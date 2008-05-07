@@ -1,0 +1,595 @@
+
+#include "NFcore.hh"
+
+#include <math.h>
+#include <fstream>
+
+using namespace std;
+using namespace NFcore;
+
+/** Default constructor that creates a System
+ * Creates a system that does not keep track of complexes.
+ */
+System::System(const char * name)
+{
+	this->name = name;
+	this->a_tot = 0;
+	current_time = 0;
+	nextReaction = 0;
+	this->useComplex = false;
+	this->go = NULL;
+}
+
+System::System(const char * name, bool useComplex)
+{
+	this->name = name;
+	this->a_tot = 0;
+	current_time = 0;
+	nextReaction = 0;
+	this->useComplex = useComplex;
+	this->go = NULL;
+}
+
+System::~System()
+{	
+	//Need to delete reactions
+	ReactionClass *r;
+	while(allReactions.size()>0)
+	{
+		r = allReactions.back();
+		allReactions.pop_back();
+		delete r;
+	}
+	
+	
+	//Delete all MoleculeTypes (which deletes all molecules and templates)
+	MoleculeType *s;
+	while(allMoleculeTypes.size()>0)
+	{
+		s = allMoleculeTypes.back();
+		allMoleculeTypes.pop_back();
+		delete s;
+	}
+	
+	//Delete all the complexes
+	Complex *c;
+	while(allComplexes.size()>0)
+	{
+		c = allComplexes.back();
+		allComplexes.pop_back();
+		delete c;
+	}
+	
+	//And finally delete all the groups
+	Group *g;
+	while(allGroups.size()>0)
+	{
+		g = allGroups.back();
+		allGroups.pop_back();
+		delete g;
+	}
+
+	nextReaction = 0;
+	
+	if(go!=NULL)
+		delete go;
+	
+	//Close our connections to output files
+	outputFileStream.close();
+}
+
+
+void System::registerOutputFileLocation(char * filename)
+{
+	outputFileStream.open(filename);
+	outputFileStream.setf(ios::scientific);
+}
+
+
+int System::addMoleculeType(MoleculeType *MoleculeType)
+{
+	allMoleculeTypes.push_back(MoleculeType);
+	return (allMoleculeTypes.size()-1);
+}
+
+
+void System::addReaction(ReactionClass *reaction)
+{
+	reaction->init();
+	allReactions.push_back(reaction);
+}
+
+
+int System::addGroup(Group * g)
+{
+	allGroups.push_back(g);
+	return (allGroups.size()-1);
+}
+
+
+int System::createComplex(Molecule * m)
+{
+	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
+	int c_id = allComplexes.size();
+	Complex * c = new Complex(this, c_id, m);
+	allComplexes.push_back(c);
+	return c_id;
+}
+
+
+
+
+
+void System::updateGroupProperty(char * groupName, double *value, int n_values)
+{
+	cout<<"Updating group property for groups named: " << groupName << endl;
+	cout<<"!! Not implemented.  I just did nothing! "<<endl;
+	
+}
+
+MoleculeType * System::getMoleculeTypeByName(const char * name)
+{
+	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		(*molTypeIter)->printDetails(); //<<endl;
+		if(strcmp((*molTypeIter)->getName(), name)==0)
+		{
+			return (*molTypeIter);
+		}
+	}
+	cerr<<"!!! warning !!! cannot find molecule type name '"<< name << "' in System: '"<<name<<"'"<<endl;
+	exit(1);
+	return 0;
+}
+
+
+double System::getAverageGroupValue(char * groupName, int valIndex)
+{
+	double sum = 0;
+	int count = 0;
+	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+	{
+		char * name = (*groupIter)->getName();
+		if(strlen(name)==strlen(groupName))
+			if(strncmp(name,groupName,strlen(name))==0)
+			{
+				sum += (*groupIter)->getValue(valIndex);
+				count ++;
+			}
+	}
+	return (sum/count);
+}
+
+
+void System::updateAllGroupProperty(double *value, int n_values)
+{
+	//cout<<"Updating group property for all groups, new value[0]: " << value[0] << endl;
+	
+	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+	{
+		(*groupIter)->updateGroupProperty(value, n_values);
+	}
+	
+}
+
+int System::getObservableCount(int moleculeTypeIndex, int observableIndex) const
+{
+	return allMoleculeTypes.at(moleculeTypeIndex)->getObservableCount(observableIndex);
+}
+
+Complex * System::getNextAvailableComplex() 
+{ 
+	Complex * c = allComplexes.at(nextAvailableComplex.front());
+	nextAvailableComplex.pop();
+	return c; 
+}
+
+void System::notifyThatComplexIsAvailable(int ID_complex)
+{
+	nextAvailableComplex.push(ID_complex);
+}
+
+void System::purgeAndPrintAvailableComplexList()
+{
+	cout<<"AvailableComplexes:";
+	while(	!nextAvailableComplex.empty() )
+	{
+		cout<<" -> "<<nextAvailableComplex.front();
+		nextAvailableComplex.pop();
+	}
+	cout<<endl;
+}
+
+
+//When you are ready to run the simulation (meaning that all moleculeTypes
+//all molecules, and all reactions have been created and registered with
+//the system) call this function to populate all the reactant lists and
+//observables.
+void System::prepareForSimulation()
+{
+	//This means we aren't going to add any more molecules to the system, so prep the rxns
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+		(*rxnIter)->prepareForSimulation();
+	
+  	//prep each molecule type for the simulation
+  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+  		(*molTypeIter)->prepareForSimulation();
+  	
+  	if(BASIC_MESSAGE) printIndexAndNames();
+  	
+  	
+  	if(go!=NULL)
+  	{
+  		go->writeGroupKeyFile();
+  		go->writeOutputFileHeader();
+  	}
+  	
+}
+
+
+double System::recompute_A_tot()
+{
+	//Loop through the reactions and add up the rates
+	a_tot = 0;
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		a_tot += (*rxnIter)->update_a();
+		if(DEBUG) (*rxnIter)->printDetails();
+	}
+	return a_tot;
+}
+
+
+/* select the next reaction, given a_tot has been calculated */
+double System::getNextRxn()
+{
+	double randNum = NFutil::RANDOM(a_tot);
+	
+	double a_sum=0, last_a_sum=0;
+	nextReaction = 0;
+	
+	//WARNING - DO NOT USE THE DEFAULT C++ RANDOM NUMBER GENERATOR FOR THIS STEP
+	// - IT INTRODUCES SMALL NUMERICAL ERRORS CAUSING THE ORDER OF RXNS TO
+	//   AFFECT SIMULATION RESULTS
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++)
+	{
+		a_sum += (*rxnIter)->get_a();
+		if (randNum <= a_sum && nextReaction==0)
+		{	
+			nextReaction = (* rxnIter);
+			//cout<<"rNum: "<<randNum<<" last_a: "<<last_a_sum<<" a_sum "<<a_sum<<endl;
+			return (randNum-last_a_sum);
+		}
+		last_a_sum = a_sum;
+	}
+	cerr<<"Error: randNum exceeds a_sum!!!"<<endl;
+	return -1;
+}
+
+/* main simulation loop */
+double System::sim(double duration, long int sampleTimes)
+{
+	cout.setf(ios::scientific);
+	cout<<"Simulating system for: "<<duration<<" second(s)."<<endl<<endl;
+	
+	//First, output the header for the output of this simulation
+	//outputAllObservableNames();
+	
+	//////////////////////////////
+	clock_t start,finish;
+	double time;
+	start = clock();
+	//////////////////////////////
+	
+	
+	//Determine when to sample and print out initial setup
+	double dSampleTime = duration / sampleTimes;
+	double curSampleTime=current_time;
+	
+	
+	double delta_t = 0; unsigned long long iteration = 0, stepIteration = 0;
+	double end_time = current_time+duration;
+	while(current_time<end_time)
+	{
+		//2: Recompute a_tot for this time
+		recompute_A_tot();
+		if(DEBUG) cout<<" Determine a_tot : " << a_tot;
+		
+		//3: Select next reaction time (making sure we have something that can react)
+		//   dt = -ln(rand) / a_tot;
+		//Choose a random number on the closed interval (0,1) so that we never
+		//have a dt=0 or a dt=infinity
+		if(a_tot>0) delta_t = -log(NFutil::RANDOM_CLOSED()) / a_tot;
+		else { delta_t=0; current_time=end_time; }
+		if(DEBUG) cout<<"   Determine dt : " << delta_t << endl;
+		
+		
+		//Report everything up until the next step if we have to
+		if(DEBUG) cout<<"  Current Sample Time: "<<curSampleTime<<endl;
+		if((current_time+delta_t)>=curSampleTime)
+		{
+			while((current_time+delta_t)>=(curSampleTime))
+			{
+				if(curSampleTime>end_time) break;
+				outputAllObservableCounts(curSampleTime);
+				outputGroupData(curSampleTime);
+				curSampleTime+=dSampleTime;
+			}
+			cout<<"Sim time: "<<current_time<<"\tCPU time: ";
+			cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
+			cout<<"\t Reactions Cycles during this step: "<<stepIteration<<endl;
+			//cout<<"\tAtot:"<<a_tot<<endl;
+			stepIteration=0;
+		}
+		
+		//Make sure we can react...
+		if(delta_t==0) break;
+		
+		//4: Select next reaction class based on smallest j, 
+		//   such that sum of a_j over all j >= r2*a_tot
+		double randElement = getNextRxn();
+		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
+		//Output selected reaction for debugging
+		//cout<<"\nFiring: "<< endl;
+		//nextReaction->printDetails();
+		//cout<<endl<<endl;
+		
+		
+		//Increment time
+		iteration++;
+		stepIteration++;
+		current_time+=delta_t;
+		
+		//5: Fire Reaction! (takes care of updates to lists and observables)
+		nextReaction->fire2(randElement);
+	}
+	
+	finish = clock();
+    time = (double(finish)-double(start))/CLOCKS_PER_SEC;
+    if(BASIC_MESSAGE)
+    {
+    	cout<<endl<<"You just simulated "<< iteration <<" reactions in "<< time << "s  ( ";
+    	cout<<((double)iteration)/time<<" reactions/sec )" << endl;
+    }
+    
+	cout.unsetf(ios::scientific);
+	return current_time;
+}
+
+double System::stepTo(double stoppingTime)
+{
+	double delta_t = 0;
+	while(current_time<stoppingTime)
+	{
+		//2: Recompute a_tot for this time
+		recompute_A_tot();
+		
+		//3: Select next reaction time (making sure we have something that can react)
+		//   dt = -ln(rand) / a_tot;
+		//Choose a random number on the closed interval (0,1) so that we never
+		//have a dt=0 or a dt=infinity
+		if(a_tot>0) delta_t = -log(NFutil::RANDOM_CLOSED()) / a_tot;
+		else 
+		{
+			//Otherwise, we can't react for the rest of this step
+			delta_t=0; 
+			current_time=stoppingTime;
+			cout<<"Total propensity is zero, no further rxns can fire in this step."<<endl;
+			break;
+		}
+		
+		
+		//Report everything up until the next step if we have to
+		if((current_time+delta_t)>=stoppingTime)
+		{
+			//We are going to jump over the stopping time, so end the step
+			break;
+		}
+		
+		//4: Select next reaction class based on smallest j, 
+		//   such that sum of a_j over all j >= r2*a_tot
+		double randElement = getNextRxn();
+		
+		
+		//Increment time
+		current_time+=delta_t;
+		
+		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
+		
+		//5: Fire Reaction! (takes care of updates to lists and observables)
+		nextReaction->fire2(randElement);
+	}
+	return current_time;
+}
+
+void System::equilibriate(double duration)
+{
+	current_time = 0;
+	stepTo(duration);
+	current_time = 0;
+}
+
+void System::equilibriate(double duration, int statusReports)
+{
+	double stepLength = duration / (double)statusReports;
+	double eTime = 0;
+	for(int i=0; i<statusReports; i++)
+	{
+		equilibriate(stepLength);
+		eTime+=stepLength;
+		cout<<"Equilibriation has now elapsed for: "<<eTime<<" seconds."<<endl;
+		
+	}	
+	
+}
+
+void System::outputAllObservableNames()
+{
+  	outputFileStream<<"#\tTime";
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		(*molTypeIter)->outputObservableNames(outputFileStream);
+	outputFileStream<<endl;
+}
+
+void System::outputAllObservableCounts()
+{
+  	outputFileStream<<"\t"<<current_time;
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		(*molTypeIter)->outputObservableCounts(outputFileStream);
+	outputFileStream<<endl;
+}
+
+void System::outputAllObservableCounts(double cSampleTime)
+{
+  	outputFileStream<<"\t"<<cSampleTime;
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		(*molTypeIter)->outputObservableCounts(outputFileStream);
+	outputFileStream<<endl;
+}
+
+void System::printAllObservableCounts(double cSampleTime)
+{
+  	cout<<"\t"<<cSampleTime;
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		(*molTypeIter)->printObservableCounts();
+	cout<<endl;
+}
+
+void System::printAllComplexes()
+{
+	cout<<"All System Complexes:"<<endl;
+	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
+		(*complexIter)->printDetails();
+	cout<<endl;
+}
+
+void System::printAllReactions()
+{
+	cout<<"All System Reactions:"<<endl;
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		(*rxnIter)->printDetails();
+	}
+	cout<<endl;
+}
+
+void System::printAllGroups()
+{
+	cout<<"All System Groups:"<<endl;
+	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+	{
+		(*groupIter)->printDetails();
+	}
+	cout<<endl;
+}
+
+void System::outputComplexSizes(double cSampleTime)
+{
+	int size = 0;
+	outputFileStream<<"\t"<<cSampleTime;
+	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
+	{
+		size = (*complexIter)->getComplexSize();
+		if(size!=0) outputFileStream<<"\t"<<size;
+	}
+	outputFileStream<<endl;
+}
+
+
+double System::outputMeanCount(MoleculeType *m)
+{
+	int count = 0;
+	int sum = 0;
+	int allSum = 0;
+	int allCount=0;
+	int size=0;
+	outputFileStream<<"\t"<<current_time;
+	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
+	{
+		size = (*complexIter)->getMoleculeCountOfType(m);
+		if(size>=2) { count++; sum+=size; }
+		if(size>=1) { allSum+=size; allCount++; }
+		
+	}
+	//cout<<sum<<"/"<<count<<"   "<<allSum<<"/"<<allCount<<endl;
+	if(count!=0)
+		outputFileStream<<"\t"<<((double)sum/(double)count)<<endl;
+	else
+		outputFileStream<<"\t"<<0.0<<endl;
+		
+	return ((double)sum/(double)count);
+}
+
+
+double System::calculateMeanCount(MoleculeType *m)
+{
+	int count = 0;
+	int sum = 0;
+	int allSum = 0;
+	int allCount=0;
+	int size=0;
+	
+	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
+	{
+		size = (*complexIter)->getMoleculeCountOfType(m);
+		if(size>=2) { count++; sum+=size; }
+		if(size>=1) { allSum+=size; allCount++; }
+	}
+	
+	return ((double)sum/(double)count);
+}
+
+void System::outputMoleculeTypeCountPerComplex(MoleculeType *m)
+{
+	int size = 0;
+	outputFileStream<<"\t"<<current_time;
+	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
+	{
+		size = (*complexIter)->getMoleculeCountOfType(m);
+		if(size>=1) outputFileStream<<"\t"<<size;
+	}
+	outputFileStream<<endl;
+	
+}
+
+void System::printIndexAndNames()
+{
+	cout<<"All System Molecules:"<<endl;
+	int idxCounter = 0;
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		cout<<idxCounter++<<"\t"<<(*molTypeIter)->getName()<<endl;
+	}
+	cout<<endl<<"All System Rxns:"<<endl;
+	idxCounter = 0;
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		cout<<idxCounter++<<"\t"<<(*rxnIter)->getName()<<endl;
+	}
+	cout<<endl;
+}
+
+
+
+void System::addGroupOutputter(GroupOutputter * go)
+{
+	this->go = go;
+}
+
+
+void System::outputGroupDataHeader()
+{
+	if(this->go!=NULL)
+		go->writeOutputFileHeader();
+}
+
+
+void System::outputGroupData(double cSampleTime)
+{
+	if(this->go!=NULL)
+		go->writeStateToOutputFile(cSampleTime);
+}
+
+
+
+
