@@ -1,10 +1,50 @@
 #include <iostream>
-#include <string>
 #include "NFcore.hh"
 
 
 using namespace std;
 using namespace NFcore;
+
+MoleculeType::MoleculeType(
+	string name, 
+	string * stateNames, 
+	int *defaultStateValues, 
+	int numOfStates,
+	string * bindingSiteNames,
+	int numOfBindingSites,
+	System * system )
+{
+	if(DEBUG) cout << "Creating MoleculeType " << name;
+	
+	this->name = name.c_str();
+	
+	//Set the state names and default states
+	this->numOfStates = numOfStates;
+	this->stateNames = stateNames;
+	this->defaultStateValues = defaultStateValues;
+	
+	//Set the binding site names
+	this->numOfBindingSites = numOfBindingSites;
+	this->bindingSiteNames = bindingSiteNames;
+	
+	//Register myself with the system, and get an ID number
+	this->system = system;
+	this->type_id = this->system->addMoleculeType(this);
+	
+	
+	if(DEBUG) {
+		cout << "Creating MoleculeType " << name;
+		cout << ": ("<< type_id <<") with " << numOfStates << " states (";
+		for(int s=0; s<numOfStates; s++)
+			cout<<" "<<this->stateNames[s]<<" ";
+		cout << ") and " << numOfBindingSites << " binding sites (";
+		for(int b=0; b<numOfBindingSites; b++)
+			cout<<" "<<bindingSiteNames[b]<<" ";
+		cout <<")."<<endl; }
+}
+
+
+
 
 MoleculeType::MoleculeType(
 	const char * name, 
@@ -15,7 +55,7 @@ MoleculeType::MoleculeType(
 	int numOfBindingSites,
 	System * system )
 {
-	if(DEBUG) cout << "Creating MoleculeType " << name;
+/*	if(DEBUG) cout << "Creating MoleculeType " << name;
 	
 	string str(name);
 	this->name = str.c_str();
@@ -42,6 +82,7 @@ MoleculeType::MoleculeType(
 		for(int b=0; b<numOfBindingSites; b++)
 			cout<<" "<<bindingSiteNames[b]<<" ";
 		cout <<")."<<endl; }
+*/
 }
 
 MoleculeType::~MoleculeType()
@@ -116,7 +157,7 @@ unsigned long int MoleculeType::getObservableCount(int obsIndex) const
 int MoleculeType::getBindingSiteIndex(const char * siteName ) const
 {
 	for(int b=0; b<numOfBindingSites; b++)
-		if(strcmp(siteName,bindingSiteNames[b])==0) return b;
+		if(siteName==bindingSiteNames[b]) return b;
 	cerr<<"!!! warning !!! cannot find site name "<< siteName << " in MoleculeType: "<<name<<endl;
 	this->printDetails();
 	exit(1);
@@ -125,7 +166,7 @@ int MoleculeType::getBindingSiteIndex(const char * siteName ) const
 int MoleculeType::getStateIndex(const char * stateName ) const
 {
 	for(int s=0; s<numOfStates; s++)
-		if(strcmp(stateName,stateNames[s])==0) return s;
+		if(stateName==stateNames[s]) return s;
 	cerr<<"!!! warning !!! cannot find state name "<< stateName << " in MoleculeType: "<<name<<endl;
 	exit(1);
 }

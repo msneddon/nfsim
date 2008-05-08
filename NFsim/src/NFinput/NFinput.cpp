@@ -14,14 +14,19 @@ using namespace std;
 
 
 
-System * NFinput::initializeFromXML(char * filename)
+System * NFinput::initializeFromXML(string filename)
 {
-	cout<<"\tTrying to read xml model specification file: "<<filename<<endl;
-	TiXmlDocument doc(filename);
+	bool verbose = true;
+	
+	if(!verbose) cout<<"reading xml file ("+filename+")  [";
+	if(verbose) cout<<"\tTrying to read xml model specification file: "<<filename<<endl;
+	
+	
+	TiXmlDocument doc(filename.c_str());
 	bool loadOkay = doc.LoadFile();
 	if (loadOkay)
 	{
-		cout<<"\t\tread was successful... beginning parse..."<<endl;
+		if(verbose) cout<<"\t\tread was successful... beginning parse..."<<endl<<endl;
 		
 		//First declare our system
 		System *s;
@@ -32,18 +37,16 @@ System * NFinput::initializeFromXML(char * filename)
 		if(!pModel) { cout<<"\tNo 'model' tag found.  Quitting."; return NULL; }
 		
 		//Make sure the basics are there
-		const char * modelName =  pModel->Attribute("id");
-		if(modelName)
-		{
-			s=new System((char *)modelName);
-			cout<<"\tCreating system: "<<s->getName()<<endl;
+		string modelName; 
+		if(!pModel->Attribute("id"))  {
+			s=new System("nameless");
+			if(verbose) cout<<"\tNo System name given, so I'm calling your system: "<<s->getName()<<endl;
 		}
-		else
-		{
-			s=new System("noname");
-			cout<<"\tNo System name given, creating system: "<<s->getName()<<endl;
+		else  {
+			modelName=pModel->Attribute("id");
+			s=new System(modelName);
+			if(verbose) cout<<"\tCreating system: "<<s->getName()<<endl;
 		}
-		
 		
 		
 		//Read the key lists needed for the simulation and make sure they exist...
@@ -60,48 +63,67 @@ System * NFinput::initializeFromXML(char * filename)
 		
 		
 		//Now retrieve the parameters, so they are easy to look up in the future
-		//and save the parameters in an map we call parameter
-		cout<<"\n\tReading parameter list..."<<endl;
-		map<const char*, double, strCmp> parameter;
-		if(!initParameters(pListOfParameters, parameter))
+		//and save the parameters in a map we call parameter
+		if(!verbose) cout<<"-";
+		else cout<<"\n\tReading parameter list..."<<endl;
+		map<string, double> parameter;
+		if(!initParameters(pListOfParameters, parameter, verbose))
 		{
+			cout<<"\n\nI failed at parsing your Parameters.  Check standard error for a report."<<endl;
 			delete s;
 			return NULL;
 		}
 		
 		
-		cout<<"\n\tReading list of MoleculeTypes..."<<endl;
-		if(!initMoleculeTypes(pListOfMoleculeTypes, s))
+		if(!verbose) cout<<"-";
+		else cout<<"\n\tReading list of MoleculeTypes..."<<endl;
+		map<string,int> allowedStates;
+		if(!initMoleculeTypes(pListOfMoleculeTypes, s, allowedStates, verbose))
 		{
+			cout<<"\n\nI failed at parsing your MoleculeTypes.  Check standard error for a report."<<endl;
 			delete s;
 			return NULL;
 		}
 		
-		cout<<"\n\tReading list of Species..."<<endl;
-		if(!initStartSpecies(pListOfSpecies, s, parameter))
+		
+		if(!verbose) cout<<"-";
+		else cout<<"\n\tReading list of Species..."<<endl;
+		if(!initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose))
 		{
+			cout<<"\n\nI failed at parsing your species.  Check standard error for a report."<<endl;
+			delete s;
+			return NULL;
+		}
+
+		
+		if(!verbose) cout<<"-";
+		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
+		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, verbose))
+		{
+			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
 			delete s;
 			return NULL;
 		}
 		
 		
-		cout<<"\n\tReading list of Reaction Rules..."<<endl;
-		if(!initReactionRules(pListOfReactionRules, s, parameter))
-		{
-			delete s;
-			return NULL;
-		}
+		delete s;
+		return NULL;
 		
-		cout<<"\n\tReading list of Observables..."<<endl;
+		if(!verbose) cout<<"-";
+		else cout<<"\n\tReading list of Observables..."<<endl;
 		if(!initObservables(pListOfObservables, s, parameter))
 		{
+			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
 			delete s;
 			return NULL;
 		}
 		
 		/////////////////////////////////////////
 	
-		cout<<"\n\n-------------------------\n";
+		
+		
+		
+		if(verbose) cout<<"\n\n-------------------------\n";
 		for(int m=0; m<s->getNumOfMoleculeTypes(); m++)
 			s->getMoleculeType(m)->printDetails();
 		
@@ -116,6 +138,12 @@ System * NFinput::initializeFromXML(char * filename)
 		s->printAllReactions();	
 		s->sim(20,200);
 		s->printAllReactions();
+		
+		
+		
+		if(!verbose) cout<<"-]";
+		else 
+		
 		return s;
 	}
 	else
@@ -130,344 +158,470 @@ System * NFinput::initializeFromXML(char * filename)
 
 
 
-bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <const char*,double, strCmp> &parameter)
+bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <string,double> &parameter, bool verbose)
 {
-	TiXmlElement *pParamElement;
-	for ( pParamElement = pListOfParameters->FirstChildElement("Parameter"); pParamElement != 0; pParamElement = pParamElement->NextSiblingElement("Parameter")) 
-	{
-		const char * a = pParamElement->Attribute("id");
-		if(!a)
+	try {
+		//Loop through all the parameter elements
+		TiXmlElement *pParamElement;
+		for ( pParamElement = pListOfParameters->FirstChildElement("Parameter"); 
+				pParamElement != 0; pParamElement = pParamElement->NextSiblingElement("Parameter")) 
 		{
-			cout<<"\t\t!!A Parameter is undefined! It is missing the 'id' attribute!  Quitting.\n";
-			return false;
-		}
 			
-		const char * v = pParamElement->Attribute("value");
-		if(!v)
-		{
-			cout<<"\t\t!!A Parameter '"<<a<<"' does not have the 'value' attribute defined! Quitting.\n";
-			return false;
-		}
-			
-		char *p;
-		double d = strtod(v,&p);
-		if(*p != '\n' && *p != '\0')
-		{
-			cout<<"\t\t!!Parameter '"<<a<<"' has a 'value' attribute that is not well formatted!\n\t\t";
-			cout<<"You gave '"<<v<<"', but that is not a valid number! Quitting.\n";
-			return false;	
-		}
-			
-		parameter[a]=d;
-		cout<<"\t\t Identified parameter:\t"<<a<<"\tValue:"<<d<<endl;
-	}
-	return true;
-}
-
-
-bool NFinput::initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * s) 
-{
-	bool output = false;
-	vector <const char*> stateLabels;
-	vector <const char*> bSiteLabels;
-	
-	
-	TiXmlElement *pMoTypeEl;
-	for ( pMoTypeEl = pListOfMoleculeTypes->FirstChildElement("MoleculeType"); pMoTypeEl != 0; pMoTypeEl = pMoTypeEl->NextSiblingElement("MoleculeType")) 
-	{
-		const char *typeName = pMoTypeEl->Attribute("id");
-		if(!typeName)
-		{
-			cout<<"!!!Error:  MoleculeType tag must contain the id attribute.  Quitting."<<endl;
-			return false;	
-		}
-		if(strcmp(typeName,"Null")==0)
-			continue;
-			
-		
-		cout<<"\t\tReading and Creating Moleculetype: "<<typeName<<"(";
-		TiXmlElement *pListOfComp = pMoTypeEl->FirstChildElement("ListOfComponentTypes");
-		if(pListOfComp)
-		{
-		
-			
-			//Grab the needed info on the molecule
-			TiXmlElement *pComp;
-			for ( pComp = pListOfComp->FirstChildElement("ComponentType"); pComp != 0; pComp = pComp->NextSiblingElement("ComponentType")) 
-			{
-				const char *comp = pComp->Attribute("id");
-				if(stateLabels.size()!=0 || bSiteLabels.size()!=0)cout<<",";	
-				
-				TiXmlElement *pListOfAllowedStates = pComp->FirstChildElement("ListOfAllowedStates");
-				if(pListOfAllowedStates)
-				{
-					stateLabels.push_back(comp);
-					cout<<comp;
-					TiXmlElement *pAlStates;
-					for ( pAlStates = pListOfAllowedStates->FirstChildElement("AllowedState"); pAlStates != 0; pAlStates = pAlStates->NextSiblingElement("AllowedState")) 
-					{
-						const char *aState = pAlStates->Attribute("id");
-						cout<<"~"<<aState;
-					}
-				}
-				else
-				{
-					bSiteLabels.push_back(comp);
-					cout<<comp;
-				}
+			//Try to extract out the parameter name
+			string paramName; 
+			if(!pParamElement->Attribute("id")) {
+				cerr<<"\t\t!!A Parameter is undefined! It is missing the 'id' attribute!  Quitting.\n";
+				return false;
+			} else {
+				paramName = pParamElement->Attribute("id");
 			}
-		}
-		cout<<")"<<endl;
-		
-		//Now, actually create the molecule
-		int numOfBsites = bSiteLabels.size();
-		char ** bSiteNames = new char * [numOfBsites];
-		
-		for(int b=0;b<numOfBsites; b++)
-		{
-			bSiteNames[b] = (char *)bSiteLabels.at(b);	
-			if(output) cout<<"bSiteNames["<<b<<"] = "<<bSiteNames[b]<<endl;
-		}
-		
-		
-		int numOfStates = stateLabels.size();
-		char ** stateNames = new char * [numOfStates];
-		int * stateValues = new int [numOfStates];
-		for(int i=0;i<numOfStates; i++)
-		{
 			
-			stateNames[i] = (char *)stateLabels.at(i);
-			stateValues[i] = 0;
-			if(output) cout<<"stateNames["<<i<<"] = "<<stateNames[i]<<endl;
-		}
-		
-		
-		new MoleculeType(typeName,stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
-
-		bSiteLabels.clear();
-		stateLabels.clear();
-	}
+			//Try to parse the value of the parameter
+			string paramValue; 
+			if(!pParamElement->Attribute("value")) {
+				cerr<<"\t\t!!A Parameter '"<<paramName<<"' does not have the 'value' attribute defined! Quitting.\n";
+				return false;
+			} else {
+				paramValue = pParamElement->Attribute("value");
+			}
 			
-			
-	
-	return true;
-}
-
-
-
-
-
-bool NFinput::initStartSpecies(TiXmlElement * pListOfSpecies, System * s, map <const char*,double, strCmp> &parameter) 
-{
-	
-	//A vector to hold molecules as we are creating the species
-	vector < vector <Molecule *> > molecules;
-	
-	//A vector that maps binding site ids into a molecule location in the molecules vector
-	//and the name of the binding site
-	map <const char*, const char *, strCmp> bSiteSiteMapping;
-	map <const char*, int, strCmp> bSiteMolMapping;
-	
-	vector <const char *> stateName;
-	vector <double> stateValue;
-	
-	vector<const char *>::iterator snIter;
-	
-	
-	TiXmlElement *pSpec;
-	for ( pSpec = pListOfSpecies->FirstChildElement("Species"); pSpec != 0; pSpec = pSpec->NextSiblingElement("Species")) 
-	{
-		//First get the species name 
-		const char *speciesName = pSpec->Attribute("id");
-		if(!speciesName)
-		{
-			cout<<"Species tag without a valid 'id' attribute.  Quiting"<<endl; 
-			return false;
-		}
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		//Get the number of molecules of this species to create
-		const char *specCount = pSpec->Attribute("concentration");
-		if(!specCount)
-		{
-			cout<<"Species "<<speciesName<<" does not have a 'concentration' attribute.  Quitting"<<endl;
-			return false;
-		}
-		
-		//Try to parse out the number of species, or look it up in the parameter map
-		char *p; double c = strtod(specCount,&p);
-		if(*p != '\n' && *p != '\0')
-		{
+			//See if we can get the parameter value into a double
+			double d = 0;
 			try {
-				c = parameter.find(specCount)->second;
-			} catch(exception& e) {
-				cout<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
-				return false;
-			}
-		}
-		
-		cout<<"\t\tCreating "<<c<<" instances of the Species: "<<speciesName<<endl;
-		TiXmlElement *pListOfMol = pSpec->FirstChildElement("ListOfMolecules");
-		if(!pListOfMol)
-		{
-			cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: Species "<<speciesName<<" contains no molecules!"<<endl;
-			continue;
-		}
-		
-			
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		// Now loop through the molecules
-		TiXmlElement *pMol;
-		for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule")) 
-		{
-			//First get the type of molecule and retrieve the moleculeType object from the systme
-			const char *molName = pMol->Attribute("name");
-			const char *molUid = pMol->Attribute("id");
-			if(!molName || ! molUid)
-			{
-				cout<<"!!!Error.  Invalid 'Molecule' tag found when creating species '"<<speciesName<<"'. Quitting"<<endl;
+				d = NFutil::convertToDouble(paramValue);
+			} catch (std::runtime_error e) {
+				cerr<<"I couldn't understand your parameter: "<<paramName<<endl;
+				cerr<<e.what()<<endl;
 				return false;
 			}
 			
-			if(strcmp(molName,"Null")==0) continue;
+			// Make sure we haven't tried to add this parameter before
+			if(parameter.find(paramName)!=parameter.end()) {
+				cerr<<"You tried to define the parameter '"+paramName+"' more than once.  I think"<<endl;
+				cerr<<"you made a mistake.  I'll forgive you, but I'm quitting now."<<endl;
+				return false;
+			}
 			
-			MoleculeType *mt = s->getMoleculeTypeByName(molName);
-			//cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
+			//Save the parameter into our parameter map
+			parameter[paramName]=d;
+			if(verbose) cout<<"\t\t Identified parameter:\t"<<paramName<<"\tValue:"<<d<<endl;
+		}
+		return true;
+	} catch (...) {
+		cerr<<"Undefined exception thrown while parsing the parameters."<<endl;
+		return false;
+	}
+}
+
+
+
+/**
+ * 
+ * The strategy is to look at one MoleculeType at a time, make sure that moleculeType contains
+ * valid information, then, and only then, create it.
+ * 
+ * 
+ */
+bool NFinput::initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * s,  map<string,int> &allowedStates, bool verbose) 
+{
+	try {
+		vector <string> stateLabels;
+		vector <string> bSiteLabels;
+		
+		//Loop through the MoleculeType tags...
+		TiXmlElement *pMoTypeEl;
+		for ( pMoTypeEl = pListOfMoleculeTypes->FirstChildElement("MoleculeType"); pMoTypeEl != 0; pMoTypeEl = pMoTypeEl->NextSiblingElement("MoleculeType")) 
+		{
+			//Check if MoleculeType tag has a name...
+			if(!pMoTypeEl->Attribute("id")) {
+				cerr<<"!!!Error:  MoleculeType tag must contain the id attribute.  Quitting."<<endl;
+				return false;	
+			}
 			
-			//Loop through the components of the molecule in order to set state values
-			TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
+			//Read in the MoleculeType Name
+			string typeName = pMoTypeEl->Attribute("id");
+			
+			//Make sure the name isn't null & output a message if needed
+			if(typeName.compare("Null")==0 || typeName.compare("NULL")==0){
+				if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + typeName + "'"<<endl;
+				continue;
+			}
+			if(verbose) cout<<"\t\tReading and Creating MoleculeType: "+typeName+"(";
+	
+			
+			//Get the list of components in the moleculeType
+			TiXmlElement *pListOfComp = pMoTypeEl->FirstChildElement("ListOfComponentTypes");
 			if(pListOfComp)
 			{
+				//Loop through the list of components
 				TiXmlElement *pComp;
-				for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
+				for ( pComp = pListOfComp->FirstChildElement("ComponentType"); pComp != 0; pComp = pComp->NextSiblingElement("ComponentType")) 
 				{
-					const char *compId = pComp->Attribute("id");
-					const char *compName = pComp->Attribute("name");
-					const char *compBondCount = pComp->Attribute("numberOfBonds");
-					const char *compStateValue = pComp->Attribute("state");
-					if(!compId || !compName || !compBondCount)
-					{
-						cout<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of species '"<<speciesName<<"'. Quitting"<<endl;
+					//Check again for errors by making sure the component has a name
+					if(!pComp->Attribute("id")) {
+						if(verbose) cout<<" ?? ...\n";
+						cerr<<"!!!Error:  ComponentType tag in MoleculeType: '" + typeName + "' must contain the id attribute.  Quitting."<<endl;
 						return false;
 					}
-					if(compStateValue)
-					{
-						double s = strtod(compStateValue,&p);
-						if(*p != '\n' && *p != '\0')
-						{
-							try {
-								s = parameter.find(compStateValue)->second;
-							} catch(exception& e) {
-								cout<<"!!!!Invalid state value for: '"<<molUid<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
+					
+					//Read in the component name and output its value
+					string compName = pComp->Attribute("id");
+					if(verbose) { 
+						if(stateLabels.size()!=0 || bSiteLabels.size()!=0) cout<<","+compName;
+						else cout<<compName;
+					}
+					
+					//Decide whether this component is a binding site or a state and act accordingly
+					TiXmlElement *pListOfAllowedStates = pComp->FirstChildElement("ListOfAllowedStates");
+					if(pListOfAllowedStates)  {
+						//First check if the component Name already exists, if so, we can't handle that yet!
+						for(vector<string>::iterator it = bSiteLabels.begin(); it != bSiteLabels.end(); it++ ) {
+							if((*it)==compName) {
+								cerr<<"!!!Error:  Binding Site Name: '"+compName+"' of MoleculeType: '"+typeName+"' was used more than once!\n";
+								cerr<<"I don't know how to handle identical sites!! So I'm quitting. "<<endl;
 								return false;
 							}
 						}
-						stateName.push_back(compName);
-						stateValue.push_back(s);
+						stateLabels.push_back(compName);
+						
+						//Look at the list of allowed states, although I never check them in the future
+						TiXmlElement *pAlStates;
+						int allowedStateCount = 0;
+						for ( pAlStates = pListOfAllowedStates->FirstChildElement("AllowedState"); pAlStates != 0; pAlStates = pAlStates->NextSiblingElement("AllowedState")) 
+						{
+							if(!pAlStates->Attribute("id")) {
+								cerr<<"!!!Error:  AllowedState tag in ComponentType '"+compName+"' of MoleculeType: '" + 
+									typeName + "' must contain the id attribute.  Quitting."<<endl;
+								return false;
+							}
+							string aState = pAlStates->Attribute("id");
+							if(allowedStates.find(typeName+"_"+compName+"_"+aState)!=allowedStates.end()) continue;
+							allowedStates[typeName+"_"+compName+"_"+aState] = allowedStateCount;
+							allowedStateCount++;
+							
+							if(verbose) cout<<"~"<<aState;
+						}
 					}
-					else
-					{
-						//Add the b site mapping that will let us later easily connect binding sites
-						//with the molecules involved
-						bSiteSiteMapping[compId] = compName;
-						bSiteMolMapping[compId] = molecules.size();
+					else {
+						//First check if the component Name already exists, if so, we can't handle that yet!
+						for(vector<string>::iterator it = bSiteLabels.begin(); it != bSiteLabels.end(); it++ ) {
+							if((*it)==compName) {
+								cerr<<"!!!Error:  Binding Site Name: '"+compName+"' of MoleculeType: '"+typeName+"' was used more than once!\n";
+								cerr<<"I don't know how to handle identical sites!! So I'm quitting. "<<endl;
+								return false;
+							}
+						}
+						bSiteLabels.push_back(compName);
 					}
 				}
-				
-				//loop to create the actual molecules
-				vector <Molecule *> currentM;
-				molecules.push_back(currentM);
-				for(int m=0; m<c; m++)
-				{
-					Molecule *m = new Molecule(mt);
-					
-					//Loop through the states and set the ones we need to set
-					int k=0;
-					for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
-						m->setState((const char *)(*snIter), (int)stateValue.at(k));
-					molecules.at(molecules.size()-1).push_back(m);
-				}
-				stateName.clear();
-				stateValue.clear();
 			}
-			else
+			if(verbose) cout<<")"<<endl;
+			
+			
+			//Now, actually create the molecule, starting with the binding sites
+			unsigned int numOfBsites = bSiteLabels.size();
+			string * bSiteNames = new string [numOfBsites];
+			for(unsigned int b=0; b<numOfBsites; b++) {
+				bSiteNames[b] = bSiteLabels.at(b);	
+				if(false) cout<<"bSiteNames["<<b<<"] = "<<bSiteNames[b]<<endl;
+			}
+			
+			//Here is where we create the states get setup
+			unsigned int numOfStates = stateLabels.size();
+			string * stateNames = new string [numOfStates];
+			int * stateValues = new int [numOfStates];
+			for(unsigned int i=0;i<numOfStates; i++)
 			{
-				cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
+				stateNames[i] = stateLabels.at(i);
+				stateValues[i] = 0;
+				if(false) cout<<"stateNames["<<i<<"] = "<<stateNames[i]<<endl;
 			}
-		}
-		
-		///////////////////////////////////////////////////////////////
-		//Here is where we add the bonds to the molecules in this species
-		TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
-		if(pListOfBonds)
-		{
-			//First get the information on the bonds in the complex
-			TiXmlElement *pBond;
-			for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond")) 
-			{
-				const char *bondId = pBond->Attribute("id");
-				const char *bSite1 = pBond->Attribute("site1");
-				const char *bSite2 = pBond->Attribute("site2");
-				if(!bondId || !bSite1 || !bSite2)
-				{
-					cout<<"!! Invalid Bond tag for species: "<<speciesName<<".  Quitting."<<endl;
-					return false;	
-				}
-				//cout<<"reading bond "<<bondId<<" which connects "<<bSite1<<" to " <<bSite2<<endl;
-				
-				
-				//Get the information on this bond that tells us which molecules to connect
-				try {
-					const char *bSiteName1 = bSiteSiteMapping[bSite1];
-					int bSiteMolIndex1 = bSiteMolMapping[bSite1];
-					const char *bSiteName2 = bSiteSiteMapping[bSite2];
-					int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
-				
-					for(int j=0;j<c;j++)
-						Molecule::bind(molecules.at(bSiteMolIndex1).at(j),bSiteName1,molecules.at(bSiteMolIndex2).at(j),bSiteName2);
-				} catch (exception& e) {
-					cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
-					return false;
-				}
-			}
-		}
-		
-		//Tidy up and clear the lists for the next species
-		for(unsigned int i=0; i<molecules.size(); i++)
-				molecules.at(i).clear();
-		molecules.clear();
-		bSiteMolMapping.clear();
-		bSiteSiteMapping.clear();
-	}
+			
+			//With everything good to go, let's create the moleculeType
+			new MoleculeType(typeName,stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	
-	//If we got here, then we are indeed successful
-	return true;
+			//Finally, clear the states and binding site labels that we read in
+			bSiteLabels.clear();
+			stateLabels.clear();
+		}
+				
+		//Getting here means we read everything we could successfully
+		return true;
+	} catch (...) {
+		//Uh oh! we got some unknown exception thrown, so we must abort!
+		return false;
+	}
 }
 
 
-bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s, map <const char*,double, strCmp> &parameter)
+
+
+
+bool NFinput::initStartSpecies(TiXmlElement * pListOfSpecies, System * s, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose) 
 {
+	//map<string,int>::iterator iter;   
+	//  for( iter = allowedStates.begin(); iter != allowedStates.end(); iter++ ) {
+	//    cout << "state: " << iter->first << ", value: " << iter->second << endl;
+	//  }
 	
+	
+	
+	
+	try {
+		//A vector to hold molecules as we are creating the species
+		vector < vector <Molecule *> > molecules;
+
+		//A vector that maps binding site ids into a molecule location in the molecules vector
+		//and the name of the binding site
+		map <string, string> bSiteSiteMapping;
+		map <string, int> bSiteMolMapping;
+
+		vector <string> stateName;
+		vector <double> stateValue;
+
+		vector<string>::iterator snIter;
+
+
+		//Loop through all the species
+		TiXmlElement *pSpec;
+		for ( pSpec = pListOfSpecies->FirstChildElement("Species"); pSpec != 0; pSpec = pSpec->NextSiblingElement("Species")) 
+		{
+			//First get the species name and make sure it exists
+			string speciesName;
+			if(!pSpec->Attribute("id")) {
+				cerr<<"Species tag without a valid 'id' attribute.  Quiting"<<endl; 
+				return false;
+			} else {
+				speciesName = pSpec->Attribute("id");
+			}
+
+			//Get the number of molecules of this species to create
+			string specCount;
+			if(!pSpec->Attribute("concentration")) {
+				cerr<<"Species "<<speciesName<<" does not have a 'concentration' attribute.  Quitting"<<endl;
+				return false;
+			} else {
+				specCount = pSpec->Attribute("concentration");
+			}
+
+			//Try to parse out the number of this species, or look it up in the parameter map
+			int specCountInteger=0;
+			try {
+				specCountInteger = NFutil::convertToInt(specCount);
+			} catch (std::runtime_error &e1) {
+				if(parameter.find(specCount)==parameter.end()) {
+					cerr<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
+					return false;
+				}
+				specCountInteger = (int)parameter.find(specCount)->second;
+			}
+			
+			//Make sure we didn't try to create a negative number of molecules
+			if(specCountInteger<0) {
+				cerr<<"I cannot, in good conscience, make a negative number ("<<specCount<<") of species when creating species "<<speciesName<<". Quitting"<<endl;
+				return false;
+			}
+			
+			//If we're not going to make anything, well, then, don't make anything silly!  Stop here!
+			if(specCountInteger==0) {
+				if(verbose) cout<<"\t\tNot creating any instances of the Species: "<<speciesName<<" because you said I should make zero of them."<<endl;
+				continue;
+			}
+
+			
+			//Make sure we have some molecules in our list of species
+			TiXmlElement *pListOfMol = pSpec->FirstChildElement("ListOfMolecules");
+			if(!pListOfMol) {
+				cerr<<"Species "<<speciesName<<" contains no molecules!  I think that was a mistake, on your part, so I'm done."<<endl;
+				return false;
+			}
+
+			
+			// Give our users a nice little message...
+			if(verbose) cout<<"\t\tCreating "<<specCountInteger<<" instances of the Species: "<<speciesName<<endl;
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+			// Now loop through the molecules
+			TiXmlElement *pMol;
+			for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule")) 
+			{
+				//First get the type of molecule and retrieve the moleculeType object from the system
+				string molName, molUid;
+				if(!pMol->Attribute("name") || ! pMol->Attribute("id"))  {
+					cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating species '"<<speciesName<<"'. Quitting"<<endl;
+					return false;
+				} else {
+					molName = pMol->Attribute("name");
+					molUid = pMol->Attribute("id");
+				}
+
+				//Skip over null molecules
+				if(molName=="Null" || molName=="NULL") {
+					if(verbose) cout<<"\t\t\tSkipping Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
+					continue;
+				}
+				
+				// Identify the moleculeType if we can (this call could potentially kill our code if we can't find the type);
+				MoleculeType *mt = s->getMoleculeTypeByName(molName);
+				if(verbose) cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
+
+				
+				//Loop through the components of the molecule in order to set state values
+				TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
+				if(pListOfComp)
+				{
+					TiXmlElement *pComp;
+					for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
+					{
+						
+						//Get the basic properties of the component
+						string compId,compName,compBondCount;
+						if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
+							cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of species '"<<speciesName<<"'. Quitting"<<endl;
+							return false;
+						} else {
+							compId=pComp->Attribute("id");
+							compName = pComp->Attribute("name");
+							compBondCount = pComp->Attribute("numberOfBonds");
+						}
+						
+						//If it is a state, treat it as such
+						string compStateValue;
+						if(pComp->Attribute("state"))
+						{
+							//First grab the states value as a string
+							compStateValue = pComp->Attribute("state");
+							if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
+								cerr<<"You are trying to create a molecule of type '"<<molName<<"', but you gave an "<<endl;
+								cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
+								return false;
+							} else {
+								
+								//State is a valid allowed state, so push it onto our list
+								int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
+								stateName.push_back(compName);
+								stateValue.push_back(stateValueInt);
+							}
+						}
+						else
+						{
+							//Add the b site mapping that will let us later easily connect binding sites
+							//with the molecules involved
+							bSiteSiteMapping[compId] = compName;
+							bSiteMolMapping[compId] = molecules.size();
+						}
+					}
+
+					//loop to create the actual molecules of this type
+					vector <Molecule *> currentM;
+					molecules.push_back(currentM);
+					for(int m=0; m<specCountInteger; m++)
+					{
+						Molecule *m = new Molecule(mt);
+
+						//Loop through the states and set the ones we need to set
+						int k=0;
+						for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
+							m->setState((*snIter).c_str(), (int)stateValue.at(k));
+						molecules.at(molecules.size()-1).push_back(m);
+					}
+					
+					//Reset the states for the next wave...
+					stateName.clear();
+					stateValue.clear();
+					
+				}
+				else
+				{
+					cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
+				}
+			}
+
+			
+			///////////////////////////////////////////////////////////////
+			//Here is where we add the bonds to the molecules in this species
+			TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
+			if(pListOfBonds)
+			{
+				//First get the information on the bonds in the complex
+				TiXmlElement *pBond;
+				for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond")) 
+				{
+					string bondId, bSite1, bSite2;
+					if(!pBond->Attribute("id") || !pBond->Attribute("site1") || !pBond->Attribute("site2")) {
+						cerr<<"!! Invalid Bond tag for species: "<<speciesName<<".  Quitting."<<endl;
+						return false;	
+					} else {
+						bondId = pBond->Attribute("id");
+						bSite1 = pBond->Attribute("site1");
+						bSite2 = pBond->Attribute("site2");
+					}
+					//cout<<"reading bond "<<bondId<<" which connects "<<bSite1<<" to " <<bSite2<<endl;
+
+
+					//Get the information on this bond that tells us which molecules to connect
+					try {
+						string bSiteName1 = bSiteSiteMapping.find(bSite1)->second;
+						int bSiteMolIndex1 = bSiteMolMapping.find(bSite1)->second;
+						string bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
+						int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
+
+						for(int j=0;j<specCountInteger;j++) {
+							Molecule::bind( molecules.at(bSiteMolIndex1).at(j),bSiteName1.c_str(),
+									        molecules.at(bSiteMolIndex2).at(j),bSiteName2.c_str());
+						}
+					} catch (exception& e) {
+						cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
+						return false;
+					}
+				}
+			}
+
+			//Tidy up and clear the lists for the next species
+			vector< vector <Molecule *> >::iterator mIter;
+			for(mIter = molecules.begin(); mIter != molecules.end(); mIter++ ) {
+				(*mIter).clear();
+			}
+			
+			molecules.clear();
+			bSiteMolMapping.clear();
+			bSiteSiteMapping.clear();
+		}
+		
+		
+		//s->printAllMoleculeTypes();
+		
+		
+		//If we got here, then we are indeed successful
+		return true;
+	} catch (...) {
+		return false;
+	}
+}
+
+
+bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose)
+{
+	try {
+		
+	//First, loop through all the rules
 	TiXmlElement *pRxnRule;
 	for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule")) 
 	{
-		const char *rxnName = pRxnRule->Attribute("id");
-		if(!rxnName)
-		{
-			cout<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
+		//Grab the name of the rule
+		string rxnName;
+		if(!pRxnRule->Attribute("id")) {
+			cerr<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
 			return false;
+		} else {
+			rxnName = pRxnRule->Attribute("id");
 		}
-				
-		cout<<"\t\tCreating Reaction Rule: "<<rxnName<<endl;
+		if(verbose) cout<<"\t\tCreating Reaction Rule: "<<rxnName<<endl;
 		
 		
 		//First, read in the template molecules
 		map <const char*,TemplateMolecule *, strCmp> reactants;
 		vector <TemplateMolecule *> templates;
-		
-		
-		
-		//Look at the products and add some transformations...
 		
 		
 		//////////////////////////////////////////////////////////////////////
@@ -518,9 +672,10 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 		
 		/////////////////////
 		// Create the Reaction
-		ReactionClass *r = new ReactionClass(rxnName,templates,0);
+		ReactionClass *r = new ReactionClass(rxnName.c_str(),templates,0);
 		
 		
+		return false;
 		
 		
 		//////////////////////////////////////////////////////////////////////
@@ -654,9 +809,14 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 	}
 	
 	return true;
+	
+	
+	} catch (...) {
+		return false;
+	}
 }
 
-bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map <const char*,double, strCmp> &parameter)
+bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map <string,double> &parameter)
 {
 	//We will parse this in a similar manner to parsing species, except to say that we don't create
 	//actual molecules, just template molecules.
@@ -712,7 +872,6 @@ bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map
 		
 		
 		
-		
 		MoleculeType *mt = tm->getMoleculeType();
 		Observable *o  = new Observable(observableName,tm);
 		mt->addObservable(o);
@@ -729,7 +888,7 @@ bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map
 
 TemplateMolecule *NFinput::readPattern(
 		TiXmlElement * pListOfMol, 
-		System * s, map <const char*,double, strCmp> &parameter, 
+		System * s, map <string,double> &parameter, 
 		const char *patternName,
 		map <const char*, TemplateMolecule *, strCmp> &templates)
 {
@@ -770,7 +929,8 @@ TemplateMolecule *NFinput::readPattern(
 		//Skip anything that is a null molecule
 		if(strcmp(molName,"Null")==0) continue;
 		
-		MoleculeType *mt = s->getMoleculeTypeByName(molName);
+		string s2(molName);
+		MoleculeType *mt = s->getMoleculeTypeByName(s2);
 		cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
 		
 		//Loop through the components of the molecule in order to set state values
@@ -897,7 +1057,7 @@ TemplateMolecule *NFinput::readPattern(
 
 bool NFinput::addTransformations(TiXmlElement * pListOfProducts, 
 		System * s, 
-		map <const char*,double, strCmp> &parameter, 
+		map <string,double> &parameter, 
 		const char *patternName,
 		map <const char*, TemplateMolecule *, strCmp> &reactants,
 		ReactionClass *r)

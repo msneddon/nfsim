@@ -3,14 +3,19 @@
 //
 // Header file that contains the class declarations and definitions
 // for any math utility functions that are needed for running the
-// NFsim program.  Currently, this just includes code to generate
-// random numbers.
+// NFsim program.
 //
 // Michael Sneddon (michael.sneddon@yale.edu)
 //
 //////////////////////////////////////////////////////////
 #ifndef NFUTIL_H_
 #define NFUTIL_H_
+
+#include <string>
+#include <exception>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 
 namespace NFutil {
@@ -47,5 +52,28 @@ namespace NFutil {
 	 * Algorithms, section 3.4.1, subsection C, algorithm P.
 	 */
 	double RANDOM_GAUSSIAN();
+	
+	
+	/* Class to handle NFsim exceptions.
+	 * Use this class to throw errors that occur in the NFsim code.  You can add
+	 * messages as the exception is passed along thereby creating a stacktrace of
+	 * your error.
+	 */
+	class NFexception : public std::runtime_error{
+		public:
+			void addMessage(std::string s);
+	};
+	
+	
+	
+	
+	double convertToDouble(const std::string& s);
+	int convertToInt(const std::string& s);
+	
+	
 }
+
+
+
+
 #endif /*NFUTIL_H_*/
