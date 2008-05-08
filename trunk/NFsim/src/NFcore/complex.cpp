@@ -24,11 +24,8 @@ int Complex::getMoleculeCountOfType(MoleculeType *m)
 	int count = 0;
 	for( molIter = complexMembers.begin(); molIter != complexMembers.end(); molIter++ )
 	{
-		if(strlen( (*molIter)->getMoleculeTypeName() )==strlen(m->getName()))
-			if(strncmp((*molIter)->getMoleculeTypeName(),m->getName(),strlen(m->getName()))==0)
-			{
-				count++;
-			}
+		if((*molIter)->getMoleculeTypeName()==m->getName())
+			count++;
 		
 	}
   	return count;

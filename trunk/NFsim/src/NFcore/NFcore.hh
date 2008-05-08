@@ -17,6 +17,7 @@
 #include <queue>
 #include <map>
 #include <fstream>
+#include <string>
 
 #include "../NFutil/NFutil.hh"
 #include "../NFoutput/NFoutput.hh"
@@ -92,15 +93,15 @@ class System
 	public:
 	
 	    // Basic constructor and desconstructor methods
-		System(const char * name);  /* creates a system with the given name that does not
+		System(string name);  /* creates a system with the given name that does not
 		                         keep track dynamically of complex formation */
-		System(const char * name, bool useComplex); /* creates a system with the given name
+		System(string name, bool useComplex); /* creates a system with the given name
 		                         that keeps track of complex formation if the useComplex
 		                         parameter is set to true */
 		~System(); /* destroys the system and cleans up all memory associated with it */
 		
 		// Basic functions to get the properties and objects of the system
-		const char * getName() const { return name; };
+		string getName() const { return name; };
 		bool isUsingComplex() { return useComplex; };
 		double getCurrentTime() const { return current_time; };
 		
@@ -112,7 +113,7 @@ class System
 		ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
 		
 		MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
-		MoleculeType * getMoleculeTypeByName(const char * name);
+		MoleculeType * getMoleculeTypeByName(string& name);
 		int getNumOfMoleculeTypes() { return allMoleculeTypes.size(); };
 		
 		
@@ -150,6 +151,7 @@ class System
 		void printAllReactions();
 		void printAllGroups();
 		void printIndexAndNames();
+		void printAllMoleculeTypes();
 		void printAllObservableCounts(double cSampleTime);
 		void purgeAndPrintAvailableComplexList(); /* ONLY USE FOR DEBUG PURPOSES, AS THIS
 													 DELETES ALL COMPLEX BOOKKEEPING */
@@ -190,7 +192,7 @@ class System
 	protected:
 	
 		// The invariant system properties, created when the system is created
-		const char * name;         /* arbitrary name of the system  */
+		string name;         /* arbitrary name of the system  */
 		bool useComplex;     /* parameter that knows if we should be dynamically tracking complexes */
 		
 		
@@ -246,6 +248,17 @@ class System
  ******************************************************/
 class MoleculeType {
 	public:
+		
+		MoleculeType(
+			string name, 
+			string * stateNames, 
+			int *defaultStateValues, 
+			int numOfStates,
+			string * bindingSiteNames,
+			int numOfBindingSites,
+			System * system );
+		
+		
 		MoleculeType(
 			const char * name, 
 			char ** stateNames, 
@@ -257,19 +270,19 @@ class MoleculeType {
 		~MoleculeType();
 		
 		/* get functions */
-		const char *getName() const { return name; };
+		string getName() const { return name; };
 		System * getSystem() const { return system; };
 		
 		int getNumOfStates() const { return numOfStates; };
-		char * getStateName( int stateIndex ) const { return stateNames[stateIndex]; };
-		char ** getAllStateNames() const { return stateNames; };
+		string getStateName( int stateIndex ) const { return stateNames[stateIndex]; };
+		//char ** getAllStateNames() const { return (char *)stateNames.c_str(); };
 		int getStateIndex(const char * stateName ) const;
 		int getDefaultState(int stateIndex) const { return defaultStateValues[stateIndex]; };
 		
 		int getNumOfBindingSites() const { return numOfBindingSites; };
-		char * getBindingSiteName( int bIndex ) const { return bindingSiteNames[bIndex]; };
+		char * getBindingSiteName( int bIndex ) const { return (char *) bindingSiteNames[bIndex].c_str(); };
 		int getBindingSiteIndex(const char * stateName ) const;
-		char ** getAllBindingSiteNames() const { return bindingSiteNames; };
+		//char ** getAllBindingSiteNames() const { return bindingSiteNames; };
 		
 		int getNumOfObservables() const { return observables.size(); };
 		const char * getObservableAlias(int obsIndex) const;
@@ -323,19 +336,33 @@ class MoleculeType {
 		void prepareForSimulation();
 		
 	protected:
-	
-		const char *name;  /* Name of this molecule type */
-		int type_id; /* assigned by the system when this molecule type is created */
-
+		
 		System *system;
 		
+		string name;
+		int type_id;
 		
 		int numOfStates; /* Gives the number of states */
-		char **stateNames; /* Gives the names of the states */
+		string *stateNames; /* Gives the names of the states */
 		int *defaultStateValues;  /* Gives the default values of the states */
-		
+				
 		int numOfBindingSites;  /* number of binding sites */
-		char **bindingSiteNames;  /* the name of those binding sites */
+		string *bindingSiteNames;  /* the name of those binding sites */
+		
+		
+		//const char *name;  /* Name of this molecule type */
+		//int type_id; /* assigned by the system when this molecule type is created */
+		//
+		//System *system;
+		//
+		//
+		//int numOfStates; /* Gives the number of states */
+		//char **stateNames; /* Gives the names of the states */
+		//int *defaultStateValues;  /* Gives the default values of the states */
+		//
+		//int numOfBindingSites;  /* number of binding sites */
+		//char **bindingSiteNames;  /* the name of those binding sites */
+		
 		
 		vector <Molecule *> mInstances;  /* List of all molecules that exist */
 		vector <ReactionClass *> reactions; /* List of reactions that this type can be involved with */
@@ -375,7 +402,7 @@ class Molecule {
 		
 		/* basic get functions for name, type, complex, and IDs*/
 		int getMoleculeID() const { return ID_number; };
-		const char * getMoleculeTypeName() const { return parentMoleculeType->getName(); };
+		string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 		MoleculeType * getMoleculeType() const { return parentMoleculeType; };
 		int getUniqueID() const { return ID_unique; };
 		
@@ -737,7 +764,7 @@ class TemplateMolecule {
 		
 		/* get functions */
 		MoleculeType * getMoleculeType() const { return parentMoleculeType; };
-		const char * getMoleculeTypeName() const { return parentMoleculeType->getName(); };
+		string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 		
 		int getNumCompareStates() const { return stateIndex.size(); };
 		int getStateIndex(int state) const { return stateIndex.at(state); };

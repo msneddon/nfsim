@@ -10,7 +10,7 @@ using namespace NFcore;
 /** Default constructor that creates a System
  * Creates a system that does not keep track of complexes.
  */
-System::System(const char * name)
+System::System(string name)
 {
 	this->name = name;
 	this->a_tot = 0;
@@ -20,7 +20,7 @@ System::System(const char * name)
 	this->go = NULL;
 }
 
-System::System(const char * name, bool useComplex)
+System::System(string name, bool useComplex)
 {
 	this->name = name;
 	this->a_tot = 0;
@@ -127,17 +127,17 @@ void System::updateGroupProperty(char * groupName, double *value, int n_values)
 	
 }
 
-MoleculeType * System::getMoleculeTypeByName(const char * name)
+MoleculeType * System::getMoleculeTypeByName(string& mName)
 {
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
-		(*molTypeIter)->printDetails(); //<<endl;
-		if(strcmp((*molTypeIter)->getName(), name)==0)
+		//(*molTypeIter)->printDetails(); //<<endl;
+		if((*molTypeIter)->getName()==mName)
 		{
 			return (*molTypeIter);
 		}
 	}
-	cerr<<"!!! warning !!! cannot find molecule type name '"<< name << "' in System: '"<<name<<"'"<<endl;
+	cerr<<"!!! warning !!! cannot find molecule type name '"<< mName << "' in System: '"<<this->name<<"'"<<endl;
 	exit(1);
 	return 0;
 }
@@ -479,6 +479,17 @@ void System::printAllGroups()
 	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
 	{
 		(*groupIter)->printDetails();
+	}
+	cout<<endl;
+}
+
+
+void System::printAllMoleculeTypes()
+{
+	cout<<"All System Molecule Types:"<<endl;
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		(*molTypeIter)->printDetails();
 	}
 	cout<<endl;
 }

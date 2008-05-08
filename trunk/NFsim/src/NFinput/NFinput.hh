@@ -23,25 +23,25 @@ namespace NFinput {
 	};
 	
 	
-	System * initializeFromXML(char * filename);
+	System * initializeFromXML(string filename);
 	
-	bool initParameters(TiXmlElement *pListOfParameters, map <const char*,double, strCmp> &parameter);
-	bool initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * system);
-	bool initStartSpecies(TiXmlElement * pListOfSpecies, System * system, map <const char*,double, strCmp> &parameter);
+	bool initParameters(TiXmlElement *pListOfParameters, map <string,double> &parameter, bool verbose);
+	bool initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * system, map<string,int> &allowedStates, bool verbose);
+	bool initStartSpecies(TiXmlElement * pListOfSpecies, System * system, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose);
 	
-	bool initReactionRules(TiXmlElement * pListOfReactionRules, System * system, map <const char*,double, strCmp> &parameter);
-	bool initObservables(TiXmlElement * pListOfObservables, System * system, map <const char*,double, strCmp> &parameter);
+	bool initReactionRules(TiXmlElement * pListOfReactionRules, System * system, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose);
+	bool initObservables(TiXmlElement * pListOfObservables, System * system, map <string,double> &parameter);
 	
 	TemplateMolecule *readPattern(
 			TiXmlElement * pListOfMol, 
-			System * s, map <const char*,double, strCmp> &parameter, 
+			System * s, map <string,double> &parameter, 
 			const char *patternName,
 			map <const char*, TemplateMolecule *, strCmp> &templates);
 	
 	
 	bool addTransformations(TiXmlElement * pListOfProducts, 
 			System * s, 
-			map <const char*,double, strCmp> &parameter, 
+			map <string,double> &parameter, 
 			const char *patternName,
 			map <const char*, TemplateMolecule *, strCmp> &reactants,
 			ReactionClass *r);

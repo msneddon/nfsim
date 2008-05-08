@@ -1,4 +1,4 @@
-/*! \mainpage The Network Free Simulator (beta v6)
+/*! \mainpage NFsim: The Network Free Simulator (beta v7)
  *
  * \section intro_sec Introduction
  *
@@ -18,6 +18,11 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
+
+
+
+void printLogo(int indent, string version);
 
 
 
@@ -127,8 +132,20 @@ int main(int argc, char *argv[])
 					delete s;
 				}
 				else
-					cout<<"You must specify an xml file to read."<<endl;	
+					cout<<"You must specify an xml file to read."<<endl;
+				
+				
 			}
+			
+			
+			else if(strcmp(argv[1],"-logo")==0)	
+			{
+				cout<<endl<<endl;
+				printLogo(15,"0.7");
+				cout<<endl<<endl;
+				cout<<"wow. that was awesome."<<endl;
+			}
+			
 			
 			else
 			{
@@ -156,3 +173,43 @@ int main(int argc, char *argv[])
     cout<<endl<<"done.  Total run time: "<< time << "s"<<endl<<endl;
     return 0;
 }
+
+
+
+
+
+
+void printLogo(int indent, string version)
+{
+	string s;
+	for(int i=0; i<indent; i++) s.append(" ");
+	
+	int space = 9-version.length();
+	if(space<0) { 
+		cout<<"\n\nCome on!!! you don't even know how to print out the NFsim logo!"<<endl;
+		cout<<"What kind of code developer are you!!\n\n"<<endl;
+	}
+	string s2;
+	for(int i=0; i<space; i++) s2.append(" ");
+	cout<<s<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"<<endl;
+	cout<<s<<"%                                   %"<<endl;
+	cout<<s<<"%     @@    @  @@@@@      v"<<version<<s2<<"%"<<endl;
+	cout<<s<<"%     @ @   @  @                    %"<<endl;
+	cout<<s<<"%     @  @  @  @@@@  ___            %"<<endl;
+	cout<<s<<"%     @   @ @  @    /__  | |\\ /|    %"<<endl;
+	cout<<s<<"%     @    @@  @    ___\\ | | v |    %"<<endl;
+	cout<<s<<"%                                   %"<<endl;
+	cout<<s<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"<<endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
