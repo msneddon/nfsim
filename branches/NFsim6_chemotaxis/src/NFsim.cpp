@@ -32,7 +32,7 @@ using namespace NG_swim;
 
 
 
-#include <math>
+#include <math.h>
 
 
 
