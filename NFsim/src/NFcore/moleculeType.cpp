@@ -144,7 +144,7 @@ void MoleculeType::addTemplateMolecule(TemplateMolecule *t)
 }
 
 
-const char * MoleculeType::getObservableAlias(int obsIndex) const 
+string MoleculeType::getObservableAlias(int obsIndex) const 
 { 
 	return observables.at(obsIndex)->getAliasName();
 }

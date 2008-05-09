@@ -129,6 +129,12 @@ int main(int argc, char *argv[])
 				if(argc>2)
 				{
 					System *s = NFinput::initializeFromXML(argv[2]);
+					
+					//Here we just run some stuff for testing... The output is just
+					s->registerOutputFileLocation((s->getName()+".gdat").c_str());
+					s->outputAllObservableNames();
+					s->sim(200,100);  // sim for 20 seconds, outputting 100 times
+					s->printAllReactions();
 					delete s;
 				}
 				else

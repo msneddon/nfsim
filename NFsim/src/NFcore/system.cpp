@@ -79,7 +79,7 @@ System::~System()
 }
 
 
-void System::registerOutputFileLocation(char * filename)
+void System::registerOutputFileLocation(const char * filename)
 {
 	outputFileStream.open(filename);
 	outputFileStream.setf(ios::scientific);
