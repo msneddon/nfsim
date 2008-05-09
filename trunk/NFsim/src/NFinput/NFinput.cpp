@@ -29,7 +29,7 @@ component::~component()
 
 System * NFinput::initializeFromXML(string filename)
 {
-	bool verbose = false;
+	bool verbose = true;
 	
 	if(!verbose) cout<<"reading xml file ("+filename+")  [";
 	if(verbose) cout<<"\tTrying to read xml model specification file: "<<filename<<endl;
@@ -132,40 +132,20 @@ System * NFinput::initializeFromXML(string filename)
 		/////////////////////////////////////////
 		// Parse is finally over!  Now we just have to take care of some final details.
 	
+		//Finish up the output message
+		if(!verbose) cout<<"-]\n";
 		
-		if(!verbose) cout<<"-";
+		//Prepare the simulation
+		s->prepareForSimulation();
 		
+		
+		//Output the long form
 		if(verbose) {
 			cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
 			s->printAllMoleculeTypes();
 			s->printAllReactions();
 			cout<<"-------------------------\n";
 		}
-				
-		if(!verbose) cout<<"-]\n";
-		
-//		for(int m=0; m<s->getNumOfMoleculeTypes(); m++)
-//			s->getMoleculeType(m)->printDetails();
-//		
-//		s->prepareForSimulation();
-//		
-//		s->registerOutputFileLocation("/home/msneddon/Desktop/new_xml/exampleOut.txt");
-//		s->outputAllObservableNames();
-//		s->outputAllObservableCounts();
-//		
-//		
-//		
-//		s->printAllReactions();	
-//		s->sim(20,200);
-//		s->printAllReactions();
-		
-		
-		
-		
-		
-
-		s->prepareForSimulation();
-		
 		
 		return s;
 	}
@@ -720,7 +700,16 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 					finalState = pStateChange->Attribute("finalState");
 				}
 			
-				if(verbose) cout<<"\t\t\t***Identified state change to site: "+site+" going to new state value: " + finalState<<endl;	
+				if(verbose) cout<<"\t\t\t***Identified state change to site: "+site+" going to new state value: " + finalState<<endl;
+				try {
+					component c = comps.find(site)->second;
+					int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
+					Transformation::genStateChangeTransform(c.t,c.name.c_str(),finalStateInt,r);
+				} catch (exception& e) {
+					cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
+					return false;
+				}
 			}
 		
 		
@@ -728,7 +717,7 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 			TiXmlElement *pAddBond;
 			for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond")) 
 			{
-				//Make sure all the information about the state change is here
+				//Make sure all the information about the binding operation is here
 				string site1, site2;
 				if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
 					cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
@@ -739,7 +728,50 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 					site2 = pAddBond->Attribute("site2");
 				}
 				
-				if(verbose) cout<<"\t\t\t***Identified binding of site: "+site1+" to binding of site " + site2<<endl;	
+				if(verbose) cout<<"\t\t\t***Identified binding of site: "+site1+" to binding of site " + site2<<endl;
+				
+				try {
+					component c1 = comps.find(site1)->second;
+					component c2 = comps.find(site2)->second;
+					Transformation::genBindingTransform(	c1.t,				c2.t,  
+															c1.name.c_str(), 	c2.name.c_str(),		r);
+				} catch (exception& e) {
+					cerr<<"Error in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
+					return false;
+				}
+			}
+			
+			
+			
+			//Next extract out removal of bonds
+			TiXmlElement *pDeleteBond;
+			for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond")) 
+			{
+				//Make sure all the information about the unbinding operation change is here
+				string site1,site2;
+				if(!pDeleteBond->Attribute("site1") || !pDeleteBond->Attribute("site2")) {
+					cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+					cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+					return false;
+				} else {
+					site1 = pDeleteBond->Attribute("site1");
+					site2 = pDeleteBond->Attribute("site2");
+				}
+				
+				if(verbose) cout<<"\t\t\t***Identified unbinding of site: "+site1+" to site " + site2<<endl;
+				
+				try {
+					component c1 = comps.find(site1)->second;
+					component c2 = comps.find(site2)->second;
+					
+					//Even though we had to make sure both ends exist, we really only need one transformation
+					Transformation::genUnbindingTransform(c1.t, c1.name.c_str(),r);
+				} catch (exception& e) {
+					cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
+					return false;
+				}
 			}
 			
 			
@@ -757,7 +789,7 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 					id = pDelete->Attribute("id");
 				}
 				
-				if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;	
+				if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;
 			}
 			
 			//Finally, figure out any new creations
@@ -859,6 +891,7 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 			
 			//Finally, add the completed rxn rule to the system
 			s->addReaction(r);
+			comps.clear();
 		}
 	
 		//If we got here, then by golly, I think we have a new reaction rule

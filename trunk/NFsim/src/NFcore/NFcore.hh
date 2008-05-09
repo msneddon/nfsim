@@ -137,7 +137,7 @@ class System
 		
 		
 		/* tell the system where to ouptut results*/
-		void registerOutputFileLocation(char * filename);
+		void registerOutputFileLocation(const char * filename);
 		
 		void addGroupOutputter(GroupOutputter * go);
 		
@@ -285,7 +285,7 @@ class MoleculeType {
 		//char ** getAllBindingSiteNames() const { return bindingSiteNames; };
 		
 		int getNumOfObservables() const { return observables.size(); };
-		const char * getObservableAlias(int obsIndex) const;
+		string getObservableAlias(int obsIndex) const;
 		unsigned long int getObservableCount(int obsIndex) const;
 		
 		int getReactionCount() const { return reactions.size(); };
@@ -856,7 +856,7 @@ class TemplateMolecule {
 class Observable
 {
 	public:
-		Observable(const char* aliasName, TemplateMolecule * templateMolecule);
+		Observable(string aliasName, TemplateMolecule * templateMolecule);
 		~Observable();
 		
 		/* methods used to keep the observable count up to date */
@@ -866,11 +866,11 @@ class Observable
 		
 		/* methods used to get observable information */
 		unsigned long int getCount() const {return count;};
-		const char * getAliasName() const { return aliasName; };
+		string getAliasName() const { return aliasName; };
 		
 		
 	protected:
-		const char * aliasName;   /* The name that will be output for this observable */
+		string aliasName;   /* The name that will be output for this observable */
 		TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */
 		unsigned long int count; /* the number of molecules that match this observable */
 		

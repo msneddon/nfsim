@@ -6,7 +6,7 @@ using namespace std;
 using namespace NFcore;
 
 
-Observable::Observable(const char* aliasName, TemplateMolecule * templateMolecule)
+Observable::Observable(string aliasName, TemplateMolecule * templateMolecule)
 {
 	this->aliasName = aliasName;
 	this->templateMolecule = templateMolecule;
