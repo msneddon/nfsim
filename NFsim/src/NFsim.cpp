@@ -145,6 +145,11 @@ int main(int argc, char *argv[])
 				cout<<endl<<endl;
 				cout<<"wow. that was awesome."<<endl;
 			}
+			else if(strcmp(argv[1],"-help")==0)	
+			{
+				cout<<"Welcome to NFsim: The Network Free Simulator"<<endl;
+				cout<<"help message to be inserted here."<<endl;
+			}
 			
 			
 			else

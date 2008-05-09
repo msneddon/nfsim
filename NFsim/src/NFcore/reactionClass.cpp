@@ -237,7 +237,7 @@ void ReactionClass::printFullDetails()
 
 
 
-ReactionClass::ReactionClass(const char *name, vector <TemplateMolecule *> templateMolecules, double rate)
+ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMolecules, double rate)
 {
 	//Setup the basic properties of this reactionClass
 	this->name = name;
@@ -279,7 +279,6 @@ ReactionClass::ReactionClass(const char *name, vector <TemplateMolecule *> templ
 	
 	
 	this->reactionType = NORMAL_RXN;  //set as normal reaction here, but deriving reaction classes can change this
-	
 }
 
 

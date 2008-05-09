@@ -592,7 +592,7 @@ class ReactionClass
 		
 		/* get functions */
 		unsigned int getNreactants() const { return n_reactants; };
-		const char * getName() const { return name; };
+		string getName() const { return name; };
 		double getRate() const { return rate; };
 		void setRate(double newRate) { this->rate=newRate; update_a(); };
 		
@@ -626,7 +626,7 @@ class ReactionClass
 		
 		////////////////////////////////
 		
-		ReactionClass(const char *name, vector <TemplateMolecule *> templateMolecules, double rate);
+		ReactionClass(string name, vector <TemplateMolecule *> templateMolecules, double rate);
 		virtual ~ReactionClass();
 		
 		
@@ -670,7 +670,7 @@ class ReactionClass
 	protected:
 		
 		///////////////////////////////////////
-			const char * name;
+			string name;
 			unsigned int n_reactants;
 			
 			double rate;
@@ -780,7 +780,7 @@ class TemplateMolecule {
 		void setHasVisited(int bSite);
 		int addEmptyBindingSite(int bSiteIndex);
 		int addEmptyBindingSite(const char * bSiteName);
-		void addOccupiedBindingSite(char * bSiteName);
+		void addOccupiedBindingSite(const char * bSiteName);
 		static void bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2);
 		static void bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2);
 		

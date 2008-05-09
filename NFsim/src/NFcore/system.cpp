@@ -215,7 +215,7 @@ void System::prepareForSimulation()
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
   		(*molTypeIter)->prepareForSimulation();
   	
-  	if(BASIC_MESSAGE) printIndexAndNames();
+  	if(BASIC_MESSAGE) cout<<"preparing the system...\n"; //printIndexAndNames();
   	
   	
   	if(go!=NULL)
