@@ -94,7 +94,7 @@ int TemplateMolecule::addEmptyBindingSite(int bSiteIndex)
 }
 
 
-void TemplateMolecule::addOccupiedBindingSite(char * bSiteName)
+void TemplateMolecule::addOccupiedBindingSite(const char * bSiteName)
 {
 	this->sitesThatMustBeOccupied.push_back(parentMoleculeType->getBindingSiteIndex(bSiteName));
 }
