@@ -13,7 +13,7 @@ ReactionClass::~ReactionClass()
 {
 	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
 	
-	for(int r=0; r<n_reactants; r++)
+	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		//delete reactantTemplates[r]; DO NOT DELETE HERE (MoleculeType has responsibility of
 		//deleting all template molecules of its type now.
@@ -57,7 +57,7 @@ void ReactionClass::prepareForSimulation() {}
 		
 void ReactionClass::printDetails() const {
 	cout<<"** Reaction: " << name <<"  ( rate="<<rate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
-	for(int r=0; r<n_reactants; r++)
+	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
 		cout<<"	(count="<< getReactantCount(r) <<")."<<endl;

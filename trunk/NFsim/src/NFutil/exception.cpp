@@ -4,6 +4,6 @@
 
 using namespace NFutil;
 
-void NFexception::addMessage(std::string s)
+/*void NFexception::addMessage(std::string s)
 {
-}
+}*/

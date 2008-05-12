@@ -889,7 +889,7 @@ private:
 };
 
 
-/*	A class used to manage a group of attributes.
+/**	A class used to manage a group of attributes.
 	It is only used internally, both by the ELEMENT and the DECLARATION.
 	
 	The set can be changed transparent to the Element and Declaration
@@ -1748,7 +1748,7 @@ public:
 	virtual bool Visit( const TiXmlUnknown& unknown );
 
 	/** Set the indent characters for printing. By default 4 spaces
-		but tab (\t) is also useful, or null/empty string for no indentation.
+		but tab (\\t) is also useful, or null/empty string for no indentation.
 	*/
 	void SetIndent( const char* _indent )			{ indent = _indent ? _indent : "" ; }
 	/// Query the indention string.

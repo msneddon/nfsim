@@ -16,6 +16,7 @@
 //     Vol. 8, No. 1, January 1998, pp. 3-30
 #include "MTrand/mtrand.h"
 
+/* files needed to seed and compute random numbers */
 #include <time.h>
 #include <cstdlib>
 #include <math.h>
@@ -35,6 +36,8 @@ static MTRand_int32 iRand;
 static MTRand dRand;
 static MTRand_closed dRandClosed;
 static MTRand_open dRandOpen;
+
+
 
 /* Return a random double on the range (0,max] */
 double NFutil::RANDOM( double max )
@@ -65,12 +68,7 @@ double NFutil::RANDOM_CLOSED()
 }
 
 
-/* Returns a random normally distributed number 
- * Based on the java implementation of Random.nextGaussian, this method uses the
- * polar method of G. E. P. Box, M. E. Muller, and G. Marsaglia, as described by 
- * Donald E. Knuth in The Art of Computer Programming, Volume 2: Seminumerical 
- * Algorithms, section 3.4.1, subsection C, algorithm P.
- */
+/* Returns a random normally distributed number */
 double NFutil::RANDOM_GAUSSIAN()
 {
 	if (initflag) {
