@@ -27,10 +27,10 @@ component::~component()
 
 
 
-System * NFinput::initializeFromXML(string filename)
+System * NFinput::initializeFromXML(
+		string filename,
+		bool verbose)
 {
-	bool verbose = true;
-	
 	if(!verbose) cout<<"reading xml file ("+filename+")  [";
 	if(verbose) cout<<"\tTrying to read xml model specification file: "<<filename<<endl;
 	
@@ -151,7 +151,7 @@ System * NFinput::initializeFromXML(string filename)
 	}
 	else
 	{
-		cout<<"could not open.."<<endl;
+		cout<<"\nError reading the file.  I could not find / open it."<<endl;
 	}
 	
 	
@@ -225,7 +225,11 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <string,double
  * 
  * 
  */
-bool NFinput::initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * s,  map<string,int> &allowedStates, bool verbose) 
+bool NFinput::initMoleculeTypes(
+		TiXmlElement * pListOfMoleculeTypes, 
+		System * s,  
+		map<string,int> &allowedStates, 
+		bool verbose) 
 {
 	try {
 		vector <string> stateLabels;
@@ -360,7 +364,12 @@ bool NFinput::initMoleculeTypes(TiXmlElement * pListOfMoleculeTypes, System * s,
 
 
 
-bool NFinput::initStartSpecies(TiXmlElement * pListOfSpecies, System * s, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose) 
+bool NFinput::initStartSpecies(
+		TiXmlElement * pListOfSpecies, 
+		System * s, 
+		map <string,double> &parameter, 
+		map<string,int> &allowedStates, 
+		bool verbose) 
 {
 	//map<string,int>::iterator iter;   
 	//  for( iter = allowedStates.begin(); iter != allowedStates.end(); iter++ ) {
@@ -607,7 +616,12 @@ bool NFinput::initStartSpecies(TiXmlElement * pListOfSpecies, System * s, map <s
 
 
 
-bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose)
+bool NFinput::initReactionRules(
+		TiXmlElement * pListOfReactionRules, 
+		System * s, 
+		map <string,double> &parameter, 
+		map<string,int> &allowedStates, 
+		bool verbose)
 {
 	try {
 		
@@ -907,7 +921,12 @@ bool NFinput::initReactionRules(TiXmlElement * pListOfReactionRules, System * s,
 
 
 
-bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map <string,double> &parameter, map<string,int> &allowedStates, bool verbose)
+bool NFinput::initObservables(
+		TiXmlElement * pListOfObservables, 
+		System * s, 
+		map <string,double> &parameter, 
+		map<string,int> &allowedStates, 
+		bool verbose)
 {
 	try {
 		//We will parse this in a similar manner to parsing species, except to say that we don't create
@@ -915,13 +934,15 @@ bool NFinput::initObservables(TiXmlElement * pListOfObservables, System * s, map
 		TiXmlElement *pObs;
 		for ( pObs = pListOfObservables->FirstChildElement("Observable"); pObs != 0; pObs = pObs->NextSiblingElement("Observable")) 
 		{
-			//First get the observable name 
-			string observableName = pObs->Attribute("id");
-			if(!pObs->Attribute("id")) {
+			//First get the observable name 			
+			string observableId, observableName, observableType;
+			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
 				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
 				return false;
 			} else {
-				observableName = pObs->Attribute("id");
+				observableId = pObs->Attribute("id");
+				observableName = pObs->Attribute("name");
+				observableType = pObs->Attribute("type");
 			}
 			
 			if(verbose) cout<<"\t\tCreating Observable: "<<observableName<<endl;
@@ -1213,332 +1234,52 @@ TemplateMolecule *NFinput::readPattern(
 
 
 
-
-bool NFinput::addTransformations(TiXmlElement * pListOfProducts, 
-		System * s, 
-		map <string,double> &parameter, 
-		const char *patternName,
-		map <const char*, TemplateMolecule *> &reactants,
-		ReactionClass *r)
+bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &argMap)
 {
-	
-	cout<<"Adding Transformations... Don't call this function!!!  Not needed anymore!"<<endl;
-	return false;
-	
-	
-	//Maps that map binding site ids into a molecule location in the molecules vector
-	//and the name of the binding site
-	map <const char*, const char *> bSiteSiteMapping;
-	map <const char*, const char *> bSiteMolMapping;
-	
-	//Map that keeps track of unbinding reactions that were already added, so we don't
-	//create two unbinding transformations when only one is desired
-	//vector <TemplateMolecule *> alreadyUnboundTemplate;
-	
-	
-	
-	//Loop through the Molecules that make up this product
-	TiXmlElement *pMol;
-	for ( pMol = pListOfProducts->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule")) 
+	for(int a=1; a<argc; a++)
 	{
-		const char *molName = pMol->Attribute("name");
-		const char *molUid = pMol->Attribute("id");
-		if(!molName || ! molUid)
+		string s(argv[a]);
+		
+		//Find the strings that start with a minus, these are the flags
+		if(s.compare(0,1,"-")==0)
 		{
-			cout<<"!!!Error.  Invalid 'Molecule' tag found when analyzing product pattern '"<<patternName<<"'. Quitting."<<endl;
-			return false;
-		}
-		
-		
-		cout<<"Reading molecule in product : " <<molName <<" has id: "<<molUid<<endl;
-		
-		
-		TemplateMolecule *tm = reactants.find(molUid)->second;
-		////////////// ADD ERROR CHECK HERE ///////////
-		
-		
-		//Now loop through the particular components of this pattern to see what we have to change
-		TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
-		if(pListOfComp)
-		{
-			TiXmlElement *pComp;
-			for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
-			{
-				const char *compId = pComp->Attribute("id");
-				const char *compName = pComp->Attribute("name");
-				const char *compBondCount = pComp->Attribute("numberOfBonds");
-				const char *compStateValue = pComp->Attribute("state");
-				if(!compId || !compName || !compBondCount)
-				{
-					cout<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
-					return false;
-				}
-				
-				//We have a state value we must check
-				if(compStateValue)
-				{
-					char *p;
-					double state_value = strtod(compStateValue,&p);
-					if(*p != '\n' && *p != '\0')
-					{
-						try {
-							state_value = parameter.find(compStateValue)->second;
-						} catch(exception& e) {
-							cout<<"!!!!Invalid state value for: '"<<molUid<<"' when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-							return false;
-						}
-					}
-					
-					//Make sure it is a transformation we have to make
-					if(!tm->isStateValue(compName, (int)state_value))
-					{
-						cout<<"State Value is different, adding..."<<endl;
-						Transformation::genStateChangeTransform(tm,compName,(int)state_value,r);
-					} else { cout<<"State value is equivalent, so no transformation needed"<<endl; }
-				}
-				
-				//Otherwise it is a binding site
-				else
-				{
-					const char* numOfBonds = pComp->Attribute("numberOfBonds");
-					if(numOfBonds!=NULL)
-					{
-						char *p; double b = strtod(numOfBonds,&p);
-						if(*p != '\n' && *p != '\0')
-						{
-							try {
-								b = parameter.find(numOfBonds)->second;
-							} catch(exception& e) {
-								cout<<"!!!!Invalid numberOfBonds value for: '"<<molUid<<"' when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-								return false;
-							}
-						}
-						
-						
-						//////////////////////////////////
-						///  NEEDS WORK HERE....
-						//Check here for a possible unbinding event
-						if((int)b==0)
-						{
-							if(tm->isBonded(compName))
-							{
-								//ch
-								//int bSiteIndex = tm->getMoleculeType()->getBindingSiteIndex(compName);
-								//int templateBSiteIndex = tm->getTemplateBsiteIndexFromMoleculeBsiteIndex(bSiteIndex);
-								//TemplateMolecule * tm2 = tm->getBondedTemplateMolecule(templateBSiteIndex);
-								
-								//alreadyUnboundMapping.push_back()
-								//Transformation::genUnbindingTransform(tm,compName, r);
-								//cout<<"site "<<compName<<" appears to be bonded, 
-							}
-							else
-							{
-								cout<<"site "<<compName<<" appears to be bonded, so we don't have to do much here"<<endl;
-							}
-							
-						}
-						
-						//Check here for a possible binding event
-						else if((int)b==1)
-						{
-							if(!tm->isBonded(compName))
-							{
-								cout<<"site "<<compName<<" appears to be open, so mark it for probable addition of a bond."<<endl; 
-								bSiteSiteMapping[compId] = compName;
-								bSiteMolMapping[compId] = molUid;
-							}
-							else
-							{
-								cout<<"site "<<compName<<"is already bonded, so we don't have to do much here"<<endl;
-							}
-							
-						}
-						
-					}
-				}
-				
-				
-				
+			string sFlag = s.substr(1,s.size()-1);
+			if(sFlag.empty()) {
+				cout<<"Warning: possible error in arguments.  You gave a '-' with a space"<<endl;
+				cout<<"directly following. This is not a valid argument."<<endl<<endl;
+				continue;
 			}
-		}
-		
-		
-//		map<const char*, const char*, strCmp>::iterator it;
-	//	for ( it=bSiteSiteMapping.begin() ; it != bSiteSiteMapping.end(); it++ )
-//			cout << (*it).first << " => " << (*it).second << endl;
-	}
-	
-	//Here is where we add the bond generation mappings to the template molecules
-	TiXmlElement *pListOfBonds = pListOfProducts->NextSiblingElement("ListOfBonds");
-	if(pListOfBonds)
-	{
-		//First get the information on the bonds in the complex
-		TiXmlElement *pBond;
-		for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond")) 
-		{
-			const char *bondId = pBond->Attribute("id");
-			const char *bSite1 = pBond->Attribute("site1");
-			const char *bSite2 = pBond->Attribute("site2");
-			if(!bondId || !bSite1 || !bSite2)
-			{
-				cout<<"!! Invalid Bond tag for product: "<<patternName<<".  Quitting."<<endl;
-				return false;	
+			
+			
+			//See if the flag has some other input value that follows
+			string sVal;
+			if((a+1)<argc) {
+				sVal=argv[a+1];
 			}
-			cout<<"reading bond "<<bondId<<" which connects "<<bSite1<<" to " <<bSite2<<endl;
-							
-							
-			//Get the information on this bond that tells us which molecules to connect
-			try {
-				const char *bSiteName1 = bSiteSiteMapping.find(bSite1)->second;
-				const char * bSiteMolId1 = bSiteMolMapping.find(bSite1)->second;
-				TemplateMolecule *t1 = reactants.find(bSiteMolId1)->second;
-				
-				const char *bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
-				const char * bSiteMolId2 = bSiteMolMapping.find(bSite2)->second;
-				TemplateMolecule *t2 = reactants.find(bSiteMolId2)->second;
-					
-				Transformation::genBindingTransform(t1,t2, bSiteName1, bSiteName2, r);
-			} catch (exception& e) {
-				cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating product '"<<patternName<<"'. Quitting"<<endl;
+			if(sVal.compare(0,1,"-")==0) {
+				sVal = "";
+			}
+			
+			//cout<<"found:  '"<<sFlag<<"' with arg: '"<<sVal<<"' "<<endl;
+			if(argMap.find(sFlag)!=argMap.end()) {
+				cout<<"Found two values for the same flag: '"<<sFlag<<"' so I am stopping"<<endl;
 				return false;
 			}
+			
+			argMap[sFlag] = sVal;
 		}
 	}
-		
-//			//First get the type of molecule and retrieve the moleculeType object from the system
-//			const char *molName = pMol->Attribute("name");
-//			const char *molUid = pMol->Attribute("id");
-//			if(!molName || ! molUid)
-//			{
-//				cout<<"!!!Error.  Invalid 'Molecule' tag found when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-//				return NULL;
-//			}
-//			
-//			//Skip anything that is a null molecule
-//			if(strcmp(molName,"Null")==0) continue;
-//			
-//			MoleculeType *mt = s->getMoleculeTypeByName(molName);
-//			cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
-//			
-//			//Loop through the components of the molecule in order to set state values
-//			TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
-//			if(pListOfComp)
-//			{
-//				TiXmlElement *pComp;
-//				for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
-//				{
-//					const char *compId = pComp->Attribute("id");
-//					const char *compName = pComp->Attribute("name");
-//					const char *compBondCount = pComp->Attribute("numberOfBonds");
-//					const char *compStateValue = pComp->Attribute("state");
-//					if(!compId || !compName || !compBondCount)
-//					{
-//						cout<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
-//						return 0;
-//					}
-//					if(compStateValue)
-//					{
-//						double s = strtod(compStateValue,&p);
-//						if(*p != '\n' && *p != '\0')
-//						{
-//							try {
-//								s = parameter.at(compStateValue);
-//							} catch(exception& e) {
-//								cout<<"!!!!Invalid state value for: '"<<molUid<<"' when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-//								return NULL;
-//							}
-//						}
-//						stateName.push_back(compName);
-//						stateValue.push_back(s);
-//					}
-//					else
-//					{
-//						const char* numOfBonds = pComp->Attribute("numberOfBonds");
-//						if(numOfBonds!=NULL)
-//						{
-//							double b = strtod(numOfBonds,&p);
-//							if(*p != '\n' && *p != '\0')
-//							{
-//								try {
-//									b = parameter.at(numOfBonds);
-//								} catch(exception& e) {
-//									cout<<"!!!!Invalid numberOfBonds value for: '"<<molUid<<"' when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-//									return NULL;
-//								}
-//							}
-//							if(b==0) emptyBondSite.push_back(compName);
-//							else
-//							{
-//								//Add the b site mapping that will let us later easily connect binding sites
-//								//with the molecules involved
-//								bSiteSiteMapping[compId] = compName;
-//								bSiteMolMapping[compId] = tMolecules.size();
-//							}
-//						}
-//					}
-//				}
-//			}
-//			
-//			//create the actual templateMolecule
-//			TemplateMolecule *m = new TemplateMolecule(mt);
-//					
-//			//Loop through the states and set the constraints we need to set
-//			int k=0;
-//			for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
-//				m->addStateValue((const char *)(*snIter),(int)stateValue.at(k));
-//			for(snIter = emptyBondSite.begin(); snIter != emptyBondSite.end(); snIter++ )
-//				m->addEmptyBindingSite((const char *)(*snIter));
-//				
-//			templates.insert(pair <const char *, TemplateMolecule *> (molUid,m));
-//			tMolecules.push_back(m);	
-//			stateName.clear();
-//			stateValue.clear();
-//			emptyBondSite.clear();
-//		}
-//		
-//		
-//		//Here is where we add the bonds to the template molecules in the pattern
-//		TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
-//		if(pListOfBonds)
-//		{
-//			//First get the information on the bonds in the complex
-//			TiXmlElement *pBond;
-//			for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond")) 
-//			{
-//				const char *bondId = pBond->Attribute("id");
-//					const char *bSite1 = pBond->Attribute("site1");
-//					const char *bSite2 = pBond->Attribute("site2");
-//					if(!bondId || !bSite1 || !bSite2)
-//					{
-//						cout<<"!! Invalid Bond tag for pattern: "<<patternName<<".  Quitting."<<endl;
-//						return false;	
-//					}
-//					cout<<"reading bond "<<bondId<<" which connects "<<bSite1<<" to " <<bSite2<<endl;
-//					
-//					
-//					//Get the information on this bond that tells us which molecules to connect
-//					try {
-//						const char *bSiteName1 = bSiteSiteMapping.at(bSite1);
-//						int bSiteMolIndex1 = bSiteMolMapping.at(bSite1);
-//						const char *bSiteName2 = bSiteSiteMapping.at(bSite2);
-//						int bSiteMolIndex2 = bSiteMolMapping.at(bSite2);
-//						TemplateMolecule::bind(tMolecules.at(bSiteMolIndex1),bSiteName1,tMolecules.at(bSiteMolIndex2),bSiteName2);
-//					} catch (exception& e) {
-//						cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-//						return false;
-//					}
-//				}
-//			}
-	
-	
-	
-	
-	
-	
-	
 	return true;
-	
 }
+
+
+
+
+
+
+
+
+
 
 
 
