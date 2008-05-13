@@ -6,6 +6,7 @@
 #include "NFcore/NFcore.hh"
 #include "NFutil/NFutil.hh"
 #include "NFinput/NFinput.hh"
+#include "NFreactions/NFreactions.hh"
 
 //Include the specific tests
 //#include "NFtest/TLBR/TLBR.hh"
@@ -20,8 +21,6 @@
 
 
 
-#include  "NFreactions/mapping/mapping.hh"
-#include  "NFreactions/transformation/transformation.hh"
 //#include "NFmodel/ChemotaxisModel/NG_swim/ChemotacticCell/chemotacticCell.hh"
 
 

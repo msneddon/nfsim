@@ -22,7 +22,7 @@ ReactionClass::~ReactionClass()
 	delete [] reactantTemplates;
 	
 	
-
+/*
 	Transformation *tr;
 	while(transformations.size()>0)
 	{
@@ -30,7 +30,7 @@ ReactionClass::~ReactionClass()
 		transformations.pop_back();
 		delete tr;
 	}
-	
+	*/
 }
 	
 
@@ -115,7 +115,7 @@ double ReactionClass::update_a()
 
 bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 {
-	//First a bit of error checking...
+/*	//First a bit of error checking...
 	if(position<0 || position>=n_reactants || m==NULL) 
 	{
 		cout<<"Error adding molecule to reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
@@ -150,10 +150,10 @@ bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 //	cout<<"Nope!!"<<endl;
 	//Otherwise, do nothing and let the superiors know we didn't add
 	delete ms;
-	return false;
+	return false;*/
 }
 		
-
+/*
 void ReactionClass::pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets)
 {
 	//Note here that we completely ignore the arguement.  The arguement is only
@@ -175,11 +175,12 @@ void ReactionClass::pickMappingSets(double random_A_number, vector <MappingSet *
 	
 	delete [] moleculeIDs;
 }
-
+*/
 
 
 void ReactionClass::fire2(double random_A_number)
 {
+	/*
 	fireCounter++; //Remember that we fired
 //	cout<<"firing: "<<name<<endl;
 	//First randomly pick the reactants to fire by selecting the MappingSets
@@ -218,7 +219,7 @@ void ReactionClass::fire2(double random_A_number)
 	
 	//Tidy up
 	products.clear();
-	mappingSets.clear();
+	mappingSets.clear();*/
 }
 
 
@@ -239,7 +240,7 @@ void ReactionClass::printFullDetails()
 
 ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMolecules, double rate)
 {
-	//Setup the basic properties of this reactionClass
+/*	//Setup the basic properties of this reactionClass
 	this->name = name;
 	this->rate = rate;
 	this->fireCounter = 0;
@@ -279,6 +280,8 @@ ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMo
 	
 	
 	this->reactionType = NORMAL_RXN;  //set as normal reaction here, but deriving reaction classes can change this
+	
+	*/
 }
 
 
@@ -287,178 +290,6 @@ ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMo
 
 
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-
-ReactantList::ReactantList(unsigned int init_capacity)
-{
-	this->n_reactants = 0;
-	this->capacity = init_capacity;
-	this->reactants = new MappingSet *[init_capacity];
-	this->reactantMoleculeIDs = new unsigned int [init_capacity];
-	for(unsigned int i=0; i<capacity; i++)
-	{
-		reactants[i]=NULL;
-		reactantMoleculeIDs[i]=0;
-	}
-}
-
-ReactantList::~ReactantList()
-{
-	moleculeLookupTable.clear();
-	
-	for(unsigned int i=0; i<capacity; i++)
-		if(reactants[i]!=NULL)
-		{
-			reactants[i]->printDetails();
-			delete reactants[i];
-		}
-	
-	delete [] reactants;
-	delete [] reactantMoleculeIDs;
-}
-
-
-void ReactantList::pickRandom(MappingSet *&ms, unsigned int &moleculeID)
-{
-	unsigned int rand = NFutil::RANDOM_INT(0,n_reactants);
-	ms = reactants[rand];
-	moleculeID = reactantMoleculeIDs[rand];
-}
-
-
-
-unsigned int ReactantList::size()
-{
-	return n_reactants;
-}
-
-
-
-void ReactantList::push(Molecule *reactant, MappingSet *mappingSet)
-{
-	if(n_reactants<capacity)
-	{
-		reactantMoleculeIDs[n_reactants] = reactant->getUniqueID();
-		moleculeLookupTable.insert(pair<unsigned int, unsigned int>(reactantMoleculeIDs[n_reactants],n_reactants));
-		reactants[n_reactants] = mappingSet;
-		
-		n_reactants++;
-	}
-	else
-	{
-		MappingSet ** newMapArray = new MappingSet *[capacity*2];
-		unsigned int * newMolArray = new unsigned int [capacity*2];
-		for(unsigned int i=0; i<capacity; i++)
-		{
-			newMapArray[i] = reactants[i];
-			newMolArray[i] = reactantMoleculeIDs[i];
-		}
-		for(unsigned int i=capacity; i<capacity*2; i++)
-		{
-			newMapArray[i] = NULL;
-			newMolArray[i]=0;
-		}
-		
-		delete [] reactants;
-		delete [] reactantMoleculeIDs;
-		reactants = newMapArray;
-		reactantMoleculeIDs = newMolArray;
-		capacity*=2;
-		
-		reactantMoleculeIDs[n_reactants] = reactant->getUniqueID();
-		moleculeLookupTable.insert(pair<unsigned int, unsigned int>(reactantMoleculeIDs[n_reactants],n_reactants));
-		reactants[n_reactants] = mappingSet;
-		n_reactants++;
-	}
-	
-}
-
-
-void ReactantList::pop(Molecule *m)
-{
-	multimap <unsigned int, unsigned int>::iterator it;
-	for(it = moleculeLookupTable.find(m->getUniqueID());
-		it != moleculeLookupTable.end();
-		it = moleculeLookupTable.find(m->getUniqueID()) )
-	{
-		this->removeReactant(it->second);
-		moleculeLookupTable.erase(it);
-	}
-}
-
-
-void ReactantList::removeReactant(unsigned int index)
-{
-	
-	//If the array has only one element, or we happened to select the last element,
-	//Then just remove the last element
-	if(index == (n_reactants-1) )
-	{
-		delete reactants[index];
-		reactants[index] = NULL;
-		reactantMoleculeIDs[index]=0;
-	}
-	
-	//Otherwise we have to swap with the last element in the list
-	else
-	{
-		MappingSet *ms = reactants[index];
-		reactants[index] = reactants[n_reactants-1];
-		reactantMoleculeIDs[index] = reactantMoleculeIDs[n_reactants-1] ;
-		
-		pair<multimap<unsigned int,unsigned int>::iterator,multimap<unsigned int,unsigned int>::iterator> ret;
-		multimap<unsigned int,unsigned int>::iterator it;
-		
-		ret = moleculeLookupTable.equal_range(reactantMoleculeIDs[n_reactants-1]);
-		for(it = ret.first;it != ret.second;it++)
-			if(it->second == (n_reactants-1))
-			{
-				it->second = index;
-				break;
-			}
-		
-		reactants[n_reactants-1] = NULL;
-		reactantMoleculeIDs[n_reactants-1] = 0;
-		delete ms;
-	}
-	
-	n_reactants--;
-}
-
-
-
-void ReactantList::printDetails()
-{
-	cout<<"ReactantList that contains: "<<size()<<" MappingSets and has a capacity for "<<capacity<<" total sets."<<endl;
-	cout<<"Members: [molecule unique Id, private mappingSet index]"<<endl;
-	
-	
-	for(unsigned int i=0; i<capacity; i++)
-		cout<<i<<" ";
-	cout<<endl;
-	for(unsigned i=0; i<capacity; i++)
-		if(reactants[i]!=NULL)
-			cout<<1<<" ";
-		else
-			cout<<0<<" ";
-	cout<<endl;
-	for(unsigned i=0; i<capacity; i++)
-			cout<<reactantMoleculeIDs[i]<<" ";
-		cout<<endl;
-	
-	multimap <unsigned int, unsigned int>::iterator it;
-	for ( it=moleculeLookupTable.begin(); it != moleculeLookupTable.end(); it++ )
-	   cout << "  [" << (*it).first << ", " << (*it).second << "]" << endl;
-	
-	cout<<endl;
-}
 
 
 

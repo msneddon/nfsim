@@ -48,6 +48,11 @@ int main(int argc, const char *argv[])
 	start = clock();
 	///////////////////////////////////////////////////////////
 	
+	NFcore::test();
+	cout<<"\n\nfinished."<<endl;
+	return 0;
+	
+	
 	
 	bool parsed = false;
 	bool verbose = false;

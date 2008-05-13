@@ -11,7 +11,10 @@
 using namespace std;
 //Forward declarations of classes from NFcore.hh
 
-
+//! Manages some of the outputting functionality.
+/*!
+	@author Michael Sneddon
+ */
 namespace NFcore
 {
 
