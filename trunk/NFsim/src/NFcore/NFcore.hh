@@ -21,13 +21,12 @@
 
 #include "../NFutil/NFutil.hh"
 #include "../NFoutput/NFoutput.hh"
-#include "../NFreactions/mapping/mapping.hh"
+#include "../NFreactions/NFreactions.hh"
 
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 1		// Set to 1 to display basic messages (eg runtime)
 
 using namespace std;
-
 
 
 //!  Contains the primary classes and functions of NFsim
@@ -37,14 +36,18 @@ using namespace std;
   the actual definitions are in the appropriately named cpp files.
   @author Michael Sneddon
 */
-namespace NFcore {
+namespace NFcore 
+{
 	
 	
 	//Forward declarations to deal with cyclic dependencies 
 	class GroupOutputter;
+	class MapGenerator;
 	class MappingSet;
-	class TemplateMapping;
-	class Transformation;
+	class ReactantList;
+	
+//	class TemplateMapping;
+//	class Transformation;
 	
 	/*****************************************
 	 * Class declarations
@@ -258,15 +261,6 @@ namespace NFcore {
 					int numOfBindingSites,
 					System * system );
 		
-		
-			MoleculeType(
-					const char * name, 
-					char ** stateNames, 
-					int *defaultStateValues, 
-					int numOfStates,
-					char ** bindingSiteNames,
-					int numOfBindingSites,
-					System * system );
 			~MoleculeType();
 		
 			/* get functions */
@@ -556,7 +550,7 @@ namespace NFcore {
 			virtual ~ReactionClass();
 		
 		
-			void registerTransformation(Transformation *t) { transformations.push_back(t); };
+	//		void registerTransformation(Transformation *t) { transformations.push_back(t); };
 		
 		
 			double get_a() const { return a; };
@@ -582,7 +576,7 @@ namespace NFcore {
 					divided by Atotal.  This arguement is ignored for your typical reaction, but
 					is required for DORreaction.
 			 */
-			virtual void pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets);
+	//		virtual void pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets);
 		
 		
 			virtual void fire2(double random_A_number);
@@ -605,7 +599,7 @@ namespace NFcore {
 		
 		
 			TemplateMolecule **reactantTemplates;
-			vector <Transformation *> transformations;
+	//		vector <Transformation *> transformations;
 			vector <ReactantList *> reactantLists;
 		
 		
@@ -618,56 +612,6 @@ namespace NFcore {
 	
 	
 	
-	//!  Maintains a list of Mapping & Molecule objects needed by ReactionClass
-	/*!
-	  This is essentially a specialized vector implementation that allows a ReactionClass 
-	  to easily keep track of all the Molecule objects that can be involved in the reaction.  It
-	  also has to maintain Mapping objects into those molecules (so that transformations can
-	  easily be made through the Transformation class).  This class automatically expands 
-	  its capacity when extra mappings are added.  The advantage over the traditional vector 
-	  class is that this class allows for near constant time removal and insertion of elements, 
-	  while vectors require linear time removal.  We can gain this speedup because the indexing 
-	  of the reactant list is unimportant.
-	    @author Michael Sneddon
-	 */
-	class ReactantList
-	{
-		
-		
-		public:
-			//!  Default Constructor
-			/*!
-				  Creates a new empty ReactantList with the given initial capacity.  This capacity
-				  should roughly be set to the number of mappings you expect this list to have.
-			 */
-			ReactantList(unsigned int init_capacity);
-			~ReactantList();
-		
-		
-			unsigned int size();
-		
-		
-			void pickRandom(MappingSet *&ms, unsigned int &moleculeID);
-			void push(Molecule *reactant, MappingSet *mappingSet);
-			void pop(Molecule *);
-		
-			void printDetails();
-		
-		protected:
-		
-		
-			void removeReactant(unsigned int index);
-		
-			unsigned int n_reactants;
-			unsigned int capacity;
-			MappingSet **reactants;
-			unsigned int *reactantMoleculeIDs;
-		
-		
-			//This multimap will map Molecule's Unique Id to the index of the MappingSet in the array
-			//and will allow a molecule to easily check if it is a member or not
-			multimap <unsigned int, unsigned int> moleculeLookupTable;
-	};
 	
 	
 	
@@ -685,20 +629,20 @@ namespace NFcore {
 		MoleculeType * getMoleculeType() const { return parentMoleculeType; };
 		string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 	
-		int getNumCompareStates() const { return stateIndex.size(); };
-		int getStateIndex(int state) const { return stateIndex.at(state); };
-		int getStateValue(int state) const { return stateValue.at(state); };
+		unsigned int getNumCompareStates() const { return stateIndex.size(); };
+		unsigned int getStateIndex(int state) const { return stateIndex.at(state); };
+		unsigned int getStateValue(int state) const { return stateValue.at(state); };
 	
-		int getNumBindingSites() const { return bonds.size(); };
+		unsigned int getNumBindingSites() const { return bonds.size(); };
 		bool isBindingSiteOpen(int bIndex) const;// { return bonds.at(bIndex)->isOpen(); };
 		bool isBindingSiteBonded(int bIndex) const; //{ return bonds.at(bIndex)->isBonded(); };
 		TemplateMolecule * getBondedTemplateMolecule(int bIndex) const;
-		int getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex);
+		unsigned int getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex);
 	
 		/* set functions */
 		void setHasVisited(int bSite);
-		int addEmptyBindingSite(int bSiteIndex);
-		int addEmptyBindingSite(const char * bSiteName);
+		unsigned int addEmptyBindingSite(int bSiteIndex);
+		unsigned int addEmptyBindingSite(const char * bSiteName);
 		void addOccupiedBindingSite(const char * bSiteName);
 		static void bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2);
 		static void bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2);
@@ -722,14 +666,20 @@ namespace NFcore {
 		bool isBonded(const char * bSiteName);
 	
 	
-		void addTemplateMapping(TemplateMapping *tm);
-		bool compare(Molecule * m, MappingSet *mappingSet);
+	//	void addTemplateMapping(TemplateMapping *tm);
+	//	bool compare(Molecule * m, MappingSet *mappingSet);
 	
 	
 	
 		void printDetails() const;
 	
 	
+		
+		
+		///////////////////////////////////////////////////////////////////
+		void addMapGenerator(MapGenerator *mg);
+		bool compare(Molecule *m, MappingSet *ms);
+		bool contains(TemplateMolecule *tempMol);
 	
 	
 	protected:
@@ -749,11 +699,18 @@ namespace NFcore {
 	
 		vector <int> sitesThatMustBeOccupied; // 
 	
-		vector <TemplateMapping *> tMappings;
-		vector <TemplateMapping *>::iterator tMapIter;	
+//		vector <TemplateMapping *> tMappings;
+//		vector <TemplateMapping *>::iterator tMapIter;	
 	
 		Molecule * matchMolecule;
 		vector <bool> hasVisitedBond;
+		
+		
+		/////////////////////////////////////////////////////////
+		bool hasVisited;
+		vector <MapGenerator *> mapGenerators;
+		vector <MapGenerator *>::iterator mgIter;
+		vector <int>::iterator intVecIter;
 	};
 	
 	

@@ -130,10 +130,6 @@ namespace NFinput {
     	@author Michael Sneddon
 	 */
 	bool parseArguments(int argc, const char *argv[], map<string,string> &argMap);
-	
-	
-	
-	
 
 }
 

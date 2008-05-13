@@ -43,34 +43,34 @@ void NFtest_simple_system::run()
 	
 	//  2)  Create the types of molecules that are in the system (see functions below)
 	//      MoleculeTypes contain all the information about the types of molecules that can exist.
-	MoleculeType *molX = createX(s);
-	MoleculeType *molY = createY(s);
+//	MoleculeType *molX = createX(s);
+//	MoleculeType *molY = createY(s);
 	
 	
 	//  3)  Instantiate the actual molecules (this populate function is the easiest way, but you can do it
 	//      manually as well by creating each molecule separately - see the populate function for details
 	//      on how this can be done).
-	molY->populateWithDefaultMolecules(500);
-	molX->populateWithDefaultMolecules(5000);
+//	molY->populateWithDefaultMolecules(500);
+//	molX->populateWithDefaultMolecules(5000);
 	
 	
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are in rates and are in
 	//      arbitrary units for now.
-	ReactionClass * x_dephos = createReactionXDephos(molX, 0.4);
-	ReactionClass *rXbindY = createReactionXYbind(molX, molY, 10.0);
-	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, 5.0);
-	ReactionClass *rYphosX = createReactionYphosX(molX, molY, 0.5);
+//	ReactionClass * x_dephos = createReactionXDephos(molX, 0.4);
+//	ReactionClass *rXbindY = createReactionXYbind(molX, molY, 10.0);
+//	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, 5.0);
+//	ReactionClass *rYphosX = createReactionYphosX(molX, molY, 0.5);
 	
-	s->addReaction(x_dephos);
-	s->addReaction(rXbindY);
-	s->addReaction(rXunbindY);
-	s->addReaction(rYphosX);
+//	s->addReaction(x_dephos);
+//	s->addReaction(rXbindY);
+//	s->addReaction(rXunbindY);
+//	s->addReaction(rYphosX);
 	
 	
 	//  5)  Add the observables that we want to track throughout the simulation.  Again, to 
 	//      see how this is done, see the function below.
-	addObs(s, molX, molY);
+//	addObs(s, molX, molY);
 	
 	
 	
@@ -134,15 +134,15 @@ void NFtest_simple_system::run()
 
 
 
-MoleculeType * NFtest_simple_system::createX(System *s)
-{
-	/* create MoleculeType X  with one binding site and one state */
+/*MoleculeType * NFtest_simple_system::createX(System *s)
+//{
+	// create MoleculeType X  with one binding site and one state 
 	int numOfBsites = 1;
-	char ** bSiteNames = new char * [numOfBsites];
+	string * bSiteNames = new string [numOfBsites];
 	bSiteNames[0] = "y";
 	
-	char  numOfStates = 1;
-	char ** stateNames = new char * [numOfStates];
+	int numOfStates = 1;
+	string * stateNames = new string [numOfStates];
 	stateNames[0] = "p";
 	
 	//This is the default state value that new molecules are created with
@@ -156,40 +156,40 @@ MoleculeType * NFtest_simple_system::createX(System *s)
 
 MoleculeType * NFtest_simple_system::createY(System *s)
 {
-	/* create MoleculeType Y */
+	// create MoleculeType Y 
 	int numOfBsites = 1;
-	char ** bSiteNames = new char * [numOfBsites];
+	string * bSiteNames = new string [numOfBsites];
 	bSiteNames[0] = "x";
 	
-	char  numOfStates = 0;
-	char ** stateNames = new char * [numOfStates];
+	int  numOfStates = 0;
+	string * stateNames = new string [numOfStates];
 	int * stateValues = new int [numOfStates];
 	
 	MoleculeType *molY = new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	return molY;
 }
 
+*/
 
 
 
-
-ReactionClass * NFtest_simple_system::createReactionXDephos(MoleculeType *molX, double rate)
-{
+//ReactionClass * NFtest_simple_system::createReactionXDephos(MoleculeType *molX, double rate)
+//{
 	
-	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+/*	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addStateValue("p",1);
 	
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp );
 	
 	ReactionClass *r = new ReactionClass("X_dephos",templates, rate);
-	Transformation::genStateChangeTransform(xTemp,"p",0,r);
-	return r;
-}
+	NFcore::Transformation::genStateChangeTransform(xTemp,"p",0,r);
+	return r;*/
+//}
 
-ReactionClass * NFtest_simple_system::createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate)
-{
-	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+//ReactionClass * NFtest_simple_system::createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate)
+//{
+/*	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addStateValue("p",0);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	TemplateMolecule::bind(xTemp,"y",yTemp,"x");
@@ -197,15 +197,15 @@ ReactionClass * NFtest_simple_system::createReactionYphosX(MoleculeType *molX, M
 	vector <TemplateMolecule *> templates;
 	templates.push_back( yTemp );
 	ReactionClass *r = new ReactionClass("Y_phos_X",templates,rate);
-	Transformation::genUnbindingTransform(yTemp,"x",r);
-	Transformation::genStateChangeTransform(xTemp,"p",1,r);
-	return r;
-}
+	NFcore::Transformation::genUnbindingTransform(yTemp,"x",r);
+	NFcore::Transformation::genStateChangeTransform(xTemp,"p",1,r);
+	return r;*/
+//}
 
 
-ReactionClass * NFtest_simple_system::createReactionXYbind(MoleculeType *molX,MoleculeType *molY, double rate)
-{
-	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+//ReactionClass * NFtest_simple_system::createReactionXYbind(MoleculeType *molX,MoleculeType *molY, double rate)
+//{
+/*	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addEmptyBindingSite("y");
 	xTemp->addStateValue("p",0);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
@@ -215,28 +215,28 @@ ReactionClass * NFtest_simple_system::createReactionXYbind(MoleculeType *molX,Mo
 	templates.push_back( xTemp );
 	templates.push_back( yTemp );
 	ReactionClass *r = new ReactionClass("Y_bind_X",templates,rate);
-	Transformation::genBindingTransform(yTemp,xTemp,"x","y",r);
-	return r;
-}
+	NFcore::Transformation::genBindingTransform(yTemp,xTemp,"x","y",r);
+	return r;*/
+//}
 
-ReactionClass * NFtest_simple_system::createReactionXYunbind(MoleculeType *molX, MoleculeType *molY, double rate)
-{
-	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+//ReactionClass * NFtest_simple_system::createReactionXYunbind(MoleculeType *molX, MoleculeType *molY, double rate)
+//{
+/*	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	TemplateMolecule::bind(xTemp,"y",yTemp,"x");
 		
 	vector <TemplateMolecule *> templates;
 	templates.push_back( yTemp );
 	ReactionClass *r = new ReactionClass("Y_unbind_X",templates,rate);
-	Transformation::genUnbindingTransform(yTemp,"x",r);
-	return r;
-}
+	NFcore::Transformation::genUnbindingTransform(yTemp,"x",r);
+	return r;*/
+//}
 
 
 
 
 
-void NFtest_simple_system::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
+/*void NFtest_simple_system::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 {
 	//To create an observable, we must first create a TemplateMolecule that we would
 	//like to match.  For instance, to create an observable for X, for create a template
@@ -295,7 +295,7 @@ void NFtest_simple_system::addObs(System * s, MoleculeType *molX, MoleculeType *
 	molY->addObservable(obsyTot);
 	
 }
-
+*/
 
 
 

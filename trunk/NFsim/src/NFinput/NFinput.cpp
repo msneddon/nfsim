@@ -718,7 +718,7 @@ bool NFinput::initReactionRules(
 				try {
 					component c = comps.find(site)->second;
 					int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-					Transformation::genStateChangeTransform(c.t,c.name.c_str(),finalStateInt,r);
+//					Transformation::genStateChangeTransform(c.t,c.name.c_str(),finalStateInt,r);
 				} catch (exception& e) {
 					cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
@@ -747,8 +747,8 @@ bool NFinput::initReactionRules(
 				try {
 					component c1 = comps.find(site1)->second;
 					component c2 = comps.find(site2)->second;
-					Transformation::genBindingTransform(	c1.t,				c2.t,  
-															c1.name.c_str(), 	c2.name.c_str(),		r);
+//					Transformation::genBindingTransform(	c1.t,				c2.t,  
+//															c1.name.c_str(), 	c2.name.c_str(),		r);
 				} catch (exception& e) {
 					cerr<<"Error in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
@@ -780,7 +780,7 @@ bool NFinput::initReactionRules(
 					component c2 = comps.find(site2)->second;
 					
 					//Even though we had to make sure both ends exist, we really only need one transformation
-					Transformation::genUnbindingTransform(c1.t, c1.name.c_str(),r);
+//					Transformation::genUnbindingTransform(c1.t, c1.name.c_str(),r);
 				} catch (exception& e) {
 					cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;

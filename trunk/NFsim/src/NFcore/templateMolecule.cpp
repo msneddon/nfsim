@@ -19,13 +19,14 @@ TemplateMolecule::~TemplateMolecule()
 	if(DEBUG) cout <<"   -destroying template molecule of type " << parentMoleculeType->getName() << endl;
 	
 	
-	TemplateMapping *tm;
+/*	TemplateMapping *tm;
 	while(tMappings.size()>0)
 	{
 		tm = tMappings.back();
 		tMappings.pop_back();
 		delete tm;
 	}
+	*/
 }
 
 void TemplateMolecule::setHasVisited(int bSiteCompareIndex)
@@ -79,12 +80,12 @@ TemplateMolecule * TemplateMolecule::getBondedTemplateMolecule(int bIndex) const
 	return bonds.at(bIndex);	
 }
 
-int TemplateMolecule::addEmptyBindingSite(const char * bSiteName)
+unsigned int TemplateMolecule::addEmptyBindingSite(const char * bSiteName)
 {
 	return this->addEmptyBindingSite(parentMoleculeType->getBindingSiteIndex(bSiteName));	
 }
 
-int TemplateMolecule::addEmptyBindingSite(int bSiteIndex)
+unsigned int TemplateMolecule::addEmptyBindingSite(int bSiteIndex)
 {
 	this->bSiteIndex.push_back(bSiteIndex);
 	bonds.push_back(0);
@@ -289,11 +290,11 @@ bool TemplateMolecule::compare(Molecule * m)
 }
 
 
-void TemplateMolecule::addTemplateMapping(TemplateMapping *tm)
-{
-	tMappings.push_back(tm);
-}
-
+//void TemplateMolecule::addTemplateMapping(TemplateMapping *tm)
+//{
+//	tMappings.push_back(tm);
+//}
+/*
 bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 {	//First check if we've been here before
 	if(matchMolecule!=0)
@@ -403,6 +404,80 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 	return true;
 }
 
+*/
+
+
+bool TemplateMolecule::contains(TemplateMolecule *tempMol)
+{
+	bool found = false;
+	
+	//Create the queues and lists
+	queue <TemplateMolecule *> q;
+	list <TemplateMolecule *> t;
+	queue <int> d;
+	int currentDepth = 0;
+	
+	//First add this molecule
+	q.push(this);
+	t.push_back(this);
+	d.push(currentDepth+1);
+	this->hasVisited=true;
+	
+	//Look at children until the queue is empty
+	while(!q.empty())
+	{
+		//Get the next parent to look at (currentMolecule)
+		TemplateMolecule *cM = q.front();
+		currentDepth = d.front();
+		q.pop(); 
+		d.pop();
+		
+		//Check if we found the molecule
+		if(cM==tempMol) {
+			found=true;
+			break;
+		}
+		
+		//Loop through the bonds to get the next set of Templates to search
+		int bMax = cM->getNumBindingSites();
+		for(int b=0; b<bMax; b++)
+		{
+			if(cM->isBindingSiteBonded(b))
+			{
+				TemplateMolecule *neighbor = cM->getBondedTemplateMolecule(b);
+				if(!neighbor->hasVisited)
+				{
+					neighbor->hasVisited=true;
+					t.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+				}
+				
+
+			}
+		}
+	}
+	
+	
+	//clear the has visitedMolecule values
+	list <TemplateMolecule *>::iterator tmIter;
+	for( tmIter = t.begin(); tmIter != t.end(); tmIter++ )
+  		(*tmIter)->hasVisited=false;
+	
+	return found;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 void TemplateMolecule::printDetails() const
 {
@@ -442,13 +517,138 @@ void TemplateMolecule::printDetails() const
 
 
 
-int TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex)
+unsigned int TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex)
 {
 	for(unsigned int b=0; b<bSiteIndex.size(); b++)
 		if(bSiteIndex.at(b)==molBsiteIndex)
 			return b;
 	return -1;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void TemplateMolecule::addMapGenerator(MapGenerator *mg)
+{
+	mapGenerators.push_back(mg);
+}
+
+
+bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
+{	
+	//First check if we've been here before
+	if(matchMolecule!=0) {
+		if(matchMolecule == m) { return true;	}
+		else { clear(); return false; }
+	}
+	
+	//Next, check if we have the same type
+	if(m->getMoleculeType()!=this->parentMoleculeType) {
+		clear();
+		return false;
+	}
+	//Check that states are correct
+	for(unsigned int s=0; s<stateIndex.size(); s++) {
+		if(m->getState(stateIndex.at(s)) != stateValue.at(s)) { 
+			clear();
+			return false; 
+		}
+	}
+	
+	for(unsigned int s=0; s<notStateIndex.size(); s++) {
+		if(m->getState(notStateIndex.at(s)) == notStateValue.at(s)) { 
+			clear();
+			return false; 
+		}
+	}
+	
+	
+	//Check if the sites that must be occupied by anything are occupied
+	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
+	{
+		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
+		//If the site is not occupied in the molecule, no match
+		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(b))) {
+			clear();
+			return false;
+		}
+	}
+	
+	
+	
+	//We have matched so far, so set our match
+	matchMolecule = m;
+	
+	//Cycle through the bonds
+	for(unsigned int b=0; b<bSiteIndex.size(); b++)
+	{
+		if(hasVisitedBond.at(b)==true) continue;
+		if(bonds.at(b)==0) //template binding site is open, so molecule binding site must be too.
+		{
+			if( m->isBindingSiteBonded(bSiteIndex.at(b))) {
+				clear();
+				return false;
+			}
+		}
+		else //template binding site has a bond
+		{
+			if(m->isBindingSiteOpen(bSiteIndex.at(b))) {
+				clear();
+				return false;
+			}
+			
+			//get template that is bound to this binding site
+			TemplateMolecule * t2 = this->getBondedTemplateMolecule(b);
+			Molecule * m2 = m->getBondedMolecule(bSiteIndex.at(b));
+			
+			//We have to remember to check that it was the right bond site on the other molecule
+			//too.  This means that the bond site in m2 that m is connected to must be the same
+			//bond site in t2 that t1 is connected to.  If not, then we must say false
+			if(m->getBsiteIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b))) {
+				clear();
+				return false;
+			}
+			
+			//tell t2 we have visited this bond before, now that we are sure it is correct
+			t2->setHasVisited(bSiteIndexOfBond.at(b));
+			
+			//remember that we visited through this bond in this template, in case we get to
+			//this molecule again
+			this->setHasVisited(b); 
+			
+			bool goodMatch = t2->compare(m2, mappingSet);
+			if(!goodMatch)
+			{
+				clear();
+				return false;
+			}
+		}		
+	}
+	clear();
+	
+
+	//If we got here, we are going to return true, so make the mappings we need
+	for(mgIter = mapGenerators.begin(); mgIter != mapGenerators.end(); mgIter++ )
+		(*mgIter)->map(mappingSet,m);
+	
+	return true;
+}
+
+
 
 
 

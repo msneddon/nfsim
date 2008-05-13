@@ -45,7 +45,7 @@ MoleculeType::MoleculeType(
 
 
 
-
+/*
 MoleculeType::MoleculeType(
 	const char * name, 
 	char ** stateNames, 
@@ -55,7 +55,7 @@ MoleculeType::MoleculeType(
 	int numOfBindingSites,
 	System * system )
 {
-/*	if(DEBUG) cout << "Creating MoleculeType " << name;
+	if(DEBUG) cout << "Creating MoleculeType " << name;
 	
 	string str(name);
 	this->name = str.c_str();
@@ -82,8 +82,8 @@ MoleculeType::MoleculeType(
 		for(int b=0; b<numOfBindingSites; b++)
 			cout<<" "<<bindingSiteNames[b]<<" ";
 		cout <<")."<<endl; }
-*/
-}
+
+}*/
 
 MoleculeType::~MoleculeType()
 {

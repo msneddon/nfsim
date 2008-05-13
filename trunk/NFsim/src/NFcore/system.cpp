@@ -7,8 +7,10 @@
 using namespace std;
 using namespace NFcore;
 
-/** Default constructor that creates a System
- * Creates a system that does not keep track of complexes.
+
+
+/*!
+   Creates a system that does not keep track of complexes.
  */
 System::System(string name)
 {
@@ -20,6 +22,10 @@ System::System(string name)
 	this->go = NULL;
 }
 
+
+/*!
+   Constructor that creates a System that has the option of keeping track of complexes
+ */
 System::System(string name, bool useComplex)
 {
 	this->name = name;
@@ -30,6 +36,10 @@ System::System(string name, bool useComplex)
 	this->go = NULL;
 }
 
+
+/*!
+  Standard deconstructor for a system that cleans everything up.
+ */
 System::~System()
 {	
 	//Need to delete reactions
