@@ -5,8 +5,9 @@
 #include <string>
 
 #include "../NFcore/NFcore.hh"
-#include "../NFtest/simple_system/simple_system.hh"
 
+
+#include "ReactantList.hh"
 
 
 
@@ -20,11 +21,12 @@ namespace NFcore
 	//Forward Declarations
 	class TemplateMolecule;
 	class Molecule;
-
+	class ReactionClass;
 
 
 
 	void test();
+	void test_simple();
 	
 	
 	class Transformation;
@@ -45,9 +47,10 @@ namespace NFcore
 			bool addStateChangeTransform(TemplateMolecule *t, string stateName, int finalStateValue);
 			
 			
+			bool addBindingTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2);
+			bool addUnbindingTransform(TemplateMolecule *t, string bSiteName);
 			
-			bool addBindingTransform() { return false; };
-			bool addUnbindingTransform() { return false; };
+			
 			bool addDeleteMolecule() { return false; };
 			bool addAddMolecule() { return false; };
 			
@@ -55,8 +58,16 @@ namespace NFcore
 			bool transform(MappingSet **mappingSets);
 			MappingSet *generateBlankMappingSet(unsigned int reactantIndex, unsigned int mappingSetId);
 		
-		protected:
 			
+			//Used for initializations in ReactionClass
+			TemplateMolecule * getTemplateMolecule(unsigned int reactantIndex) const { return reactants[reactantIndex]; };
+			unsigned int getNreactants() const {return n_reactants; }; 
+			void finalize();
+			bool isFinalized() const { return finalized; };
+			bool getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit);
+			
+		protected:
+			bool finalized;
 			
 			int find(TemplateMolecule *t);
 			
@@ -73,19 +84,21 @@ namespace NFcore
 	{
 		public:
 			
-			Transformation();
+			
 			~Transformation();
 			unsigned int getType() const { return type; };
+			unsigned int getStateOrSiteIndex() const { return stateORsiteIndex; };
 			int getNewStateValue() const { return newStateValue; };
-			unsigned int getBiPartnerReactantIndex() const { return reactant; };
-			unsigned int getBiPartnerMappingIndex() const { return mappingIndex; };
+			unsigned int getPartnerReactantIndex() const { return otherReactantIndex; };
+			unsigned int getPartnerMappingIndex() const { return otherMappingIndex; };
 			
-			static Transformation * genStateChangeTransform(int newStateValue);
-			static Transformation * genBindingTransform1(unsigned int reactant, unsigned int mappingIndex);
-			static Transformation * genBindingTransform2();
-			static Transformation * genUnbindingTransform();
+			static Transformation * genStateChangeTransform(unsigned int stateIndex, int newStateValue);
+			static Transformation * genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+			static Transformation * genBindingTransform2(unsigned int bSiteIndex);
+			static Transformation * genUnbindingTransform(unsigned int bSiteIndex);
 			static Transformation * genAddMoleculeTransform();
 			static Transformation * genRemoveMoleculeTransform();
+			static Transformation * genEmptyTransform();
 			
 			//Keep track of types
 			static const unsigned int STATE_CHANGE = 0;
@@ -97,14 +110,17 @@ namespace NFcore
 						          
 			
 		protected:
+			Transformation();
+			
 			unsigned int type;
+			unsigned int stateORsiteIndex;
 			
 			//For a state change transformation
 			int newStateValue;
 			
 			//For a binding reaction
-			unsigned int reactant;
-			unsigned int mappingIndex;
+			unsigned int otherReactantIndex;
+			unsigned int otherMappingIndex;
 			
 			//For a creation of a new molecule
 			//Species s
@@ -137,12 +153,14 @@ namespace NFcore
 	class MappingSet
 	{
 		public:
-			MappingSet(vector <Transformation *> &transformations);
+			MappingSet(unsigned int id, vector <Transformation *> &transformations);
 			~MappingSet();
 			
 			bool set(unsigned int mappingIndex, Molecule *m);
 			Mapping *get(unsigned int mappingIndex);
 			bool clear();
+			
+			unsigned int getId() const { return id; };
 			
 			
 		protected:
@@ -150,7 +168,7 @@ namespace NFcore
 			
 			bool isSet;
 			unsigned int n_mappings;
-			Mapping * mappings;
+			Mapping ** mappings;
 	};
 
 	
@@ -173,74 +191,12 @@ namespace NFcore
 			
 			void clear();
 			bool setMolecule(Molecule *m);
-			
-			
-			const static unsigned int STATE =  0;
-			const static unsigned int BSITE =  1;
-			const static unsigned int REMOVAL =  2;
-			const static unsigned int ADDITION =  3;
-			
 
 		protected:
 			unsigned int type;
 			unsigned int index;
 			Molecule * m;
 	};
-	
-	
-	
-	//!  Maintains a list of Mapping & Molecule objects needed by ReactionClass
-		/*!
-		  This is essentially a specialized vector implementation that allows a ReactionClass 
-		  to easily keep track of all the Molecule objects that can be involved in the reaction.  It
-		  also has to maintain Mapping objects into those molecules (so that transformations can
-		  easily be made through the Transformation class).  This class automatically expands 
-		  its capacity when extra mappings are added.  The advantage over the traditional vector 
-		  class is that this class allows for near constant time removal and insertion of elements, 
-		  while vectors require linear time removal.  We can gain this speedup because the indexing 
-		  of the reactant list is unimportant.
-		    @author Michael Sneddon
-		 */
-		class ReactantList
-		{
-			
-			
-			public:
-				//!  Default Constructor
-				/*!
-					  Creates a new empty ReactantList with the given initial capacity.  This capacity
-					  should roughly be set to the number of mappings you expect this list to have.
-				 */
-				ReactantList(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity);
-				~ReactantList();
-			
-			
-				unsigned int size() const;
-				
-				
-				MappingSet * pushNextAvailableMappingSet();
-				void popLastMappingSet();
-				void removeMappingSet(unsigned int mappingSetId);
-			
-				
-				
-				
-				
-				void printDetails();
-			
-			protected:
-				
-				
-				unsigned int n_mappingSets;
-				unsigned int capacity;
-				TransformationSet *ts;
-				unsigned int reactantIndex;
-				
-				unsigned int * msPositionMap;
-				MappingSet **mappingSets;
-		};
-		
-	
 	
 }
 

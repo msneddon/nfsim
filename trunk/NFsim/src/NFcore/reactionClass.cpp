@@ -11,6 +11,9 @@ using namespace NFcore;
 
 ReactionClass::~ReactionClass()
 {
+	
+	this->reactantLists.at(0)->printDetails();
+	
 	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
 	
 	for(unsigned int r=0; r<n_reactants; r++)
@@ -20,7 +23,7 @@ ReactionClass::~ReactionClass()
 		reactantTemplates[r] = 0;
 	}
 	delete [] reactantTemplates;
-	
+	delete [] mappingSet;
 	
 /*
 	Transformation *tr;
@@ -115,46 +118,46 @@ double ReactionClass::update_a()
 
 bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 {
-/*	//First a bit of error checking...
+	//First a bit of error checking...
 	if(position<0 || position>=n_reactants || m==NULL) 
 	{
 		cout<<"Error adding molecule to reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
 		exit(1);
 	}
 	
+	
 	//Get the specified reactantList
 	ReactantList *rl = reactantLists.at(position);
 	
-	//No matter the situation, we should pop this molecule first
-	rl->pop(m);
+	//Check if the molecule is in this list
+	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,position);
+	//cout<<"got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
 	
-	//Try to match this molecule to the template at this position
-	MappingSet *ms = new MappingSet();
-	bool match = reactantTemplates[position]->compare(m,ms);
+	bool isInRxn = (m->getRxnListMappingId(rxnIndex)>=0);
 	
-	//cout<<"comparing, resulting mappingSet:"<<endl;
-	//ms->printDetails();
 	
-//	cout<<"in rxn "<<name<<", comparing: " << m->getMoleculeTypeName() << "_" <<m->getUniqueID()<<endl;
-//	m->printDetails();
-	
-	//If there was a match, add the mappingSet
-	if(match)
+	if(isInRxn)
 	{
-	//	cout<<"Match!!"<<endl;
-		rl->push(m,ms);
-		return true;
+		if(!reactantTemplates[position]->compare(m)) {
+			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			m->setRxnListMappingId(rxnIndex,-1);
+		}
+		
+	} else {
+		//Try to map it!
+		MappingSet *ms = rl->pushNextAvailableMappingSet();
+		if(!reactantTemplates[position]->compare(m,ms)) {
+			rl->popLastMappingSet();
+		} else {
+			m->setRxnListMappingId(rxnIndex,ms->getId());
+		}
 	}
-	
-	
-//	cout<<"Nope!!"<<endl;
-	//Otherwise, do nothing and let the superiors know we didn't add
-	delete ms;
-	return false;*/
+		
+	return false;
 }
 		
-/*
-void ReactionClass::pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets)
+
+void ReactionClass::pickMappingSets(double random_A_number)
 {
 	//Note here that we completely ignore the arguement.  The arguement is only
 	//used for DOR reactions because we need that number to select the reactant to fire
@@ -164,39 +167,27 @@ void ReactionClass::pickMappingSets(double random_A_number, vector <MappingSet *
 	unsigned int *moleculeIDs = new unsigned int [n_reactants];
 	for(unsigned int i=0; i<n_reactants; i++)
 	{
-		MappingSet *ms= NULL;
-		reactantLists.at(i)->pickRandom(ms,moleculeIDs[i]);
-		//cout<<"here: "<<endl;
-		//ms->printDetails();
-		mappingSets.push_back(ms);
-		
-	//	cout<<"selected: \t"<<moleculeIDs[i]<<endl;
+		reactantLists.at(i)->pickRandom(mappingSet[i]);
+		//mappingSet[i]->get(0)
 	}
 	
 	delete [] moleculeIDs;
 }
-*/
+
 
 
 void ReactionClass::fire2(double random_A_number)
 {
-	/*
+	
 	fireCounter++; //Remember that we fired
 //	cout<<"firing: "<<name<<endl;
+	
 	//First randomly pick the reactants to fire by selecting the MappingSets
-	vector <MappingSet *> mappingSets;
-	pickMappingSets(random_A_number, mappingSets);
-	
-	//Only continue if we found some MappingSets.  PickMappingSets may return
-	//nothing if certain constraints are not met, so we have to check here
-	if(mappingSets.size()==0)
-	{
-		return;
-	}
-	
+	pickMappingSets(random_A_number);
+
 	//Generate the set of possible products that we need to update
 	list <Molecule *> products;
-	MappingSet::getPossibleProducts(mappingSets,products,traversalLimit);
+	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 	
 	//Loop through the products and remove them from thier observables
 	list <Molecule *>::iterator molIter;
@@ -204,8 +195,7 @@ void ReactionClass::fire2(double random_A_number)
 		(*molIter)->removeFromObservables();
 		
 	//Through the MappingSet, transform all the molecules as neccessary
-	MappingSet::transform(mappingSets);
-		
+	this->transformationSet->transform(this->mappingSet);
 
 	//Tell each molecule in the list of products to add itself back into 
 	//the counts of observables and update its class lists, and update any DOR Groups
@@ -219,7 +209,6 @@ void ReactionClass::fire2(double random_A_number)
 	
 	//Tidy up
 	products.clear();
-	mappingSets.clear();*/
 }
 
 
@@ -229,36 +218,37 @@ void ReactionClass::printFullDetails()
 	cout<<"Reaction: "<<name<<endl;
 	for(unsigned int i=0; i<n_reactants; i++)
 		reactantLists.at(i)->printDetails();
-	
-	
-	
 }
 
 
 
 
-
-ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMolecules, double rate)
+ReactionClass::ReactionClass(string name, double rate, TransformationSet *transformationSet)
 {
-/*	//Setup the basic properties of this reactionClass
+	//Setup the basic properties of this reactionClass
 	this->name = name;
 	this->rate = rate;
 	this->fireCounter = 0;
 	this->a = 0;
 	this->traversalLimit = ReactionClass::NO_LIMIT;
+	this->transformationSet = transformationSet;
 	
-	//Set up the template molecules
-	this->n_reactants = templateMolecules.size();
+	
+	//Set up the template molecules from the transformationSet
+	this->n_reactants = transformationSet->getNreactants();
 	this->reactantTemplates = new TemplateMolecule *[n_reactants];
-	for(unsigned int i=0; i<n_reactants; i++)
-		reactantTemplates[i] = templateMolecules.at(i);
+	for(unsigned int r=0; r<n_reactants; r++)
+		reactantTemplates[r] = transformationSet->getTemplateMolecule(r);
 	
+
 	//Set up the reactantLists
-	for(unsigned int i=0; i<n_reactants; i++)
-		reactantLists.push_back(new ReactantList(50));
+	for(unsigned int r=0; r<n_reactants; r++)
+		reactantLists.push_back(new ReactantList(r,transformationSet,50));
 	
 	
+	mappingSet = new MappingSet *[n_reactants];
 	
+	/*
 	
 	//Check here to see if we have molecule types that are the same across different reactants
 	//Because if so, we will give a warning
@@ -277,11 +267,11 @@ ReactionClass::ReactionClass(string name, vector <TemplateMolecule *> templateMo
 	}
 	
 	
-	
+	*/
 	
 	this->reactionType = NORMAL_RXN;  //set as normal reaction here, but deriving reaction classes can change this
 	
-	*/
+	
 }
 
 

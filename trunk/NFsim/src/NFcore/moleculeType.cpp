@@ -154,7 +154,7 @@ unsigned long int MoleculeType::getObservableCount(int obsIndex) const
 	return observables.at(obsIndex)->getCount();
 }
 
-int MoleculeType::getBindingSiteIndex(const char * siteName ) const
+unsigned int MoleculeType::getBindingSiteIndex(string siteName ) const
 {
 	for(int b=0; b<numOfBindingSites; b++)
 		if(siteName==bindingSiteNames[b]) return b;
@@ -163,7 +163,7 @@ int MoleculeType::getBindingSiteIndex(const char * siteName ) const
 	exit(1);
 }
 
-int MoleculeType::getStateIndex(const char * stateName ) const
+unsigned int MoleculeType::getStateIndex(string stateName ) const
 {
 	for(int s=0; s<numOfStates; s++)
 		if(stateName==stateNames[s]) return s;

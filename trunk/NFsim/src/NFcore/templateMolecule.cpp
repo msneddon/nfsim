@@ -19,14 +19,12 @@ TemplateMolecule::~TemplateMolecule()
 	if(DEBUG) cout <<"   -destroying template molecule of type " << parentMoleculeType->getName() << endl;
 	
 	
-/*	TemplateMapping *tm;
-	while(tMappings.size()>0)
-	{
-		tm = tMappings.back();
-		tMappings.pop_back();
-		delete tm;
+	MapGenerator *mg;
+	while(mapGenerators.size()>0) {
+		mg = mapGenerators.back();
+		mapGenerators.pop_back();
+		delete mg;
 	}
-	*/
 }
 
 void TemplateMolecule::setHasVisited(int bSiteCompareIndex)
@@ -587,6 +585,7 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 			return false;
 		}
 	}
+	
 	
 	
 	

@@ -687,7 +687,8 @@ bool NFinput::initReactionRules(
 		
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// Create the actual Reaction
-			ReactionClass *r = new ReactionClass(rxnName,templates,0);
+			TransformationSet *ts = new TransformationSet(templates);
+			ReactionClass *r = new ReactionClass(rxnName,0,ts);
 		
 		
 		
