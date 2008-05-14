@@ -45,6 +45,7 @@ namespace NFcore
 	class MapGenerator;
 	class MappingSet;
 	class ReactantList;
+	class TransformationSet;
 	
 //	class TemplateMapping;
 //	class Transformation;
@@ -270,12 +271,12 @@ namespace NFcore
 			int getNumOfStates() const { return numOfStates; };
 			string getStateName( int stateIndex ) const { return stateNames[stateIndex]; };
 			//char ** getAllStateNames() const { return (char *)stateNames.c_str(); };
-			int getStateIndex(const char * stateName ) const;
+			unsigned int getStateIndex(string stateName ) const;
 			int getDefaultState(int stateIndex) const { return defaultStateValues[stateIndex]; };
 		
 			int getNumOfBindingSites() const { return numOfBindingSites; };
 			char * getBindingSiteName( int bIndex ) const { return (char *) bindingSiteNames[bIndex].c_str(); };
-			int getBindingSiteIndex(const char * stateName ) const;
+			unsigned int getBindingSiteIndex(string stateName ) const;
 			//char ** getAllBindingSiteNames() const { return bindingSiteNames; };
 		
 			int getNumOfObservables() const { return observables.size(); };
@@ -402,8 +403,11 @@ namespace NFcore
 			Molecule * getBondedMolecule(int bSiteIndex) const;
 			int getBsiteIndexOfBond(int bSiteIndex) const { return bSiteIndexOfBond[bSiteIndex]; };
 		
-			int getRxnListIndex(int rxnIndex) const { return rxnListIndex[rxnIndex]; };
-			void setRxnListIndex(int rxnIndex, int rxnListIndex) { this->rxnListIndex[rxnIndex] = rxnListIndex; };
+			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
+			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) { 
+					this->rxnListMappingId[rxnIndex] = rxnListMappingId; 
+				
+			};
 		
 			/* set functions for states, bonds, and complexes */
 			void setState(const char * stateName, int value);
@@ -480,7 +484,7 @@ namespace NFcore
 			bool * hasVisitedBond;
 			bool hasVisitedMolecule;
 		
-			int * rxnListIndex;
+			int * rxnListMappingId;
 			int nReactions;
 		
 		private:
@@ -490,6 +494,15 @@ namespace NFcore
 	
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//!  Contains a reaction rule and associated functions.
 	/*!
 	    @author Michael Sneddon
@@ -518,8 +531,7 @@ namespace NFcore
 		
 			int getRxnType() const { return reactionType; };
 		
-		
-		
+			
 		
 		
 		
@@ -546,11 +558,8 @@ namespace NFcore
 		
 			////////////////////////////////
 		
-			ReactionClass(string name, vector <TemplateMolecule *> templateMolecules, double rate);
+			ReactionClass(string name, double rate, TransformationSet *transformationSet);
 			virtual ~ReactionClass();
-		
-		
-	//		void registerTransformation(Transformation *t) { transformations.push_back(t); };
 		
 		
 			double get_a() const { return a; };
@@ -576,6 +585,7 @@ namespace NFcore
 					divided by Atotal.  This arguement is ignored for your typical reaction, but
 					is required for DORreaction.
 			 */
+			void pickMappingSets(double random_A_number);
 	//		virtual void pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets);
 		
 		
@@ -605,8 +615,12 @@ namespace NFcore
 		
 			unsigned int traversalLimit;
 			int reactionType;
-		
-		
+			TransformationSet * transformationSet;
+			
+			
+			
+			MappingSet ** mappingSet;
+			
 	};
 	
 	
@@ -650,7 +664,7 @@ namespace NFcore
 		void addStateValue(int stateIndex, int stateValue);
 		void addStateValue(const char * stateName, int stateValue);
 		void addNotStateValue(char * stateName, int notStateValue);
-		void clear() { this->matchMolecule = 0; for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; };
+		void clear() { this->matchMolecule = 0; for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; hasVisited=false; };
 	
 	
 		/* the primary function and purpose of a template molecule 

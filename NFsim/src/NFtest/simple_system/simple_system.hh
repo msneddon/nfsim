@@ -3,27 +3,29 @@
 
 
 #include "../../NFcore/NFcore.hh"
-//#include "../../NFreactions/basic/NFreactions.hh"
+#include "../../NFreactions/NFreactions.hh"
 //#include "../../NFreactions/transformation/transformation.hh"
 
-//using namespace NFcore;
+using namespace NFcore;
 
-namespace NFtest_simple_system
+namespace NFtest_ss
 {
 	void run();
 	
 	
+//	int stuff(System *s);
 	
-//	MoleculeType * createX(NFcore::System *s);
-//	MoleculeType * createY(System *s);
+	
+	MoleculeType * createX(System *s);
+	MoleculeType * createY(System *s);
 	
 	
 
-	//ReactionClass * createReactionXDephos(MoleculeType *molX, double rate);
-	//ReactionClass * createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate);
-	//ReactionClass * createReactionXYbind(MoleculeType *molX,MoleculeType *molY, double rate);
+	ReactionClass * createReactionXDephos(MoleculeType *molX, double rate);
+	ReactionClass * createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate);
+	ReactionClass * createReactionXYbind(MoleculeType *molX,MoleculeType *molY, double rate);
 	//ReactionClass * createReactionXYunbind(MoleculeType *molX, MoleculeType *molY, double rate);
-	//void addObs(System * s, MoleculeType *molX, MoleculeType *molY);
+	void addObs(System * s, MoleculeType *molX, MoleculeType *molY);
 }
 
 

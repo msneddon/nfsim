@@ -37,7 +37,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType)
 		hasVisitedBond[b] = false;
 	
 	hasVisitedMolecule = false;
-	rxnListIndex = 0;
+	rxnListMappingId = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	
@@ -69,16 +69,16 @@ Molecule::~Molecule()
 	delete [] states;
 	delete [] bSiteIndexOfBond;
 	delete [] hasVisitedBond;
-	delete [] rxnListIndex;
+	delete [] rxnListMappingId;
 }
 
 
 void Molecule::prepareForSimulation()
 {
 	nReactions = parentMoleculeType->getReactionCount();
-	this->rxnListIndex = new int[nReactions];
+	this->rxnListMappingId = new int[nReactions];
 	for(int r=0; r<nReactions; r++)
-		rxnListIndex[r] = -1;
+		rxnListMappingId[r] = -1;
 }
 
 
@@ -109,7 +109,7 @@ void Molecule::updateDORs()
 		
 	//	cout<<" identified DOR RXN index: "<<dorRxnIndex<<endl;
 	//	cout<<" identified DOR RXN pos: "<<dorRxnPos<<endl;
-		DORrxn->notifyRateFactorChange(this, dorRxnPos, rxnListIndex[dorRxnIndex]);
+		DORrxn->notifyRateFactorChange(this, dorRxnPos, rxnListMappingId[dorRxnIndex]);
 	}
 	
 }
@@ -155,6 +155,7 @@ void Molecule::setState(const char * state, int value)
 
 void Molecule::setState(int state, int value)
 {
+	//cout<<"value: "<<value<<"  state: "<<state<<endl;
 	this->states[state]=value;
 	
 	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;

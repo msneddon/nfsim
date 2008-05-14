@@ -12,29 +12,43 @@ void NFcore::test()
 	
 	
 	System *s = new System("boo");
-	// create MoleculeType X  with one binding site and one state 
+	
+	
 	int numOfBsites = 1;
 	string * bSiteNames = new string [numOfBsites];
 	bSiteNames[0] = "y";
-	
 	int numOfStates = 1;
 	string * stateNames = new string [numOfStates];
 	stateNames[0] = "p";
-	
-	//This is the default state value that new molecules are created with
 	int * stateValues = new int [numOfStates];
-	stateValues[0] = 0;
-	
-	//When we create a molecule, it automatically adds itself to the system, 
+	stateValues[0] = 1;
 	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	
+	numOfBsites = 1;
+	bSiteNames = new string [numOfBsites];
+	bSiteNames[0] = "x";
+	numOfStates = 1;
+	stateNames = new string [numOfStates];
+	stateNames[0] = "m";
+	stateValues = new int [numOfStates];
+	stateValues[0] = 1;
+	MoleculeType *molY = new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	
+	molX->populateWithDefaultMolecules(500);
+	molY->populateWithDefaultMolecules(500);
+	
+	
+	molX->getMolecule(0)->printDetails();
+	molY->getMolecule(0)->printDetails();
+	
 	
 	
 	TemplateMolecule *xTemp1 = new TemplateMolecule(molX);
 	xTemp1->addStateValue("p",1);
-	TemplateMolecule *xTemp2 = new TemplateMolecule(molX);
-	xTemp2->addStateValue("p",1);
-	TemplateMolecule::bind(xTemp1,"y",xTemp2,"y");
-	xTemp2->printDetails();
+	TemplateMolecule *yTemp2 = new TemplateMolecule(molY);
+	yTemp2->addStateValue("m",1);
+	//TemplateMolecule::bind(xTemp1,"y",yTemp2,"x");
+	//xTemp2->printDetails();
 	
 	TemplateMolecule *xTemp3 = new TemplateMolecule(molX);
 	xTemp3->addStateValue("p",1);
@@ -43,21 +57,80 @@ void NFcore::test()
 	
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp1 );
-	templates.push_back( xTemp2 );
-	templates.push_back( xTemp3 );
-	templates.push_back( xTemp4 );
+	templates.push_back( yTemp2 );
+	//templates.push_back( xTemp3 );
+	//templates.push_back( xTemp4 );
 	
 	
 	
-
+	
 	
 	
 	TransformationSet *t = new TransformationSet(templates);
-	t->addStateChangeTransform(xTemp4,"p",1);
-	t->addStateChangeTransform(xTemp4,"p",1);
-	delete t;
+	//t->addStateChangeTransform(xTemp1,"p",0);
+	//t->addStateChangeTransform(yTemp2,"m",3);
+	t->addBindingTransform(yTemp2,"x",xTemp1,"y");
+	cout<<endl;
 	
 	
+	
+	
+	
+	t->finalize();
+	
+	ReactantList * rl_0 = new ReactantList(0, t, 15);
+	ReactantList * rl_1 = new ReactantList(1, t, 15);
+	//rl->printDetails();
+	
+	
+	
+	
+	for(int i=0; i<12; i++)
+	{
+		MappingSet *ms = rl_0->pushNextAvailableMappingSet();
+		if(!xTemp1->compare(molX->getMolecule(20+i),ms)) {
+			rl_0->popLastMappingSet();
+		}
+	}
+	for(int i=0; i<12; i++)
+	{
+		MappingSet *ms = rl_1->pushNextAvailableMappingSet();
+		if(!yTemp2->compare(molY->getMolecule(20+i),ms)) {
+			rl_1->popLastMappingSet();
+		}
+	}
+	
+	
+	rl_0->printDetails();
+	rl_1->printDetails();
+	
+	//cout<<"ms->getId() = "<<ms->getId()<<endl;
+	//rl->removeMappingSet(5);
+	
+
+	//rl->printDetails();
+	
+	
+	
+	MappingSet **ms = new MappingSet *[2];
+	rl_0->pickRandom(ms[0]);
+	rl_1->pickRandom(ms[1]);
+	cout<<"Retrieving randomly: " <<ms[0]->get(0)->getMolecule()->getUniqueID()<<endl;
+	cout<<"Retrieving randomly: " <<ms[1]->get(0)->getMolecule()->getUniqueID()<<endl;
+	
+	ms[0]->get(0)->getMolecule()->printDetails();
+	ms[1]->get(0)->getMolecule()->printDetails();
+	t->transform(ms);
+	cout<<endl<<"--------"<<endl;
+	ms[0]->get(0)->getMolecule()->printDetails();
+	ms[1]->get(0)->getMolecule()->printDetails();
+	
+	cout<<endl<<endl<<endl;
+	delete [] ms;
+	delete t; delete rl_0; 
+	delete rl_1;
+	
+	delete s;
 }
 
 
@@ -67,7 +140,93 @@ void NFcore::test()
 
 
 
+void NFcore::test_simple()
+{
+	cout<<"Testing rxns..."<<endl;
+	
+	
+	System *s = new System("boo");
+	
+	
+	int numOfBsites = 1;
+	string * bSiteNames = new string [numOfBsites];
+	bSiteNames[0] = "y";
+	int numOfStates = 1;
+	string * stateNames = new string [numOfStates];
+	stateNames[0] = "p";
+	int * stateValues = new int [numOfStates];
+	stateValues[0] = 1;
+	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	molX->populateWithDefaultMolecules(500);
+	molX->getMolecule(0)->printDetails();
+	
+	
+	
+	TemplateMolecule *xTemp1 = new TemplateMolecule(molX);
+	xTemp1->addStateValue("p",1);
+	TemplateMolecule *xTemp2 = new TemplateMolecule(molX);
+	xTemp2->addStateValue("p",1);
+	//TemplateMolecule::bind(xTemp1,"y",yTemp2,"x");
+	//xTemp2->printDetails();
+	
+	
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp1 );
+	
+	
+	
+	
+	
+	
+	TransformationSet *t = new TransformationSet(templates);
+	t->addStateChangeTransform(xTemp1,"p",0);
+	//t->addBindingTransform(xTemp1,"y",yTemp2,"x");
+	cout<<endl;
+	
+	
+	
+	
+	
+	t->finalize();
+	
+	
+	ReactantList * rl = new ReactantList(0, t, 15);
+	//rl->printDetails();
+	
+	
+	
+	
+	for(int i=0; i<12; i++)
+	{
+		MappingSet *ms = rl->pushNextAvailableMappingSet();
+		if(!xTemp1->compare(molX->getMolecule(20+i),ms)) {
+			rl->popLastMappingSet();
+		}
+	}
+	
+	
+	rl->printDetails();
+	//cout<<"ms->getId() = "<<ms->getId()<<endl;
+	//rl->removeMappingSet(5);
+	
 
+	//rl->printDetails();
+	
+	
+	
+	MappingSet **ms = new MappingSet *[2];
+	rl->pickRandom(ms[0]);
+	cout<<"Retrieving randomly: " <<ms[0]->get(0)->getMolecule()->getUniqueID()<<endl;
+	
+	ms[0]->get(0)->getMolecule()->printDetails();
+	t->transform(ms);
+	cout<<endl<<"--------"<<endl;
+	ms[0]->get(0)->getMolecule()->printDetails();
+	
+	cout<<endl<<endl<<endl;
+	delete t; delete rl; 
+	delete s;
+}
 
 
 
@@ -86,6 +245,7 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 	
 	//Set up our transformation vectors
 	this->transformations = new vector <Transformation *> [n_reactants];
+	finalized = false;
 }
 
 
@@ -95,17 +255,23 @@ TransformationSet::~TransformationSet()
 		cout<<"Count in ["<<r<<"]: "<<this->transformations[r].size()<<endl;
 	}
 	
-	
-	this->n_reactants = 0;
-	
-	
 	for(unsigned int r=0; r<n_reactants; r++)  {
-		this->transformations = new vector <Transformation *>;
+		Transformation *t;
+		while(transformations[r].size()>0)
+		{
+			t = transformations[r].back();
+			transformations[r].pop_back();
+			delete t;
+		}
 	}
+	delete [] transformations;
+	delete [] reactants;
+	this->n_reactants = 0;
 }
 
 bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string stateName, int finalStateValue)
 {
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
 	int reactantIndex = find(t);
 	if(reactantIndex==-1) {
@@ -114,24 +280,90 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string stat
 	}
 	
 	// 2) Create a Transformation object to remember the information
-	Transformation *transformation = Transformation::genStateChangeTransform(finalStateValue);
+	unsigned int stateIndex = t->getMoleculeType()->getStateIndex(stateName);
+	Transformation *transformation = Transformation::genStateChangeTransform(stateIndex, finalStateValue);
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
 	
 	// 3) Create a MapGenerator object and add it to the templateMolecule
-	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size());
+	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
 	t->addMapGenerator(mg);
 	return true;
 }
+bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)
+{
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	//Again, first find the reactants that the binding pertains to
+	int reactantIndex1 = find(t1);
+	int reactantIndex2 = find(t2);
+	if(reactantIndex2==-1 || reactantIndex2==-1) {
+		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!"<<endl;
+		exit(1);
+	}
+	
+	//Find the index of the respective binding sites
+	unsigned int bSiteIndex1 = t1->getMoleculeType()->getBindingSiteIndex(bSiteName1);
+	unsigned int bSiteIndex2 = t2->getMoleculeType()->getBindingSiteIndex(bSiteName2);
+	
+	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
+	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
+	//equal to the size.
+	Transformation *transformation1;
+	if(reactantIndex1==reactantIndex2)
+		transformation1 = Transformation::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+	else
+		transformation1 = Transformation::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
+
+	Transformation *transformation2 = Transformation::genBindingTransform2(bSiteIndex2);
+	
+	transformations[reactantIndex1].push_back(transformation1);
+	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
+	t1->addMapGenerator(mg1);
+	
+	transformations[reactantIndex2].push_back(transformation2);
+	MapGenerator *mg2 = new MapGenerator(transformations[reactantIndex1].size()-1);
+	t2->addMapGenerator(mg2);
+	
+	return true;
+}
+bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteName)
+{
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	// 1) Check that the template molecule is contained in one of the reactant templates we have
+	int reactantIndex = find(t);
+	if(reactantIndex==-1) {
+		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
+		exit(1);
+	}
+	
+	// 2) Create a Transformation object to remember the information
+	unsigned int bSiteIndex = t->getMoleculeType()->getBindingSiteIndex(bSiteName);
+	Transformation *transformation = Transformation::genUnbindingTransform(bSiteIndex);
+	
+	// 3) Add the transformation object to the TransformationSet
+	transformations[reactantIndex].push_back(transformation);
+	
+	// 3) Create a MapGenerator object and add it to the templateMolecule
+	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+	t->addMapGenerator(mg);
+	
+	return true;
+}
+
+
+
+
+
+
 int TransformationSet::find(TemplateMolecule *t)
 {
+	if(finalized) { cerr<<"TransformationSet cannot search for a templateMolecule once it has been finalized!"<<endl; exit(1); }
 	int findIndex = -1;
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		if(this->reactants[r]->contains(t)) {
 			if(findIndex==-1) {
 				findIndex = r;
-				cout<<"found at index: "<<r<<endl;
 			}
 			else {
 				cerr<<"Found duplicate template molecule in two reaction lists!!  (in transformationSet)."<<endl;
@@ -143,6 +375,8 @@ int TransformationSet::find(TemplateMolecule *t)
 }
 bool TransformationSet::transform(MappingSet **mappingSets)
 {
+	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
+	
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		MappingSet *ms = mappingSets[r];
 		for(unsigned int t=0; t<transformations[r].size(); t++)
@@ -161,22 +395,49 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 			}
 			else if(type == Transformation::BINDING) {
 				Mapping *m1 = ms->get(t);
-				Mapping *m2 = mappingSets[transformations[r].at(t)->getBiPartnerReactantIndex()]->get(transformations[r].at(t)->getBiPartnerMappingIndex());
+				Mapping *m2 = mappingSets[transformations[r].at(t)->getPartnerReactantIndex()]->get(transformations[r].at(t)->getPartnerMappingIndex());
 				Molecule::bind(m1->getMolecule(),m1->getIndex(), m2->getMolecule(), m2->getIndex());
 			}
 		}
 	}
+	return true;
 }
+bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit)
+{
+	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
+	
+	for(unsigned int r=0; r<n_reactants; r++)  {
+		MappingSet *ms = mappingSets[r];
+		ms->get(0)->getMolecule()->traverseBondedNeighborhood(products, traversalLimit);
+		
+	}
+	return true;
+}
+
+
 MappingSet *TransformationSet::generateBlankMappingSet(unsigned int reactantIndex, unsigned int mappingSetId)
 {
+	if(!finalized) { cerr<<"TransformationSet cannot generate blank mapping if it is not finalized!"<<endl; exit(1); }
 	if(reactantIndex>=n_reactants) {
 		cerr<<"Gave me (a transformation Set) a reactant index that was too high!"<<endl;
 		exit(1);
 	}
-	return new MappingSet(transformations[reactantIndex]);
+	return new MappingSet(mappingSetId, transformations[reactantIndex]);
 }
 
-
+void TransformationSet::finalize()
+{
+	//Be sure to add at least a blank transformation to every reactant if there is no transformation
+	//specified so that we count the reactants even if we don't do anything to it.
+	for(unsigned int r=0; r<n_reactants; r++)  {
+		if(transformations[r].size()==0) {
+			transformations[r].push_back(Transformation::genEmptyTransform());
+			MapGenerator *mg = new MapGenerator(transformations[r].size()-1);
+			getTemplateMolecule(r)->addMapGenerator(mg);
+		}
+	}
+	finalized = true;
+}
 
 
 
@@ -187,38 +448,61 @@ NFcore::Transformation::Transformation()
 {
 	type=Transformation::SKIP;
 	newStateValue = -1;
-	reactant=0;
-	mappingIndex=0;
+	stateORsiteIndex=0;
+	otherReactantIndex=0;
+	otherMappingIndex=0;
 }
-NFcore::Transformation * NFcore::Transformation::genStateChangeTransform(int newStateValue)
+NFcore::Transformation::~Transformation()
 {
-	Transformation *t = new Transformation();
-	t->type = Transformation::STATE_CHANGE;
-	t->newStateValue = newStateValue;
-	return t;
+	type=Transformation::SKIP;
+	newStateValue = -1;
+	stateORsiteIndex=0;
+	otherReactantIndex=0;
+	otherMappingIndex=0;
 }
-NFcore::Transformation * NFcore::Transformation::genBindingTransform1(unsigned int reactant, unsigned int mappingIndex)
-{	
-	Transformation *t = new Transformation();
-	t->type = Transformation::BINDING;
-	t->reactant = reactant;
-	t->mappingIndex = mappingIndex;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genBindingTransform2()
+NFcore::Transformation * Transformation::genEmptyTransform()
 {
 	return new Transformation();
 }
-NFcore::Transformation * NFcore::Transformation::genUnbindingTransform()
+NFcore::Transformation * Transformation::genStateChangeTransform(unsigned int stateIndex, int newStateValue)
 {
-	return 0;
+	Transformation *t = new Transformation();
+	t->type = Transformation::STATE_CHANGE;
+	t->stateORsiteIndex=stateIndex;
+	t->newStateValue = newStateValue;
+	return t;
+}
+NFcore::Transformation * NFcore::Transformation::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+{	
+	Transformation *t = new Transformation();
+	t->type = Transformation::BINDING;
+	t->stateORsiteIndex=bSiteIndex;
+	t->otherReactantIndex = otherReactantIndex;
+	t->otherMappingIndex = otherMappingIndex;
+	return t;
+}
+NFcore::Transformation * NFcore::Transformation::genBindingTransform2(unsigned int bSiteIndex)
+{
+	Transformation *t = new Transformation();
+	t->type = Transformation::SKIP;
+	t->stateORsiteIndex=bSiteIndex;
+	return t;
+}
+NFcore::Transformation * NFcore::Transformation::genUnbindingTransform(unsigned int bSiteIndex)
+{
+	Transformation *t = new Transformation();
+	t->type = Transformation::UNBINDING;
+	t->stateORsiteIndex=bSiteIndex;
+	return t;
 }
 NFcore::Transformation * NFcore::Transformation::genAddMoleculeTransform()
 {
+	cerr<<"Warning genAddMoleculeTransform() not yet working!!"<<endl;
 	return 0;
 }
 NFcore::Transformation * NFcore::Transformation::genRemoveMoleculeTransform()
 {
+	cerr<<"Warning genRemoveMoleculeTransform() not yet working!!"<<endl;
 	return 0;
 }
 
@@ -240,6 +524,8 @@ NFcore::MapGenerator::~MapGenerator()
 bool NFcore::MapGenerator::map(MappingSet *mappingSet, Molecule *molecule)
 {
 	mappingSet->set(mappingIndex,molecule);
+	cout<<"here"<<endl;
+	return true;
 }
 
 
@@ -249,26 +535,53 @@ bool NFcore::MapGenerator::map(MappingSet *mappingSet, Molecule *molecule)
 
 
 
-NFcore::MappingSet::MappingSet(vector <Transformation *> &transformations)
+NFcore::MappingSet::MappingSet(unsigned int id, vector <Transformation *> &transformations)
 {
+	this->id = id;
+	this->isSet = false;
+	this->n_mappings = transformations.size();
+	this->mappings = new Mapping *[n_mappings];
 	
+	for(unsigned int t=0; t<n_mappings; t++) {
+		mappings[t] = new Mapping(transformations.at(t)->getType(), transformations.at(t)->getStateOrSiteIndex() );
+	}
 }
 NFcore::MappingSet::~MappingSet()
 {
-	
+	for(unsigned int t=0; t<n_mappings; t++) {
+		delete mappings[t];
+	}
+	delete [] mappings;
 }
 			
 bool NFcore::MappingSet::set(unsigned int mappingIndex, Molecule *m)
 {
-	
+	if(mappingIndex>=n_mappings) {
+		cerr<<"Out of bounds access to a mapping in set function of mapping set!"<< mappingIndex<<" but max is " << n_mappings<<endl;
+		return false;
+	}
+	mappings[mappingIndex]->setMolecule(m);
+	isSet = true;
+	return true;
 }
 Mapping *NFcore::MappingSet::get(unsigned int mappingIndex)
 {
-	
+	if(mappingIndex>=n_mappings) {
+		cerr<<"Out of bounds access to a mapping in get function of a mapping set!"<<endl;
+		return false;
+	}
+	return mappings[mappingIndex];
 }
 bool NFcore::MappingSet::clear()
 {
+	isSet = false;
 	
+	//This is not entirely necessary, but for now can be used for debugging
+	for(unsigned int t=0; t<n_mappings; t++) {
+		mappings[t]->clear();
+	}
+	
+	return true;
 }
 	
 
@@ -286,37 +599,41 @@ bool NFcore::MappingSet::clear()
 
 NFcore::Mapping::Mapping(unsigned int type, unsigned int index)
 {
-	
-	
-	
+	this->type = type;
+	this->index = index;
 }
 NFcore::Mapping::~Mapping()
 {
-	
+	type=Transformation::SKIP;
+	index=0;
+	clear();
 }
 		
 unsigned int NFcore::Mapping::getType() const
 {
-	
-	return 0;
+	return this->type;
 }
 unsigned int NFcore::Mapping::getIndex() const
 {
-	
-	return 0;
+	return this->index;
 }
 Molecule * NFcore::Mapping::getMolecule() const
 {
-	return 0;
+	if(m==NULL) {
+		cerr<<"Trying to get a molecule from a null mapping!!"<<endl;
+		return 0;
+	}
+	return m;
 }
 		
 void NFcore::Mapping::clear()
 {
-	
+	this->m=NULL;
 }
 bool NFcore::Mapping::setMolecule(Molecule *m)
 {
-	return false;
+	this->m = m;
+	return true;
 }
 		
 		
@@ -331,156 +648,5 @@ bool NFcore::Mapping::setMolecule(Molecule *m)
 
 
 
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-
-ReactantList::ReactantList(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity=50)
-{
-	this->n_mappingSets = 0;
-	this->capacity = init_capacity;
-	this->reactantIndex = reactantIndex;
-	this->ts=ts;
-	this->mappingSets = new MappingSet *[init_capacity];
-	this->msPositionMap = new unsigned int [init_capacity];
-	for(unsigned int i=0; i<this->capacity; i++)
-	{
-		mappingSets[i]=ts->generateBlankMappingSet(reactantIndex,i);
-		msPositionMap[i]=i;
-	}
-}
-
-ReactantList::~ReactantList()
-{
-	for(unsigned int i=0; i<capacity; i++)
-	{
-		delete mappingSets[i];
-		msPositionMap[i]=0;
-	}
-	delete [] mappingSets;
-	delete [] msPositionMap;
-	this->n_mappingSets = 0;
-	this->capacity = 0;
-}
-
-/*
-void ReactantList::pickRandom(MappingSet *&ms, unsigned int &moleculeID)
-{
-	unsigned int rand = NFutil::RANDOM_INT(0,n_reactants);
-	ms = reactants[rand];
-	moleculeID = reactantMoleculeIDs[rand];
-}
-*/
-
-
-unsigned int ReactantList::size() const
-{
-	return n_mappingSets;
-}
-
-
-MappingSet * ReactantList::pushNextAvailableMappingSet()
-{
-	//Check if we are going to exceed capacity
-	if(n_mappingSets>=capacity)
-	{
-		//Copy everything over to new arrays that are double the size
-		MappingSet ** new_mappingSets = new MappingSet *[capacity*2];
-		unsigned int * new_msPositionMap = new unsigned int [capacity*2];
-		for(unsigned int i=0; i<capacity; i++)  {
-			new_mappingSets[i] = mappingSets[i];
-			new_msPositionMap[i] = msPositionMap[i];
-		}
-		for(unsigned int i=capacity; i<capacity*2; i++)  {
-			new_mappingSets[i] = ts->generateBlankMappingSet(reactantIndex, i);
-			new_msPositionMap[i] = i;
-		}
-		
-		//Swap the copied data with the real data and double the capacity
-		delete [] mappingSets;
-		delete [] msPositionMap;
-		mappingSets = new_mappingSets;
-		msPositionMap = new_msPositionMap;
-		capacity*=2;
-	}
-	
-	//Increase the number of reactants, and return the activated mappingSet
-	n_mappingSets++;
-	return mappingSets[n_mappingSets-1];
-}
-
-
-void ReactantList::popLastMappingSet()
-{
-	//Clear out the mappingSet (just in case) and decrease the count
-	mappingSets[n_mappingSets-1]->clear();
-	n_mappingSets--;
-}
-
-void ReactantList::removeMappingSet(unsigned int mappingSetId)
-{
-	//First, get the position of the mappingSet we need to remove
-	unsigned int pos = msPositionMap[mappingSetId];
-	
-	//If the array has only one element, or we just happened to select the last element,
-	//then just remove the last element without a swap
-	if( pos == (n_mappingSets-1) )
-	{
-		popLastMappingSet();
-		return;
-	}
-	
-	//Otherwise, we have to swap with the last element in the list
-	MappingSet *tempMappingSet = mappingSets[pos];
-	mappingSets[pos] = mappingSets[n_mappingSets-1];
-	mappingSets[n_mappingSets-1] = tempMappingSet;
-	msPositionMap[pos] = n_mappingSets-1;
-	msPositionMap[n_mappingSets-1] = pos;
-	
-	
-	//Make sure we clear what we don't need
-	mappingSets[n_mappingSets-1]->clear();
-
-	//Remember to remove 
-	n_mappingSets--;
-}
-
-
-void ReactantList::printDetails()
-{
-	cout<<"ReactantList that contains: "<<size()<<" MappingSets and has a capacity for "<<capacity<<" total sets."<<endl;
-	/*cout<<"Members: [molecule unique Id, private mappingSet index]"<<endl;
-	
-	
-	for(unsigned int i=0; i<capacity; i++)
-		cout<<i<<" ";
-	cout<<endl;
-	for(unsigned i=0; i<capacity; i++)
-		if(reactants[i]!=NULL)
-			cout<<1<<" ";
-		else
-			cout<<0<<" ";
-	cout<<endl;
-	for(unsigned i=0; i<capacity; i++)
-			cout<<reactantMoleculeIDs[i]<<" ";
-		cout<<endl;
-	
-	multimap <unsigned int, unsigned int>::iterator it;
-	for ( it=moleculeLookupTable.begin(); it != moleculeLookupTable.end(); it++ )
-	   cout << "  [" << (*it).first << ", " << (*it).second << "]" << endl;
-	
-	cout<<endl;*/
-}
 		
 		

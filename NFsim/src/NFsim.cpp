@@ -48,7 +48,7 @@ int main(int argc, const char *argv[])
 	start = clock();
 	///////////////////////////////////////////////////////////
 	
-	NFcore::test();
+	NFtest_ss::run();
 	cout<<"\n\nfinished."<<endl;
 	return 0;
 	
