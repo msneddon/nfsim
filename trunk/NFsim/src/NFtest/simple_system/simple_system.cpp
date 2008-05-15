@@ -1,11 +1,11 @@
 
 
 
+//All we need in this file is to include the header file
+//that has the function prototypes, the other includes, and
+//declaration that we are using the NFcore namespace.
 #include "simple_system.hh"
 
-
-using namespace NFtest_ss;
-using namespace NFcore;
 
 
 
@@ -15,9 +15,14 @@ void NFtest_ss::run()
 
 	/**
 	 * 
-	 * 
-	 * As a simple demonstration of how to create and run a simulation, here is an example
-	 * where we have a system that looks like:
+	 * This example is a good starting point to learn the basics of the underlying NFsim
+	 * code and what happens behind the scenes.  Generally, you will specify the system
+	 * through BioNetGen and NFsim will just parse the resulting xml model specification
+	 * file.  However, for learning the code, there is nothing better than hardcoding a
+	 * simple system yourself and learning which functions get called when.
+	 *  
+	 * So, as a simple demonstration of how to create and run a simulation, here is an example
+	 * where we have a system that looks like this:
 	 * 
 	 * X(p~1) -> X(p~0)
 	 * X(y,p~0) + Y(x) <-> X(y!1,p~0).Y(x!1)
@@ -25,11 +30,12 @@ void NFtest_ss::run()
 	 * 
 	 * This is basically a simple enzymatic reaction where Y is the enzyme which can
 	 * phosphorylate X, and X can auto-dephosphorylate.  This system has basic binding,
-	 * unbinding, and state change reactions.  Below are the numbered steps of getting
-	 * this system together.  Notice the functions defined at the end that do the actual work.
+	 * unbinding, and state change reactions along with a reaction that unbinds and has
+	 * a state change.  Below are the numbered steps of getting this system together by
+	 * hardcoding the reaction rules.  Notice the functions defined at the end that do 
+	 * the actual work.
 	 * 
-	 * To run this example, call the NFsim program as follows (either from the Release or Debug
-	 * directories, or using eclipse's launch):
+	 * To run this example, call the NFsim program as follows:
 	 * 
 	 *        ./NFsim6 -test simple_system
 	 * 
@@ -48,23 +54,23 @@ void NFtest_ss::run()
 	
 	
 	//  3)  Instantiate the actual molecules (this populate function is the easiest way, but you can do it
-	//      manually as well by creating each molecule separately - see the populate function for details
-	//      on how this can be done).
+	//      manually as well by creating each molecule separately - see the MoleculeType::populate function for
+	//      an example on how this can be done).
 	molY->populateWithDefaultMolecules(500);
 	molX->populateWithDefaultMolecules(5000);
 	
 	
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
-	//      below where I set up the details of the reactions.  The numbers are in rates and are in
-	//      arbitrary units for now.
+	//      below where I set up the details of the reactions.  The numbers are the rates and are in
+	//      arbitrary units here.  In general, the rates should be in units of per second.
 	ReactionClass * x_dephos = createReactionXDephos(molX, 0.4);
 	ReactionClass *rXbindY = createReactionXYbind(molX, molY, 10.0);
-//	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, 5.0);
+	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, 5.0);
 	ReactionClass *rYphosX = createReactionYphosX(molX, molY, 0.5);
 	
 	s->addReaction(x_dephos);
 	s->addReaction(rXbindY);
-//	s->addReaction(rXunbindY);
+	s->addReaction(rXunbindY);
 	s->addReaction(rYphosX);
 	
 	
@@ -80,9 +86,8 @@ void NFtest_ss::run()
 	s->printAllReactions();
 	
 	
-	//  7)  Register the output file name (This will put the file in your working directory, which
-	//      if you run from eclipse is in the base NFsim directory) )
-	//      Here, you also want to output the headers to the file, which is not done automatically
+	//  7)  Register the output file name (This will put the file in your working directory)
+	//      Here, you also want to output the header to the file, which is not done automatically
 	//      because you can run a simulation with multiple calls to the sim functions.
 	s->registerOutputFileLocation("simple_system_output.txt");
 	s->outputAllObservableNames();
@@ -96,10 +101,13 @@ void NFtest_ss::run()
 	//recorded (all times are in seconds) using this function where the first parameter is the
 	//length of the equilibriation, and the second is the number of times we want to print a
 	//message that says how we are doing.  After it equilibriates, the simulation time is reset to zero.
-	//s->equilibriate(50,10);
+	//The first parameter is the number of seconds we want to equilibriate.  The second (optional) parameter
+	//is the number of times you want to print an 'ok' output message.  If the second parameter is not
+	//given, nothing is outputted to the console.
+	s->equilibriate(50,10);
 	
 	//There are two ways to run a simulation.  First, you can just call the function sim as in:
-	s->sim(50,50);
+	s->sim(500,50);
 	
 	//Calling this sim function is the easist way to run a simulation.  The first parameter is the
 	//number of seconds you want to run for, the second is the number of times you want to output
@@ -108,17 +116,22 @@ void NFtest_ss::run()
 	
 	
 	//The second way to run a simulation is to call this stepTo function:
-	//cout<<"Calling the stepTo function and stepping to 600 seconds"<<endl;
-	//double stoppingTime = s->stepTo(600);
-	//cout<<"The last reaction was fired at simulation time: "<<stoppingTime<<endl;
+	cout<<endl<<endl<<"Calling the stepTo function and stepping to the system time t=600 seconds"<<endl;
+	double stoppingTime = s->stepTo(600);
+	cout<<"The last reaction was fired at simulation time: "<<stoppingTime<<endl<<endl;
 	
 	//This function runs the simulation until the given time is reached, and it also returns the
-	//time of the simulation when the last reaction fired.  This function does not output to a file
-	//automatically, so to output using this function, you will have to use a call to this function:
+	//time of the simulation when the last reaction fired (which is now the current time in the
+	//system.  This function does not output to a file automatically, so to output using this function, 
+	//so to get results, you will have to use a call to this function:
 	s->outputAllObservableCounts();
 	
 	//The stepTo function will have to be written as part of a loop where you decide when it should
 	//output.  This gives you more control, but of course requires more work.
+	
+	
+	//Here we can print out the list of reactions.  This is nice because it tells us how many times
+	//a reaction fired, and how many molecules are in each list at the end of the simulation
 	s->printAllReactions();
 	
 	
@@ -134,9 +147,13 @@ void NFtest_ss::run()
 
 
 
+
+
 MoleculeType * NFtest_ss::createX(System *s)
 {
-	// create MoleculeType X  with one binding site and one state 
+	// create MoleculeType X  with one binding site and one state.  In NFsim, you have to
+	//specify arrays that name the binding sites, the states, and give a default state value.
+	//The default binding site value, of course, is unbound.
 	int numOfBsites = 1;
 	string * bSiteNames = new string [numOfBsites];
 	bSiteNames[0] = "y";
@@ -149,14 +166,16 @@ MoleculeType * NFtest_ss::createX(System *s)
 	int * stateValues = new int [numOfStates];
 	stateValues[0] = 1;
 	
-	//When we create a molecule, it automatically adds itself to the system, 
+	//When we create a molecule, it automatically adds itself to the system, so all we have to 
+	//do here is create it, and return it so we can use it to add reactions to the system
 	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	return molX;
 }
 
 MoleculeType * NFtest_ss::createY(System *s)
 {
-	// create MoleculeType Y 
+	// create MoleculeType Y  the same way we created MoleculeType X.  Notice that it is possible
+	// to have zero states specified (similarly, you can have no binding sites).
 	int numOfBsites = 1;
 	string * bSiteNames = new string [numOfBsites];
 	bSiteNames[0] = "x";
@@ -172,78 +191,148 @@ MoleculeType * NFtest_ss::createY(System *s)
 
 
 
+
+
+
+
+
+
 ReactionClass * NFtest_ss::createReactionXDephos(MoleculeType *molX, double rate)
 {
-	
+	//Here is your first glimpse at defining a reaction rule.  This is the simplist rule
+	//as it only has a single state change operation.  There are several straightforward steps.
+	//First, you have to define the set of TemplateMolecules that represent the possible reactants.
+	//Here, we create a templateMolecule representing molecules of type X, and set the state to
+	//be phosphorylated.
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addStateValue("p",1);
 	
+	
+	//We have to create a vector (basically a storage array) for the Template Molecules that we
+	//want to add to our reaction.  We do this using the standard library class std::vector.  We
+	//only have one reactant in this reaction, so we just put it on the vector.
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp );
 	
+	
+	//Once we have our set of templateMolecules defined, we can specify the transformations on
+	//those molecules. To do this, we create a TransformationSet object passing in the templates
+	//Next, we use the TransformationSet functionality to specify the transform.  Here we specify
+	//that the transformation should apply to the template molecule (defined above) and it should
+	//change the state of "p" to a value of zero (which means unphosphorylated in our system).
+	//Finally, once we have added all operations we want (there is no limit!), we have to finalize
+	//our transformationSet.
 	TransformationSet *ts = new TransformationSet(templates);
 	ts->addStateChangeTransform(xTemp,"p",0);
 	ts->finalize();
 	
+	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
+	//set that you just created.  It will take care of the rest!
 	ReactionClass *r = new ReactionClass("X_dephos",rate,ts);
-	return r;
-}
-
-ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate)
-{
-	TemplateMolecule *xTemp = new TemplateMolecule(molX);
-	xTemp->addStateValue("p",0);
-	TemplateMolecule *yTemp = new TemplateMolecule(molY);
-	TemplateMolecule::bind(xTemp,"y",yTemp,"x");
-	
-	vector <TemplateMolecule *> templates;
-	templates.push_back( yTemp );
-	
-	TransformationSet *ts = new TransformationSet(templates);
-	ts->addUnbindingTransform(xTemp,"y");
-	ts->addStateChangeTransform(xTemp,"p",1);
-	ts->finalize();
-	
-	
-	ReactionClass *r = new ReactionClass("Y_phos_X",rate, ts);
 	return r;
 }
 
 
 ReactionClass * NFtest_ss::createReactionXYbind(MoleculeType *molX,MoleculeType *molY, double rate)
 {
+	//Now we want to create a binding reaction.  This is a little trickier, but still not too bad.
+	//First we need to create TemplateMolecules to represent our two reactants, Molecule X and 
+	//Molecule Y.  Remember to specify that Mol X has an empty binding site for y and that
+	//Y has an empty binding site for X!  This is not done for you and can lead to errors if
+	//you try to bind a site that is already bound!  Also, we want to bind only if X is not
+	//phosphorylated.
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addEmptyBindingSite("y");
 	xTemp->addStateValue("p",0);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	yTemp->addEmptyBindingSite("x");
 		
+	
+	//Again, we create the vector of templates to store our reactants.  There are two reactants
+	//involved, so we have to add both of them to our templates vector.  Remember that only the
+	//primary reactants should be added to this vector!  If we had another molecule, say Z, that
+	//is bound to Y, we would have to choose to add either Y or Z to the second reactant, not both!
+	//In general, there will only be one or two templates added to this vector (for unimolecular and
+	//bimolecular reactions) no matter how many templates are actually involved!  Reactions are still
+	//able to access all of them, however, by traversing the bonds of these two "head" molecules.
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp );
 	templates.push_back( yTemp );
 	
-	
+	//Again, create a TransformationSet with the templates, add the binding operation between X and
+	//Y by specifying the sites that are binding, (ordering between x and y do not matter in this
+	//function) and finalize the TransformationSet.
 	TransformationSet *ts = new TransformationSet(templates);
 	ts->addBindingTransform(xTemp,"y", yTemp, "x");
 	ts->finalize();
 	
-	
+	//Create and return the reaction!
 	ReactionClass *r = new ReactionClass("Y_bind_X",rate,ts);
 	return r;
 }
 
-//ReactionClass * NFtest_simple_system::createReactionXYunbind(MoleculeType *molX, MoleculeType *molY, double rate)
-//{
-/*	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+ReactionClass * NFtest_ss::createReactionXYunbind(MoleculeType *molX, MoleculeType *molY, double rate)
+{
+	//Now its time for the unbinding reaction.  For a reactant to match the unbinding reaction,
+	//the molecules X and Y must be bound.  To do this, again create the two template molecules for
+	//X and Y, and now we must specify that they are bound through the named binding sites.  We
+	//do that with the bind function in the TemplateMolecule class.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	TemplateMolecule::bind(xTemp,"y",yTemp,"x");
 		
+	//Like before, we create the vector of templates.  Notice that this is a unimolecular reaction!
+	//even though there are two templates, only one "species" or reactant is involved.  Therefore, we
+	//have to only insert one of the templates into this list.  It doesn't matter whether it is
+	//the template for X or the template for Y.  Just pick one!
 	vector <TemplateMolecule *> templates;
 	templates.push_back( yTemp );
-	ReactionClass *r = new ReactionClass("Y_unbind_X",templates,rate);
-	NFcore::Transformation::genUnbindingTransform(yTemp,"x",r);
-	return r;*/
-//}
+	
+	//Again, here we go with the transformationSet.  We only have to specify one unbinding transform.
+	//Either Y unbinds, or X unbinds, but not both.  Here, I arbitrarily choose molecule X to unbind
+	//its binding site at site "y".  The templates take care of the fact that Molecule Y is on the other
+	//end and also has to be updated when this is called.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addUnbindingTransform(xTemp,"y");
+	ts->finalize();
+	
+	//Create the reaction in the usual way.
+	ReactionClass *r = new ReactionClass("Y_unbind_X",rate,ts);
+	return r;
+}
+
+
+ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate)
+{
+	//This function demonstrates how you can create reactions with multiple transformations.  Just
+	//as we did for the unbinding reaction, we create the templates and bind them.  We would also
+	//like to specify that molecule X must be dephosphorylated for this reaction to fire, so add
+	//that constraint too.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	xTemp->addStateValue("p",0);
+	TemplateMolecule *yTemp = new TemplateMolecule(molY);
+	TemplateMolecule::bind(xTemp,"y",yTemp,"x");
+	
+	//Again, just like in the unbinding reaction, just add one of the templates to the vector
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp );
+	
+	//Create the transformation set.  Add all the operations you want and finalize once you are done.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addUnbindingTransform(xTemp,"y");
+	ts->addStateChangeTransform(xTemp,"p",1);
+	ts->finalize();
+	
+	//Return the Reaction.
+	ReactionClass *r = new ReactionClass("Y_phos_X",rate, ts);
+	return r;
+}
+
+
+
+
+
+
 
 
 
@@ -252,7 +341,7 @@ ReactionClass * NFtest_ss::createReactionXYbind(MoleculeType *molX,MoleculeType 
 void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 {
 	//To create an observable, we must first create a TemplateMolecule that we would
-	//like to match.  For instance, to create an observable for X, for create a template
+	//like to match.  For instance, to create an observable for X, first create a template
 	//molecule like this:
 	TemplateMolecule *xNotPhos = new TemplateMolecule(molX);
 	
@@ -264,7 +353,7 @@ void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 	
 	//Now, we create an observable from the templateMolecule and give it a name
 	//that will be used in the output.
-	Observable * obsxNotPhos = new Observable("X(p~0)_free",xNotPhos);
+	Observable * obsxNotPhos = new Observable("X(p~1,y)",xNotPhos);
 	
 	
 	//Finally, we have to add the observable to the MoleculeType that is being observed.  If you
@@ -277,36 +366,36 @@ void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 	
 	//Below I do the same for some other species...
 	
-	//Xp
+	//X phosphorylated and not bound to Y
 	TemplateMolecule *xPhos = new TemplateMolecule(molX);
 	xPhos->addStateValue("p",1);
 	xPhos->addEmptyBindingSite("y");
-	Observable * obsxPhos = new Observable("X(p~1)_free",xPhos);
+	Observable * obsxPhos = new Observable("X(p~1,y)",xPhos);
 	molX->addObservable(obsxPhos);
 	
 	
-	//X-Y
+	//X bound to Y
 	TemplateMolecule *xBoundP = new TemplateMolecule(molX);
 	TemplateMolecule *yBound2 = new TemplateMolecule(molY);
 	TemplateMolecule::bind(xBoundP,"y",yBound2,"x");
-	Observable * obsXBoundP = new Observable("XY",xBoundP);
+	Observable * obsXBoundP = new Observable("X(y!1).Y(x!1)",xBoundP);
 	molX->addObservable(obsXBoundP);
 	
 	//Yfree
 	TemplateMolecule *yFree = new TemplateMolecule(molY);
 	yFree->addEmptyBindingSite("x");
-	Observable * obsyFree = new Observable("Y_free",yFree);
+	Observable * obsyFree = new Observable("Y(x)",yFree);
 	molY->addObservable(obsyFree);
 	
-	
+	//Total amount of X
 	TemplateMolecule *xTot = new TemplateMolecule(molX);
 	Observable * obsxTot = new Observable("Xtot",xTot);
 	molX->addObservable(obsxTot);
 	
+	//Total amount of Y
 	TemplateMolecule *yTot = new TemplateMolecule(molY);
 	Observable * obsyTot = new Observable("Ytot",yTot);
 	molY->addObservable(obsyTot);
-	
 }
 
 

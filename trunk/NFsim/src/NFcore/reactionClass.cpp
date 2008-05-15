@@ -12,7 +12,7 @@ using namespace NFcore;
 ReactionClass::~ReactionClass()
 {
 	
-	this->reactantLists.at(0)->printDetails();
+//	this->reactantLists.at(0)->printDetails();
 	
 	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
 	
@@ -139,7 +139,9 @@ bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 	if(isInRxn)
 	{
 		if(!reactantTemplates[position]->compare(m)) {
+		//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
 			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			
 			m->setRxnListMappingId(rxnIndex,-1);
 		}
 		

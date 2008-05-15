@@ -524,7 +524,6 @@ NFcore::MapGenerator::~MapGenerator()
 bool NFcore::MapGenerator::map(MappingSet *mappingSet, Molecule *molecule)
 {
 	mappingSet->set(mappingIndex,molecule);
-	cout<<"here"<<endl;
 	return true;
 }
 
@@ -620,7 +619,7 @@ unsigned int NFcore::Mapping::getIndex() const
 Molecule * NFcore::Mapping::getMolecule() const
 {
 	if(m==NULL) {
-		cerr<<"Trying to get a molecule from a null mapping!!"<<endl;
+		cout<<"Trying to get a molecule from a null mapping!!"<<endl;
 		return 0;
 	}
 	return m;
