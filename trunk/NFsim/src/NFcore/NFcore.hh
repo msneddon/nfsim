@@ -610,6 +610,7 @@ namespace NFcore
 		
 			TemplateMolecule **reactantTemplates;
 	//		vector <Transformation *> transformations;
+			//ReactantList ** reactantLists;
 			vector <ReactantList *> reactantLists;
 		
 		

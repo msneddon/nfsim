@@ -20,15 +20,6 @@ using namespace NFcore;
  */
 namespace NFinput {
 
-	// class for comparing strings needed for remembering parameters in a map
-//	class strCmp {
-//	    public:
-//	    	bool operator()( const char* s1, const char* s2 ) const {
-//	      		return strcmp( s1, s2 ) < 0;
-//	    	}
-//	};
-	
-
 	//! Maintains information about a component of a TemplateMolecule.
 	/*!
     	@author Michael Sneddon

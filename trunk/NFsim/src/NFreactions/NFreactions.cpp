@@ -404,11 +404,22 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 }
 bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit)
 {
-	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
-	
+	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
+	bool isPresent = false;
+	list <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)  {
-		MappingSet *ms = mappingSets[r];
-		ms->get(0)->getMolecule()->traverseBondedNeighborhood(products, traversalLimit);
+		
+		//For each of the molecules that we possibly affect, traverse the neighborhood
+		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
+					
+		isPresent=false;
+		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+			if((*molIter)==molecule) { isPresent = true; break; cout<<"here"<<endl;}
+		}
+					
+		if(!isPresent)
+			molecule->traverseBondedNeighborhood(products,traversalLimit);
+		
 		
 	}
 	return true;
@@ -514,18 +525,20 @@ NFcore::Transformation * NFcore::Transformation::genRemoveMoleculeTransform()
 
 
 
+
+
+
+
+
+
 NFcore::MapGenerator::MapGenerator(unsigned int mappingIndex)
-{
-	this->mappingIndex = mappingIndex;
-}
-NFcore::MapGenerator::~MapGenerator()
-{
-}
-bool NFcore::MapGenerator::map(MappingSet *mappingSet, Molecule *molecule)
-{
-	mappingSet->set(mappingIndex,molecule);
-	return true;
-}
+			{
+				this->mappingIndex = mappingIndex;
+			}
+			NFcore::MapGenerator::~MapGenerator()
+			{
+			}
+
 
 
 
@@ -552,36 +565,73 @@ NFcore::MappingSet::~MappingSet()
 	}
 	delete [] mappings;
 }
-			
-bool NFcore::MappingSet::set(unsigned int mappingIndex, Molecule *m)
-{
-	if(mappingIndex>=n_mappings) {
-		cerr<<"Out of bounds access to a mapping in set function of mapping set!"<< mappingIndex<<" but max is " << n_mappings<<endl;
-		return false;
-	}
-	mappings[mappingIndex]->setMolecule(m);
-	isSet = true;
-	return true;
-}
-Mapping *NFcore::MappingSet::get(unsigned int mappingIndex)
-{
-	if(mappingIndex>=n_mappings) {
-		cerr<<"Out of bounds access to a mapping in get function of a mapping set!"<<endl;
-		return false;
-	}
-	return mappings[mappingIndex];
-}
-bool NFcore::MappingSet::clear()
-{
-	isSet = false;
-	
-	//This is not entirely necessary, but for now can be used for debugging
-	for(unsigned int t=0; t<n_mappings; t++) {
-		mappings[t]->clear();
-	}
-	
-	return true;
-}
+// Defined inline			
+//bool NFcore::MappingSet::set(unsigned int mappingIndex, Molecule *m)
+//{
+//	mappings[mappingIndex]->setMolecule(m);
+//	return true;
+//}
+//Mapping *NFcore::MappingSet::get(unsigned int mappingIndex)
+//{
+//	return mappings[mappingIndex];
+//}
+//bool NFcore::MappingSet::clear()
+//{
+//	return true;
+//}
+
+
+
+//  Slower version, but good for debuggin
+//
+//NFcore::MappingSet::MappingSet(unsigned int id, vector <Transformation *> &transformations)
+//{
+//	this->id = id;
+//	this->isSet = false;
+//	this->n_mappings = transformations.size();
+//	this->mappings = new Mapping *[n_mappings];
+//	
+//	for(unsigned int t=0; t<n_mappings; t++) {
+//		mappings[t] = new Mapping(transformations.at(t)->getType(), transformations.at(t)->getStateOrSiteIndex() );
+//	}
+//}
+//NFcore::MappingSet::~MappingSet()
+//{
+//	for(unsigned int t=0; t<n_mappings; t++) {
+//		delete mappings[t];
+//	}
+//	delete [] mappings;
+//}
+//			
+//bool NFcore::MappingSet::set(unsigned int mappingIndex, Molecule *m)
+//{
+//	if(mappingIndex>=n_mappings) {
+//		cerr<<"Out of bounds access to a mapping in set function of mapping set!"<< mappingIndex<<" but max is " << n_mappings<<endl;
+//		return false;
+//	}
+//	mappings[mappingIndex]->setMolecule(m);
+//	isSet = true;
+//	return true;
+//}
+//Mapping *NFcore::MappingSet::get(unsigned int mappingIndex)
+//{
+//	if(mappingIndex>=n_mappings) {
+//		cerr<<"Out of bounds access to a mapping in get function of a mapping set!"<<endl;
+//		return false;
+//	}
+//	return mappings[mappingIndex];
+//}
+//bool NFcore::MappingSet::clear()
+//{
+//	isSet = false;
+//	
+//	//This is not entirely necessary, but for now can be used for debugging
+//	for(unsigned int t=0; t<n_mappings; t++) {
+//		mappings[t]->clear();
+//	}
+//	
+//	return true;
+//}
 	
 
 

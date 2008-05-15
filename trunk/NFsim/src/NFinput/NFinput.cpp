@@ -686,10 +686,8 @@ bool NFinput::initReactionRules(
 				
 		
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// Create the actual Reaction
+			// Create the TransformationSet so that we can collect all the operations that are specified for this rule
 			TransformationSet *ts = new TransformationSet(templates);
-			ReactionClass *r = new ReactionClass(rxnName,0,ts);
-		
 		
 		
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -719,7 +717,10 @@ bool NFinput::initReactionRules(
 				try {
 					component c = comps.find(site)->second;
 					int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-//					Transformation::genStateChangeTransform(c.t,c.name.c_str(),finalStateInt,r);
+					
+
+					
+					ts->addStateChangeTransform(c.t,c.name,finalStateInt);
 				} catch (exception& e) {
 					cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
@@ -748,6 +749,10 @@ bool NFinput::initReactionRules(
 				try {
 					component c1 = comps.find(site1)->second;
 					component c2 = comps.find(site2)->second;
+					
+					ts->addBindingTransform(c1.t, c1.name, c2.t, c2.name);
+
+					
 //					Transformation::genBindingTransform(	c1.t,				c2.t,  
 //															c1.name.c_str(), 	c2.name.c_str(),		r);
 				} catch (exception& e) {
@@ -781,6 +786,9 @@ bool NFinput::initReactionRules(
 					component c2 = comps.find(site2)->second;
 					
 					//Even though we had to make sure both ends exist, we really only need one transformation
+					ts->addUnbindingTransform(c1.t, c1.name);
+					
+					
 //					Transformation::genUnbindingTransform(c1.t, c1.name.c_str(),r);
 				} catch (exception& e) {
 					cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
@@ -825,6 +833,13 @@ bool NFinput::initReactionRules(
 			}
 		
 		
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
+			ts->finalize();
+			ReactionClass *r = new ReactionClass(rxnName,0,ts);
+			
+			
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//  Read in the rate law for this reaction

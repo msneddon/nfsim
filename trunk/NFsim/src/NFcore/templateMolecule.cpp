@@ -560,15 +560,16 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 		return false;
 	}
 	//Check that states are correct
-	for(unsigned int s=0; s<stateIndex.size(); s++) {
-		if(m->getState(stateIndex.at(s)) != stateValue.at(s)) { 
+	int s;
+	for(s=0, intVecIter=stateIndex.begin(); intVecIter!=stateIndex.end(); intVecIter++, s++) {
+		if(m->getState((*intVecIter)) != stateValue.at(s)) { 
 			clear();
 			return false; 
 		}
 	}
 	
-	for(unsigned int s=0; s<notStateIndex.size(); s++) {
-		if(m->getState(notStateIndex.at(s)) == notStateValue.at(s)) { 
+	for(s=0, intVecIter=notStateIndex.begin(); intVecIter!=notStateIndex.end(); intVecIter++, s++) {
+		if(m->getState((*intVecIter)) == notStateValue.at(s)) { 
 			clear();
 			return false; 
 		}
@@ -576,11 +577,11 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 	
 	
 	//Check if the sites that must be occupied by anything are occupied
-	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
+	for(intVecIter=sitesThatMustBeOccupied.begin(); intVecIter!=sitesThatMustBeOccupied.end(); intVecIter++)
 	{
 		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
 		//If the site is not occupied in the molecule, no match
-		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(b))) {
+		if(!m->isBindingSiteBonded((*intVecIter))) {
 			clear();
 			return false;
 		}

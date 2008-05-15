@@ -386,11 +386,10 @@ void Molecule::clear()
 
 
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
-{
-	
-	
+{	
 	//Create the queues
 	queue <Molecule *> q;
+	
 	queue <int> d;
 	int currentDepth = 0;
 	
