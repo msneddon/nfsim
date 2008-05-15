@@ -96,6 +96,9 @@ void ReactantList::popLastMappingSet()
 
 void ReactantList::removeMappingSet(unsigned int mappingSetId)
 {
+	//cout<<"in ReactantList: removing mappingSet "<<mappingSetId<<" at position "<<msPositionMap[mappingSetId]<<" containing molecule: "<<mappingSets[msPositionMap[mappingSetId]]->get(0)->getMolecule()->getUniqueID()<< "  "<<endl;
+	//printDetails();
+	
 	if(n_mappingSets==0) {
 		cerr<<"Trying to remove from an empty ReactantList!!"<<endl;
 		if(n_mappingSets==0) {
@@ -106,8 +109,12 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 	//First, get the position of the mappingSet we need to remove
 	int pos = msPositionMap[mappingSetId];
 	
+	
+	
 	if(pos+1>(n_mappingSets)) {
-		cerr<<"Error in ReactantList:  you can't remove a mappingSet that has been cleared! (trying to remove: "<< mappingSetId << " in pos " << pos <<" but size is: "<<size()<<endl;
+		cout<<"Error in ReactantList:  you can't remove a mappingSet that has been cleared! (trying to remove: "<< mappingSetId << " in pos " << pos <<" but size is: "<<size()<<endl;
+		printDetails();
+		
 		return;
 	}
 	
@@ -115,6 +122,7 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 	//If the array has only one element, or we just happened to select the last element,
 	//then just remove the last element without a swap
 	if( pos+1 == (n_mappingSets) ) {
+	//	cout<<"popping not swapping..."<<endl;
 		popLastMappingSet();
 		return;
 	}
@@ -123,8 +131,9 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 	MappingSet *tempMappingSet = mappingSets[pos];
 	mappingSets[pos] = mappingSets[n_mappingSets-1];
 	mappingSets[n_mappingSets-1] = tempMappingSet;
-	msPositionMap[pos] = n_mappingSets-1;
-	msPositionMap[n_mappingSets-1] = pos;
+	
+	msPositionMap[mappingSetId] = n_mappingSets-1;
+	msPositionMap[mappingSets[pos]->getId()] = pos;
 	
 	
 	//Make sure we clear what we don't need
