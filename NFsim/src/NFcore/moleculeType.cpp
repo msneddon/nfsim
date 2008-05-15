@@ -232,9 +232,6 @@ void MoleculeType::prepareForSimulation()
 void MoleculeType::updateRxnMembership(Molecule * m)
 {
 	int r=0;
-	
-//	cout<<"update membership of "<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<endl;
-	
 	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
 	{
 		(*rxnIter)->tryToAdd(m, reactionPositions.at(r));

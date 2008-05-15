@@ -141,7 +141,6 @@ bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 		if(!reactantTemplates[position]->compare(m)) {
 		//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
 			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			
 			m->setRxnListMappingId(rxnIndex,-1);
 		}
 		

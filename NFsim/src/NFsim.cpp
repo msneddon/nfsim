@@ -48,11 +48,6 @@ int main(int argc, const char *argv[])
 	start = clock();
 	///////////////////////////////////////////////////////////
 	
-	NFtest_ss::run();
-	cout<<"\n\nfinished."<<endl;
-	return 0;
-	
-	
 	
 	bool parsed = false;
 	bool verbose = false;
@@ -93,7 +88,7 @@ int main(int argc, const char *argv[])
 					//Here we just run some stuff for testing... The output is just
 					s->registerOutputFileLocation((s->getName()+".gdat").c_str());
 					s->outputAllObservableNames();
-					s->sim(200,100);  // sim for 20 seconds, outputting 100 times
+					s->sim(10000,100);  // sim for 20 seconds, outputting 100 times
 					s->printAllReactions();
 					delete s;
 				}
@@ -113,6 +108,10 @@ int main(int argc, const char *argv[])
 			if(!test.empty())
 			{
 				cout<<"running test: '"+test+"'"<<endl;
+				if(test=="simple_system")
+				{
+					NFtest_ss::run();
+				}
 			}
 			else
 			{

@@ -129,48 +129,6 @@ namespace NFcore
 	};
 
 
-	//!  Knows how to assign mappings in a MappingSet to a particular Molecule
-	/*!
-	    @author Michael Sneddon
-	 */
-	class MapGenerator
-	{
-		public:
-			MapGenerator(unsigned int mappingIndex);
-			~MapGenerator();
-			bool map(MappingSet *mappingSet, Molecule *molecule);
-			
-		protected:
-			unsigned int mappingIndex;
-	};
-	
-	
-	
-	//!  Keeps a list of mappings
-	/*!
-	    @author Michael Sneddon
-	 */
-	class MappingSet
-	{
-		public:
-			MappingSet(unsigned int id, vector <Transformation *> &transformations);
-			~MappingSet();
-			
-			bool set(unsigned int mappingIndex, Molecule *m);
-			Mapping *get(unsigned int mappingIndex);
-			bool clear();
-			
-			unsigned int getId() const { return id; };
-			
-			
-		protected:
-			unsigned int id;
-			
-			bool isSet;
-			unsigned int n_mappings;
-			Mapping ** mappings;
-	};
-
 	
 	
 	
@@ -198,6 +156,62 @@ namespace NFcore
 			Molecule * m;
 	};
 	
+	
+	
+
+	
+	
+	
+	//!  Keeps a list of mappings
+	/*!
+	    @author Michael Sneddon
+	 */
+	class MappingSet
+	{
+		public:
+			MappingSet(unsigned int id, vector <Transformation *> &transformations);
+			~MappingSet();
+			
+			bool set(unsigned int mappingIndex, Molecule *m){
+				mappings[mappingIndex]->setMolecule(m);
+				return true;
+			}
+			Mapping *get(unsigned int mappingIndex) { return mappings[mappingIndex]; }
+			void clear() { };
+			
+			unsigned int getId() const { return id; };
+			
+		protected:
+			unsigned int id;
+			
+			bool isSet;
+			unsigned int n_mappings;
+			Mapping ** mappings;
+	};
+	
+
+	//!  Knows how to assign mappings in a MappingSet to a particular Molecule
+	/*!
+	    @author Michael Sneddon
+	 */
+	class MapGenerator
+	{
+		public:
+			MapGenerator(unsigned int mappingIndex);
+			~MapGenerator();
+			bool map(MappingSet *mappingSet, Molecule *molecule){
+				mappingSet->set(mappingIndex,molecule);
+				return true;
+			}
+			
+			
+			
+			
+			
+		protected:
+			unsigned int mappingIndex;
+	};
+
 }
 
 #endif /*NFREACTIONS_HH_*/
