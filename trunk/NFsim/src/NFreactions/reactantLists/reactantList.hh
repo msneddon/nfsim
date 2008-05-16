@@ -4,8 +4,7 @@
 
 
 
-#include "../NFcore/NFcore.hh"
-#include "NFreactions.hh"
+#include "../NFreactions.hh"
 
 
 

@@ -1,0 +1,4 @@
+#ifndef REACTANTTREE_HH_
+#define REACTANTTREE_HH_
+
+#endif /*REACTANTTREE_HH_*/

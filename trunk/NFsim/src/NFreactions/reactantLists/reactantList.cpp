@@ -1,4 +1,4 @@
-#include "NFreactions.hh"
+#include "reactantList.hh"
 
 using namespace NFcore;
 using namespace std;

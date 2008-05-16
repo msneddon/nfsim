@@ -88,7 +88,7 @@ int main(int argc, const char *argv[])
 					//Here we just run some stuff for testing... The output is just
 					s->registerOutputFileLocation((s->getName()+".gdat").c_str());
 					s->outputAllObservableNames();
-					s->sim(10000,100);  // sim for 20 seconds, outputting 100 times
+					s->sim(200,20);  // sim for 200 seconds, outputting 20 times
 					s->printAllReactions();
 					delete s;
 				}
