@@ -1,11 +1,7 @@
 #include "reactantList.hh"
 
+
 using namespace NFcore;
-using namespace std;
-
-
-
-
 
 ReactantList::ReactantList(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity=50)
 {
@@ -96,9 +92,7 @@ void ReactantList::popLastMappingSet()
 
 void ReactantList::removeMappingSet(unsigned int mappingSetId)
 {
-	//cout<<"in ReactantList: removing mappingSet "<<mappingSetId<<" at position "<<msPositionMap[mappingSetId]<<" containing molecule: "<<mappingSets[msPositionMap[mappingSetId]]->get(0)->getMolecule()->getUniqueID()<< "  "<<endl;
-	//printDetails();
-	
+	//Make sure this mappingSet is not empty
 	if(n_mappingSets==0) {
 		cerr<<"Trying to remove from an empty ReactantList!!"<<endl;
 		if(n_mappingSets==0) {
@@ -106,11 +100,11 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 				exit(1);
 			}exit(1);
 	}
+	
 	//First, get the position of the mappingSet we need to remove
 	int pos = msPositionMap[mappingSetId];
 	
-	
-	
+	//Make sure the position is valid (not out of bounds of the List)
 	if(pos+1>(n_mappingSets)) {
 		cout<<"Error in ReactantList:  you can't remove a mappingSet that has been cleared! (trying to remove: "<< mappingSetId << " in pos " << pos <<" but size is: "<<size()<<endl;
 		printDetails();
@@ -118,11 +112,9 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 		return;
 	}
 	
-	
 	//If the array has only one element, or we just happened to select the last element,
 	//then just remove the last element without a swap
 	if( pos+1 == (n_mappingSets) ) {
-	//	cout<<"popping not swapping..."<<endl;
 		popLastMappingSet();
 		return;
 	}
@@ -132,9 +124,12 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 	mappingSets[pos] = mappingSets[n_mappingSets-1];
 	mappingSets[n_mappingSets-1] = tempMappingSet;
 	
+	//Careful here!  We have to swap values in the msPositionMap
+	//so that msPositionMap[mappingId] points correctly to where
+	//that MappingSet now lives.  Notice that this is a different
+	//swap than above in the MappingSets array!
 	msPositionMap[mappingSetId] = n_mappingSets-1;
 	msPositionMap[mappingSets[pos]->getId()] = pos;
-	
 	
 	//Make sure we clear what we don't need
 	tempMappingSet->clear();
@@ -146,8 +141,8 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 
 void ReactantList::printDetails()
 {
+	//Used for debuggin'...
 	cout<<"ReactantList that contains: "<<size()<<" MappingSets and has a capacity for "<<capacity<<" total sets."<<endl;
-	
 	
 	for(int i=0; i<capacity; i++)
 	{

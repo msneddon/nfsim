@@ -6,17 +6,8 @@
 
 #include "../NFreactions.hh"
 
-
-
-
-
-using namespace std;
-
-
-
 namespace NFcore
 {
-
 	//Forward Declarations
 	class TransformationSet;
 	class MappingSet;
@@ -34,9 +25,10 @@ namespace NFcore
 	  requires linear time removal.  We gain this speedup because the ordering of the list
 	  is unimportant.  To use this class, call the pushNextAvailableMappingSet to get a pointer
 	  to the available MappingSet.  Pass this MappingSet to a TemplateMolecule to actually
-	  map it onto molecules.  If you don't use this MappingSet, call popLoastMappingSet
+	  map it onto molecules.  If you don't end up using this MappingSet, call popLastMappingSet
 	  immediately.  To remove MappingSets, call removeMappingSet with the ID of the MappingSet
-	  you want to remove.  You can get this Id from the MappingSet object.
+	  you want to remove.  You can get this Id from the MappingSet object and Molecule objects
+	  also keep a vector of the MappingSet objects that point to it.
 	    @author Michael Sneddon
 	 */
 	class ReactantList
@@ -62,7 +54,6 @@ namespace NFcore
 				Returns the number of mappingSets that have been added to this list
 			 */
 			int size() const;
-			
 			
 			/*!
 				Adds a new MappingSet to this list and returns a pointer to the new mapping set for you

@@ -520,7 +520,10 @@ unsigned int TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex(int m
 	for(unsigned int b=0; b<bSiteIndex.size(); b++)
 		if(bSiteIndex.at(b)==molBsiteIndex)
 			return b;
-	return -1;
+	cerr<<"Could not find the binding site index in a TemplateMolecule: so I could"<<endl;
+	cerr<<"Not get you your Template Binding site index.  I am thus quitting."<<endl;
+	exit(1);
+	return 0;
 }
 
 
