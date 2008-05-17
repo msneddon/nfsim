@@ -1,7 +1,6 @@
 
 #include "transformationSet.hh"
 
-
 using namespace NFcore;
 
 
@@ -178,12 +177,15 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
-	bool isPresent = false;
+	//bool isPresent = false;
 	list <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		mappingSets[r]->get(0)->getMolecule()->traverseBondedNeighborhood(products,traversalLimit);
 		
 		/*
+		 * I thought that making sure we don't go over the same molecule multiple
+		 * times would make the code faster - but this is rarely used for most rxn
+		 * systems, so it is commented out for now.  But it may help in some cases!
 		//For each of the molecules that we possibly affect, traverse the neighborhood
 		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 					

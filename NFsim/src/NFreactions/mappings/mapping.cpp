@@ -3,11 +3,7 @@
 
 #include "mapping.hh"
 
-
 using namespace NFcore;
-
-
-
 
 
 NFcore::Mapping::Mapping(unsigned int type, unsigned int index)
@@ -21,7 +17,8 @@ NFcore::Mapping::~Mapping()
 	index=0;
 	clear();
 }
-		
+
+
 unsigned int NFcore::Mapping::getType() const
 {
 	return this->type;
@@ -32,15 +29,19 @@ unsigned int NFcore::Mapping::getIndex() const
 }
 Molecule * NFcore::Mapping::getMolecule() const
 {
+	//Make sure the Molecule points somewhere.  For effeciency, this check
+	//can be removed.
 	if(m==NULL) {
-		cout<<"Trying to get a molecule from a null mapping!!"<<endl;
-		return 0;
+		cout<<"Trying to get a molecule from a null mapping (in class Mapping)!! Quitting!"<<endl;
+		exit(1);
 	}
 	return m;
 }
 		
+
 void NFcore::Mapping::clear()
 {
+	//Clearing the Mapping only requires us to set the molecule to null
 	this->m=NULL;
 }
 bool NFcore::Mapping::setMolecule(Molecule *m)

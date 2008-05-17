@@ -16,6 +16,11 @@ using namespace NFcore;
 
 //!  Functionality to handle input from XML files or command line arguments
 /*!
+	This is a very straightforward set of functions and simple classes that
+	together parse and handle all the major input into NFsim.  The raw XML
+	parsing code comes from the TinyXML project and can be found in its
+	unedited form in the TinyXML directory.  Thanks TinyXML!  You perform great
+	and you are definitly tiny!
     @author Michael Sneddon
  */
 namespace NFinput {

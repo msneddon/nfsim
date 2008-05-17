@@ -5,7 +5,6 @@
 using namespace NFcore;
 
 
-
 NFcore::Transformation::Transformation()
 {
 	type=Transformation::SKIP;
@@ -22,6 +21,11 @@ NFcore::Transformation::~Transformation()
 	otherReactantIndex=0;
 	otherMappingIndex=0;
 }
+
+
+
+
+
 NFcore::Transformation * Transformation::genEmptyTransform()
 {
 	return new Transformation();
