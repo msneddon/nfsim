@@ -12,14 +12,18 @@ NFcore::Transformation::Transformation()
 	stateORsiteIndex=0;
 	otherReactantIndex=0;
 	otherMappingIndex=0;
+	sc = 0;
 }
 NFcore::Transformation::~Transformation()
 {
+	if(type==Transformation::ADD) delete sc;
 	type=Transformation::SKIP;
 	newStateValue = -1;
 	stateORsiteIndex=0;
 	otherReactantIndex=0;
 	otherMappingIndex=0;
+	
+	
 }
 
 
@@ -61,13 +65,22 @@ NFcore::Transformation * NFcore::Transformation::genUnbindingTransform(unsigned 
 	t->stateORsiteIndex=bSiteIndex;
 	return t;
 }
-NFcore::Transformation * NFcore::Transformation::genAddMoleculeTransform()
+NFcore::Transformation * NFcore::Transformation::genAddMoleculeTransform(SpeciesCreator *sc)
 {
-	cerr<<"Warning genAddMoleculeTransform() not yet working!!"<<endl;
-	return 0;
+	Transformation *t = new Transformation();
+	t->type = Transformation::ADD;
+	t->sc=sc;
+	return t;
 }
 NFcore::Transformation * NFcore::Transformation::genRemoveMoleculeTransform()
 {
-	cerr<<"Warning genRemoveMoleculeTransform() not yet working!!"<<endl;
-	return 0;
+	Transformation *t = new Transformation();
+	t->type = Transformation::REMOVE;
+	return t;
+}
+
+void Transformation::createSpecies() {
+	if(sc!=NULL) {
+		sc->create();
+	}
 }

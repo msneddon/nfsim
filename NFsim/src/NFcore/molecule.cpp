@@ -9,10 +9,22 @@ using namespace NFcore;
 int Molecule::uniqueIdCount = 0;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // Molecule Constructor
 //
 //
-Molecule::Molecule(MoleculeType * parentMoleculeType)
+Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 {
 	if(DEBUG) cout<<"-creating molecule instance of type " << parentMoleculeType->getName() << endl;	
 	this->parentMoleculeType = parentMoleculeType;
@@ -40,12 +52,14 @@ Molecule::Molecule(MoleculeType * parentMoleculeType)
 	rxnListMappingId = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
+	isPrepared = false;
 	
 	//register this molecule with moleculeType and get some ID values
-	ID_number = this->parentMoleculeType->addMolecule(this);
+	//ID_number = this->parentMoleculeType->addMolecule(this);
 	ID_complex = this->parentMoleculeType->createComplex(this);
 	ID_type = this->parentMoleculeType->getTypeID();
 	ID_unique = Molecule::uniqueIdCount++;
+	this->listId = listId;
 }
 
 // Molecule Deconstructor
@@ -75,10 +89,12 @@ Molecule::~Molecule()
 
 void Molecule::prepareForSimulation()
 {
+	if(isPrepared) return;
 	nReactions = parentMoleculeType->getReactionCount();
 	this->rxnListMappingId = new int[nReactions];
 	for(int r=0; r<nReactions; r++)
 		rxnListMappingId[r] = -1;
+	isPrepared = true;
 }
 
 

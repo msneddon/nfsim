@@ -40,6 +40,7 @@ namespace NFinput {
 			
 			const static unsigned int BSITE = 0;
 			const static unsigned int STATE = 1;
+			const static unsigned int MOLECULE = 2;
 	};
 
 	
@@ -118,6 +119,20 @@ namespace NFinput {
 			map <string, component> &comps,
 			bool verbose);
 	
+	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.
+	/*!
+    	@author Michael Sneddon
+	 */
+	
+		bool readProductPattern(
+			TiXmlElement * pListOfMol, 
+			System * s, map <string,double> &parameter,
+			map<string,int> &allowedStates,
+			string patternName,
+			vector <MoleculeType *> &productMoleculeTypes,
+			vector < vector <int> > &stateInformation,
+			vector < vector <int> > &bindingSiteInformation,
+			bool verbose);
 	
 	
 	

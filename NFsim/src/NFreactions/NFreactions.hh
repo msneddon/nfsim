@@ -12,6 +12,7 @@
 #include "reactantLists/reactantList.hh"
 #include "transformations/transformationSet.hh"
 #include "transformations/transformation.hh"
+#include "transformations/speciesCreator.hh"
 #include "mappings/mapping.hh"
 #include "mappings/mappingSet.hh"
 #include "mappings/mappingGenerator.hh"

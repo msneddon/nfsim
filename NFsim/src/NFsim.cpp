@@ -6,9 +6,46 @@
  *
  * \section install_sec Installation
  *
+ * 
+ * 
  * \subsection key Key Features
  *  NFsim can ...
  *  and it can also...
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ *  \section install_sec Developers
+ * To begin developing and extending NFsim, the best place to start looking is in
+ * the src/NFtest/simple_system directory. Here you'll find two files, simple_system.hh
+ * and simple_system.cpp.  Together, this code specifies a simple enzymatic type reaction
+ * that is completely hard coded.  This will give you an idea of the basic classes and
+ * functions used to define, initialize, run, and output a simulaiton.  From there, you
+ * can dive into the specific classes and functions that you need to work with.  Details
+ * about how to run the simple_system example are given in these files.
+ * 
+ * All of the other main classes are defined in the NFcore namespace and are found in the NFcore
+ * directory and the NFreactions directory.  The NFcore directory contains the basic structure
+ * of the simulation engine while the NFreactions directory contains the classes associated with
+ * actually executing rules and transforming molecules.  NFinput contains what's needed for
+ * the xml parser (built using the TinyXML package) and the command line parser.  NFutil primarily
+ * contains a nice implementation of the Mersenne Twister random number generator which should
+ * be used for all random number generation in NFsim.  NFoutput is more sparse as it deals only
+ * with handling the more complicated output required of groups and complexes.  (Basic outputting
+ * is handled easily with the Observable class in the NFcore namespace).
+ * 
+ *  \section install_sec Authors & Acknowledgments
+ * The NFsim code was written and developed by Michael Sneddon with help from James Faeder and
+ * Thierry Emonet.  The core simulation algorithm is based on 
+ * 
+ * Special thanks to other members of the Emonet lab, particularly William Pontius, Garrit Jentsch, 
+ * and Oleksii Sliusarenko for helpful feedback.  For questions or assistance with the code, please contact
+ * michael.sneddon@yale.edu.
+ * 
  * 
  */
 #include "NFsim.hh"
@@ -80,7 +117,6 @@ int main(int argc, const char *argv[])
 			if(!filename.empty())
 			{
 				
-				
 				System *s = NFinput::initializeFromXML(argv[2], verbose);
 			
 				if(s!=NULL)
@@ -88,7 +124,13 @@ int main(int argc, const char *argv[])
 					//Here we just run some stuff for testing... The output is just
 					s->registerOutputFileLocation((s->getName()+".gdat").c_str());
 					s->outputAllObservableNames();
-					s->sim(200,20);  // sim for 200 seconds, outputting 20 times
+					
+					s->equilibriate(0,10);
+					s->sim(50,50);
+					s->stepTo(600);
+					
+					
+					//s->sim(200,20);  // sim for 200 seconds, outputting 20 times
 					s->printAllReactions();
 					delete s;
 				}
@@ -111,6 +153,10 @@ int main(int argc, const char *argv[])
 				if(test=="simple_system")
 				{
 					NFtest_ss::run();
+				}
+				if(test=="transcription")
+				{
+					NFtest_transcription::run();
 				}
 			}
 			else

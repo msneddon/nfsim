@@ -41,6 +41,16 @@ void NFtest_ss::run()
 	 * 
 	 */
 	
+	//First we define some parameters for rates and counts
+	int numOfMoleculeY = 500;
+	int numOfMoleculeX = 5000;
+	double dephosRate = 0.5;
+	double kOn = 10;
+	double kOff = 5;
+	double kCat = 0.5;
+	
+	
+	
 	
 	//  1)  Create the reaction system by creating an object called System with the given name
 	//      This will be the base unit for running simulations and outputting results
@@ -56,17 +66,17 @@ void NFtest_ss::run()
 	//  3)  Instantiate the actual molecules (this populate function is the easiest way, but you can do it
 	//      manually as well by creating each molecule separately - see the MoleculeType::populate function for
 	//      an example on how this can be done).
-	molY->populateWithDefaultMolecules(500);
-	molX->populateWithDefaultMolecules(5000);
+	molY->populateWithDefaultMolecules(numOfMoleculeY);
+	molX->populateWithDefaultMolecules(numOfMoleculeX);
 	
 	
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are the rates and are in
 	//      arbitrary units here.  In general, the rates should be in units of per second.
-	ReactionClass * x_dephos = createReactionXDephos(molX, 0.4);
-	ReactionClass *rXbindY = createReactionXYbind(molX, molY, 10.0);
-	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, 5.0);
-	ReactionClass *rYphosX = createReactionYphosX(molX, molY, 0.5);
+	ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
+	ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
+	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
+	ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
 	
 	s->addReaction(x_dephos);
 	s->addReaction(rXbindY);
@@ -353,7 +363,7 @@ void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 	
 	//Now, we create an observable from the templateMolecule and give it a name
 	//that will be used in the output.
-	Observable * obsxNotPhos = new Observable("X(p~1,y)",xNotPhos);
+	Observable * obsxNotPhos = new Observable("X(p~0,y)",xNotPhos);
 	
 	
 	//Finally, we have to add the observable to the MoleculeType that is being observed.  If you

@@ -32,7 +32,7 @@ System * NFinput::initializeFromXML(
 		bool verbose)
 {
 	if(!verbose) cout<<"reading xml file ("+filename+")  [";
-	if(verbose) cout<<"\tTrying to read xml model specification file: "<<filename<<endl;
+	if(verbose) cout<<"\tTrying to read xml model specification file: '"<<filename<<"'"<<endl;
 	
 	
 	TiXmlDocument doc(filename.c_str());
@@ -151,7 +151,7 @@ System * NFinput::initializeFromXML(
 	}
 	else
 	{
-		cout<<"\nError reading the file.  I could not find / open it."<<endl;
+		cout<<"\nError reading the file.  I could not find / open it, or it is not valid xml."<<endl;
 	}
 	
 	
@@ -251,6 +251,10 @@ bool NFinput::initMoleculeTypes(
 			//Make sure the name isn't null & output a message if needed
 			if(typeName.compare("Null")==0 || typeName.compare("NULL")==0){
 				if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + typeName + "'"<<endl;
+				continue;
+			}
+			if(typeName=="Trash" || typeName=="trash" || typeName=="TRASH") {
+					if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + typeName + "'"<<endl;
 				continue;
 			}
 			if(verbose) cout<<"\t\tReading and Creating MoleculeType: "+typeName+"(";
@@ -523,30 +527,29 @@ bool NFinput::initStartSpecies(
 							bSiteMolMapping[compId] = molecules.size();
 						}
 					}
-
-					//loop to create the actual molecules of this type
-					vector <Molecule *> currentM;
-					molecules.push_back(currentM);
-					for(int m=0; m<specCountInteger; m++)
-					{
-						Molecule *m = new Molecule(mt);
-
-						//Loop through the states and set the ones we need to set
-						int k=0;
-						for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
-							m->setState((*snIter).c_str(), (int)stateValue.at(k));
-						molecules.at(molecules.size()-1).push_back(m);
-					}
-					
-					//Reset the states for the next wave...
-					stateName.clear();
-					stateValue.clear();
-					
 				}
 				else
 				{
 					cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
 				}
+
+				//loop to create the actual molecules of this type
+				vector <Molecule *> currentM;
+				molecules.push_back(currentM);
+				for(int m=0; m<specCountInteger; m++)
+				{
+					Molecule *m = mt->genDefaultMolecule();
+
+					//Loop through the states and set the ones we need to set
+					int k=0;
+					for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
+						m->setState((*snIter).c_str(), (int)stateValue.at(k));
+					molecules.at(molecules.size()-1).push_back(m);
+				}
+				
+				//Reset the states for the next wave...
+				stateName.clear();
+				stateValue.clear();
 			}
 
 			
@@ -717,9 +720,6 @@ bool NFinput::initReactionRules(
 				try {
 					component c = comps.find(site)->second;
 					int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-					
-
-					
 					ts->addStateChangeTransform(c.t,c.name,finalStateInt);
 				} catch (exception& e) {
 					cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
@@ -749,12 +749,7 @@ bool NFinput::initReactionRules(
 				try {
 					component c1 = comps.find(site1)->second;
 					component c2 = comps.find(site2)->second;
-					
 					ts->addBindingTransform(c1.t, c1.name, c2.t, c2.name);
-
-					
-//					Transformation::genBindingTransform(	c1.t,				c2.t,  
-//															c1.name.c_str(), 	c2.name.c_str(),		r);
 				} catch (exception& e) {
 					cerr<<"Error in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
@@ -787,9 +782,6 @@ bool NFinput::initReactionRules(
 					
 					//Even though we had to make sure both ends exist, we really only need one transformation
 					ts->addUnbindingTransform(c1.t, c1.name);
-					
-					
-//					Transformation::genUnbindingTransform(c1.t, c1.name.c_str(),r);
 				} catch (exception& e) {
 					cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
 					cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
@@ -809,16 +801,29 @@ bool NFinput::initReactionRules(
 					cerr<<"have a valid id attribute.  Quitting."<<endl;
 					return false;
 				} else {
-					id = pDelete->Attribute("id");
+					try {
+						id = pDelete->Attribute("id");
+						if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;
+						//cout<<"id: "<<id<<endl;
+						component c = comps.find(id)->second;
+						//cout<<"Templates.size() "<<templates.size()<<endl;
+						//c.t->printDetails();
+						ts->addDeleteMolecule(c.t);
+					} catch (exception& e) {
+						cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
+						cerr<<"It seems that I couldn't find the molecule to delete that you are refering to. (I was looking for ID: "<<pDelete->Attribute("id")<<endl;
+						return false;
+					}
 				}
 				
-				if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;
+				
 			}
 			
 			//Finally, figure out any new creations
 			TiXmlElement *pAdd;
 			for ( pAdd = pListOfOperations->FirstChildElement("Add"); pAdd != 0; pAdd = pAdd->NextSiblingElement("Add")) 
 			{
+				
 				//Make sure all the information about the state change is here
 				string id;
 				if(!pAdd->Attribute("id")) {
@@ -827,12 +832,65 @@ bool NFinput::initReactionRules(
 					return false;
 				} else {
 					id = pAdd->Attribute("id");
+					if(verbose) cout<<"\t\t\t***Identified addition of product pattern: "+id+"  Warning!  does some stuff, but not everything yet."<<endl;	
+									
+					SpeciesCreator *sc = NULL;
+					
+					//Go get the product pattern we need which will specify how to make this new species
+					TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
+					if(!pListOfProductPatterns) {
+						cerr<<"Error:: ReactionRule "<<rxnName<<" contains no product patterns, but needs at least one to add a species creation rule!"<<endl;
+						return false;
+					}
+					TiXmlElement * pProduct;
+					for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern")) 
+					{
+						//First extract out the product Id
+						string productName;
+						if(!pProduct->Attribute("id")) {
+							cerr<<"Product pattern in ReactionRule "+rxnName+" does not have a valid id attribute!"<<endl;
+							return false;
+						} else {
+							productName = pProduct->Attribute("id");
+						}
+						
+						//When we find the product pattern with the correct Id, then lets create it
+						if(productName==id) {
+							TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
+								if(pListOfMols) {
+									
+									
+									vector <MoleculeType *> productMoleculeTypes;
+									vector < vector <int> > stateInformation;
+									vector < vector <int> > bindingSiteInformation;
+									
+									bool ok = NFinput::readProductPattern(pListOfMols,s,parameter,allowedStates, productName, 
+											productMoleculeTypes, stateInformation, bindingSiteInformation, verbose);
+									
+									if(!ok) {
+										cout<<"Could not read the list of product patterns for addition of a molecule in reaction "<<rxnName<<endl;
+				
+									} else if(productMoleculeTypes.size()>0){
+										sc = new SpeciesCreator(productMoleculeTypes,stateInformation,bindingSiteInformation);
+										ts->addAddMolecule(sc);
+									}
+								}
+								else {
+									cerr<<"Reactant product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+									return false;
+								}
+						}
+					}
+					
+					if(!sc)
+					{
+						
+					}
+					
 				}
 						
-				if(verbose) cout<<"\t\t\t***Identified addition of pattern: "+id<<"  Warning!  does nothing yet."<<endl;	
+				
 			}
-		
-		
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
@@ -928,7 +986,7 @@ bool NFinput::initReactionRules(
 		return true;
 		
 	} catch (...) {
-		//Something went wrong... again.
+		cout<<"caught something.."<<endl;
 		return false;
 	}
 }
@@ -1032,7 +1090,7 @@ TemplateMolecule *NFinput::readPattern(
 		bool verbose)
 {
 	try {
-	
+		
 		//A vector to hold each template molecule as we compose the entire template molecule
 		vector < TemplateMolecule * > tMolecules;
 	
@@ -1067,6 +1125,7 @@ TemplateMolecule *NFinput::readPattern(
 		
 			//Skip anything that is a null molecule
 			if(molName=="Null" || molName=="NULL" || molName=="null") continue;
+			if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
 		
 			//Get the moleculeType and create the actual template
 			MoleculeType *moltype = s->getMoleculeTypeByName(molName);
@@ -1106,7 +1165,6 @@ TemplateMolecule *NFinput::readPattern(
 							int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
 							stateName.push_back(compName);
 							stateValue.push_back(stateValueInt);
-							
 							
 							//cout<<"state value: "<< compId;
 							component c(tempmol,component::STATE, compName);
@@ -1240,12 +1298,247 @@ TemplateMolecule *NFinput::readPattern(
 		tMolecules.clear();
 		bSiteMolMapping.clear();
 		bSiteSiteMapping.clear();
+		
+		
+		//Add a pointer to this reactant as a component so that we can get to it on deletes
+		component c(finalTemplate,component::MOLECULE, "");
+		comps.insert(pair <string, component> (patternName,c));
+		
 		return finalTemplate;
 	} catch (...) {
 		//Here's our final catch all!
 		return NULL;
 	}
 }
+
+
+bool NFinput::readProductPattern(
+		TiXmlElement * pListOfMol, 
+		System * s, map <string,double> &parameter,
+		map<string,int> &allowedStates,
+		string patternName,
+		vector <MoleculeType *> &productMoleculeTypes,
+		vector < vector <int> > &stateInformation,
+		vector < vector <int> > &bindingSiteInformation,
+		bool verbose)
+{
+	try {
+		
+		//Variables to remember the index of things
+		const int proMolTypeIndex = 0;
+		const int stateIndex = 1, stateValue=2;
+		const int bSiteIndex = 1, partnerMolTypeIndex = 2, partnerBsiteIndex = 3;
+
+		//First, set up the stateInformation vector
+		{
+			//v1 maps index into productMoleculetypes, v2 maps the stateIndex
+			//v3 maps the state value
+			vector <int> v1,v2,v3;
+			stateInformation.push_back(v1);
+			stateInformation.push_back(v2);
+			stateInformation.push_back(v3);
+		}
+		
+		//And here we go with the bindingSiteInformation vector
+		{
+			//v1 maps index into productMoleculetypes, v2 maps the bindingSiteIndex
+			//v3 maps the partner's index into productMoleculeTypes, and v4 maps the 
+			vector <int> v1,v2,v3, v4;
+			bindingSiteInformation.push_back(v1);
+			bindingSiteInformation.push_back(v2);
+			bindingSiteInformation.push_back(v3);
+			bindingSiteInformation.push_back(v4);
+		}
+		
+		//Some mappings to keep track of binding sites
+		map <string, string> bSiteSiteMapping;
+		map <string, int> bSiteMolMapping;
+
+		//Map the ids of the molecules with thier location in the productMoleculeTypes vector
+		map <string,int> uniqueIdMapping;
+
+		// Now loop through the molecules in the list
+		TiXmlElement *pMol;
+		bool foundTrash = false;
+		for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule")) 
+		{
+			//First get the type of molecule and retrieve the moleculeType object from the system
+			string molName, molUid;
+			if(!pMol->Attribute("name") || ! pMol->Attribute("id")) {
+				cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating product pattern '"<<patternName<<"'. Quitting"<<endl;
+				return false;
+			} else {
+				molName = pMol->Attribute("name");
+				molUid = pMol->Attribute("id");
+			}
+		
+			//Skip anything that is a null molecule
+			if(molName=="Null" || molName=="NULL" || molName=="null") {
+				if(verbose) cout<<"\t\t\t\tskipping a null molecule in product pattern..."<<endl;
+				foundTrash=true;
+				continue;
+			}
+			//Skip anything that is trash molecule
+			if(molName=="Trash" || molName=="TRASH" || molName=="trash") {
+				if(verbose) cout<<"\t\t\t\tskipping a trash molecule in product pattern..."<<endl;
+				foundTrash=true;
+				continue;
+			}
+		
+			//Retrieve the moleculeType and remember it
+			MoleculeType *moltype = s->getMoleculeTypeByName(molName);
+			productMoleculeTypes.push_back(moltype);
+			
+			int currentMoleculeTypeIndex = productMoleculeTypes.size()-1;
+			uniqueIdMapping.insert(pair<string,int>(molUid,currentMoleculeTypeIndex));
+			
+			if(verbose) cout<<"\t\t\t\ttIncluding Product Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
+		
+			//Loop through the components of the molecule in order to remember state values
+			TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
+			if(pListOfComp)
+			{
+				TiXmlElement *pComp;
+				for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
+				{
+					//Get the basic components of this molecule
+					string compId, compName, compBondCount;
+					if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
+						cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
+						return false;
+					} else {
+						compId = pComp->Attribute("id");
+						compName = pComp->Attribute("name");
+						compBondCount = pComp->Attribute("numberOfBonds");
+					}
+					
+					
+					//Read in a state, if it is in fact a state
+					if(pComp->Attribute("state")) {
+						string compStateValue = pComp->Attribute("state");
+						
+						//Make sure the given state is allowed
+						if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
+							cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
+							cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
+							return false;
+						} else {
+							//State is a valid allowed state, so push it onto our lists to remember it
+							int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
+							stateInformation.at(proMolTypeIndex).push_back(currentMoleculeTypeIndex);
+							stateInformation.at(stateIndex).push_back(moltype->getStateIndex(compName));
+							stateInformation.at(stateValue).push_back(stateValueInt);
+						}
+					}
+					
+					//Otherwise, parse it as a binding site - here we just check to make sure the number of 
+					//bonds specified is 0 or 1, and remember the site if it was set to 1.  This way we ensure
+					//that you can't specify the site has zero bonds, but later try to add a bond there.
+					else {
+						if(!pComp->Attribute("numberOfBonds")) {
+							cerr<<"You gave a bond when creating pattern: "+patternName+" that does not have a numberOfBonds"<<endl;
+							cerr<<"tag.  I need this to determine what exactly to do.  Quitting."<<endl;
+							return false;
+						} else {
+							string numOfBonds = pComp->Attribute("numberOfBonds");
+							int numOfBondsInt = -1;
+							try {
+								numOfBondsInt = NFutil::convertToInt(numOfBonds);
+							} catch (std::runtime_error e) {
+								cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
+								cerr<<e.what()<<endl;
+								return false;
+							}
+							
+							if (numOfBondsInt==1) {
+								bSiteSiteMapping[compId] = compName;
+								bSiteMolMapping[compId] = currentMoleculeTypeIndex;
+							} else if (numOfBondsInt!=0) {
+								cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
+								cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
+								return false;
+							}
+						}
+					}
+				} //end loop over components
+			} //end if statement for compenents to exist
+		} // end loop over molecules
+		
+	
+	
+		//Here is where we find the bonds that need to be created
+		TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
+		if(pListOfBonds)
+		{
+			//First get the information on the bonds in the complex
+			TiXmlElement *pBond;
+			for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond")) 
+			{
+				//First, grab the bond information that we need to set things up
+				string bondId, bSite1, bSite2;
+				if(!pBond->Attribute("id") || !pBond->Attribute("site1") || !pBond->Attribute("site2")) {
+					cerr<<"!! Invalid Bond tag for pattern: "<<patternName<<".  Quitting."<<endl;
+					return false;	
+				} else {
+					bondId = pBond->Attribute("id");
+					bSite1 = pBond->Attribute("site1");
+					bSite2 = pBond->Attribute("site2");
+				}
+				
+				//if(verbose)cout<<"reading bond "<<bondId<<" which connects "<<bSite1<<" to " <<bSite2<<endl;
+				
+				//Get the information on this bond that tells us which molecules to connect
+				try {
+					
+					//First look up the info and add the bond
+					string bSiteName1 = bSiteSiteMapping.find(bSite1)->second;
+					int bSiteMolTypeIndex1 = bSiteMolMapping.find(bSite1)->second;
+					string bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
+					int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
+
+					//Add the information to the list
+					bindingSiteInformation.at(proMolTypeIndex).push_back(bSiteMolTypeIndex1);
+					unsigned int bSiteIndex1 = productMoleculeTypes.at(bSiteMolTypeIndex1)->getBindingSiteIndex(bSiteName1);
+					bindingSiteInformation.at(bSiteIndex).push_back(bSiteIndex1);
+					bindingSiteInformation.at(partnerMolTypeIndex).push_back(bSiteMolIndex2);
+					unsigned int bSiteIndex2 = productMoleculeTypes.at(bSiteMolIndex2)->getBindingSiteIndex(bSiteName2);
+					bindingSiteInformation.at(partnerBsiteIndex).push_back(bSiteIndex2);
+					
+					//Erase the bonds to make sure we don't add them again
+					bSiteSiteMapping.erase(bSite1);
+					bSiteMolMapping.erase(bSite1);
+					bSiteSiteMapping.erase(bSite2);
+					bSiteMolMapping.erase(bSite2);
+				} catch (exception& e) {
+					cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating product pattern '"<<patternName<<"'. "<<endl;
+					cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
+					cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
+					return false;
+				}
+			}
+		}
+		
+
+		//Make sure we actually did something!
+		if(productMoleculeTypes.empty()){
+			if(foundTrash) {
+				if(verbose) cout<<"\t\t\t\tWarning: You have an add molecule rule, but only a Trash or Null pattern listed..."<<endl;
+				return true;
+			}
+			cerr<<"You have a product pattern named "<<patternName<<" that doesn't include any actual patterns!  (Or I just couldn't find any)"<<endl;
+			cerr<<"Therefore, I see no other choice than to quit until you fix the problem."<<endl;
+			return false;
+		}
+		
+		bSiteMolMapping.clear();
+		bSiteSiteMapping.clear();
+		return true;
+	} catch (...) {
+		//Here's our final catch all!
+		return false;
+	}
+}
+
 
 
 

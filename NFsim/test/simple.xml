@@ -205,6 +205,34 @@
           <StateChange site="RR3_RP1_M1_C2" finalState="P"/>
         </ListOfOperations>
       </ReactionRule>
+      <ReactionRule id="RR4" name="Rule3">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR4_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_RP1_M1" name="R"/>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR4_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_PP1_M1" name="R"/>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR4_RateLaw" type="Ele">
+          <ListOfRateConstants>
+            <RateConstant value="rateParam1"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR4_RP1_M1"/>
+        </Map>
+        <ListOfOperations>
+          <Delete id="RR4_RP1"/>
+          <Add id="RR4_PP1"/>
+        </ListOfOperations>
+      </ReactionRule>
     </ListOfReactionRules>
     <ListOfObservables>
       <Observable id="O1" name="Rbound" type="Molecules">

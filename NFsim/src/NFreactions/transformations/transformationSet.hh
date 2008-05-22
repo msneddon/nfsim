@@ -12,6 +12,7 @@ namespace NFcore
 	class Transformation;
 	class TemplateMolecule;
 	class Molecule;
+	class SpeciesCreator;
 
 
 	//!  Maintains a set of Transformation objects for a ReactionClass
@@ -79,13 +80,13 @@ namespace NFcore
 				implemented yet, so it may take other parameters.
 				@author Michael Sneddon
 			*/
-			bool addDeleteMolecule(TemplateMolecule *t) { return false; };
+			bool addDeleteMolecule(TemplateMolecule *t);
 			
 			/*!
 				Adds a create molecule rule, but has not been implemented yet.
 				@author Michael Sneddon
 			*/
-			bool addAddMolecule() { return false; };
+			bool addAddMolecule(SpeciesCreator *sc);
 			
 			/*!
 				Call this (in a ReactionClass) to transform the array of MappingSets (one
@@ -166,6 +167,9 @@ namespace NFcore
 			
 			/*!	A vector that keeps holds the actual Transformation objects	*/
 			vector <Transformation *> *transformations;
+			
+			
+			vector <Transformation *> addMoleculeTransformations;
 	};
 
 }
