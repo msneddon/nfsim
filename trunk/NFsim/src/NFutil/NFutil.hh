@@ -110,6 +110,47 @@ namespace NFutil {
 	int convertToInt(const std::string& s);
 	
 	
+	
+	
+	
+	/*
+	class factory {
+		public:
+			virtual 
+		
+	};
+	
+	
+	
+	
+	template <class T, class factory>
+	class NFlist {
+		
+		
+		public:
+			NFlist(int initCapacity);
+			~NFlist() {};
+		
+			T *at() const;
+			int getNextAvailable(T &t);
+			void remove(int listId);
+		
+		protected:
+			int size;
+			int lastAllocated;
+			int capacity;
+			T *containerArray;
+		
+	};
+	
+	*/
+	
+	
+	
+	
+	
+	
+	
 }
 
 

@@ -13,6 +13,7 @@
 //#include "NFtest/compare/compare.hh"
 //#include  "NFtest/transformations/transformations.hh"
 #include  "NFtest/simple_system/simple_system.hh"
+#include  "NFtest/transcription/transcription.hh"
 
 //The chemotaxis models
 //#include "NFmodel/ChemotaxisModel/AN_system/AN_system.hh"

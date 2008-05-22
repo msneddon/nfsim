@@ -7,6 +7,8 @@
 namespace NFcore
 {
 
+	class SpeciesCreator;
+
 	//!  Keeps information about how to perform one transform of a Molecule.
 	/*!
 	 	This is the base unit used to store information about transformations.  Based on
@@ -73,7 +75,7 @@ namespace NFcore
 			
 			
 			
-			
+			void createSpecies();
 			
 			
 			
@@ -113,7 +115,7 @@ namespace NFcore
 			 	implemented.
 			    @author Michael Sneddon
 			 */
-			static Transformation * genAddMoleculeTransform();
+			static Transformation * genAddMoleculeTransform(SpeciesCreator *sc);
 			
 			/*!
 			 	Generates a removal of a molecule from the system.  Currently this is
@@ -181,7 +183,7 @@ namespace NFcore
 			unsigned int otherMappingIndex;
 			
 			//For a creation of a new molecule, not yet impelemented
-			//SpeciesGenerator sg
+			SpeciesCreator *sc;
 	};
 }
 

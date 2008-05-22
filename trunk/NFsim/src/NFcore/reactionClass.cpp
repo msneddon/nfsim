@@ -34,6 +34,16 @@ ReactionClass::~ReactionClass()
 		delete tr;
 	}
 	*/
+	
+	ReactantList *rl;
+	while(reactantLists.size()>0)
+	{
+		rl = reactantLists.back();
+		reactantLists.pop_back();
+		delete rl;
+	}
+	
+	delete transformationSet;
 }
 	
 
@@ -156,6 +166,37 @@ bool ReactionClass::tryToAdd(Molecule *m, unsigned int position)
 		
 	return false;
 }
+
+
+void ReactionClass::remove(Molecule *m, unsigned int position)
+{
+	//First a bit of error checking...
+	if(position<0 || position>=n_reactants || m==NULL) 
+	{
+		cout<<"Error removing molecule from a reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
+		exit(1);
+	}
+		
+		
+	//Get the specified reactantList
+	ReactantList *rl = reactantLists.at(position);
+		
+	//Check if the molecule is in this list
+	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,position);
+		
+	bool isInRxn = (m->getRxnListMappingId(rxnIndex)>=0);
+		
+		
+	if(isInRxn)
+	{
+		rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+		m->setRxnListMappingId(rxnIndex,-1);
+	}
+}
+
+
+
+
 		
 
 void ReactionClass::pickMappingSets(double random_A_number)

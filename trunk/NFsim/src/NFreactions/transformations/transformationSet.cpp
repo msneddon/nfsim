@@ -24,10 +24,6 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 TransformationSet::~TransformationSet()
 {
 	for(unsigned int r=0; r<n_reactants; r++)  {
-		cout<<"Count in ["<<r<<"]: "<<this->transformations[r].size()<<endl;
-	}
-	
-	for(unsigned int r=0; r<n_reactants; r++)  {
 		Transformation *t;
 		while(transformations[r].size()>0)
 		{
@@ -36,6 +32,15 @@ TransformationSet::~TransformationSet()
 			delete t;
 		}
 	}
+	
+	Transformation *t;
+	while(addMoleculeTransformations.size()>0)
+	{
+		t = addMoleculeTransformations.back();
+		addMoleculeTransformations.pop_back();
+		delete t;
+	}
+	
 	delete [] transformations;
 	delete [] reactants;
 	this->n_reactants = 0;
@@ -124,6 +129,41 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 }
 
 
+/*!
+	Adds a delete rule to the given TemplateMolecule.
+	@author Michael Sneddon
+*/
+bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	int reactantIndex = find(t);
+	if(reactantIndex==-1) {
+		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
+		exit(1);
+	}
+	Transformation *transformation = Transformation::genRemoveMoleculeTransform();
+	
+	// 3) Add the transformation object to the TransformationSet
+	transformations[reactantIndex].push_back(transformation);
+	
+	// 3) Create a MapGenerator object and add it to the templateMolecule
+	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+	t->addMapGenerator(mg);
+	return true;
+}
+
+bool TransformationSet::addAddMolecule(SpeciesCreator *sc) {
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+
+	Transformation *transformation = Transformation::genAddMoleculeTransform(sc);
+		
+	// 3) Add the transformation object to the TransformationSet
+	addMoleculeTransformations.push_back(transformation);
+		
+	// 3) No map generators needed for an add molecule!
+	//MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+	//t->addMapGenerator(mg);
+	return true;
+}
 
 
 
@@ -149,6 +189,8 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 	
+	list <Molecule *> deleteList;
+	
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		MappingSet *ms = mappingSets[r];
 		for(unsigned int t=0; t<transformations[r].size(); t++)
@@ -170,6 +212,29 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 				Mapping *m2 = mappingSets[transformations[r].at(t)->getPartnerReactantIndex()]->get(transformations[r].at(t)->getPartnerMappingIndex());
 				Molecule::bind(m1->getMolecule(),m1->getIndex(), m2->getMolecule(), m2->getIndex());
 			}
+			else if(type == Transformation::REMOVE) {
+				Mapping *m1 = ms->get(t);
+				deleteList.push_back(m1->getMolecule());
+				
+			}
+		}
+	}
+	
+	if(deleteList.size()>0) {
+		list <Molecule *> allMolecules;
+		list <Molecule *>::iterator it;
+		for(it = deleteList.begin(); it!=deleteList.end(); it++) {
+			(*it)->traverseBondedNeighborhood(allMolecules,ReactionClass::NO_LIMIT);
+		}
+		for(it = allMolecules.begin(); it!=allMolecules.end(); it++) {
+			(*it)->getMoleculeType()->removeMoleculeFromRunningSystem((*it));
+		}
+	}
+	
+	int size = addMoleculeTransformations.size();
+	if(size>0) {
+		for(int i=0; i<size; i++) {
+			addMoleculeTransformations.at(i)->createSpecies();
 		}
 	}
 	return true;
@@ -180,6 +245,8 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 	//bool isPresent = false;
 	list <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)  {
+		if(mappingSets[r]->hasDeletionTransform()) continue;  //if we are deleting this guy, it doesn't have to get updated
+		
 		mappingSets[r]->get(0)->getMolecule()->traverseBondedNeighborhood(products,traversalLimit);
 		
 		/*

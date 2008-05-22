@@ -72,6 +72,8 @@ namespace NFcore
 			void clear() { };
 			
 			
+			bool hasDeletionTransform() const { return isDeletion; };
+			
 			/*!
 			 	Returns the Id of this MappingSet.  The Id of the MappingSet is used to track the
 			 	MappingSet as it exists in a ReactantList or ReactantTree.  This Id should be unique
@@ -103,6 +105,9 @@ namespace NFcore
 				An array of pointers to Mapping objects.  This is where the actual Mappings are stored.
 			*/
 			Mapping ** mappings;
+			
+			
+			bool isDeletion;
 	};
 
 }

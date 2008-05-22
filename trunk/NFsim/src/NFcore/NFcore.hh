@@ -22,6 +22,7 @@
 #include "../NFutil/NFutil.hh"
 #include "../NFoutput/NFoutput.hh"
 #include "../NFreactions/NFreactions.hh"
+#include "moleculeLists/moleculeList.hh"
 
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 1		// Set to 1 to display basic messages (eg runtime)
@@ -46,6 +47,7 @@ namespace NFcore
 	class MappingSet;
 	class ReactantList;
 	class TransformationSet;
+	class MoleculeList;
 	
 //	class TemplateMapping;
 //	class Transformation;
@@ -270,14 +272,13 @@ namespace NFcore
 		
 			int getNumOfStates() const { return numOfStates; };
 			string getStateName( int stateIndex ) const { return stateNames[stateIndex]; };
-			//char ** getAllStateNames() const { return (char *)stateNames.c_str(); };
+			
 			unsigned int getStateIndex(string stateName ) const;
 			int getDefaultState(int stateIndex) const { return defaultStateValues[stateIndex]; };
 		
 			int getNumOfBindingSites() const { return numOfBindingSites; };
 			char * getBindingSiteName( int bIndex ) const { return (char *) bindingSiteNames[bIndex].c_str(); };
 			unsigned int getBindingSiteIndex(string stateName ) const;
-			//char ** getAllBindingSiteNames() const { return bindingSiteNames; };
 		
 			int getNumOfObservables() const { return observables.size(); };
 			string getObservableAlias(int obsIndex) const;
@@ -286,15 +287,33 @@ namespace NFcore
 			int getReactionCount() const { return reactions.size(); };
 			int getTypeID() const { return type_id; };
 		
-			Molecule * getMolecule(int ID_molecule) const { return mInstances.at(ID_molecule); };
-			int getMoleculeCount() const { return mInstances.size(); };
-		
+			Molecule * getMolecule(int ID_molecule) const;
+			int getMoleculeCount() const;
 		
 			int getRxnIndex(ReactionClass * rxn, int rxnPosition);
 		
+			
+			//Functions for adding and removing molecules from the system during a simulation
+			Molecule *createMolecule();
+			void prepMolecule();
+			void deleteMolecule(Molecule *m);
+			void deleteJustOneMolecule(Molecule *m);
+			
 		
 			/* set functions */
-			int addMolecule(Molecule *m);
+			Molecule *genDefaultMolecule();
+			
+			void addMoleculeToRunningSystem(Molecule *&mol);
+			void removeMoleculeFromRunningSystem(Molecule *&m);
+			
+			void removeFromRxns(Molecule * m);
+			//int addMolecule(Molecule *m);
+			
+			
+			
+			
+			
+			
 			void addReactionClass(ReactionClass * r, int rPosition);
 			void addObservable(Observable * o) { observables.push_back(o); }; //could add check here to make sure observable is of this type
 			int createComplex(Molecule *m) { return system->createComplex(m); };
@@ -345,8 +364,8 @@ namespace NFcore
 			string *bindingSiteNames;  /* the name of those binding sites */
 		
 		
-		
-			vector <Molecule *> mInstances;  /* List of all molecules that exist */
+			MoleculeList * mList;
+			//vector <Molecule *> mInstances;  /* List of all molecules that exist */
 			vector <ReactionClass *> reactions; /* List of reactions that this type can be involved with */
 			vector <int> reactionPositions;   /* the position in the reaction for this type of molecule */
 		
@@ -381,11 +400,12 @@ namespace NFcore
 		public:
 		
 			/* constructors / deconstuctors */
-			Molecule(MoleculeType * parentMoleculeType);
+			Molecule(MoleculeType * parentMoleculeType, int listId);
 			~Molecule();
 		
 			/* basic get functions for name, type, complex, and IDs*/
 			int getMoleculeID() const { return ID_number; };
+			int getMolListId() const { return listId; };
 			string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 			MoleculeType * getMoleculeType() const { return parentMoleculeType; };
 			int getUniqueID() const { return ID_unique; };
@@ -405,8 +425,7 @@ namespace NFcore
 		
 			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
 			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) { 
-					this->rxnListMappingId[rxnIndex] = rxnListMappingId; 
-				
+					this->rxnListMappingId[rxnIndex] = rxnListMappingId;
 			};
 		
 			/* set functions for states, bonds, and complexes */
@@ -460,11 +479,16 @@ namespace NFcore
 		
 		protected:
 		
+
+			bool isPrepared;
+			
+			
 			/* Set of IDs which identifies uniquely this molecule */
 			int ID_number;
 			int ID_complex;
 			int ID_type;
 			int ID_unique;
+			int listId;
 		
 			list <StateChangeListener *> listeners;
 		
@@ -577,6 +601,8 @@ namespace NFcore
 			 */
 			virtual bool tryToAdd(Molecule *m, unsigned int position);
 		
+			
+			virtual void remove(Molecule *m, unsigned int position);
 		
 			//!  Randomly select the set of MappingSet objects to transform 
 			/*!

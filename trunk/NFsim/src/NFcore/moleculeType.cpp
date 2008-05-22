@@ -41,49 +41,13 @@ MoleculeType::MoleculeType(
 		for(int b=0; b<numOfBindingSites; b++)
 			cout<<" "<<bindingSiteNames[b]<<" ";
 		cout <<")."<<endl; }
+	
+	
+	
+	mList = new MoleculeList(this,2);
 }
 
 
-
-/*
-MoleculeType::MoleculeType(
-	const char * name, 
-	char ** stateNames, 
-	int *defaultStateValues, 
-	int numOfStates,
-	char ** bindingSiteNames,
-	int numOfBindingSites,
-	System * system )
-{
-	if(DEBUG) cout << "Creating MoleculeType " << name;
-	
-	string str(name);
-	this->name = str.c_str();
-	
-	//Set the state names and default states
-	this->numOfStates = numOfStates;
-	this->stateNames = stateNames;
-	this->defaultStateValues = defaultStateValues;
-	
-	//Set the binding site names
-	this->numOfBindingSites = numOfBindingSites;
-	this->bindingSiteNames = bindingSiteNames;
-	
-	//Register myself with the system, and get an ID number
-	this->system = system;
-	this->type_id = this->system->addMoleculeType(this);
-	
-	
-	if(DEBUG) {
-		cout << "("<< type_id <<") with " << numOfStates << " states (";
-		for(int s=0; s<numOfStates; s++)
-			cout<<" "<<this->stateNames[s]<<" ";
-		cout << ") and " << numOfBindingSites << " binding sites (";
-		for(int b=0; b<numOfBindingSites; b++)
-			cout<<" "<<bindingSiteNames[b]<<" ";
-		cout <<")."<<endl; }
-
-}*/
 
 MoleculeType::~MoleculeType()
 {
@@ -96,13 +60,13 @@ MoleculeType::~MoleculeType()
 	
 	
 	//Delete all molecules of this type that exist
-	Molecule *m;
-	while(mInstances.size()>0)
-	{
-		m = mInstances.back();
-		mInstances.pop_back();
-		delete m;
-	}
+	//Molecule *m;
+	//while(.size()>0)
+	//{
+	//	m = mInstances.back();
+	//	mInstances.pop_back();
+	//	delete m;
+	//}
 	
 	//Delete all template molecules of this type that exist
 	TemplateMolecule *t;
@@ -121,19 +85,56 @@ MoleculeType::~MoleculeType()
 		observables.pop_back();
 		delete o;
 	}
+	
+	
+	delete mList;
 }
 
-int MoleculeType::addMolecule(Molecule *m)
+
+
+
+Molecule *MoleculeType::genDefaultMolecule()
 {
-	if(m->getMoleculeType()==this)
-		mInstances.push_back(m);
-	else {
-		cout<<"!!!!Error: trying to add molecule of type " << m->getMoleculeTypeName() << " to MoleculeType " << name << endl;
-		return -1;
-	}
-	return mInstances.size()-1;
-
+	Molecule *m;
+	mList->create(m);
+	return m;
 }
+
+
+void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
+{
+	//First prepare the molecule for simulation
+	mol->prepareForSimulation();
+	  		
+	//Check each observable and see if this molecule should be counted
+	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
+	{
+		if((*obsIter)->isObservable(mol))
+			(*obsIter)->add();
+	}
+	  		
+	//Check each reaction and add this molecule as a reactant if we have to
+	int r=0;
+	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )
+	{
+		(*rxnIter)->tryToAdd(mol, reactionPositions.at(r));
+	}
+}
+
+
+
+void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
+{
+	mList->remove(m->getMolListId());
+	removeFromObservables(m);
+	removeFromRxns(m);
+	
+}
+
+
+Molecule * MoleculeType::getMolecule(int ID_molecule) const { return mList->at(ID_molecule); }
+int MoleculeType::getMoleculeCount() const { return mList->size(); }
+
 
 void MoleculeType::addTemplateMolecule(TemplateMolecule *t)
 {
@@ -190,41 +191,65 @@ void MoleculeType::addDORrxnClass(ReactionClass * r, int rPosition)
 void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 {
 	if(DEBUG) cout<< " Populating "<< this->name << " with " << moleculeCount << " molecule(s)";
-	if(DEBUG) cout<< " for a total of " << mInstances.size()+moleculeCount << " molecule(s)."<<endl;
-	mInstances.reserve(mInstances.size()+moleculeCount);
+	if(DEBUG) cout<< " for a total of " << mList->size()+moleculeCount << " molecule(s)."<<endl;
+	//mInstances.reserve(mInstances.size()+moleculeCount);
 	for(int m=0; m<moleculeCount; m++)
 	{	
 		if(DEBUG) cout<<" ("<<m+1<<") ";
 		
 		//Create the molecule (which knows how many states and binding sites to make)
-		new Molecule(this);
+		Molecule *m = this->genDefaultMolecule();
+		//new Molecule(this);
 		
 		//Add the molecule to the list of molecules so we save it (does this automatically now!!!! )
 		//mInstances.push_back(mol);
 	}
 }
 
+
+void MoleculeType::deleteJustOneMolecule(Molecule *m)
+{
+	
+	
+	
+}
+
+
+void MoleculeType::deleteMolecule(Molecule *m)
+{
+//	list <Molecule *> allMolecules;
+//	list <Molecule *>::iterator it;
+//			for(it = deleteList.begin(); it!=deleteList.end(); it++) {
+//				(*it)->traverseBondedNeighborhood(allMolecules,ReactionClass::NO_LIMIT);
+//			}
+//			for(it = allMolecules.begin(); it!=allMolecules.end(); it++) {
+	//			(*it)->getMoleculeType()->deleteMolecule((*it));
+	//		}
+}
+
+
 void MoleculeType::prepareForSimulation()
 {
 	//Our iterators that we will use to loop through every molecule
 	int r=0;
-	
-  	for( molIter = mInstances.begin(); molIter != mInstances.end(); molIter++ )
+	Molecule *mol;
+  	for( int m=0; m<mList->size(); m++ )
   	{
   		//First prepare the molecule for simulation
-  		(*molIter)->prepareForSimulation();
+  		mol = mList->at(m);
+  		mol->prepareForSimulation();
   		
   		//Check each observable and see if this molecule should be counted
   		for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
   		{
-			if((*obsIter)->isObservable(*molIter))
+			if((*obsIter)->isObservable(mol))
 				(*obsIter)->add();
   		}
   		
   		//Check each reaction and add this molecule as a reactant if we have to
 		for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )
 		{
-			(*rxnIter)->tryToAdd((*molIter), reactionPositions.at(r));
+			(*rxnIter)->tryToAdd(mol, reactionPositions.at(r));
   		}
 	}
 }
@@ -236,7 +261,6 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 	{
 		(*rxnIter)->tryToAdd(m, reactionPositions.at(r));
   	}
-  	
 }
 
 
@@ -262,6 +286,15 @@ void MoleculeType::removeFromObservables(Molecule *m)
   	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
 		if((*obsIter)->isObservable(m))
 			(*obsIter)->subtract();
+}
+
+void MoleculeType::removeFromRxns(Molecule * m)
+{
+	int r=0;
+	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
+	{
+		(*rxnIter)->remove(m, reactionPositions.at(r));
+  	}
 }
 
 void MoleculeType::addToObservables(Molecule *m)
@@ -294,7 +327,7 @@ void MoleculeType::printObservableCounts()
 void MoleculeType::printDetails() const
 {
 	cout<<"Molecule Type: "<< name << " type ID: " << type_id <<endl;
-	cout<<"   -has "<< mInstances.size() <<" molecules."<<endl;
+	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
 	cout<<"   -has "<< reactions.size() <<" reactions"<<endl;
 	cout<<"        of which "<< indexOfDORrxns.size() <<" are DOR rxns. "<<endl;
 	cout<<"   -has "<< observables.size() <<" observables " <<endl;
