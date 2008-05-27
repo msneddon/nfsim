@@ -130,13 +130,12 @@ void Molecule::updateDORs()
 	
 }
 
-double Molecule::getDORvalueFromGroup(char * groupName, int valueIndex)
+double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
 {
 	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
 	{
-		if(strlen(groupName)==strlen((*listenerIter)->getGroupName()))
-			if(strncmp(groupName,(*listenerIter)->getGroupName(),strlen(groupName))==0)
-				return (*listenerIter)->getValue(valueIndex);
+		if(groupName==(*listenerIter)->getGroupName())
+			return (*listenerIter)->getValue(valueIndex);
 	}
 	
 	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;

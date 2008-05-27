@@ -7,6 +7,8 @@
 //run a simple simulation with basic reactions.
 #include "../../NFcore/NFcore.hh"
 #include "../../NFreactions/NFreactions.hh"
+#include "../../NFreactions/basicReactions/basicReaction.hh"
+#include "../../NFreactions/dorReactions/dorReaction.hh"
 
 
 //NFcore is the primary namespace of the NFsim program.  It contains

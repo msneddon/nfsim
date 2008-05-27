@@ -4,7 +4,7 @@
   <model id="simple_removal">
     <ListOfParameters>
       <Parameter id="kd" value="0.5"/>
-      <Parameter id="kp" value="100"/>
+      <Parameter id="kp" value="10000"/>
     </ListOfParameters>
     <ListOfMoleculeTypes>
       <MoleculeType id="I"/>

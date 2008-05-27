@@ -351,7 +351,7 @@ double System::sim(double duration, long int sampleTimes)
 		current_time+=delta_t;
 		
 		//5: Fire Reaction! (takes care of updates to lists and observables)
-		nextReaction->fire2(randElement);
+		nextReaction->fire(randElement);
 	}
 	
 	finish = clock();
@@ -407,7 +407,7 @@ double System::stepTo(double stoppingTime)
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		
 		//5: Fire Reaction! (takes care of updates to lists and observables)
-		nextReaction->fire2(randElement);
+		nextReaction->fire(randElement);
 	}
 	return current_time;
 }

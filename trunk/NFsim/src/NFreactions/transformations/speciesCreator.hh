@@ -18,6 +18,7 @@ namespace NFcore
 					vector <MoleculeType *> &productMoleculeTypes,
 					vector < vector <int> > &stateInformation,
 					vector < vector <int> > &bindingSiteInformation);
+			SpeciesCreator(vector <TemplateMolecule *> &templates);
 			~SpeciesCreator();
 			
 			void create();

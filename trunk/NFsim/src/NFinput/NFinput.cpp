@@ -881,22 +881,13 @@ bool NFinput::initReactionRules(
 								}
 						}
 					}
-					
-					if(!sc)
-					{
-						
-					}
-					
 				}
-						
-				
 			}
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
 			ts->finalize();
-			ReactionClass *r = new ReactionClass(rxnName,0,ts);
-			
+			ReactionClass *r = new BasicRxnClass(rxnName,0,ts);
 			
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -957,7 +948,7 @@ bool NFinput::initReactionRules(
 							cout<<endl;
 						}
 						
-						r->setRate(rate);
+						r->setBaseRate(rate);
 					}
 					
 					pRateConstant = pRateConstant->NextSiblingElement("RateConstant");

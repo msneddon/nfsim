@@ -33,11 +33,11 @@ void NFtest_transcription::run()
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are the rates and are in
 	//      arbitrary units here.  In general, the rates should be in units of per second.
-	ReactionClass * rna_degrade = createReactionRNAdegrades(molRNA, 1);
-	//ReactionClass *rna_transcribe = createReactionXYbind(molRNA, 10.0);
+	ReactionClass * rna_degrade = createReactionRNAdegrades(molRNA, 0.5);
+	ReactionClass *rna_transcribe = createReactionRNAtranscribed(molRNA, 100.0);
 	
 	s->addReaction(rna_degrade);
-	//s->addReaction(rna_transcribe);
+	s->addReaction(rna_transcribe);
 	
 	
 	//  5)  Add the observables that we want to track throughout the simulation.  Again, to 
@@ -171,13 +171,29 @@ ReactionClass * NFtest_transcription::createReactionRNAdegrades(MoleculeType *mo
 	
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
 	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new ReactionClass("RNA_degradation",rate,ts);
+	ReactionClass *r = new BasicRxnClass("RNA_degradation",rate,ts);
 	return r;
 }
 
 
-
-
+ReactionClass * NFtest_transcription::createReactionRNAtranscribed(MoleculeType *molRNA, double rate)
+{
+	vector <TemplateMolecule *> templates;
+	vector <TemplateMolecule *> newProduct;
+	
+	TemplateMolecule *newRnaTemp = new TemplateMolecule(molRNA);
+	newProduct.push_back(newRnaTemp);
+	
+	
+	
+	TransformationSet *ts = new TransformationSet(templates);
+	SpeciesCreator *sc = new SpeciesCreator(newProduct);
+	ts->addAddMolecule(sc);
+	ts->finalize();
+	
+	ReactionClass *r = new BasicRxnClass("RNA_transcription",rate,ts);
+	return r;
+}
 
 
 

@@ -8,6 +8,7 @@
 
 
 #include "../NFcore/NFcore.hh"
+#include "../NFreactions/basicReactions/basicReaction.hh"
 #include "TinyXML/tinyxml.h"
 
 using namespace NFcore;
