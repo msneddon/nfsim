@@ -78,6 +78,15 @@ TemplateMolecule * TemplateMolecule::getBondedTemplateMolecule(int bIndex) const
 	return bonds.at(bIndex);	
 }
 
+int TemplateMolecule::getBindingSiteIndex(int bIndex) const
+{
+	return bSiteIndex.at(bIndex);
+}
+int TemplateMolecule::getBindingSiteIndexOfBondedTemplate(int bIndex) const
+{
+	return bSiteIndexOfBond.at(bIndex);
+}
+
 unsigned int TemplateMolecule::addEmptyBindingSite(const char * bSiteName)
 {
 	return this->addEmptyBindingSite(parentMoleculeType->getBindingSiteIndex(bSiteName));	

@@ -10,6 +10,7 @@
 
 //Include the local header files needed for reactions
 #include "reactantLists/reactantList.hh"
+#include "reactantLists/reactantTree.hh"
 #include "transformations/transformationSet.hh"
 #include "transformations/transformation.hh"
 #include "transformations/speciesCreator.hh"

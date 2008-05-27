@@ -103,8 +103,7 @@ int main(int argc, const char *argv[])
 		}
 		
 		//Handle when the user asks for help!	
-		else if (argMap.find("help")!=argMap.end()) 
-		{
+		else if (argMap.find("help")!=argMap.end())  {
 			printHelp(versionNumber);
 			parsed = true;					
 		}
@@ -116,27 +115,63 @@ int main(int argc, const char *argv[])
 			string filename = argMap.find("xml")->second;
 			if(!filename.empty())
 			{
-				
-				System *s = NFinput::initializeFromXML(argv[2], verbose);
+				//Create the system from the XML file
+				System *s = NFinput::initializeFromXML(filename, verbose);
 			
 				if(s!=NULL)
 				{
 					//Here we just run some stuff for testing... The output is just
-					s->registerOutputFileLocation((s->getName()+".gdat").c_str());
+					s->registerOutputFileLocation((s->getName()+"_nf.gdat").c_str());
 					s->outputAllObservableNames();
 					
-					s->equilibriate(0,10);
-					s->sim(50,50);
-					s->stepTo(600);
+					
+					double eqTime = 0;
+					double sTime = 1;
+					int oSteps = 10;
+					
+					//Here we parse out the length of time to equilibriate, run and output
+					if(argMap.find("eq")!=argMap.end()) {
+						string str_eqTime = argMap.find("eq")->second;
+						try {
+							eqTime = NFutil::convertToDouble(str_eqTime);
+						} catch (std::runtime_error e) {
+							cout<<"I couldn't find or parse your equilibriation time (flag -eq): "<<str_eqTime<<endl;
+							cout<<"Using default equilibriation time of :"<<eqTime<<"s"<<endl;
+						}
+					}
+					if(argMap.find("sim")!=argMap.end()) {
+						string str_sTime = argMap.find("sim")->second;
+						try {
+							sTime = NFutil::convertToDouble(str_sTime);
+						} catch (std::runtime_error e) {
+							cout<<"I couldn't find or parse your simulation time (flag -sim): "<<str_sTime<<endl;
+							cout<<"Using default simulation time of :"<<sTime<<"s"<<endl;
+						}
+					}
+					if(argMap.find("oSteps")!=argMap.end()) {
+						string str_oSteps = argMap.find("oSteps")->second;
+						try {
+							oSteps = NFutil::convertToInt(str_oSteps);
+						} catch (std::runtime_error e) {
+							cout<<"I couldn't find or parse your output step count (flag -oSteps): "<<str_oSteps<<endl;
+							cout<<"Using default simulation time of :"<<oSteps<<"s"<<endl;
+						}
+					}
 					
 					
-					//s->sim(200,20);  // sim for 200 seconds, outputting 20 times
+					cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+					s->equilibriate(eqTime);
+					s->sim(sTime,oSteps);
+					
+					cout<<endl<<endl;
 					s->printAllReactions();
 					delete s;
 				}
+				else  {
+					cout<<"Couldn't create a system from your XML file.  I don't know what you did."<<endl;
+				}
 			}
-			else
-			{
+			else  {
 				cout<<"You must specify an xml file to read."<<endl;
 			}
 			parsed = true;
@@ -159,8 +194,7 @@ int main(int argc, const char *argv[])
 					NFtest_transcription::run();
 				}
 			}
-			else
-			{
+			else {
 				cout<<"You must specify a test to run."<<endl;				
 			}
 					
@@ -178,9 +212,8 @@ int main(int argc, const char *argv[])
 			cout<<"wow. that was awesome."<<endl;
 			parsed = true;
 		}
-		
-		
 	}
+	
 	
 	if(!parsed)
 	{

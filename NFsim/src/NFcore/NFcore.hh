@@ -460,7 +460,7 @@ namespace NFcore
 			void addToObservables();
 			void updateDORs();
 		
-			double getDORvalueFromGroup(char * groupName, int valueIndex);
+			double getDORvalueFromGroup(string groupName, int valueIndex);
 		
 		
 		
@@ -527,127 +527,72 @@ namespace NFcore
 	
 	
 	
-	//!  Contains a reaction rule and associated functions.
+	//!  Abstract Base Class that defines the interface for all reaction rules.
 	/*!
 	    @author Michael Sneddon
 	*/
 	class ReactionClass
 	{
 		public:
-		
-		
-		
-			//This is code that allows you to set a limit to the depth you traverse
-			//when you are getting the reactants that fired.
 			static const int NO_LIMIT = -3;
-			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
-		
-		
-			virtual void init();
-		
-		
-		
-			/* get functions */
-			unsigned int getNreactants() const { return n_reactants; };
-			string getName() const { return name; };
-			double getRate() const { return rate; };
-			void setRate(double newRate) { this->rate=newRate; update_a(); };
-		
-			int getRxnType() const { return reactionType; };
-		
 			
-		
-		
-		
-		
-		
-		
-		
-		
-			/* necessary for DOR rxns */
-			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) { cerr<<"Calling rate factor change from ReactionClass!! should never happen!"<<endl; };
-		
-			static const int NORMAL_RXN = 0;
+			static const int BASIC_RXN = 0;
 			static const int DOR_RXN = 1;
 			static const int OBS_DEPENDENT_RXN = 2;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-			////////////////////////////////
-		
+			
+			
+
 			ReactionClass(string name, double rate, TransformationSet *transformationSet);
 			virtual ~ReactionClass();
-		
-		
-			double get_a() const { return a; };
-			virtual double update_a();
-			virtual void prepareForSimulation();
-		
-			unsigned int getReactantCount(unsigned int reactantIndex) const;
-		
-		
-			//!  Attempts to add a molecule to this reactionClass
-			/*!
-					This will attempt to add Molecule m into this reaction as the reactant in the
-					specified position.  If Molecule m matches the template for that posistion, it
-					will be added.  Otherwise, it will not be.
-			 */
-			virtual bool tryToAdd(Molecule *m, unsigned int position);
-		
 			
-			virtual void remove(Molecule *m, unsigned int position);
-		
-			//!  Randomly select the set of MappingSet objects to transform 
-			/*!
-					This function randomly chooses elements from the ReactantList objects and returns
-					the mappings.  The arguement is the random number selected to fire this reaction
-					divided by Atotal.  This arguement is ignored for your typical reaction, but
-					is required for DORreaction.
-			 */
-			void pickMappingSets(double random_A_number);
-	//		virtual void pickMappingSets(double random_A_number, vector <MappingSet *> &mappingSets);
-		
-		
-			virtual void fire2(double random_A_number);
-		
-		
-			virtual void printDetails() const;
-			virtual void printFullDetails();
-		
-		
-		
+			
+			
+			string getName() const { return name; };
+			double getBaseRate() const { return baseRate; };
+			int getRxnType() const { return reactionType; };
+
+			void setBaseRate(double newBaseRate) { this->baseRate=newBaseRate; update_a(); };
+			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
+			
+			double get_a() const { return a; };
+			void printDetails() const;
+			void fire(double random_A_number);
+			
+			
+			
+			//The main virtual functions that must be implemented in all implementing classes
+			virtual void init() = 0; //called when the reaction is added to the system
+			virtual void prepareForSimulation() = 0; //called once everything is added to the system
+			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos) = 0;
+			virtual void remove(Molecule *m, unsigned int reactantPos) = 0;
+			
+			virtual double update_a() = 0;
+			
+			
+			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;
+			
+			
+			
+			virtual unsigned int getReactantCount(unsigned int reactantIndex) const = 0;
+			virtual void printFullDetails() const = 0;
+			
+			
 		protected:
-		
-			///////////////////////////////////////
+			virtual void pickMappingSets(double randNumber) const=0;
+			
 			string name;
+			int reactionType;
 			unsigned int n_reactants;
-		
-			double rate;
+			
+			double baseRate;
 			double a;
 			unsigned int fireCounter;
-		
-		
-			TemplateMolecule **reactantTemplates;
-	//		vector <Transformation *> transformations;
-			//ReactantList ** reactantLists;
-			vector <ReactantList *> reactantLists;
-		
-		
+			
 			unsigned int traversalLimit;
-			int reactionType;
+			
+			TemplateMolecule **reactantTemplates;
 			TransformationSet * transformationSet;
-			
-			
-			
-			MappingSet ** mappingSet;
-			
+			MappingSet **mappingSet;
 	};
 	
 	
@@ -680,6 +625,10 @@ namespace NFcore
 		TemplateMolecule * getBondedTemplateMolecule(int bIndex) const;
 		unsigned int getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex);
 	
+		int getBindingSiteIndex(int bIndex) const;
+		int getBindingSiteIndexOfBondedTemplate(int bIndex) const ;
+		
+		
 		/* set functions */
 		void setHasVisited(int bSite);
 		unsigned int addEmptyBindingSite(int bSiteIndex);
