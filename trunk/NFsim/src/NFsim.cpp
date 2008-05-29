@@ -124,41 +124,16 @@ int main(int argc, const char *argv[])
 					s->registerOutputFileLocation((s->getName()+"_nf.gdat").c_str());
 					s->outputAllObservableNames();
 					
-					
+					//Parameters (assigned first to thier default values if these parameters
+					//are not explicitly given...
 					double eqTime = 0;
 					double sTime = 1;
 					int oSteps = 10;
 					
-					//Here we parse out the length of time to equilibriate, run and output
-					if(argMap.find("eq")!=argMap.end()) {
-						string str_eqTime = argMap.find("eq")->second;
-						try {
-							eqTime = NFutil::convertToDouble(str_eqTime);
-						} catch (std::runtime_error e) {
-							cout<<"I couldn't find or parse your equilibriation time (flag -eq): "<<str_eqTime<<endl;
-							cout<<"Using default equilibriation time of :"<<eqTime<<"s"<<endl;
-						}
-					}
-					if(argMap.find("sim")!=argMap.end()) {
-						string str_sTime = argMap.find("sim")->second;
-						try {
-							sTime = NFutil::convertToDouble(str_sTime);
-						} catch (std::runtime_error e) {
-							cout<<"I couldn't find or parse your simulation time (flag -sim): "<<str_sTime<<endl;
-							cout<<"Using default simulation time of :"<<sTime<<"s"<<endl;
-						}
-					}
-					if(argMap.find("oSteps")!=argMap.end()) {
-						string str_oSteps = argMap.find("oSteps")->second;
-						try {
-							oSteps = NFutil::convertToInt(str_oSteps);
-						} catch (std::runtime_error e) {
-							cout<<"I couldn't find or parse your output step count (flag -oSteps): "<<str_oSteps<<endl;
-							cout<<"Using default simulation time of :"<<oSteps<<"s"<<endl;
-						}
-					}
-					
-					
+					eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
+					sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+					oSteps = NFinput::parseAsInt(argMap,"oSteps",oSteps);
+
 					cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 					s->equilibriate(eqTime);
 					s->sim(sTime,oSteps);
@@ -185,13 +160,14 @@ int main(int argc, const char *argv[])
 			if(!test.empty())
 			{
 				cout<<"running test: '"+test+"'"<<endl;
-				if(test=="simple_system")
-				{
+				if(test=="simple_system") {
 					NFtest_ss::run();
 				}
-				if(test=="transcription")
-				{
+				if(test=="transcription") {
 					NFtest_transcription::run();
+				}
+				if(test=="tlbr") {
+					NFtest_tlbr::run(argMap);
 				}
 			}
 			else {
@@ -217,7 +193,7 @@ int main(int argc, const char *argv[])
 	
 	if(!parsed)
 	{
-		cout<<"Could not identify what you want to do."<<endl;
+		cout<<"Could not identify what you want to do.  Try running the -help flag for advice."<<endl;
 	}
 	
 	

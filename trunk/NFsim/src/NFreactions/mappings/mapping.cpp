@@ -13,7 +13,6 @@ NFcore::Mapping::Mapping(unsigned int type, unsigned int index)
 }
 NFcore::Mapping::~Mapping()
 {
-	type=Transformation::SKIP;
 	index=0;
 	clear();
 }

@@ -198,7 +198,7 @@ void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 		if(DEBUG) cout<<" ("<<m+1<<") ";
 		
 		//Create the molecule (which knows how many states and binding sites to make)
-		Molecule *m = this->genDefaultMolecule();
+		this->genDefaultMolecule();
 		//new Molecule(this);
 		
 		//Add the molecule to the list of molecules so we save it (does this automatically now!!!! )
@@ -207,25 +207,7 @@ void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 }
 
 
-void MoleculeType::deleteJustOneMolecule(Molecule *m)
-{
-	
-	
-	
-}
 
-
-void MoleculeType::deleteMolecule(Molecule *m)
-{
-//	list <Molecule *> allMolecules;
-//	list <Molecule *>::iterator it;
-//			for(it = deleteList.begin(); it!=deleteList.end(); it++) {
-//				(*it)->traverseBondedNeighborhood(allMolecules,ReactionClass::NO_LIMIT);
-//			}
-//			for(it = allMolecules.begin(); it!=allMolecules.end(); it++) {
-	//			(*it)->getMoleculeType()->deleteMolecule((*it));
-	//		}
-}
 
 
 void MoleculeType::prepareForSimulation()

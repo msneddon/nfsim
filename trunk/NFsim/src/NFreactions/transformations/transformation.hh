@@ -8,79 +8,11 @@ namespace NFcore
 {
 
 	class SpeciesCreator;
-
-	//!  Keeps information about how to perform one transform of a Molecule.
-	/*!
-	 	This is the base unit used to store information about transformations.  Based on
-	 	its "type", it is able to store state changes, binding, unbinding, molecule creation,
-	 	and molecule deletion.  It is managed and owned by a TransformationSet object which
-	 	uses Transformation objects to actually carry out the operation.  Transforms are
-	 	created by a TransformationSet which calls one of the static functions that generates
-	 	new Transformations.  Transformation Objects exist for each transformation in the
-	 	System and are not deleted until the simulation is over.
-	    @author Michael Sneddon
-	 */
-	class Transformation
-	{
+	class Mapping;
+	class Transformation;
+	
+	class TransformationFactory {
 		public:
-			
-			/*!
-			 	Deletes this Transformation and clears the data associated with it.
-			    @author Michael Sneddon
-			 */
-			~Transformation();
-			
-			/*!
-			 	Returns the type of this transformation (for instance, state change, binding, etc).
-			 	The list of possible types are static constant integers in this class, but in general
-			 	you do not need to keep track of them as you can only create transformations
-			 	via the static generator functions.
-			    @author Michael Sneddon
-			 */
-			unsigned int getType() const { return type; };
-			
-			/*!
-			 	Returns the State or Binding Site index of the component that is transformed.  This
-			 	value may be irrelevant for certain types of transformations, and what it represents
-			 	can be determined by the type of transformation. 
-			    @author Michael Sneddon
-			 */
-			unsigned int getStateOrSiteIndex() const { return stateORsiteIndex; };
-			
-			/*!
-			 	For a state change transformation, this will return the new value of the state
-			 	that is transformed.  In other words, the state will change to this value.  For other
-			 	transformations, this value is meaningless.
-			    @author Michael Sneddon
-			 */
-			int getNewStateValue() const { return newStateValue; };
-			
-			/*!
-			 	For Binding transformations, this remembers which reactant this Transformation object
-			 	will bind to.  For any binding reaction, there are two Transformation objects created for
-			 	each site.  This is the first bit of information needed to get the other site.  The other
-			 	piece of information can be obtained from the getPartnerMappingIndes() function.
-			    @author Michael Sneddon
-			 */
-			unsigned int getPartnerReactantIndex() const { return otherReactantIndex; };
-			
-			/*!
-			 	For Binding transformations, this remembers which particular Mapping this Transformation
-			 	object will bind to.  You will need this, along the the PartnerReactantIndex, (from the
-			 	getPartnerReactantIndex() function) to completely specify the partner.
-			    @author Michael Sneddon
-			 */
-			unsigned int getPartnerMappingIndex() const { return otherMappingIndex; };
-			
-			
-			
-			
-			void createSpecies();
-			
-			
-			
-			
-			
 			/*!
 			 	Generates a state change Transformation for transforming the given state at the given
 			 	index into the new state value.
@@ -94,7 +26,8 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
-			
+			static Transformation * genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+						
 			/*!
 			 	Generates the second half of a binding transform.  The other site already knows about this site, so all you
 			 	need here is the index of the binding site that must be bonded.
@@ -131,9 +64,10 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genEmptyTransform();
-			
-			
-			
+		
+		
+			static Transformation * genIncrementStateTransform();
+			static Transformation * genDecrementStateTransform();
 			
 			
 			/*!	Indicates a state change transformation or mapping onto a state	*/
@@ -153,38 +87,126 @@ namespace NFcore
 			
 			/*!	Indicates no transformation is needed (or is the second partner
 			    in a binding transform and so should be skipped when applying transforms	*/
-			static const unsigned int SKIP = 5; 
+			static const unsigned int EMPTY = 5;
 			
+			/*!	*/
+			static const unsigned int INCREMENT_STATE = 6;
 			
+			/*!		*/
+			static const unsigned int DECREMENT_STATE = 7; 
+		
+	};
+	
+	
+	class Transformation {
+		public:
+			Transformation(int type) {this->type=type;};
+			virtual ~Transformation() {};
+			int getType() const { return type; }
+			virtual void apply(Mapping *m, MappingSet **ms) = 0;
+			virtual int getStateOrSiteIndex() const = 0;
 		protected:
-			
-			/*!
-				Constructs a new Transformation object.  This is protected because Transformations
-				should only be created by the static public generator functions of this class.  So
-				don't use this unless you know exactly what you are doing!
-				@author Michael Sneddon
-			*/
-			Transformation();
-			
-			/*!	Remembers the type of transformation this is	*/
-			unsigned int type;
-			
-			/*!	Remember the index of the state or binding site that this transform affects	*/
-			unsigned int stateORsiteIndex;
-			
-			//For a state change transformation
-			/*!	Keeps the final state of a state change reaction	*/
+			int type;
+	};
+	
+	
+	class EmptyTransform : public Transformation {
+		public:
+			EmptyTransform() : Transformation(TransformationFactory::EMPTY){ this->stateOrSite=-1; };
+			EmptyTransform(int stateOrSite) : Transformation(TransformationFactory::EMPTY){ this->stateOrSite=stateOrSite; };
+			virtual ~EmptyTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms) {};
+			virtual int getStateOrSiteIndex() const { return stateOrSite; };
+		protected:
+			int stateOrSite;
+	};
+	
+	
+	class StateChangeTransform : public Transformation {
+		public:
+			StateChangeTransform(int stateIndex, int newStateValue);
+			virtual ~StateChangeTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return stateIndex;};
+		protected:
+			int stateIndex;
 			int newStateValue;
-			
-			//For a binding reaction
-			/*!	Keeps the reactant index of the binding partner of this binding transform	*/
-			unsigned int otherReactantIndex;
-			/*!	Keeps the mapping index of the binding partner of this binding transform	*/
-			unsigned int otherMappingIndex;
-			
-			//For a creation of a new molecule, not yet impelemented
+	};
+	
+	class BindingTransform : public Transformation {
+		public:
+			BindingTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex);
+			virtual ~BindingTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return siteIndex;};
+		protected:
+			int siteIndex;
+			int otherReactantIndex;
+			int otherMappingIndex;
+	};
+	
+	class BindingSeparateComplexTransform : public BindingTransform {
+			public:
+				BindingSeparateComplexTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex) : 
+					BindingTransform(siteIndex, otherReactantIndex, otherMappingIndex) {};
+				virtual ~BindingSeparateComplexTransform() {};
+				virtual void apply(Mapping *m, MappingSet **ms);
+				virtual int getStateOrSiteIndex() const {return siteIndex;};
+	};
+	
+	class UnbindingTransform : public Transformation {
+		public:
+			UnbindingTransform(int siteIndex);
+			virtual ~UnbindingTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return siteIndex;};
+		protected:
+			int siteIndex;
+	};
+	
+	class AddMoleculeTransform : public Transformation {
+		public:
+			AddMoleculeTransform(SpeciesCreator *sc);
+			virtual ~AddMoleculeTransform();
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return 0;};
+		protected:
 			SpeciesCreator *sc;
 	};
+	
+	class RemoveMoleculeTransform : public Transformation {
+		public:
+			RemoveMoleculeTransform() : Transformation(TransformationFactory::REMOVE) {};
+			virtual ~RemoveMoleculeTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return 0;};
+	};
+	
+	
+	
+	
+	class IncrementStateTransform : public Transformation {
+		public:
+			IncrementStateTransform(int stateIndex);
+			virtual ~IncrementStateTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return stateIndex;};
+		protected:
+			int stateIndex;
+	};
+	
+	class DecrementStateTransform : public Transformation {
+		public:
+			DecrementStateTransform(int stateIndex);
+			virtual ~DecrementStateTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getStateOrSiteIndex() const {return stateIndex;};
+		protected:
+			int stateIndex;
+	};
+	
+	
+	
 }
 
 

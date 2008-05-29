@@ -5,7 +5,7 @@ using namespace std;
 using namespace NFcore;
 
 
-Group::Group(char * groupName, System * s, int stateIndex) 
+Group::Group(string groupName, System * s, int stateIndex) 
 {
 	this->groupName = groupName;
 	this->stateIndex = stateIndex;

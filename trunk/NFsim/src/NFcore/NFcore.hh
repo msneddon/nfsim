@@ -114,7 +114,7 @@ namespace NFcore
 			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
 			int getGroupCount() const { return allGroups.size(); }
 			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
-			double getAverageGroupValue(char * groupName, int valIndex);
+			double getAverageGroupValue(string groupName, int valIndex);
 		
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
 		
@@ -294,10 +294,10 @@ namespace NFcore
 		
 			
 			//Functions for adding and removing molecules from the system during a simulation
-			Molecule *createMolecule();
-			void prepMolecule();
-			void deleteMolecule(Molecule *m);
-			void deleteJustOneMolecule(Molecule *m);
+			//Molecule *createMolecule();
+			//void prepMolecule();
+			//void deleteMolecule(Molecule *m);
+			//void deleteJustOneMolecule(Molecule *m);
 			
 		
 			/* set functions */
@@ -800,10 +800,10 @@ namespace NFcore
 	class Group
 	{
 		public:
-			Group(char * groupName, System * s, int stateIndex);
+			Group(string groupName, System * s, int stateIndex);
 			virtual ~Group();
 		
-			char * getName() const { return groupName; };
+			string getName() const { return groupName; };
 			double getValue(unsigned int valIndex);
 			int getNumberInGroup() const { return groupMembers.size(); };
 			Molecule * getMolecule(int mIndex) { return groupMembers.at(mIndex); };
@@ -826,7 +826,7 @@ namespace NFcore
 			vector <Molecule *> groupMembers;
 			System * system;
 		
-			char * groupName;
+			string groupName;
 			int Group_ID;
 		
 			vector <char *> valueNames;
@@ -860,7 +860,7 @@ namespace NFcore
 			void updateGroupReactions();
 		
 			/* simple functions for molecule to talk to this group */
-			char * getGroupName() const { return group->getName(); };
+			string getGroupName() const { return group->getName(); };
 			double getValue(int valueIndex) const { return group->getValue(valueIndex); };
 		
 		

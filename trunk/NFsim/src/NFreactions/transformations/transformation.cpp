@@ -5,82 +5,130 @@
 using namespace NFcore;
 
 
-NFcore::Transformation::Transformation()
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+StateChangeTransform::StateChangeTransform(int stateIndex, int newStateValue) :
+	Transformation(TransformationFactory::STATE_CHANGE)
 {
-	type=Transformation::SKIP;
-	newStateValue = -1;
-	stateORsiteIndex=0;
-	otherReactantIndex=0;
-	otherMappingIndex=0;
-	sc = 0;
+	this->stateIndex = stateIndex;
+	this->newStateValue = newStateValue;
 }
-NFcore::Transformation::~Transformation()
+void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
-	if(type==Transformation::ADD) delete sc;
-	type=Transformation::SKIP;
-	newStateValue = -1;
-	stateORsiteIndex=0;
-	otherReactantIndex=0;
-	otherMappingIndex=0;
+	m->getMolecule()->setState(stateIndex,newStateValue);
+}
+
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+BindingTransform::BindingTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex) :
+	Transformation(TransformationFactory::BINDING)
+{
+	this->siteIndex=siteIndex;
+	this->otherReactantIndex=otherReactantIndex;
+	this->otherMappingIndex=otherMappingIndex;
+}
+
+void BindingTransform::apply(Mapping *m, MappingSet **ms) 
+{
+	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 	
-	
 }
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
 
-
-
-
-NFcore::Transformation * Transformation::genEmptyTransform()
+void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms) 
 {
-	return new Transformation();
-}
-NFcore::Transformation * Transformation::genStateChangeTransform(unsigned int stateIndex, int newStateValue)
-{
-	Transformation *t = new Transformation();
-	t->type = Transformation::STATE_CHANGE;
-	t->stateORsiteIndex=stateIndex;
-	t->newStateValue = newStateValue;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
-{	
-	Transformation *t = new Transformation();
-	t->type = Transformation::BINDING;
-	t->stateORsiteIndex=bSiteIndex;
-	t->otherReactantIndex = otherReactantIndex;
-	t->otherMappingIndex = otherMappingIndex;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genBindingTransform2(unsigned int bSiteIndex)
-{
-	Transformation *t = new Transformation();
-	t->type = Transformation::SKIP;
-	t->stateORsiteIndex=bSiteIndex;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genUnbindingTransform(unsigned int bSiteIndex)
-{
-	Transformation *t = new Transformation();
-	t->type = Transformation::UNBINDING;
-	t->stateORsiteIndex=bSiteIndex;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genAddMoleculeTransform(SpeciesCreator *sc)
-{
-	Transformation *t = new Transformation();
-	t->type = Transformation::ADD;
-	t->sc=sc;
-	return t;
-}
-NFcore::Transformation * NFcore::Transformation::genRemoveMoleculeTransform()
-{
-	Transformation *t = new Transformation();
-	t->type = Transformation::REMOVE;
-	return t;
-}
-
-void Transformation::createSpecies() {
-	if(sc!=NULL) {
-		sc->create();
+	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+	//cout<<"complex ID: "<<m->getMolecule()->getComplexID()<<" "<<m2->getMolecule()->getComplexID()<<endl;
+	if(m->getMolecule()->getComplexID()!=m2->getMolecule()->getComplexID()) {
+		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 	}
 }
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+UnbindingTransform::UnbindingTransform(int siteIndex) :
+	Transformation(TransformationFactory::UNBINDING)
+{
+	this->siteIndex=siteIndex;
+}
+void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
+{
+	Molecule::unbind(m->getMolecule(),m->getIndex());
+}
+	
+
+
+
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+AddMoleculeTransform::AddMoleculeTransform(SpeciesCreator *sc) :
+	Transformation(TransformationFactory::ADD)
+{
+	this->sc=sc;
+}
+AddMoleculeTransform::~AddMoleculeTransform()
+{
+	delete sc;
+}
+void AddMoleculeTransform::apply(Mapping *m, MappingSet **ms)
+{
+	this->sc->create();
+}
+	
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
+{
+	cout<<"!! Warning: calling apply on a RemoveMoleculeTransform!  This cannot be handled here!"<<endl;
+	cout<<"!! This function should not be called.  The TransformationSet object should handle this!"<<endl;
+}
+
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+NFcore::Transformation * TransformationFactory::genEmptyTransform()
+{
+	return new EmptyTransform();
+}
+NFcore::Transformation * TransformationFactory::genStateChangeTransform(unsigned int stateIndex, int newStateValue)
+{
+	return new StateChangeTransform(stateIndex, newStateValue);
+}
+NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+{	
+	return new BindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
+}
+NFcore::Transformation * TransformationFactory::genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+{	
+	return new BindingSeparateComplexTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
+}
+
+NFcore::Transformation * TransformationFactory::genBindingTransform2(unsigned int bSiteIndex)
+{
+	return new EmptyTransform(bSiteIndex);
+}
+NFcore::Transformation * TransformationFactory::genUnbindingTransform(unsigned int bSiteIndex)
+{
+	return new UnbindingTransform(bSiteIndex);
+}
+NFcore::Transformation * TransformationFactory::genAddMoleculeTransform(SpeciesCreator *sc)
+{
+	return new AddMoleculeTransform(sc);
+}
+NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform()
+{
+	return new RemoveMoleculeTransform();
+}
+
