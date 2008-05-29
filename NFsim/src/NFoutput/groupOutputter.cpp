@@ -58,8 +58,8 @@ using namespace NFcore;
  * 
  * ************************************************/
 GroupOutputter::GroupOutputter(System * s,
-	char * groupName,
-	char * groupKeyFileName, 
+	string groupName,
+	string groupKeyFileName, 
 	vector <TemplateMolecule *> &keyTemplates,
 	vector <char *> &templateNames,
 	vector <char *> &filenames, 
@@ -127,7 +127,7 @@ void GroupOutputter::writeGroupKeyFile()
 {
 	//Open up the output stream
 	ofstream keyStream;
-	keyStream.open(groupKeyFileName);
+	keyStream.open(groupKeyFileName.c_str());
 	keyStream.setf(ios::scientific);
 	
 	//Write the header
@@ -154,10 +154,9 @@ void GroupOutputter::writeGroupKeyFile()
 	{
 		//First output the basic stuff
 		Group *g = s->getGroup(i);
-		char *gName = g->getName();
-		if(strlen(gName)==strlen(this->groupName))
-		{
-			if(strncmp(gName,groupName,strlen(groupName))!=0) continue;
+		string gName = g->getName();
+		if(gName!=this->groupName)
+		{	 continue;
 		}
 		
 		int groupSize = g->getNumberInGroup();
@@ -207,10 +206,10 @@ void GroupOutputter::writeStateToOutputFile(double cSampleTime)
 		}
 		for(int i=0; i<n_groups; i++)
 		{
-			char *gName = s->getGroup(i)->getName();
-			if(strlen(gName)==strlen(this->groupName))
+			string gName = s->getGroup(i)->getName();
+			if(gName!=this->groupName)
 			{
-				if(strncmp(gName,groupName,strlen(groupName))!=0) continue;
+				continue;
 			}
 			(*(*streamIter))<<"\t"<< s->getGroup(i)->getValue(values.at(v));
 		}
@@ -224,7 +223,7 @@ void GroupOutputter::writeStateToOutputFile(double cSampleTime)
  */
 void GroupOutputter::writeOutputFileHeader()
 {
-	int v=0, n_groups=0;
+	int v=0; //, n_groups=0;
 	for( streamIter = outputStreams.begin(); streamIter != outputStreams.end(); streamIter++,v++)
 	{
 		(*(*streamIter))<<"#\tTime";
@@ -236,10 +235,10 @@ void GroupOutputter::writeOutputFileHeader()
 		}
 		for(int i=0; i<n_groups; i++)
 		{
-			char *gName = s->getGroup(i)->getName();
-			if(strlen(gName)==strlen(this->groupName))
+			string gName = s->getGroup(i)->getName();
+			if(gName!=this->groupName)
 			{
-				if(strncmp(gName,groupName,strlen(groupName))!=0) continue;
+				continue;
 			}
 			(*(*streamIter))<<"\t"<<i;
 		}

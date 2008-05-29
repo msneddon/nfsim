@@ -26,7 +26,13 @@ namespace NFcore
 	class GroupOutputter
 	{
 		public:
-			GroupOutputter(System * s, char * groupName, char * groupKeyFileName, vector <TemplateMolecule *> &keyTemplates, vector <char *> &templateNames, vector <char *> &filenames, vector <unsigned int> &values);
+			GroupOutputter(System * s, 
+					string groupName, 
+					string groupKeyFileName, 
+					vector <TemplateMolecule *> &keyTemplates, 
+					vector <char *> &templateNames, 
+					vector <char *> &filenames, 
+					vector <unsigned int> &values);
 			~GroupOutputter();
 			
 			void writeGroupKeyFile();
@@ -37,8 +43,8 @@ namespace NFcore
 		protected:
 			
 			System *s;
-			char * groupKeyFileName;
-			char * groupName;
+			string groupKeyFileName;
+			string groupName;
 			
 			vector <TemplateMolecule *> keyTemplates;
 			vector <char *> templateNames;

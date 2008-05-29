@@ -112,6 +112,12 @@ namespace NFutil {
 	
 	
 	
+
+	
+	
+	
+	
+	
 	
 	/*
 	class factory {
@@ -146,7 +152,8 @@ namespace NFutil {
 	*/
 	
 	
-	
+	const double PI = 3.1415926535897932384626433832795;
+	const double NA = 6.02214179e23;
 	
 	
 	

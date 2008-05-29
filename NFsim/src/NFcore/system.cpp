@@ -153,19 +153,18 @@ MoleculeType * System::getMoleculeTypeByName(string& mName)
 }
 
 
-double System::getAverageGroupValue(char * groupName, int valIndex)
+double System::getAverageGroupValue(string groupName, int valIndex)
 {
 	double sum = 0;
 	int count = 0;
 	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
 	{
-		char * name = (*groupIter)->getName();
-		if(strlen(name)==strlen(groupName))
-			if(strncmp(name,groupName,strlen(name))==0)
-			{
-				sum += (*groupIter)->getValue(valIndex);
-				count ++;
-			}
+		string name = (*groupIter)->getName();
+		if(name==groupName)
+		{
+			sum += (*groupIter)->getValue(valIndex);
+			count ++;
+		}
 	}
 	return (sum/count);
 }
@@ -528,15 +527,20 @@ double System::outputMeanCount(MoleculeType *m)
 	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
 	{
 		size = (*complexIter)->getMoleculeCountOfType(m);
-		if(size>=2) { count++; sum+=size; }
+		if(size>=2) { count++; sum+=size;}
 		if(size>=1) { allSum+=size; allCount++; }
 		
 	}
 	//cout<<sum<<"/"<<count<<"   "<<allSum<<"/"<<allCount<<endl;
-	if(count!=0)
+	if(count!=0) {
 		outputFileStream<<"\t"<<((double)sum/(double)count)<<endl;
+		return ((double)sum/(double)count);
+	}
 	else
+	{
 		outputFileStream<<"\t"<<0.0<<endl;
+		return 0.0;
+	}
 		
 	return ((double)sum/(double)count);
 }
@@ -556,7 +560,6 @@ double System::calculateMeanCount(MoleculeType *m)
 		if(size>=2) { count++; sum+=size; }
 		if(size>=1) { allSum+=size; allCount++; }
 	}
-	
 	return ((double)sum/(double)count);
 }
 

@@ -18,7 +18,7 @@ MappingSet::MappingSet(unsigned int id, vector <Transformation *> &transformatio
 	this->isDeletion=false;
 	
 	for(unsigned int t=0; t<n_mappings; t++) {
-		if(transformations.at(t)->getType()==Transformation::REMOVE)
+		if(transformations.at(t)->getType()==TransformationFactory::REMOVE)
 			this->isDeletion=true;;
 		mappings[t] = new Mapping(transformations.at(t)->getType(), transformations.at(t)->getStateOrSiteIndex() );
 	}

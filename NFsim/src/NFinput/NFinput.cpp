@@ -1574,7 +1574,35 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 
 
 
+int NFinput::parseAsInt(map<string,string> &argMap,string argName,int defaultValue)
+{
+	if(argMap.find(argName)!=argMap.end()) {
+		string strVal = argMap.find(argName)->second;
+		try {
+			int intVal = NFutil::convertToInt(strVal);
+			return intVal;
+		} catch (std::runtime_error e) {
+			cout<<endl<<"!!  Warning: I couldn't parse your flag '-"+argName+" "+strVal+"' as an integer."<<endl;
+			cout<<"!!  Using the default value of "<<defaultValue<<endl<<endl;;
+		}
+	}
+	return defaultValue;
+}
 
+double NFinput::parseAsDouble(map<string,string> &argMap,string argName,double defaultValue)
+{
+	if(argMap.find(argName)!=argMap.end()) {
+		string strVal = argMap.find(argName)->second;
+		try {
+			double doubleVal = NFutil::convertToDouble(strVal);
+			return doubleVal;
+		} catch (std::runtime_error e) {
+			cout<<endl<<"!!  Warning: I couldn't parse your flag '-"+argName+" "+strVal+"' as a double."<<endl;
+			cout<<"!!  Using the default value of "<<defaultValue<<endl<<endl;;
+		}
+	}
+	return defaultValue;
+}
 
 
 

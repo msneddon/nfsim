@@ -58,7 +58,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string stat
 	
 	// 2) Create a Transformation object to remember the information
 	unsigned int stateIndex = t->getMoleculeType()->getStateIndex(stateName);
-	Transformation *transformation = Transformation::genStateChangeTransform(stateIndex, finalStateValue);
+	Transformation *transformation = TransformationFactory::genStateChangeTransform(stateIndex, finalStateValue);
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -88,11 +88,47 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = Transformation::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
 	else
-		transformation1 = Transformation::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
 
-	Transformation *transformation2 = Transformation::genBindingTransform2(bSiteIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(bSiteIndex2);
+	
+	transformations[reactantIndex1].push_back(transformation1);
+	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
+	t1->addMapGenerator(mg1);
+	
+	transformations[reactantIndex2].push_back(transformation2);
+	MapGenerator *mg2 = new MapGenerator(transformations[reactantIndex1].size()-1);
+	t2->addMapGenerator(mg2);
+	
+	return true;
+}
+bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)
+{
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	//Again, first find the reactants that the binding pertains to
+	int reactantIndex1 = find(t1);
+	int reactantIndex2 = find(t2);
+	if(reactantIndex2==-1 || reactantIndex2==-1) {
+		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!"<<endl;
+		exit(1);
+	}
+	
+	//Find the index of the respective binding sites
+	unsigned int bSiteIndex1 = t1->getMoleculeType()->getBindingSiteIndex(bSiteName1);
+	unsigned int bSiteIndex2 = t2->getMoleculeType()->getBindingSiteIndex(bSiteName2);
+	
+	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
+	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
+	//equal to the size.
+	Transformation *transformation1;
+	if(reactantIndex1==reactantIndex2)
+		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+	else
+		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
+
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(bSiteIndex2);
 	
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -116,7 +152,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	
 	// 2) Create a Transformation object to remember the information
 	unsigned int bSiteIndex = t->getMoleculeType()->getBindingSiteIndex(bSiteName);
-	Transformation *transformation = Transformation::genUnbindingTransform(bSiteIndex);
+	Transformation *transformation = TransformationFactory::genUnbindingTransform(bSiteIndex);
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -140,7 +176,7 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
 		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
 		exit(1);
 	}
-	Transformation *transformation = Transformation::genRemoveMoleculeTransform();
+	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform();
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -154,7 +190,7 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
 bool TransformationSet::addAddMolecule(SpeciesCreator *sc) {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 
-	Transformation *transformation = Transformation::genAddMoleculeTransform(sc);
+	Transformation *transformation = TransformationFactory::genAddMoleculeTransform(sc);
 		
 	// 3) Add the transformation object to the TransformationSet
 	addMoleculeTransformations.push_back(transformation);
@@ -195,28 +231,34 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 		MappingSet *ms = mappingSets[r];
 		for(unsigned int t=0; t<transformations[r].size(); t++)
 		{
-			unsigned int type = transformations[r].at(t)->getType();
-			if(type == Transformation::SKIP) {
-				continue;
-			}
-			else if(type == Transformation::STATE_CHANGE) {
-				Mapping *m = ms->get(t);
-				m->getMolecule()->setState(m->getIndex(),transformations[r].at(t)->getNewStateValue());
-			}
-			else if(type == Transformation::UNBINDING) {
-				Mapping *m = ms->get(t);
-				Molecule::unbind(m->getMolecule(),m->getIndex());
-			}
-			else if(type == Transformation::BINDING) {
-				Mapping *m1 = ms->get(t);
-				Mapping *m2 = mappingSets[transformations[r].at(t)->getPartnerReactantIndex()]->get(transformations[r].at(t)->getPartnerMappingIndex());
-				Molecule::bind(m1->getMolecule(),m1->getIndex(), m2->getMolecule(), m2->getIndex());
-			}
-			else if(type == Transformation::REMOVE) {
+			if(transformations[r].at(t)->getType()==TransformationFactory::REMOVE) {
 				Mapping *m1 = ms->get(t);
 				deleteList.push_back(m1->getMolecule());
-				
+			} else {
+				transformations[r].at(t)->apply(ms->get(t),mappingSets);
 			}
+//			unsigned int type = transformations[r].at(t)->getType();
+//			if(type == TransformationFactory::SKIP) {
+//				continue;
+//			}
+//			else if(type == Transformation::STATE_CHANGE) {
+//				Mapping *m = ms->get(t);
+//				m->getMolecule()->setState(m->getIndex(),transformations[r].at(t)->getNewStateValue());
+//			}
+//			else if(type == Transformation::UNBINDING) {
+//				Mapping *m = ms->get(t);
+//				Molecule::unbind(m->getMolecule(),m->getIndex());
+//			}
+//			else if(type == Transformation::BINDING) {
+//				Mapping *m1 = ms->get(t);
+//				Mapping *m2 = mappingSets[transformations[r].at(t)->getPartnerReactantIndex()]->get(transformations[r].at(t)->getPartnerMappingIndex());
+//				Molecule::bind(m1->getMolecule(),m1->getIndex(), m2->getMolecule(), m2->getIndex());
+//			}
+//			else if(type == Transformation::REMOVE) {
+//				Mapping *m1 = ms->get(t);
+//				deleteList.push_back(m1->getMolecule());
+//				
+//			}
 		}
 	}
 	
@@ -234,7 +276,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	int size = addMoleculeTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
-			addMoleculeTransformations.at(i)->createSpecies();
+			addMoleculeTransformations.at(i)->apply(NULL,NULL);
 		}
 	}
 	return true;
@@ -286,7 +328,7 @@ void TransformationSet::finalize()
 	//specified so that we count the reactants even if we don't do anything to it.
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		if(transformations[r].size()==0) {
-			transformations[r].push_back(Transformation::genEmptyTransform());
+			transformations[r].push_back(TransformationFactory::genEmptyTransform());
 			MapGenerator *mg = new MapGenerator(transformations[r].size()-1);
 			getTemplateMolecule(r)->addMapGenerator(mg);
 		}

@@ -142,6 +142,12 @@ namespace NFinput {
     	@author Michael Sneddon
 	 */
 	bool parseArguments(int argc, const char *argv[], map<string,string> &argMap);
+	
+	
+	int parseAsInt(map<string,string> &argMap, string argName, int defaultValue);
+	double parseAsDouble(map<string,string> &argMap, string argName, double defaultValue);
+	
+	
 
 }
 
