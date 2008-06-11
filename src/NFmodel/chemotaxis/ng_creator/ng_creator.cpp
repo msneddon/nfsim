@@ -277,6 +277,8 @@ System * create(
 	
 	s->prepareForSimulation();
 	s->outputAllObservableNames();
+	
+	s->getMoleculeType(0)->getMolecule(0)->printDetails();
 	return s;
 }
 

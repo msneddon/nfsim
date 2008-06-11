@@ -68,8 +68,8 @@ void DimerGroup::addToGroup(Molecule * m)
 	
 	
 	//and update the value of this group
-	value.at(METH_SITE_LEVEL) = m->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);//methLevel * m->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);
-	value.at(FREE_SITE_LEVEL) = m->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);//(numOfMethSites-methLevel) *m->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);
+	value.at(METH_SITE_LEVEL) = methLevel * m->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);
+	value.at(FREE_SITE_LEVEL) = (numOfMethSites-methLevel) *m->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);
 	
 	//Things are no longer up to date, so remember to update them
 	areReactionsUpToDate = false;
@@ -101,8 +101,8 @@ void DimerGroup::notify(Molecule *changedMolecule, int oldStateValue, int newSta
 	//changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);
 	
 	//cout<<"hereFirst:"<<endl;
-	value.at(METH_SITE_LEVEL) = changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);//newStateValue*changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);
-	value.at(FREE_SITE_LEVEL) = changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);//(numOfMethSites-newStateValue)* changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);
+	value.at(METH_SITE_LEVEL) = newStateValue*changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_ON_INDEX);
+	value.at(FREE_SITE_LEVEL) = (numOfMethSites-newStateValue)* changedMolecule->getDORvalueFromGroup(CLUSTER_NAME, P_OFF_INDEX);
 	//cout<<"and here:"<<endl;
 	
 	//Things are no longer up to date, so remember to update them
