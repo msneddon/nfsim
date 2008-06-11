@@ -384,6 +384,7 @@ void RecCluster::printDetails()
 
 RecClusterWill::RecClusterWill(const char *name, System *s, int methStateIndex, NGparam &p) : Group(name, s, methStateIndex)
 {
+	cout<<"Creating Receptor Cluster Will"<<endl;
 
 	this->e0 = p.get_clusterEnergy_e0();
 	this->e1 = p.get_clusterEnergy_e1();
@@ -623,8 +624,9 @@ double RecClusterWill::getPon()
 
 double RecClusterWill::getFofL()
 {
-	double tarTerm = pow(  (1.0+(AspConc/Asp_Koff_TAR)) / (1.0+(AspConc/Asp_Kon_TAR))  ,TAR_COUNT);
-	double tsrTerm = pow(  (1.0+(AspConc/Asp_Koff_TSR)) / (1.0+(AspConc/Asp_Kon_TSR))  ,TSR_COUNT);
+	// In terms of Dimers!!! so TAR_COUNT and TSR_COUNT have to be divided by two
+	double tarTerm = pow(  (1.0+(AspConc/Asp_Koff_TAR)) / (1.0+(AspConc/Asp_Kon_TAR))  ,TAR_COUNT/2);
+	double tsrTerm = pow(  (1.0+(AspConc/Asp_Koff_TSR)) / (1.0+(AspConc/Asp_Kon_TSR))  ,TSR_COUNT/2);
 	return exp(e0)*tarTerm*tsrTerm;
 }
 

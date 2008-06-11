@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 	
 		System * s = create("testSys",p);
 	
-		s->equilibriate(2700,30);
+		s->equilibriate(150,30);
 		s->sim(10000,200000);
 		s->printAllReactions();
 		delete s;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 		NGparam p;
 		p.setFullLite();
 		
-		p.setInitReceptorMethToZero();
+		//p.setInitReceptorMethToZero();
 		p.setToActivityOutput();
 		
 		
@@ -208,9 +208,20 @@ int main(int argc, char *argv[])
 		
 		System * s = create("testSys",p);
 			
-		//s->equilibriate(200,5);
+		s->equilibriate(150,30);
+		s->sim(100,10);
+		int n_values = 1;
+		double * ligandConc = new double[n_values];
+		ligandConc[0] = 0.03e-3;
+			
+		s->updateAllGroupProperty(ligandConc, n_values);
+		s->sim(1000,100);
 		
-		s->sim(20000,2000);
+		
+		
+		
+		// old
+		//s->sim(1000,200);
 			
 			
 		s->printAllReactions();

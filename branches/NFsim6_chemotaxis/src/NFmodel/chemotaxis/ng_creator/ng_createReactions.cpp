@@ -77,30 +77,46 @@ void createRxn_freeR_bind_unbind_active(System *s,
 		MoleculeType * cheR,
 		NGparam &p)
 {
-	//First, free binding of CheR to the active site depends on the number of active
-	//sites available.  Thus, we need to use a DOR rxn to keep track of this
+//	//First, free binding of CheR to the active site depends on the number of active
+//	//sites available.  Thus, we need to use a DOR rxn to keep track of this
+//	int n_reactants = 2;
+//	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
+//	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+//	reactantTemplates[0]->addEmptyBindingSite(p.get_nameReceptorActiveSite());  // the active site must be available
+//	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't bind if we are fully methylated
+//	
+//	reactantTemplates[1] = new TemplateMolecule(cheR);
+//	reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheRactiveSite());  //has to have an empty site to bind the active site
+//	if(p.get_useTether())
+//		reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheRtetherSite()); //this is the free rxn, so tether must be free too
+//	
+//	//Only the receptor is the DOR reactant	
+//	int DORreactantIndex = 0;
+//	char *DORgroupName = DIMER_GROUP_NAME;
+//	int DORgroupValueIndex = DimerGroup::FREE_SITE_LEVEL;
+//
+//	ReactionClass * r = new NG_FreeActiveSiteBinding("FREE_R_bind_ASITE",n_reactants,reactantTemplates,DORreactantIndex,DORgroupName,DORgroupValueIndex,
+//			p.get_rateFREE_CHER_bind_ACTIVE(), p.get_nameCheRactiveSite(), p.get_nameReceptorActiveSite());
+//	s->addReaction(r);
+//	r->setTraversalLimit(2);
+	
+	
+	//Binding is independent of everyting
 	int n_reactants = 2;
 	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
 	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
 	reactantTemplates[0]->addEmptyBindingSite(p.get_nameReceptorActiveSite());  // the active site must be available
-	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't bind if we are fully methylated
-	
+	//reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't bind if we are fully methylated
+		
 	reactantTemplates[1] = new TemplateMolecule(cheR);
-	reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheRactiveSite());  //has to have an empty site to bind the active site
-	if(p.get_useTether())
-		reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheRtetherSite()); //this is the free rxn, so tether must be free too
+	reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheRactiveSite());
 	
-	//Only the receptor is the DOR reactant	
-	int DORreactantIndex = 0;
-	char *DORgroupName = DIMER_GROUP_NAME;
-	int DORgroupValueIndex = DimerGroup::FREE_SITE_LEVEL;
-
-	ReactionClass * r = new NG_FreeActiveSiteBinding("FREE_R_bind_ASITE",n_reactants,reactantTemplates,DORreactantIndex,DORgroupName,DORgroupValueIndex,
-			p.get_rateFREE_CHER_bind_ACTIVE(), p.get_nameCheRactiveSite(), p.get_nameReceptorActiveSite());
-	s->addReaction(r);
-	r->setTraversalLimit(2);
+	ReactionClass *r = new ReactionSimpleBinding("FREE_R_bind_ASITE", 
+			n_reactants, reactantTemplates, p.get_rateFREE_CHER_bind_ACTIVE(), (char *)p.get_nameReceptorActiveSite(), (char *) p.get_nameCheRactiveSite());
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	
-	
+	//Unbinding Reaction (always independent of everything
 	n_reactants = 1;
 	reactantTemplates = new TemplateMolecule *[n_reactants];
 	reactantTemplates[0] = new TemplateMolecule(cheR);
@@ -119,29 +135,64 @@ void createRxn_R_meth(System *s,
 		MoleculeType * cheR,
 		NGparam &p)
 {
-	int n_reactants = 1;
-	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
-	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
-	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't meth if we are already fully methylated
+//	int n_reactants = 1;
+//	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
+//	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+//	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't meth if we are already fully methylated
+//	
+//	TemplateMolecule * cheRtemp = new TemplateMolecule(cheR);
+//	TemplateMolecule::bind(reactantTemplates[0],p.get_nameReceptorActiveSite(),cheRtemp,p.get_nameCheRactiveSite());
+//
+//	
+//	ReactionClass * r = new NG_BR_MethDemeth2("R_meth_RECEPTOR",n_reactants,reactantTemplates,
+//		p.get_rateCHER_meth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),1);
+//	s->addReaction(r);
+//	r->setTraversalLimit(2);
 	
-	TemplateMolecule * cheRtemp = new TemplateMolecule(cheR);
-	TemplateMolecule::bind(reactantTemplates[0],p.get_nameReceptorActiveSite(),cheRtemp,p.get_nameCheRactiveSite());
+	
+	//	//First, free binding of CheR to the active site depends on the number of active
+	//	//sites available.  Thus, we need to use a DOR rxn to keep track of this
+	//	int n_reactants = 2;
+	//	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
+	//	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+	//	reactantTemplates[0]->addEmptyBindingSite(p.get_nameReceptorActiveSite());  // the active site must be available
+	//	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't bind if we are fully methylated
+	//	
+	//	reactantTemplates[1] = new TemplateMolecule(cheR);
+	
+	/////////////////////
 
-	
-	ReactionClass * r = new NG_BR_MethDemeth2("R_meth_RECEPTOR",n_reactants,reactantTemplates,
-		p.get_rateCHER_meth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),1);
-	s->addReaction(r);
-	r->setTraversalLimit(2);
+		
+	/////////////////////	
+	//
+//		ReactionClass * r = new NG_FreeActiveSiteBinding("FREE_R_bind_ASITE",n_reactants,reactantTemplates,DORreactantIndex,DORgroupName,DORgroupValueIndex,
+//				p.get_rateFREE_CHER_bind_ACTIVE(), p.get_nameCheRactiveSite(), p.get_nameReceptorActiveSite());
+//		s->addReaction(r);
+//		r->setTraversalLimit(2);
 	
 	
 	//int DORreactantIndex = 0;
 	//char *DORgroupName = CLUSTER_NAME;
 	//int DORgroupValueIndex = P_OFF_INDEX;
 	
-	//ReactionClass * r = new NG_BR_MethDemeth("R_meth_RECEPTOR",n_reactants,reactantTemplates,DORreactantIndex,DORgroupName,DORgroupValueIndex,
-	//	p.get_rateCHER_meth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),1);
-	//s->addReaction(r);
-	//r->setTraversalLimit(2);
+	
+	//Methylation depends on activity
+	int n_reactants = 1;
+	TemplateMolecule **reactantTemplates = new TemplateMolecule *[n_reactants];
+	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+	TemplateMolecule *cheRTemplate = new TemplateMolecule(cheR);
+	TemplateMolecule::bind(reactantTemplates[0], p.get_nameReceptorActiveSite(), cheRTemplate, p.get_nameCheRactiveSite());
+	
+	//Only the receptor is the DOR reactant	
+	int DORreactantIndex = 0;
+	char *DORgroupName = DIMER_GROUP_NAME;
+	int DORgroupValueIndex = DimerGroup::FREE_SITE_LEVEL;
+	
+	ReactionClass * r = new NG_BR_MethDemeth("R_meth_RECEPTOR",n_reactants,reactantTemplates,
+			DORreactantIndex,DORgroupName,DORgroupValueIndex,
+		p.get_rateCHER_meth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),1);
+	s->addReaction(r);
+	r->setTraversalLimit(2);
 }
 
 
@@ -150,7 +201,7 @@ void createRxn_freeB_bind_unbind_active(System *s,
 		MoleculeType * cheB,
 		NGparam &p)
 {
-	//First, free binding of CheR to the active site depends on the number of active
+/*	//First, free binding of CheR to the active site depends on the number of active
 	//sites available.  Thus, we need to use a DOR rxn to keep track of this
 	int n_reactants = 2;
 	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
@@ -184,6 +235,35 @@ void createRxn_freeB_bind_unbind_active(System *s,
 	r = new ReactionUnbinding("B_unbind_ASITE",
 		n_reactants,reactantTemplates,p.get_rateCHEB_unbind_ACTIVE(),p.get_nameCheBactiveSite());
 	r->setTraversalLimit(2);
+	s->addReaction(r);*/
+	
+	
+	
+	int n_reactants = 2;
+	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
+	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+	reactantTemplates[0]->addEmptyBindingSite(p.get_nameReceptorActiveSite());  // the active site must be available
+	//reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),p.get_receptorDimerNumberOfMethSites());  // can't bind if we are fully methylated
+		
+	reactantTemplates[1] = new TemplateMolecule(cheB);
+	reactantTemplates[1]->addEmptyBindingSite(p.get_nameCheBactiveSite());
+	if(p.get_useCheBFeedback()) 
+		reactantTemplates[1]->addStateValue(p.get_nameCheBphosState(),PHOS);
+	
+	ReactionClass *r = new ReactionSimpleBinding("FREE_B_bind_ASITE", 
+			n_reactants, reactantTemplates, p.get_rateFREE_CHEB_bind_ACTIVE(), (char *)p.get_nameReceptorActiveSite(), (char *) p.get_nameCheBactiveSite());
+		r->setTraversalLimit(2);
+		s->addReaction(r);
+	
+	//Unbinding Reaction (always independent of everything
+	n_reactants = 1;
+	reactantTemplates = new TemplateMolecule *[n_reactants];
+	reactantTemplates[0] = new TemplateMolecule(cheB);
+	TemplateMolecule *receptorTemplate = new TemplateMolecule(receptorDimer);
+	TemplateMolecule::bind(reactantTemplates[0], p.get_nameCheRactiveSite(), receptorTemplate, p.get_nameReceptorActiveSite());
+	r = new ReactionUnbinding("B_unbind_ASITE",
+		n_reactants,reactantTemplates,p.get_rateCHEB_unbind_ACTIVE(),p.get_nameCheBactiveSite());
+	r->setTraversalLimit(2);
 	s->addReaction(r);
 }
 
@@ -194,18 +274,18 @@ void createRxn_B_demeth(System *s,
 		MoleculeType * cheB,
 		NGparam &p)
 {
-	int n_reactants = 1;
-	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
-	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
-	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),0);  // can't demeth if we are already fully demethylated
-	
-	TemplateMolecule * cheBtemp = new TemplateMolecule(cheB);
-	TemplateMolecule::bind(reactantTemplates[0],p.get_nameReceptorActiveSite(),cheBtemp,p.get_nameCheBactiveSite());
-
-	ReactionClass * r = new NG_BR_MethDemeth2("B_demeth_RECEPTOR",n_reactants,reactantTemplates,
-		p.get_rateCHEB_demeth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),-1);
-	s->addReaction(r);
-	r->setTraversalLimit(2);
+//	int n_reactants = 1;
+//	TemplateMolecule ** reactantTemplates = new TemplateMolecule *[n_reactants];
+//	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+//	reactantTemplates[0]->addNotStateValue(p.get_nameReceptorMethState(),0);  // can't demeth if we are already fully demethylated
+//	
+//	TemplateMolecule * cheBtemp = new TemplateMolecule(cheB);
+//	TemplateMolecule::bind(reactantTemplates[0],p.get_nameReceptorActiveSite(),cheBtemp,p.get_nameCheBactiveSite());
+//
+//	ReactionClass * r = new NG_BR_MethDemeth2("B_demeth_RECEPTOR",n_reactants,reactantTemplates,
+//		p.get_rateCHEB_demeth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),-1);
+//	s->addReaction(r);
+//	r->setTraversalLimit(2);
 	
 	
 	
@@ -217,6 +297,25 @@ void createRxn_B_demeth(System *s,
 	//	p.get_rateCHEB_demeth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),-1);
 	//s->addReaction(r);
 	//r->setTraversalLimit(2);
+	
+	
+	//Methylation depends on activity
+	int n_reactants = 1;
+	TemplateMolecule **reactantTemplates = new TemplateMolecule *[n_reactants];
+	reactantTemplates[0] = new TemplateMolecule(receptorDimer);
+	TemplateMolecule *cheBTemplate = new TemplateMolecule(cheB);
+	TemplateMolecule::bind(reactantTemplates[0], p.get_nameReceptorActiveSite(), cheBTemplate, p.get_nameCheBactiveSite());
+	
+	//Only the receptor is the DOR reactant	
+	int DORreactantIndex = 0;
+	char *DORgroupName = DIMER_GROUP_NAME;
+	int DORgroupValueIndex = DimerGroup::METH_SITE_LEVEL;
+	
+	ReactionClass * r = new NG_BR_MethDemeth("B_meth_RECEPTOR",n_reactants,reactantTemplates,
+			DORreactantIndex,DORgroupName,DORgroupValueIndex,
+		p.get_rateCHEB_demeth_RECEPTOR(), p.get_nameReceptorMethState(), p.get_nameReceptorActiveSite(),-1);
+	s->addReaction(r);
+	r->setTraversalLimit(2);
 }
 
 

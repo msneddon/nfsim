@@ -383,27 +383,37 @@ void NGparam::setToActivityOutput() {
 void NGparam::setWillParameters() {
 	
 	//Set concentrations (roughly from Li and Hazelbauer)
-	tarCount = 849; //4500/10;
-	tsrCount = 0; //9000/10;
-	cheAcount = 849; //4500/10;
-	cheRcount =  170; //85;
-	cheBcount = 170; //509;
-	cheYcount = 8200; //8200/10;
+	tarCount = 4500; //4500/10;  
+	tsrCount = 9000; //9000/10;
+	cheAcount = 4500; //4500/10;
+	cheRcount =  255; //85;
+	cheBcount = 255; //509;
+	cheYcount = 8236; //8200/10;
 	motorCount = 0;
 	
+	//15.9
 	//this->useCheB=false;
 	//this->setInitReceptorMethToZero();
 	
 	//setInitReceptorMethToZero(); 
 	//number of clusters = 750
-	this->tarPerCluster = 1; //9; //(6*75)/10;
-	this->tsrPerCluster = 0; //18; //(12*75)/10;
-	numberOfDimerMethylationSites = 12;
+	this->tarPerCluster = 6; //9; //(6*75)/10;
+	this->tsrPerCluster = 12; //18; //(12*75)/10;
+	numberOfDimerMethylationSites = 4;
+	tarMethLevel[0] = 0;   tsrMethLevel[0] = 0;
+	tarMethLevel[1] = 1;   tsrMethLevel[1] = 1; 
+	tarMethLevel[2] = 2;   tsrMethLevel[2] = 2;
+	tarMethLevel[3] = 1;   tsrMethLevel[3] = 1;
+	tarMethLevel[4] = 0;   tsrMethLevel[4] = 0;
+	tarMethLevel[5] = 0;   tsrMethLevel[5] = 0;
+	tarMethLevel[6] = 0;   tsrMethLevel[6] = 0;
+	tarMethLevel[7] = 0;   tsrMethLevel[7] = 0;
+	tarMethLevel[8] = 0;   tsrMethLevel[8] = 0;
 	
 	
 	//Set offset energy for receptor clusters
 	e0 = 3.36*1;// / 18;  //Divide by 18 because will has 18 dimers per cluster
-	e1 = -(0.063*12); //*36)/(tarPerCluster+tsrPerCluster);
+	e1 = -(0.063); //*36)/(tarPerCluster+tsrPerCluster);
 /*	for(int m=0; m<=8; m++) {
 		TAR_freeEnergyOffset[m] = e0+e1*m;
 		TSR_freeEnergyOffset[m] = e0+e1*m;
@@ -412,28 +422,28 @@ void NGparam::setWillParameters() {
 	
 	//Ligand binding and unbinding to tar and tsr
 	asp_Koff_TAR = 0.0094e-3;
-	asp_Kon_TAR = 0.17e-3;
+	asp_Kon_TAR = 0.017e-3;
 	asp_Koff_TSR = 150e-3;
 	asp_Kon_TSR = 245e-3;
 	
 	
 	//Methylation Rates from Will's model (scaled for receptor dimers)
 	double KM_R_michaelisConstant = 0.2; //uM
-	double KM_B_michaelisConstant = 0.2; //uM
+	double KM_B_michaelisConstant = 1; //uM
 	
 	//Catylitic rates from will's model
-	this->CHER_meth_RECEPTOR = .01; //1.35; //13.5; // s^-1
-	this->CHEB_demeth_RECEPTOR = .02; //2.16; // s^-1
+	this->CHER_meth_RECEPTOR = 0.6; //1.35; //13.5; // s^-1
+	this->CHEB_demeth_RECEPTOR = 0.8; //2.16; // s^-1
 	
 	//All we have to do is fix the unbinding rates, and we get the binding rates
 	//from will's parameters.
-	CHER_unbind_ACTIVE = 30; // per second
-	CHEB_unbind_ACTIVE = 30; // per second
+	CHER_unbind_ACTIVE = 50; // per second
+	CHEB_unbind_ACTIVE = 50; // per second
 	
-	FREE_CHER_bind_ACTIVE = (CHER_meth_RECEPTOR + CHER_unbind_ACTIVE) / (KM_R_michaelisConstant);
+	FREE_CHER_bind_ACTIVE = (CHER_unbind_ACTIVE) / (KM_R_michaelisConstant);
 	FREE_CHER_bind_ACTIVE = FREE_CHER_bind_ACTIVE*1e6 / (cellVolume*NFutil::NA);
 	
-	FREE_CHEB_bind_ACTIVE = (CHEB_demeth_RECEPTOR + CHEB_unbind_ACTIVE) / (KM_B_michaelisConstant);
+	FREE_CHEB_bind_ACTIVE = (CHEB_unbind_ACTIVE) / (KM_B_michaelisConstant);
 	FREE_CHEB_bind_ACTIVE = FREE_CHEB_bind_ACTIVE*1e6 / (cellVolume*NFutil::NA);
 	
 	
@@ -443,8 +453,8 @@ void NGparam::setWillParameters() {
 	CHEA_phos_CHEB = 10e6 / (cellVolume*NFutil::NA); // 10 / uM s
 	AUTO_dephos_CHEB = 1; // s^-1
 	
-	CHEA_phos_CHEY = 90e6 / (cellVolume*NFutil::NA); // 90 / uM s;;
-	AUTO_dephos_CHEY = 0.5;  // s^-1
+	CHEA_phos_CHEY = 80e6 / (cellVolume*NFutil::NA); // 90 / uM s;;
+	AUTO_dephos_CHEY = 15;  // s^-1
 	
 	
 	

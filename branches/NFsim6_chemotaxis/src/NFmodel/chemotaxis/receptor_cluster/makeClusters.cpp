@@ -168,11 +168,11 @@ int ReceptorCluster::createFixedSizeClustersWithConstantRatio(System *s, vector 
 		
 		//Create a new group that will hold our AN_Cluster
 		//Create a new group that will hold our AN_Cluster
-		new RecCluster(CLUSTER_NAME,s,methylStateIndex,
-				p.get_clusterTarAspKoff(),p.get_clusterTarAspKon(),
-				p.get_clusterTsrAspKoff(),p.get_clusterTsrAspKon(),p.get_aspartateConcentration());
+		//new RecCluster(CLUSTER_NAME,s,methylStateIndex,
+		//		p.get_clusterTarAspKoff(),p.get_clusterTarAspKon(),
+		//		p.get_clusterTsrAspKoff(),p.get_clusterTsrAspKon(),p.get_aspartateConcentration());
 		
-		/*new RecClusterWill(CLUSTER_NAME,s,methylStateIndex,p);*/
+		new RecClusterWill(CLUSTER_NAME,s,methylStateIndex,p);
 		
 		//Put each molecule into that cluster
 		for(molIter=currentClusterMembers.begin(); molIter!=currentClusterMembers.end(); molIter++)
