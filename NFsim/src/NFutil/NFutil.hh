@@ -19,7 +19,9 @@
 
 
 
-//!  General utility functions for NFsim, including a random number generator
+using namespace std;
+
+//!  General utility functions for NFsim, including a random number generator and a function parser.
 /*!
     @author Michael Sneddon
  */
@@ -112,9 +114,6 @@ namespace NFutil {
 	
 	
 	
-
-	
-	
 	
 	
 	
@@ -152,7 +151,7 @@ namespace NFutil {
 	*/
 	
 	
-	const double PI = 3.1415926535897932384626433832795;
+	const double PI = 3.14159265358979323846;
 	const double NA = 6.02214179e23;
 	
 	

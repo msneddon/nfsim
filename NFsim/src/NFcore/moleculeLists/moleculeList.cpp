@@ -1,8 +1,3 @@
-
-
-
-
-
 #include "moleculeList.hh"
 
 
@@ -86,7 +81,6 @@ int MoleculeList::create(Molecule *&m)
 
 void MoleculeList::remove(int listId)
 {
-	
 	//Make sure this mappingSet is not empty
 	if(n_molecules==0) {
 		cerr<<"Trying to remove from an empty MoleculeList!!"<<endl;
@@ -125,8 +119,8 @@ void MoleculeList::remove(int listId)
 	
 	//cout<<"REMOVING!!! "<< listId<<" at pos: "<<pos<<endl;
 	//printDetails();
-	
 }
+
 void MoleculeList::removeLast()
 {
 	if(n_molecules<=0) {

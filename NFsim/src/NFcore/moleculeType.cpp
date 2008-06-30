@@ -212,8 +212,16 @@ void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 
 void MoleculeType::prepareForSimulation()
 {
-	//Our iterators that we will use to loop through every molecule
+	
+	//Check each reaction and add this molecule as a reactant if we have to
 	int r=0;
+	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )
+	{
+		system->registerRxnIndex((*rxnIter)->getRxnId(), reactionPositions.at(r),r);
+  	}
+	
+	//Our iterators that we will use to loop through every molecule
+	
 	Molecule *mol;
   	for( int m=0; m<mList->size(); m++ )
   	{
@@ -248,6 +256,9 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 
 int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 {
+	return system->getRxnIndex(rxn->getRxnId(),rxnPosition);
+	
+	//The old way!!  (that is slow if we have many rxns of course!)
 	int r=0;
 	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
 	{

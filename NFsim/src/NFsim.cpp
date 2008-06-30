@@ -16,6 +16,12 @@
  * 
  * 
  * 
+ * arguements accecpted:
+ * -v = verbose output
+ * -sim =
+ * -ogf = output global function values at each point of the output
+ * 
+ * 
  * 
  * 
  * 
@@ -120,6 +126,11 @@ int main(int argc, const char *argv[])
 			
 				if(s!=NULL)
 				{
+					//If requested, be sure to output the values of global functions
+					if (argMap.find("ogf")!=argMap.end()) {
+						s->turnOnGlobalFuncOut();
+					}
+					
 					//Here we just run some stuff for testing... The output is just
 					s->registerOutputFileLocation((s->getName()+"_nf.gdat").c_str());
 					s->outputAllObservableNames();
@@ -133,6 +144,7 @@ int main(int argc, const char *argv[])
 					eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 					sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 					oSteps = NFinput::parseAsInt(argMap,"oSteps",oSteps);
+					
 
 					cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 					s->equilibriate(eqTime);
@@ -157,18 +169,31 @@ int main(int argc, const char *argv[])
 		else if (argMap.find("test")!=argMap.end()) 
 		{
 			string test = argMap.find("test")->second;
+			bool foundATest = false;
 			if(!test.empty())
 			{
 				cout<<"running test: '"+test+"'"<<endl;
 				if(test=="simple_system") {
 					NFtest_ss::run();
+					foundATest=true;
 				}
 				if(test=="transcription") {
 					NFtest_transcription::run();
+					foundATest=true;
 				}
 				if(test=="tlbr") {
 					NFtest_tlbr::run(argMap);
+					foundATest=true;
 				}
+				if(test=="mathFuncParser") {
+					FuncFactory::test();
+					foundATest=true;
+				}
+				
+				if(!foundATest) {
+					cout<<"  That test could not be identified!!  Skipping!"<<endl;
+				}
+					
 			}
 			else {
 				cout<<"You must specify a test to run."<<endl;				

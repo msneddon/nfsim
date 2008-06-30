@@ -40,13 +40,6 @@ void ReactantList::pickRandom(MappingSet *&ms)
 }
 
 
-
-int ReactantList::size() const
-{
-	return n_mappingSets;
-}
-
-
 MappingSet * ReactantList::pushNextAvailableMappingSet()
 {
 	//Check if we are going to exceed capacity

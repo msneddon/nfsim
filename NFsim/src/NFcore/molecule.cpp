@@ -399,13 +399,17 @@ void Molecule::clear()
 //}
 
 
+queue <Molecule *> Molecule::q;
+queue <int> Molecule::d;
+list <Molecule *>::iterator Molecule::molIter;
+
 
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {	
 	//Create the queues
-	queue <Molecule *> q;
+	//queue <Molecule *> q;
 	
-	queue <int> d;
+	//queue <int> d;
 	int currentDepth = 0;
 	
 	//First add this molecule
@@ -446,7 +450,7 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 	
 	
 	//clear the has visitedMolecule values
-	list <Molecule *>::iterator molIter;
+	//list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ )
   		(*molIter)->hasVisitedMolecule=false;
 	

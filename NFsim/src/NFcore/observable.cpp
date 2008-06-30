@@ -30,3 +30,9 @@ bool Observable::isObservable(Molecule * m) const {
 	
 
 }
+
+
+void Observable::addReferenceToMyself(mu::Parser * p) {
+	p->DefineVar(this->aliasName,&count);
+}
+

@@ -8,6 +8,7 @@
 
 
 #include "../NFcore/NFcore.hh"
+#include "../NFfunction/NFfunction.hh"
 #include "../NFreactions/basicReactions/basicReaction.hh"
 #include "TinyXML/tinyxml.h"
 
@@ -62,6 +63,17 @@ namespace NFinput {
 			TiXmlElement *pListOfParameters, 
 			map <string,double> &parameter, 
 			bool verbose);
+	
+	
+	//! Reads the Function XML block and adds the Functions to the system.
+	/*!
+	   	@author Michael Sneddon
+	*/
+	bool initGlobalFunctions(
+		TiXmlElement * pListOfFunctions, 
+		System * system,
+		map <string,double> &parameter,
+		bool verbose);
 	
 	//! Reads the MoleculeType XML block and adds the MoleculeTypes to the system.
 	/*!

@@ -30,7 +30,7 @@ namespace Motor {
 //	///////////////////////////////////////////////////////////////////////
 //	// Reaction for the Motors depend on observable CheYp
 
-	class MotorSwitchRxn : public ReactionClass
+	class MotorSwitchRxn // : public ReactionClass
 	{
 //		public:
 //			MotorSwitchRxn( string name, 
