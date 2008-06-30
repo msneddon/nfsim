@@ -65,6 +65,8 @@ System * NFinput::initializeFromXML(
 		//Read the key lists needed for the simulation and make sure they exist...
 		TiXmlElement *pListOfParameters = pModel->FirstChildElement("ListOfParameters");
 		if(!pListOfParameters) { cout<<"\tNo 'ListOfParameters' tag found.  Quitting."; delete s; return NULL; }
+		TiXmlElement *pListOfFunctions = pModel->FirstChildElement("ListOfFunctions");
+		//(we do not enforce that functions must exist... yet)  if(!pListOfFunctions) { cout<<"\tNo 'ListOfParameters' tag found.  Quitting."; delete s; return NULL; }
 		TiXmlElement *pListOfMoleculeTypes = pListOfParameters->NextSiblingElement("ListOfMoleculeTypes");
 		if(!pListOfMoleculeTypes) { cout<<"\tNo 'ListOfMoleculeTypes' tag found.  Quitting."; delete s; return NULL; }
 		TiXmlElement *pListOfSpecies = pListOfMoleculeTypes->NextSiblingElement("ListOfSpecies");
@@ -85,6 +87,17 @@ System * NFinput::initializeFromXML(
 			cout<<"\n\nI failed at parsing your Parameters.  Check standard error for a report."<<endl;
 			delete s;
 			return NULL;
+		}
+		
+		if(!verbose) cout<<"-";
+		else if(pListOfFunctions) cout<<"\n\tReading list of Global Functions..."<<endl;
+		if(pListOfFunctions)
+		{
+			if(!initGlobalFunctions(pListOfFunctions, s, parameter, verbose)) {
+				cout<<"\n\nI failed at parsing your Global Functions.  Check standard error for a report."<<endl;
+				delete s;
+				return NULL;
+			}
 		}
 		
 		
@@ -215,6 +228,123 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <string,double
 		return false;
 	}
 }
+
+
+
+bool NFinput::initGlobalFunctions(
+	TiXmlElement * pListOfFunctions, 
+	System * system,
+	map <string,double> &parameter,
+	bool verbose)
+{
+	try {
+		vector <string> argNames;
+		vector <string> argTypes;
+		vector <string> paramNames;
+		vector <double> paramValues;
+		
+		//Loop through the Function tags...
+		TiXmlElement *pFunction;
+		for ( pFunction = pListOfFunctions->FirstChildElement("Function"); pFunction != 0; pFunction = pFunction->NextSiblingElement("Function")) 
+		{
+			//Check if MoleculeType tag has a name...
+			if(!pFunction->Attribute("id")) {
+				cerr<<"!!!Error:  Function tag must contain the id attribute.  Quitting."<<endl;
+				return false;	
+			}
+				
+			//Read in the Function Name
+			string funcName = pFunction->Attribute("id");
+			if(verbose) cout<<"\t\tReading and Creating Function: "+funcName+"(";
+			
+			
+			//Get the list of arguments for this function
+			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArgs");
+			if(pListOfArgs) {
+				//Loop through each arguement
+				TiXmlElement *pArg; bool firstArg = true;
+				for ( pArg = pListOfArgs->FirstChildElement("Arg"); pArg != 0; pArg = pArg->NextSiblingElement("Arg")) 
+				{
+					if(verbose && !firstArg) cout<<", ";
+					firstArg=false;
+					//Check again for errors by making sure the argument has a name
+					string argName, argType;
+					if(!pArg->Attribute("id") || !pArg->Attribute("name") || !pArg->Attribute("type")) {
+						if(verbose) cout<<" ?? ...\n";
+						cerr<<"!!!Error:  Arg tag in Function: '" + funcName + "' must contain the all attributes including id, name, and type.  Quitting."<<endl;
+						return false;
+					}
+					
+					argName = pArg->Attribute("name");
+					argType = pArg->Attribute("type");
+					argNames.push_back(argName);
+					argTypes.push_back(argType);
+					
+					if(verbose) cout<<argName;
+				}
+			}
+			if(verbose) cout<<")"<<endl;
+			
+			
+			//Get the list of Parameter Constants for this function
+			TiXmlElement *pListOfParamConst = pFunction->FirstChildElement("ListOfParameterConstants");
+			if(pListOfParamConst) {
+				
+				//Loop through each arguement
+				TiXmlElement *pParamConst;
+				for ( pParamConst = pListOfParamConst->FirstChildElement("ParameterConstant"); pParamConst != 0; pParamConst = pParamConst->NextSiblingElement("ParameterConstant")) 
+				{
+					//Check again for errors by making sure the parameter has a name
+					if(!pParamConst->Attribute("id")) {
+						cerr<<"!!!Error:  ParameterConstant tag in Function: '" + funcName + "' must contain a proper id.  Quitting."<<endl;
+						return false;
+					}
+								
+					string paramName = pParamConst->Attribute("id");
+					if(parameter.find(paramName)==parameter.end()) {
+						cerr<<"Could not find parameter constant: "<<paramName<<" when creating function "<<funcName<<". Quitting"<<endl;
+						return false;
+					}
+					paramNames.push_back(paramName);
+					paramValues.push_back(parameter.find(paramName)->second);
+				}
+			}
+			
+			
+			//Read in the actual function definition
+			TiXmlElement *pDefinition = pFunction->FirstChildElement("Definition");
+			if(pDefinition) {
+				if(!pDefinition->GetText()) {
+					cerr<<"!!!Error:  Definition tag must actually contain a string for the function.  Quitting."<<endl;
+										return false;
+				}
+				string functionDefintion = pDefinition->GetText();
+				GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
+				system->addGlobalFunction(gf);
+				if(verbose) cout<<"\t\t\t= "<<functionDefintion<<endl;
+			} else {
+				cerr<<"!!!Error:  Definition tag for a function must exist!  Quitting."<<endl;
+				return false;
+			}
+		
+			argNames.clear();
+			argTypes.clear();
+			paramNames.clear();
+			paramValues.clear();
+		}
+		
+		//Getting here means we read everything we could successfully
+		return true;
+	} catch (...) {
+		//Uh oh! we got some unknown exception thrown, so we must abort!
+		return false;
+	}
+	
+	
+}
+
+
+
 
 
 

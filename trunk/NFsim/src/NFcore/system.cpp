@@ -20,6 +20,7 @@ System::System(string name)
 	nextReaction = 0;
 	this->useComplex = false;
 	this->go = NULL;
+	this->outputGlobalFunctionValues=false;
 }
 
 
@@ -34,6 +35,7 @@ System::System(string name, bool useComplex)
 	nextReaction = 0;
 	this->useComplex = useComplex;
 	this->go = NULL;
+	this->outputGlobalFunctionValues=false;
 }
 
 
@@ -43,6 +45,10 @@ System::System(string name, bool useComplex)
 System::~System()
 {	
 	//Need to delete reactions
+  	for(unsigned int r=0; r<allReactions.size(); r++)
+  		delete [] rxnIndexMap[r];
+  	delete [] rxnIndexMap;
+	
 	ReactionClass *r;
 	while(allReactions.size()>0)
 	{
@@ -126,7 +132,10 @@ int System::createComplex(Molecule * m)
 	return c_id;
 }
 
-
+void System::addGlobalFunction(GlobalFunction *gf)
+{
+	this->globalFunctions.push_back(gf);
+}
 
 
 
@@ -215,7 +224,16 @@ void System::purgeAndPrintAvailableComplexList()
 //the system) call this function to populate all the reactant lists and
 //observables.
 void System::prepareForSimulation()
-{
+{	
+	
+	rxnIndexMap = new int * [allReactions.size()];
+  	for(unsigned int r=0; r<allReactions.size(); r++)
+  	{
+  		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
+  		allReactions.at(r)->setRxnId(r);
+  	}
+  	
+  	
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->prepareForSimulation();
@@ -233,6 +251,11 @@ void System::prepareForSimulation()
   		go->writeOutputFileHeader();
   	}
   	
+  	
+  	
+  	//prep each molecule type for the simulation
+  	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+  		(*functionIter)->prepareForSimulation(this);
 }
 
 
@@ -437,6 +460,9 @@ void System::outputAllObservableNames()
   	outputFileStream<<"#\tTime";
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 		(*molTypeIter)->outputObservableNames(outputFileStream);
+	if(outputGlobalFunctionValues)
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			outputFileStream<<"\t"<<(*functionIter)->getNiceName();
 	outputFileStream<<endl;
 }
 
@@ -445,6 +471,10 @@ void System::outputAllObservableCounts()
   	outputFileStream<<"\t"<<current_time;
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 		(*molTypeIter)->outputObservableCounts(outputFileStream);
+	
+	if(outputGlobalFunctionValues)
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 	outputFileStream<<endl;
 }
 
@@ -453,6 +483,10 @@ void System::outputAllObservableCounts(double cSampleTime)
   	outputFileStream<<"\t"<<cSampleTime;
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 		(*molTypeIter)->outputObservableCounts(outputFileStream);
+	
+	if(outputGlobalFunctionValues)
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 	outputFileStream<<endl;
 }
 
@@ -461,6 +495,9 @@ void System::printAllObservableCounts(double cSampleTime)
   	cout<<"\t"<<cSampleTime;
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 		(*molTypeIter)->printObservableCounts();
+	if(outputGlobalFunctionValues)
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 	cout<<endl;
 }
 
@@ -570,6 +607,7 @@ void System::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
 	{
 		size = (*complexIter)->getMoleculeCountOfType(m);
+		
 		if(size>=1) outputFileStream<<"\t"<<size;
 	}
 	outputFileStream<<endl;
@@ -617,3 +655,17 @@ void System::outputGroupData(double cSampleTime)
 
 
 
+
+
+
+Observable * System::getObservableByName(string obsName)
+{
+	for(unsigned mt=0; mt<allMoleculeTypes.size(); mt++) {
+		for(int ob=0; ob<allMoleculeTypes.at(mt)->getNumOfObservables(); ob++ ) {
+			string name = allMoleculeTypes.at(mt)->getObservableAlias(ob);
+			if(obsName==name) {
+				return allMoleculeTypes.at(mt)->getObservable(ob);
+			}
+		}
+	}
+}

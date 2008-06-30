@@ -38,19 +38,25 @@ void NFtest_tlbr::run(map<string,string> &argMap)
 	double beta = 0.3;
 	double simTime = 3000;
 	double dt = 100;
-	string filename = "tlbr_nf.out";
+	
+	bool outputObservables = false;
+	bool outputAvg = true;
+	bool outputFinalDist = false;
 	
 	//If a valid preset was entered, then set the values
 	//to the requested values
 	if(preset==-1) {}  //This means we are not using any preset values...
 	else if(preset==1) {
-		cout<<"Loading preset parameters 2: Ramping Trajectory"<<endl;
+		cout<<"Loading preset parameters 1: Ramping Trajectory"<<endl;
 		n_L = 2000;
 		n_R = 3000;
 		cTot = 0.11;
 		beta = 16.8;
 		koff = 0.01;
 		simTime = 10000;
+		outputObservables = false;
+		outputAvg = true;
+		outputFinalDist = false;
 	}
 	else if(preset==2) {
 		cout<<"Loading preset parameters 2: Peaking Trajectory"<<endl;
@@ -59,14 +65,43 @@ void NFtest_tlbr::run(map<string,string> &argMap)
 		cTot = 2.7;
 		beta = 16.8;
 		koff = 0.01;
-		simTime = 1000;
+		simTime = 10000;
+		outputObservables = false;
+		outputAvg = true;
+		outputFinalDist = false;
 	} else if(preset==3) {
+		cout<<"Loading preset parameters 3: Final Distribution before PT"<<endl;
 		n_L = 42000;
 		n_R = 3000;
 		koff = 0.01;
 		cTot = 0.378;
 		beta = 0.3;
 		simTime = 1200;
+		outputObservables = false;
+		outputAvg = false;
+		outputFinalDist = true;
+	} else if(preset==4) {
+		cout<<"Loading preset parameters 4: Final Distribution above PT"<<endl;
+		n_L = 42000;
+		n_R = 3000;
+		koff = 0.01;
+		cTot = 0.378;
+		beta = 90;
+		simTime = 1000;
+		outputObservables = false;
+		outputAvg = false;
+		outputFinalDist = true;
+	} else if(preset==5) {
+		cout<<"Loading preset parameters 5: Final Distribution magic"<<endl;
+		n_L = 1000;
+		n_R = 3000;
+		koff = 0.01;
+		cTot = 0.054;
+		beta = 16.8;
+		simTime = 2000;
+		outputObservables = false;
+		outputAvg = false;
+		outputFinalDist = true;
 	}
 	else {
 		cout<<"!! Warning: The preset value of "<<preset<<" that you gave me does nothing!"<<endl;
@@ -82,14 +117,37 @@ void NFtest_tlbr::run(map<string,string> &argMap)
 	dt=NFinput::parseAsDouble(argMap,"dt",dt);
 	
 	
+	string filename="testTlbrOut";
+	if(argMap.find("out")!=argMap.end()) {
+		filename = argMap.find("out")->second;
+	}
+	if(filename.empty()) {
+		cout<<"No filename given: using testTlbrOut[#]_nf.out"<<endl;
+	}
 	
-	bool outputObservables = false;
-	bool outputAvg = true;
-	bool outputFinalDist = false;
 	
-	runSystem(n_L, n_R, cTot, beta, koff,
-			"testTlbrOut", simTime, dt,
-			outputObservables, outputAvg, outputFinalDist);
+	
+	int runs=NFinput::parseAsInt(argMap,"runs",1);
+	string sRuns;
+	std::stringstream out;
+	out << runs;
+	sRuns = out.str();
+	
+	
+	
+	for(int r=0; r<runs; r++) {
+		
+		string sRuns;
+		std::stringstream out;
+		out << r;
+		sRuns = out.str();
+	
+		cout<<"Executing Run Number: "<<r<<endl<<endl;
+		runSystem(n_L, n_R, cTot, beta, koff,
+				filename+sRuns+string("_nf.out"), simTime, dt,
+				outputObservables, outputAvg, outputFinalDist);
+		
+	}
 	
 	
 /*	
@@ -237,6 +295,8 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	//if(outputObservables) addObservables(s,L,R);
 		
 	//Prepare to run
+
+	s->printAllMoleculeTypes();
 	s->prepareForSimulation();
 	s->registerOutputFileLocation(outputFileName.c_str());
 	if(outputObservables || outputAvg) s->outputAllObservableNames();
@@ -248,14 +308,16 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	if(outputAvg) avg = s->outputMeanCount(R);
 		
 	if(outputObservables) s->outputAllObservableCounts();
+	int step=0;
 	while(currentTime<simTime)
 	{
 		currentTime = s->stepTo(nextStoppingTime);
 		if(outputAvg) avg = s->outputMeanCount(R);
-		cout<<"at time: "<<currentTime<<"  avg: "<<avg<<endl;
+		if(step%((int)(100/dt))==0)cout<<"at time: "<<currentTime<<"  avg: "<<avg<<endl;
 			
 		if(outputObservables) s->outputAllObservableCounts();
 		nextStoppingTime += dt;
+		step++;
 	}
 	
 	s->printAllReactions();
@@ -268,6 +330,8 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	//final aggregate size distribution
 	if(outputFinalDist) s->outputMoleculeTypeCountPerComplex(R);
 	if(outputFinalDist) s->outputMoleculeTypeCountPerComplex(R);
+	
+	delete s;
 }
 
 

@@ -42,12 +42,12 @@ void NFtest_ss::run()
 	 */
 	
 	//First we define some parameters for rates and counts
-	int numOfMoleculeY = 500;
-	int numOfMoleculeX = 5000;
-	double dephosRate = 0.5;
-	double kOn = 10;
-	double kOff = 5;
-	double kCat = 0.5;
+	int numOfMoleculeY = 3011;
+	int numOfMoleculeX = 6022;
+	double dephosRate = 0.2;
+	double kOn = 0.0003;
+	double kOff = 0.2;
+	double kCat = 0.1;
 	
 	
 	
@@ -114,10 +114,10 @@ void NFtest_ss::run()
 	//The first parameter is the number of seconds we want to equilibriate.  The second (optional) parameter
 	//is the number of times you want to print an 'ok' output message.  If the second parameter is not
 	//given, nothing is outputted to the console.
-	s->equilibriate(50,10);
+	//s->equilibriate(50,10);
 	
 	//There are two ways to run a simulation.  First, you can just call the function sim as in:
-	s->sim(500,50);
+	s->sim(5000,500);
 	
 	//Calling this sim function is the easist way to run a simulation.  The first parameter is the
 	//number of seconds you want to run for, the second is the number of times you want to output
@@ -127,8 +127,8 @@ void NFtest_ss::run()
 	
 	//The second way to run a simulation is to call this stepTo function:
 	cout<<endl<<endl<<"Calling the stepTo function and stepping to the system time t=600 seconds"<<endl;
-	double stoppingTime = s->stepTo(600);
-	cout<<"The last reaction was fired at simulation time: "<<stoppingTime<<endl<<endl;
+	//double stoppingTime = s->stepTo(600);
+	//cout<<"The last reaction was fired at simulation time: "<<stoppingTime<<endl<<endl;
 	
 	//This function runs the simulation until the given time is reached, and it also returns the
 	//time of the simulation when the last reaction fired (which is now the current time in the
@@ -174,7 +174,7 @@ MoleculeType * NFtest_ss::createX(System *s)
 	
 	//This is the default state value that new molecules are created with
 	int * stateValues = new int [numOfStates];
-	stateValues[0] = 1;
+	stateValues[0] = 0;
 	
 	//When we create a molecule, it automatically adds itself to the system, so all we have to 
 	//do here is create it, and return it so we can use it to add reactions to the system
@@ -398,14 +398,14 @@ void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 	molY->addObservable(obsyFree);
 	
 	//Total amount of X
-	TemplateMolecule *xTot = new TemplateMolecule(molX);
+	/*TemplateMolecule *xTot = new TemplateMolecule(molX);
 	Observable * obsxTot = new Observable("Xtot",xTot);
 	molX->addObservable(obsxTot);
 	
 	//Total amount of Y
 	TemplateMolecule *yTot = new TemplateMolecule(molY);
 	Observable * obsyTot = new Observable("Ytot",yTot);
-	molY->addObservable(obsyTot);
+	molY->addObservable(obsyTot);*/
 }
 
 

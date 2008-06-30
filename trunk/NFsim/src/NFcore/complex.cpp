@@ -25,7 +25,10 @@ int Complex::getMoleculeCountOfType(MoleculeType *m)
 	for( molIter = complexMembers.begin(); molIter != complexMembers.end(); molIter++ )
 	{
 		if((*molIter)->getMoleculeTypeName()==m->getName())
+		{
+			//cout<<count<<" Match! : "<<m->getName()<<" with "<< (*molIter)->getMoleculeTypeName()<<endl;
 			count++;
+		}
 		
 	}
   	return count;

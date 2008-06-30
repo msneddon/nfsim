@@ -21,7 +21,15 @@ namespace NFcore
 			virtual void prepareForSimulation();
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
 			virtual void remove(Molecule *m, unsigned int reactantPos);
-			virtual double update_a();
+			virtual double update_a() {
+					a = 1;
+					
+					for(unsigned int i=0; i<n_reactants; i++)
+						a*=reactantLists.at(i)->size();
+					
+					a*=baseRate;
+					return a;
+			}
 						
 						
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);

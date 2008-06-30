@@ -145,16 +145,7 @@ void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 
 
 
-double BasicRxnClass::update_a()
-{
-	a = 1;
-	
-	for(unsigned int i=0; i<n_reactants; i++)
-		a*=reactantLists.at(i)->size();
-	
-	a*=baseRate;
-	return a;
-}
+
 						
 						
 void BasicRxnClass::notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) 

@@ -23,6 +23,7 @@
 #include "../NFoutput/NFoutput.hh"
 #include "../NFreactions/NFreactions.hh"
 #include "moleculeLists/moleculeList.hh"
+#include "../NFfunction/NFfunction.hh"
 
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 1		// Set to 1 to display basic messages (eg runtime)
@@ -49,6 +50,7 @@ namespace NFcore
 	class TransformationSet;
 	class MoleculeList;
 	
+	class GlobalFunction;
 //	class TemplateMapping;
 //	class Transformation;
 	
@@ -114,6 +116,7 @@ namespace NFcore
 			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
 			int getGroupCount() const { return allGroups.size(); }
 			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
+			Observable * getObservableByName(string obsName);
 			double getAverageGroupValue(string groupName, int valIndex);
 		
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
@@ -132,6 +135,8 @@ namespace NFcore
 			int createComplex(Molecule * m);
 			int addGroup(Group * g);
 		
+			void addGlobalFunction(GlobalFunction *gf);
+			
 			/* once all elements are added, we need to prepare and initialize for simulations */
 			void prepareForSimulation();
 		
@@ -144,6 +149,9 @@ namespace NFcore
 		
 			/* tell the system where to ouptut results*/
 			void registerOutputFileLocation(const char * filename);
+			
+			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
+			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 		
 			void addGroupOutputter(GroupOutputter * go);
 		
@@ -194,13 +202,19 @@ namespace NFcore
 			 * zero so that additional simulations can take place */
 			void equilibriate(double duration);
 			void equilibriate(double duration, int statusReports);
+			
+			
+			//For moleculeTypes to do a quick lookup and see where a particular reaction
+			//is mapped to.  This is an optimization....
+			void registerRxnIndex(int rxnId, int rxnPos, int rxnIndex) {rxnIndexMap[rxnId][rxnPos]=rxnIndex;};
+			int getRxnIndex(int rxnId, int rxnPos) const { return rxnIndexMap[rxnId][rxnPos]; };
 		
 		protected:
 		
 			// The invariant system properties, created when the system is created
 			string name;         /* arbitrary name of the system  */
 			bool useComplex;     /* parameter that knows if we should be dynamically tracking complexes */
-		
+		    
 		
 			// The container objects that maintain the system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /* container of all MoleculeTypes in the simulation */
@@ -209,6 +223,8 @@ namespace NFcore
 			vector <Complex * > allComplexes;         /* container of all complexes in the simulation */
 			queue <int> nextAvailableComplex;         /* queue tells us which complexes can be used next */
 		
+			
+			vector <GlobalFunction *> globalFunctions; /* container of all functions available to the system */
 		
 			// Properties of the system that update in time
 			double a_tot;        /* the sum of all a's (propensities) of all reactions */
@@ -226,7 +242,12 @@ namespace NFcore
 			ofstream outputFileStream; /* the stream to a file to write out the results */
 			void outputGroupDataHeader();
 			GroupOutputter * go;
-		
+		    bool outputGlobalFunctionValues;
+			
+			//For moleculeTypes to do a quick lookup and see where a particular reaction
+			//is mapped to.  This is an optimization....
+			int **rxnIndexMap;
+			
 		
 		private:
 		
@@ -235,6 +256,7 @@ namespace NFcore
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
 			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
 			vector <Group *>::iterator groupIter;          /* to iterate over allGroups */
+			vector <GlobalFunction *>::iterator functionIter; /* to iterate over Global Functions */
 	};
 	
 	
@@ -282,6 +304,7 @@ namespace NFcore
 		
 			int getNumOfObservables() const { return observables.size(); };
 			string getObservableAlias(int obsIndex) const;
+			Observable * getObservable(int obsIndex) const { return observables.at(obsIndex); };
 			unsigned long int getObservableCount(int obsIndex) const;
 		
 			int getReactionCount() const { return reactions.size(); };
@@ -510,17 +533,20 @@ namespace NFcore
 		
 			int * rxnListMappingId;
 			int nReactions;
-		
+			
+			static queue <Molecule *> q;
+			static queue <int> d;
+			static list <Molecule *>::iterator molIter;
 		private:
+			
+			
+			
 			list <StateChangeListener *>::iterator listenerIter; /* to iterate over groups this molecule is in */
 	};
 	
 	
 	
 
-	
-	
-	
 	
 	
 	
@@ -545,7 +571,7 @@ namespace NFcore
 			ReactionClass(string name, double rate, TransformationSet *transformationSet);
 			virtual ~ReactionClass();
 			
-			
+			int getNumOfReactants() const { return n_reactants; };
 			
 			string getName() const { return name; };
 			double getBaseRate() const { return baseRate; };
@@ -577,8 +603,13 @@ namespace NFcore
 			virtual void printFullDetails() const = 0;
 			
 			
+			void setRxnId(int rxnId) { this->rxnId = rxnId; };
+			int getRxnId() const { return rxnId; };
+			
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;
+			
+			int rxnId;
 			
 			string name;
 			int reactionType;
@@ -722,14 +753,15 @@ namespace NFcore
 			void subtract() { if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); } count--; };
 		
 			/* methods used to get observable information */
-			unsigned long int getCount() const {return count;};
+			unsigned long int getCount() const {return (unsigned long int) count;};
 			string getAliasName() const { return aliasName; };
-		
+			
+			void addReferenceToMyself(mu::Parser * p);
 		
 		protected:
 			string aliasName;   /* The name that will be output for this observable */
 			TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */
-			unsigned long int count; /* the number of molecules that match this observable */
+			double count; /* the number of molecules that match this observable, its a double so that functions can use it (as a reference) */
 		
 	};
 	

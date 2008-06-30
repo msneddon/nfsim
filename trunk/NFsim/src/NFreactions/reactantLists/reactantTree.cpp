@@ -22,14 +22,14 @@ ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, un
 	
 	//For a binary tree, the depth is the rounded up value of the log base 10 of
 	//the capacity divided by the log base 10 of 2.
-	this->treeDepth = (unsigned int)ceil(log(capacity)/log(2));
+	this->treeDepth = (unsigned int)ceil(log((double)capacity)/log(2.0));
 	
 	//We have a complete binary tree, so we must recalculate the capacity
 	//from the depth of the tree (this is the number of nodes we can store
-	this->capacity = (unsigned int) pow(2,treeDepth);
+	this->capacity = (unsigned int) pow((double)2.0,(int)treeDepth);
 	
 	//Calculate the number of nodes we need (and thus the length of the tree arrays)
-	this->numOfNodes = ((unsigned int) pow(2,treeDepth+1)) - 1;
+	this->numOfNodes = ((unsigned int) pow((double)2.0,(int)(treeDepth+1))) - 1;
 	
 	//Calculate the first index (into the tree! not the mappingset array!) that can store a molecule element
 	//This is, conveniently, the capacity of the tree (gotta love binary!)

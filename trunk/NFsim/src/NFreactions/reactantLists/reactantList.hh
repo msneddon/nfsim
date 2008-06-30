@@ -53,7 +53,7 @@ namespace NFcore
 			/*!
 				Returns the number of mappingSets that have been added to this list
 			 */
-			int size() const;
+			int size() const { return n_mappingSets; };
 			
 			/*!
 				Adds a new MappingSet to this list and returns a pointer to the new mapping set for you
