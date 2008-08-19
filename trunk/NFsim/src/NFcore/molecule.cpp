@@ -106,7 +106,6 @@ void Molecule::updateRxnMembership()
 
 void Molecule::notifyGroupsThatRateMayChange()
 {
-	
 	//if(listeners.size()>0) cout<<"    notifying groups that rate may have changed"<<endl;
 	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
 		(*listenerIter)->updateGroupReactions();
@@ -329,86 +328,14 @@ void Molecule::clear()
 
 
 
-
-//void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
-//{	
-//	//cout<<"Traversing molecule: " << this->getUniqueID()<<endl;
-//	
-//		//If we are too deep at this point, then return
-//	
-//	
-//	
-//	//cout<<"Traversing, limit: " << traversalLimit << endl;
-//	if(hasVisitedMolecule==true) { return; }
-//	
-//	if(traversalLimit!=ReactionClass::NO_LIMIT)
-//	{
-//		//cout<<"   Limit: "<<traversalLimit<<endl;
-//		if(traversalLimit==0)
-//		{
-//			//cout<<"     -returning!!! "<<endl;
-//			clear();
-//			return;
-//		}
-//	}
-//	
-//	//Make sure that this is not alreadly in the member list
-//	//If it was, then we exit because if it was in the member list,
-//	//then we alreadly explored down all its bonds and we have the
-//	//entire complex
-//	list <Molecule *>::iterator molIter;
-//	for( molIter = members.begin(); molIter != members.end(); molIter++ )
-//  		if((*molIter)==this) { clear(); return; }
-//	
-//	//This molecule must then be added to the member list
-//	members.push_back(this);
-//	
-//			
-//	//Otherwise, we keep exploring...
-//	hasVisitedMolecule = true;
-//	
-//	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-//	{
-//		if(hasVisitedBond[b]==true) { continue; }
-//		if(bonds[b]==0) //binding site is open, so continue
-//		{
-//			//cout<<"    -bond "<<b<<" is empty."<<endl;
-//			continue;
-//		}
-//		else // binding site has a bond, so we must explore it
-//		{
-//			//cout<<"    -Going down bond: "<<b<<endl;
-//			//get template that is bound to this binding site
-//			Molecule * m2 = bonds[b];
-//			
-//			m2->setHasVisited(bSiteIndexOfBond[b]); //tell t2 we have visited this bond
-//			setHasVisited(b); //remember that we visited through this bond.
-//			if(traversalLimit==ReactionClass::NO_LIMIT)
-//			{
-//				//cout<<"continuing with no limit"<<endl;
-//				m2->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
-//			}
-//			else
-//			{
-//				//cout<<"continuing with one less"<<endl;
-//				m2->traverseBondedNeighborhood(members,traversalLimit-1 );
-//			}
-//		}		
-//	}
-//	clear();
-//}
-
-
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
 
-
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {	
-	//Create the queues
+	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
 	//queue <Molecule *> q;
-	
 	//queue <int> d;
 	int currentDepth = 0;
 	
@@ -464,74 +391,74 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 	
 	Molecule::breadthFirstSearch(members, this, traversalLimit);
 	return;
-	//cout<<"Traversing molecule: " << this->getUniqueID()<<endl;
-	
-		//If we are too deep at this point, then return
-	
-	
-	//cout<<"Traversing, limit: " << traversalLimit << endl;
-	if(hasVisitedMolecule==true) { return; }
-	
-	if(traversalLimit!=ReactionClass::NO_LIMIT)
-	{
-		//cout<<"   Limit: "<<traversalLimit<<endl;
-		if(traversalLimit==0)
-		{
-			//cout<<"     -returning!!! "<<endl;
-			clear();
-			return;
-		}
-	}
-	
-	//Make sure that this is not alreadly in the member list
-	//If it was, then we exit because if it was in the member list,
-	//then we alreadly explored down all its bonds and we have the
-	//entire complex
-	list <Molecule *>::iterator molIter;
-	for( molIter = members.begin(); molIter != members.end(); molIter++ )
-  		if((*molIter)==this) { clear(); return; }
-	
-	//This molecule must then be added to the member list
-	members.push_back(this);
-	
-			
-	//Otherwise, we keep exploring...
-	hasVisitedMolecule = true;
-	
-	bool * needToVisit = new bool[parentMoleculeType->getNumOfBindingSites()];
-	
-	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-	{
-		if(hasVisitedBond[b]==true) { continue; }
-		if(bonds[b]==0) //binding site is open, so continue
-		{
-			//cout<<"    -bond "<<b<<" is empty."<<endl;
-			needToVisit[b]=false;
-			continue;
-		}
-		else // binding site has a bond, so we must explore it
-		{
-			//cout<<"    -Going down bond: "<<b<<endl;
-			//get template that is bound to this binding site
-			Molecule * m2 = bonds[b];
-			
-			m2->setHasVisited(bSiteIndexOfBond[b]); //tell t2 we have visited this bond
-			setHasVisited(b); //remember that we visited through this bond.
-			if(traversalLimit==ReactionClass::NO_LIMIT)
-			{
-				//cout<<"continuing with no limit"<<endl;
-				needToVisit[b]=true;
-				m2->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
-			}
-			else
-			{
-				needToVisit[b]=true;
-				//cout<<"continuing with one less"<<endl;
-				m2->traverseBondedNeighborhood(members,traversalLimit-1 );
-			}
-		}		
-	}
-	clear();
+//	//cout<<"Traversing molecule: " << this->getUniqueID()<<endl;
+//	
+//		//If we are too deep at this point, then return
+//	
+//	
+//	//cout<<"Traversing, limit: " << traversalLimit << endl;
+//	if(hasVisitedMolecule==true) { return; }
+//	
+//	if(traversalLimit!=ReactionClass::NO_LIMIT)
+//	{
+//		//cout<<"   Limit: "<<traversalLimit<<endl;
+//		if(traversalLimit==0)
+//		{
+//			//cout<<"     -returning!!! "<<endl;
+//			clear();
+//			return;
+//		}
+//	}
+//	
+//	//Make sure that this is not alreadly in the member list
+//	//If it was, then we exit because if it was in the member list,
+//	//then we alreadly explored down all its bonds and we have the
+//	//entire complex
+//	list <Molecule *>::iterator molIter;
+//	for( molIter = members.begin(); molIter != members.end(); molIter++ )
+//  		if((*molIter)==this) { clear(); return; }
+//	
+//	//This molecule must then be added to the member list
+//	members.push_back(this);
+//	
+//			
+//	//Otherwise, we keep exploring...
+//	hasVisitedMolecule = true;
+//	
+//	bool * needToVisit = new bool[parentMoleculeType->getNumOfBindingSites()];
+//	
+//	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
+//	{
+//		if(hasVisitedBond[b]==true) { continue; }
+//		if(bonds[b]==0) //binding site is open, so continue
+//		{
+//			//cout<<"    -bond "<<b<<" is empty."<<endl;
+//			needToVisit[b]=false;
+//			continue;
+//		}
+//		else // binding site has a bond, so we must explore it
+//		{
+//			//cout<<"    -Going down bond: "<<b<<endl;
+//			//get template that is bound to this binding site
+//			Molecule * m2 = bonds[b];
+//			
+//			m2->setHasVisited(bSiteIndexOfBond[b]); //tell t2 we have visited this bond
+//			setHasVisited(b); //remember that we visited through this bond.
+//			if(traversalLimit==ReactionClass::NO_LIMIT)
+//			{
+//				//cout<<"continuing with no limit"<<endl;
+//				needToVisit[b]=true;
+//				m2->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
+//			}
+//			else
+//			{
+//				needToVisit[b]=true;
+//				//cout<<"continuing with one less"<<endl;
+//				m2->traverseBondedNeighborhood(members,traversalLimit-1 );
+//			}
+//		}		
+//	}
+//	clear();
 }
 
 

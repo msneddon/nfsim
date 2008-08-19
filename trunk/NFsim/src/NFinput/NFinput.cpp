@@ -4,10 +4,6 @@
 
 
 
-
-
-
-
 using namespace NFinput;
 using namespace std;
 
@@ -16,6 +12,13 @@ using namespace std;
 component::component(TemplateMolecule *t, int type, string name)
 {
 	this->t=t;
+	this->type = type;
+	this->name = name;
+}
+
+component::component(MoleculeType *mt, int type, string name)
+{
+	this->mt=mt;
 	this->type = type;
 	this->name = name;
 }
@@ -124,6 +127,7 @@ System * NFinput::initializeFromXML(
 		
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
+		
 		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
@@ -364,6 +368,8 @@ bool NFinput::initMoleculeTypes(
 	try {
 		vector <string> stateLabels;
 		vector <string> bSiteLabels;
+		vector <vector <string> > identicalSites;  //Organized as each vector in this vector contains the set of names of sites that are identical
+		vector <vector <string> > identicalStates;
 		
 		//Loop through the MoleculeType tags...
 		TiXmlElement *pMoTypeEl;
@@ -415,12 +421,36 @@ bool NFinput::initMoleculeTypes(
 					//Decide whether this component is a binding site or a state and act accordingly
 					TiXmlElement *pListOfAllowedStates = pComp->FirstChildElement("ListOfAllowedStates");
 					if(pListOfAllowedStates)  {
-						//First check if the component Name already exists, if so, we can't handle that yet!
-						for(vector<string>::iterator it = bSiteLabels.begin(); it != bSiteLabels.end(); it++ ) {
+						//If we get here, then this must be a state of the molecule
+						
+						//First check if the component Name already exists, if so, we gotta do more!
+						for(vector<string>::iterator it = stateLabels.begin(); it != stateLabels.end(); it++ ) {
 							if((*it)==compName) {
-								cerr<<"!!!Error:  Binding Site Name: '"+compName+"' of MoleculeType: '"+typeName+"' was used more than once!\n";
-								cerr<<"I don't know how to handle identical sites!! So I'm quitting. "<<endl;
-								return false;
+								
+								string newCompName = compName;
+								string num="0"; bool matchedSiteName=false;
+								for(unsigned int is=0; is<identicalStates.size(); is++)
+								{
+									if(identicalStates.at(is).at(0)==compName)
+									{
+										unsigned int lastIndex = identicalStates.at(is).size();
+										std::stringstream lastIndexStream; lastIndexStream << lastIndex+1;
+										num = lastIndexStream.str();
+										newCompName = compName+num;
+										identicalStates.at(is).push_back(newCompName);
+										matchedSiteName = true;
+									}
+								}
+								if(!matchedSiteName) {
+									num="2";
+									newCompName = compName+num;
+									vector <string> v;
+									v.push_back(compName);
+									v.push_back(newCompName);
+									identicalStates.push_back(v);
+								}
+								compName = newCompName;
+								if(verbose) cout<<num;
 							}
 						}
 						stateLabels.push_back(compName);
@@ -444,12 +474,34 @@ bool NFinput::initMoleculeTypes(
 						}
 					}
 					else {
-						//First check if the component Name already exists, if so, we can't handle that yet!
+						//First check if the component Name already exists, if so, then we have to do extra work
 						for(vector<string>::iterator it = bSiteLabels.begin(); it != bSiteLabels.end(); it++ ) {
 							if((*it)==compName) {
-								cerr<<"!!!Error:  Binding Site Name: '"+compName+"' of MoleculeType: '"+typeName+"' was used more than once!\n";
-								cerr<<"I don't know how to handle identical sites!! So I'm quitting. "<<endl;
-								return false;
+								string newCompName = compName;
+								string num="0"; bool matchedSiteName=false;
+								for(unsigned int is=0; is<identicalSites.size(); is++)
+								{
+									if(identicalSites.at(is).at(0)==compName)
+									{
+										unsigned int lastIndex = identicalSites.at(is).size();
+										std::stringstream lastIndexStream; lastIndexStream << lastIndex+1;
+										num = lastIndexStream.str();
+										newCompName = compName+num;
+										identicalSites.at(is).push_back(newCompName);
+										matchedSiteName = true;
+									}
+								}
+								if(!matchedSiteName) {
+									num="2";
+									newCompName = compName+num;
+									vector <string> v;
+									v.push_back(compName);
+									v.push_back(newCompName);
+									identicalSites.push_back(v);
+								}
+								
+								compName = newCompName;
+								if(verbose) cout<<num;
 							}
 						}
 						bSiteLabels.push_back(compName);
@@ -457,6 +509,15 @@ bool NFinput::initMoleculeTypes(
 				}
 			}
 			if(verbose) cout<<")"<<endl;
+			if(verbose) {
+				for(unsigned int is=0; is<identicalSites.size(); is++)  {
+					cout<<"\t\t\t-Identified Equivalent Sites: ";
+					for(unsigned int isvec=0; isvec<identicalSites.at(is).size(); isvec++) {
+						cout<<identicalSites.at(is).at(isvec)<<" ";
+					} cout<<endl;
+				}
+			}
+			
 			
 			
 			//Now, actually create the molecule, starting with the binding sites
@@ -478,12 +539,15 @@ bool NFinput::initMoleculeTypes(
 				if(false) cout<<"stateNames["<<i<<"] = "<<stateNames[i]<<endl;
 			}
 			
-			//With everything good to go, let's create the moleculeType
-			new MoleculeType(typeName,stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
-	
+			//With everything good to go, let's create the moleculeType, being sure to remember the equavalent sites.
+			MoleculeType *mt = new MoleculeType(typeName,stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+			mt->addEquivalentSites(identicalSites);
+			mt->addEquivalentStates(identicalStates);
+			
 			//Finally, clear the states and binding site labels that we read in
 			bSiteLabels.clear();
 			stateLabels.clear();
+			identicalSites.clear();
 		}
 				
 		//Getting here means we read everything we could successfully
@@ -747,6 +811,376 @@ bool NFinput::initStartSpecies(
 
 
 
+bool NFinput::FindReactionRuleSymmetry(
+		TiXmlElement * pRxnRule, 
+		System * s, 
+		map <string,double> &parameter, 
+		map<string,int> &allowedStates,
+		map <string, component> &symComps,
+		map <string, component> &symRxnCenter,
+		bool verbose) 
+{
+			
+	try {
+		map <string, component> comps;
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////					
+		//Grab the name of the rule
+		string rxnName;
+		if(!pRxnRule->Attribute("id")) {
+			cerr<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
+			return false;
+		} else {
+			rxnName = pRxnRule->Attribute("id");
+		}
+		if(verbose) cout<<"\n\t\tReading Reaction Rule: "<<rxnName<<" to find symmetries... "<<endl;
+		
+		
+		TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
+		if(!pListOfReactantPatterns) {
+			cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant patterns!"<<endl;
+			return true;
+		}
+		
+		TiXmlElement *pReactant;
+		for ( pReactant = pListOfReactantPatterns->FirstChildElement("ReactantPattern"); pReactant != 0; pReactant = pReactant->NextSiblingElement("ReactantPattern")) 
+		{
+			const char *reactantName = pReactant->Attribute("id");
+			if(!reactantName) {
+				cerr<<"Reactant tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
+				return false;
+			}
+			//if(verbose) cout<<"\t\t\tReading Reactant Pattern: "<<reactantName<<endl;
+		
+			//int NumOfSymComps = symComps.size();
+			TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
+			if(pListOfMols) {
+				if(!readPatternForSymmetry(pListOfMols, s, reactantName, comps, symComps, verbose)) return false;
+			}
+			else {
+				cerr<<"Reactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+				return false;
+			}
+			
+			//cout<<"("<<symComps.size() - NumOfSymComps<<")"<<endl;
+		}
+					
+		
+		//Read in the list of operations we need to perform in this rule
+		TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
+		if(!pListOfOperations) {
+			cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no operations!  This rule will do nothing!"<<endl;
+			return true;
+		}
+		
+		//First extract out the state changes
+		TiXmlElement *pStateChange;
+		for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange")) 
+		{
+			//Make sure all the information about the state change is here
+			string site, finalState;
+			if(!pStateChange->Attribute("site") || !pStateChange->Attribute("finalState")) {
+				cerr<<"A specified state change operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+				cerr<<"have a valid site or finalState attribute.  Quitting."<<endl;
+				return false;
+			} else {
+				site = pStateChange->Attribute("site");
+				finalState = pStateChange->Attribute("finalState");
+			}
+			
+			if(comps.find(site)!=comps.end()) {
+				component c = comps.find(site)->second;
+				MoleculeType *mt = c.mt;
+				
+				if(mt->isAnEquivalentState(c.name)) {
+					symRxnCenter.insert(pair <string, component> (site,c));
+					symComps.erase(site);
+				}
+			} else {
+					cerr<<"Error in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that either I couldn't find the states you are refering to."<<endl;
+					return false;
+			}
+		
+//			try {
+//				component c = comps.find(site)->second;
+//				int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
+//				ts->addStateChangeTransform(c.t,c.name,finalStateInt);
+//			} catch (exception& e) {
+//				cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
+//				cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
+//				return false;
+//			}
+		}
+		
+		
+		//Search for symmetric sites in the bonds that are formed...
+		TiXmlElement *pAddBond;
+		for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond")) 
+		{
+			//Make sure all the information about the binding operation is here
+			string site1, site2;
+			if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
+				cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+				cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+				return false;
+			} else {
+				site1 = pAddBond->Attribute("site1");
+				site2 = pAddBond->Attribute("site2");
+			}
+			
+			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
+				component c1 = comps.find(site1)->second;
+				component c2 = comps.find(site2)->second;
+										
+				MoleculeType *mt1 = c1.mt;
+				MoleculeType *mt2 = c2.mt;
+										
+				if(mt1->isAnEquivalentSite(c1.name)) {
+					symRxnCenter.insert(pair <string, component> (site1,c1));
+					symComps.erase(site1);
+				}
+				if(mt2->isAnEquivalentSite(c2.name)) {
+					symRxnCenter.insert(pair <string, component> (site2,c2));
+					symComps.erase(site2);
+				}
+			} else {
+				cerr<<"Error in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
+				cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
+				return false;
+			}
+		}
+		
+		//Next extract out removal of bonds
+		TiXmlElement *pDeleteBond;
+		for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond")) 
+		{
+			//Make sure all the information about the unbinding operation change is here
+			string site1,site2;
+			if(!pDeleteBond->Attribute("site1") || !pDeleteBond->Attribute("site2")) {
+				cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+				cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+				return false;
+			} else {
+				site1 = pDeleteBond->Attribute("site1");
+				site2 = pDeleteBond->Attribute("site2");
+			}
+			
+			if(verbose) cout<<"\t\t\t***Identified unbinding of site: "+site1+" to site " + site2<<endl;
+			
+			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
+				component c1 = comps.find(site1)->second;
+				component c2 = comps.find(site2)->second;
+										
+				MoleculeType *mt1 = c1.mt;
+				MoleculeType *mt2 = c2.mt;
+										
+				if(mt1->isAnEquivalentSite(c1.name)) {
+					symRxnCenter.insert(pair <string, component> (site1,c1));
+					symComps.erase(site1);
+				}
+				if(mt2->isAnEquivalentSite(c2.name)) {
+					symRxnCenter.insert(pair <string, component> (site2,c2));
+					symComps.erase(site2);
+				}
+				
+			} else {
+				cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
+				cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
+				return false;
+			}
+		}
+		
+		
+		if(verbose)
+		if(symComps.size()>0 || symRxnCenter.size()>0) {
+			cout<<"Found "<< symRxnCenter.size() <<" equivalent states/sites in the rxn center and "<<endl;
+			cout<<symComps.size()<<" equivalent states sites outside the rxn center."<<endl;
+		} else {
+			cout<<"No symmetries found.";
+		}
+		
+		return true;
+			
+	} catch (...) {
+		cout<<"caught something.."<<endl;
+		return false;
+	}
+}
+
+
+
+
+
+bool isValid(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
+	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
+		for(unsigned int j=i+1; j<symRxnCenterComp.size(); j++) {
+			if(symRxnCenterComp.at(i).at(currentPos.at(i)).symPermutationName
+					== symRxnCenterComp.at(j).at(currentPos.at(j)).symPermutationName) return false;
+		}
+	}
+	return true;
+}
+
+
+void dumpState(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
+	cout<<"( ";
+	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
+		cout<<symRxnCenterComp.at(s).at(currentPos.at(s)).symPermutationName<<" ";
+	cout<<")"<<endl;
+}
+
+void createSymMap(map<string,component> & symMap,
+		vector <string> &uniqueId,
+		vector <vector <component> > &symRxnCenterComp, 
+		vector <int> &currentPos) 
+{
+	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
+	{
+		component c = symRxnCenterComp.at(s).at(currentPos.at(s));
+		component newComp(c.mt, c.type, c.name);
+		newComp.symPermutationName = c.symPermutationName;
+		symMap.insert(pair <string, component> (uniqueId.at(s),newComp));
+	}
+}
+
+
+bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutations, 
+		map<string,component> &symComps, 
+		map<string,component> &symRxnCenter)
+{
+	//First, make sure we have some symmetric sites.  If not, just return and
+	//carry on as normal...
+	//if(symComps.size()==0 && symRxnCenter.size()==0) {
+	if(symRxnCenter.size()==0) {
+		map <string,component> m;
+		permutations.push_back(m);
+		return true;
+	}
+	cout<<"generating permutations..."<<endl;
+	
+	
+	//Vectors to hold the info we need as we are generating things...
+	vector <vector <component> > symRxnCenterComp;
+	vector <string> uniqueId;
+	vector <int> currentPos;
+	
+	
+	//First, translate the map into vectors that have the 
+	map<string, component>::iterator it;
+	for ( it=symRxnCenter.begin() ; it != symRxnCenter.end(); it++)
+	{
+		//Create a new set to hold all the names of this equivalent site.
+		vector <component> v;
+		
+		//Get the generalized component for this site or state
+		component c = (*it).second;
+		int *eq; int n_eq; //here we get the number of equivalent sites
+		if(c.type==component::BSITE) {
+			c.mt->getEquivalencyClass(eq,n_eq, c.name);
+		} else if(c.type==component::STATE) {
+			c.mt->getEquivalencyStateClass(eq,n_eq, c.name);
+		}
+			
+		
+		//Loop through the equivalent sites or states and add it to the vector
+		for(int e=0; e<n_eq; e++) {
+			component newComp(c.mt, c.type, c.name);
+			if(c.type==component::BSITE) {
+				string name(c.mt->getBindingSiteName(eq[e]));
+				newComp.symPermutationName=name;
+			}
+			else if(c.type==component::STATE) {
+				string name(c.mt->getStateName(eq[e]));
+				newComp.symPermutationName=name;
+			}
+			v.push_back(newComp);
+		}
+		
+		//finally put that list of equivalent sites on the main vector
+		symRxnCenterComp.push_back(v);
+		currentPos.push_back(0);
+		uniqueId.push_back((*it).first);
+	}
+	
+	// Output for debugging...
+	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
+		cout<<"sym class "<<i<<": ";
+		for(unsigned int j=0; j<symRxnCenterComp.at(i).size(); j++)
+			cout<<symRxnCenterComp.at(i).at(j).symPermutationName<<" ";
+		cout<<endl;
+	}
+	 
+	
+	int dumpCounter = 0;
+	int activeIndex = 0; bool finished=false;
+	if(isValid(symRxnCenterComp, currentPos)) {
+		dumpCounter++;
+		cout<<dumpCounter<<": ";
+		dumpState(symRxnCenterComp, currentPos);
+		
+		map<string,component> symMap;
+		createSymMap(symMap,uniqueId,symRxnCenterComp, currentPos);
+		permutations.push_back(symMap);
+	} else {
+		cout<<"Invalid Configuration! : ";
+		dumpState(symRxnCenterComp, currentPos);
+	}
+	while(true) {
+		bool looped = false;
+		while(((unsigned int)currentPos.at(activeIndex)+1)>=symRxnCenterComp.at(activeIndex).size()) {
+			looped=true;
+			currentPos.at(activeIndex)=0;
+			activeIndex++;
+			if((unsigned int)activeIndex>=symRxnCenterComp.size()) { finished=true; break; }
+		}
+		if(finished) break;
+		currentPos.at(activeIndex) = currentPos.at(activeIndex)+1;
+		if(looped) { activeIndex=0; } //Reset to the beginning of the list
+		if(isValid(symRxnCenterComp, currentPos)) {
+			dumpCounter++;
+			cout<<dumpCounter<<": ";
+			dumpState(symRxnCenterComp, currentPos);
+			
+			map<string,component> symMap;
+			createSymMap(symMap,uniqueId,symRxnCenterComp, currentPos);
+			permutations.push_back(symMap);
+		} else {
+			cout<<"Invalid Configuration! : ";
+			dumpState(symRxnCenterComp, currentPos);
+		}
+	}
+	
+	
+	return true;
+}
+
+
+bool lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap) {
+	try {
+		if(symMap.find(id)!=symMap.end()) {
+			component symC = symMap.find(id)->second;
+			c = (&(comps.find(id)->second));
+			c->symPermutationName=symC.symPermutationName;
+		} else {
+			if(comps.find(id)!=comps.end()) {
+				c = (&(comps.find(id)->second));
+				c->symPermutationName = c->name;
+			} else {
+				cerr<<"It seems that I couldn't find the binding sites or states you are refering to."<<endl;
+				cerr<<"Could not find the component that matches the id: "<<id<<endl;
+				return false;
+			}
+		}
+	} catch (exception &e) {
+		cerr<<"There was some problem when looking up the location of a particular component."<<endl;
+		cerr<<"Could not find the component that matches the id: "<<id<<endl;
+		return false;
+	}
+	return true;
+}
+
+
 
 
 bool NFinput::initReactionRules(
@@ -756,360 +1190,386 @@ bool NFinput::initReactionRules(
 		map<string,int> &allowedStates, 
 		bool verbose)
 {
-	try {
+	//try {
 		
 		//First, loop through all the rules
 		TiXmlElement *pRxnRule;
 		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule")) 
 		{
 			
+			//First, scan the reaction rule for possible symmetries!!!
+			map <string, component> symComps;
+			map <string, component> symRxnCenter;
+			
+			if(!FindReactionRuleSymmetry(pRxnRule, s, 
+									parameter, 
+									allowedStates,
+									symComps,
+									symRxnCenter,
+									verbose)) return false;
+			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// Begin with some basic parsing of the rules and reactant patterns
+			//cout<<symComps.size()<<"  ----  "<<symRxnCenter.size()<<endl;
 			
-			//Grab the name of the rule
-			string rxnName;
-			if(!pRxnRule->Attribute("id")) {
-				cerr<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
-				return false;
-			} else {
-				rxnName = pRxnRule->Attribute("id");
-			}
-			if(verbose) cout<<"\t\tCreating Reaction Rule: "<<rxnName<<endl;
+			//For each possible permuation of the reaction rule, let us create a separate reaction
+			//to keep track of the result...
+			vector < map <string,component> > permutations;
+			generateRxnPermutations(permutations, symComps, symRxnCenter);
 			
-			
-			//First, read in the template molecules using these data structures
-			map <string,TemplateMolecule *> reactants;
-			map <string, component> comps;
-			vector <TemplateMolecule *> templates;
-		
-			//  Read in the Reactant Patterns for this rule
-			TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
-			if(!pListOfReactantPatterns) {
-				cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant patterns!"<<endl;
-				continue;
-			}
-		
-			TiXmlElement *pReactant;
-			for ( pReactant = pListOfReactantPatterns->FirstChildElement("ReactantPattern"); pReactant != 0; pReactant = pReactant->NextSiblingElement("ReactantPattern")) 
+			for( unsigned int p=0; p<permutations.size(); p++)
 			{
-				const char *reactantName = pReactant->Attribute("id");
-				if(!reactantName) {
-					cerr<<"Reactant tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
-					return false;
-				}
-				if(verbose) cout<<"\t\t\tReading Reactant Pattern: "<<reactantName<<endl;
-			
-				TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
-				if(pListOfMols) {
-					TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, verbose);
-					if(tm==NULL) return false;
-					templates.push_back(tm);
-				}
-				else {
-					cerr<<"Reactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
-					return false;
-				}
-			}
-		
-			//Outputting all the templates for debugging purposes
-			//map<const char*, TemplateMolecule *, strCmp>::iterator it;
-			//	for ( it=reactants.begin() ; it != reactants.end(); it++ )
-			//		cout << (*it).first << " => " << (*it).second->getMoleculeType()->getName() << endl;
-							
+				map <string,component> symMap = permutations.at(p);
 				
-		
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// Create the TransformationSet so that we can collect all the operations that are specified for this rule
-			TransformationSet *ts = new TransformationSet(templates);
-		
-		
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//Read in the list of operations we need to perform in this rule
-			TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
-			if(!pListOfOperations) {
-				cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no operations!  This rule will do nothing!"<<endl;
-				continue;
-			}
-		
-			//First extract out the state changes
-			TiXmlElement *pStateChange;
-			for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange")) 
-			{
-				//Make sure all the information about the state change is here
-				string site, finalState;
-				if(!pStateChange->Attribute("site") || !pStateChange->Attribute("finalState")) {
-					cerr<<"A specified state change operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-					cerr<<"have a valid site or finalState attribute.  Quitting."<<endl;
+				//Grab the name of the rule
+				string rxnName;
+				if(!pRxnRule->Attribute("id")) {
+					cerr<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
 					return false;
 				} else {
-					site = pStateChange->Attribute("site");
-					finalState = pStateChange->Attribute("finalState");
-				}
-			
-				if(verbose) cout<<"\t\t\t***Identified state change to site: "+site+" going to new state value: " + finalState<<endl;
-				try {
-					component c = comps.find(site)->second;
-					int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-					ts->addStateChangeTransform(c.t,c.name,finalStateInt);
-				} catch (exception& e) {
-					cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
-					cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
-					return false;
-				}
-			}
-		
-		
-			//Next extract out the new bonds that are formed
-			TiXmlElement *pAddBond;
-			for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond")) 
-			{
-				//Make sure all the information about the binding operation is here
-				string site1, site2;
-				if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
-					cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-					cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
-					return false;
-				} else {
-					site1 = pAddBond->Attribute("site1");
-					site2 = pAddBond->Attribute("site2");
-				}
-				
-				if(verbose) cout<<"\t\t\t***Identified binding of site: "+site1+" to binding of site " + site2<<endl;
-				
-				try {
-					component c1 = comps.find(site1)->second;
-					component c2 = comps.find(site2)->second;
-					ts->addBindingTransform(c1.t, c1.name, c2.t, c2.name);
-				} catch (exception& e) {
-					cerr<<"Error in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
-					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
-					return false;
-				}
-			}
-			
-			
-			
-			//Next extract out removal of bonds
-			TiXmlElement *pDeleteBond;
-			for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond")) 
-			{
-				//Make sure all the information about the unbinding operation change is here
-				string site1,site2;
-				if(!pDeleteBond->Attribute("site1") || !pDeleteBond->Attribute("site2")) {
-					cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-					cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
-					return false;
-				} else {
-					site1 = pDeleteBond->Attribute("site1");
-					site2 = pDeleteBond->Attribute("site2");
-				}
-				
-				if(verbose) cout<<"\t\t\t***Identified unbinding of site: "+site1+" to site " + site2<<endl;
-				
-				try {
-					component c1 = comps.find(site1)->second;
-					component c2 = comps.find(site2)->second;
+					rxnName = pRxnRule->Attribute("id");
 					
-					//Even though we had to make sure both ends exist, we really only need one transformation
-					ts->addUnbindingTransform(c1.t, c1.name);
-				} catch (exception& e) {
-					cerr<<"Error in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
-					cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
-					return false;
-				}
-			}
-			
-			
-			//Next extract out anything that is destroyed
-			TiXmlElement *pDelete;
-			for ( pDelete = pListOfOperations->FirstChildElement("Delete"); pDelete != 0; pDelete = pDelete->NextSiblingElement("Delete")) 
-			{
-				//Make sure all the information about the state change is here
-				string id;
-				if(!pDelete->Attribute("id")) {
-					cerr<<"A specified delete operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-					cerr<<"have a valid id attribute.  Quitting."<<endl;
-					return false;
-				} else {
-					try {
-						id = pDelete->Attribute("id");
-						if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;
-						//cout<<"id: "<<id<<endl;
-						component c = comps.find(id)->second;
-						//cout<<"Templates.size() "<<templates.size()<<endl;
-						//c.t->printDetails();
-						ts->addDeleteMolecule(c.t);
-					} catch (exception& e) {
-						cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
-						cerr<<"It seems that I couldn't find the molecule to delete that you are refering to. (I was looking for ID: "<<pDelete->Attribute("id")<<endl;
-						return false;
+					if(permutations.size()>1) {
+						stringstream out; out << p;
+						rxnName = rxnName + "_sym" + out.str();
 					}
 				}
+				if(verbose) cout<<"\t\tCreating Reaction Rule: "<<rxnName<<endl;
 				
 				
-			}
+				//First, read in the template molecules using these data structures
+				map <string,TemplateMolecule *> reactants;
+				map <string, component> comps;
+				vector <TemplateMolecule *> templates;
 			
-			//Finally, figure out any new creations
-			TiXmlElement *pAdd;
-			for ( pAdd = pListOfOperations->FirstChildElement("Add"); pAdd != 0; pAdd = pAdd->NextSiblingElement("Add")) 
-			{
-				
-				//Make sure all the information about the state change is here
-				string id;
-				if(!pAdd->Attribute("id")) {
-					cerr<<"A specified add operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-					cerr<<"have a valid id attribute.  Quitting."<<endl;
-					return false;
-				} else {
-					id = pAdd->Attribute("id");
-					if(verbose) cout<<"\t\t\t***Identified addition of product pattern: "+id+"  Warning!  does some stuff, but not everything yet."<<endl;	
-									
-					SpeciesCreator *sc = NULL;
-					
-					//Go get the product pattern we need which will specify how to make this new species
-					TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
-					if(!pListOfProductPatterns) {
-						cerr<<"Error:: ReactionRule "<<rxnName<<" contains no product patterns, but needs at least one to add a species creation rule!"<<endl;
-						return false;
-					}
-					TiXmlElement * pProduct;
-					for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern")) 
-					{
-						//First extract out the product Id
-						string productName;
-						if(!pProduct->Attribute("id")) {
-							cerr<<"Product pattern in ReactionRule "+rxnName+" does not have a valid id attribute!"<<endl;
-							return false;
-						} else {
-							productName = pProduct->Attribute("id");
-						}
-						
-						//When we find the product pattern with the correct Id, then lets create it
-						if(productName==id) {
-							TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
-								if(pListOfMols) {
-									
-									
-									vector <MoleculeType *> productMoleculeTypes;
-									vector < vector <int> > stateInformation;
-									vector < vector <int> > bindingSiteInformation;
-									
-									bool ok = NFinput::readProductPattern(pListOfMols,s,parameter,allowedStates, productName, 
-											productMoleculeTypes, stateInformation, bindingSiteInformation, verbose);
-									
-									if(!ok) {
-										cout<<"Could not read the list of product patterns for addition of a molecule in reaction "<<rxnName<<endl;
-				
-									} else if(productMoleculeTypes.size()>0){
-										sc = new SpeciesCreator(productMoleculeTypes,stateInformation,bindingSiteInformation);
-										ts->addAddMolecule(sc);
-									}
-								}
-								else {
-									cerr<<"Reactant product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
-									return false;
-								}
-						}
-					}
+				//  Read in the Reactant Patterns for this rule
+				TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
+				if(!pListOfReactantPatterns) {
+					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant patterns!"<<endl;
+					continue;
 				}
-			}
 			
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
-			ts->finalize();
-			ReactionClass *r = new BasicRxnClass(rxnName,0,ts);
-			
-			
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//  Read in the rate law for this reaction
-			TiXmlElement *pRateLaw = pRxnRule->FirstChildElement("RateLaw");
-			if(!pRateLaw){
-				cerr<<"!!Error:: ReactionRule "<<rxnName<<" contains no rate law specification!"<<endl;
-				return false;
-			}
-			
-			if(!pRateLaw->Attribute("id") || !pRateLaw->Attribute("type")) {
-				cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification: cannot read 'id' or 'type' attribute!"<<endl;
-					return false;
-			}
-			else {
-				string rateLawName = pRateLaw->Attribute("id");
-				string rateLawType = pRateLaw->Attribute("type");
-				
-				if(verbose) cout<<"\t\t\tRate Law for Reaction is: "<<rateLawType<<endl;
-				if(rateLawType=="Ele") 
+				TiXmlElement *pReactant;
+				for ( pReactant = pListOfReactantPatterns->FirstChildElement("ReactantPattern"); pReactant != 0; pReactant = pReactant->NextSiblingElement("ReactantPattern")) 
 				{
-					//Make sure that the rate constant exists
-					TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
-					if(!pListOfRateConstants) {
-						cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have listOfRateConstants specified!  Quiting"<<endl;
+					const char *reactantName = pReactant->Attribute("id");
+					if(!reactantName) {
+						cerr<<"Reactant tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
 						return false;
 					}
-					TiXmlElement *pRateConstant = pListOfRateConstants->FirstChildElement("RateConstant");
-					if(!pRateConstant) {
-						cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have RateConstants specified!  Quiting"<<endl;
+					if(verbose) cout<<"\t\t\tReading Reactant Pattern: "<<reactantName<<endl;
+				
+					TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
+					if(pListOfMols) {
+						TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, symMap, verbose);
+						if(tm==NULL) return false;
+						templates.push_back(tm);
+						tm->printDetails();
+					}
+					else {
+						cerr<<"Reactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+						return false;
+					}
+				}
+			
+				//Outputting all the templates for debugging purposes
+				//map<const char*, TemplateMolecule *, strCmp>::iterator it;
+				//	for ( it=reactants.begin() ; it != reactants.end(); it++ )
+				//		cout << (*it).first << " => " << (*it).second->getMoleculeType()->getName() << endl;
+								
+					
+			
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
+				TransformationSet *ts = new TransformationSet(templates);
+				
+			
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//Read in the list of operations we need to perform in this rule
+				TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
+				if(!pListOfOperations) {
+					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no operations!  This rule will do nothing!"<<endl;
+					continue;
+				}
+			
+				//First extract out the state changes
+				TiXmlElement *pStateChange;
+				for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange")) 
+				{
+					//Make sure all the information about the state change is here
+					string site, finalState;
+					if(!pStateChange->Attribute("site") || !pStateChange->Attribute("finalState")) {
+						cerr<<"A specified state change operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+						cerr<<"have a valid site or finalState attribute.  Quitting."<<endl;
 						return false;
 					} else {
-						
-						//Get the rate constant value
-						string rateValue; 
-						if(!pRateConstant->Attribute("value")) {
-							cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have a valid RateConstant value!  Quiting"<<endl;
-							return false;
-						} else {
-							rateValue = pRateConstant->Attribute("value");
-						}
-						
-						//Try to parse it into a double value or look it up in the parameter map
-						double rate=0; bool usedParam = false;
-						try {
-							rate = NFutil::convertToDouble(rateValue);
-						} catch (std::runtime_error &e1) {
-							if(parameter.find(rateValue)==parameter.end()) {
-								cerr<<"Could not find parameter: "<<rateValue<<" when reading rate for rxn "<<rxnName <<". Quitting"<<endl;
-								return false;
-							}
-							rate = parameter.find(rateValue)->second;
-							usedParam = true;
-						}
-						if(verbose) {
-							cout<<"\t\t\t\t...setting elementary rate to be: "<<rateValue;
-							if(usedParam) cout<<" (has value: "<<rate<<")";
-							cout<<endl;
-						}
-						
-						r->setBaseRate(rate);
+						site = pStateChange->Attribute("site");
+						finalState = pStateChange->Attribute("finalState");
+					}
+				
+					if(verbose) cout<<"\t\t\t***Identified state change to site: "+site+" going to new state value: " + finalState<<endl;
+
+					component *c;
+					int finalStateInt = 0;
+					if(!lookup(c, site, comps, symMap)) return false;
+					try {
+						finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)->second;
+					} catch (exception& e) {
+						cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
+						cerr<<"It seems that the final state is not valid."<<endl;
+						return false;
+					}
+					ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt);
+				}
+			
+			
+				//Next extract out the new bonds that are formed
+				TiXmlElement *pAddBond;
+				for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond")) 
+				{
+					//Make sure all the information about the binding operation is here
+					string site1, site2;
+					if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
+						cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+						cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+						return false;
+					} else {
+						site1 = pAddBond->Attribute("site1");
+						site2 = pAddBond->Attribute("site2");
 					}
 					
-					pRateConstant = pRateConstant->NextSiblingElement("RateConstant");
-					if(pRateConstant!=NULL) {
-						cout<<"\n\n!!Warning:: Multiple RateConstant tags present for RateLaw definition of "<<rxnName<<"."<<endl;
-						cout<<"Only the first RateConstant given will be used..."<<endl;
-					}	
+					if(verbose) cout<<"\t\t\t***Identified binding of site: "+site1+" to binding of site " + site2<<endl;
+					
+					component *c1;
+					component *c2;
+					
+					if(!lookup(c1, site1, comps, symMap)) return false;
+					if(!lookup(c2, site2, comps, symMap)) return false;
+					ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName);
 				}
 				
-				////  To extend NFsim to parse more rate law types, add an extra else if clause here to catch the rate law
+				
+				
+				//Next extract out removal of bonds
+				TiXmlElement *pDeleteBond;
+				for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond")) 
+				{
+					//Make sure all the information about the unbinding operation change is here
+					string site1,site2;
+					if(!pDeleteBond->Attribute("site1") || !pDeleteBond->Attribute("site2")) {
+						cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+						cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+						return false;
+					} else {
+						site1 = pDeleteBond->Attribute("site1");
+						site2 = pDeleteBond->Attribute("site2");
+					}
+					
+					if(verbose) cout<<"\t\t\t***Identified unbinding of site: "+site1+" to site " + site2<<endl;
+					
+					component *c1;
+					component *c2;
+					if(!lookup(c1, site1, comps, symMap)) return false;
+					if(!lookup(c2, site2, comps, symMap)) return false;
 						
-				else {
-					cerr<<"!! I cannot yet interpret a Rate Law of 'type': "<<rateLawType<<".\n";
-					cerr<<"  Remember, an elementry reaction needs to be specified as 'Ele' (case sensitive)."<<endl;
-					cerr<<"Quitting."<<endl;
+					//Even though we had to make sure both ends exist, we really only need one transformation
+					ts->addUnbindingTransform(c1->t, c1->symPermutationName);
+				}
+				
+				
+				//Next extract out anything that is destroyed
+				TiXmlElement *pDelete;
+				for ( pDelete = pListOfOperations->FirstChildElement("Delete"); pDelete != 0; pDelete = pDelete->NextSiblingElement("Delete")) 
+				{
+					//Make sure all the information about the state change is here
+					string id;
+					if(!pDelete->Attribute("id")) {
+						cerr<<"A specified delete operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+						cerr<<"have a valid id attribute.  Quitting."<<endl;
+						return false;
+					} else {
+						try {
+							id = pDelete->Attribute("id");
+							if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"  Warning!  does nothing yet."<<endl;
+							//cout<<"id: "<<id<<endl;
+							component c = comps.find(id)->second;
+							//cout<<"Templates.size() "<<templates.size()<<endl;
+							//c.t->printDetails();
+							ts->addDeleteMolecule(c.t);
+						} catch (exception& e) {
+							cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
+							cerr<<"It seems that I couldn't find the molecule to delete that you are refering to. (I was looking for ID: "<<pDelete->Attribute("id")<<endl;
+							return false;
+						}
+					}
+					
+					
+				}
+				
+				//Finally, figure out any new creations
+				TiXmlElement *pAdd;
+				for ( pAdd = pListOfOperations->FirstChildElement("Add"); pAdd != 0; pAdd = pAdd->NextSiblingElement("Add")) 
+				{
+					
+					//Make sure all the information about the state change is here
+					string id;
+					if(!pAdd->Attribute("id")) {
+						cerr<<"A specified add operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+						cerr<<"have a valid id attribute.  Quitting."<<endl;
+						return false;
+					} else {
+						id = pAdd->Attribute("id");
+						if(verbose) cout<<"\t\t\t***Identified addition of product pattern: "+id+"  Warning!  does some stuff, but not everything yet."<<endl;	
+										
+						SpeciesCreator *sc = NULL;
+						
+						//Go get the product pattern we need which will specify how to make this new species
+						TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
+						if(!pListOfProductPatterns) {
+							cerr<<"Error:: ReactionRule "<<rxnName<<" contains no product patterns, but needs at least one to add a species creation rule!"<<endl;
+							return false;
+						}
+						TiXmlElement * pProduct;
+						for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern")) 
+						{
+							//First extract out the product Id
+							string productName;
+							if(!pProduct->Attribute("id")) {
+								cerr<<"Product pattern in ReactionRule "+rxnName+" does not have a valid id attribute!"<<endl;
+								return false;
+							} else {
+								productName = pProduct->Attribute("id");
+							}
+							
+							//When we find the product pattern with the correct Id, then lets create it
+							if(productName==id) {
+								TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
+									if(pListOfMols) {
+										
+										
+										vector <MoleculeType *> productMoleculeTypes;
+										vector < vector <int> > stateInformation;
+										vector < vector <int> > bindingSiteInformation;
+										
+										bool ok = NFinput::readProductPattern(pListOfMols,s,parameter,allowedStates, productName, 
+												productMoleculeTypes, stateInformation, bindingSiteInformation, verbose);
+										
+										if(!ok) {
+											cout<<"Could not read the list of product patterns for addition of a molecule in reaction "<<rxnName<<endl;
+					
+										} else if(productMoleculeTypes.size()>0){
+											sc = new SpeciesCreator(productMoleculeTypes,stateInformation,bindingSiteInformation);
+											ts->addAddMolecule(sc);
+										}
+									}
+									else {
+										cerr<<"Reactant product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+										return false;
+									}
+							}
+						}
+					}
+				}
+				
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
+				ts->finalize();
+				ReactionClass *r = new BasicRxnClass(rxnName,0,ts);
+				
+				
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//  Read in the rate law for this reaction
+				TiXmlElement *pRateLaw = pRxnRule->FirstChildElement("RateLaw");
+				if(!pRateLaw){
+					cerr<<"!!Error:: ReactionRule "<<rxnName<<" contains no rate law specification!"<<endl;
 					return false;
 				}
-			} // end to the else statement that parses the rate law.
+				
+				if(!pRateLaw->Attribute("id") || !pRateLaw->Attribute("type")) {
+					cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification: cannot read 'id' or 'type' attribute!"<<endl;
+						return false;
+				}
+				else {
+					string rateLawName = pRateLaw->Attribute("id");
+					string rateLawType = pRateLaw->Attribute("type");
+					
+					if(verbose) cout<<"\t\t\tRate Law for Reaction is: "<<rateLawType<<endl;
+					if(rateLawType=="Ele") 
+					{
+						//Make sure that the rate constant exists
+						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
+						if(!pListOfRateConstants) {
+							cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have listOfRateConstants specified!  Quiting"<<endl;
+							return false;
+						}
+						TiXmlElement *pRateConstant = pListOfRateConstants->FirstChildElement("RateConstant");
+						if(!pRateConstant) {
+							cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have RateConstants specified!  Quiting"<<endl;
+							return false;
+						} else {
+							
+							//Get the rate constant value
+							string rateValue; 
+							if(!pRateConstant->Attribute("value")) {
+								cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have a valid RateConstant value!  Quiting"<<endl;
+								return false;
+							} else {
+								rateValue = pRateConstant->Attribute("value");
+							}
+							
+							//Try to parse it into a double value or look it up in the parameter map
+							double rate=0; bool usedParam = false;
+							try {
+								rate = NFutil::convertToDouble(rateValue);
+							} catch (std::runtime_error &e1) {
+								if(parameter.find(rateValue)==parameter.end()) {
+									cerr<<"Could not find parameter: "<<rateValue<<" when reading rate for rxn "<<rxnName <<". Quitting"<<endl;
+									return false;
+								}
+								rate = parameter.find(rateValue)->second;
+								usedParam = true;
+							}
+							if(verbose) {
+								cout<<"\t\t\t\t...setting elementary rate to be: "<<rateValue;
+								if(usedParam) cout<<" (has value: "<<rate<<")";
+								cout<<endl;
+							}
+							
+							r->setBaseRate(rate);
+						}
+						
+						pRateConstant = pRateConstant->NextSiblingElement("RateConstant");
+						if(pRateConstant!=NULL) {
+							cout<<"\n\n!!Warning:: Multiple RateConstant tags present for RateLaw definition of "<<rxnName<<"."<<endl;
+							cout<<"Only the first RateConstant given will be used..."<<endl;
+						}	
+					}
+					
+					////  To extend NFsim to parse more rate law types, add an extra else if clause here to catch the rate law
+							
+					else {
+						cerr<<"!! I cannot yet interpret a Rate Law of 'type': "<<rateLawType<<".\n";
+						cerr<<"  Remember, an elementry reaction needs to be specified as 'Ele' (case sensitive)."<<endl;
+						cerr<<"Quitting."<<endl;
+						return false;
+					}
+				} // end to the else statement that parses the rate law.
+				
+				//Finally, add the completed rxn rule to the system
+				s->addReaction(r);
+				comps.clear();
+				
+			} //end loop through all permutations
 			
-			//Finally, add the completed rxn rule to the system
-			s->addReaction(r);
-			comps.clear();
-		}
+		} //end loop through all reaction rules
 	
 		//If we got here, then by golly, I think we have a new reaction rule
 		return true;
 		
-	} catch (...) {
-		cout<<"caught something.."<<endl;
-		return false;
-	}
+//	} catch (...) {
+//		cout<<"caught something.."<<endl;
+//		return false;
+//	}
 }
 
 
@@ -1172,7 +1632,8 @@ bool NFinput::initObservables(
 			//Let the other function (readPattern) gather and create our template 
 			map <string, TemplateMolecule *> templates;
 			map <string, component> comps;
-			TemplateMolecule *tempmol = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, verbose);
+			map <string, component> symMap;
+			TemplateMolecule *tempmol = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
 			if(tempmol==NULL) {
 				cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
 				return false;
@@ -1183,6 +1644,7 @@ bool NFinput::initObservables(
 			MoleculeType *moltype = tempmol->getMoleculeType();
 			Observable *o  = new Observable(observableName.c_str(),tempmol);
 			moltype->addObservable(o);
+			tempmol->printDetails();
 		}
 		
 		//Getting here means success!
@@ -1197,6 +1659,98 @@ bool NFinput::initObservables(
 
 
 
+bool NFinput::readPatternForSymmetry(
+		TiXmlElement * pListOfMol, 
+		System * s,
+		string patternName,
+		map <string, component> &comps,
+		map <string, component> &symComps,
+		bool verbose)
+{
+	TiXmlElement *pMol;
+	for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule")) 
+	{
+		//First get the type of molecule and retrieve the moleculeType object from the system
+		string molName, molUid;
+		if(!pMol->Attribute("name") || ! pMol->Attribute("id")) {
+			cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating pattern '"<<patternName<<"'. Quitting"<<endl;
+			return false;
+		} else {
+			molName = pMol->Attribute("name");
+			molUid = pMol->Attribute("id");
+		}
+			
+		//Skip anything that is a null molecule
+		if(molName=="Null" || molName=="NULL" || molName=="null") continue;
+		if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
+			
+		//Get the moleculeType and create the actual template
+		MoleculeType *moltype = s->getMoleculeTypeByName(molName);
+		
+		//Loop through the components of the molecule in order to set state values
+		TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
+		if(pListOfComp)
+		{
+			TiXmlElement *pComp;
+			for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component")) 
+			{
+				//Get the basic components of this molecule
+				string compId, compName, compBondCount;
+				if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
+					cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
+					return false;
+				} else {
+					compId = pComp->Attribute("id");
+					compName = pComp->Attribute("name");
+					compBondCount = pComp->Attribute("numberOfBonds");
+				}
+						
+						
+				//Read in a state, if it is in fact a state
+				if(pComp->Attribute("state")) {
+					string compStateValue = pComp->Attribute("state");
+					component c(moltype,component::STATE, compName);
+						
+					////////// Check here for symmetric states!!!!!!!!!!!!!!!!!!!!!!
+					comps.insert(pair <string, component> (compId,c));
+					
+					if(moltype->isAnEquivalentState(compName)) {
+						symComps.insert(pair <string, component> (compId,c));
+					} else {/*cout<<"no"<<endl;*/ }
+				}
+				//Otherwise, parse it as a binding site
+				else {
+					if(!pComp->Attribute("numberOfBonds")) {
+						cerr<<"You gave a bond when creating pattern: "+patternName+" that does not have a numberOfBonds"<<endl;
+						cerr<<"tag.  I need this to determine what exactly to do.  Quitting."<<endl;
+						return false;
+					} else {
+						string numOfBonds = pComp->Attribute("numberOfBonds");
+						int numOfBondsInt = -1;
+						try {
+							numOfBondsInt = NFutil::convertToInt(numOfBonds);
+						} catch (std::runtime_error e) {
+							cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
+							cerr<<e.what()<<endl;
+							return false;
+						}
+								
+						component c(moltype,component::BSITE, compName);
+						comps.insert(pair <string, component> (compId,c));
+						//cout<<"checking eq for "<<compName<<" in moleculetype " <<moltype->getName()<<endl;
+						if(moltype->isAnEquivalentSite(compName)) {
+							symComps.insert(pair <string, component> (compId,c));
+						} else {/*cout<<"no"<<endl;*/ }
+						
+					} //end loop over components
+				} //end if statement for compenents to exist
+	
+			}
+		}
+	}
+	return true;
+}
+
 
 
 
@@ -1208,6 +1762,7 @@ TemplateMolecule *NFinput::readPattern(
 		string patternName,
 		map <string , TemplateMolecule *> &templates,
 		map <string, component> &comps,
+		map <string, component> &symMap,
 		bool verbose)
 {
 	try {
@@ -1284,12 +1839,17 @@ TemplateMolecule *NFinput::readPattern(
 						} else {
 							//State is a valid allowed state, so push it onto our list
 							int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
-							stateName.push_back(compName);
-							stateValue.push_back(stateValueInt);
 							
 							//cout<<"state value: "<< compId;
 							component c(tempmol,component::STATE, compName);
 							comps.insert(pair <string, component> (compId,c));
+							
+							//Make sure we catch symmetric state changes
+							component *symC;
+							if(!lookup(symC, compId, comps, symMap)) return false;
+							
+							stateName.push_back(symC->symPermutationName);
+							stateValue.push_back(stateValueInt);
 						}
 					}
 					
@@ -1311,13 +1871,19 @@ TemplateMolecule *NFinput::readPattern(
 							}
 							
 							//cout<<"bond value: "<< compId <<" " <<numOfBondsInt;
+							
+							//First, remember where this component points
 							component c(tempmol,component::BSITE, compName);
 							comps.insert(pair <string, component> (compId,c));
 							
+							//Look up this site in case we have some symmetry going on...
+							component *symC;
+							if(!lookup(symC, compId, comps, symMap)) return false;
+							
 							if(numOfBondsInt==0) {
-								emptyBondSite.push_back(compName);
+								emptyBondSite.push_back(symC->symPermutationName);
 							} else if (numOfBondsInt==1) {
-								bSiteSiteMapping[compId] = compName;
+								bSiteSiteMapping[compId] = symC->symPermutationName;
 								bSiteMolMapping[compId] = tMolecules.size();
 							} else {
 								cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
@@ -1333,9 +1899,13 @@ TemplateMolecule *NFinput::readPattern(
 			//Loop through the states and set the constraints we need to set
 			int k=0;
 			for(strVecIter = stateName.begin(); strVecIter != stateName.end(); k++, strVecIter++ )
+			{
 				tempmol->addStateValue((*strVecIter).c_str(),(int)stateValue.at(k));
+			}
 			for(strVecIter = emptyBondSite.begin(); strVecIter != emptyBondSite.end(); strVecIter++ )
+			{
 				tempmol->addEmptyBindingSite((*strVecIter).c_str());
+			}
 			
 			//Update our data storage with the new template and empty out the things we don't need
 			templates.insert(pair <string, TemplateMolecule *> (molUid,tempmol));
@@ -1370,18 +1940,30 @@ TemplateMolecule *NFinput::readPattern(
 				//Get the information on this bond that tells us which molecules to connect
 				try {
 					
-					//First look up the info and add the bond
-					string bSiteName1 = bSiteSiteMapping.find(bSite1)->second;
-					int bSiteMolIndex1 = bSiteMolMapping.find(bSite1)->second;
-					string bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
-					int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
-					TemplateMolecule::bind(tMolecules.at(bSiteMolIndex1),bSiteName1.c_str(),tMolecules.at(bSiteMolIndex2),bSiteName2.c_str());
+					//First look up the info from the component maps
+					if(		bSiteSiteMapping.find(bSite1)!=bSiteSiteMapping.end() &&
+							bSiteMolMapping.find(bSite1)!=bSiteMolMapping.end() &&
+							bSiteSiteMapping.find(bSite2)!=bSiteSiteMapping.end() &&
+							bSiteMolMapping.find(bSite2)!=bSiteMolMapping.end()
+							) {
 					
-					//Erase the bonds to make sure we don't add them again
-					bSiteSiteMapping.erase(bSite1);
-					bSiteMolMapping.erase(bSite1);
-					bSiteSiteMapping.erase(bSite2);
-					bSiteMolMapping.erase(bSite2);
+						string bSiteName1 = bSiteSiteMapping.find(bSite1)->second;
+						int bSiteMolIndex1 = bSiteMolMapping.find(bSite1)->second;
+						string bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
+						int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
+						TemplateMolecule::bind(tMolecules.at(bSiteMolIndex1),bSiteName1.c_str(),tMolecules.at(bSiteMolIndex2),bSiteName2.c_str());
+						
+						//Erase the bonds to make sure we don't add them again
+						bSiteSiteMapping.erase(bSite1);
+						bSiteMolMapping.erase(bSite1);
+						bSiteSiteMapping.erase(bSite2);
+						bSiteMolMapping.erase(bSite2);
+					} else {
+						cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
+						cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
+						cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
+						return false;
+					}
 				} catch (exception& e) {
 					cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
 					cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;

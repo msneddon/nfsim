@@ -22,10 +22,18 @@ MoleculeType::MoleculeType(
 	this->numOfStates = numOfStates;
 	this->stateNames = stateNames;
 	this->defaultStateValues = defaultStateValues;
+	this->isStateEq = new int [numOfStates];
+	for(int s=0; s<numOfStates; s++) {
+		isStateEq[s] = -1;
+	}
 	
 	//Set the binding site names
 	this->numOfBindingSites = numOfBindingSites;
 	this->bindingSiteNames = bindingSiteNames;
+	this->isSiteEq = new int [numOfBindingSites];
+	for(int b=0; b<numOfBindingSites; b++) {
+		isSiteEq[b] = -1;
+	}
 	
 	//Register myself with the system, and get an ID number
 	this->system = system;
@@ -45,6 +53,8 @@ MoleculeType::MoleculeType(
 	
 	
 	mList = new MoleculeList(this,2);
+	n_eqSites = 0;
+	n_eqStates = 0;
 }
 
 
@@ -57,7 +67,25 @@ MoleculeType::~MoleculeType()
 	delete [] defaultStateValues;
 	delete [] bindingSiteNames;
 	
+	delete [] isSiteEq;
+	delete [] eqSiteSizes;
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		delete [] eqSiteName[i];
+		delete [] eqSiteIndex[i];
+	}
+	delete [] eqSiteName;
+	delete [] eqSiteIndex;
 	
+	
+	delete [] isStateEq;
+	delete [] eqStateSizes;
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		delete [] eqStateName[i];
+		delete [] eqStateIndex[i];
+	}
+	delete [] eqStateName;
+	delete [] eqStateIndex;
+		
 	
 	//Delete all molecules of this type that exist
 	//Molecule *m;
@@ -91,6 +119,106 @@ MoleculeType::~MoleculeType()
 }
 
 
+void MoleculeType::addEquivalentSites(vector <vector <string> > &identicalSites)
+{
+	this->n_eqSites = identicalSites.size();
+	eqSiteName=new string * [n_eqSites];
+	eqSiteIndex=new int *[n_eqSites];
+	eqSiteSizes=new unsigned int [n_eqSites];
+	
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		eqSiteSizes[i]=identicalSites.at(i).size();
+		eqSiteName[i] = new string [eqSiteSizes[i]];
+		eqSiteIndex[i] = new int [eqSiteSizes[i]];
+		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
+			eqSiteName[i][k] = identicalSites.at(i).at(k);
+			eqSiteIndex[i][k] = getBindingSiteIndex(eqSiteName[i][k]);
+			isSiteEq[eqSiteIndex[i][k]]=i;
+		}
+	}
+}
+
+
+bool MoleculeType::isAnEquivalentSite(string siteName) {
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
+			if(eqSiteName[i][k]==siteName)
+				return true;
+		}
+	}
+	return false;
+}
+bool MoleculeType::isAnEquivalentSite(int siteIndex) {
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
+			if(eqSiteIndex[i][k]==siteIndex)
+				return true;
+		}
+	}
+	return false;
+}
+void MoleculeType::getEquivalencyClass(int *&sites, int &n_sites, string siteName) {
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
+			if(eqSiteName[i][k]==siteName) {
+				sites = eqSiteIndex[i];
+				n_sites=eqSiteSizes[i];
+			}
+		}
+	}
+}
+
+
+void MoleculeType::addEquivalentStates(vector <vector <string> > &identicalStates)
+{
+	this->n_eqStates = identicalStates.size();
+	eqStateName=new string * [n_eqStates];
+	eqStateIndex=new int *[n_eqStates];
+	eqStateSizes=new unsigned int [n_eqStates];
+	
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		eqStateSizes[i]=identicalStates.at(i).size();
+		eqStateName[i] = new string [eqStateSizes[i]];
+		eqStateIndex[i] = new int [eqStateSizes[i]];
+
+		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
+			eqStateName[i][k] = identicalStates.at(i).at(k);
+			eqStateIndex[i][k] = getStateIndex(eqStateName[i][k]);
+			isStateEq[eqStateIndex[i][k]]=i;
+		}
+	}
+}
+
+
+
+bool MoleculeType::isAnEquivalentState(string stateName) {
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
+			if(eqStateName[i][k]==stateName)
+				return true;
+		}
+	}
+	return false;
+}
+bool MoleculeType::isAnEquivalentState(int stateIndex) {
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
+			if(eqStateIndex[i][k]==stateIndex)
+				return true;
+		}
+	}
+	return false;
+}
+void MoleculeType::getEquivalencyStateClass(int *&states, int &n_states, string stateName) {
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
+			if(eqStateName[i][k]==stateName) {
+				states = eqStateIndex[i];
+				n_states=eqStateSizes[i];
+			}
+		}
+	}
+}
 
 
 Molecule *MoleculeType::genDefaultMolecule()
@@ -276,9 +404,12 @@ int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 void MoleculeType::removeFromObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule was counted, and if so, remove
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-		if((*obsIter)->isObservable(m))
+  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
+		//cout<<"Comparing (in subtract): "<<endl;
+		//m->printDetails();
+		if((*obsIter)->isObservable(m)) 
 			(*obsIter)->subtract();
+	}
 }
 
 void MoleculeType::removeFromRxns(Molecule * m)
@@ -293,9 +424,13 @@ void MoleculeType::removeFromRxns(Molecule * m)
 void MoleculeType::addToObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule should be counted
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
+  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
+		//cout<<"Comparing(in add: "<<endl;
+		//m->printDetails();
 		if((*obsIter)->isObservable(m))
 			(*obsIter)->add();
+	}
+			
 }
 
 void MoleculeType::outputObservableNames(ofstream &fout)
@@ -320,11 +455,33 @@ void MoleculeType::printObservableCounts()
 void MoleculeType::printDetails() const
 {
 	cout<<"Molecule Type: "<< name << " type ID: " << type_id <<endl;
+	
+	cout<<"   -states ( ";
+	for(int s=0; s<numOfStates; s++) cout<<stateNames[s]<<" ";
+	cout<<")"<<endl;
+	
+	cout<<"   -sites ( ";
+	for(int s=0; s<numOfBindingSites; s++) cout<<bindingSiteNames[s]<<" ";
+	cout<<")"<<endl;
+	
+	for(unsigned int i=0; i<n_eqSites; i++) {
+		cout<<"   -equivalent sites ( ";
+		for(unsigned int k=0; k<eqSiteSizes[i]; k++)
+			cout<<eqSiteName[i][k]<<" ";
+		cout<<")"<<endl;
+	}
+	
+	for(unsigned int i=0; i<n_eqStates; i++) {
+		cout<<"   -equivalent states ( ";
+		for(unsigned int k=0; k<eqStateSizes[i]; k++)
+			cout<<eqStateName[i][k]<<" ";
+		cout<<")"<<endl;
+	}
+	
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
 	cout<<"   -has "<< reactions.size() <<" reactions"<<endl;
 	cout<<"        of which "<< indexOfDORrxns.size() <<" are DOR rxns. "<<endl;
 	cout<<"   -has "<< observables.size() <<" observables " <<endl;
-	
 }
 
 

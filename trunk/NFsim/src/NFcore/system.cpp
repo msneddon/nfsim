@@ -7,7 +7,7 @@
 using namespace std;
 using namespace NFcore;
 
-
+int System::NULL_EVENT_COUNTER = 0;
 
 /*!
    Creates a system that does not keep track of complexes.
@@ -301,6 +301,7 @@ double System::getNextRxn()
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes)
 {
+	System::NULL_EVENT_COUNTER=0;
 	cout.setf(ios::scientific);
 	cout<<"Simulating system for: "<<duration<<" second(s)."<<endl<<endl;
 	
@@ -347,6 +348,7 @@ double System::sim(double duration, long int sampleTimes)
 				outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
+			//printAllReactions();
 			cout<<"Sim time: "<<current_time<<"\tCPU time: ";
 			cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
 			cout<<"\t Reactions Cycles during this step: "<<stepIteration<<endl;
@@ -367,6 +369,8 @@ double System::sim(double duration, long int sampleTimes)
 		//cout<<endl<<endl;
 		
 		
+		
+		
 		//Increment time
 		iteration++;
 		stepIteration++;
@@ -381,7 +385,10 @@ double System::sim(double duration, long int sampleTimes)
     if(BASIC_MESSAGE)
     {
     	cout<<endl<<"You just simulated "<< iteration <<" reactions in "<< time << "s  ( ";
-    	cout<<((double)iteration)/time<<" reactions/sec )" << endl;
+    	cout<<((double)iteration)/time<<" reactions/sec, ";
+    	cout<<(time/((double)iteration))<<" CPU seconds/event )"<< endl;
+    	cout<<"Null events: "<< System::NULL_EVENT_COUNTER <<endl;
+    	cout<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/event )"<< endl;
     }
     
 	cout.unsetf(ios::scientific);

@@ -115,7 +115,9 @@ class IsInWrongComplex
 		int ID;
 };
 
-
+//int counter=0;
+//int totalSizeSum=0;
+//int avgTraversalSize = 0;
 /* for unbinding, we have to figure out the elements of the new complex,
  * put those elements in the new complex, renumber the complex_id for those
  * molecules, and delete those molecules from this complex.  wheh! */
@@ -128,6 +130,13 @@ void Complex::updateComplexMembership(Molecule * m)
 	//Get list of things this molecule is still connected to
 	list <Molecule *> members;
 	m->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
+	
+	//counter++;
+	//cout<<"traversing neighborhood: "<<counter<<endl;
+	//totalSizeSum+=members.size();
+	//avgTraversalSize = totalSizeSum/counter;
+	//cout<<members.size()<<endl;
+	//cout<<"average: "<<avgTraversalSize<<endl;
 	
 	
 	//Check if we even need to create a new complex (if not, return)

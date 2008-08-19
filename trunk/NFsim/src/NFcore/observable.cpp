@@ -21,7 +21,8 @@ Observable::~Observable()
 bool Observable::isObservable(Molecule * m) const { 
 	
 	//cout<<"comparing obs: "<<this->aliasName<<" to: "<<endl;
-//	m->printDetails();
+	//m->printDetails();
+	//templateMolecule->printDetails();
 	bool answer = templateMolecule->compare(m);
 	//if(answer) cout<<"Match."<<endl;
 	//else cout<<"nope"<<endl;

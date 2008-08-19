@@ -45,8 +45,11 @@ void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
 {
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
 	//cout<<"complex ID: "<<m->getMolecule()->getComplexID()<<" "<<m2->getMolecule()->getComplexID()<<endl;
+	
 	if(m->getMolecule()->getComplexID()!=m2->getMolecule()->getComplexID()) {
 		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+	} else {
+		System::NULL_EVENT_COUNTER++;
 	}
 }
 
@@ -59,7 +62,7 @@ UnbindingTransform::UnbindingTransform(int siteIndex) :
 	this->siteIndex=siteIndex;
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
-{
+{   //cout<<"unbinding.."<<endl;
 	Molecule::unbind(m->getMolecule(),m->getIndex());
 }
 	
