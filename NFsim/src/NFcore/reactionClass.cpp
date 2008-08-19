@@ -75,13 +75,16 @@ void ReactionClass::fire(double random_A_number)
 	pickMappingSets(random_A_number);
 
 	//Generate the set of possible products that we need to update
-	list <Molecule *> products;
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 	
 	//Loop through the products and remove them from thier observables
-	list <Molecule *>::iterator molIter;
+	//cout<<"------------------------------------------"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	{
+		//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getMoleculeID()<<endl;
 		(*molIter)->removeFromObservables();
+	}
+	//cout<<"++++++++++++++++++++++++++++++++++++++++++"<<endl;
 		
 	//Through the MappingSet, transform all the molecules as neccessary
 	this->transformationSet->transform(this->mappingSet);

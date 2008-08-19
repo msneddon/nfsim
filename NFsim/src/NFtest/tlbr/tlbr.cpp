@@ -34,7 +34,7 @@ void NFtest_tlbr::run(map<string,string> &argMap)
 	int n_L = 42000;
 	int n_R = 3000;
 	double koff = 0.01;
-	double cTot = 0.378;
+	double cTot = 0.84; //0.378;
 	double beta = 0.3;
 	double simTime = 3000;
 	double dt = 100;
@@ -149,129 +149,6 @@ void NFtest_tlbr::run(map<string,string> &argMap)
 		
 	}
 	
-	
-/*	
-	if(argc<=4)
-	{
-		cout<<"Not enough arguements!  "<<endl;
-		cout<<"You need to specify first which TLBR test to run and an output filename"<<endl;
-		return;
-	}
-	
-	char * filename = argv[4];
-	
-	
-	if( argc>3 )
-	{
-		if(strncmp(argv[3],"1",1)==0)
-		{
-//			cout<<" Running test 1: sample trajectory 1 (slope)"<<endl;
-//			int N_l = 2000;
-//			int N_r = 3000;
-//			double ctot = 0.11;
-//			double beta = 16.8;
-//			double koff = 0.01;
-//			double endTime = 10000;
-//			cout<<"simming for "<< endTime <<" seconds "<<endl;
-//			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false, true, false);
-//			delete s;
-//			return;
-			
-			for(int k=0; k<9; k++) {
-			cout<<" Running test 1: sample trajectory"<<endl;
-			int N_l = 42000;
-			int N_r = 3000;
-			double koff = 0.01;
-			double ctot = 0.378;
-			double beta = 0.3;
-			double endTime = 3000;
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false, true, false);
-			delete s;
-			
-			}
-			return;
-			
-		}
-		else if(strncmp(argv[3],"2",1)==0)
-		{
-			cout<<" Running test 2: sample trajectory 2 (peak)"<<endl;
-			int N_l = 50000;
-			int N_r = 3000;
-			double ctot = 2.7;
-			double beta = 16.8;
-			double koff = 0.01;
-			double endTime = 10000;
-			cout<<"simming for "<< endTime <<" seconds "<<endl;
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false,true,false);
-			delete s;
-			return;
-		}
-		else if(strncmp(argv[3],"3",1)==0)
-		{
-			cout<<" Running test 3: final distribution before PT"<<endl;
-			int N_l = 42000;
-			int N_r = 3000;
-			double koff = 0.01;
-			double ctot = 0.378;
-			double beta = 0.3;
-			double endTime = 1200;
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false, false, true);
-			delete s;
-			return;
-		}
-		else if(strncmp(argv[3],"4",1)==0)
-		{
-			cout<<" Running test 4: Observables below PT"<<endl;
-			
-			//Below PT
-			int N_l = 42000;
-			int N_r = 3000;
-			double ctot = 0.378;
-			double beta = 0.3;
-			double koff = 0.01;
-			double endTime = 2000;
-			
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, true, false, false);
-			delete s;
-			return;
-		}
-		else if(strncmp(argv[3],"5",1)==0)
-		{
-			cout<<" Running test 5: final distribution magic"<<endl;
-			int N_l = 1000;
-			int N_r = 3000;
-			double koff = 0.01;
-			double ctot = 0.054;
-			double beta = 16.8;
-			double endTime = 2000;
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false, false, true);
-			delete s;
-			return;
-		}
-		else if(strncmp(argv[3],"6",1)==0)
-		{
-			cout<<" Running test 6: final distribution above PT"<<endl;
-			int N_l = 42000;
-			int N_r = 3000;
-			double koff = 0.01;
-			double ctot = 0.378;
-			double beta = 90;
-			double endTime = 1000;
-			System *s = runTLBRSystem(N_l, N_r, ctot, beta, koff, filename, endTime, false, false, true);
-			delete s;
-			return;
-		}
-	}
-	else
-	{
-		cout<<"You didn't specify which TLBR setup to run."<<endl;
-		cout<<"  Your options:  -r 1: Sample Trajectory 1 (medium)"<<endl;
-		cout<<"                 -r 2: Sample Trajectory 2 (long)"<<endl;
-		cout<<"                 -r 3: Final distribution before PT (fast)"<<endl;
-		cout<<"                 -r 4: Final distribution after PT (very long)"<<endl;
-		return;
-	}
-	*/
 }
 
 
@@ -282,14 +159,31 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	double freeBindRate = (cTot*koff)/(3.0*(double)n_L);
 	double crossLinkRate = (beta*koff)/(double)n_R;
 	
+	cout<<"beta: " <<beta<<endl;
+	cout<<"cTot: " <<cTot<<endl;
+	cout<<"kOff: " <<koff<<endl;
+	cout<<"N_l:  " <<n_L<<endl;
+	cout<<"N_r:  " <<n_R<<endl;
+	cout<<"blah!!"<<endl;
+	
+	
 	//Create the system with ligands, receptors, and reactions
 	System * s = new System("TLBR",true);
+	vector<vector<string> > v;
 	MoleculeType * L = createL(s,n_L);
+	L->addEquivalentSites(v);
+	L->addEquivalentStates(v);
 	MoleculeType * R = createR(s,n_R);
+	R->addEquivalentSites(v);
+	R->addEquivalentStates(v);
 	
-	createFreeBindingRxns(s,L,R,freeBindRate);
+	
 	createUnbindingRxns(s,R,koff);
+	createFreeBindingRxns(s,L,R,freeBindRate);
 	createCrossLinkingRxns(s,L,R,crossLinkRate);
+	
+	
+	
 	
 	//add the observables if we so choose
 	//if(outputObservables) addObservables(s,L,R);
@@ -299,6 +193,18 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	s->printAllMoleculeTypes();
 	s->prepareForSimulation();
 	s->registerOutputFileLocation(outputFileName.c_str());
+	
+	/////////////////  added here for calculating scalling...
+	s->equilibriate(200,20);
+	s->sim(3000,3);
+	
+	s->printAllReactions();
+	cout<<"Finished...  avg complex size: "<<s->calculateMeanCount(R)<<" receptors"<<endl;
+	
+	delete s;
+	return;
+	/////////////////////////////////////
+	
 	if(outputObservables || outputAvg) s->outputAllObservableNames();
 	
 	
@@ -393,7 +299,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r0", rTemp, "l0");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r0-l0)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l0)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 	
 	{ // Reaction r1 binds l0
@@ -410,7 +318,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r1", rTemp, "l0");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r1-l0)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l0)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 	
 	{ // Reaction r2 binds l0
@@ -427,7 +337,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r2", rTemp, "l0");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r2-l0)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l0)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 	
 	{ // Reaction r0 binds l1
@@ -444,7 +356,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r0", rTemp, "l1");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r0-l1)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l1)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 	
 	{ // Reaction r1 binds l1
@@ -461,7 +375,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r1", rTemp, "l1");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r1-l1)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l1)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 	
 	{ // Reaction r2 binds l1
@@ -478,7 +394,9 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 		ts->addBindingTransform(lTemp,"r2", rTemp, "l1");
 		ts->finalize();
 		
-		s->addReaction(new BasicRxnClass("FreeBinding(r2-l1)",rate,ts));
+		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l1)",rate,ts);
+		r->setTraversalLimit(2);
+		s->addReaction(r);
 	}
 }
 
@@ -517,12 +435,10 @@ void NFtest_tlbr::createUnbindingRxns(System * s, MoleculeType * R, double rate)
 
 
 
-
 void NFtest_tlbr::createCrossLinkingRxns(System * s, MoleculeType * L, MoleculeType *R, double rate)
 {
 	int traversalLimit = 2;
 	bool doNotAllowSameComplex = true;
-
 
 	///////// r0 binds l0 ////////////////////////////////////////
 	{/////////// Variant 1

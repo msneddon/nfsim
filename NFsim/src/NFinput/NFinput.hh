@@ -34,11 +34,15 @@ namespace NFinput {
 	class component {
 		public:
 			component(TemplateMolecule *t, int type, string name);
+			component(MoleculeType *mt, int type, string name);
 			~component();
 			
 			TemplateMolecule * t;
+			MoleculeType *mt;
 			unsigned int type;
 			string name;
+			
+			string symPermutationName;
 			
 			const static unsigned int BSITE = 0;
 			const static unsigned int STATE = 1;
@@ -85,6 +89,33 @@ namespace NFinput {
 			map<string,int> &allowedStates, 
 			bool verbose);
 	
+	
+	
+	
+	
+	bool FindReactionRuleSymmetry(
+			TiXmlElement * pRxnRule,
+			System * s, 
+			map <string,double> &parameter, 
+			map<string,int> &allowedStates,
+			map <string, component> &symComps,
+			map <string, component> &symRxnCenter,
+			bool verbose);
+	
+	bool readPatternForSymmetry(
+			TiXmlElement * pListOfMol, 
+			System * s,
+			string patternName,
+			map <string, component> &comps,
+			map <string, component> &symComps,
+			bool verbose);
+	
+	bool generateRxnPermutations(vector<map<string,component> > &permutations, 
+			map<string,component> &symComps, 
+			map<string,component> &symRxnCenter);
+	
+	
+	
 	//! Reads a Species XML block, creates the molecules and adds them to the system.
 	/*!
     	@author Michael Sneddon
@@ -130,6 +161,7 @@ namespace NFinput {
 			string patternName,
 			map <string, TemplateMolecule *> &templates, 
 			map <string, component> &comps,
+			map <string, component> &symMap,
 			bool verbose);
 	
 	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.

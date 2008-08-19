@@ -100,6 +100,8 @@ namespace NFcore
 	{
 		public:
 		
+			static int NULL_EVENT_COUNTER;
+			
 			// Basic constructor and desconstructor methods
 			System(string name);  /* creates a system with the given name that does not
 				                         keep track dynamically of complex formation */
@@ -288,6 +290,20 @@ namespace NFcore
 		
 			~MoleculeType();
 		
+			
+			void addEquivalentSites(vector <vector <string> > &identicalSites);
+			bool isAnEquivalentSite(string siteName);
+			bool isAnEquivalentSite(int siteIndex);
+			void getEquivalencyClass(int *&sites, int &n_sites, string siteName);
+			
+			void addEquivalentStates(vector <vector <string> > &identicalStates);
+			bool isAnEquivalentState(string stateName);
+			bool isAnEquivalentState(int stateIndex);
+			void getEquivalencyStateClass(int *&states, int &n_states, string stateName);
+			
+			
+			
+			
 			/* get functions */
 			string getName() const { return name; };
 			System * getSystem() const { return system; };
@@ -398,6 +414,23 @@ namespace NFcore
 		
 			vector <TemplateMolecule *> allTemplates; /* keep track of all templates that exist of this type
 															so that they are easy to delete from memory at the end */
+			
+			//Maintains the set of equivalent sites used only when creating reaction
+			//rules
+			unsigned int n_eqSites;
+			unsigned int * eqSiteSizes;
+			string **eqSiteName;
+			int **eqSiteIndex;
+			
+			int *isSiteEq;
+			
+			
+			unsigned int n_eqStates;
+			unsigned int * eqStateSizes;
+			string **eqStateName;
+			int **eqStateIndex;
+					
+			int *isStateEq;
 		
 		private:
 			vector<Molecule *>::iterator molIter;  /* to iterate over mInstances */
@@ -624,6 +657,11 @@ namespace NFcore
 			TemplateMolecule **reactantTemplates;
 			TransformationSet * transformationSet;
 			MappingSet **mappingSet;
+			
+			
+			
+			list <Molecule *> products;
+			list <Molecule *>::iterator molIter;
 	};
 	
 	
@@ -749,8 +787,8 @@ namespace NFcore
 		
 			/* methods used to keep the observable count up to date */
 			bool isObservable(Molecule * m) const;
-			void add() { count++; };
-			void subtract() { if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); } count--; };
+			void add() { count++;};
+			void subtract() { if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); } count--;};
 		
 			/* methods used to get observable information */
 			unsigned long int getCount() const {return (unsigned long int) count;};

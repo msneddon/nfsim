@@ -18,11 +18,14 @@
  * 
  * arguements accecpted:
  * -v = verbose output
- * -sim =
+ * -sim = length of time in seconds of a simulation
  * -ogf = output global function values at each point of the output
- * 
- * 
- * 
+ * -help = output a help message
+ * -xml = read an xml file
+ * -test = run a predefined test
+ * -logo = print the nfsim logo
+ * -eq = equilibriate for a length of time (in seconds)
+ * -oSteps = number of times 
  * 
  * 
  *  \section install_sec Developers
@@ -46,7 +49,7 @@
  * 
  *  \section install_sec Authors & Acknowledgments
  * The NFsim code was written and developed by Michael Sneddon with help from James Faeder and
- * Thierry Emonet.  The core simulation algorithm is based on 
+ * Thierry Emonet.
  * 
  * Special thanks to other members of the Emonet lab, particularly William Pontius, Garrit Jentsch, 
  * and Oleksii Sliusarenko for helpful feedback.  For questions or assistance with the code, please contact
@@ -60,6 +63,8 @@
 
 #include <iostream>
 #include <string>
+#include <time.h>
+
 using namespace std;
 
 
@@ -138,12 +143,12 @@ int main(int argc, const char *argv[])
 					//Parameters (assigned first to thier default values if these parameters
 					//are not explicitly given...
 					double eqTime = 0;
-					double sTime = 1;
+					double sTime = 10;
 					int oSteps = 10;
 					
 					eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 					sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
-					oSteps = NFinput::parseAsInt(argMap,"oSteps",oSteps);
+					oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
 					
 
 					cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;

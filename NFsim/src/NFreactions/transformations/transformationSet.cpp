@@ -286,28 +286,31 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 	//bool isPresent = false;
 	list <Molecule *>::iterator molIter;
+	bool isPresent = false;
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		if(mappingSets[r]->hasDeletionTransform()) continue;  //if we are deleting this guy, it doesn't have to get updated
 		
-		mappingSets[r]->get(0)->getMolecule()->traverseBondedNeighborhood(products,traversalLimit);
+		//cout<<"Traversing:"<<endl;
+		//mappingSets[r]->get(0)->getMolecule()->printDetails();
+		//mappingSets[r]->get(0)->getMolecule()->traverseBondedNeighborhood(products,traversalLimit);
 		
 		/*
 		 * I thought that making sure we don't go over the same molecule multiple
 		 * times would make the code faster - but this is rarely used for most rxn
-		 * systems, so it is commented out for now.  But it may help in some cases!
+		 * systems, so it is commented out for now.  But it may help in some cases! */
 		//For each of the molecules that we possibly affect, traverse the neighborhood
 		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 					
-		isPresent=false;
-		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-			if((*molIter)==molecule) { isPresent = true; break; cout<<"here"<<endl;}
-		}
+		//isPresent=false;
+		//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		//	if((*molIter)==molecule) { isPresent = true; break;}
+		//}
 					
-		if(!isPresent)
+		//if(!isPresent)
 			molecule->traverseBondedNeighborhood(products,traversalLimit);
-		*/
 		
 	}
+	//cout<<"All together, we have: "<<products.size()<<endl;
 	return true;
 }
 
