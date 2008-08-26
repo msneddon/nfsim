@@ -126,7 +126,8 @@ namespace NFcore
 			MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
 			MoleculeType * getMoleculeTypeByName(string& name);
 			int getNumOfMoleculeTypes() { return allMoleculeTypes.size(); };
-		
+			Molecule * getMoleculeByUid(int uid);
+		    int getNumOfMolecules();
 		
 			//Functions used when setting up the system.  Note that most of these methods
 			//are called automatically when you create an object (notable exception are
@@ -150,7 +151,8 @@ namespace NFcore
 		
 		
 			/* tell the system where to ouptut results*/
-			void registerOutputFileLocation(const char * filename);
+			void registerOutputFileLocation(string filename);
+			void changeOutputFileLocation(string newFilename);
 			
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
@@ -199,6 +201,8 @@ namespace NFcore
 			 * will not output anything to file (so must be done manually) and returns the current time
 			 * of the simulation, which will always be less than the stopping time */
 			double stepTo(double stoppingTime);
+			
+			void singleStep();
 		
 			/* runs the simulation without output for the given time.  After, the clock is reset to
 			 * zero so that additional simulations can take place */
@@ -373,6 +377,7 @@ namespace NFcore
 			void addToObservables(Molecule * m);
 			void outputObservableNames(ofstream &fout);
 			void outputObservableCounts(ofstream &fout);
+			void printObservableNames();
 			void printObservableCounts();
 		
 			void printDetails() const;
@@ -530,7 +535,7 @@ namespace NFcore
 			void printDetails() const;
 			static void printMoleculeList(list <Molecule *> &members);
 		
-		
+			static int getUniqueIdCount() { return uniqueIdCount; };
 			static const int NOT_IN_RXN = -1;
 		
 		protected:
