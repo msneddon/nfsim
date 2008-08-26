@@ -192,6 +192,10 @@ namespace NFinput {
 	double parseAsDouble(map<string,string> &argMap, string argName, double defaultValue);
 	
 	
+	
+	
+	void walk(System *s);
+	
 
 }
 

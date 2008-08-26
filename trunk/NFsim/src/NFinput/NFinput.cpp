@@ -1264,7 +1264,7 @@ bool NFinput::initReactionRules(
 						TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, symMap, verbose);
 						if(tm==NULL) return false;
 						templates.push_back(tm);
-						tm->printDetails();
+//////////////////////////////////////////tm->printDetails();
 					}
 					else {
 						cerr<<"Reactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
@@ -1644,7 +1644,7 @@ bool NFinput::initObservables(
 			MoleculeType *moltype = tempmol->getMoleculeType();
 			Observable *o  = new Observable(observableName.c_str(),tempmol);
 			moltype->addObservable(o);
-			tempmol->printDetails();
+//////////////////////			tempmol->printDetails();
 		}
 		
 		//Getting here means success!

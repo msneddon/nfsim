@@ -95,13 +95,17 @@ System::~System()
 }
 
 
-void System::registerOutputFileLocation(const char * filename)
+void System::registerOutputFileLocation(string filename)
 {
-	outputFileStream.open(filename);
+	outputFileStream.open(filename.c_str());
 	outputFileStream.setf(ios::scientific);
 }
 
-
+void System::changeOutputFileLocation(string newFilename) {
+	outputFileStream.close();
+	outputFileStream.open(newFilename.c_str());
+	outputFileStream.setf(ios::scientific);
+}
 int System::addMoleculeType(MoleculeType *MoleculeType)
 {
 	allMoleculeTypes.push_back(MoleculeType);
@@ -159,6 +163,30 @@ MoleculeType * System::getMoleculeTypeByName(string& mName)
 	cerr<<"!!! warning !!! cannot find molecule type name '"<< mName << "' in System: '"<<this->name<<"'"<<endl;
 	exit(1);
 	return 0;
+}
+
+
+Molecule * System::getMoleculeByUid(int uid)
+{
+	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		//(*molTypeIter)->printDetails(); //<<endl;
+		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++)
+		{
+				if( (*molTypeIter)->getMolecule(m)->getUniqueID() == uid)
+					return (*molTypeIter)->getMolecule(m);
+		}
+	}
+	cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
+	return 0;
+}
+
+int System::getNumOfMolecules()
+{
+	int sum=0;
+	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		sum+=(*molTypeIter)->getMoleculeCount();
+	return sum;
 }
 
 
@@ -369,8 +397,6 @@ double System::sim(double duration, long int sampleTimes)
 		//cout<<endl<<endl;
 		
 		
-		
-		
 		//Increment time
 		iteration++;
 		stepIteration++;
@@ -384,11 +410,11 @@ double System::sim(double duration, long int sampleTimes)
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
     if(BASIC_MESSAGE)
     {
-    	cout<<endl<<"You just simulated "<< iteration <<" reactions in "<< time << "s  ( ";
+    	cout<<endl<<"You just simulated "<< iteration <<" reactions in "<< time << "s\n( ";
     	cout<<((double)iteration)/time<<" reactions/sec, ";
     	cout<<(time/((double)iteration))<<" CPU seconds/event )"<< endl;
-    	cout<<"Null events: "<< System::NULL_EVENT_COUNTER <<endl;
-    	cout<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/event )"<< endl;
+    	cout<<"Null events: "<< System::NULL_EVENT_COUNTER;
+    	cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
     }
     
 	cout.unsetf(ios::scientific);
@@ -439,6 +465,35 @@ double System::stepTo(double stoppingTime)
 		nextReaction->fire(randElement);
 	}
 	return current_time;
+}
+
+void System::singleStep()
+{
+	cout<<"  -Starting at time: "<<this->current_time<<endl;
+	double delta_t = 0;
+	
+	recompute_A_tot();
+	cout<<"  -total propensity (a_total) calculated as: "<<a_tot<<endl;
+	if(a_tot>0) delta_t = -log(NFutil::RANDOM_CLOSED()) / a_tot;
+	else 
+	{
+		//Otherwise, we can't react for the rest of this step
+		delta_t=0; 
+		cout<<"  -Total propensity is zero, no further rxns can fire."<<endl;
+		return;
+	}
+
+	cout<<" -calculated time step is: "<<delta_t<<" seconds";
+	double randElement = getNextRxn();
+		
+	//Increment time
+	current_time+=delta_t;
+		
+	cout<<"  -Firing: "<<nextReaction->getName()<<endl;
+		
+	//5: Fire Reaction! (takes care of updates to lists and observables)
+	nextReaction->fire(randElement);
+	cout<<"  -System time is now"<<current_time<<endl;
 }
 
 void System::equilibriate(double duration)
@@ -499,7 +554,15 @@ void System::outputAllObservableCounts(double cSampleTime)
 
 void System::printAllObservableCounts(double cSampleTime)
 {
-  	cout<<"\t"<<cSampleTime;
+	cout<<"Time";
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		(*molTypeIter)->printObservableNames();
+	if(outputGlobalFunctionValues)
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			cout<<"\t"<<(*functionIter)->getNiceName();
+	cout<<endl;
+	
+  	cout<<cSampleTime;
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 		(*molTypeIter)->printObservableCounts();
 	if(outputGlobalFunctionValues)
@@ -518,6 +581,7 @@ void System::printAllComplexes()
 
 void System::printAllReactions()
 {
+	recompute_A_tot();
 	cout<<"All System Reactions:"<<endl;
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 	{

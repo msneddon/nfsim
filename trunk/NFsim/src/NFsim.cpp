@@ -90,6 +90,7 @@ int main(int argc, const char *argv[])
 {
 	string versionNumber = "0.7";
 	
+	
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
@@ -137,26 +138,39 @@ int main(int argc, const char *argv[])
 					}
 					
 					//Here we just run some stuff for testing... The output is just
-					s->registerOutputFileLocation((s->getName()+"_nf.gdat").c_str());
+					if (argMap.find("o")!=argMap.end()) {
+						string outputFileName = argMap.find("o")->second;
+						s->registerOutputFileLocation(outputFileName);
+					} else {
+						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
+					}
 					s->outputAllObservableNames();
 					
-					//Parameters (assigned first to thier default values if these parameters
-					//are not explicitly given...
-					double eqTime = 0;
-					double sTime = 10;
-					int oSteps = 10;
-					
-					eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
-					sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
-					oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
-					
-
-					cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
-					s->equilibriate(eqTime);
-					s->sim(sTime,oSteps);
-					
-					cout<<endl<<endl;
-					s->printAllReactions();
+					//If requested, walk through the simulation
+					if (argMap.find("walk")!=argMap.end()) {
+						NFinput::walk(s);
+					}
+					//Otherwise, run as normal
+					else
+					{
+						//Parameters (assigned first to thier default values if these parameters
+						//are not explicitly given...
+						double eqTime = 0;
+						double sTime = 10;
+						int oSteps = 10;
+						
+						eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
+						sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+						oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
+						
+	
+						cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+						s->equilibriate(eqTime);
+						s->sim(sTime,oSteps);
+						
+						cout<<endl<<endl;
+						s->printAllReactions();
+					}
 					delete s;
 				}
 				else  {
@@ -231,7 +245,7 @@ int main(int argc, const char *argv[])
 	// Finish and check the run time;
     finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
-    cout<<endl<<"done.  Total run time: "<< time << "s"<<endl<<endl;
+    cout<<endl<<"done.  Total CPU time: "<< time << "s"<<endl<<endl;
     return 0;
 }
 
@@ -279,20 +293,36 @@ void printHelp(string version)
 	cout<<"to do.  Flags are given in this format in any order: \"-[flagName]\"."<<endl;
 	cout<<"Some of the flags require an additional parameter.  For instance, the"<<endl;
 	cout<<"-xml flag requires the filename of the xml file.  The format would look"<<endl;
-	cout<<"something like: \"-xml modelFile.xml\"."<<endl;
+	cout<<"something like: \"-xml modelFile.xml\".  Simulation output is dumped to"<<endl;
+	cout<<"a file named: \"[modelName]_nf.gdat\" in the current directory by default."<<endl;
 	cout<<""<<endl;
-	cout<<"Here are the list of possible flags:"<<endl;
+	cout<<"Here is a list of most of the possible flags:"<<endl;
 	cout<<""<<endl;
-	cout<<"  -help          well, you already know what this one does."<<endl;
+	cout<<"  -help          well, you already know what this one does..."<<endl;
 	cout<<""<<endl;
 	cout<<"  -xml           used to specify the input xml file to read.  the xml file"<<endl;
 	cout<<"                 must be given directly after this flag."<<endl;
 	cout<<""<<endl;
+	cout<<"  -o             used to specify the output file name."<<endl;
+	cout<<""<<endl;
+	cout<<"  -sim           used to specify the length (in seconds) of a simulation when"<<endl;
+	cout<<"                 running an xml file.  Fractional seconds are valid.  For"<<endl;
+	cout<<"                 instance, you could use: -sim 525.50"<<endl;
+	cout<<""<<endl;
+	cout<<"  -eq            used to specify the length (in seconds) to equilibriate the"<<endl;
+	cout<<"                 system before running a simulation."<<endl;
+	cout<<""<<endl;
+	cout<<"  -oSteps        used to specify the number of times throughout the simulation"<<endl;
+	cout<<"                 that observables will be outputted.  Must be an integer value."<<endl;
+	cout<<"                 Default is to output once per simulation second."<<endl;
+	cout<<""<<endl;
 	cout<<"  -v             specify verbose output and print all kinds of extra things."<<endl;
 	cout<<""<<endl;
-	cout<<"  -test          used to specify a given preprogrammed test."<<endl;
+	cout<<"  -test          used to specify a given preprogrammed test. Some tests"<<endl;
+	cout<<"                 include \"tlbr\" and \"simple_system\".  Tests do not read in"<<endl;
+	cout<<"                 other command line flags, so your -sim flag won't do anything."<<endl;
 	cout<<""<<endl;
-	cout<<"  -logo          prints out the ascii NFsim logo."<<endl;
+	cout<<"  -logo          prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
 	cout<<""<<endl;
 	cout<<""<<endl;
 }

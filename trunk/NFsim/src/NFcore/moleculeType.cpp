@@ -445,6 +445,12 @@ void MoleculeType::outputObservableCounts(ofstream &fout)
 		fout<<"\t"<<(*obsIter)->getCount();
 }
 
+void MoleculeType::printObservableNames()
+{
+	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
+		cout<<"\t"<<(*obsIter)->getAliasName();
+}
+
 void MoleculeType::printObservableCounts()
 {
 	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
