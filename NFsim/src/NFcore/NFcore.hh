@@ -538,6 +538,11 @@ namespace NFcore
 			static int getUniqueIdCount() { return uniqueIdCount; };
 			static const int NOT_IN_RXN = -1;
 		
+			
+			/* used for traversing a molecule complex */
+			bool * hasVisitedBond;
+			bool hasVisitedMolecule;
+			
 		protected:
 		
 
@@ -561,13 +566,18 @@ namespace NFcore
 		
 		
 			/* store the states and bonds in arrays */
+			static const int NOSTATE = -1;
+			
+			int *components;
+			
+			
+			
+			
 			int *states;
 			Molecule ** bonds;
 			int * bSiteIndexOfBond;  // index of this molecule in bonded 
 		
 			/* used for traversing a molecule complex */
-			bool * hasVisitedBond;
-			bool hasVisitedMolecule;
 		
 			int * rxnListMappingId;
 			int nReactions;
@@ -720,7 +730,7 @@ namespace NFcore
 		/* the primary function and purpose of a template molecule 
 			   is to compare itself to an instance of a molecule */
 		bool compare(Molecule * m);
-	
+		static bool compareBreadthFirst(TemplateMolecule *tm, Molecule *m);
 	
 		/*
 		 * Used to check if a particular state value matches - used when parsing an xml file and
@@ -746,6 +756,13 @@ namespace NFcore
 		bool contains(TemplateMolecule *tempMol);
 	
 	
+		Molecule * matchMolecule;
+		vector <bool> hasVisitedBond;
+				
+				
+		/////////////////////////////////////////////////////////
+		bool hasVisited;
+		
 	protected:
 	
 	
@@ -763,18 +780,19 @@ namespace NFcore
 	
 		vector <int> sitesThatMustBeOccupied; // 
 	
-//		vector <TemplateMapping *> tMappings;
-//		vector <TemplateMapping *>::iterator tMapIter;	
-	
-		Molecule * matchMolecule;
-		vector <bool> hasVisitedBond;
+
 		
-		
-		/////////////////////////////////////////////////////////
-		bool hasVisited;
 		vector <MapGenerator *> mapGenerators;
 		vector <MapGenerator *>::iterator mgIter;
 		vector <int>::iterator intVecIter;
+		
+		
+		static queue <TemplateMolecule *> tmq;
+		static queue <Molecule *> mq;
+		static list <TemplateMolecule *> tml;
+		static queue <int> d;
+		static list <TemplateMolecule *>::iterator tmIter;
+		
 	};
 	
 	

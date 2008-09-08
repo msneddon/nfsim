@@ -163,7 +163,6 @@ int main(int argc, const char *argv[])
 						sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 						oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
 						
-	
 						cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 						s->equilibriate(eqTime);
 						s->sim(sTime,oSteps);
