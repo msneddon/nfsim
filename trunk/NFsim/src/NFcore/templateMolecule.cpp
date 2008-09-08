@@ -179,11 +179,146 @@ void TemplateMolecule::bind(TemplateMolecule *t1, const char * bSiteName1, Templ
 }
 
 
+queue <TemplateMolecule *> TemplateMolecule::tmq;
+queue <Molecule *> TemplateMolecule::mq;
+list <TemplateMolecule *> TemplateMolecule::tml;
+queue <int> TemplateMolecule::d;
+list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
+bool TemplateMolecule::compareBreadthFirst(TemplateMolecule *tm, Molecule *m)
+{
+	bool match=true;
+	
+	//Create the queues and lists
+	//queue <TemplateMolecule *> tmq;
+	//queue <Molecule *> mq;
+	//list <TemplateMolecule *> tml;
+	//queue <int> d;
+	int currentDepth = 0;
+	
+	tmq.push(tm);
+	mq.push(m);
+	tml.push_back(tm);
+	d.push(currentDepth+1);
+	tm->hasVisited=true;
+
+		
+	//Look at children until the queue is empty
+	while(!tmq.empty())
+	{
+		//Get the next parent to look at (currentMolecule)
+		TemplateMolecule *cTM = tmq.front();
+		Molecule *cM = mq.front();
+		currentDepth = d.front();
+		tmq.pop(); 
+		mq.pop();
+		d.pop();
+			
+		//First check if we've been here before
+		if(cTM->matchMolecule!=0) {
+			if(cTM->matchMolecule == m) { continue; }
+			else { match=false; break; }
+		}
+			
+		//Next, check if we have the same type
+		if(cM->getMoleculeType()!=cTM->parentMoleculeType){
+			match=false; break;
+		}
+		
+		//Check that states are correct
+		for(unsigned int s=0; s<cTM->stateIndex.size(); s++) {
+			if(cM->getState(cTM->stateIndex.at(s)) != cTM->stateValue.at(s)) { 
+					match=false; break;
+			}
+		}
+			
+		for(unsigned int s=0; s<cTM->notStateIndex.size(); s++) {
+			if(cM->getState(cTM->notStateIndex.at(s)) == cTM->notStateValue.at(s)) { 
+					match=false; break;
+			}
+		}
+			
+			
+		//Check if the sites that must be occupied by anything are occupied
+		for(unsigned int b=0; b<cTM->sitesThatMustBeOccupied.size(); b++)
+		{
+			//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
+			//If the site is not occupied in the molecule, no match
+			if(!cM->isBindingSiteBonded(cTM->sitesThatMustBeOccupied.at(b)))
+			{
+				match=false; break;
+			}
+		}
+		
+		//We have matched so far, so set our match
+		cTM->matchMolecule = cM;
+		
+		
+
+		
+		//Loop through the bonds to get the next set of Templates to search
+		int bMax = cTM->getNumBindingSites();
+		for(int b=0; b<bMax; b++)
+		{
+			if(cTM->bonds.at(b)==0) //template binding site is open, so molecule binding site must be too.
+			{
+				if( cM->isBindingSiteBonded(cTM->bSiteIndex.at(b))) {
+					match=false; break;
+				}
+			}
+			
+			
+			if(cTM->isBindingSiteBonded(b)) //the template site is bonded, 
+			{
+				if(cM->isBindingSiteOpen(cTM->bSiteIndex.at(b))) { //so the molecule site must be bonded too
+					match=false; break;
+				}
+				
+				//Grab the bonded neighbors of both the template and the molecule
+				TemplateMolecule *tempNeighbor = cTM->getBondedTemplateMolecule(b);
+				Molecule *molNeighbor = cM->getBondedMolecule(cTM->bSiteIndex.at(b));
+				
+				//Make sure the back binding (of molNeighbor to cM is through the correct site on molNeighbor)
+				if(cM->getBsiteIndexOfBond(cTM->bSiteIndex.at(b)) != tempNeighbor->bSiteIndex.at(cTM->bSiteIndexOfBond.at(b))) {
+					match=false; break;
+				}
+				
+				//Looks like everything is good to go, so add this guy to the list
+				if(!tempNeighbor->hasVisited)
+				{
+					tempNeighbor->hasVisited=true;
+					tml.push_back(tempNeighbor);
+					tmq.push(tempNeighbor);
+					mq.push(molNeighbor);
+					d.push(currentDepth+1);
+				}
+			}
+		}
+		if(match=false) break;
+	}
+	
+	
+	
+	
+	//clear the has visitedMolecule values
+	//list <TemplateMolecule *>::iterator tmIter;
+	for( tmIter = tml.begin(); tmIter != tml.end(); tmIter++ ) {
+  		(*tmIter)->hasVisited=false;
+  		(*tmIter)->matchMolecule=0;
+	}
+	
+	
+	while(!tmq.empty()) tmq.pop();
+	while(!mq.empty()) mq.pop();
+	while(!d.empty()) d.pop();
+	tml.clear();
+	return match;
+}
 
 
 bool TemplateMolecule::compare(Molecule * m)
 {
+	//return compareBreadthFirst(this, m);
 	//if(DEBUG) {
 	//	cout<<"Calling Template Molecule compare: "<<endl;
 	//	m->printDetails();
@@ -412,6 +547,13 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 }
 
 */
+
+
+
+
+
+
+
 
 
 bool TemplateMolecule::contains(TemplateMolecule *tempMol)
