@@ -1179,7 +1179,7 @@ bool NFinput::initReactionRules(
 					rxnName = pRxnRule->Attribute("id");
 					
 					if(permutations.size()>1) {
-						stringstream out; out << p;
+						stringstream out; out << (p+1);
 						rxnName = rxnName + "_sym" + out.str();
 					}
 				}

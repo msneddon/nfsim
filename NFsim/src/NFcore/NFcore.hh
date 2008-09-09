@@ -293,8 +293,10 @@ namespace NFcore
 			~MoleculeType();
 		
 			string getName() const { return name; };
+			int getTypeID() const { return type_id; };
 			System * getSystem() const { return system; };
 			
+			//Function to access component information
 			int getNumOfComponents() const { return numOfComponents; };
 			string getComponentName(int cIndex) const { return compName[cIndex]; };
 			void getPossibleComponentStates(int cIndex, list <string> &nameList);
@@ -305,79 +307,63 @@ namespace NFcore
 			
 			
 			
-			
+			//set of functions that deal with equivalent (aka symmetric) components
 			void addEquivalentComponents(vector <vector <string> > &identicalComponents);
 			bool isEquivalentComponent(string cName) const;
 			bool isEquivalentComponent(int cIndex) const;
 			void getEquivalencyClass(int *&components, int &n_components, string cName) const;
 			
 			
-			
-			
-			
-			
-			/* get functions */
-			
+			//functions that handle the observables
 			int getNumOfObservables() const { return observables.size(); };
 			string getObservableAlias(int obsIndex) const;
 			Observable * getObservable(int obsIndex) const { return observables.at(obsIndex); };
 			unsigned long int getObservableCount(int obsIndex) const;
-		
-			int getReactionCount() const { return reactions.size(); };
-			int getTypeID() const { return type_id; };
-		
-			Molecule * getMolecule(int ID_molecule) const;
-			int getMoleculeCount() const;
-		
-			int getRxnIndex(ReactionClass * rxn, int rxnPosition);
-		
-			
-			//Functions for adding and removing molecules from the system during a simulation
-			//Molecule *createMolecule();
-			//void prepMolecule();
-			//void deleteMolecule(Molecule *m);
-			//void deleteJustOneMolecule(Molecule *m);
-			
-		
-			/* set functions */
-			Molecule *genDefaultMolecule();
-			
-			void addMoleculeToRunningSystem(Molecule *&mol);
-			void removeMoleculeFromRunningSystem(Molecule *&m);
-			
-			void removeFromRxns(Molecule * m);
-			//int addMolecule(Molecule *m);
-			
-			
-			
-			
-			
-			
-			void addReactionClass(ReactionClass * r, int rPosition);
-			void addObservable(Observable * o) { observables.push_back(o); }; //could add check here to make sure observable is of this type
-			int createComplex(Molecule *m) { return system->createComplex(m); };
-			void addTemplateMolecule(TemplateMolecule *t);
-		
-			/* handle DOR reactions */
-			void addDORrxnClass(ReactionClass * r, int rPosition);
-			int getDORrxnCount() const { return indexOfDORrxns.size(); };
-			ReactionClass * getDORrxn(int index) const { return reactions.at(indexOfDORrxns.at(index)); };
-			int getDORreactantPosition(int index) const { return reactionPositions.at(indexOfDORrxns.at(index)); };
-			int getDORreactantIndex(int index) const { return indexOfDORrxns.at(index); };
-		
-			/* updates a molecules membership (assumes molecule is of type this) */
-			void updateRxnMembership(Molecule * m);
-		
-			/* functions which handles observables */
 			void removeFromObservables(Molecule * m);
 			void addToObservables(Molecule * m);
 			void outputObservableNames(ofstream &fout);
 			void outputObservableCounts(ofstream &fout);
 			void printObservableNames();
 			void printObservableCounts();
+			
+			
+			
+			//function to access particular molecules or reactions (these are really only
+			//used when debugging or running the walker...
+			Molecule * getMolecule(int ID_molecule) const;
+			int getMoleculeCount() const;
+			
+			int getReactionCount() const { return reactions.size(); };
+			int getRxnIndex(ReactionClass * rxn, int rxnPosition);
 		
 			
-			void printDetails() const;
+		
+			//Functions to generate molecules, remove molecules at the beginning
+			//or during a running simulation
+			Molecule *genDefaultMolecule();
+			
+			void addMoleculeToRunningSystem(Molecule *&mol);
+			void removeMoleculeFromRunningSystem(Molecule *&m);
+			void removeFromRxns(Molecule * m);
+			
+			
+			
+			//Adds the basic components that this MoleculeType needs to reference
+			void addReactionClass(ReactionClass * r, int rPosition);
+			void addObservable(Observable * o) { observables.push_back(o); }; //could add check here to make sure observable is of this type
+			int createComplex(Molecule *m) { return system->createComplex(m); };
+			void addTemplateMolecule(TemplateMolecule *t);
+		
+			/* handle DOR reactions */
+			//void addDORrxnClass(ReactionClass * r, int rPosition);
+			//int getDORrxnCount() const { return indexOfDORrxns.size(); };
+			//ReactionClass * getDORrxn(int index) const { return reactions.at(indexOfDORrxns.at(index)); };
+			//int getDORreactantPosition(int index) const { return reactionPositions.at(indexOfDORrxns.at(index)); };
+			//int getDORreactantIndex(int index) const { return indexOfDORrxns.at(index); };
+		
+			
+			/* updates a molecules membership (assumes molecule is of type this) */
+			void updateRxnMembership(Molecule * m);
 		
 			/* auto populate with default molecules */
 			void populateWithDefaultMolecules(int moleculeCount);
@@ -389,33 +375,39 @@ namespace NFcore
 			 * In general, you do not need to worry about this function because
 			 * it automatically gets called by the System when you prepare the System*/
 			void prepareForSimulation();
+			
+
+			//Debugging function that prints some useful information about this MoleculeType
+			void printDetails() const;
+		
 		
 		protected:
 		
+			//basic info
 			System *system;
-								
-						string name;
-						int type_id;
-								
-									
-						//keeps track
-						int numOfComponents;
-						string *compName;
-						vector < vector < string > > possibleCompStates;
-						int *defaultCompState;
+			string name;
+			int type_id;
+												
+			//keeps track of the key information about a MoleculeType - the component
+			int numOfComponents;
+			string *compName;
+			vector < vector < string > > possibleCompStates;
+			int *defaultCompState;
 						
-						////////////////////////////////////////////////////////////////////////////////
-						int n_eqComp;
-						int * eqCompSizes;
-						string **eqCompName;
-						int **eqCompIndex;
+			//set of variables to keep track of equivalent (aka symmetric) components
+			int n_eqComp;
+			int * eqCompSizes;
+			string **eqCompName;
+			int **eqCompIndex;
 		
+			
+			//Lists and vectors of everything we need to know
 			MoleculeList * mList;
-			//vector <Molecule *> mInstances;  /* List of all molecules that exist */
+			
 			vector <ReactionClass *> reactions; /* List of reactions that this type can be involved with */
 			vector <int> reactionPositions;   /* the position in the reaction for this type of molecule */
 		
-			vector <int> indexOfDORrxns;
+		//	vector <int> indexOfDORrxns;
 		
 			vector <Observable *> observables;  /* list of things to keep track of */
 		
@@ -423,30 +415,8 @@ namespace NFcore
 															so that they are easy to delete from memory at the end */
 			
 			
-			
-			
-			
-			
-			
-			
-			//Maintains the set of equivalent sites used only when creating reaction
-			//rules
-//			unsigned int n_eqSites;
-//			unsigned int * eqSiteSizes;
-//			string **eqSiteName;
-//			int **eqSiteIndex;
-//			
-//			int *isSiteEq;
-//			
-//			
-//			unsigned int n_eqStates;
-//			unsigned int * eqStateSizes;
-//			string **eqStateName;
-//			int **eqStateIndex;
-//					
-//			int *isStateEq;
-		
 		private:
+			//Some iterators so we don't have to instantiate a new iterator every time
 			vector<Molecule *>::iterator molIter;  /* to iterate over mInstances */
 			vector<Observable *>::iterator obsIter; /* to iterate over observables */
 			vector <ReactionClass *>::iterator rxnIter; /* to iterate over reactions */
