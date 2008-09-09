@@ -5,96 +5,129 @@
 using namespace std;
 using namespace NFcore;
 
+//MoleculeType::MoleculeType(
+//	string name, 
+//	string * stateNames, 
+//	int *defaultStateValues, 
+//	int numOfStates,
+//	string * bindingSiteNames,
+//	int numOfBindingSites,
+//	System * system )
+//{
+//	if(DEBUG) cout << "Creating MoleculeType " << name;
+//	
+//	this->name = name.c_str();
+//	
+//	//Set the state names and default states
+//	this->numOfStates = numOfStates;
+//	this->stateNames = stateNames;
+//	this->defaultStateValues = defaultStateValues;
+//	this->isStateEq = new int [numOfStates];
+//	for(int s=0; s<numOfStates; s++) {
+//		isStateEq[s] = -1;
+//	}
+//	
+//	//Set the binding site names
+//	this->numOfBindingSites = numOfBindingSites;
+//	this->bindingSiteNames = bindingSiteNames;
+//	this->isSiteEq = new int [numOfBindingSites];
+//	for(int b=0; b<numOfBindingSites; b++) {
+//		isSiteEq[b] = -1;
+//	}
+//	
+//	//Register myself with the system, and get an ID number
+//	this->system = system;
+//	this->type_id = this->system->addMoleculeType(this);
+//	
+//	
+//	if(DEBUG) {
+//		cout << "Creating MoleculeType " << name;
+//		cout << ": ("<< type_id <<") with " << numOfStates << " states (";
+//		for(int s=0; s<numOfStates; s++)
+//			cout<<" "<<this->stateNames[s]<<" ";
+//		cout << ") and " << numOfBindingSites << " binding sites (";
+//		for(int b=0; b<numOfBindingSites; b++)
+//			cout<<" "<<bindingSiteNames[b]<<" ";
+//		cout <<")."<<endl; }
+//	
+//	
+//	
+//	mList = new MoleculeList(this,2);
+//	n_eqSites = 0;
+//	n_eqStates = 0;
+//}
+
 MoleculeType::MoleculeType(
-	string name, 
-	string * stateNames, 
-	int *defaultStateValues, 
-	int numOfStates,
-	string * bindingSiteNames,
-	int numOfBindingSites,
-	System * system )
+		string name,
+		vector <string> &compName,
+		vector <string> &defaultCompState,
+		vector < vector<string> > &possibleCompStates,
+		System *system)
 {
-	if(DEBUG) cout << "Creating MoleculeType " << name;
+	//Basics...
+	this->name=name;
+	this->numOfComponents=compName.size();
 	
-	this->name = name.c_str();
-	
-	//Set the state names and default states
-	this->numOfStates = numOfStates;
-	this->stateNames = stateNames;
-	this->defaultStateValues = defaultStateValues;
-	this->isStateEq = new int [numOfStates];
-	for(int s=0; s<numOfStates; s++) {
-		isStateEq[s] = -1;
+	//First, some quick error checks
+	if((int)defaultCompState.size()!=numOfComponents || (int)possibleCompStates.size()!=numOfComponents) {
+		cout<<"Error creating MoleculeType: '"<<name<<"': The length of the input vectors\n";
+		cout<<"do not match, so I can't initialize this object.\n";
+		cout<<"quitting now."<<endl; exit(1);
 	}
 	
-	//Set the binding site names
-	this->numOfBindingSites = numOfBindingSites;
-	this->bindingSiteNames = bindingSiteNames;
-	this->isSiteEq = new int [numOfBindingSites];
-	for(int b=0; b<numOfBindingSites; b++) {
-		isSiteEq[b] = -1;
+	//Now we can get on with initializing the MoleculeType information
+	this->compName=new string [numOfComponents];
+	this->defaultCompState = new int [numOfComponents];
+	
+	for(int c=0; c<numOfComponents; c++) {
+		this->compName[c]=compName.at(c);
+		
+		bool foundDefaultState=false;
+		vector <string> p;
+		for(unsigned int i=0; i<possibleCompStates.at(c).size(); i++) {
+			p.push_back(possibleCompStates.at(c).at(i));
+			if(possibleCompStates.at(c).at(i) == defaultCompState.at(c)) {
+				this->defaultCompState[c]=i; foundDefaultState=true;
+			}
+		}
+		if(!foundDefaultState) this->defaultCompState[c]=Molecule::NOSTATE; 
+		this->possibleCompStates.push_back(p);                                
 	}
+	
+	
+	
+	
+	
 	
 	//Register myself with the system, and get an ID number
 	this->system = system;
 	this->type_id = this->system->addMoleculeType(this);
 	
 	
-	if(DEBUG) {
-		cout << "Creating MoleculeType " << name;
-		cout << ": ("<< type_id <<") with " << numOfStates << " states (";
-		for(int s=0; s<numOfStates; s++)
-			cout<<" "<<this->stateNames[s]<<" ";
-		cout << ") and " << numOfBindingSites << " binding sites (";
-		for(int b=0; b<numOfBindingSites; b++)
-			cout<<" "<<bindingSiteNames[b]<<" ";
-		cout <<")."<<endl; }
-	
-	
-	
 	mList = new MoleculeList(this,2);
-	n_eqSites = 0;
-	n_eqStates = 0;
+	n_eqComp = 0;
+	
 }
-
-
 
 MoleculeType::~MoleculeType()
 {
 	if(DEBUG) cout << "Destroying MoleculeType " << name << endl;
 	
-	delete [] stateNames;
-	delete [] defaultStateValues;
-	delete [] bindingSiteNames;
+	//Delete freestore component information
+	delete [] compName;
+	delete [] defaultCompState;
 	
-	delete [] isSiteEq;
-	delete [] eqSiteSizes;
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		delete [] eqSiteName[i];
-		delete [] eqSiteIndex[i];
+	//Delete details about equivalent components
+	delete [] eqCompSizes;
+	for(unsigned int i=0; i<n_eqComp; i++) {
+		delete [] eqCompName[i];
+		delete [] eqCompIndex[i];
 	}
-	delete [] eqSiteName;
-	delete [] eqSiteIndex;
+	delete [] eqCompName;
+	delete [] eqCompIndex;
 	
 	
-	delete [] isStateEq;
-	delete [] eqStateSizes;
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		delete [] eqStateName[i];
-		delete [] eqStateIndex[i];
-	}
-	delete [] eqStateName;
-	delete [] eqStateIndex;
-		
 	
-	//Delete all molecules of this type that exist
-	//Molecule *m;
-	//while(.size()>0)
-	//{
-	//	m = mInstances.back();
-	//	mInstances.pop_back();
-	//	delete m;
-	//}
 	
 	//Delete all template molecules of this type that exist
 	TemplateMolecule *t;
@@ -118,107 +151,63 @@ MoleculeType::~MoleculeType()
 	delete mList;
 }
 
-
-void MoleculeType::addEquivalentSites(vector <vector <string> > &identicalSites)
+void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
 {
-	this->n_eqSites = identicalSites.size();
-	eqSiteName=new string * [n_eqSites];
-	eqSiteIndex=new int *[n_eqSites];
-	eqSiteSizes=new unsigned int [n_eqSites];
-	
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		eqSiteSizes[i]=identicalSites.at(i).size();
-		eqSiteName[i] = new string [eqSiteSizes[i]];
-		eqSiteIndex[i] = new int [eqSiteSizes[i]];
-		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
-			eqSiteName[i][k] = identicalSites.at(i).at(k);
-			eqSiteIndex[i][k] = getBindingSiteIndex(eqSiteName[i][k]);
-			isSiteEq[eqSiteIndex[i][k]]=i;
+	this->n_eqComp = identicalComponents.size();
+	eqCompName=new string * [n_eqComp];
+	eqCompIndex=new int *[n_eqComp];
+	eqCompSizes=new int [n_eqComp];
+		
+	for(int i=0; i<n_eqComp; i++) {
+		eqCompSizes[i]=identicalComponents.at(i).size();
+		eqCompName[i] = new string [eqCompSizes[i]];
+		eqCompIndex[i] = new int [eqCompSizes[i]];
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			eqCompName[i][k] = identicalComponents.at(i).at(k);
+			eqCompIndex[i][k] = getCompIndexFromName(eqCompName[i][k]);
 		}
 	}
 }
 
-
-bool MoleculeType::isAnEquivalentSite(string siteName) {
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
-			if(eqSiteName[i][k]==siteName)
+bool MoleculeType::isEquivalentComponent(string cName) const {
+	for(int i=0; i<n_eqComp; i++) {
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(eqCompName[i][k]==cName)
 				return true;
 		}
 	}
 	return false;
 }
-bool MoleculeType::isAnEquivalentSite(int siteIndex) {
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
-			if(eqSiteIndex[i][k]==siteIndex)
+bool MoleculeType::isEquivalentComponent(int cIndex) const {
+	for(int i=0; i<n_eqComp; i++) {
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(eqCompIndex[i][k]==cIndex)
 				return true;
 		}
 	}
 	return false;
 }
-void MoleculeType::getEquivalencyClass(int *&sites, int &n_sites, string siteName) {
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		for(unsigned int k=0; k<eqSiteSizes[i]; k++) {
-			if(eqSiteName[i][k]==siteName) {
-				sites = eqSiteIndex[i];
-				n_sites=eqSiteSizes[i];
+void MoleculeType::getEquivalencyClass(int *&components, int &n_components, string cName) const {
+	for(int i=0; i<n_eqComp; i++) {
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(eqCompName[i][k]==cName) {
+				components = eqCompIndex[i];
+				n_components=eqCompSizes[i];
 			}
 		}
 	}
 }
 
 
-void MoleculeType::addEquivalentStates(vector <vector <string> > &identicalStates)
-{
-	this->n_eqStates = identicalStates.size();
-	eqStateName=new string * [n_eqStates];
-	eqStateIndex=new int *[n_eqStates];
-	eqStateSizes=new unsigned int [n_eqStates];
-	
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		eqStateSizes[i]=identicalStates.at(i).size();
-		eqStateName[i] = new string [eqStateSizes[i]];
-		eqStateIndex[i] = new int [eqStateSizes[i]];
-
-		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
-			eqStateName[i][k] = identicalStates.at(i).at(k);
-			eqStateIndex[i][k] = getStateIndex(eqStateName[i][k]);
-			isStateEq[eqStateIndex[i][k]]=i;
-		}
-	}
-}
 
 
 
-bool MoleculeType::isAnEquivalentState(string stateName) {
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
-			if(eqStateName[i][k]==stateName)
-				return true;
-		}
-	}
-	return false;
+string MoleculeType::getComponentStateName(int cIndex, int cValue) {
+	if(cValue==Molecule::NOSTATE) return "No State";
+	return possibleCompStates.at(cIndex).at(cValue);
 }
-bool MoleculeType::isAnEquivalentState(int stateIndex) {
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
-			if(eqStateIndex[i][k]==stateIndex)
-				return true;
-		}
-	}
-	return false;
-}
-void MoleculeType::getEquivalencyStateClass(int *&states, int &n_states, string stateName) {
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		for(unsigned int k=0; k<eqStateSizes[i]; k++) {
-			if(eqStateName[i][k]==stateName) {
-				states = eqStateIndex[i];
-				n_states=eqStateSizes[i];
-			}
-		}
-	}
-}
+
+
 
 
 Molecule *MoleculeType::genDefaultMolecule()
@@ -283,22 +272,32 @@ unsigned long int MoleculeType::getObservableCount(int obsIndex) const
 	return observables.at(obsIndex)->getCount();
 }
 
-unsigned int MoleculeType::getBindingSiteIndex(string siteName ) const
+
+int MoleculeType::getCompIndexFromName(string cName) const
 {
-	for(int b=0; b<numOfBindingSites; b++)
-		if(siteName==bindingSiteNames[b]) return b;
-	cerr<<"!!! warning !!! cannot find site name "<< siteName << " in MoleculeType: "<<name<<endl;
+	for(int c=0; c<numOfComponents; c++)
+		if(cName==compName[c]) return c;
+	cerr<<"!!! warning !!! cannot find site name "<< cName << " in MoleculeType: "<<name<<endl;
 	this->printDetails();
 	exit(1);
 }
 
-unsigned int MoleculeType::getStateIndex(string stateName ) const
-{
-	for(int s=0; s<numOfStates; s++)
-		if(stateName==stateNames[s]) return s;
-	cerr<<"!!! warning !!! cannot find state name "<< stateName << " in MoleculeType: "<<name<<endl;
-	exit(1);
-}
+//unsigned int MoleculeType::getBindingSiteIndex(string siteName ) const
+//{
+//	for(int b=0; b<numOfBindingSites; b++)
+//		if(siteName==bindingSiteNames[b]) return b;
+//	cerr<<"!!! warning !!! cannot find site name "<< siteName << " in MoleculeType: "<<name<<endl;
+//	this->printDetails();
+//	exit(1);
+//}
+//
+//unsigned int MoleculeType::getStateIndex(string stateName ) const
+//{
+//	for(int s=0; s<numOfStates; s++)
+//		if(stateName==stateNames[s]) return s;
+//	cerr<<"!!! warning !!! cannot find state name "<< stateName << " in MoleculeType: "<<name<<endl;
+//	exit(1);
+//}
 
 
 void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
@@ -462,27 +461,27 @@ void MoleculeType::printDetails() const
 {
 	cout<<"Molecule Type: "<< name << " type ID: " << type_id <<endl;
 	
-	cout<<"   -states ( ";
-	for(int s=0; s<numOfStates; s++) cout<<stateNames[s]<<" ";
+	cout<<"   -components ( ";
+	for(int c=0; c<numOfComponents; c++) cout<<compName[c]<<" ";
 	cout<<")"<<endl;
 	
-	cout<<"   -sites ( ";
-	for(int s=0; s<numOfBindingSites; s++) cout<<bindingSiteNames[s]<<" ";
-	cout<<")"<<endl;
-	
-	for(unsigned int i=0; i<n_eqSites; i++) {
-		cout<<"   -equivalent sites ( ";
-		for(unsigned int k=0; k<eqSiteSizes[i]; k++)
-			cout<<eqSiteName[i][k]<<" ";
-		cout<<")"<<endl;
-	}
-	
-	for(unsigned int i=0; i<n_eqStates; i++) {
-		cout<<"   -equivalent states ( ";
-		for(unsigned int k=0; k<eqStateSizes[i]; k++)
-			cout<<eqStateName[i][k]<<" ";
-		cout<<")"<<endl;
-	}
+//	cout<<"   -sites ( ";
+//	for(int s=0; s<numOfBindingSites; s++) cout<<bindingSiteNames[s]<<" ";
+//	cout<<")"<<endl;
+//	
+//	for(unsigned int i=0; i<n_eqSites; i++) {
+//		cout<<"   -equivalent sites ( ";
+//		for(unsigned int k=0; k<eqSiteSizes[i]; k++)
+//			cout<<eqSiteName[i][k]<<" ";
+//		cout<<")"<<endl;
+//	}
+//	
+//	for(unsigned int i=0; i<n_eqStates; i++) {
+//		cout<<"   -equivalent states ( ";
+//		for(unsigned int k=0; k<eqStateSizes[i]; k++)
+//			cout<<eqStateName[i][k]<<" ";
+//		cout<<")"<<endl;
+//	}
 	
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
 	cout<<"   -has "<< reactions.size() <<" reactions"<<endl;

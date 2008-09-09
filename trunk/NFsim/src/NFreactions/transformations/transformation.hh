@@ -18,7 +18,7 @@ namespace NFcore
 			 	index into the new state value.
 			    @author Michael Sneddon
 			 */
-			static Transformation * genStateChangeTransform(unsigned int stateIndex, int newStateValue);
+			static Transformation * genStateChangeTransform(unsigned int cIndex, int newValue);
 			
 			/*!
 			 	Generates a binding transformation for one of the two binding sites in the binding Transform.  You will
@@ -104,7 +104,7 @@ namespace NFcore
 			virtual ~Transformation() {};
 			int getType() const { return type; }
 			virtual void apply(Mapping *m, MappingSet **ms) = 0;
-			virtual int getStateOrSiteIndex() const = 0;
+			virtual int getComponentIndex() const = 0;
 		protected:
 			int type;
 	};
@@ -112,56 +112,56 @@ namespace NFcore
 	
 	class EmptyTransform : public Transformation {
 		public:
-			EmptyTransform() : Transformation(TransformationFactory::EMPTY){ this->stateOrSite=-1; };
-			EmptyTransform(int stateOrSite) : Transformation(TransformationFactory::EMPTY){ this->stateOrSite=stateOrSite; };
+			EmptyTransform() : Transformation(TransformationFactory::EMPTY){ this->cIndex=-1; };
+			EmptyTransform(int cIndex) : Transformation(TransformationFactory::EMPTY){ this->cIndex=cIndex; };
 			virtual ~EmptyTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms) {};
-			virtual int getStateOrSiteIndex() const { return stateOrSite; };
+			virtual int getComponentIndex() const { return cIndex; };
 		protected:
-			int stateOrSite;
+			int cIndex;
 	};
 	
 	
 	class StateChangeTransform : public Transformation {
 		public:
-			StateChangeTransform(int stateIndex, int newStateValue);
+			StateChangeTransform(int cIndex, int newValue);
 			virtual ~StateChangeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
-			virtual int getStateOrSiteIndex() const {return stateIndex;};
+			virtual int getComponentIndex() const {return cIndex;};
 		protected:
-			int stateIndex;
-			int newStateValue;
+			int cIndex;
+			int newValue;
 	};
 	
 	class BindingTransform : public Transformation {
 		public:
-			BindingTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex);
+			BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex);
 			virtual ~BindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
-			virtual int getStateOrSiteIndex() const {return siteIndex;};
+			virtual int getComponentIndex() const {return cIndex;};
 		protected:
-			int siteIndex;
+			int cIndex;
 			int otherReactantIndex;
 			int otherMappingIndex;
 	};
 	
 	class BindingSeparateComplexTransform : public BindingTransform {
 			public:
-				BindingSeparateComplexTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex) : 
-					BindingTransform(siteIndex, otherReactantIndex, otherMappingIndex) {};
+				BindingSeparateComplexTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) : 
+					BindingTransform(cIndex, otherReactantIndex, otherMappingIndex) {};
 				virtual ~BindingSeparateComplexTransform() {};
 				virtual void apply(Mapping *m, MappingSet **ms);
-				virtual int getStateOrSiteIndex() const {return siteIndex;};
+				virtual int getComponentIndex() const {return cIndex;};
 	};
 	
 	class UnbindingTransform : public Transformation {
 		public:
-			UnbindingTransform(int siteIndex);
+			UnbindingTransform(int cIndex);
 			virtual ~UnbindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
-			virtual int getStateOrSiteIndex() const {return siteIndex;};
+			virtual int getComponentIndex() const {return cIndex;};
 		protected:
-			int siteIndex;
+			int cIndex;
 	};
 	
 	class AddMoleculeTransform : public Transformation {
@@ -169,7 +169,7 @@ namespace NFcore
 			AddMoleculeTransform(SpeciesCreator *sc);
 			virtual ~AddMoleculeTransform();
 			virtual void apply(Mapping *m, MappingSet **ms);
-			virtual int getStateOrSiteIndex() const {return 0;};
+			virtual int getComponentIndex() const {cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
 		protected:
 			SpeciesCreator *sc;
 	};
@@ -179,7 +179,7 @@ namespace NFcore
 			RemoveMoleculeTransform() : Transformation(TransformationFactory::REMOVE) {};
 			virtual ~RemoveMoleculeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
-			virtual int getStateOrSiteIndex() const {return 0;};
+			virtual int getComponentIndex() const {cout<<"You should not get a component index from a RemoveMoleculeTransform!!"<<endl; exit(1); return -1;};
 	};
 	
 	

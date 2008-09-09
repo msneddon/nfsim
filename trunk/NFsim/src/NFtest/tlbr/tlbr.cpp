@@ -171,11 +171,9 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	System * s = new System("TLBR",true);
 	vector<vector<string> > v;
 	MoleculeType * L = createL(s,n_L);
-	L->addEquivalentSites(v);
-	L->addEquivalentStates(v);
+	L->addEquivalentComponents(v);
 	MoleculeType * R = createR(s,n_R);
-	R->addEquivalentSites(v);
-	R->addEquivalentStates(v);
+	R->addEquivalentComponents(v);
 	
 	
 	createUnbindingRxns(s,R,koff);
@@ -254,7 +252,7 @@ MoleculeType * NFtest_tlbr::createL(System * s, int count)
 	int numOfStates = 0;
 	string* stateNames = new string [numOfStates];
 	int * stateValues = new int [numOfStates];
-	MoleculeType *L = new MoleculeType("L",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	MoleculeType *L = 0; //new MoleculeType("L",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	L->populateWithDefaultMolecules(count);
 	return L;	
 }
@@ -268,7 +266,7 @@ MoleculeType * NFtest_tlbr::createR(System * s, int count)
 	int numOfStates = 0;
 	string * stateNames = new string [numOfStates];
 	int * stateValues = new int [numOfStates];
-	MoleculeType *R = new MoleculeType("R",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	MoleculeType *R = 0; //new MoleculeType("R",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	R->populateWithDefaultMolecules(count);
 	return R;	
 }

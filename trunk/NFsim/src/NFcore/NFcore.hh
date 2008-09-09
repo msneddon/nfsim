@@ -43,7 +43,7 @@ namespace NFcore
 	
 	
 	//Forward declarations to deal with cyclic dependencies 
-	class GroupOutputter;
+//	class GroupOutputter;
 	class MapGenerator;
 	class MappingSet;
 	class ReactantList;
@@ -74,9 +74,9 @@ namespace NFcore
 	
 	class Complex;  /* collection of molecules that are bonded to each 
 						other and whose membership dynamically can change*/					
-	class Group; /* collection of molecules that are not necessarily bonded together, but
-					can share certain properties */
-	class StateChangeListener;  /*used by molecules to let its group know its state changed */
+//	class Group; /* collection of molecules that are not necessarily bonded together, but
+//					can share certain properties */
+//	class StateChangeListener;  /*used by molecules to let its group know its state changed */
 	
 	class ReactantList;
 	
@@ -115,8 +115,8 @@ namespace NFcore
 			bool isUsingComplex() { return useComplex; };
 			double getCurrentTime() const { return current_time; };
 		
-			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
-			int getGroupCount() const { return allGroups.size(); }
+//			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
+//			int getGroupCount() const { return allGroups.size(); }
 			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
 			Observable * getObservableByName(string obsName);
 			double getAverageGroupValue(string groupName, int valIndex);
@@ -136,7 +136,7 @@ namespace NFcore
 			int addMoleculeType(MoleculeType *moleculeType);
 			void addReaction(ReactionClass *reaction);
 			int createComplex(Molecule * m);
-			int addGroup(Group * g);
+//			int addGroup(Group * g);
 		
 			void addGlobalFunction(GlobalFunction *gf);
 			
@@ -157,7 +157,7 @@ namespace NFcore
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 		
-			void addGroupOutputter(GroupOutputter * go);
+//			void addGroupOutputter(GroupOutputter * go);
 		
 			/* functions to output simulation properties to the registered file*/
 			void outputAllObservableNames();
@@ -179,8 +179,8 @@ namespace NFcore
 			double calculateMeanCount(MoleculeType *m);
 		
 		
-			void outputGroupData() { outputGroupData(this->current_time); };
-			void outputGroupData(double cSampleTime);
+//			void outputGroupData() { outputGroupData(this->current_time); };
+//			void outputGroupData(double cSampleTime);
 		
 		
 		
@@ -225,7 +225,7 @@ namespace NFcore
 			// The container objects that maintain the system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /* container of all MoleculeTypes in the simulation */
 			vector <ReactionClass *> allReactions;    /* container of all Reactions in the simulation */
-			vector <Group *> allGroups;               /* container of all groups in the simulation */
+//			vector <Group *> allGroups;               /* container of all groups in the simulation */
 			vector <Complex * > allComplexes;         /* container of all complexes in the simulation */
 			queue <int> nextAvailableComplex;         /* queue tells us which complexes can be used next */
 		
@@ -247,7 +247,7 @@ namespace NFcore
 			// Neccessary variables and methods for outputting
 			ofstream outputFileStream; /* the stream to a file to write out the results */
 			void outputGroupDataHeader();
-			GroupOutputter * go;
+//			GroupOutputter * go;
 		    bool outputGlobalFunctionValues;
 			
 			//For moleculeTypes to do a quick lookup and see where a particular reaction
@@ -261,7 +261,7 @@ namespace NFcore
 			vector<MoleculeType *>::iterator molTypeIter;  /* to iterate over allMoleculeType */
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
 			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
-			vector <Group *>::iterator groupIter;          /* to iterate over allGroups */
+//			vector <Group *>::iterator groupIter;          /* to iterate over allGroups */
 			vector <GlobalFunction *>::iterator functionIter; /* to iterate over Global Functions */
 	};
 	
@@ -284,44 +284,40 @@ namespace NFcore
 		public:
 		
 			MoleculeType(
-					string name, 
-					string * stateNames, 
-					int *defaultStateValues, 
-					int numOfStates,
-					string * bindingSiteNames,
-					int numOfBindingSites,
-					System * system );
-		
+					string name,
+					vector <string> &compName,
+					vector <string> &defaultCompState,
+					vector < vector<string> > &possibleCompStates,
+					System *system);
+			
 			~MoleculeType();
 		
+			string getName() const { return name; };
+			System * getSystem() const { return system; };
 			
-			void addEquivalentSites(vector <vector <string> > &identicalSites);
-			bool isAnEquivalentSite(string siteName);
-			bool isAnEquivalentSite(int siteIndex);
-			void getEquivalencyClass(int *&sites, int &n_sites, string siteName);
+			int getNumOfComponents() const { return numOfComponents; };
+			string getComponentName(int cIndex) const { return compName[cIndex]; };
+			void getPossibleComponentStates(int cIndex, list <string> &nameList);
+			int getDefaultComponentState(int cIndex) const { return defaultCompState[cIndex]; };
 			
-			void addEquivalentStates(vector <vector <string> > &identicalStates);
-			bool isAnEquivalentState(string stateName);
-			bool isAnEquivalentState(int stateIndex);
-			void getEquivalencyStateClass(int *&states, int &n_states, string stateName);
+			int getCompIndexFromName(string cName) const;
+			string getComponentStateName(int cIndex, int cValue);
+			
+			
+			
+			
+			void addEquivalentComponents(vector <vector <string> > &identicalComponents);
+			bool isEquivalentComponent(string cName) const;
+			bool isEquivalentComponent(int cIndex) const;
+			void getEquivalencyClass(int *&components, int &n_components, string cName) const;
+			
+			
 			
 			
 			
 			
 			/* get functions */
-			string getName() const { return name; };
-			System * getSystem() const { return system; };
-		
-			int getNumOfStates() const { return numOfStates; };
-			string getStateName( int stateIndex ) const { return stateNames[stateIndex]; };
 			
-			unsigned int getStateIndex(string stateName ) const;
-			int getDefaultState(int stateIndex) const { return defaultStateValues[stateIndex]; };
-		
-			int getNumOfBindingSites() const { return numOfBindingSites; };
-			char * getBindingSiteName( int bIndex ) const { return (char *) bindingSiteNames[bIndex].c_str(); };
-			unsigned int getBindingSiteIndex(string stateName ) const;
-		
 			int getNumOfObservables() const { return observables.size(); };
 			string getObservableAlias(int obsIndex) const;
 			Observable * getObservable(int obsIndex) const { return observables.at(obsIndex); };
@@ -380,6 +376,7 @@ namespace NFcore
 			void printObservableNames();
 			void printObservableCounts();
 		
+			
 			void printDetails() const;
 		
 			/* auto populate with default molecules */
@@ -396,17 +393,22 @@ namespace NFcore
 		protected:
 		
 			System *system;
-		
-			string name;
-			int type_id;
-		
-			int numOfStates; /* Gives the number of states */
-			string *stateNames; /* Gives the names of the states */
-			int *defaultStateValues;  /* Gives the default values of the states */
-		
-			int numOfBindingSites;  /* number of binding sites */
-			string *bindingSiteNames;  /* the name of those binding sites */
-		
+								
+						string name;
+						int type_id;
+								
+									
+						//keeps track
+						int numOfComponents;
+						string *compName;
+						vector < vector < string > > possibleCompStates;
+						int *defaultCompState;
+						
+						////////////////////////////////////////////////////////////////////////////////
+						int n_eqComp;
+						int * eqCompSizes;
+						string **eqCompName;
+						int **eqCompIndex;
 		
 			MoleculeList * mList;
 			//vector <Molecule *> mInstances;  /* List of all molecules that exist */
@@ -420,22 +422,29 @@ namespace NFcore
 			vector <TemplateMolecule *> allTemplates; /* keep track of all templates that exist of this type
 															so that they are easy to delete from memory at the end */
 			
+			
+			
+			
+			
+			
+			
+			
 			//Maintains the set of equivalent sites used only when creating reaction
 			//rules
-			unsigned int n_eqSites;
-			unsigned int * eqSiteSizes;
-			string **eqSiteName;
-			int **eqSiteIndex;
-			
-			int *isSiteEq;
-			
-			
-			unsigned int n_eqStates;
-			unsigned int * eqStateSizes;
-			string **eqStateName;
-			int **eqStateIndex;
-					
-			int *isStateEq;
+//			unsigned int n_eqSites;
+//			unsigned int * eqSiteSizes;
+//			string **eqSiteName;
+//			int **eqSiteIndex;
+//			
+//			int *isSiteEq;
+//			
+//			
+//			unsigned int n_eqStates;
+//			unsigned int * eqStateSizes;
+//			string **eqStateName;
+//			int **eqStateIndex;
+//					
+//			int *isStateEq;
 		
 		private:
 			vector<Molecule *>::iterator molIter;  /* to iterate over mInstances */
@@ -475,14 +484,26 @@ namespace NFcore
 			Complex * getComplex() const { return parentMoleculeType->getSystem()->getComplex(ID_complex); };
 			int getDegree();
 		
+			
+			///////////////////////////////////////////////////////////////////////
+			int getComponentState(int cIndex) const { return component[cIndex]; };
+			int getComponentIndexOfBond(int cIndex) const { return indexOfBond[cIndex]; };
+			void setComponentState(int cIndex, int newValue);
+			void setComponentState(string cName, int newValue);
+			
+			
+			
+			////////////////////////////////////////////////////////////////////
+			
+			
 			//int getState(char * stateName) const { return 0; }
-			int getState(int stateIndex) const { return states[stateIndex]; };
+			//int getState(int stateIndex) const { return states[stateIndex]; };
 		
 			/* accessor functions for checking binding sites */
 			bool isBindingSiteOpen(int bIndex) const;
 			bool isBindingSiteBonded(int bIndex) const;
 			Molecule * getBondedMolecule(int bSiteIndex) const;
-			int getBsiteIndexOfBond(int bSiteIndex) const { return bSiteIndexOfBond[bSiteIndex]; };
+			//int getBsiteIndexOfBond(int bSiteIndex) const { return bSiteIndexOfBond[bSiteIndex]; };
 		
 			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
 			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) { 
@@ -490,23 +511,23 @@ namespace NFcore
 			};
 		
 			/* set functions for states, bonds, and complexes */
-			void setState(const char * stateName, int value);
-			void setState(int stateIndex, int value);
+			//void setState(const char * stateName, int value);
+			//void setState(int stateIndex, int value);
 			void setBondTo(Molecule * m2, int bindingSiteIndex);
 			void moveToNewComplex(int newComplexID) { ID_complex = newComplexID; };
 		
 		
 			/* static functions which bind and unbind two molecules */
-			static void bind(Molecule *m1, int bSiteIndex1, Molecule *m2, int bSiteIndex2);
-			static void bind(Molecule *m1, const char * bSiteName1, Molecule *m2, const char * bSiteName2);
+			static void bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2);
+			static void bind(Molecule *m1, string compName1, Molecule *m2, string compName2);
 			static void unbind(Molecule *m1, int bSiteIndex);
 			static void unbind(Molecule *m1, char * bSiteName);
 		
 		
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
-			void clear();
-			void setHasVisited(int bSiteIndex);
+		//	void clear();
+		//	void setHasVisited(int bSiteIndex);
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
 		
@@ -526,7 +547,7 @@ namespace NFcore
 		
 		
 			/* group functions */
-			void addListener(StateChangeListener * l) { listeners.push_back(l); };
+//			void addListener(StateChangeListener * l) { listeners.push_back(l); };
 		
 			void notifyGroupsThatRateMayChange();
 		
@@ -540,8 +561,13 @@ namespace NFcore
 		
 			
 			/* used for traversing a molecule complex */
-			bool * hasVisitedBond;
+			//bool * hasVisitedBond;
 			bool hasVisitedMolecule;
+			
+			
+			static const int NOSTATE = -1;
+			static const int NOBOND = 0;
+			static const int NOINDEX = -1;
 			
 		protected:
 		
@@ -556,7 +582,7 @@ namespace NFcore
 			int ID_unique;
 			int listId;
 		
-			list <StateChangeListener *> listeners;
+//			list <StateChangeListener *> listeners;
 		
 			static int uniqueIdCount;
 		
@@ -566,30 +592,34 @@ namespace NFcore
 		
 		
 			/* store the states and bonds in arrays */
-			static const int NOSTATE = -1;
-			
-			int *components;
 			
 			
+			///////////////////////////////////////////////////////////////////
+			/* list of components */
+			int *component;
+			int numOfComponents;
+			Molecule **bond;
+			int *indexOfBond; /* gives the index of the component that is bonded to this molecule */
 			
 			
-			int *states;
-			Molecule ** bonds;
-			int * bSiteIndexOfBond;  // index of this molecule in bonded 
+			
+			//int *states;
+			//Molecule ** bonds;
+			//int * bSiteIndexOfBond;  // index of this molecule in bonded 
 		
+			
 			/* used for traversing a molecule complex */
-		
 			int * rxnListMappingId;
 			int nReactions;
+			
+			
+		private:
 			
 			static queue <Molecule *> q;
 			static queue <int> d;
 			static list <Molecule *>::iterator molIter;
-		private:
 			
-			
-			
-			list <StateChangeListener *>::iterator listenerIter; /* to iterate over groups this molecule is in */
+//			list <StateChangeListener *>::iterator listenerIter; /* to iterate over groups this molecule is in */
 	};
 	
 	
@@ -722,7 +752,7 @@ namespace NFcore
 		static void bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2);
 	
 		void addStateValue(int stateIndex, int stateValue);
-		void addStateValue(const char * stateName, int stateValue);
+		void addStateValue(string stateName, int stateValue);
 		void addNotStateValue(char * stateName, int notStateValue);
 		void clear() { this->matchMolecule = 0; for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; hasVisited=false; };
 	
@@ -890,48 +920,48 @@ namespace NFcore
 	/*!
         @author Michael Sneddon
 	 */
-	class Group
-	{
-		public:
-			Group(string groupName, System * s, int stateIndex);
-			virtual ~Group();
-		
-			string getName() const { return groupName; };
-			double getValue(unsigned int valIndex);
-			int getNumberInGroup() const { return groupMembers.size(); };
-			Molecule * getMolecule(int mIndex) { return groupMembers.at(mIndex); };
-		
-			virtual void addToGroup(Molecule * m);
-			virtual void addToGroupWithoutListener(Molecule * m);
-		
-			virtual void notify(Molecule *changedMolecule, int oldStateValue, int newStateValue);
-		
-			/* an function that lets classes that inherit from group update
-			 * some of its values that are not dependent on state, but rather
-			 * depend on some outside value at arbitrary points in the simulation */
-			virtual void updateGroupProperty(double * values, int n_values);
-		
-			virtual void updateReactionRates();
-		
-			virtual void printDetails();
-		
-		protected:
-			vector <Molecule *> groupMembers;
-			System * system;
-		
-			string groupName;
-			int Group_ID;
-		
-			vector <char *> valueNames;
-			vector <double> value;  
-			/* keeps track of the sum of the state values - 
-				                  override notify to change what this does */
-			int stateIndex;
-		
-			bool areReactionsUpToDate;
-		
-			vector <Molecule *>::iterator molIter;	
-	};
+//	class Group
+//	{
+//		public:
+//			Group(string groupName, System * s, int stateIndex);
+//			virtual ~Group();
+//		
+//			string getName() const { return groupName; };
+//			double getValue(unsigned int valIndex);
+//			int getNumberInGroup() const { return groupMembers.size(); };
+//			Molecule * getMolecule(int mIndex) { return groupMembers.at(mIndex); };
+//		
+//			virtual void addToGroup(Molecule * m);
+//			virtual void addToGroupWithoutListener(Molecule * m);
+//		
+//			virtual void notify(Molecule *changedMolecule, int oldStateValue, int newStateValue);
+//		
+//			/* an function that lets classes that inherit from group update
+//			 * some of its values that are not dependent on state, but rather
+//			 * depend on some outside value at arbitrary points in the simulation */
+//			virtual void updateGroupProperty(double * values, int n_values);
+//		
+//			virtual void updateReactionRates();
+//		
+//			virtual void printDetails();
+//		
+//		protected:
+//			vector <Molecule *> groupMembers;
+//			System * system;
+//		
+//			string groupName;
+//			int Group_ID;
+//		
+//			vector <char *> valueNames;
+//			vector <double> value;  
+//			/* keeps track of the sum of the state values - 
+//				                  override notify to change what this does */
+//			int stateIndex;
+//		
+//			bool areReactionsUpToDate;
+//		
+//			vector <Molecule *>::iterator molIter;	
+//	};
 	
 	
 	
@@ -939,33 +969,33 @@ namespace NFcore
 	/*!
         @author Michael Sneddon
 	 */
-	class StateChangeListener
-	{
-		public:
-			StateChangeListener(Molecule * m, Group * g, int stateIndex);
-			~StateChangeListener();
-		
-			/* called by molecule to alert that state has changed */
-			void notify(Molecule *changedMolecule, int stateIndexOfChange);
-		
-			/* called by molecule when the molecule is ready to have
-			 * all the group's reactions updated */
-			void updateGroupReactions();
-		
-			/* simple functions for molecule to talk to this group */
-			string getGroupName() const { return group->getName(); };
-			double getValue(int valueIndex) const { return group->getValue(valueIndex); };
-		
-		
-		protected:
-			Molecule * molecule;
-			Group * group;
-			int oldStateValue;
-			int newStateValue;
-		
-			int stateIndex;
-	
-	};
+//	class StateChangeListener
+//	{
+//		public:
+//			StateChangeListener(Molecule * m, Group * g, int stateIndex);
+//			~StateChangeListener();
+//		
+//			/* called by molecule to alert that state has changed */
+//			void notify(Molecule *changedMolecule, int stateIndexOfChange);
+//		
+//			/* called by molecule when the molecule is ready to have
+//			 * all the group's reactions updated */
+//			void updateGroupReactions();
+//		
+//			/* simple functions for molecule to talk to this group */
+//			string getGroupName() const { return group->getName(); };
+//			double getValue(int valueIndex) const { return group->getValue(valueIndex); };
+//		
+//		
+//		protected:
+//			Molecule * molecule;
+//			Group * group;
+//			int oldStateValue;
+//			int newStateValue;
+//		
+//			int stateIndex;
+//	
+//	};
 	
 	
 }

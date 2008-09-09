@@ -46,7 +46,7 @@ TransformationSet::~TransformationSet()
 	this->n_reactants = 0;
 }
 
-bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string stateName, int finalStateValue)
+bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string componentName, int finalStateValue)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
@@ -57,8 +57,8 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string stat
 	}
 	
 	// 2) Create a Transformation object to remember the information
-	unsigned int stateIndex = t->getMoleculeType()->getStateIndex(stateName);
-	Transformation *transformation = TransformationFactory::genStateChangeTransform(stateIndex, finalStateValue);
+	int cIndex = t->getMoleculeType()->getCompIndexFromName(componentName);
+	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue);
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -80,19 +80,19 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	}
 	
 	//Find the index of the respective binding sites
-	unsigned int bSiteIndex1 = t1->getMoleculeType()->getBindingSiteIndex(bSiteName1);
-	unsigned int bSiteIndex2 = t2->getMoleculeType()->getBindingSiteIndex(bSiteName2);
+	unsigned int cIndex1 = t1->getMoleculeType()->getCompIndexFromName(bSiteName1);
+	unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
 	
 	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
 	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
 	else
-		transformation1 = TransformationFactory::genBindingTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(bSiteIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
 	
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -116,19 +116,19 @@ bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1,
 	}
 	
 	//Find the index of the respective binding sites
-	unsigned int bSiteIndex1 = t1->getMoleculeType()->getBindingSiteIndex(bSiteName1);
-	unsigned int bSiteIndex2 = t2->getMoleculeType()->getBindingSiteIndex(bSiteName2);
+	unsigned int cIndex1 = t1->getMoleculeType()->getCompIndexFromName(bSiteName1);
+	unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
 	
 	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
 	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
 	else
-		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(bSiteIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genBindingSeparateComplexTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(bSiteIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
 	
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -151,8 +151,8 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	}
 	
 	// 2) Create a Transformation object to remember the information
-	unsigned int bSiteIndex = t->getMoleculeType()->getBindingSiteIndex(bSiteName);
-	Transformation *transformation = TransformationFactory::genUnbindingTransform(bSiteIndex);
+	unsigned int cIndex = t->getMoleculeType()->getCompIndexFromName(bSiteName);
+	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex);
 	
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);

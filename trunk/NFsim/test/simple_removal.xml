@@ -19,7 +19,7 @@
     <ListOfCompartments>
     </ListOfCompartments>
     <ListOfSpecies>
-      <Species id="S1"  concentration="5000">
+      <Species id="S1"  concentration="2">
         <ListOfMolecules>
           <Molecule id="S1_M1" name="RNA">
             <ListOfComponents>
