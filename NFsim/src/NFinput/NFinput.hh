@@ -33,20 +33,15 @@ namespace NFinput {
 	 */
 	class component {
 		public:
-			component(TemplateMolecule *t, int type, string name);
-			component(MoleculeType *mt, int type, string name);
+			component(TemplateMolecule *t, string name);
+			component(MoleculeType *mt, string name);
 			~component();
 			
 			TemplateMolecule * t;
 			MoleculeType *mt;
-			unsigned int type;
 			string name;
 			
 			string symPermutationName;
-			
-			const static unsigned int BSITE = 0;
-			const static unsigned int STATE = 1;
-			const static unsigned int MOLECULE = 2;
 	};
 
 	

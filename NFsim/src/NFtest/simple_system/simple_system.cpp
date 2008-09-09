@@ -178,7 +178,7 @@ MoleculeType * NFtest_ss::createX(System *s)
 	
 	//When we create a molecule, it automatically adds itself to the system, so all we have to 
 	//do here is create it, and return it so we can use it to add reactions to the system
-	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	MoleculeType *molX = 0; //new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	return molX;
 }
 
@@ -194,7 +194,7 @@ MoleculeType * NFtest_ss::createY(System *s)
 	string * stateNames = new string [numOfStates];
 	int * stateValues = new int [numOfStates];
 	
-	MoleculeType *molY = new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	MoleculeType *molY = 0; //new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	return molY;
 }
 

@@ -205,10 +205,10 @@ void SpeciesCreator::create()
 		newMoleculeCreations[m] = moleculeTypes[m]->genDefaultMolecule();
 	}
 	
-	//Set the state values correctly
-	for(unsigned int s=0; s<n_ndStates; s++)
+	//Set the component state values correctly
+	for(int c=0; c<n_ndStates; c++)
 	{
-		newMoleculeCreations[ndStateMolecule[s]]->setState(ndStateIndex[s],ndStateValue[s]);
+		newMoleculeCreations[ndStateMolecule[c]]->setComponentState(ndStateIndex[c],ndStateValue[c]);
 	}
 	
 	//Make the bonds

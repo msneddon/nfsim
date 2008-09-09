@@ -8,25 +8,25 @@ using namespace NFcore;
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-StateChangeTransform::StateChangeTransform(int stateIndex, int newStateValue) :
+StateChangeTransform::StateChangeTransform(int cIndex, int newValue) :
 	Transformation(TransformationFactory::STATE_CHANGE)
 {
-	this->stateIndex = stateIndex;
-	this->newStateValue = newStateValue;
+	this->cIndex = cIndex;
+	this->newValue = newValue;
 }
 void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
-	m->getMolecule()->setState(stateIndex,newStateValue);
+	m->getMolecule()->setComponentState(cIndex,newValue);
 }
 
 
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-BindingTransform::BindingTransform(int siteIndex, int otherReactantIndex, int otherMappingIndex) :
+BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
 	Transformation(TransformationFactory::BINDING)
 {
-	this->siteIndex=siteIndex;
+	this->cIndex=cIndex;
 	this->otherReactantIndex=otherReactantIndex;
 	this->otherMappingIndex=otherMappingIndex;
 }
@@ -56,10 +56,10 @@ void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-UnbindingTransform::UnbindingTransform(int siteIndex) :
+UnbindingTransform::UnbindingTransform(int cIndex) :
 	Transformation(TransformationFactory::UNBINDING)
 {
-	this->siteIndex=siteIndex;
+	this->cIndex=cIndex;
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 {   //cout<<"unbinding.."<<endl;

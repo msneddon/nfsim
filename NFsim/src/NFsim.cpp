@@ -219,8 +219,6 @@ int main(int argc, const char *argv[])
 					
 			parsed = true;
 		}
-
-		
 		
 		//Finally, give the logo to anyone who wants it
 		if (argMap.find("logo")!=argMap.end()) 
@@ -234,8 +232,7 @@ int main(int argc, const char *argv[])
 	}
 	
 	
-	if(!parsed)
-	{
+	if(!parsed) {
 		cout<<"Could not identify what you want to do.  Try running the -help flag for advice."<<endl;
 	}
 	

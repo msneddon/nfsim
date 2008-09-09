@@ -29,24 +29,20 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	if(DEBUG) cout<<"-creating molecule instance of type " << parentMoleculeType->getName() << endl;	
 	this->parentMoleculeType = parentMoleculeType;
 	
-	//Set the state of this molecule to default state as defined by this MoleculeType
-	this->states = new int [parentMoleculeType->getNumOfStates()];
-	for(int s=0; s<parentMoleculeType->getNumOfStates(); s++)
-		states[s] = parentMoleculeType->getDefaultState(s);
+	//First initialize the component states and bonds
+	this->numOfComponents = parentMoleculeType->getNumOfComponents();
+	this->component = new int [parentMoleculeType->getNumOfComponents()];
+	for(int c=0; c<numOfComponents; c++)
+		component[c] = parentMoleculeType->getDefaultComponentState(c);
 	
-	//Create the default binding sites
-	int b = 0;
-	this->bonds = new Molecule * [parentMoleculeType->getNumOfBindingSites()];
-	for(b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-		bonds[b] = 0;
+	this->bond = new Molecule * [numOfComponents];
+	this->indexOfBond = new int [numOfComponents];
+	for(int b=0; b<numOfComponents; b++) {
+		bond[b]=0; indexOfBond[b]=NOBOND;
+	}
 	
-	this->bSiteIndexOfBond = new int [parentMoleculeType->getNumOfBindingSites()];
-	for(b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-		bSiteIndexOfBond[b] = -1;	
 	
-	this->hasVisitedBond = new bool [parentMoleculeType->getNumOfBindingSites()];
-	for(b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-		hasVisitedBond[b] = false;
+	
 	
 	hasVisitedMolecule = false;
 	rxnListMappingId = 0;
@@ -68,21 +64,20 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 Molecule::~Molecule()
 {
 	if(DEBUG) cout <<"   -destroying molecule instance of type " << parentMoleculeType->getName() << endl;
-	delete [] bonds;
+	delete [] bond;
 	
 	parentMoleculeType = 0;
 
-	StateChangeListener *l;
-	while(listeners.size()>0)
-	{
-		l = listeners.back();
-		listeners.pop_back();
-		delete l;
-	}
+//	StateChangeListener *l;
+//	while(listeners.size()>0)
+//	{
+//		l = listeners.back();
+//		listeners.pop_back();
+//		delete l;
+//	}
 	
-	delete [] states;
-	delete [] bSiteIndexOfBond;
-	delete [] hasVisitedBond;
+	delete [] component;
+	delete [] indexOfBond;
 	delete [] rxnListMappingId;
 }
 
@@ -107,8 +102,8 @@ void Molecule::updateRxnMembership()
 void Molecule::notifyGroupsThatRateMayChange()
 {
 	//if(listeners.size()>0) cout<<"    notifying groups that rate may have changed"<<endl;
-	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-		(*listenerIter)->updateGroupReactions();
+//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
+//		(*listenerIter)->updateGroupReactions();
 	
 }
 
@@ -131,11 +126,11 @@ void Molecule::updateDORs()
 
 double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
 {
-	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-	{
-		if(groupName==(*listenerIter)->getGroupName())
-			return (*listenerIter)->getValue(valueIndex);
-	}
+//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
+//	{
+//		if(groupName==(*listenerIter)->getGroupName())
+//			return (*listenerIter)->getValue(valueIndex);
+//	}
 	
 	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;
 	cerr<<"    Looking for group: "<<groupName<<" from molecule ";
@@ -155,90 +150,84 @@ void Molecule::addToObservables()
 }
 
 
-void Molecule::setState(const char * state, int value)
+void Molecule::setComponentState(int cIndex, int newValue)
 {
-	int stateIndex = this->parentMoleculeType->getStateIndex(state);
-	this->states[stateIndex]=value;
+	this->component[cIndex]=newValue;
 	
 	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
 	//Let all the listeners know that the state of a molecule has changed...
-	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-		(*listenerIter)->notify(this,stateIndex);
+	//for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
+	//	(*listenerIter)->notify(this,stateIndex);
 }
-
-
-void Molecule::setState(int state, int value)
+void Molecule::setComponentState(string cName, int newValue)
 {
-	//cout<<"value: "<<value<<"  state: "<<state<<endl;
-	this->states[state]=value;
-	
-	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
-	//Let all the listeners know that the state of a molecule has changed...
-	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-		(*listenerIter)->notify(this,state);
+	this->component[this->parentMoleculeType->getCompIndexFromName(cName)]=newValue;
 }
+
+//void Molecule::setState(int state, int value)
+//{
+//	//cout<<"value: "<<value<<"  state: "<<state<<endl;
+//	this->states[state]=value;
+//	
+//	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
+//	//Let all the listeners know that the state of a molecule has changed...
+//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
+//		(*listenerIter)->notify(this,state);
+//}
 
 void Molecule::printDetails() const
 {
 	int degree = 0;
 	cout<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	cout<< " (uId="<<ID_unique<<", mId=" << ID_number << ", tId=" << ID_type << ", cId" << ID_complex<<")"<<endl;
-	cout<<"       states: ";
-	for(int s=0; s<parentMoleculeType->getNumOfStates(); s++)
+	cout<< " (uId="<<ID_unique<<", mId=" << ID_number << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	cout<<"      components: ";
+	for(int c=0; c<numOfComponents; c++)
 	{
-		cout<< parentMoleculeType->getStateName(s) <<"=";
-		cout<< states[s] << " ";
+		if(c!=0)cout<<"                  ";
+		cout<< parentMoleculeType->getComponentName(c) <<"=";
+		cout<<parentMoleculeType->getComponentStateName(c,component[c]);
+		cout<<"\tbond=";
+		if(bond[c]==NOBOND) cout<<"empty";
+		else cout<<bond[c]->getUniqueID();
+		cout<<endl;
 	}
-	cout<<endl<<"       bonds: ";
-	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-	{
-		cout<< parentMoleculeType->getBindingSiteName(b) <<"=";
-		//cout<<this->hasVisitedBond[b]<<", ";
-		if(bonds[b]==0) cout<<"empty ";
-		else { degree++; 
-			cout<<bonds[b]->getUniqueID()<<" ";
-			
-			//cout<<"full ";
-			} 
-	}
-	cout<<"  :::degree="<<degree<<endl<<endl;
 }
 
 //Get the number of molecules this molecule is bonded to
 int Molecule::getDegree()
 {
 	int degree = 0;
-	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-		if(bonds[b]!=0) degree++;
+	for(int c=0; c<numOfComponents; c++)
+		if(bond[c]!=NOBOND) degree++;
 	return degree;
 }
 
-bool Molecule::isBindingSiteOpen(int bIndex) const
+bool Molecule::isBindingSiteOpen(int cIndex) const
 {
-	if(this->bonds[bIndex]==0) return true;
+	if(bond[cIndex]==NOBOND) return true;
 	return false;
 }
 
-bool Molecule::isBindingSiteBonded(int bIndex) const
+bool Molecule::isBindingSiteBonded(int cIndex) const
 {
-	if(this->bonds[bIndex]==0) return false;
+	if(bond[cIndex]==NOBOND) return false;
 	return true;
 }
 
-Molecule * Molecule::getBondedMolecule(int bSiteIndex) const
+Molecule * Molecule::getBondedMolecule(int cIndex) const
 {
-	return bonds[bSiteIndex];	
+	return bond[cIndex];	
 }
 
 
-//Molecule * Molecule::getBindingSiteBondParent(int bIndex) const; //{ return bindingSites[bIndex]->getBondedParent(); };
-void Molecule::bind(Molecule *m1, int bSiteIndex1, Molecule *m2, int bSiteIndex2)
+
+void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 {
-	if(m1->bonds[bSiteIndex1]!=0 || m2->bonds[bSiteIndex2]!=0) { 
+	if(m1->bond[cIndex1]!=NOBOND || m2->bond[cIndex2]!=NOBOND) { 
 		cout<<"Trying to bond "<< m1->getMoleculeTypeName() << "_"<<m1->getUniqueID()<<"(";
-		cout<<m1->getMoleculeType()->getBindingSiteName(bSiteIndex1)<<") & ";
+		cout<<m1->getMoleculeType()->getComponentName(cIndex1)<<") & ";
 		cout<< m2->getMoleculeTypeName()<<"_"<<m2->getUniqueID()<<"(";
-		cout<<m2->getMoleculeType()->getBindingSiteName(bSiteIndex2)<<")\n";
+		cout<<m2->getMoleculeType()->getComponentName(cIndex2)<<")\n";
 		cout<<" to sites that are already occupied!  Check rxn rules!!\n";
 		
 		m1->printDetails();
@@ -246,11 +235,11 @@ void Molecule::bind(Molecule *m1, int bSiteIndex1, Molecule *m2, int bSiteIndex2
 		exit(1); 
 	}
 	
-	m1->bonds[bSiteIndex1] = m2;
-	m2->bonds[bSiteIndex2] = m1;
+	m1->bond[cIndex1] = m2;
+	m2->bond[cIndex2] = m1;
 	
-	m1->bSiteIndexOfBond[bSiteIndex1] = bSiteIndex2;
-	m2->bSiteIndexOfBond[bSiteIndex2] = bSiteIndex1;
+	m1->indexOfBond[cIndex1] = cIndex2;
+	m2->indexOfBond[cIndex2] = cIndex1;
 	
 	//Handle Complexes
 	if(m1->useComplex)
@@ -260,19 +249,19 @@ void Molecule::bind(Molecule *m1, int bSiteIndex1, Molecule *m2, int bSiteIndex2
 	}
 }
 
-void Molecule::bind(Molecule *m1, const char * bSiteName1, Molecule *m2, const char * bSiteName2)
+void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compName2)
 {
-	int bSiteIndex1 = m1->getMoleculeType()->getBindingSiteIndex(bSiteName1);
-	int bSiteIndex2 = m2->getMoleculeType()->getBindingSiteIndex(bSiteName2);
-	Molecule::bind(m1, bSiteIndex1, m2, bSiteIndex2);
+	int cIndex1 = m1->getMoleculeType()->getCompIndexFromName(compName1);
+	int cIndex2 = m2->getMoleculeType()->getCompIndexFromName(compName2);
+	Molecule::bind(m1, cIndex1, m2, cIndex2);
 }
 
 
-void Molecule::unbind(Molecule *m1, int bSiteIndex)
+void Molecule::unbind(Molecule *m1, int cIndex)
 {
 	//get the other molecule bound to this site
 	//cout<<"I am here. "<<bSiteIndex<<endl;
-	Molecule *m2 = m1->bonds[bSiteIndex];
+	Molecule *m2 = m1->bond[cIndex];
 	if(m2==NULL)
 	{
 		cout<<endl<<endl<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
@@ -280,20 +269,19 @@ void Molecule::unbind(Molecule *m1, int bSiteIndex)
 		cout<<endl<<endl<<"The molecule is:"<<endl;
 		m1->printDetails();
 		cout<<endl<<"The site trying to be unbound was: ";
-		cout<<m1->getMoleculeType()->getBindingSiteName(bSiteIndex)<<endl;
+		cout<<m1->getMoleculeType()->getComponentName(cIndex)<<endl;
 		exit(1);
 	}
 	
 	
-	//cout<<" and now here.";
-	int bSiteIndex2 = m1->bSiteIndexOfBond[bSiteIndex];
+	int cIndex2 = m1->indexOfBond[cIndex];
 	
 	//break the bond
-	m1->bonds[bSiteIndex] = 0;
-	m2->bonds[bSiteIndex2] = 0;
+	m1->bond[cIndex] = NOBOND;
+	m2->bond[cIndex2] = NOBOND;
 	
-	m1->bSiteIndexOfBond[bSiteIndex] = -1;
-	m2->bSiteIndexOfBond[bSiteIndex2] = -1;
+	m1->indexOfBond[cIndex] = NOINDEX;
+	m2->indexOfBond[cIndex2] = NOINDEX;
 	
 	//Handle Complexes
 	if(m1->useComplex)
@@ -305,26 +293,16 @@ void Molecule::unbind(Molecule *m1, int bSiteIndex)
 	//m1->getComplex()->printDetails();
 }
 
-void Molecule::unbind(Molecule *m1, char * bSiteName)
+void Molecule::unbind(Molecule *m1, char * compName)
 {
-	int bSiteIndex = m1->getMoleculeType()->getBindingSiteIndex(bSiteName);
-	Molecule::unbind(m1,bSiteIndex);
+	int cIndex = m1->getMoleculeType()->getCompIndexFromName(compName);
+	Molecule::unbind(m1,cIndex);
 }
 
 
 
 
-void Molecule::setHasVisited(int bSiteIndex)
-{
-	hasVisitedBond[bSiteIndex] = true;
-}
 
-void Molecule::clear()
-{
-	hasVisitedMolecule = false;
-	for(int i=0; i<parentMoleculeType->getNumOfBindingSites(); i++)
-		hasVisitedBond[i] = false;
-}
 
 
 
@@ -358,12 +336,12 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 		if((depth!=ReactionClass::NO_LIMIT) && (currentDepth>=depth)) continue;
 		
 		//Loop through the bonds
-		int bMax = cM->getMoleculeType()->getNumOfBindingSites();
-		for(int b=0; b<bMax; b++)
+		int cMax = cM->numOfComponents;
+		for(int c=0; c<cMax; c++)
 		{
-			if(cM->isBindingSiteBonded(b))
+			if(cM->isBindingSiteBonded(c))
 			{
-				Molecule *neighbor = cM->getBondedMolecule(b);
+				Molecule *neighbor = cM->getBondedMolecule(c);
 				if(!neighbor->hasVisitedMolecule)
 				{
 					neighbor->hasVisitedMolecule=true;
@@ -377,88 +355,15 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 	
 	
 	//clear the has visitedMolecule values
-	//list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ )
   		(*molIter)->hasVisitedMolecule=false;
-	
-	
 }
 
 
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {	
-	
-	
 	Molecule::breadthFirstSearch(members, this, traversalLimit);
 	return;
-//	//cout<<"Traversing molecule: " << this->getUniqueID()<<endl;
-//	
-//		//If we are too deep at this point, then return
-//	
-//	
-//	//cout<<"Traversing, limit: " << traversalLimit << endl;
-//	if(hasVisitedMolecule==true) { return; }
-//	
-//	if(traversalLimit!=ReactionClass::NO_LIMIT)
-//	{
-//		//cout<<"   Limit: "<<traversalLimit<<endl;
-//		if(traversalLimit==0)
-//		{
-//			//cout<<"     -returning!!! "<<endl;
-//			clear();
-//			return;
-//		}
-//	}
-//	
-//	//Make sure that this is not alreadly in the member list
-//	//If it was, then we exit because if it was in the member list,
-//	//then we alreadly explored down all its bonds and we have the
-//	//entire complex
-//	list <Molecule *>::iterator molIter;
-//	for( molIter = members.begin(); molIter != members.end(); molIter++ )
-//  		if((*molIter)==this) { clear(); return; }
-//	
-//	//This molecule must then be added to the member list
-//	members.push_back(this);
-//	
-//			
-//	//Otherwise, we keep exploring...
-//	hasVisitedMolecule = true;
-//	
-//	bool * needToVisit = new bool[parentMoleculeType->getNumOfBindingSites()];
-//	
-//	for(int b=0; b<parentMoleculeType->getNumOfBindingSites(); b++)
-//	{
-//		if(hasVisitedBond[b]==true) { continue; }
-//		if(bonds[b]==0) //binding site is open, so continue
-//		{
-//			//cout<<"    -bond "<<b<<" is empty."<<endl;
-//			needToVisit[b]=false;
-//			continue;
-//		}
-//		else // binding site has a bond, so we must explore it
-//		{
-//			//cout<<"    -Going down bond: "<<b<<endl;
-//			//get template that is bound to this binding site
-//			Molecule * m2 = bonds[b];
-//			
-//			m2->setHasVisited(bSiteIndexOfBond[b]); //tell t2 we have visited this bond
-//			setHasVisited(b); //remember that we visited through this bond.
-//			if(traversalLimit==ReactionClass::NO_LIMIT)
-//			{
-//				//cout<<"continuing with no limit"<<endl;
-//				needToVisit[b]=true;
-//				m2->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
-//			}
-//			else
-//			{
-//				needToVisit[b]=true;
-//				//cout<<"continuing with one less"<<endl;
-//				m2->traverseBondedNeighborhood(members,traversalLimit-1 );
-//			}
-//		}		
-//	}
-//	clear();
 }
 
 

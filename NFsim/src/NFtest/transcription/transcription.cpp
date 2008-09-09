@@ -132,9 +132,32 @@ MoleculeType * NFtest_transcription::createRNA(System *s)
 	int * stateValues = new int [numOfStates];
 	stateValues[0] = 0;
 	
+	
+	vector <string> compName;
+	vector <string> defaultCompState;
+	vector <vector <string> > possibleCompStates;
+	
+	compName.push_back("ribosome");
+	defaultCompState.push_back("");
+	vector <string> p1;
+	possibleCompStates.push_back(p1);
+	
+	
+	compName.push_back("activiated");
+	defaultCompState.push_back("inactive");
+	vector <string> p2;
+	p2.push_back("inactive");
+	p2.push_back("active");
+	possibleCompStates.push_back(p2);
+	
+	
+	
+	MoleculeType *molRNA = new MoleculeType("RNA",compName,defaultCompState,possibleCompStates,s);
+	
+	
 	//When we create a molecule, it automatically adds itself to the system, so all we have to 
 	//do here is create it, and return it so we can use it to add reactions to the system
-	MoleculeType *molRNA = new MoleculeType("RNA",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	//MoleculeType *molRNA = new MoleculeType("RNA",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
 	return molRNA;
 }
 

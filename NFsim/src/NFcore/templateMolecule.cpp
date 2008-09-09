@@ -42,9 +42,9 @@ void TemplateMolecule::setHasVisited(int bSiteCompareIndex)
 //}
 
 
-void TemplateMolecule::addStateValue(const char * stateName, int stateValue)
+void TemplateMolecule::addStateValue(string stateName, int stateValue)
 {
-	this->addStateValue(parentMoleculeType->getStateIndex(stateName), stateValue);
+	this->addStateValue(parentMoleculeType->getCompIndexFromName(stateName), stateValue);
 }
 
 void TemplateMolecule::addStateValue(int stateIndex, int stateValue)
@@ -55,7 +55,7 @@ void TemplateMolecule::addStateValue(int stateIndex, int stateValue)
 
 void TemplateMolecule::addNotStateValue(char * stateName, int notStateValue)
 {
-	this->notStateIndex.push_back(parentMoleculeType->getStateIndex(stateName));
+	this->notStateIndex.push_back(parentMoleculeType->getCompIndexFromName(stateName));
 	this->notStateValue.push_back(notStateValue);
 }
 
@@ -89,7 +89,7 @@ int TemplateMolecule::getBindingSiteIndexOfBondedTemplate(int bIndex) const
 
 unsigned int TemplateMolecule::addEmptyBindingSite(const char * bSiteName)
 {
-	return this->addEmptyBindingSite(parentMoleculeType->getBindingSiteIndex(bSiteName));	
+	return this->addEmptyBindingSite(parentMoleculeType->getCompIndexFromName(bSiteName));	
 }
 
 unsigned int TemplateMolecule::addEmptyBindingSite(int bSiteIndex)
@@ -104,13 +104,13 @@ unsigned int TemplateMolecule::addEmptyBindingSite(int bSiteIndex)
 
 void TemplateMolecule::addOccupiedBindingSite(const char * bSiteName)
 {
-	this->sitesThatMustBeOccupied.push_back(parentMoleculeType->getBindingSiteIndex(bSiteName));
+	this->sitesThatMustBeOccupied.push_back(parentMoleculeType->getCompIndexFromName(bSiteName));
 }
 
 
 bool TemplateMolecule::isStateValue(const char * stateName, int stateVal)
 {
-	int sIndex = parentMoleculeType->getStateIndex(stateName);
+	int sIndex = parentMoleculeType->getCompIndexFromName(stateName);
 	for(unsigned int s=0; s<stateIndex.size(); s++)
 	{
 			if(stateIndex.at(s)==sIndex)
@@ -125,7 +125,7 @@ bool TemplateMolecule::isStateValue(const char * stateName, int stateVal)
 
 bool TemplateMolecule::isBonded(const char * bSiteName)
 {
-	int bIndex = parentMoleculeType->getBindingSiteIndex(bSiteName);
+	int bIndex = parentMoleculeType->getCompIndexFromName(bSiteName);
 	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
 	{
 		if(sitesThatMustBeOccupied.at(b)==bIndex)
@@ -172,8 +172,8 @@ void TemplateMolecule::bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolec
 
 void TemplateMolecule::bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2)
 {
-	int bSiteIndex1 = t1->parentMoleculeType->getBindingSiteIndex(bSiteName1);
-	int bSiteIndex2 = t2->parentMoleculeType->getBindingSiteIndex(bSiteName2);
+	int bSiteIndex1 = t1->parentMoleculeType->getCompIndexFromName(bSiteName1);
+	int bSiteIndex2 = t2->parentMoleculeType->getCompIndexFromName(bSiteName2);
 	
 	bind(t1,bSiteIndex1, t2, bSiteIndex2); 
 }
@@ -227,13 +227,13 @@ bool TemplateMolecule::compareBreadthFirst(TemplateMolecule *tm, Molecule *m)
 		
 		//Check that states are correct
 		for(unsigned int s=0; s<cTM->stateIndex.size(); s++) {
-			if(cM->getState(cTM->stateIndex.at(s)) != cTM->stateValue.at(s)) { 
+			if(cM->getComponentState(cTM->stateIndex.at(s)) != cTM->stateValue.at(s)) { 
 					match=false; break;
 			}
 		}
 			
 		for(unsigned int s=0; s<cTM->notStateIndex.size(); s++) {
-			if(cM->getState(cTM->notStateIndex.at(s)) == cTM->notStateValue.at(s)) { 
+			if(cM->getComponentState(cTM->notStateIndex.at(s)) == cTM->notStateValue.at(s)) { 
 					match=false; break;
 			}
 		}
@@ -279,7 +279,7 @@ bool TemplateMolecule::compareBreadthFirst(TemplateMolecule *tm, Molecule *m)
 				Molecule *molNeighbor = cM->getBondedMolecule(cTM->bSiteIndex.at(b));
 				
 				//Make sure the back binding (of molNeighbor to cM is through the correct site on molNeighbor)
-				if(cM->getBsiteIndexOfBond(cTM->bSiteIndex.at(b)) != tempNeighbor->bSiteIndex.at(cTM->bSiteIndexOfBond.at(b))) {
+				if(cM->getComponentIndexOfBond(cTM->bSiteIndex.at(b)) != tempNeighbor->bSiteIndex.at(cTM->bSiteIndexOfBond.at(b))) {
 					match=false; break;
 				}
 				
@@ -342,7 +342,7 @@ bool TemplateMolecule::compare(Molecule * m)
 	//Check that states are correct
 	for(unsigned int s=0; s<stateIndex.size(); s++)
 	{
-		if(m->getState(stateIndex.at(s)) != stateValue.at(s))
+		if(m->getComponentState(stateIndex.at(s)) != stateValue.at(s))
 		{ 
 			clear();
 			return false; 
@@ -351,7 +351,7 @@ bool TemplateMolecule::compare(Molecule * m)
 	
 	for(unsigned int s=0; s<notStateIndex.size(); s++)
 	{
-		if(m->getState(notStateIndex.at(s)) == notStateValue.at(s))
+		if(m->getComponentState(notStateIndex.at(s)) == notStateValue.at(s))
 		{ 
 			clear();
 			return false; 
@@ -403,7 +403,7 @@ bool TemplateMolecule::compare(Molecule * m)
 			//We have to remember to check that it was the right bond site on the other molecule
 			//too.  This means that the bond site in m2 that m is connected to must be the same
 			//bond site in t2 that t1 is connected to.  If not, then we must say false
-			if(m->getBsiteIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b)))
+			if(m->getComponentIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b)))
 			{
 				clear();
 				return false;
@@ -635,14 +635,14 @@ void TemplateMolecule::printDetails() const
 	if(stateIndex.size()==0) cout<<"none.";
 	for(unsigned int s=0; s<stateIndex.size(); s++)
 	{
-		cout<< parentMoleculeType->getStateName(stateIndex.at(s)) <<"=";
+		cout<< parentMoleculeType->getComponentName(stateIndex.at(s)) <<"=";
 		cout<< stateValue.at(s) << " ";
 	}
 	cout<<endl<<"      constraints on bonds: ";
 	if(bSiteIndex.size()==0) cout<<"none.";
 	for(unsigned int b=0; b<bSiteIndex.size(); b++)
 	{
-		cout<< parentMoleculeType->getBindingSiteName(bSiteIndex.at(b)) <<"=";
+		cout<< parentMoleculeType->getComponentName(bSiteIndex.at(b)) <<"=";
 		if(bonds.at(b)==0) cout<<"empty ";
 		else cout<<"full "; 
 	}
@@ -654,7 +654,7 @@ void TemplateMolecule::printDetails() const
 	if(bSiteIndex.size()==0) cout<<"n/a";
 	for(unsigned int b=0; b<bSiteIndex.size(); b++)
 	{
-		cout<< parentMoleculeType->getBindingSiteName(bSiteIndex.at(b)) <<"=";
+		cout<< parentMoleculeType->getComponentName(bSiteIndex.at(b)) <<"=";
 		if(hasVisitedBond.at(b)==0) cout<<"no ";
 		else cout<<"yes "; 
 	}
@@ -716,14 +716,14 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 	//Check that states are correct
 	int s;
 	for(s=0, intVecIter=stateIndex.begin(); intVecIter!=stateIndex.end(); intVecIter++, s++) {
-		if(m->getState((*intVecIter)) != stateValue.at(s)) { 
+		if(m->getComponentState((*intVecIter)) != stateValue.at(s)) { 
 			clear();
 			return false; 
 		}
 	}
 	
 	for(s=0, intVecIter=notStateIndex.begin(); intVecIter!=notStateIndex.end(); intVecIter++, s++) {
-		if(m->getState((*intVecIter)) == notStateValue.at(s)) { 
+		if(m->getComponentState((*intVecIter)) == notStateValue.at(s)) { 
 			clear();
 			return false; 
 		}
@@ -772,7 +772,7 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 			//We have to remember to check that it was the right bond site on the other molecule
 			//too.  This means that the bond site in m2 that m is connected to must be the same
 			//bond site in t2 that t1 is connected to.  If not, then we must say false
-			if(m->getBsiteIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b))) {
+			if(m->getComponentIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b))) {
 				clear();
 				return false;
 			}

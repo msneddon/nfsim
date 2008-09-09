@@ -19,7 +19,7 @@ System::System(string name)
 	current_time = 0;
 	nextReaction = 0;
 	this->useComplex = false;
-	this->go = NULL;
+//	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
 }
 
@@ -34,7 +34,7 @@ System::System(string name, bool useComplex)
 	current_time = 0;
 	nextReaction = 0;
 	this->useComplex = useComplex;
-	this->go = NULL;
+//	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
 }
 
@@ -77,18 +77,18 @@ System::~System()
 	}
 	
 	//And finally delete all the groups
-	Group *g;
-	while(allGroups.size()>0)
-	{
-		g = allGroups.back();
-		allGroups.pop_back();
-		delete g;
-	}
+//	Group *g;
+//	while(allGroups.size()>0)
+//	{
+//		g = allGroups.back();
+//		allGroups.pop_back();
+//		delete g;
+//	}
 
 	nextReaction = 0;
 	
-	if(go!=NULL)
-		delete go;
+//	if(go!=NULL)
+//		delete go;
 	
 	//Close our connections to output files
 	outputFileStream.close();
@@ -120,11 +120,11 @@ void System::addReaction(ReactionClass *reaction)
 }
 
 
-int System::addGroup(Group * g)
-{
-	allGroups.push_back(g);
-	return (allGroups.size()-1);
-}
+//int System::addGroup(Group * g)
+//{
+//	allGroups.push_back(g);
+//	return (allGroups.size()-1);
+//}
 
 
 int System::createComplex(Molecule * m)
@@ -192,18 +192,19 @@ int System::getNumOfMolecules()
 
 double System::getAverageGroupValue(string groupName, int valIndex)
 {
-	double sum = 0;
-	int count = 0;
-	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-	{
-		string name = (*groupIter)->getName();
-		if(name==groupName)
-		{
-			sum += (*groupIter)->getValue(valIndex);
-			count ++;
-		}
-	}
-	return (sum/count);
+	return 0;
+//	double sum = 0;
+//	int count = 0;
+//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+//	{
+//		string name = (*groupIter)->getName();
+//		if(name==groupName)
+//		{
+//			sum += (*groupIter)->getValue(valIndex);
+//			count ++;
+//		}
+//	}
+//	return (sum/count);
 }
 
 
@@ -211,10 +212,10 @@ void System::updateAllGroupProperty(double *value, int n_values)
 {
 	//cout<<"Updating group property for all groups, new value[0]: " << value[0] << endl;
 	
-	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-	{
-		(*groupIter)->updateGroupProperty(value, n_values);
-	}
+//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+//	{
+//		(*groupIter)->updateGroupProperty(value, n_values);
+//	}
 	
 }
 
@@ -273,11 +274,11 @@ void System::prepareForSimulation()
   	if(BASIC_MESSAGE) cout<<"preparing the system...\n"; //printIndexAndNames();
   	
   	
-  	if(go!=NULL)
-  	{
-  		go->writeGroupKeyFile();
-  		go->writeOutputFileHeader();
-  	}
+//  if(go!=NULL)
+// 	{
+//  		go->writeGroupKeyFile();
+// 		go->writeOutputFileHeader();
+// 	}
   	
   	
   	
@@ -373,7 +374,7 @@ double System::sim(double duration, long int sampleTimes)
 			{
 				if(curSampleTime>end_time) break;
 				outputAllObservableCounts(curSampleTime);
-				outputGroupData(curSampleTime);
+//				outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
 			//printAllReactions();
@@ -592,12 +593,13 @@ void System::printAllReactions()
 
 void System::printAllGroups()
 {
-	cout<<"All System Groups:"<<endl;
-	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-	{
-		(*groupIter)->printDetails();
-	}
-	cout<<endl;
+	cout<<"can't print all groups: groups not available in this build"<<endl;
+//	cout<<"All System Groups:"<<endl;
+//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
+//	{
+//		(*groupIter)->printDetails();
+//	}
+//	cout<<endl;
 }
 
 
@@ -704,24 +706,24 @@ void System::printIndexAndNames()
 
 
 
-void System::addGroupOutputter(GroupOutputter * go)
-{
-	this->go = go;
-}
+//void System::addGroupOutputter(GroupOutputter * go)
+//{
+//	this->go = go;
+//}
 
 
-void System::outputGroupDataHeader()
-{
-	if(this->go!=NULL)
-		go->writeOutputFileHeader();
-}
+//void System::outputGroupDataHeader()
+//{
+//	if(this->go!=NULL)
+//		go->writeOutputFileHeader();
+//}
 
 
-void System::outputGroupData(double cSampleTime)
-{
-	if(this->go!=NULL)
-		go->writeStateToOutputFile(cSampleTime);
-}
+//void System::outputGroupData(double cSampleTime)
+//{
+//	if(this->go!=NULL)
+//		go->writeStateToOutputFile(cSampleTime);
+//}
 
 
 
