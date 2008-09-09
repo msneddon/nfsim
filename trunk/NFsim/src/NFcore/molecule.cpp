@@ -12,15 +12,6 @@ int Molecule::uniqueIdCount = 0;
 
 
 
-
-
-
-
-
-
-
-
-
 // Molecule Constructor
 //
 //
@@ -107,22 +98,22 @@ void Molecule::notifyGroupsThatRateMayChange()
 	
 }
 
-void Molecule::updateDORs()
-{
-	
-	for(int r=0; r<parentMoleculeType->getDORrxnCount(); r++)
-	{
-		
-		ReactionClass * DORrxn = parentMoleculeType->getDORrxn(r);
-		int dorRxnIndex = parentMoleculeType->getDORreactantIndex(r);
-		int dorRxnPos = parentMoleculeType->getDORreactantPosition(r);
-		
-	//	cout<<" identified DOR RXN index: "<<dorRxnIndex<<endl;
-	//	cout<<" identified DOR RXN pos: "<<dorRxnPos<<endl;
-		DORrxn->notifyRateFactorChange(this, dorRxnPos, rxnListMappingId[dorRxnIndex]);
-	}
-	
-}
+//void Molecule::updateDORs()
+//{
+//	
+//	for(int r=0; r<parentMoleculeType->getDORrxnCount(); r++)
+//	{
+//		
+//		ReactionClass * DORrxn = parentMoleculeType->getDORrxn(r);
+//		int dorRxnIndex = parentMoleculeType->getDORreactantIndex(r);
+//		int dorRxnPos = parentMoleculeType->getDORreactantPosition(r);
+//		
+//	//	cout<<" identified DOR RXN index: "<<dorRxnIndex<<endl;
+//	//	cout<<" identified DOR RXN pos: "<<dorRxnPos<<endl;
+//		DORrxn->notifyRateFactorChange(this, dorRxnPos, rxnListMappingId[dorRxnIndex]);
+//	}
+//	
+//}
 
 double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
 {
@@ -159,21 +150,11 @@ void Molecule::setComponentState(int cIndex, int newValue)
 	//for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
 	//	(*listenerIter)->notify(this,stateIndex);
 }
-void Molecule::setComponentState(string cName, int newValue)
-{
+void Molecule::setComponentState(string cName, int newValue) {
 	this->component[this->parentMoleculeType->getCompIndexFromName(cName)]=newValue;
 }
 
-//void Molecule::setState(int state, int value)
-//{
-//	//cout<<"value: "<<value<<"  state: "<<state<<endl;
-//	this->states[state]=value;
-//	
-//	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
-//	//Let all the listeners know that the state of a molecule has changed...
-//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-//		(*listenerIter)->notify(this,state);
-//}
+
 
 void Molecule::printDetails() const
 {
