@@ -46,7 +46,7 @@ TransformationSet::~TransformationSet()
 	this->n_reactants = 0;
 }
 
-bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string componentName, int finalStateValue)
+bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cName, int finalStateValue)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
@@ -57,7 +57,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string comp
 	}
 	
 	// 2) Create a Transformation object to remember the information
-	int cIndex = t->getMoleculeType()->getCompIndexFromName(componentName);
+	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
 	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue);
 	
 	// 3) Add the transformation object to the TransformationSet
@@ -68,6 +68,15 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string comp
 	t->addMapGenerator(mg);
 	return true;
 }
+
+bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cName, string finalStateValue)
+{
+	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
+	int fStateValue = t->getMoleculeType()->getStateValueFromName(cIndex,finalStateValue);
+	return TransformationSet::addStateChangeTransform(t,cName, fStateValue);
+}		
+
+
 bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }

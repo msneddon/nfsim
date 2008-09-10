@@ -42,14 +42,20 @@ void TemplateMolecule::setHasVisited(int bSiteCompareIndex)
 //}
 
 
-void TemplateMolecule::addStateValue(string stateName, int stateValue)
+void TemplateMolecule::addStateValue(string cName, int stateValue)
 {
-	this->addStateValue(parentMoleculeType->getCompIndexFromName(stateName), stateValue);
+	this->addStateValue(parentMoleculeType->getCompIndexFromName(cName), stateValue);
 }
 
-void TemplateMolecule::addStateValue(int stateIndex, int stateValue)
+void TemplateMolecule::addStateValue(string cName, string stateValue)
 {
-	this->stateIndex.push_back(stateIndex);
+	int cIndex = parentMoleculeType->getCompIndexFromName(cName);
+	this->addStateValue(cIndex, parentMoleculeType->getStateValueFromName(cIndex,stateValue));
+}
+
+void TemplateMolecule::addStateValue(int cIndex, int stateValue)
+{
+	this->stateIndex.push_back(cIndex);
 	this->stateValue.push_back(stateValue);
 }
 

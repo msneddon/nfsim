@@ -41,6 +41,33 @@ namespace NFcore
 			virtual void pickMappingSets(double randNumber) const;
 			vector <ReactantList *> reactantLists;
 	};
+	
+	
+	
+	
+	
+	
+	
+	
+	class FunctionalRxnClass : public BasicRxnClass {
+		
+		public:
+			FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet);
+			virtual ~FunctionalRxnClass();
+			
+			virtual double update_a();
+			virtual void printDetails() const;
+		
+		protected:
+			GlobalFunction *gf;
+	};
+	
+	
+	
+	
+	
+	
+	
 }
 
 

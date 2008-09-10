@@ -6,12 +6,67 @@ using namespace std;
 using namespace NFcore;
 
 
+
+
+
+
+
+MoleculeType::MoleculeType(
+	string name,
+	vector <string> &compName,
+	System *s)
+{
+	vector <string> defaultCompState;
+	vector < vector <string> > possibleCompStates;
+	for(unsigned int i=0; i<compName.size(); i++) {
+		vector <string> v;
+		possibleCompStates.push_back(v);
+		defaultCompState.push_back("No State");
+	}
+	init(name, compName, defaultCompState, possibleCompStates, s);
+	
+}
+			
+MoleculeType::MoleculeType(
+	string name,
+	vector <string> &compName,
+	vector <string> &defaultCompState,
+	System *s)
+{
+	
+	vector < vector <string> > possibleCompStates;
+	for(unsigned int i=0; i<compName.size(); i++) {
+		vector <string> v;
+		possibleCompStates.push_back(v);
+	}
+	init(name, compName, defaultCompState, possibleCompStates, s);
+}
+
+
+
+
+
+
+
 MoleculeType::MoleculeType(
 		string name,
 		vector <string> &compName,
 		vector <string> &defaultCompState,
 		vector < vector<string> > &possibleCompStates,
 		System *system)
+{
+	init(name, compName, defaultCompState, possibleCompStates, system);
+}
+
+
+
+
+void MoleculeType::init(
+	string name,
+	vector <string> &compName,
+	vector <string> &defaultCompState,
+	vector < vector<string> > &possibleCompStates,
+	System *system) 
 {
 	//Basics...
 	this->name=name;
@@ -51,8 +106,12 @@ MoleculeType::MoleculeType(
 	
 	mList = new MoleculeList(this,2);
 	n_eqComp = 0;
-	
 }
+
+	
+
+
+
 
 MoleculeType::~MoleculeType()
 {
@@ -226,6 +285,19 @@ int MoleculeType::getCompIndexFromName(string cName) const
 	exit(1);
 }
 
+int MoleculeType::getStateValueFromName(int cIndex, string stateName) const
+{
+	for(unsigned int s=0; s<possibleCompStates.at(cIndex).size(); s++) {
+		if(possibleCompStates.at(cIndex).at(s)==stateName) {
+			return s;
+		}
+	}
+	cerr<<"Error!  '"<<stateName<<" is not a recognized possible state for '"<<compName[cIndex]<<"' in MoleculeType: '"<<name<<"'"<<endl;
+	cerr<<"For that, I'm quitting!";
+	printDetails();
+	exit(1);
+}
+
 
 
 
@@ -279,11 +351,7 @@ void MoleculeType::prepareForSimulation()
   		mol->prepareForSimulation();
   		
   		//Check each observable and see if this molecule should be counted
-  		for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-  		{
-			if((*obsIter)->isObservable(mol))
-				(*obsIter)->add();
-  		}
+  		this->addToObservables(mol);
   		
   		//Check each reaction and add this molecule as a reactant if we have to
 		for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )
@@ -325,11 +393,13 @@ int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 void MoleculeType::removeFromObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule was counted, and if so, remove
+	int o=0;
   	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
-		//cout<<"Comparing (in subtract): "<<endl;
-		//m->printDetails();
-		if((*obsIter)->isObservable(m)) 
+  		//Only subtract if m happened to be an observable... this saves us a compare call
+  		if(m->isObs(o)) {
 			(*obsIter)->subtract();
+  		}
+  		o++;
 	}
 }
 
@@ -345,11 +415,17 @@ void MoleculeType::removeFromRxns(Molecule * m)
 void MoleculeType::addToObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule should be counted
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
+	int o=0;
+  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++){
 		//cout<<"Comparing(in add: "<<endl;
 		//m->printDetails();
-		if((*obsIter)->isObservable(m))
+		if((*obsIter)->isObservable(m)) {
 			(*obsIter)->add();
+			m->setIsObs(o,true);
+		} else {
+			m->setIsObs(o,false);
+		}
+		o++;
 	}
 			
 }
@@ -384,8 +460,15 @@ void MoleculeType::printDetails() const
 	cout<<"Molecule Type: "<< name << " type ID: " << type_id <<endl;
 	
 	cout<<"   -components ( ";
-	for(int c=0; c<numOfComponents; c++) cout<<compName[c]<<" ";
-	cout<<")"<<endl;
+	for(int c=0; c<numOfComponents; c++) {
+		
+		cout<<compName[c];
+		for(unsigned int s=0; s<possibleCompStates.at(c).size(); s++) {
+			cout<<"~"<<possibleCompStates.at(c).at(s);
+		}
+		if(c<(numOfComponents-1)) cout<<", ";
+	}
+	cout<<" )"<<endl;
 
 	
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;

@@ -139,6 +139,7 @@ namespace NFcore
 //			int addGroup(Group * g);
 		
 			void addGlobalFunction(GlobalFunction *gf);
+			GlobalFunction * getGlobalFunctionByName(string fName);
 			
 			/* once all elements are added, we need to prepare and initialize for simulations */
 			void prepareForSimulation();
@@ -286,6 +287,17 @@ namespace NFcore
 			MoleculeType(
 					string name,
 					vector <string> &compName,
+					System *s);
+			
+			MoleculeType(
+					string name,
+					vector <string> &compName,
+					vector <string> &defaultCompState,
+					System *s);
+			
+			MoleculeType(
+					string name,
+					vector <string> &compName,
 					vector <string> &defaultCompState,
 					vector < vector<string> > &possibleCompStates,
 					System *system);
@@ -304,7 +316,7 @@ namespace NFcore
 			
 			int getCompIndexFromName(string cName) const;
 			string getComponentStateName(int cIndex, int cValue);
-			
+			int getStateValueFromName(int cIndex, string stateName) const;
 			
 			
 			//set of functions that deal with equivalent (aka symmetric) components
@@ -383,6 +395,14 @@ namespace NFcore
 		
 		protected:
 		
+			void init(
+				string name,
+				vector <string> &compName,
+				vector <string> &defaultCompState,
+				vector < vector<string> > &possibleCompStates,
+				System *system);
+			
+			
 			//basic info
 			System *system;
 			string name;
@@ -444,7 +464,6 @@ namespace NFcore
 			~Molecule();
 		
 			/* basic get functions for name, type, complex, and IDs*/
-			int getMoleculeID() const { return ID_number; };
 			int getMolListId() const { return listId; };
 			string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 			MoleculeType * getMoleculeType() const { return parentMoleculeType; };
@@ -465,15 +484,10 @@ namespace NFcore
 			
 			////////////////////////////////////////////////////////////////////
 			
-			
-			//int getState(char * stateName) const { return 0; }
-			//int getState(int stateIndex) const { return states[stateIndex]; };
-		
 			/* accessor functions for checking binding sites */
 			bool isBindingSiteOpen(int bIndex) const;
 			bool isBindingSiteBonded(int bIndex) const;
 			Molecule * getBondedMolecule(int bSiteIndex) const;
-			//int getBsiteIndexOfBond(int bSiteIndex) const { return bSiteIndexOfBond[bSiteIndex]; };
 		
 			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
 			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) { 
@@ -496,8 +510,6 @@ namespace NFcore
 		
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
-		//	void clear();
-		//	void setHasVisited(int bSiteIndex);
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
 		
@@ -530,6 +542,10 @@ namespace NFcore
 			static const int NOT_IN_RXN = -1;
 		
 			
+			bool isObs(int oIndex) const { return isObservable[oIndex]; };
+			void setIsObs(int oIndex, bool isObs) { isObservable[oIndex]=isObs; };
+			
+			
 			/* used for traversing a molecule complex */
 			//bool * hasVisitedBond;
 			bool hasVisitedMolecule;
@@ -546,13 +562,11 @@ namespace NFcore
 			
 			
 			/* Set of IDs which identifies uniquely this molecule */
-			int ID_number;
 			int ID_complex;
 			int ID_type;
 			int ID_unique;
 			int listId;
 		
-//			list <StateChangeListener *> listeners;
 		
 			static int uniqueIdCount;
 		
@@ -573,15 +587,12 @@ namespace NFcore
 			
 			
 			
-			//int *states;
-			//Molecule ** bonds;
-			//int * bSiteIndexOfBond;  // index of this molecule in bonded 
-		
+			bool *isObservable;
+			
 			
 			/* used for traversing a molecule complex */
 			int * rxnListMappingId;
 			int nReactions;
-			
 			
 		private:
 			
@@ -629,7 +640,7 @@ namespace NFcore
 			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
 			
 			double get_a() const { return a; };
-			void printDetails() const;
+			virtual void printDetails() const;
 			void fire(double random_A_number);
 			
 			
@@ -721,8 +732,9 @@ namespace NFcore
 		static void bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2);
 		static void bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2);
 	
-		void addStateValue(int stateIndex, int stateValue);
-		void addStateValue(string stateName, int stateValue);
+		void addStateValue(int cIndex, int stateValue);
+		void addStateValue(string cName, int stateValue);
+		void addStateValue(string cName, string stateValue);
 		void addNotStateValue(char * stateName, int notStateValue);
 		void clear() { this->matchMolecule = 0; for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; hasVisited=false; };
 	

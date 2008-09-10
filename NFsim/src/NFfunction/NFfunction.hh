@@ -155,6 +155,11 @@ namespace NFcore {
 			string getNiceName() const {return name+"()";};
 			
 			/*!
+				Simply gives the name of the function only (without the open and close parentheses) .
+			*/
+			string getName() const {return name;};
+			
+			/*!
 				For Debugging, prints out the details of the function including the defined variables and constant
 				parameters as well as what the function currently evaluates to.
 			*/
