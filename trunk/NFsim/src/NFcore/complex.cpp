@@ -42,7 +42,7 @@ void Complex::printDetails()
 	for( molIter = complexMembers.begin(); molIter != complexMembers.end(); molIter++ )
 	{
   		cout<<" "<<(*molIter)->getMoleculeTypeName()<<"_";
-  		cout<<"_"<<(*molIter)->getMoleculeID();
+//  		cout<<"_"<<(*molIter)->getMoleculeID();
 		cout<<"_u"<<(*molIter)->getUniqueID();
 	}
   	cout<<endl;

@@ -59,7 +59,15 @@ namespace NFcore
 				of the state to be transformed.
 				@author Michael Sneddon
 			*/
-			bool addStateChangeTransform(TemplateMolecule *t, string stateName, int finalStateValue);
+			bool addStateChangeTransform(TemplateMolecule *t, string cName, int finalStateValue);
+			
+			/*!
+				Adds a state change transformation on the given TemplateMolecule (that must have been included
+				in the original vector of TemplateMolecules) along with the stateName and final value
+				of the state to be transformed.
+				@author Michael Sneddon
+			*/
+			bool addStateChangeTransform(TemplateMolecule *t, string cName, string finalStateValue);
 			
 			/*!
 				Adds a binding reaction between the two given TemplateMolecules at the specified

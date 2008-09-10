@@ -10,6 +10,36 @@ using namespace NFcore;
 
 
 
+
+FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet) :
+	BasicRxnClass(name,1, transformationSet)
+{
+	this->gf=gf;
+}
+FunctionalRxnClass::~FunctionalRxnClass() {};
+			
+double FunctionalRxnClass::update_a() {
+	a = 1;
+	for(unsigned int i=0; i<n_reactants; i++)
+		a*=reactantLists.at(i)->size();
+	
+	a*=FuncFactory::Eval(gf->p);
+	return a;
+}
+
+void FunctionalRxnClass::printDetails() const {
+	cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
+		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+	}
+	if(n_reactants==0)
+		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+}
+
+
+
 BasicRxnClass::BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet) : 
 	ReactionClass(name,baseRate,transformationSet)
 {

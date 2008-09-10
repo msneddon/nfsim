@@ -729,7 +729,15 @@ void System::printIndexAndNames()
 
 
 
-
+GlobalFunction * System::getGlobalFunctionByName(string fName) {
+	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+		if((*functionIter)->getName()==fName) {
+			return (*functionIter);
+		}
+	cout<<"!!Warning, the system could not identify the global function: "<<fName<<".\n";
+	cout<<"The calling function might catch this, or your program might crash now."<<endl;
+	return 0;
+}
 
 Observable * System::getObservableByName(string obsName)
 {
@@ -741,4 +749,7 @@ Observable * System::getObservableByName(string obsName)
 			}
 		}
 	}
+	cout<<"!!Warning, the system could not identify the observable: "<<obsName<<".\n";
+	cout<<"The calling function might catch this, or your program might crash now."<<endl;
+	return 0;
 }

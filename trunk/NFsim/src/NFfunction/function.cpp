@@ -78,6 +78,9 @@ void GlobalFunction::prepareForSimulation(System *s)
 				obs->addReferenceToMyself(p);
 			} else {
 				cout<<"Uh oh, an unrecognized argType ("<<argTypes[a]<<") for a function! "<<argNames[a]<<endl;
+				cout<<"Try using the type: \"MoleculeObservable\""<<endl;
+				cout<<"Quitting because this will give unpredicatable results, or just crash."<<endl;
+				exit(1);
 			}
 		}
 		

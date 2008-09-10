@@ -40,9 +40,9 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
+	isObservable = 0;
 	
 	//register this molecule with moleculeType and get some ID values
-	//ID_number = this->parentMoleculeType->addMolecule(this);
 	ID_complex = this->parentMoleculeType->createComplex(this);
 	ID_type = this->parentMoleculeType->getTypeID();
 	ID_unique = Molecule::uniqueIdCount++;
@@ -67,6 +67,7 @@ Molecule::~Molecule()
 //		delete l;
 //	}
 	
+	delete [] isObservable;
 	delete [] component;
 	delete [] indexOfBond;
 	delete [] rxnListMappingId;
@@ -81,6 +82,12 @@ void Molecule::prepareForSimulation()
 	for(int r=0; r<nReactions; r++)
 		rxnListMappingId[r] = -1;
 	isPrepared = true;
+	
+	//We do not belong to any observable... yet.
+	isObservable=new bool [parentMoleculeType->getNumOfObservables()];
+	for(int o=0;o<parentMoleculeType->getNumOfObservables(); o++) {
+		isObservable[o]=false;
+	}
 }
 
 
@@ -125,7 +132,7 @@ double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
 	
 	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;
 	cerr<<"    Looking for group: "<<groupName<<" from molecule ";
-	cerr<<this->getMoleculeTypeName()<<"_"<<this->getMoleculeID()<<endl;
+	cerr<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
 	exit(1);
 }
 
@@ -139,6 +146,8 @@ void Molecule::addToObservables()
 {
 	parentMoleculeType->addToObservables(this);
 }
+
+
 
 
 void Molecule::setComponentState(int cIndex, int newValue)
@@ -160,7 +169,7 @@ void Molecule::printDetails() const
 {
 	int degree = 0;
 	cout<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	cout<< " (uId="<<ID_unique<<", mId=" << ID_number << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	cout<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
 	cout<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
@@ -355,7 +364,6 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
 	list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		cout<<"   -"<<(*molIter)->getMoleculeTypeName();
-		cout<<"_"<<(*molIter)->getMoleculeID();
 		cout<<"_u"<<(*molIter)->getUniqueID()<<endl;
 	}
 }

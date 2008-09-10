@@ -1421,8 +1421,7 @@ bool NFinput::initReactionRules(
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
 				ts->finalize();
-				ReactionClass *r = new BasicRxnClass(rxnName,0,ts);
-				
+				ReactionClass *r;
 				
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//  Read in the rate law for this reaction
@@ -1443,6 +1442,9 @@ bool NFinput::initReactionRules(
 					if(verbose) cout<<"\t\t\tRate Law for Reaction is: "<<rateLawType<<endl;
 					if(rateLawType=="Ele") 
 					{
+						//Create the Elementary Reaction...
+						r = new BasicRxnClass(rxnName,0,ts);
+						
 						//Make sure that the rate constant exists
 						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
 						if(!pListOfRateConstants) {
@@ -1491,6 +1493,34 @@ bool NFinput::initReactionRules(
 							cout<<"Only the first RateConstant given will be used..."<<endl;
 						}	
 					}
+					else if(rateLawType=="Functional") {
+						//Make sure that the rate constant exists
+						TiXmlElement *pFunction = pRateLaw->FirstChildElement("Function");
+						if(!pFunction) {
+							cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have Function specified!  Quiting"<<endl;
+							return false;
+						} else {
+							//Get the rate constant value
+							string functionName; 
+							if(!pFunction->Attribute("name")) {
+								cerr<<"Elementry Rate Law definition for "<<rxnName<<" does not have a valid function 'name'!  Quiting"<<endl;
+								return false;
+							} else {
+								functionName = pFunction->Attribute("name");
+								GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
+								if(gf==NULL) {
+									cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
+									cerr<<"the system.  Therefore, I must abort."<<endl;
+									exit(1);
+								}
+								
+								//Create the Functional Reaction from the found function...
+								r = new FunctionalRxnClass(rxnName,gf,ts);
+							}
+						}
+					}
+					
+					
 					
 					////  To extend NFsim to parse more rate law types, add an extra else if clause here to catch the rate law
 							

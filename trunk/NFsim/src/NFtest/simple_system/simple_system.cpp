@@ -161,40 +161,53 @@ void NFtest_ss::run()
 
 MoleculeType * NFtest_ss::createX(System *s)
 {
-	// create MoleculeType X  with one binding site and one state.  In NFsim, you have to
-	//specify arrays that name the binding sites, the states, and give a default state value.
-	//The default binding site value, of course, is unbound.
-	int numOfBsites = 1;
-	string * bSiteNames = new string [numOfBsites];
-	bSiteNames[0] = "y";
+	//In NFsim, there are several ways to declare a new MoleculeType.  First, we will
+	//go through the extensive way, where we specify every option for a molecule of
+	//type X.  This includes the specification of all components of X (components
+	//can bind to other molecules and can have some state attribute) in addition
+	//to default state values and the complete list of all the possible state
+	//values for each state.
 	
-	int numOfStates = 1;
-	string * stateNames = new string [numOfStates];
-	stateNames[0] = "p";
+	//First, we declare three vectors which we will use as we create the molecule
+	//type.  they are:
+	vector <string> compName;  //Vector of the names of each component
+	vector <string> defaultCompState;  //Vector of the default state of each component
+	vector < vector <string> > possibleCompStates;  //Vector to hold the possible states for each component 
 	
-	//This is the default state value that new molecules are created with
-	int * stateValues = new int [numOfStates];
-	stateValues[0] = 0;
+	//First, let's create the binding site for molecule Y.
+	compName.push_back("y");  //This declares the name of Y
+	defaultCompState.push_back("No State");  //This is arbitrary - there is no state associated with y
+	vector <string> possibleYstates; //declare a vector that holds possible states for y (which is empty)
+	possibleCompStates.push_back(possibleYstates); //add the possible states for y to the vector 
+	                                               //we will pass to the constructor
 	
-	//When we create a molecule, it automatically adds itself to the system, so all we have to 
-	//do here is create it, and return it so we can use it to add reactions to the system
-	MoleculeType *molX = 0; //new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	//Next, let's create component p, a phosphorylation site
+	compName.push_back("p");  //again, here is the name of the component
+	defaultCompState.push_back("Unphos");  //It begins in the Unphos state
+	vector <string> possibleXstates;  //Here is a vector now of all the possible states for component p
+	possibleXstates.push_back("Unphos");  //It can be Unphos
+	possibleXstates.push_back("Phos");  //Or it can also be Phos.
+	possibleCompStates.push_back(possibleXstates);  //Remember the possible states
+	
+	//Now, we create the MoleculeType object
+	MoleculeType *molX = new MoleculeType("MolX", compName, defaultCompState, possibleCompStates, s);
 	return molX;
 }
 
 MoleculeType * NFtest_ss::createY(System *s)
 {
-	// create MoleculeType Y  the same way we created MoleculeType X.  Notice that it is possible
-	// to have zero states specified (similarly, you can have no binding sites).
-	int numOfBsites = 1;
-	string * bSiteNames = new string [numOfBsites];
-	bSiteNames[0] = "x";
+	vector <string> compName;
+	vector <string> defaultCompState; 
+	vector < vector <string> > possibleCompStates;
+		
 	
-	int  numOfStates = 0;
-	string * stateNames = new string [numOfStates];
-	int * stateValues = new int [numOfStates];
+	compName.push_back("x"); 
+	defaultCompState.push_back("No State");
+	vector <string> possibleXstates; 
+	possibleCompStates.push_back(possibleXstates);
 	
-	MoleculeType *molY = 0; //new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+	//Now, we create the MoleculeType object
+	MoleculeType *molY = new MoleculeType("MolY", compName, defaultCompState, possibleCompStates, s);
 	return molY;
 }
 
@@ -215,7 +228,7 @@ ReactionClass * NFtest_ss::createReactionXDephos(MoleculeType *molX, double rate
 	//Here, we create a templateMolecule representing molecules of type X, and set the state to
 	//be phosphorylated.
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
-	xTemp->addStateValue("p",1);
+	xTemp->addStateValue("p","Phos");
 	
 	
 	//We have to create a vector (basically a storage array) for the Template Molecules that we
@@ -233,7 +246,7 @@ ReactionClass * NFtest_ss::createReactionXDephos(MoleculeType *molX, double rate
 	//Finally, once we have added all operations we want (there is no limit!), we have to finalize
 	//our transformationSet.
 	TransformationSet *ts = new TransformationSet(templates);
-	ts->addStateChangeTransform(xTemp,"p",0);
+	ts->addStateChangeTransform(xTemp,"p","Unphos");
 	ts->finalize();
 	
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
@@ -253,7 +266,7 @@ ReactionClass * NFtest_ss::createReactionXYbind(MoleculeType *molX,MoleculeType 
 	//phosphorylated.
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addEmptyBindingSite("y");
-	xTemp->addStateValue("p",0);
+	xTemp->addStateValue("p","Unphos");
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	yTemp->addEmptyBindingSite("x");
 		
@@ -330,7 +343,7 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 	//Create the transformation set.  Add all the operations you want and finalize once you are done.
 	TransformationSet *ts = new TransformationSet(templates);
 	ts->addUnbindingTransform(xTemp,"y");
-	ts->addStateChangeTransform(xTemp,"p",1);
+	ts->addStateChangeTransform(xTemp,"p","Phos");
 	ts->finalize();
 	
 	//Return the Reaction.
