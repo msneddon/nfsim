@@ -40,6 +40,56 @@ void FunctionalRxnClass::printDetails() const {
 
 
 
+
+
+
+
+
+
+MMRxnClass::MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet ) :
+	BasicRxnClass(name,1,transformationSet)
+{
+	this->Km = Km;
+	this->kcat = kcat;
+	this->sFree=0;
+	if(n_reactants!=2) {
+		cerr<<"You have tried to create a reaction with a Michaelis-Menten rate law (named: '"+name+"'\n')";
+		cerr<<"but you don't have the correct number of reactants!  Michaelis-Menten reactions require\n";
+		cerr<<"exactly 2 reactants.  A substrate (always given first) and an enzyme (always given second)\n";
+		cerr<<"Read your tutorial next time... now I will quit."<<endl;
+		exit(1);
+	}
+}
+MMRxnClass::~MMRxnClass() {};
+			
+double MMRxnClass::update_a() 
+{	
+	double S = (double)reactantLists.at(0)->size();
+	double E = (double)reactantLists.at(1)->size();
+	sFree=0.5*( (S-Km-E) + pow((pow( (S-Km-E),2.0) + 4.0*Km*S),  0.5) );
+	a=kcat*sFree*E/(Km+sFree);
+	return a;
+}
+
+void MMRxnClass::printDetails() const {
+	cout<<"ReactionClass: " << name <<"  ( Km="<<Km<<", kcat="<<kcat<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
+		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+	}
+	if(n_reactants==0)
+		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+}
+
+
+
+
+
+
+
+
+
 BasicRxnClass::BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet) : 
 	ReactionClass(name,baseRate,transformationSet)
 {

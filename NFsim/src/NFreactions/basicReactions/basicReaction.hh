@@ -62,7 +62,20 @@ namespace NFcore
 			GlobalFunction *gf;
 	};
 	
-	
+	class MMRxnClass : public BasicRxnClass {
+		
+		public:
+			MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet );
+			virtual ~MMRxnClass();
+			
+			virtual double update_a();
+			virtual void printDetails() const;
+		
+		protected:
+			double Km;
+			double kcat;
+			double sFree;
+	};	
 	
 	
 	

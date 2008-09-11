@@ -86,7 +86,7 @@ System * NFinput::initializeFromXML(
 		if(!initParameters(pListOfParameters, parameter, verbose))
 		{
 			cout<<"\n\nI failed at parsing your Parameters.  Check standard error for a report."<<endl;
-			delete s;
+			if(s!=NULL) delete s;
 			return NULL;
 		}
 		
@@ -96,7 +96,7 @@ System * NFinput::initializeFromXML(
 		{
 			if(!initGlobalFunctions(pListOfFunctions, s, parameter, verbose)) {
 				cout<<"\n\nI failed at parsing your Global Functions.  Check standard error for a report."<<endl;
-				delete s;
+				if(s!=NULL) delete s;
 				return NULL;
 			}
 		}
@@ -108,7 +108,7 @@ System * NFinput::initializeFromXML(
 		if(!initMoleculeTypes(pListOfMoleculeTypes, s, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your MoleculeTypes.  Check standard error for a report."<<endl;
-			delete s;
+			if(s!=NULL) delete s;
 			return NULL;
 		}
 		
@@ -118,7 +118,7 @@ System * NFinput::initializeFromXML(
 		if(!initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your species.  Check standard error for a report."<<endl;
-			delete s;
+			if(s!=NULL) delete s;
 			return NULL;
 		}
 
@@ -129,7 +129,7 @@ System * NFinput::initializeFromXML(
 		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
-			delete s;
+			if(s!=NULL) delete s;
 			return NULL;
 		}
 		
@@ -139,7 +139,7 @@ System * NFinput::initializeFromXML(
 		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
-			delete s;
+			if(s!=NULL) delete s;
 			return NULL;
 		}
 		
@@ -322,7 +322,11 @@ bool NFinput::initGlobalFunctions(
 				}
 				string functionDefintion = pDefinition->GetText();
 				GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
-				system->addGlobalFunction(gf);
+				if(!system->addGlobalFunction(gf)) {
+					cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
+					cerr<<"functions with the same name, so I'll just stop now."<<endl;
+					return false;
+				}
 				if(verbose) cout<<"\t\t\t= "<<functionDefintion<<endl;
 			} else {
 				cerr<<"!!!Error:  Definition tag for a function must exist!  Quitting."<<endl;
@@ -339,10 +343,10 @@ bool NFinput::initGlobalFunctions(
 		return true;
 	} catch (...) {
 		//Uh oh! we got some unknown exception thrown, so we must abort!
+		cerr<<"I caught some unknown error when I was trying to parse out a Global Function.\n";
+		cerr<<"I'm at a loss for words right now, so you're on you're own."<<endl;
 		return false;
 	}
-	
-	
 }
 
 
@@ -1268,7 +1272,7 @@ bool NFinput::initReactionRules(
 						cerr<<"It seems that the final state is not valid."<<endl;
 						return false;
 					}
-					ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt);
+					if(!ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt)) return false;
 				}
 			
 			
@@ -1294,7 +1298,7 @@ bool NFinput::initReactionRules(
 					
 					if(!lookup(c1, site1, comps, symMap)) return false;
 					if(!lookup(c2, site2, comps, symMap)) return false;
-					ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName);
+					if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) return false;
 				}
 				
 				
@@ -1322,7 +1326,7 @@ bool NFinput::initReactionRules(
 					if(!lookup(c2, site2, comps, symMap)) return false;
 						
 					//Even though we had to make sure both ends exist, we really only need one transformation
-					ts->addUnbindingTransform(c1->t, c1->symPermutationName);
+					if(!ts->addUnbindingTransform(c1->t, c1->symPermutationName)) return false;
 				}
 				
 				
@@ -1344,7 +1348,7 @@ bool NFinput::initReactionRules(
 							component c = comps.find(id)->second;
 							//cout<<"Templates.size() "<<templates.size()<<endl;
 							//c.t->printDetails();
-							ts->addDeleteMolecule(c.t);
+							if(!ts->addDeleteMolecule(c.t)) return false;
 						} catch (exception& e) {
 							cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
 							cerr<<"It seems that I couldn't find the molecule to delete that you are refering to. (I was looking for ID: "<<pDelete->Attribute("id")<<endl;
@@ -1407,7 +1411,7 @@ bool NFinput::initReactionRules(
 					
 										} else if(productMoleculeTypes.size()>0){
 											sc = new SpeciesCreator(productMoleculeTypes,stateInformation,bindingSiteInformation);
-											ts->addAddMolecule(sc);
+											if(!ts->addAddMolecule(sc)) return false;
 										}
 									}
 									else {
@@ -1519,14 +1523,101 @@ bool NFinput::initReactionRules(
 							}
 						}
 					}
-					
-					
+					else if(rateLawType=="MM") {
+						//Make sure that the rate constant exists
+						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
+						if(!pListOfRateConstants) {
+							cerr<<"Michaelis-Menten Rate Law definition for "<<rxnName<<" does not have a ListOfRateConstants tag!  Quiting"<<endl;
+							return false;
+						} else {
+							double kcat=0;
+							double Km=0;
+							
+							//We should always get the catalytic rate (kcat) first!
+							TiXmlElement *pRateConstant = pListOfRateConstants->FirstChildElement("RateConstant");
+							if(!pRateConstant) {
+								cerr<<"Michaelis-Menten Law definition for "<<rxnName<<" does not have kcat value defined!  Quiting"<<endl;
+								return false;
+							} else {
+								//Get the rate constant value
+								string kcatName; 
+								if(!pRateConstant->Attribute("value")) {
+									cerr<<"Michaelis-Menten Rate Law definition for "<<rxnName<<" does not have a valid kcat RateConstant 'value'!  Quiting"<<endl;
+									return false;
+								} else {
+									kcatName = pRateConstant->Attribute("value");
+									bool usedParam = false;
+									try {
+										kcat = NFutil::convertToDouble(kcatName);
+									} catch (std::runtime_error &e1) {
+										if(parameter.find(kcatName)==parameter.end()) {
+											cerr<<"Could not find parameter: "<<kcatName<<" when reading kcat rate for rxn "<<rxnName <<". Quitting"<<endl;
+											return false;
+										}
+										kcat = parameter.find(kcatName)->second;
+										usedParam = true;
+									}
+									if(verbose) {
+										cout<<"\t\t\t\t...setting kcat rate to be: "<<kcatName;
+										if(usedParam) cout<<" (has value: "<<kcat<<")";
+										cout<<endl;
+									}
+								}
+							}
+								
+							//Now, do the same thing for the Michaelis constant (Km)
+							pRateConstant = pRateConstant->NextSiblingElement("RateConstant");
+							if(!pRateConstant) {
+								cerr<<"Michaelis-Menten Law definition for "<<rxnName<<" does not have Km value defined!  Quiting"<<endl;
+								return false;
+							} else {
+								//Get the rate constant value
+								string KmName; 
+								if(!pRateConstant->Attribute("value")) {
+									cerr<<"Michaelis-Menten Rate Law definition for "<<rxnName<<" does not have a valid Km RateConstant 'value'!  Quiting"<<endl;
+									return false;
+								} else {
+									KmName = pRateConstant->Attribute("value");
+									bool usedParam = false;
+									try {
+										Km = NFutil::convertToDouble(KmName);
+									} catch (std::runtime_error &e1) {
+										if(parameter.find(KmName)==parameter.end()) {
+											cerr<<"Could not find parameter: "<<KmName<<" when reading Km rate for rxn "<<rxnName <<". Quitting"<<endl;
+											return false;
+										}
+										Km = parameter.find(KmName)->second;
+										usedParam = true;
+									}
+									if(verbose) {
+										cout<<"\t\t\t\t...setting Km rate to be: "<<KmName;
+										if(usedParam) cout<<" (has value: "<<Km<<")";
+										cout<<endl;
+									}
+								}
+							}
+							
+							//Finally, we can make the actual reaction
+							r = new MMRxnClass(rxnName,kcat,Km,ts);
+						
+						}
+					}
+					else if(rateLawType=="Sat") {
+						cerr<<"!! Nfsim cannot, and will not, interpret a Rate Law of 'type': 'Sat' as BioNetGen.\n";
+						cerr<<"  once could.  You should instead use a Michaelis-Menten rate law (use type 'MM')\n";
+						cerr<<"  that also takes the parameters (kcat, Km) but is more accurate.\n"<<endl;
+						cerr<<"  But for now, I'm aborting..."<<endl;
+						return false;
+					}
 					
 					////  To extend NFsim to parse more rate law types, add an extra else if clause here to catch the rate law
+					////  by its name.
 							
 					else {
 						cerr<<"!! I cannot yet interpret a Rate Law of 'type': "<<rateLawType<<".\n";
-						cerr<<"  Remember, an elementry reaction needs to be specified as 'Ele' (case sensitive)."<<endl;
+						cerr<<"  Remember, an elementry reaction needs to be specified as 'Ele' (case sensitive),"<<endl;
+						cerr<<"  a Michaelis-Menten reaction should be specified as 'MM', and"<<endl;
+						cerr<<"  a functional reaction should be specified as 'Functional'."<<endl;
 						cerr<<"Quitting."<<endl;
 						return false;
 					}

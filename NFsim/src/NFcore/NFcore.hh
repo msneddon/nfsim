@@ -51,8 +51,6 @@ namespace NFcore
 	class MoleculeList;
 	
 	class GlobalFunction;
-//	class TemplateMapping;
-//	class Transformation;
 	
 	/*****************************************
 	 * Class declarations
@@ -113,6 +111,7 @@ namespace NFcore
 			// Basic functions to get the properties and objects of the system
 			string getName() const { return name; };
 			bool isUsingComplex() { return useComplex; };
+			bool isOutputtingBinary() { return useBinaryOutput; };
 			double getCurrentTime() const { return current_time; };
 		
 //			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
@@ -138,7 +137,7 @@ namespace NFcore
 			int createComplex(Molecule * m);
 //			int addGroup(Group * g);
 		
-			void addGlobalFunction(GlobalFunction *gf);
+			bool addGlobalFunction(GlobalFunction *gf);
 			GlobalFunction * getGlobalFunctionByName(string fName);
 			
 			/* once all elements are added, we need to prepare and initialize for simulations */
@@ -152,8 +151,8 @@ namespace NFcore
 		
 		
 			/* tell the system where to ouptut results*/
+			void setOutputToBinary();
 			void registerOutputFileLocation(string filename);
-			void changeOutputFileLocation(string newFilename);
 			
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
@@ -179,7 +178,7 @@ namespace NFcore
 			double outputMeanCount(MoleculeType *m);
 			double calculateMeanCount(MoleculeType *m);
 		
-		
+			
 //			void outputGroupData() { outputGroupData(this->current_time); };
 //			void outputGroupData(double cSampleTime);
 		
@@ -222,6 +221,7 @@ namespace NFcore
 			string name;         /* arbitrary name of the system  */
 			bool useComplex;     /* parameter that knows if we should be dynamically tracking complexes */
 		    
+			bool useBinaryOutput;
 		
 			// The container objects that maintain the system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /* container of all MoleculeTypes in the simulation */

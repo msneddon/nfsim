@@ -88,7 +88,7 @@ void printHelp(string version);
 */
 int main(int argc, const char *argv[])
 {
-	string versionNumber = "0.7";
+	string versionNumber = "0.71";
 	
 	
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
@@ -137,14 +137,23 @@ int main(int argc, const char *argv[])
 						s->turnOnGlobalFuncOut();
 					}
 					
+					if (argMap.find("b")!=argMap.end()) {
+						s->setOutputToBinary();
+					}
+					
 					//Here we just run some stuff for testing... The output is just
 					if (argMap.find("o")!=argMap.end()) {
 						string outputFileName = argMap.find("o")->second;
 						s->registerOutputFileLocation(outputFileName);
 					} else {
-						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
+						if(s->isOutputtingBinary())
+							s->registerOutputFileLocation(s->getName()+"_nf.dat");
+						else {
+							s->registerOutputFileLocation(s->getName()+"_nf.gdat");
+							s->outputAllObservableNames();
+						}
 					}
-					s->outputAllObservableNames();
+					
 					
 					//If requested, walk through the simulation
 					if (argMap.find("walk")!=argMap.end()) {
