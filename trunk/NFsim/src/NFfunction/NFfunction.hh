@@ -173,7 +173,7 @@ namespace NFcore {
 			mu::Parser *p;
 			
 		protected:
-			//int uniqueGlobalFunctionId;
+			
 			string name;
 			string funcString;
 			

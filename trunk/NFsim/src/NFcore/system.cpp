@@ -21,6 +21,8 @@ System::System(string name)
 	this->useComplex = false;
 //	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
+	rxnIndexMap=0;
+	useBinaryOutput=false;
 }
 
 
@@ -36,6 +38,9 @@ System::System(string name, bool useComplex)
 	this->useComplex = useComplex;
 //	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
+
+	rxnIndexMap=0;
+	useBinaryOutput=false;
 }
 
 
@@ -44,11 +49,14 @@ System::System(string name, bool useComplex)
  */
 System::~System()
 {	
-	//Need to delete reactions
-  	for(unsigned int r=0; r<allReactions.size(); r++)
-  		delete [] rxnIndexMap[r];
-  	delete [] rxnIndexMap;
+	//Delete the rxnIndexMap array
+	if(rxnIndexMap!=NULL) {
+		for(unsigned int r=0; r<allReactions.size(); r++)
+			if(rxnIndexMap[r]!=NULL) { delete [] rxnIndexMap[r]; }
+		delete [] rxnIndexMap;
+	}
 	
+	//Need to delete reactions
 	ReactionClass *r;
 	while(allReactions.size()>0)
 	{
@@ -56,7 +64,6 @@ System::~System()
 		allReactions.pop_back();
 		delete r;
 	}
-	
 	
 	//Delete all MoleculeTypes (which deletes all molecules and templates)
 	MoleculeType *s;
@@ -95,17 +102,61 @@ System::~System()
 }
 
 
-void System::registerOutputFileLocation(string filename)
+void System::setOutputToBinary()
 {
-	outputFileStream.open(filename.c_str());
-	outputFileStream.setf(ios::scientific);
+	this->useBinaryOutput = true;
+	if(outputFileStream.is_open()) {
+		outputFileStream.close();
+		cerr<<"Error!! You are trying to switch the output of this system to Binary, but\n";
+		cerr<<"you already have an open file stream that is not binary!  The results are\n";
+		cerr<<"therefore unpredictable.  It would be better if you fix this problem first.\n";
+		cerr<<"This problem is caused when you call 'setOutputToBinary()' after you call\n";
+		cerr<<"registerOutputFileLocation().\n";
+		cerr<<"So I'm just going to stop now."<<endl;
+		exit(1);
+	}
+	
+	
 }
 
-void System::changeOutputFileLocation(string newFilename) {
-	outputFileStream.close();
-	outputFileStream.open(newFilename.c_str());
-	outputFileStream.setf(ios::scientific);
+
+void System::registerOutputFileLocation(string filename)
+{
+	if(outputFileStream.is_open()) { outputFileStream.close(); }
+	if(useBinaryOutput) {
+		outputFileStream.open((filename).c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
+		//ios_base::out -- Set for output only
+		//ios_base::binary --  Set output to binary
+		//ios_base::trunc --  Truncate the file - that is overwrite anything that was already there
+		
+		//Also, output a header file to keep track of the number
+		ofstream headerFile;
+		int tabCount=0;
+		headerFile.open((filename+".head").c_str());
+		headerFile<<"#\tTime"; tabCount++;
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+			int oTot = (*molTypeIter)->getNumOfObservables();
+			for(int o=0; o<oTot; o++) {
+				headerFile<<"\t"<<(*molTypeIter)->getObservable(o)->getAliasName();
+				tabCount++;
+			}
+		}
+		if(outputGlobalFunctionValues)
+			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
+				headerFile<<"\t"<<(*functionIter)->getNiceName();
+				tabCount++;
+			}
+		headerFile<<endl;
+		for(int t=0; t<tabCount; t++) headerFile<<"\t";
+		headerFile.close();
+		
+	} else {
+		outputFileStream.open(filename.c_str());
+		outputFileStream.setf(ios::scientific);
+	}
+	
 }
+
 int System::addMoleculeType(MoleculeType *MoleculeType)
 {
 	allMoleculeTypes.push_back(MoleculeType);
@@ -127,6 +178,9 @@ void System::addReaction(ReactionClass *reaction)
 //}
 
 
+/*!
+	Some documentation can go here.
+*/
 int System::createComplex(Molecule * m)
 {
 	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
@@ -136,9 +190,12 @@ int System::createComplex(Molecule * m)
 	return c_id;
 }
 
-void System::addGlobalFunction(GlobalFunction *gf)
+bool System::addGlobalFunction(GlobalFunction *gf)
 {
+	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+	  	if(gf->getName()==(*functionIter)->getName()) return false;
 	this->globalFunctions.push_back(gf);
+	return true;
 }
 
 
@@ -520,37 +577,57 @@ void System::equilibriate(double duration, int statusReports)
 
 void System::outputAllObservableNames()
 {
-  	outputFileStream<<"#\tTime";
-	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		(*molTypeIter)->outputObservableNames(outputFileStream);
-	if(outputGlobalFunctionValues)
-		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-			outputFileStream<<"\t"<<(*functionIter)->getNiceName();
-	outputFileStream<<endl;
+	if(!useBinaryOutput) {
+		outputFileStream<<"#\tTime";
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+			(*molTypeIter)->outputObservableNames(outputFileStream);
+		
+		if(outputGlobalFunctionValues)
+			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+				outputFileStream<<"\t"<<(*functionIter)->getNiceName();
+		outputFileStream<<endl;
+	} else {
+		cout<<"Warning: You cannot output observable names when outputting in Binary Mode."<<endl;
+	}
 }
 
 void System::outputAllObservableCounts()
 {
-  	outputFileStream<<"\t"<<current_time;
-	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		(*molTypeIter)->outputObservableCounts(outputFileStream);
-	
-	if(outputGlobalFunctionValues)
-		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-			outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
-	outputFileStream<<endl;
+	outputAllObservableCounts(this->current_time);
 }
+
+
 
 void System::outputAllObservableCounts(double cSampleTime)
 {
-  	outputFileStream<<"\t"<<cSampleTime;
-	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		(*molTypeIter)->outputObservableCounts(outputFileStream);
-	
-	if(outputGlobalFunctionValues)
-		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-			outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
-	outputFileStream<<endl;
+	if(useBinaryOutput) {
+		double count=0.0; int oTot=0;
+
+		outputFileStream.write((char *)&cSampleTime, sizeof(double));
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+			oTot = (*molTypeIter)->getNumOfObservables();
+			for(int o=0; o<oTot; o++) {
+				count=(double)((*molTypeIter)->getObservable(o)->getCount());
+				outputFileStream.write((char *) &count, sizeof(double));
+			}
+		}
+		if(outputGlobalFunctionValues)
+			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
+				count=FuncFactory::Eval((*functionIter)->p);
+				outputFileStream.write((char *) &count, sizeof(double));
+			}
+	}
+	else {
+
+		outputFileStream<<"\t"<<current_time;
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+			(*molTypeIter)->outputObservableCounts(outputFileStream);
+
+		if(outputGlobalFunctionValues)
+			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+				outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+		outputFileStream<<endl;
+	}
 }
 
 void System::printAllObservableCounts(double cSampleTime)

@@ -52,8 +52,11 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
 	int reactantIndex = find(t);
 	if(reactantIndex==-1) {
-		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
-		exit(1);
+		cerr<<"Couldn't find the template you gave me!  In transformation set - addStateChangeTransform!\n";
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
 	}
 	
 	// 2) Create a Transformation object to remember the information
@@ -84,8 +87,11 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	int reactantIndex1 = find(t1);
 	int reactantIndex2 = find(t2);
 	if(reactantIndex2==-1 || reactantIndex2==-1) {
-		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!"<<endl;
-		exit(1);
+		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!\n";
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
 	}
 	
 	//Find the index of the respective binding sites
@@ -120,8 +126,11 @@ bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1,
 	int reactantIndex1 = find(t1);
 	int reactantIndex2 = find(t2);
 	if(reactantIndex2==-1 || reactantIndex2==-1) {
-		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!"<<endl;
-		exit(1);
+		cerr<<"Couldn't find one of the templates you gave me!  In transformation set - addBindingTransform!\n";
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
 	}
 	
 	//Find the index of the respective binding sites
@@ -156,7 +165,10 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	int reactantIndex = find(t);
 	if(reactantIndex==-1) {
 		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
-		exit(1);
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
 	}
 	
 	// 2) Create a Transformation object to remember the information
@@ -182,8 +194,11 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	int reactantIndex = find(t);
 	if(reactantIndex==-1) {
-		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
-		exit(1);
+		cerr<<"Couldn't find the template you gave me!  In transformation set - addDeleteMolecule!"<<endl;
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
 	}
 	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform();
 	
@@ -240,7 +255,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 		MappingSet *ms = mappingSets[r];
 		for(unsigned int t=0; t<transformations[r].size(); t++)
 		{
-			if(transformations[r].at(t)->getType()==TransformationFactory::REMOVE) {
+			if(transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE) {
 				Mapping *m1 = ms->get(t);
 				deleteList.push_back(m1->getMolecule());
 			} else {
@@ -295,7 +310,6 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 	//bool isPresent = false;
 	list <Molecule *>::iterator molIter;
-	bool isPresent = false;
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		if(mappingSets[r]->hasDeletionTransform()) continue;  //if we are deleting this guy, it doesn't have to get updated
 		
