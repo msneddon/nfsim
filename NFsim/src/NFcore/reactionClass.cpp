@@ -43,6 +43,7 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
 		}	
 	}
+	onTheFlyObservables=true;
 }
 
 
@@ -79,12 +80,14 @@ void ReactionClass::fire(double random_A_number)
 	
 	//Loop through the products and remove them from thier observables
 	//cout<<"------------------------------------------"<<endl;
-	for( molIter = products.begin(); molIter != products.end(); molIter++ )
-	{
-		//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getMoleculeID()<<endl;
-		(*molIter)->removeFromObservables();
+	if(this->onTheFlyObservables) {
+		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+		{
+			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getMoleculeID()<<endl;
+			(*molIter)->removeFromObservables();
+		}
 	}
-	//cout<<"++++++++++++++++++++++++++++++++++++++++++"<<endl;
+		//cout<<"++++++++++++++++++++++++++++++++++++++++++"<<endl;
 		
 	//Through the MappingSet, transform all the molecules as neccessary
 	this->transformationSet->transform(this->mappingSet);
@@ -93,7 +96,7 @@ void ReactionClass::fire(double random_A_number)
 	//the counts of observables and update its class lists, and update any DOR Groups
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-		(*molIter)->addToObservables();
+		if(onTheFlyObservables) (*molIter)->addToObservables();
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->notifyGroupsThatRateMayChange();
 	}

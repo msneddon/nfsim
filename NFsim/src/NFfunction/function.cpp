@@ -46,6 +46,7 @@ GlobalFunction::GlobalFunction(string name,
 		this->paramNames[i]=paramConstNames.at(i);
 		this->paramValues[i]=paramConstValues.at(i);
 	}
+	p=0;
 }
 
 
@@ -56,6 +57,7 @@ GlobalFunction::~GlobalFunction()
 	delete [] argTypes;
 	delete [] paramNames;
 	delete [] paramValues;
+	if(p!=NULL) delete p;
 }
 			
 
@@ -98,6 +100,17 @@ void GlobalFunction::prepareForSimulation(System *s)
 		exit(1);
 	}
 }
+
+
+void GlobalFunction::attatchRxn(ReactionClass *r) 
+{
+	//unsigned int n_rxns;
+	//ReactionClass *rxns;
+	
+}
+
+
+
 
 
 void GlobalFunction::printDetails()

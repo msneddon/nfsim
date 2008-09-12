@@ -8,7 +8,7 @@
       <Parameter id="w" value="1.02" />
       <Parameter id="cellVolume" value="1.41e-15" />
       
-      <Parameter id="motorCount" value="1000" />
+      <Parameter id="motorCount" value="3" />
       
       
       <Parameter id="ypPhos" value="7" />

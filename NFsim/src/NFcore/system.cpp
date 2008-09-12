@@ -23,6 +23,7 @@ System::System(string name)
 	this->outputGlobalFunctionValues=false;
 	rxnIndexMap=0;
 	useBinaryOutput=false;
+	onTheFlyObservables=true;
 }
 
 
@@ -41,6 +42,7 @@ System::System(string name, bool useComplex)
 
 	rxnIndexMap=0;
 	useBinaryOutput=false;
+	onTheFlyObservables=true;
 }
 
 
@@ -83,6 +85,14 @@ System::~System()
 		delete c;
 	}
 	
+	GlobalFunction *gf;
+	while(this->globalFunctions.size()>0)
+	{
+		gf = globalFunctions.back();
+		globalFunctions.pop_back();
+		delete gf;
+	}
+	
 	//And finally delete all the groups
 //	Group *g;
 //	while(allGroups.size()>0)
@@ -119,6 +129,11 @@ void System::setOutputToBinary()
 	
 }
 
+void System::turnOff_OnTheFlyObs() {
+	this->onTheFlyObservables=false;
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+		(*rxnIter)->turnOff_OnTheFlyObs();
+}
 
 void System::registerOutputFileLocation(string filename)
 {
@@ -168,6 +183,13 @@ void System::addReaction(ReactionClass *reaction)
 {
 	reaction->init();
 	allReactions.push_back(reaction);
+}
+
+void System::addNecessaryUpdateReaction(ReactionClass *reaction)
+{
+	reaction->init();
+	allReactions.push_back(reaction);
+	necessaryUpdateRxns.push_back(reaction);
 }
 
 
@@ -342,6 +364,8 @@ void System::prepareForSimulation()
   	//prep each molecule type for the simulation
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
+  	
+  	recompute_A_tot();
 }
 
 
@@ -356,6 +380,10 @@ double System::recompute_A_tot()
 	}
 	return a_tot;
 }
+
+
+
+
 
 
 /* select the next reaction, given a_tot has been calculated */
@@ -381,6 +409,7 @@ double System::getNextRxn()
 		last_a_sum = a_sum;
 	}
 	cerr<<"Error: randNum exceeds a_sum!!!"<<endl;
+	cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<endl;
 	return -1;
 }
 
@@ -405,14 +434,17 @@ double System::sim(double duration, long int sampleTimes)
 	double dSampleTime = duration / sampleTimes;
 	double curSampleTime=current_time;
 	
+	//Do this once at the beginning, so that we start on the right page
+	recompute_A_tot();
 	
 	double delta_t = 0; unsigned long long iteration = 0, stepIteration = 0;
 	double end_time = current_time+duration;
 	while(current_time<end_time)
 	{
 		//2: Recompute a_tot for this time
-		recompute_A_tot();
-		if(DEBUG) cout<<" Determine a_tot : " << a_tot;
+		//cout<<" a_tot was : " << a_tot<<endl;
+		//recompute_A_tot();
+		//cout<<" a_tot (after recomputing) is : " << a_tot<<endl;
 		
 		//3: Select next reaction time (making sure we have something that can react)
 		//   dt = -ln(rand) / a_tot;
@@ -485,7 +517,7 @@ double System::stepTo(double stoppingTime)
 	while(current_time<stoppingTime)
 	{
 		//2: Recompute a_tot for this time
-		recompute_A_tot();
+		//recompute_A_tot();
 		
 		//3: Select next reaction time (making sure we have something that can react)
 		//   dt = -ln(rand) / a_tot;
@@ -600,6 +632,13 @@ void System::outputAllObservableCounts()
 
 void System::outputAllObservableCounts(double cSampleTime)
 {
+	if(!onTheFlyObservables) {
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+			(*molTypeIter)->addAllToObservables();
+		}
+	}
+	
+	
 	if(useBinaryOutput) {
 		double count=0.0; int oTot=0;
 
@@ -628,6 +667,9 @@ void System::outputAllObservableCounts(double cSampleTime)
 				outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 		outputFileStream<<endl;
 	}
+	
+	
+
 }
 
 void System::printAllObservableCounts(double cSampleTime)

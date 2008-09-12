@@ -18,6 +18,31 @@ Observable::~Observable()
 	templateMolecule = 0;
 }
 
+
+void Observable::add() { 
+	count++;
+	for(rxnIter = dependentRxns.begin(); rxnIter != dependentRxns.end(); rxnIter++ ) {
+		double old_a = (*rxnIter)->get_a();
+		templateMolecule->getMoleculeType()->getSystem()->update_A_tot(old_a,(*rxnIter)->update_a());
+	}
+};
+			
+
+void Observable::subtract() { 
+	if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); } 
+	count--;
+	for(rxnIter = dependentRxns.begin(); rxnIter != dependentRxns.end(); rxnIter++ ) {
+		double old_a = (*rxnIter)->get_a();
+		templateMolecule->getMoleculeType()->getSystem()->update_A_tot(old_a,(*rxnIter)->update_a());
+	}
+};
+
+void Observable::addDependentRxn(ReactionClass *r) {
+	this->dependentRxns.push_back(r);
+}
+
+
+
 bool Observable::isObservable(Molecule * m) const { 
 	
 	//cout<<"comparing obs: "<<this->aliasName<<" to: "<<endl;

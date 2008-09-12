@@ -134,6 +134,7 @@ namespace NFcore
 			//use them!
 			int addMoleculeType(MoleculeType *moleculeType);
 			void addReaction(ReactionClass *reaction);
+			void addNecessaryUpdateReaction(ReactionClass *reaction);
 			int createComplex(Molecule * m);
 //			int addGroup(Group * g);
 		
@@ -178,6 +179,10 @@ namespace NFcore
 			double outputMeanCount(MoleculeType *m);
 			double calculateMeanCount(MoleculeType *m);
 		
+			void update_A_tot(double old_a, double new_a) {
+				a_tot-=old_a;
+				a_tot+=new_a;
+			}
 			
 //			void outputGroupData() { outputGroupData(this->current_time); };
 //			void outputGroupData(double cSampleTime);
@@ -191,6 +196,8 @@ namespace NFcore
 			Complex * getComplex(int ID_complex) const { return allComplexes.at(ID_complex); };
 			Complex * getNextAvailableComplex();
 			void notifyThatComplexIsAvailable(int ID_complex);
+			
+			
 		
 			/* run the simulation for a given length of time, output all results to the registered
 			 * file.  The number of sample times is the number of times the function will output to
@@ -215,6 +222,8 @@ namespace NFcore
 			void registerRxnIndex(int rxnId, int rxnPos, int rxnIndex) {rxnIndexMap[rxnId][rxnPos]=rxnIndex;};
 			int getRxnIndex(int rxnId, int rxnPos) const { return rxnIndexMap[rxnId][rxnPos]; };
 		
+			void turnOff_OnTheFlyObs();
+			
 		protected:
 		
 			// The invariant system properties, created when the system is created
@@ -232,7 +241,10 @@ namespace NFcore
 		
 			
 			vector <GlobalFunction *> globalFunctions; /* container of all functions available to the system */
-		
+			vector <ReactionClass *> necessaryUpdateRxns;
+			
+			bool onTheFlyObservables;
+			
 			// Properties of the system that update in time
 			double a_tot;        /* the sum of all a's (propensities) of all reactions */
 			double current_time; /* keep track of the simulation time */
@@ -250,6 +262,8 @@ namespace NFcore
 			void outputGroupDataHeader();
 //			GroupOutputter * go;
 		    bool outputGlobalFunctionValues;
+		    
+		    
 			
 			//For moleculeTypes to do a quick lookup and see where a particular reaction
 			//is mapped to.  This is an optimization....
@@ -338,6 +352,9 @@ namespace NFcore
 			void printObservableNames();
 			void printObservableCounts();
 			
+			
+
+			void addAllToObservables();
 			
 			
 			//function to access particular molecules or reactions (these are really only
@@ -479,6 +496,7 @@ namespace NFcore
 			int getComponentIndexOfBond(int cIndex) const { return indexOfBond[cIndex]; };
 			void setComponentState(int cIndex, int newValue);
 			void setComponentState(string cName, int newValue);
+			
 			
 			
 			
@@ -665,6 +683,9 @@ namespace NFcore
 			void setRxnId(int rxnId) { this->rxnId = rxnId; };
 			int getRxnId() const { return rxnId; };
 			
+			
+			void turnOff_OnTheFlyObs() { onTheFlyObservables=false; };
+			
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;
 			
@@ -684,7 +705,7 @@ namespace NFcore
 			TransformationSet * transformationSet;
 			MappingSet **mappingSet;
 			
-			
+			bool onTheFlyObservables;
 			
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
@@ -822,22 +843,30 @@ namespace NFcore
 		
 			/* methods used to keep the observable count up to date */
 			bool isObservable(Molecule * m) const;
-			void add() { count++;};
-			void subtract() { if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); } count--;};
-		
+			void add();
+			void subtract();
+			
+			
+			void clear() { count=0; };
+			void straightAdd() {count++;};
+			
 			/* methods used to get observable information */
 			unsigned long int getCount() const {return (unsigned long int) count;};
 			string getAliasName() const { return aliasName; };
 			
 			void addReferenceToMyself(mu::Parser * p);
+			
+			void addDependentRxn(ReactionClass *r);
 		
 		protected:
 			string aliasName;   /* The name that will be output for this observable */
 			TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */
 			double count; /* the number of molecules that match this observable, its a double so that functions can use it (as a reference) */
+			
+			vector <ReactionClass *> dependentRxns;/* signifies that some reaction's propensity depends on this observable */
+			vector <ReactionClass *>::iterator rxnIter;
 		
 	};
-	
 	
 	
 

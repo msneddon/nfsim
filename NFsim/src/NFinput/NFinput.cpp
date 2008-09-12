@@ -124,21 +124,23 @@ System * NFinput::initializeFromXML(
 
 		
 		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
-		
-		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, verbose))
+		else cout<<"\n\tReading list of Observables..."<<endl;
+		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose))
 		{
-			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
+			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
 			return NULL;
 		}
 		
 		
+		//We have to read reactionRules AFTER observables because sometimes reactions
+		//might depend on some observable...
 		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of Observables..."<<endl;
-		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose))
+		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
+		
+		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, verbose))
 		{
-			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
+			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
 			return NULL;
 		}
@@ -1519,7 +1521,7 @@ bool NFinput::initReactionRules(
 								}
 								
 								//Create the Functional Reaction from the found function...
-								r = new FunctionalRxnClass(rxnName,gf,ts);
+								r = new FunctionalRxnClass(rxnName,gf,ts,s);
 							}
 						}
 					}

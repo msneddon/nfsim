@@ -12,6 +12,7 @@ using namespace std;
 namespace NFcore {
 	
 	class System;
+	class ReactionClass;
 
 	//! Parses mathmatical functions that can be easily used anywhere
 	/*!
@@ -164,6 +165,22 @@ namespace NFcore {
 				parameters as well as what the function currently evaluates to.
 			*/
 			void printDetails();
+			
+			
+			/*!
+				When a reaction uses this function, we have to keep track of it here so that
+				we can notify it to update is propensity when this function changes...
+			*/
+			void attatchRxn(ReactionClass *r);
+			
+			
+			int getNumberOfArgs() const { return (int) n_args; };
+			string getArgName(int argIndex) const { 
+				if(argIndex<n_args && argIndex>=0) return argNames[argIndex];
+				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
+			string getArgType(int argIndex) const { 
+				if(argIndex<n_args && argIndex>=0) return argTypes[argIndex];
+				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
 			
 			/*!
 				This is the actual Parser object that keeps track of the function and has references to all of its
