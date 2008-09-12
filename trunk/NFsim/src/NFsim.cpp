@@ -105,6 +105,12 @@ int main(int argc, const char *argv[])
 	{
 		//First, find the arguments that we might use in any situation
 		if(argMap.find("v")!=argMap.end()) verbose = true;
+		if(argMap.find("seed")!= argMap.end()) {
+			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
+			NFutil::SEED_RANDOM(seed);
+			cout<<"seeding random number generator with: "<<seed<<endl;
+		}
+		
 		
 		
 		//Handle the case of no parameters
@@ -152,6 +158,12 @@ int main(int argc, const char *argv[])
 							s->registerOutputFileLocation(s->getName()+"_nf.gdat");
 							s->outputAllObservableNames();
 						}
+					}
+					
+					
+					//turn off on the fly calculation of observables
+					if(argMap.find("notf")!=argMap.end()) {
+						s->turnOff_OnTheFlyObs();
 					}
 					
 					
@@ -323,9 +335,17 @@ void printHelp(string version)
 	cout<<""<<endl;
 	cout<<"  -v             specify verbose output and print all kinds of extra things."<<endl;
 	cout<<""<<endl;
+	cout<<"  -b             use this flag to tell NFsim to output in binary (not ascii)."<<endl;
+	cout<<""<<endl;
+	cout<<"  -ogf           use this flag to tell NFsim to output the value of all global functions."<<endl;
+	cout<<""<<endl;
 	cout<<"  -test          used to specify a given preprogrammed test. Some tests"<<endl;
 	cout<<"                 include \"tlbr\" and \"simple_system\".  Tests do not read in"<<endl;
 	cout<<"                 other command line flags, so your -sim flag won't do anything."<<endl;
+	cout<<""<<endl;
+	cout<<"  -seed          used to specify the seed for the random number generator.  This"<<endl;
+	cout<<"                 allows you to run the same simulation and get the exact same results"<<endl;
+	cout<<"                 perhaps to compare performance"<<endl;
 	cout<<""<<endl;
 	cout<<"  -logo          prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
 	cout<<""<<endl;

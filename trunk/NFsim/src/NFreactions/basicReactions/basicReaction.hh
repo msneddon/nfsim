@@ -25,7 +25,7 @@ namespace NFcore
 					a = 1;
 					
 					for(unsigned int i=0; i<n_reactants; i++)
-						a*=reactantLists.at(i)->size();
+						a*=reactantLists[i]->size();
 					
 					a*=baseRate;
 					return a;
@@ -39,20 +39,62 @@ namespace NFcore
 		
 		protected:
 			virtual void pickMappingSets(double randNumber) const;
-			vector <ReactantList *> reactantLists;
+			
+			ReactantList **reactantLists;
+			
+			ReactantList *rl;
+			MappingSet *ms;
 	};
 	
 	
 	
-	
-	
+	inline
+	bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
+		{
+			//First a bit of error checking, that you should skip unless we are debugging...
+		//	if(reactantPos<0 || reactantPos>=n_reactants || m==NULL) 
+		//	{
+		//		cout<<"Error adding molecule to reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
+		//		exit(1);
+		//	}
+			
+			
+			//Get the specified reactantList
+			rl = reactantLists[reactantPos];
+			
+			//Check if the molecule is in this list
+			int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+			//cout<<"got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
+			
+			
+			if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
+			{
+				if(!reactantTemplates[reactantPos]->compare(m)) {
+				//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
+					rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+					m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+				}
+				
+			} else {
+				//Try to map it!
+				ms = rl->pushNextAvailableMappingSet();
+				if(!reactantTemplates[reactantPos]->compare(m,ms)) {
+					rl->popLastMappingSet();
+					//we just pushed, then popped, so we a has not changed...
+				} else {
+					m->setRxnListMappingId(rxnIndex,ms->getId());
+				}
+			}
+				
+			return true;
+		}
 	
 	
 	
 	class FunctionalRxnClass : public BasicRxnClass {
 		
 		public:
-			FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet);
+			FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s);
 			virtual ~FunctionalRxnClass();
 			
 			virtual double update_a();

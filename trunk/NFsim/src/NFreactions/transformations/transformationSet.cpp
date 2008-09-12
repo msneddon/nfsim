@@ -261,28 +261,6 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 			} else {
 				transformations[r].at(t)->apply(ms->get(t),mappingSets);
 			}
-//			unsigned int type = transformations[r].at(t)->getType();
-//			if(type == TransformationFactory::SKIP) {
-//				continue;
-//			}
-//			else if(type == Transformation::STATE_CHANGE) {
-//				Mapping *m = ms->get(t);
-//				m->getMolecule()->setState(m->getIndex(),transformations[r].at(t)->getNewStateValue());
-//			}
-//			else if(type == Transformation::UNBINDING) {
-//				Mapping *m = ms->get(t);
-//				Molecule::unbind(m->getMolecule(),m->getIndex());
-//			}
-//			else if(type == Transformation::BINDING) {
-//				Mapping *m1 = ms->get(t);
-//				Mapping *m2 = mappingSets[transformations[r].at(t)->getPartnerReactantIndex()]->get(transformations[r].at(t)->getPartnerMappingIndex());
-//				Molecule::bind(m1->getMolecule(),m1->getIndex(), m2->getMolecule(), m2->getIndex());
-//			}
-//			else if(type == Transformation::REMOVE) {
-//				Mapping *m1 = ms->get(t);
-//				deleteList.push_back(m1->getMolecule());
-//				
-//			}
 		}
 	}
 	
@@ -324,12 +302,12 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 		//For each of the molecules that we possibly affect, traverse the neighborhood
 		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 					
-		//isPresent=false;
-		//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-		//	if((*molIter)==molecule) { isPresent = true; break;}
-		//}
-					
-		//if(!isPresent)
+//		bool isPresent=false;
+//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+//			if((*molIter)==molecule) { isPresent = true; break;}
+//		}
+//					
+//		if(!isPresent)
 			molecule->traverseBondedNeighborhood(products,traversalLimit);
 		
 	}

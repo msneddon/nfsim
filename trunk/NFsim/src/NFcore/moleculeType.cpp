@@ -366,7 +366,10 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 	int r=0;
 	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
 	{
+		double oldA = (*rxnIter)->get_a();
 		(*rxnIter)->tryToAdd(m, reactionPositions.at(r));
+		this->system->update_A_tot(oldA,(*rxnIter)->update_a());
+		
   	}
 }
 
@@ -396,7 +399,7 @@ void MoleculeType::removeFromObservables(Molecule *m)
 	int o=0;
   	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
   		//Only subtract if m happened to be an observable... this saves us a compare call
-  		if(m->isObs(o)) {
+  		if(m->isObs(o)) { //(*obsIter)->isObservable(m)){
 			(*obsIter)->subtract();
   		}
   		o++;
@@ -408,9 +411,34 @@ void MoleculeType::removeFromRxns(Molecule * m)
 	int r=0;
 	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
 	{
+		double oldA = (*rxnIter)->get_a();
 		(*rxnIter)->remove(m, reactionPositions.at(r));
+		this->system->update_A_tot(oldA,(*rxnIter)->update_a());
   	}
 }
+
+void MoleculeType::addAllToObservables()
+{
+	//Check each observable and see if this molecule should be counted
+	Molecule *mol; int o=0;
+  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++){
+  		(*obsIter)->clear();
+  		for( int m=0; m<mList->size(); m++ )
+  		{
+  			mol = mList->at(m);
+  		  	if((*obsIter)->isObservable(mol)) {
+  		  		(*obsIter)->straightAdd();
+  		  		mol->setIsObs(o,true);
+  		  	} else {
+  		  		mol->setIsObs(o,false);
+  		  	}
+  		}
+  		o++;
+	}
+			
+}
+
+
 
 void MoleculeType::addToObservables(Molecule *m)
 {

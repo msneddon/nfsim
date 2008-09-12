@@ -99,6 +99,19 @@ namespace NFcore
 			Molecule * m;
 	};
 
+	
+
+	inline
+	Molecule * NFcore::Mapping::getMolecule() const
+	{
+		//Make sure the Molecule points somewhere.  For effeciency, this check
+		//can be removed.
+	//	if(m==NULL) {
+	//		cout<<"Trying to get a molecule from a null mapping (in class Mapping)!! Quitting!"<<endl;
+	//		exit(1);
+	//	}
+		return m;
+	}
 }
 
 

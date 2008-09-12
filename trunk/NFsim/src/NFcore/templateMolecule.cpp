@@ -321,44 +321,32 @@ bool TemplateMolecule::compareBreadthFirst(TemplateMolecule *tm, Molecule *m)
 	return match;
 }
 
-
 bool TemplateMolecule::compare(Molecule * m)
-{
-	//return compareBreadthFirst(this, m);
-	//if(DEBUG) {
-	//	cout<<"Calling Template Molecule compare: "<<endl;
-	//	m->printDetails();
-	//	this->printDetails();
-	//}
-	
-	
+{	
 	//First check if we've been here before
-	if(matchMolecule!=0)
-	{
+	if(matchMolecule!=0) {
 		if(matchMolecule == m) { return true;	}
 		else { clear(); return false; }
 	}
 	
 	//Next, check if we have the same type
-	if(m->getMoleculeType()!=this->parentMoleculeType)
-	{
+	if(m->getMoleculeType()!=this->parentMoleculeType) {
 		clear();
 		return false;
 	}
+
+	
 	//Check that states are correct
-	for(unsigned int s=0; s<stateIndex.size(); s++)
-	{
-		if(m->getComponentState(stateIndex.at(s)) != stateValue.at(s))
-		{ 
+	int s=0;
+	for(s=0; s<stateIndex.size(); s++) {
+		if(m->getComponentState(stateIndex.at(s)) != stateValue.at(s)) { 
 			clear();
 			return false; 
 		}
 	}
 	
-	for(unsigned int s=0; s<notStateIndex.size(); s++)
-	{
-		if(m->getComponentState(notStateIndex.at(s)) == notStateValue.at(s))
-		{ 
+	for(s=0; s<notStateIndex.size(); s++) {
+		if(m->getComponentState(notStateIndex.at(s)) == notStateValue.at(s)) { 
 			clear();
 			return false; 
 		}
@@ -366,12 +354,11 @@ bool TemplateMolecule::compare(Molecule * m)
 	
 	
 	//Check if the sites that must be occupied by anything are occupied
-	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
+	for(s=0; s<sitesThatMustBeOccupied.size(); s++)
 	{
 		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
 		//If the site is not occupied in the molecule, no match
-		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(b)))
-		{
+		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(s))) {
 			clear();
 			return false;
 		}
@@ -388,16 +375,14 @@ bool TemplateMolecule::compare(Molecule * m)
 		if(hasVisitedBond.at(b)==true) continue;
 		if(bonds.at(b)==0) //template binding site is open, so molecule binding site must be too.
 		{
-			if( m->isBindingSiteBonded(bSiteIndex.at(b)))
-			{
+			if( m->isBindingSiteBonded(bSiteIndex.at(b))) {
 				clear();
 				return false;
 			}
 		}
 		else //template binding site has a bond
 		{
-			if(m->isBindingSiteOpen(bSiteIndex.at(b)))
-			{
+			if(m->isBindingSiteOpen(bSiteIndex.at(b))) {
 				clear();
 				return false;
 			}
@@ -409,8 +394,7 @@ bool TemplateMolecule::compare(Molecule * m)
 			//We have to remember to check that it was the right bond site on the other molecule
 			//too.  This means that the bond site in m2 that m is connected to must be the same
 			//bond site in t2 that t1 is connected to.  If not, then we must say false
-			if(m->getComponentIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b)))
-			{
+			if(m->getComponentIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b))) {
 				clear();
 				return false;
 			}
@@ -422,137 +406,132 @@ bool TemplateMolecule::compare(Molecule * m)
 			//this molecule again
 			this->setHasVisited(b); 
 			
-			bool goodMatch = t2->compare(m2);
-			if(!goodMatch)
+			//bool goodMatch = ;
+			if(!t2->compare(m2))
 			{
 				clear();
 				return false;
 			}
 		}		
 	}
-	
-	// we have a match!  so clear and return
-	//cout<<"Match!"<<endl;
 	clear();
 	return true;
 }
 
-
-//void TemplateMolecule::addTemplateMapping(TemplateMapping *tm)
+//bool TemplateMolecule::compare(Molecule * m)
 //{
-//	tMappings.push_back(tm);
+//	//return compareBreadthFirst(this, m);
+//	//if(DEBUG) {
+//	//	cout<<"Calling Template Molecule compare: "<<endl;
+//	//	m->printDetails();
+//	//	this->printDetails();
+//	//}
+//	
+//	
+//	//First check if we've been here before
+//	if(matchMolecule!=0)
+//	{
+//		if(matchMolecule == m) { return true;	}
+//		else { clear(); return false; }
+//	}
+//	
+//	//Next, check if we have the same type
+//	if(m->getMoleculeType()!=this->parentMoleculeType)
+//	{
+//		clear();
+//		return false;
+//	}
+//	//Check that states are correct
+//	for(unsigned int s=0; s<stateIndex.size(); s++)
+//	{
+//		if(m->getComponentState(stateIndex.at(s)) != stateValue.at(s))
+//		{ 
+//			clear();
+//			return false; 
+//		}
+//	}
+//	
+//	for(unsigned int s=0; s<notStateIndex.size(); s++)
+//	{
+//		if(m->getComponentState(notStateIndex.at(s)) == notStateValue.at(s))
+//		{ 
+//			clear();
+//			return false; 
+//		}
+//	}
+//	
+//	
+//	//Check if the sites that must be occupied by anything are occupied
+//	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
+//	{
+//		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
+//		//If the site is not occupied in the molecule, no match
+//		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(b)))
+//		{
+//			clear();
+//			return false;
+//		}
+//	}
+//	
+//	
+//	
+//	//We have matched so far, so set our match
+//	matchMolecule = m;
+//	
+//	//Cycle through the bonds
+//	for(unsigned int b=0; b<bSiteIndex.size(); b++)
+//	{
+//		if(hasVisitedBond.at(b)==true) continue;
+//		if(bonds.at(b)==0) //template binding site is open, so molecule binding site must be too.
+//		{
+//			if( m->isBindingSiteBonded(bSiteIndex.at(b)))
+//			{
+//				clear();
+//				return false;
+//			}
+//		}
+//		else //template binding site has a bond
+//		{
+//			if(m->isBindingSiteOpen(bSiteIndex.at(b)))
+//			{
+//				clear();
+//				return false;
+//			}
+//			
+//			//get template that is bound to this binding site
+//			TemplateMolecule * t2 = this->getBondedTemplateMolecule(b);
+//			Molecule * m2 = m->getBondedMolecule(bSiteIndex.at(b));
+//			
+//			//We have to remember to check that it was the right bond site on the other molecule
+//			//too.  This means that the bond site in m2 that m is connected to must be the same
+//			//bond site in t2 that t1 is connected to.  If not, then we must say false
+//			if(m->getComponentIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b)))
+//			{
+//				clear();
+//				return false;
+//			}
+//			
+//			//tell t2 we have visited this bond before, now that we are sure it is correct
+//			t2->setHasVisited(bSiteIndexOfBond.at(b));
+//			
+//			//remember that we visited through this bond in this template, in case we get to
+//			//this molecule again
+//			this->setHasVisited(b); 
+//			
+//			bool goodMatch = t2->compare(m2);
+//			if(!goodMatch)
+//			{
+//				clear();
+//				return false;
+//			}
+//		}		
+//	}
+//	
+//	// we have a match!  so clear and return
+//	//cout<<"Match!"<<endl;
+//	clear();
+//	return true;
 //}
-/*
-bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
-{	//First check if we've been here before
-	if(matchMolecule!=0)
-	{
-		if(matchMolecule == m) { return true;	}
-		else { clear(); return false; }
-	}
-	
-	//Next, check if we have the same type
-	if(m->getMoleculeType()!=this->parentMoleculeType)
-	{
-		clear();
-		return false;
-	}
-	//Check that states are correct
-	for(unsigned int s=0; s<stateIndex.size(); s++)
-	{
-		if(m->getState(stateIndex.at(s)) != stateValue.at(s))
-		{ 
-			clear();
-			return false; 
-		}
-	}
-	
-	for(unsigned int s=0; s<notStateIndex.size(); s++)
-	{
-		if(m->getState(notStateIndex.at(s)) == notStateValue.at(s))
-		{ 
-			clear();
-			return false; 
-		}
-	}
-	
-	
-	//Check if the sites that must be occupied by anything are occupied
-	for(unsigned int b=0; b<sitesThatMustBeOccupied.size(); b++)
-	{
-		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
-		//If the site is not occupied in the molecule, no match
-		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(b)))
-		{
-			clear();
-			return false;
-		}
-	}
-	
-	
-	
-	//We have matched so far, so set our match
-	matchMolecule = m;
-	
-	//Cycle through the bonds
-	for(unsigned int b=0; b<bSiteIndex.size(); b++)
-	{
-		if(hasVisitedBond.at(b)==true) continue;
-		if(bonds.at(b)==0) //template binding site is open, so molecule binding site must be too.
-		{
-			if( m->isBindingSiteBonded(bSiteIndex.at(b)))
-			{
-				clear();
-				return false;
-			}
-		}
-		else //template binding site has a bond
-		{
-			if(m->isBindingSiteOpen(bSiteIndex.at(b)))
-			{
-				clear();
-				return false;
-			}
-			
-			//get template that is bound to this binding site
-			TemplateMolecule * t2 = this->getBondedTemplateMolecule(b);
-			Molecule * m2 = m->getBondedMolecule(bSiteIndex.at(b));
-			
-			//We have to remember to check that it was the right bond site on the other molecule
-			//too.  This means that the bond site in m2 that m is connected to must be the same
-			//bond site in t2 that t1 is connected to.  If not, then we must say false
-			if(m->getBsiteIndexOfBond(bSiteIndex.at(b)) != t2->bSiteIndex.at(bSiteIndexOfBond.at(b)))
-			{
-				clear();
-				return false;
-			}
-			
-			//tell t2 we have visited this bond before, now that we are sure it is correct
-			t2->setHasVisited(bSiteIndexOfBond.at(b));
-			
-			//remember that we visited through this bond in this template, in case we get to
-			//this molecule again
-			this->setHasVisited(b); 
-			
-			bool goodMatch = t2->compare(m2, mappingSet);
-			if(!goodMatch)
-			{
-				clear();
-				return false;
-			}
-		}		
-	}
-	clear();
-	
-	
-	//If we got here, we are going to return true, so create the new mappings we will need
-	for(tMapIter = tMappings.begin(); tMapIter != tMappings.end(); tMapIter++ )
-		mappingSet->add( (*tMapIter)->createNewMapping(m) );
-	
-	return true;
-}
-
-*/
 
 
 
@@ -706,6 +685,8 @@ void TemplateMolecule::addMapGenerator(MapGenerator *mg)
 }
 
 
+
+
 bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 {	
 	//First check if we've been here before
@@ -719,17 +700,19 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 		clear();
 		return false;
 	}
+
+	
 	//Check that states are correct
-	int s;
-	for(s=0, intVecIter=stateIndex.begin(); intVecIter!=stateIndex.end(); intVecIter++, s++) {
-		if(m->getComponentState((*intVecIter)) != stateValue.at(s)) { 
+	int s=0;
+	for(s=0; s<stateIndex.size(); s++) {
+		if(m->getComponentState(stateIndex.at(s)) != stateValue.at(s)) { 
 			clear();
 			return false; 
 		}
 	}
 	
-	for(s=0, intVecIter=notStateIndex.begin(); intVecIter!=notStateIndex.end(); intVecIter++, s++) {
-		if(m->getComponentState((*intVecIter)) == notStateValue.at(s)) { 
+	for(s=0; s<notStateIndex.size(); s++) {
+		if(m->getComponentState(notStateIndex.at(s)) == notStateValue.at(s)) { 
 			clear();
 			return false; 
 		}
@@ -737,16 +720,15 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 	
 	
 	//Check if the sites that must be occupied by anything are occupied
-	for(intVecIter=sitesThatMustBeOccupied.begin(); intVecIter!=sitesThatMustBeOccupied.end(); intVecIter++)
+	for(s=0; s<sitesThatMustBeOccupied.size(); s++)
 	{
 		//cout<<"Checking site that must be occupied: "<< sitesThatMustBeOccupied.at(b) <<endl;
 		//If the site is not occupied in the molecule, no match
-		if(!m->isBindingSiteBonded((*intVecIter))) {
+		if(!m->isBindingSiteBonded(sitesThatMustBeOccupied.at(s))) {
 			clear();
 			return false;
 		}
 	}
-	
 	
 	
 	
@@ -790,8 +772,8 @@ bool TemplateMolecule::compare(Molecule * m, MappingSet *mappingSet)
 			//this molecule again
 			this->setHasVisited(b); 
 			
-			bool goodMatch = t2->compare(m2, mappingSet);
-			if(!goodMatch)
+			//bool goodMatch = ;
+			if(!t2->compare(m2, mappingSet))
 			{
 				clear();
 				return false;

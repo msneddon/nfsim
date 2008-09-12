@@ -11,17 +11,35 @@ using namespace NFcore;
 
 
 
-FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet) :
+FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s) :
 	BasicRxnClass(name,1, transformationSet)
 {
 	this->gf=gf;
+	for(int a=0; a<gf->getNumberOfArgs(); a++) {
+		if(gf->getArgType(a)=="MoleculeObservable") {
+			Observable *obs = s->getObservableByName(gf->getArgName(a));
+			obs->addDependentRxn(this);
+		} else {
+			cerr<<"When creating a FunctionalRxnClass of name: "+name+" you provided a function that\n";
+			cerr<<"depends on an observable type that I can't yet handle! (which is "+gf->getArgType(a)+"\n";
+			cerr<<"try using type: 'MoleculeObservable' for now.\n";
+			cerr<<"quiting..."<<endl; exit(1);
+		}
+	}
 }
 FunctionalRxnClass::~FunctionalRxnClass() {};
 			
 double FunctionalRxnClass::update_a() {
+	if(this->onTheFlyObservables==false) {
+		cerr<<"Warning!!  You have on the fly observables turned off, but you are using functional\n";
+		cerr<<"reactions which depend on observables.  Therefore, you cannot turn off onTheFlyObservables!\n";
+		cerr<<"exiting now."<<endl;
+		exit(1);
+	}
+	
 	a = 1;
 	for(unsigned int i=0; i<n_reactants; i++)
-		a*=reactantLists.at(i)->size();
+		a*=reactantLists[i]->size();
 	
 	a*=FuncFactory::Eval(gf->p);
 	return a;
@@ -64,8 +82,8 @@ MMRxnClass::~MMRxnClass() {};
 			
 double MMRxnClass::update_a() 
 {	
-	double S = (double)reactantLists.at(0)->size();
-	double E = (double)reactantLists.at(1)->size();
+	double S = (double)reactantLists[0]->size();
+	double E = (double)reactantLists[1]->size();
 	sFree=0.5*( (S-Km-E) + pow((pow( (S-Km-E),2.0) + 4.0*Km*S),  0.5) );
 	a=kcat*sFree*E/(Km+sFree);
 	return a;
@@ -94,10 +112,10 @@ BasicRxnClass::BasicRxnClass(string name, double baseRate, TransformationSet *tr
 	ReactionClass(name,baseRate,transformationSet)
 {
 	this->reactionType = BASIC_RXN;  //set as normal reaction here, but deriving reaction classes can change this
-	
+	reactantLists = new ReactantList *[n_reactants];
 	//Set up the reactantLists
 	for(unsigned int r=0; r<n_reactants; r++)
-		reactantLists.push_back(new ReactantList(r,transformationSet,25));
+		reactantLists[r]=(new ReactantList(r,transformationSet,25));
 }
 
 
@@ -113,27 +131,13 @@ BasicRxnClass::~BasicRxnClass()
 		//delete reactantTemplates[r]; DO NOT DELETE HERE (MoleculeType has responsibility of
 		//deleting all template molecules of its type now.
 		reactantTemplates[r] = 0;
+		delete reactantLists[r];
 	}
 	delete [] reactantTemplates;
 	delete [] mappingSet;
+	delete [] reactantLists;
 	
-/*
-	Transformation *tr;
-	while(transformations.size()>0)
-	{
-		tr = transformations.back();
-		transformations.pop_back();
-		delete tr;
-	}
-	*/
 	
-	ReactantList *rl;
-	while(reactantLists.size()>0)
-	{
-		rl = reactantLists.back();
-		reactantLists.pop_back();
-		delete rl;
-	}
 	
 	delete transformationSet;
 }
@@ -154,46 +158,7 @@ void BasicRxnClass::prepareForSimulation()
 
 
 
-bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
-{
-	//First a bit of error checking...
-	if(reactantPos<0 || reactantPos>=n_reactants || m==NULL) 
-	{
-		cout<<"Error adding molecule to reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
-		exit(1);
-	}
-	
-	
-	//Get the specified reactantList
-	ReactantList *rl = reactantLists.at(reactantPos);
-	
-	//Check if the molecule is in this list
-	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
-	//cout<<"got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
-	
-	bool isInRxn = (m->getRxnListMappingId(rxnIndex)>=0);
-	
-	
-	if(isInRxn)
-	{
-		if(!reactantTemplates[reactantPos]->compare(m)) {
-		//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-		}
-		
-	} else {
-		//Try to map it!
-		MappingSet *ms = rl->pushNextAvailableMappingSet();
-		if(!reactantTemplates[reactantPos]->compare(m,ms)) {
-			rl->popLastMappingSet();
-		} else {
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-	}
-		
-	return true;
-}
+
 
 
 void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
@@ -207,7 +172,7 @@ void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 		
 		
 	//Get the specified reactantList
-	ReactantList *rl = reactantLists.at(reactantPos);
+	ReactantList *rl = reactantLists[reactantPos];
 		
 	//Check if the molecule is in this list
 	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
@@ -238,7 +203,7 @@ void BasicRxnClass::notifyRateFactorChange(Molecule * m, int reactantIndex, int 
 
 unsigned int BasicRxnClass::getReactantCount(unsigned int reactantIndex) const
 {
-	return reactantLists.at(reactantIndex)->size();
+	return reactantLists[reactantIndex]->size();
 }			
 
 
@@ -247,7 +212,7 @@ void BasicRxnClass::printFullDetails() const
 {
 	cout<<"BasicRxnClass: "<<name<<endl;
 	for(unsigned int i=0; i<n_reactants; i++)
-		reactantLists.at(i)->printDetails();
+		reactantLists[i]->printDetails();
 }
 
 			
@@ -261,7 +226,7 @@ void BasicRxnClass::pickMappingSets(double random_A_number) const
 	//unsigned int *moleculeIDs = new unsigned int [n_reactants];
 	for(unsigned int i=0; i<n_reactants; i++)
 	{
-		reactantLists.at(i)->pickRandom(mappingSet[i]);
+		reactantLists[i]->pickRandom(mappingSet[i]);
 		//mappingSet[i]->get(0)
 	}
 	
