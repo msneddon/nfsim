@@ -451,6 +451,8 @@ namespace NFcore
 			vector <TemplateMolecule *> allTemplates; /* keep track of all templates that exist of this type
 															so that they are easy to delete from memory at the end */
 			
+			 ReactionClass *rxn; /*used so we don't need to redeclare this at every call to updateRxnMembership */
+			
 			
 		private:
 			//Some iterators so we don't have to instantiate a new iterator every time
@@ -757,7 +759,10 @@ namespace NFcore
 		void addStateValue(string cName, int stateValue);
 		void addStateValue(string cName, string stateValue);
 		void addNotStateValue(char * stateName, int notStateValue);
-		void clear() { this->matchMolecule = 0; for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; hasVisited=false; };
+		void clear() { 
+			this->matchMolecule = 0; 
+			for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false; 
+			hasVisited=false; };
 	
 	
 		/* the primary function and purpose of a template molecule 
@@ -790,7 +795,7 @@ namespace NFcore
 	
 	
 		Molecule * matchMolecule;
-		vector <bool> hasVisitedBond;
+		vector <bool> hasVisitedBond; //Change this to array for slight performance gain...
 				
 				
 		/////////////////////////////////////////////////////////
