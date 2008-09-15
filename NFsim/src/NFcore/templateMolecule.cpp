@@ -32,14 +32,7 @@ void TemplateMolecule::setHasVisited(int bSiteCompareIndex)
 	hasVisitedBond.at(bSiteCompareIndex) = true;
 }
 
-//void TemplateMolecule::addBindingSite(int bSiteIndex)
-//{
-//	// get the binding site from the MoleculeType
-//	this->bSiteIndex.push_back(bSiteIndex); // saves index into bSite array in MoleculeType
-////	TemplateSite * b = new TemplateSite(parentMoleculeType->getBindingSiteName(bSiteIndex),this, bonds.size());
-//	bonds.push_back(b);
-//	hasVisitedBond.push_back(false);
-//}
+
 
 
 void TemplateMolecule::addStateValue(string cName, int stateValue)

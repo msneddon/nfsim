@@ -363,13 +363,13 @@ void MoleculeType::prepareForSimulation()
 
 void MoleculeType::updateRxnMembership(Molecule * m)
 {
-	int r=0;
-	for(rxnIter = reactions.begin(); rxnIter != reactions.end(); rxnIter++, r++ )
+	unsigned int r=0; ReactionClass *rxn;
+	for(; r<reactions.size(); r++ )
 	{
-		double oldA = (*rxnIter)->get_a();
-		(*rxnIter)->tryToAdd(m, reactionPositions.at(r));
-		this->system->update_A_tot(oldA,(*rxnIter)->update_a());
-		
+		rxn=reactions.at(r);
+		double oldA = rxn->get_a();
+		rxn->tryToAdd(m, reactionPositions.at(r));
+		this->system->update_A_tot(oldA,rxn->update_a());
   	}
 }
 
