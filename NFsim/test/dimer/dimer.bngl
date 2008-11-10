@@ -1,0 +1,32 @@
+begin parameters
+
+   kp 0.00001
+   km 1
+end parameters
+
+begin molecule types
+   A(a,p~0~1)
+end molecule types
+
+
+begin seed species
+  A(a,p~0) 5000
+end seed species
+
+begin reaction rules
+  A(a) + A(a) <-> A(a!1).A(a!1) kp, km
+end reaction rules
+
+begin observables
+#  Molecules Free EGF(R)
+#  Molecules Bound EGF(R!1)
+  Molecules Adim  A(a!+)
+end observables
+
+writeXML();
+#simulate_nf({suffix=>nf,t_end=>200,n_steps=>100});
+generate_network({overwrite=>1});
+saveConcentrations();
+simulate_ode({suffix=>ode,t_end=>200,n_steps=>100});
+resetConcentrations();
+simulate_ssa({suffix=>ssa,t_end=>200,n_steps=>100});

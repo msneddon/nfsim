@@ -1,0 +1,164 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%            SVN for NFsim              %%
+
+
+NFsim is a stand alone C++ program for simulating biochemical reaction networks
+that exhibit high degrees of combinatorial complexity. Although you can develop
+code for NFsim in any environment that supports C++, it is highly recommended
+that you use the freely available Eclipse IDE.  Below are instructions on
+obtaining and configuring Eclipse, downloading NFsim from the subversion
+repository, compiling the code, and finally running your first few examples.
+
+
+
+
+#####################################
+I)  Getting a C++ compiler
+
+The Eclipse IDE designed for C++ does not come with a C++ compiler or
+debugger.  You will have to have your own version installed on your computer.
+If you have linux, you should be ok (as you will probably have the standard
+gcc).  If you have windows or mac, you will have to get a copy of gcc.  On 
+windows this can get a little tricky.  The best way, I know of, to
+get gcc for windows is to download Cygwin (http://www.cygwin.com/). Follow the
+directions from their website and when you download Cygwin, being sure to get
+the packages for gcc (usually located under the programming utilities).  After
+Cygwin is installed, you will also have to configure your system so that the
+cygwin 'bin' directory is on your path.  This will allow you to run gcc from
+any command prompt in windows without running Cygwin.  To add this directory
+to your Path variable, right click on 'my computer', go to the advanced tab, 
+select environment variables, and add the 'bin' directory to your PATH variable.
+All directories on your path should be separated with a semi-colon.
+
+To check in windows if everything is working, open a command prompt (start->run, 
+type cmd).  Type 'gcc --help'.  If some help text is printed out, you are ready.
+If not, try, try again.
+
+
+
+#####################################
+II)  Getting the Eclipse IDE installed and configured
+
+1) Download the latest version (3.3+) of Eclipse that works on your operating system
+     Be sure to download the 'Eclipse IDE for C/C++ Developers' that
+     contains the CDT plugins.  This is all available from this site:
+        http://www.eclipse.org/downloads/
+
+2) Unpack (Unzip) the Eclipse tar file (or zip file for windows)
+     It doesn't matter where you unpack it, but once you put it somewhere
+     this is where Eclipse will run from - so plan ahead!
+
+3) Create a new folder called 'workspace' in your Eclipse directory or where ever you
+   want the NFsim code to live on your computer.
+
+4) Launch Eclipse and select your workspace to be the folder you just created.
+
+5) Install necessary plugins needed for SVN (see http://subclipse.tigris.org/install.html)
+     a) In the file menu, go to Help->Software Updates->Find and Install...
+     b) Select the option 'Search for new features to install' and click 'next'
+     c) Click on the button to add a 'New Remote Site'
+     d) Enter 'Subclipse' for the name and 'http://subclipse.tigris.org/update_1.2.x' for the URL
+     e) Click OK.  Now also check the box in front of 'Europa Discovery Site' and click Finish
+     f) Select the Subclipse checkbox to install Subclipse.  You will find that it 
+        requires the Buckminster plugin to install.  So click on and open the 'Europa 
+        Discovery Site' revealing the list of plugins (don't check the checkbox in front 
+        of Europa Discovery Site!  Otherwise you will download every plugin there is!)  
+        Now  click on the 'Select Required' button on the right side of the window 
+        and Eclipse should automatically find the required plugins from the Europa 
+        Discovery Site.  There should be ~12 plugins now selected.  Accept the license 
+        agreements and download all the files.  When finished, Eclipse will ask you to
+        restart, so go ahead and let Eclipse restart itself.
+
+        NOTE: If you still can't find Buckminster (It should be under 'Europa Discovery 
+        Site'-> 'Other Tools', see this website: http://www.eclipse.org/buckminster/)  
+        Basically, you will have to import another Remote location (name it Buckminster 
+        and set the URL to this location:http://download.eclipse.org/tools/buckminster/updates).  
+        Along with this, you should be able to get all the plugins you need.
+
+6) Run Eclipse again and you should see the 'Welcome' tab with tutorials on getting 
+   started.  Just close the 'Welcome' tab for now and switch your perspective to C/C++.
+   You can switch perspectives by going to the menu Window->Open Perspective->Other...  
+   and selecting C/C++.
+
+7) Eclipse should be up and running, able to compile C/C++ code, and able to import
+   from an SVN repository.
+
+
+
+
+#####################################
+III)  Checking out NFsim from SVN
+
+1) In Eclipse, right click anywhere on the leftmost tab that is titled 'Project Explorer' 
+   and select the 'Import' option.
+   
+2) Under the Other tab, select 'CheckOut projects from SVN' and click 'next'.
+
+3) Mark the option to 'Create a new repository location' and click 'next'.
+
+4) Enter the url: "svn://claudel.biology.yale.edu/NFsim"
+
+5) If you have a username and password, enter it when prompted.  If not, use the following:
+    username: guest    password: nFgo434
+    
+   The guest user will have read access only so will only be allowed to update and checkout.
+   
+6) Select the branch or version you want to use.  In general, the main development 
+   branch will be under the trunk directory named simply NFsim.  Select that directory, 
+   and click "Next".
+   
+7) Be sure the select the option to 'Check out as a project configured using the New 
+   Project Wizard'.  All project files that Eclipse needs should be managed locally, 
+   otherwise different versions of Eclipse will not be able to compile the code.  So 
+   if you are a developer, never ever commit your .project or .cproject files to the 
+   repository!  They will have to be deleted before anyone else can check out the code 
+   again!  And it may mess up your other developers!  Once you select the option, 
+   click 'Finish'.
+   
+8) Click Ok to any prompt that appears until you get to the 'Select a wizard' window.  
+   Be sure to select 'C++ Project', and click 'Next'.
+   
+9) Name the project however you wish, and set the options you want for this project.  
+   Generally, the default options are fine, but this is really up to you.  Make sure 
+   you are pointing to the correct C++ compiler you have installed on your computer.
+   
+10) Hit finish, click OK to any additional prompts that appear, and the files should 
+    start downloading. In a short time, you should have everything you need.
+
+
+
+
+#####################################
+IV)  Compiling and Running NFsim
+
+1) By default, there are two build configurations provided for you: Debug and Release.  
+   Debug compiles the code to its least optimized form (making it very slow) but 
+   allows you to step through it with gdb or your favorite debugging program.  Release 
+   compiles into much faster code, but of course cannot be debugged.  To build your 
+   project (using the active build configuration) click on the hammer icon on the 
+   toolbar, or click on the menu Project->'Build All' or 'Build Project'.  Then 
+   sit back and watch things (hopefully) compile.
+   
+2) There should be no errors, but if there are they should be simple fixes (ie some 
+   compilers do not recognize the library <math> but instead need <math.h>).  Once 
+   you get it all compiled it is time to run!
+   
+3) One way to run is to right click on the project, click 'Run As', and click 'Local 
+   C/C++ Application'.  If your lucky, the code should just run.  If you're not lucky, 
+   you'll have to click on the menu 'Run'->Open Run Dialog.  From there, create a new 
+   C/C++ Local Application run configuration (with the menu on the left).  Find the 
+   project, the project executable (which will be either Debug\NFsim.exe or 
+   Release\NFsim.exe.  Notice that you can adjust the run configuration including the 
+   arguments and other environment variables.  Name your configuration and click run.
+   
+4) Things should be able to run!  Probably with no parameters at first.  To run 
+   something more interesting, open the run dialog again, and under the arguments tag, 
+   enter '-xml test/simple.xml'.  This should let you run a basic xml input file that 
+   is located in the test directory.  Something else to try: use the parameter '-logo'.  
+   Have fun!
+
+
+
+
