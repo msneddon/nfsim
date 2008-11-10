@@ -1,0 +1,87 @@
+# 
+
+
+begin parameters
+
+
+
+
+end parameters
+
+
+begin species
+
+DNA(pol,b~A,five,three!1).DNA(pol,b~T,five!1,three!2).DNA(pol,b~G,five!2,three!3).DNA(pol,b~G,five!3,three!4).DNA(pol,b~C,five!4,three!5).DNA(pol,b~G,five!5,three!6) 1
+
+POL(dna,rnaA,rnaB) 1
+mRNA(b~A,five,three,pol)  6
+mRNA(b~T,five,three,pol)  6
+mRNA(b~C,five,three,pol)  6
+mRNA(b~G,five,three,pol)  6
+
+
+end species
+
+
+
+
+begin reaction rules
+
+#Binding of RNA Polymerase to the end of the DNA
+DNA(pol,five) + POL(dna,rnaA,rnaB) -> DNA(pol!1,five).POL(dna!1,rnaA,rnaB) 50
+
+
+#INITIATION: Loading the first mRNA nucleotide, and sliding over so we can match the first base
+DNA(pol!1,b~A,five,three!2).DNA(pol,five!2).POL(dna!1,rnaA,rnaB) + mRNA(five,three,pol,b~A) -> DNA(pol,b~A,five,three!2).DNA(pol!1,five!2).POL(dna!1,rnaA!3,rnaB).mRNA(five,three,pol!3,b~A) 20
+DNA(pol!1,b~T,five,three!2).DNA(pol,five!2).POL(dna!1,rnaA,rnaB) + mRNA(five,three,pol,b~T) -> DNA(pol,b~T,five,three!2).DNA(pol!1,five!2).POL(dna!1,rnaA!3,rnaB).mRNA(five,three,pol!3,b~T) 20
+DNA(pol!1,b~C,five,three!2).DNA(pol,five!2).POL(dna!1,rnaA,rnaB) + mRNA(five,three,pol,b~C) -> DNA(pol,b~C,five,three!2).DNA(pol!1,five!2).POL(dna!1,rnaA!3,rnaB).mRNA(five,three,pol!3,b~C) 20
+DNA(pol!1,b~G,five,three!2).DNA(pol,five!2).POL(dna!1,rnaA,rnaB) + mRNA(five,three,pol,b~G) -> DNA(pol,b~G,five,three!2).DNA(pol!1,five!2).POL(dna!1,rnaA!3,rnaB).mRNA(five,three,pol!3,b~G) 20
+
+
+
+#ELONGATION I: Loading the second mRNA nucleotide for elongation
+DNA(pol!1,b~A).POL(dna!1,rnaA!2,rnaB).mRNA(three,pol!2) + mRNA(five,three,pol,b~A) ->  DNA(pol!1,b~A).POL(dna!1,rnaA!2,rnaB!3).mRNA(three,pol!2).mRNA(five,three,pol!3,b~A) 20
+DNA(pol!1,b~T).POL(dna!1,rnaA!2,rnaB).mRNA(three,pol!2) + mRNA(five,three,pol,b~T) ->  DNA(pol!1,b~T).POL(dna!1,rnaA!2,rnaB!3).mRNA(three,pol!2).mRNA(five,three,pol!3,b~T) 20
+DNA(pol!1,b~C).POL(dna!1,rnaA!2,rnaB).mRNA(three,pol!2) + mRNA(five,three,pol,b~C) ->  DNA(pol!1,b~C).POL(dna!1,rnaA!2,rnaB!3).mRNA(three,pol!2).mRNA(five,three,pol!3,b~C) 20
+DNA(pol!1,b~G).POL(dna!1,rnaA!2,rnaB).mRNA(three,pol!2) + mRNA(five,three,pol,b~G) ->  DNA(pol!1,b~G).POL(dna!1,rnaA!2,rnaB!3).mRNA(three,pol!2).mRNA(five,three,pol!3,b~G) 20
+
+#ELONGATION II: Binding the two mRNA nucleotides that are attathced to the polymerase
+DNA(pol!1).POL(dna!1,rnaA!2,rnaB!3).mRNA(three,pol!2).mRNA(five,three,pol!3) -> DNA(pol!1).POL(dna!1,rnaA!2,rnaB!3).mRNA(three!4,pol!2).mRNA(five!4,three,pol!3) 50
+
+#ELONGATION III: Sliding to the next basepair in the DNA sequence, and moving the mRNA along and out
+DNA(pol!1,three!5).DNA(pol,five!5).POL(dna!1,rnaA!2,rnaB!3).mRNA(three!4,pol!2).mRNA(five!4,three,pol!3) -> DNA(pol,three!5).DNA(pol!1,five!5).POL(dna!1,rnaA!2,rnaB).mRNA(three!4,pol).mRNA(five!4,three,pol!2) 25
+
+
+
+#TERMINATION I: Falling off of the DNA that that has an empty three prime end
+#and has already matched up with an mRNA
+DNA(pol!1,three).POL(dna!1,rnaA!2,rnaB!3).mRNA(three!4,pol!2).mRNA(five!4,three,pol!3) -> DNA(pol,three) + POL(dna,rnaA!2,rnaB!3).mRNA(three!4,pol!2).mRNA(five!4,three,pol!3) 5
+
+#TERMINATION II: unbinding of the last of the mRNA from the polymerase
+POL(dna,rnaA!1,rnaB!2).mRNA(three!3,pol!1).mRNA(five!3,three,pol!2) -> POL(dna,rnaA,rnaB) + mRNA(three!3,pol).mRNA(five!3,three,pol) 20
+
+
+end reaction rules
+
+
+begin observables
+
+Molecules    DNA_free          DNA(pol)
+Molecules    RNA_A             mRNA(b~A,five,three)
+Molecules    RNA_T             mRNA(b~T,five,three)
+Molecules    RNA_C             mRNA(b~C,five,three)
+Molecules    RNA_G             mRNA(b~G,five,three)
+Molecules    RNA_2             mRNA(five,three!1).mRNA(five!1,three)
+Molecules    RNA_3             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three)
+Molecules    RNA_4             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three!3).mRNA(five!3,three)
+Molecules    RNA_5             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three!3).mRNA(five!3,three!4).mRNA(five!4,three)
+Molecules    RNA_6             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three!3).mRNA(five!3,three!4).mRNA(five!4,three!5).mRNA(five!5,three)
+Molecules    RNA_7             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three!3).mRNA(five!3,three!4).mRNA(five!4,three!5).mRNA(five!5,three!6).mRNA(five!6,three)
+Molecules    RNA_8             mRNA(five,three!1).mRNA(five!1,three!2).mRNA(five!2,three!3).mRNA(five!3,three!4).mRNA(five!4,three!5).mRNA(five!5,three!6).mRNA(five!6,three!7).mRNA(five!7,three)
+
+end observables
+
+
+#generate_network({overwrite=>1,max_iter=>20});
+writeXML();
+#simulate_ssa({t_end=>20,n_steps=>20});
