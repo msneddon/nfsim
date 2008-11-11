@@ -152,16 +152,7 @@ System * NFinput::initializeFromXML(
 		//Finish up the output message
 		if(!verbose) cout<<"-]\n";
 
-		//Prepare the simulation
-		s->prepareForSimulation();
-
-		//Output the long form
-		if(verbose) {
-			cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
-			s->printAllMoleculeTypes();
-			s->printAllReactions();
-			cout<<"-------------------------\n";
-		}
+		//We no longer prepare the simulation here!  You have to do it yourself
 
 		return s;
 	}

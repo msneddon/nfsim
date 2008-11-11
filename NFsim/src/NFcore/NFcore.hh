@@ -136,7 +136,7 @@ namespace NFcore
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
 
 			MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
-			MoleculeType * getMoleculeTypeByName(string& name);
+			MoleculeType * getMoleculeTypeByName(string name);
 			int getNumOfMoleculeTypes() { return allMoleculeTypes.size(); };
 			Molecule * getMoleculeByUid(int uid);
 		    int getNumOfMolecules();
@@ -173,6 +173,10 @@ namespace NFcore
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
+
+			void addLocalFunction(LocalFunction *lf);
+			void getLocalFunction(string funcName) const { cout<<"getLocalFunction not yet implemented."<<endl;exit(1);};
+
 //			void addGroupOutputter(GroupOutputter * go);
 
 			/* functions to output simulation properties to the registered file*/
@@ -202,6 +206,9 @@ namespace NFcore
 //			void outputGroupData() { outputGroupData(this->current_time); };
 //			void outputGroupData(double cSampleTime);
 
+
+
+			void evaluateAllLocalFunctions();
 
 
 			void addOutputter(Outputter *op);
@@ -261,9 +268,10 @@ namespace NFcore
 			vector <Outputter *> allOutputters;
 
 
-			vector <ModuleType *> allModuleTypes;
+			//vector <ModuleType *> allModuleTypes;
 
 			vector <GlobalFunction *> globalFunctions; /* container of all functions available to the system */
+			vector <LocalFunction *> localFunctions;
 			vector <ReactionClass *> necessaryUpdateRxns;
 
 			bool onTheFlyObservables;
@@ -456,11 +464,18 @@ namespace NFcore
 			 * or counter to be evaluated.  When this molecule gets updated, it has to automatically
 			 * update all of its type II local functions.
 			 *
+			 * These functions return the index in the array indicating where these functions were
+			 * added.  This allows local functions to quickly update molecules that need the local
+			 * function information.
 			 */
-			void addLocalFunc_TypeI(LocalFunction *lf);
-			void addLocalFunc_TypeII(LocalFunction *lf);
+			int addLocalFunc_TypeI(LocalFunction *lf);
+			int addLocalFunc_TypeII(LocalFunction *lf);
 			vector <LocalFunction *> locFuncs_typeI;
 			vector <LocalFunction *> locFuncs_typeII;
+
+			int getNumOfTypeIFunctions() const {return locFuncs_typeI.size(); };
+			LocalFunction *getTypeILocalFunction(int index) { return locFuncs_typeI.at(index); };
+			int getNumOfTypeIIFunctions() const {return locFuncs_typeII.size(); };
 
 
 		protected:
@@ -557,6 +572,10 @@ namespace NFcore
 			void setComponentState(string cName, int newValue);
 
 
+			///////////// local function methods...
+			void setLocalFunctionValue(double newValue,int localFunctionIndex);
+
+
 
 
 			////////////////////////////////////////////////////////////////////
@@ -626,6 +645,9 @@ namespace NFcore
 			/* used for traversing a molecule complex */
 			bool hasVisitedMolecule;
 
+			/* used when reevaluating local functions */
+			bool hasEvaluatedMolecule;
+
 
 			static const int NOSTATE = -1;
 			static const int NOBOND = 0;
@@ -660,6 +682,10 @@ namespace NFcore
 			int numOfComponents;
 			Molecule **bond;
 			int *indexOfBond; /* gives the index of the component that is bonded to this molecule */
+
+
+			//////////// keep track of local function values
+			double *localFunctionValues;
 
 
 
@@ -837,6 +863,10 @@ namespace NFcore
 		bool compare(Molecule * m);
 		static bool compareBreadthFirst(TemplateMolecule *tm, Molecule *m);
 
+		//general function used to get a list of all the template molecules connected to
+		//this template molecule through bonds.
+		static void traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList);
+
 		/*
 		 * Used to check if a particular state value matches - used when parsing an xml file and
 		 * generating reaction transformations.
@@ -929,6 +959,9 @@ namespace NFcore
 			void addReferenceToMyself(mu::Parser * p);
 
 			void addDependentRxn(ReactionClass *r);
+
+			TemplateMolecule * getTemplateMolecule() const { return templateMolecule; };
+
 
 		protected:
 			string aliasName;   /* The name that will be output for this observable */

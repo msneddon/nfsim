@@ -226,13 +226,22 @@ int main(int argc, const char *argv[])
 						if(s->getName()=="localFunc"){
 							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
 
-							MoleculeType *rec = s->getMoleculeType(0);
+							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
+							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
+
+							Observable *obs_rCheR = s->getObservableByName("r_Cher");
+							vector <TemplateMolecule *> tmList;
+							TemplateMolecule::traverse(obs_rCheR->getTemplateMolecule(),tmList);
+							cout<<"\n----\n"<<tmList.size()<<endl;
+
 
 							vector <Observable *> obs;
 							TemplateMolecule * rec2 = new TemplateMolecule(rec);
 							rec2->addStateValue("m","2");
 							Observable * rec2obs = new Observable("RecM2", rec2);
 							obs.push_back(rec2obs);
+
+							obs.push_back(obs_rCheR);
 
 							vector <StateCounter *> sc;
 							StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
@@ -241,10 +250,15 @@ int main(int argc, const char *argv[])
 							vector <string> paramConstNames;
 							vector <double> paramConstValues;
 
-							LocalFunction *lf = new LocalFunction(
+							LocalFunction *lf = new LocalFunction(s,
 									"simpleFunc",
 									"RecMSum*RecM2*(5*5)/sqrt(10)",
 									obs,sc,paramConstNames,paramConstValues);
+
+
+							//prepare!
+							lf->addTypeIMoleculeDependency(rec);
+							s->prepareForSimulation();
 
 							lf->printDetails();
 							cout<<"reevaluating function on molecule"<<endl;
@@ -252,9 +266,34 @@ int main(int argc, const char *argv[])
 							lf->printDetails();
 
 
+
+
+							rec->printDetails();
+							cheR->printDetails();
+
+							cout<<endl<<endl<<endl;
+							//s->sim(10,10);
+							s->evaluateAllLocalFunctions();
+
+							lf->printDetails();
+
+							rec->getMolecule(0)->printDetails();
+
 							cout<<"ending test."<<endl;
 						}
 						else{
+
+
+						//Prepare the system for simulation!!
+						s->prepareForSimulation();
+
+						//Output some info on the system if we ask for it
+						if(verbose) {
+							cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
+							s->printAllMoleculeTypes();
+							s->printAllReactions();
+							cout<<"-------------------------\n";
+						}
 
 						cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 						s->equilibriate(eqTime);

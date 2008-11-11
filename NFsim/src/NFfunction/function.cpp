@@ -187,12 +187,15 @@ void StateCounter::add(Molecule *m) {
 
 /////////////////////////////////////////
 
-LocalFunction::LocalFunction(string name,
+LocalFunction::LocalFunction(System *s,
+					string name,
 					string funcString,
 					vector <Observable *> &observables,
 					vector <StateCounter *> &stateCounters,
 					vector <string> &paramConstNames,
 					vector <double> &paramConstValues) {
+
+	cout<<"Attempting to create local function: "<<name<<endl;
 
 	if(paramConstNames.size()!=paramConstValues.size()) {
 		cerr<<"Trying to create a local function, but your parameter vectors don't match up!"<<endl;
@@ -258,6 +261,69 @@ LocalFunction::LocalFunction(string name,
 		cout<<"Quitting."<<endl;
 		exit(1);
 	}
+
+
+	////////////////////////////
+	//If everything works, we can now identify the type II molecule types, because we have all the observables
+	//used to define this local function.  So let's add them now..
+	vector <TemplateMolecule *> tmList;
+	vector <MoleculeType *> addedMoleculeTypes;
+
+	cout<<"Now remembering type II molecules..."<<endl;
+	bool hasAdded = false;
+	for(unsigned int i=0; i<n_obs; i++) {
+		TemplateMolecule::traverse(this->obs[i]->getTemplateMolecule(),tmList);
+		cout<<"traversed obs "<<i<<" and found: "<<tmList.size()<<" templates\n";
+
+		for(unsigned int t=0; t<tmList.size(); t++) {
+			MoleculeType *mt = tmList.at(t)->getMoleculeType();
+
+			//Make sure we haven't added this molecule type before
+			hasAdded = false;
+			for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+				if(addedMoleculeTypes.at(m)==mt) {
+					hasAdded=true; break;
+				}
+			}
+			if(!hasAdded) {
+				addedMoleculeTypes.push_back(mt);
+				cout<<"remembering: "<<mt->getName()<<endl;
+			} else {
+				cout<<"ignoring: "<<mt->getName()<<endl;
+			}
+		}
+		tmList.clear();
+	}
+
+	for(unsigned int i=0; i<n_sc; i++) {
+		MoleculeType *mt = this->sc[i]->mt;
+
+		//Make sure we haven't added this molecule type before
+		hasAdded = false;
+		for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+			if(addedMoleculeTypes.at(m)==mt) {
+				hasAdded=true; break;
+			}
+		}
+		if(!hasAdded) {
+			addedMoleculeTypes.push_back(mt);
+			cout<<"*remembering: "<<mt->getName()<<endl;
+		} else {
+			cout<<"*ignoring: "<<mt->getName()<<endl;
+		}
+	}
+
+	for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+		int index = addedMoleculeTypes.at(m)->addLocalFunc_TypeII(this);
+		this->typeII_mol.push_back(addedMoleculeTypes.at(m));
+		this->typeII_localFunctionIndex.push_back(index);
+	}
+
+
+
+
+	// finally add the function to the system so it is remembered...
+	s->addLocalFunction(this);
 }
 
 LocalFunction::~LocalFunction() {
@@ -275,6 +341,24 @@ LocalFunction::~LocalFunction() {
 }
 
 
+
+//This function is generally called by a DOR reaction class once the
+//DOR reaction class has established that the value of this function
+//is required for some moleculetype...
+void LocalFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
+
+	//First, make sure we haven't added this bad boy yet
+	for(unsigned int i=0; i<this->typeI_mol.size(); i++) {
+		if(typeI_mol.at(i)==mt) return;
+	}
+
+	//First, add myself to the moleculeType
+	int index = mt->addLocalFunc_TypeI(this);
+	this->typeI_mol.push_back(mt);
+	this->typeI_localFunctionIndex.push_back(index);
+}
+
+
 void LocalFunction::printDetails() {
 
 	cout<<"Local Function: "+name+"()="<<funcString<<"\n";
@@ -283,11 +367,17 @@ void LocalFunction::printDetails() {
 	for(unsigned int i=0; i<n_sc; i++)
 		cout<<" -StateCounter '"<<sc[i]->name<<"' has local value: "<<sc[i]->value<<"\n";
 
+	for(unsigned int i=0; i<typeII_mol.size(); i++) {
+		cout<<" -TypeII: "<<typeII_mol.at(i)->getName()<<" @ index "<<typeII_localFunctionIndex.at(i)<<"\n";
+	}
+
 	double val =FuncFactory::Eval(p);
-	cout<<"Evaluates to: "<<val<<endl<<endl;
+	cout<<"  Last Evaluated to: "<<val<<endl<<endl;
 }
 
 
+//Note: not the most effecient function in the world, but it does what it has to for now
+//we should make this faster in the future...
 double LocalFunction::evaluateOn(Molecule *m) {
 
 	list <Molecule *> molList;
@@ -302,10 +392,25 @@ double LocalFunction::evaluateOn(Molecule *m) {
 		for(unsigned int i=0; i<n_obs; i++)
 			if(obs[i]->isObservable(*molIter)) obs[i]->straightAdd();
 		for(unsigned int i=0; i<n_sc; i++) {
-			cout<<"adding to sc"<<endl;
+			//cout<<"adding to sc"<<endl;
 			sc[i]->add(*molIter);
 		}
 	}
+
+	//evaluate the function
+	double newValue = FuncFactory::Eval(p);
+
+	//Update the molecules that needed this function evaluated...
+	for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+			if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
+				(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+			}
+		}
+	}
+
+
+
 	return FuncFactory::Eval(p);
 }
 

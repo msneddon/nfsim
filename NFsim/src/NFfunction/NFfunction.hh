@@ -225,13 +225,17 @@ namespace NFcore {
 	class LocalFunction {
 
 		public:
-			LocalFunction(string name,
+			LocalFunction(System *s,
+					string name,
 					string funcString,
 					vector <Observable *> &observables,
 					vector <StateCounter *> &stateCounters,
 					vector <string> &paramConstNames,
 					vector <double> &paramConstValues);
 			~LocalFunction();
+
+			void addTypeIMoleculeDependency(MoleculeType *mt);
+
 
 		//	void prepareForSimulation(System *s);
 
@@ -270,6 +274,17 @@ namespace NFcore {
 			unsigned int n_paramConst;
 			string *paramNames;
 			double *paramValues;
+
+
+			//Here we store back pointers into both type I and type II molecules
+			//Remember that type I molecules must store the value of this function
+			//locally so that it can be used in DOR reactions.  Type II molecules
+			//do not have the local value explicitly, but local functions should still
+			//know 'of' them in case of future speedups that might use this information
+			vector <MoleculeType *> typeI_mol;
+			vector <int> typeI_localFunctionIndex;
+			vector <MoleculeType *> typeII_mol;
+			vector <int> typeII_localFunctionIndex;
 
 
 	};

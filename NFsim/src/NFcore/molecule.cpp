@@ -32,10 +32,8 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 		bond[b]=0; indexOfBond[b]=NOBOND;
 	}
 
-
-
-
 	hasVisitedMolecule = false;
+	hasEvaluatedMolecule = false;
 	rxnListMappingId = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
@@ -88,7 +86,27 @@ void Molecule::prepareForSimulation()
 	for(int o=0;o<parentMoleculeType->getNumOfObservables(); o++) {
 		isObservable[o]=false;
 	}
+
+	localFunctionValues=new double[parentMoleculeType->getNumOfTypeIFunctions()];
+	for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
+		localFunctionValues[lf]=0;
+	}
+
 }
+
+
+
+//Used so that this molecule can remember what its local function was
+//evaluated to.  Only TypeI local functions are set up in this way
+void Molecule::setLocalFunctionValue(double newValue,int localFunctionIndex) {
+	if(localFunctionIndex<0 || localFunctionIndex>=parentMoleculeType->getNumOfTypeIFunctions()) {
+		cout<<"Error in Molecule: trying to set the value of a local function, but the\n";
+		cout<<"index provided was out of bounds!  I shall quit now."<<endl;
+		exit(1);
+	}
+	localFunctionValues[localFunctionIndex] = newValue;
+}
+
 
 
 void Molecule::updateRxnMembership()
@@ -180,6 +198,14 @@ void Molecule::printDetails() const
 		if(bond[c]==NOBOND) cout<<"empty";
 		else cout<<bond[c]->getUniqueID();
 		cout<<endl;
+	}
+
+	cout<<"number of typeI local functions: "<<parentMoleculeType->getNumOfTypeIFunctions()<<endl;
+	if(parentMoleculeType->getNumOfTypeIFunctions()>0) {
+		cout<<" Local functions:\n";
+		for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
+			cout<<"   "<<parentMoleculeType->getTypeILocalFunction(lf)->getNiceName()<<"="<<localFunctionValues[lf]<<"\n";
+		}
 	}
 }
 

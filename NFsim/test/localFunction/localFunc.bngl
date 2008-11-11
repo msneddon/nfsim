@@ -1,6 +1,6 @@
 begin parameters
 
-	RecClusterTotal 50
+	RecClusterTotal 4
 	kp 0.5
 	km 0.5
 
@@ -10,7 +10,7 @@ end parameters
 
 begin species
 	Receptor(m~2,r1,r2!1).Receptor(m~2,r1!1,r2!2).Receptor(m~2,r1!2,r2!3).Receptor(m~2,r1!3,r2) RecClusterTotal
-
+	CheR(r) 5
 
 end species
 
@@ -42,6 +42,8 @@ begin observables
 	Molecules  R2     Receptor(m~2)
 	Molecules  R3     Receptor(m~3)
 	Molecules  R4     Receptor(m~4)
+
+	Molecules r_Cher  Receptor(r1!1).CheR(r!1)
 
 end observables
 	

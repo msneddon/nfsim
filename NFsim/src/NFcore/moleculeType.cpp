@@ -464,6 +464,42 @@ void MoleculeType::removeFromRxns(Molecule * m)
   	}
 }
 
+
+
+
+//TypeI local function: this molecule type depends on the value of this
+//evaluated function
+int MoleculeType::addLocalFunc_TypeI(LocalFunction *lf) {
+	cout<<"adding type I local function to "<<name<<endl;
+	locFuncs_typeI.push_back(lf);
+	return locFuncs_typeI.size()-1;
+
+}
+
+//TypeII local function: this molecule type, when updated, changes the
+//value of this function
+int MoleculeType::addLocalFunc_TypeII(LocalFunction *lf) {
+	cout<<"adding type II local functions to "<<name<<endl;
+	locFuncs_typeII.push_back(lf);
+	return locFuncs_typeII.size()-1;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void MoleculeType::addAllToObservables()
 {
 	//Check each observable and see if this molecule should be counted
@@ -504,6 +540,7 @@ void MoleculeType::addToObservables(Molecule *m)
 	}
 
 }
+
 
 void MoleculeType::outputObservableNames(ofstream &fout)
 {
@@ -548,6 +585,18 @@ void MoleculeType::printDetails() const
 		if(c<(numOfComponents-1)) cout<<", ";
 	}
 	cout<<" )"<<endl;
+
+	//Output the local functions...
+	cout<<"  Type I local functions include:";
+	if(locFuncs_typeI.size()==0) cout<<"  none.";
+	for(unsigned int ti=0; ti<locFuncs_typeI.size(); ti++) {
+		cout<<"  "<<locFuncs_typeI.at(ti)->getNiceName();
+	} cout<<endl;
+	cout<<"  Type II local functions include:";
+	if(locFuncs_typeII.size()==0) cout<<"  none.";
+	for(unsigned int tii=0; tii<locFuncs_typeII.size(); tii++) {
+		cout<<"  "<<locFuncs_typeII.at(tii)->getNiceName();
+	} cout<<endl;
 
 
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
