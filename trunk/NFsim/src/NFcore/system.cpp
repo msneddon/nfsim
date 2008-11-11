@@ -257,7 +257,7 @@ void System::updateGroupProperty(char * groupName, double *value, int n_values)
 
 }
 
-MoleculeType * System::getMoleculeTypeByName(string& mName)
+MoleculeType * System::getMoleculeTypeByName(string mName)
 {
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
@@ -855,6 +855,67 @@ void System::printIndexAndNames()
 	}
 	cout<<endl;
 }
+
+
+
+void System::addLocalFunction(LocalFunction *lf) {
+	localFunctions.push_back(lf);
+}
+
+void System::evaluateAllLocalFunctions() {
+
+	//Don't do all the work if we don't actually have to...
+	if(localFunctions.size()==0) return;
+
+	list <Molecule *> molList;
+	list <Molecule *>::iterator molListIter;
+
+	//loop through each moleculeType
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+
+		//Loop through each molecule of that type
+		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++) {
+			Molecule *mol = (*molTypeIter)->getMolecule(m);
+
+			//Only continue if we haven't yet evaluated on this complex
+			if(!mol->hasEvaluatedMolecule) {
+
+				//First, grab the molecules in the complex
+				mol->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+
+				//Evaluate all local functions on this complex
+				for(unsigned int l=0; l<localFunctions.size(); l++) {
+					cout<<"--------------Evaluating local function..."<<endl;
+					double val = localFunctions.at(l)->evaluateOn(mol);
+					cout<<"     value of function: "<<val<<endl;
+
+				}
+
+				//Let those molecules know they've been visited
+				for(molListIter=molList.begin(); molListIter!=molList.end(); molListIter++) {
+					(*molListIter)->hasEvaluatedMolecule=true;
+				}
+			}
+		}
+	}
+
+	// Now go back and clear all the molecules of thier local functions...
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++)
+			(*molTypeIter)->getMolecule(m)->hasEvaluatedMolecule=false;
+	}
+
+
+
+	//Now, since we changed things around, we have to update the molecule positions in the
+	//reactant trees of DOR reactions.
+}
+
+
+
+
+
 
 
 
