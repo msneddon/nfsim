@@ -174,10 +174,10 @@ StateCounter::~StateCounter() {
 void StateCounter::add(Molecule *m) {
 	if(m->getMoleculeType()==mt) {
 
-		cout<<"matched moleculeType"<<endl;
+	//	cout<<"matched moleculeType"<<endl;
 		value+=m->getComponentState(stateIndex);
-		cout<<"found component state: "<<m->getComponentState(stateIndex)<<endl;
-		cout<<"updating value to: "<< value<<endl;
+	//	cout<<"found component state: "<<m->getComponentState(stateIndex)<<endl;
+	//	cout<<"updating v`alue to: "<< value<<endl;
 	}
 }
 

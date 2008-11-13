@@ -467,7 +467,7 @@ bool NFinput::initMoleculeTypes(
 								return false;
 							}
 
-							////// Original code always that always parses possible states as strings
+							////// Original code that always parses possible states as strings
 							//string aState = pAlStates->Attribute("id");
 							//if(allowedStates.find(typeName+"_"+compName+"_"+aState)!=allowedStates.end()) continue;
 							//allowedStates[typeName+"_"+compName+"_"+aState] = allowedStateCount;
@@ -475,10 +475,16 @@ bool NFinput::initMoleculeTypes(
 							//possibleStateNames.push_back(aState);
 							//if(verbose) cout<<"~"<<aState;
 
+							///  New code that allows integer state values, and checks for PLUS and MINUS
 							string aState = pAlStates->Attribute("id");
-
 							try {
-								int stateVal = NFutil::convertToInt(aState);
+
+								//First, check for PLUS and MINUS - if we find them, then stateVal is set to
+								//zero and we parse this state as an integer...
+								int stateVal=0;
+								if(aState!="PLUS" && aState!="MINUS") {
+									stateVal = NFutil::convertToInt(aState);
+								}
 
 								//If we got here, then we have to parse this state value as an integer, so there
 								//cannot be any other strings already added as possible state values.
@@ -486,6 +492,7 @@ bool NFinput::initMoleculeTypes(
 									cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
 									 typeName +"'.\n  The possible states can be either Integers OR strings," +
 									 " but cannot be both!!  Check your moleculeTypes."<<endl;
+									return false;
 								}
 
 								//Also check to make sure that stateVal is nonnegative - we don't allow that now
@@ -493,6 +500,7 @@ bool NFinput::initMoleculeTypes(
 									cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
 										typeName +"'.\n  State values cannot be negative Integers!" +
 										" Check your moleculeTypes."<<endl;
+									return false;
 								}
 
 								//Now find the max value... we will have to create all states between 0 and the max value
@@ -506,24 +514,28 @@ bool NFinput::initMoleculeTypes(
 										return false;
 									}
 									string aState = pAlStates->Attribute("id");
-									try {
-										stateVal = NFutil::convertToInt(aState);
+									if(aState!="PLUS" && aState!="MINUS") {
+										try {
+											stateVal = NFutil::convertToInt(aState);
 
-									} catch (std::runtime_error e) {
-										cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-											typeName +"'.\n  The possible states can be either Integers OR strings," +
-											" but cannot be both!!  Check your moleculeTypes."<<endl;
-									}
-									if(stateVal>maxValue) maxValue = stateVal;
-									if(stateVal<0) {
-										cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-												typeName +"'.\n  State values cannot be negative Integers!" +
-												" Check your moleculeTypes."<<endl;
-									}
-									if(stateVal>10000) {
-										cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-												typeName +"'.\n  State values that are Integers cannot exceed" +
-												" a value of 10,000!  Recheck your moleculeTypes."<<endl;
+										} catch (std::runtime_error e) {
+											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
+												typeName +"'.\n  The possible states can be either Integers OR strings," +
+												" but cannot be both!!  Check your moleculeTypes."<<endl;
+										}
+										if(stateVal>maxValue) maxValue = stateVal;
+										if(stateVal<0) {
+											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
+													typeName +"'.\n  State values cannot be negative Integers!" +
+													" Check your moleculeTypes."<<endl;
+											return false;
+										}
+										if(stateVal>10000) {
+											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
+													typeName +"'.\n  State values that are Integers cannot exceed" +
+													" a value of 10,000!  Recheck your moleculeTypes."<<endl;
+											return false;
+										}
 									}
 								}
 
@@ -1349,19 +1361,46 @@ bool NFinput::initReactionRules(
 						finalState = pStateChange->Attribute("finalState");
 					}
 
-					if(verbose) cout<<"\t\t\t***Identified state change to site: "+site+" going to new state value: " + finalState<<endl;
-
+					//First grab the component that is going to change...
 					component *c;
 					int finalStateInt = 0;
 					if(!lookup(c, site, comps, symMap)) return false;
-					try {
-						finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)->second;
-					} catch (exception& e) {
-						cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
-						cerr<<"It seems that the final state is not valid."<<endl;
-						return false;
+
+					//handle both increment and decrement states first...
+					if(finalState=="PLUS") {
+						if(!ts->addIncrementStateTransform(c->t,c->symPermutationName)) return false;
+
+						if(verbose) {
+							cout<<"\t\t\t***Identified increment state of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+							cout<<") to new state value: oldStateValue+1"<<endl;
+						}
 					}
-					if(!ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt)) return false;
+					else if(finalState=="MINUS") {
+						if(!ts->addDecrementStateTransform(c->t,c->symPermutationName)) return false;
+
+
+						if(verbose) {
+							cout<<"\t\t\t***Identified decrement state of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+							cout<<") to new state value: oldStateValue-1"<<endl;
+						}
+
+					}
+					else {
+
+						//Here, we handle your typical state change operation
+						try {
+							finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)->second;
+						} catch (exception& e) {
+							cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
+							cerr<<"It seems that the final state is not valid."<<endl;
+							return false;
+						}
+						if(!ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt)) return false;
+						if(verbose) {
+							cout<<"\t\t\t***Identified state change of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+							cout<<") to new state value: " + finalState<<endl;
+						}
+					}
 				}
 
 
@@ -1382,7 +1421,7 @@ bool NFinput::initReactionRules(
 						site2 = pDeleteBond->Attribute("site2");
 					}
 
-					if(verbose) cout<<"\t\t\t***Identified unbinding of site: "+site1+" to site " + site2<<endl;
+
 
 					component *c1;
 					component *c2;
@@ -1392,6 +1431,11 @@ bool NFinput::initReactionRules(
 					//Even though we had to make sure both ends exist, and we really only need one transformation
 					//we give both templates so we can check for symmetric unbinding
 					if(!ts->addUnbindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) return false;
+					if(verbose) {
+						cout<<"\t\t\t***Identified unbinding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
+						cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
+					}
+
 				}
 
 				//Next extract out the new bonds that are formed
@@ -1409,18 +1453,19 @@ bool NFinput::initReactionRules(
 						site2 = pAddBond->Attribute("site2");
 					}
 
-					if(verbose) cout<<"\t\t\t***Identified binding of site: "+site1+" to binding of site " + site2<<endl;
-
 					component *c1;
 					component *c2;
 
 					if(!lookup(c1, site1, comps, symMap)) return false;
 					if(!lookup(c2, site2, comps, symMap)) return false;
 					if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) return false;
+					if(verbose) {
+						cout<<"\t\t\t***Identified binding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
+						cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
+					}
+
+
 				}
-
-
-
 
 
 
@@ -1985,24 +2030,26 @@ TemplateMolecule *NFinput::readPattern(
 					if(pComp->Attribute("state")) {
 						string compStateValue = pComp->Attribute("state");
 
-						//Make sure the given state is allowed
-						if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
-							cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
-							cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
-							return false;
-						} else {
-							//State is a valid allowed state, so push it onto our list
-							int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
-
-							//Make sure we catch symmetric components in the case of a state change...
-							component *symC;  //cout<<"state value: "<< compId;
-							if(!lookup(symC, compId, comps, symMap)) {
-								cerr<<"Could not find the symmetric component when creating a component state, but there\n";
-								cerr<<"should have been one!!  I don't know what to do, so I'll quit."<<endl;
+						//Make sure the given state is allowed (we allow for wildcards...)
+						if(compStateValue!="*") {
+							if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
+								cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
+								cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
 								return false;
+							} else {
+								//State is a valid allowed state, so push it onto our list
+								int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
+
+								//Make sure we catch symmetric components in the case of a state change...
+								component *symC;  //cout<<"state value: "<< compId;
+								if(!lookup(symC, compId, comps, symMap)) {
+									cerr<<"Could not find the symmetric component when creating a component state, but there\n";
+									cerr<<"should have been one!!  I don't know what to do, so I'll quit."<<endl;
+									return false;
+								}
+								stateName.push_back(symC->symPermutationName);
+								stateValue.push_back(stateValueInt);
 							}
-							stateName.push_back(symC->symPermutationName);
-							stateValue.push_back(stateValueInt);
 						}
 					}
 

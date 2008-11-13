@@ -69,6 +69,11 @@ namespace NFcore
 			*/
 			bool addStateChangeTransform(TemplateMolecule *t, string cName, string finalStateValue);
 
+
+			bool addIncrementStateTransform(TemplateMolecule *t, string cName);
+			bool addDecrementStateTransform(TemplateMolecule *t, string cName);
+
+
 			/*!
 				Adds a binding reaction between the two given TemplateMolecules at the specified
 				binding sites.
