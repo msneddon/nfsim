@@ -200,11 +200,12 @@ void Molecule::printDetails() const
 		cout<<endl;
 	}
 
-	cout<<"number of typeI local functions: "<<parentMoleculeType->getNumOfTypeIFunctions()<<endl;
 	if(parentMoleculeType->getNumOfTypeIFunctions()>0) {
-		cout<<" Local functions:\n";
+		cout<<"      loc funcs:";
 		for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
-			cout<<"   "<<parentMoleculeType->getTypeILocalFunction(lf)->getNiceName()<<"="<<localFunctionValues[lf]<<"\n";
+			if(lf!=0) cout<<"                  ";
+			cout<<"  "<<parentMoleculeType->getTypeILocalFunction(lf)->getNiceName();
+			cout<<"="<<localFunctionValues[lf]<<"\n";
 		}
 	}
 }

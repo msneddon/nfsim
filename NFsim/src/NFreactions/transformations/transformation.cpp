@@ -23,6 +23,35 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
+IncrementStateTransform::IncrementStateTransform(unsigned int cIndex) :
+	Transformation(TransformationFactory::INCREMENT_STATE)
+{
+	this->cIndex = cIndex;
+}
+void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue+1);
+}
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+DecrementStateTransform::DecrementStateTransform(unsigned int cIndex) :
+	Transformation(TransformationFactory::DECREMENT_STATE)
+{
+	this->cIndex = cIndex;
+}
+void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue-1);
+}
+
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
 	Transformation(TransformationFactory::BINDING)
 {
@@ -138,4 +167,27 @@ NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform()
 {
 	return new RemoveMoleculeTransform();
 }
+
+
+NFcore::Transformation * TransformationFactory::genIncrementStateTransform(unsigned int cIndex)
+{
+	return new IncrementStateTransform(cIndex);
+}
+NFcore::Transformation * TransformationFactory::genDecrementStateTransform(unsigned int cIndex)
+{
+	return new DecrementStateTransform(cIndex);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 

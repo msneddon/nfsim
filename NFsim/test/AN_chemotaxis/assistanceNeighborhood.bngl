@@ -1,0 +1,104 @@
+begin parameters
+ V 1.41e-15 #litres
+ Na 6.02e23
+
+pOn 0.4
+
+konR 0.2
+konB 0.2
+koffR 0.1
+koffB 0.1
+
+kr 0.3
+kb 0.4
+
+end parameters
+
+begin species
+
+ ##  Receptor Dimers (named here simply as receptors)
+ Receptor(me~3,r~OPEN,b~BOUND,t1,t2,t3,t4,t5,t6) 100
+ 
+ 
+end species
+
+begin reaction rules
+
+##  R/B binding to a receptor tether
+Receptor(r~OPEN,b~OPEN) <-> Receptor(r~BOUND,b~OPEN) konR,koffR
+Receptor(r~OPEN,b~OPEN) <-> Receptor(r~OPEN,b~BOUND) konB,koffB
+
+##  R methylating the bound receptor
+Receptor(me~0,r~BOUND) -> Receptor(me~1,r~BOUND) kr*8*(1-pOn)
+Receptor(me~1,r~BOUND) -> Receptor(me~2,r~BOUND) kr*7*(1-pOn)
+Receptor(me~2,r~BOUND) -> Receptor(me~3,r~BOUND) kr*6*(1-pOn)
+Receptor(me~3,r~BOUND) -> Receptor(me~4,r~BOUND) kr*5*(1-pOn)
+Receptor(me~4,r~BOUND) -> Receptor(me~5,r~BOUND) kr*4*(1-pOn)
+Receptor(me~5,r~BOUND) -> Receptor(me~6,r~BOUND) kr*3*(1-pOn)
+Receptor(me~6,r~BOUND) -> Receptor(me~7,r~BOUND) kr*2*(1-pOn)
+Receptor(me~7,r~BOUND) -> Receptor(me~8,r~BOUND) kr*1*(1-pOn)
+
+##  B demethylating the bound receptor
+Receptor(me~8,r~BOUND) -> Receptor(me~7,r~BOUND) kb*8*pOn
+Receptor(me~7,r~BOUND) -> Receptor(me~6,r~BOUND) kb*7*pOn
+Receptor(me~6,r~BOUND) -> Receptor(me~5,r~BOUND) kb*6*pOn
+Receptor(me~5,r~BOUND) -> Receptor(me~4,r~BOUND) kb*5*pOn
+Receptor(me~4,r~BOUND) -> Receptor(me~3,r~BOUND) kb*4*pOn
+Receptor(me~3,r~BOUND) -> Receptor(me~2,r~BOUND) kb*3*pOn
+Receptor(me~2,r~BOUND) -> Receptor(me~1,r~BOUND) kb*2*pOn
+Receptor(me~1,r~BOUND) -> Receptor(me~0,r~BOUND) kb*1*pOn
+
+#########  Here we have to consider all the different ways that a receptor
+#########  can be methylated or demethylated from a neighbor
+
+## R methylating a neighbor receptor from me=0 to 1
+Receptor(r~BOUND,t1!1).Receptor(me~0,t4!1) -> Receptor(r~BOUND,t1!1).Receptor(me~1,t4!1) kr*8*(1-pOn)
+Receptor(r~BOUND,t2!1).Receptor(me~0,t5!1) -> Receptor(r~BOUND,t2!1).Receptor(me~1,t5!1) kr*8*(1-pOn)
+Receptor(r~BOUND,t3!1).Receptor(me~0,t6!1) -> Receptor(r~BOUND,t3!1).Receptor(me~1,t6!1) kr*8*(1-pOn)
+Receptor(r~BOUND,t4!1).Receptor(me~0,t1!1) -> Receptor(r~BOUND,t4!1).Receptor(me~1,t1!1) kr*8*(1-pOn)
+Receptor(r~BOUND,t5!1).Receptor(me~0,t2!1) -> Receptor(r~BOUND,t5!1).Receptor(me~1,t2!1) kr*8*(1-pOn)
+Receptor(r~BOUND,t6!1).Receptor(me~0,t3!1) -> Receptor(r~BOUND,t6!1).Receptor(me~1,t3!1) kr*8*(1-pOn)
+
+
+## B demethylating a neighbor receptor from me=8 to 7
+Receptor(b~BOUND,t1!1).Receptor(me~8,t4!1) -> Receptor(b~BOUND,t1!1).Receptor(me~7,t4!1) kb*8*pOn
+Receptor(b~BOUND,t2!1).Receptor(me~8,t5!1) -> Receptor(b~BOUND,t2!1).Receptor(me~7,t5!1) kb*8*pOn
+Receptor(b~BOUND,t3!1).Receptor(me~8,t6!1) -> Receptor(b~BOUND,t3!1).Receptor(me~7,t6!1) kb*8*pOn
+Receptor(b~BOUND,t4!1).Receptor(me~8,t1!1) -> Receptor(b~BOUND,t4!1).Receptor(me~7,t1!1) kb*8*pOn
+Receptor(b~BOUND,t5!1).Receptor(me~8,t2!1) -> Receptor(b~BOUND,t5!1).Receptor(me~7,t2!1) kb*8*pOn
+Receptor(b~BOUND,t6!1).Receptor(me~8,t3!1) -> Receptor(b~BOUND,t6!1).Receptor(me~7,t3!1) kb*8*pOn
+
+
+
+$1::Receptor(b~BOUND,t1!1).Receptor(me~??,t4!1) -> $1::Receptor(b~BOUND,t1!1).Receptor(me~--,t4!1) kb*8*pOn
+
+
+
+
+
+end reaction rules
+
+
+begin observables
+  Molecules r0 Receptor(me~0)
+  Molecules r1 Receptor(me~1)
+  Molecules r2 Receptor(me~2)
+  Molecules r3 Receptor(me~3)
+  Molecules r4 Receptor(me~4)
+  Molecules r5 Receptor(me~5)
+  Molecules r6 Receptor(me~6)
+  Molecules r7 Receptor(me~7)
+  Molecules r8 Receptor(me~8)
+end observables
+
+#generate_network({overwrite=>1});
+#generate_network({max_iter=>1,overwrite=>1});
+
+# equilibration
+#simulate_ode({suffix=>equil,t_end=>10000,n_steps=>10,steady_state=>1});
+
+# stochastic simulation
+#simulate_ode({t_end=>200,n_steps=>1000});
+#simulate_ssa({suffix=>ssa,t_end=>100,n_steps=>100});
+
+writeXML();
