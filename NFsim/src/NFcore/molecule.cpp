@@ -108,6 +108,16 @@ void Molecule::setLocalFunctionValue(double newValue,int localFunctionIndex) {
 }
 
 
+double Molecule::getLocalFunctionValue(int localFunctionIndex) {
+	if(localFunctionIndex<0 || localFunctionIndex>=parentMoleculeType->getNumOfTypeIFunctions()) {
+		cout<<"Error in Molecule: trying to set the value of a local function, but the\n";
+		cout<<"index provided was out of bounds!  I shall quit now."<<endl;
+		exit(1);
+	}
+	return localFunctionValues[localFunctionIndex];
+}
+
+
 
 void Molecule::updateRxnMembership()
 {

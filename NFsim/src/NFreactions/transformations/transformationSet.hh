@@ -111,6 +111,14 @@ namespace NFcore
 			*/
 			bool addAddMolecule(SpeciesCreator *sc);
 
+
+			/*!
+				Adds a create molecule rule, but has not been implemented yet.
+				@author Michael Sneddon
+			*/
+			bool addLocalFunctionReference(TemplateMolecule *t, string PointerName, int type);
+
+
 			/*!
 				Call this (in a ReactionClass) to transform the array of MappingSets (one
 				MappingSet per reactant in the correct position in the array, please!).
@@ -170,6 +178,13 @@ namespace NFcore
 
 			bool hasSymUnbindingTransform() const { return hasSymUnbinding; };
 
+
+			int getNumOfTransformations(int reactantIndex) const { return transformations[reactantIndex].size();};
+			Transformation *getTransformation(int reactantIndex, int index) const { return transformations[reactantIndex].at(index); };
+
+
+
+
 		protected:
 
 			/*!
@@ -190,7 +205,7 @@ namespace NFcore
 			/*!	The array of TemplateMolecules that represent the reactants		*/
 			TemplateMolecule ** reactants;
 
-			/*!	A vector that keeps holds the actual Transformation objects	*/
+			/*!	A vector that holds the actual Transformation objects	*/
 			vector <Transformation *> *transformations;
 
 

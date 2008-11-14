@@ -157,7 +157,6 @@ namespace NFcore
 
 			//The index of the first molecule in the tree
 			unsigned int firstMappingTreeIndex;
-
 	};
 }
 

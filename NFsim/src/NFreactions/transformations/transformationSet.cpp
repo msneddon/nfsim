@@ -74,6 +74,25 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	return true;
 }
 
+bool TransformationSet::addLocalFunctionReference(TemplateMolecule *t, string PointerName, int type)
+{
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	int reactantIndex = find(t);
+	if(reactantIndex==-1) {
+		cerr<<"Couldn't find the template you gave me!  In transformation set - addStateChangeTransform!\n";
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
+	}
+
+	Transformation *transformation = TransformationFactory::genLocalFunctionReference(PointerName,type,t);
+	transformations[reactantIndex].push_back(transformation);
+	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+	t->addMapGenerator(mg);
+	return true;
+}
+
 
 bool TransformationSet::addIncrementStateTransform(TemplateMolecule *t, string cName)
 {
@@ -247,6 +266,8 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	}
 	return true;
 }
+
+
 
 
 /*!

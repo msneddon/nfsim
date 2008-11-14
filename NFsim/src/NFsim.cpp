@@ -1,3 +1,29 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//    NFsim: The Network Free Stochastic Simulator
+//    A software framework for efficient simulation of biochemical reaction
+//    systems with a large or infinite state space.
+//
+//    Copyright (C) 2008  Michael Sneddon, James Faeder, Thierry Emonet
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//    For more information on NFsim, see http://emonet.biology.yale.edu/nfsim
+//
+////////////////////////////////////////////////////////////////////////////////
+
 /*! \mainpage NFsim: The Network Free Stochastic Simulator
  *
  * \section intro_sec Overview
@@ -252,9 +278,15 @@ int main(int argc, const char *argv[])
 
 							LocalFunction *lf = new LocalFunction(s,
 									"simpleFunc",
-									"RecMSum*RecM2*(5*5)/sqrt(10)",
+									"RecM2+(RecMSum*(5*5)/sqrt(10))",
 									obs,sc,paramConstNames,paramConstValues);
 
+							LocalFunction *lf2 = new LocalFunction(s,
+								"simpleFunc2",
+								"RecM2+(RecMSum+5)",
+								obs,sc,paramConstNames,paramConstValues);
+
+							lf->setEvaluationLevel(1);
 
 							//prepare!
 							lf->addTypeIMoleculeDependency(rec);
@@ -267,18 +299,46 @@ int main(int argc, const char *argv[])
 
 
 
+							///////////////////Testing DOR reactions....
+							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
+							TemplateMolecule *recTemp = new TemplateMolecule(rec);
+							recTemp->addStateValue("m","2");
+							vector <TemplateMolecule *> templates;
+							templates.push_back( recTemp );
+							templates.push_back( cherTemp );
+
+							TransformationSet *ts = new TransformationSet(templates);
+							ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
+							ts->addLocalFunctionReference(recTemp,"Pointer2",LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+							ts->addStateChangeTransform(recTemp,"m","1");
+							ts->finalize();
+
+
+
+							vector <LocalFunction *> lfList;
+							lfList.push_back(lf);
+							vector <string> lfPointerNameList;
+							lfPointerNameList.push_back("Pointer1");
+
+
+							ReactionClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
+
+
+							s->evaluateAllLocalFunctions();
+
+							r->tryToAdd(rec->getMolecule(0), 0);
+
 
 							rec->printDetails();
 							cheR->printDetails();
 
 							cout<<endl<<endl<<endl;
-							//s->sim(10,10);
-							s->evaluateAllLocalFunctions();
+							s->sim(10,10);
 
 							lf->printDetails();
 
 							rec->getMolecule(0)->printDetails();
-
+							cheR->getMolecule(0)->printDetails();
 							cout<<"ending test."<<endl;
 						}
 						else{

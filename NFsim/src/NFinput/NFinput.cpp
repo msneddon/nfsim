@@ -1318,7 +1318,6 @@ bool NFinput::initReactionRules(
 						TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, symMap, verbose);
 						if(tm==NULL) return false;
 						templates.push_back(tm);
-//////////////////////////////////////////tm->printDetails();
 					}
 					else {
 						cerr<<"Reactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
