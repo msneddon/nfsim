@@ -321,6 +321,12 @@ LocalFunction::LocalFunction(System *s,
 
 
 
+	//evaluation level is the degree to which the local function is evaluated
+	//An evaluation level of 0 evaluates over the entire species.  A level of
+	// 1 searches the immediate molecule only.  All other levels are currently
+	//not supported....  default evaluates over the entire species
+	evaluationLevel = 0;
+
 
 	// finally add the function to the system so it is remembered...
 	s->addLocalFunction(this);
@@ -341,6 +347,17 @@ LocalFunction::~LocalFunction() {
 }
 
 
+void LocalFunction::setEvaluationLevel(int eLevel) {
+
+	if(eLevel<0 || eLevel>1) {
+		cout<<"Error when setting evaluation level of function: "<<getNiceName();
+		cout<<"\nEvaluation level given was:"<<eLevel<<" but currently only supports levels of 0 or 1."<<endl;
+		exit(1);
+	}
+
+	this->evaluationLevel = eLevel;
+}
+
 
 //This function is generally called by a DOR reaction class once the
 //DOR reaction class has established that the value of this function
@@ -356,6 +373,16 @@ void LocalFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 	int index = mt->addLocalFunc_TypeI(this);
 	this->typeI_mol.push_back(mt);
 	this->typeI_localFunctionIndex.push_back(index);
+}
+
+
+int LocalFunction::getIndexOfTypeIFunctionValue(Molecule *m) {
+	for(unsigned int i=0; i<this->typeI_mol.size(); i++) {
+		if(typeI_mol.at(i)==m->getMoleculeType()) return this->typeI_localFunctionIndex.at(i);
+	}
+	cout<<"Error when getting the index of a Type I function value in LocalFunction:"<<endl;
+	cout<<"Could not find the molecule type as a type I molecule of this function: "<<this->getNiceName()<<endl;
+	exit(1);
 }
 
 
@@ -380,62 +407,71 @@ void LocalFunction::printDetails() {
 //we should make this faster in the future...
 double LocalFunction::evaluateOn(Molecule *m) {
 
-	list <Molecule *> molList;
-	list <Molecule *>::iterator molIter;
+	if(evaluationLevel==0) {
+		list <Molecule *> molList;
+		list <Molecule *>::iterator molIter;
 
-	m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
-	for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
-	for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
+		//Get the species.  If we are using complex bookkeeping, we should take advantage
+		//of that here, although I don't.
+		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
+		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
 
-	//Update the observables and counters, as something has changed
-	for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
-		for(unsigned int i=0; i<n_obs; i++)
-			if(obs[i]->isObservable(*molIter)) obs[i]->straightAdd();
-		for(unsigned int i=0; i<n_sc; i++) {
-			//cout<<"adding to sc"<<endl;
-			sc[i]->add(*molIter);
-		}
-	}
-
-	//evaluate the function
-	double newValue = FuncFactory::Eval(p);
-
-	//Update the molecules that needed this function evaluated...
-	for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
-		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
-			if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
-				(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+		//Update the observables and counters, as something has changed
+		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+			for(unsigned int i=0; i<n_obs; i++)
+				if(obs[i]->isObservable(*molIter)) obs[i]->straightAdd();
+			for(unsigned int i=0; i<n_sc; i++) {
+				//cout<<"adding to sc"<<endl;
+				sc[i]->add(*molIter);
 			}
 		}
+
+		//evaluate the function
+		double newValue = FuncFactory::Eval(p);
+
+		//Update the molecules (Type I) that needed this function evaluated...
+		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+			for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+				if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
+					(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+				}
+			}
+		}
+		return newValue;
+
+	//Evaluation level of 1 means that we search only this molecule when
+	//evaluating the function - the steps are the same as for the entire species, except we evaluate
+	//only on the molecule
+	} else if(evaluationLevel==1) {
+
+		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
+		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
+
+		for(unsigned int i=0; i<n_obs; i++) {
+			if(obs[i]->isObservable(m)) obs[i]->straightAdd();
+		}
+
+		for(unsigned int i=0; i<n_sc; i++) {
+			sc[i]->add(m);
+		}
+		double newValue = FuncFactory::Eval(p);
+		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+			if(m->getMoleculeType()==typeI_mol.at(ti)) {
+				m->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+			}
+		}
+		return newValue;
+
+
+	} else {
+		cout<<"Internal error in LocalFunction::evaluateOn()! trying to evaluate a function with a bad evaluation level."<<endl;
+		exit(1);
 	}
 
-
-
-	return FuncFactory::Eval(p);
+	//Should never get here...
+	return 0;
 }
-
-
-//			//List of observables that this local function depends on
-//			Observable ** observables;
-//			int * observableValues;
-//
-//
-//			string name;
-//			string funcString;
-//
-//			unsigned int n_args;
-//			string *argNames;
-//			string *argTypes;
-//
-//			unsigned int n_paramConst;
-//			string *paramNames;
-//			double *paramValues;
-
-
-
-
-
-
 
 
 

@@ -877,6 +877,16 @@ void System::evaluateAllLocalFunctions() {
 		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++) {
 			Molecule *mol = (*molTypeIter)->getMolecule(m);
 
+			//evaluate all functions on this Molecule that are local to a single molecule
+			for(unsigned int l=0; l<localFunctions.size(); l++) {
+				if(localFunctions.at(l)->getEvaluationLevel()>0) {
+					cout<<"--------------Evaluating local function on single molecule..."<<endl;
+					double val = localFunctions.at(l)->evaluateOn(mol);
+					cout<<"     value of function: "<<val<<endl;
+				}
+			}
+
+
 			//Only continue if we haven't yet evaluated on this complex
 			if(!mol->hasEvaluatedMolecule) {
 
@@ -885,9 +895,11 @@ void System::evaluateAllLocalFunctions() {
 
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
-					cout<<"--------------Evaluating local function..."<<endl;
-					double val = localFunctions.at(l)->evaluateOn(mol);
-					cout<<"     value of function: "<<val<<endl;
+					if(localFunctions.at(l)->getEvaluationLevel()==0) {
+						cout<<"--------------Evaluating local function on species..."<<endl;
+						double val = localFunctions.at(l)->evaluateOn(mol);
+						cout<<"     value of function: "<<val<<endl;
+					}
 
 				}
 

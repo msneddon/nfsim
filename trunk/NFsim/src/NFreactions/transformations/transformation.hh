@@ -78,6 +78,9 @@ namespace NFcore
 			static Transformation * genDecrementStateTransform(unsigned int cIndex);
 
 
+
+
+
 			/*!	Indicates a state change transformation or mapping onto a state	*/
 			static const unsigned int STATE_CHANGE = 0;
 
@@ -103,6 +106,13 @@ namespace NFcore
 			/*!		*/
 			static const unsigned int DECREMENT_STATE = 7;
 
+
+
+			////////////////////////////////
+			static Transformation * genLocalFunctionReference(string PointerName, int type, TemplateMolecule *tm);
+			static const unsigned int LOCAL_FUNCTION_REFERENCE = 8;
+			////////////////////////////////
+
 	};
 
 
@@ -116,6 +126,27 @@ namespace NFcore
 		protected:
 			int type;
 	};
+
+
+	class LocalFunctionReference : public Transformation {
+		public:
+			LocalFunctionReference(string PointerName, int type, TemplateMolecule *tm);
+			virtual ~LocalFunctionReference() {};
+			virtual void apply(Mapping *m, MappingSet **ms) {};
+			virtual int getComponentIndex() const { return -1; };
+
+			int getFunctionType() const {return type; };
+			TemplateMolecule *getTemplateObject() const {return tm;};
+			string getPointerName() const { return PointerName; };
+
+			static const unsigned int SPECIES_FUNCTION=0;
+			static const unsigned int SINGLE_MOLECULE_FUNCTION=1;
+		protected:
+			string PointerName;
+			int type;
+			TemplateMolecule *tm;
+	};
+
 
 
 	class EmptyTransform : public Transformation {

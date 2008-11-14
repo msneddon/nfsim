@@ -234,8 +234,16 @@ namespace NFcore {
 					vector <double> &paramConstValues);
 			~LocalFunction();
 
+
+			void setEvaluationLevel(int eLevel);
+			int getEvaluationLevel() const { return evaluationLevel; };
+
 			void addTypeIMoleculeDependency(MoleculeType *mt);
 
+
+			// NEED a FUNCTION HERE THAT TELLS US THE INDEX TO GET
+			// OUT THE STORED VALUE OF THIS FUNCTION FROM A GIVEN MOLECULE
+			int getIndexOfTypeIFunctionValue(Molecule *m);
 
 		//	void prepareForSimulation(System *s);
 
@@ -275,6 +283,8 @@ namespace NFcore {
 			string *paramNames;
 			double *paramValues;
 
+
+			int evaluationLevel;
 
 			//Here we store back pointers into both type I and type II molecules
 			//Remember that type I molecules must store the value of this function

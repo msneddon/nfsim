@@ -94,6 +94,7 @@ namespace NFcore
 
 
 
+
 	//!  The main class that begins and runs simulations
 	/*!
 	   This class is what runs the actual simulation.  It keeps lists of
@@ -478,6 +479,11 @@ namespace NFcore
 			int getNumOfTypeIIFunctions() const {return locFuncs_typeII.size(); };
 
 
+			//For DOR reactions, but it accepts general reaction classes so that NFcore does
+			//not have to reference DORreaction.cpp directly.
+			void addDORreaction(ReactionClass * dorRxn);
+
+
 		protected:
 
 			void init(
@@ -524,6 +530,9 @@ namespace NFcore
 
 			 ReactionClass *rxn; /*used so we don't need to redeclare this at every call to updateRxnMembership */
 
+
+
+			 //DOR reaction
 
 		private:
 			//Some iterators so we don't have to instantiate a new iterator every time
@@ -574,7 +583,7 @@ namespace NFcore
 
 			///////////// local function methods...
 			void setLocalFunctionValue(double newValue,int localFunctionIndex);
-
+			double getLocalFunctionValue(int localFunctionIndex);
 
 
 

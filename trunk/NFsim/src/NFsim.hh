@@ -20,7 +20,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
-//    For more information on NFsim, see http://emonet.biology.yale.edu/NFsim
+//    For more information on NFsim, see http://emonet.biology.yale.edu/nfsim
 //
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -131,6 +131,19 @@ void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 }
 
 
+/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+LocalFunctionReference::LocalFunctionReference(string PointerName, int type, TemplateMolecule *tm)
+	: Transformation(TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
+
+	this->PointerName=PointerName;
+	this->type=type;
+	this->tm=tm;
+
+}
+
+
+
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -178,7 +191,10 @@ NFcore::Transformation * TransformationFactory::genDecrementStateTransform(unsig
 	return new DecrementStateTransform(cIndex);
 }
 
-
+Transformation * TransformationFactory::genLocalFunctionReference(string PointerName, int type, TemplateMolecule *tm)
+{
+	return new LocalFunctionReference(PointerName, type, tm);
+}
 
 
 
