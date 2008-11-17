@@ -368,7 +368,9 @@ void System::prepareForSimulation()
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
 
-  	//
+
+
+  	// now we prepare all reactions
 	rxnIndexMap = new int * [allReactions.size()];
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
@@ -381,9 +383,19 @@ void System::prepareForSimulation()
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->prepareForSimulation();
 
+	//If there are local functions to be had, make sure we set up those local function lists in the molecules
+	//before we try to add molecules to reactant lists
+	if(this->localFunctions.size()>0) {
+	  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	  		(*molTypeIter)->setUpLocalFunctionListForMolecules();
+	}
+
+	this->evaluateAllLocalFunctions();
+
   	//prep each molecule type for the simulation
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
   		(*molTypeIter)->prepareForSimulation();
+
 
 
   	//if(BASIC_MESSAGE) cout<<"preparing the system...\n";

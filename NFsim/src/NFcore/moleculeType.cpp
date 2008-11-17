@@ -374,7 +374,15 @@ void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 
 
 
-
+void MoleculeType::setUpLocalFunctionListForMolecules()
+{
+	Molecule *mol;
+	for(int m=0; m<mList->size(); m++ )
+	{
+	  	mol = mList->at(m);
+	  	mol->setUpLocalFunctionList();
+	}
+}
 
 void MoleculeType::prepareForSimulation()
 {
