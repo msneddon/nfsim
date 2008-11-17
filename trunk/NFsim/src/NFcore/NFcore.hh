@@ -483,6 +483,7 @@ namespace NFcore
 			//not have to reference DORreaction.cpp directly.
 			void addDORreaction(ReactionClass * dorRxn);
 
+			void setUpLocalFunctionListForMolecules();
 
 		protected:
 
@@ -584,7 +585,7 @@ namespace NFcore
 			///////////// local function methods...
 			void setLocalFunctionValue(double newValue,int localFunctionIndex);
 			double getLocalFunctionValue(int localFunctionIndex);
-
+			void setUpLocalFunctionList();
 
 
 			////////////////////////////////////////////////////////////////////

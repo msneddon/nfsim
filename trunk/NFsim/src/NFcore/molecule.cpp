@@ -87,11 +87,16 @@ void Molecule::prepareForSimulation()
 		isObservable[o]=false;
 	}
 
+
+
+}
+
+void Molecule::setUpLocalFunctionList()
+{
 	localFunctionValues=new double[parentMoleculeType->getNumOfTypeIFunctions()];
 	for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
 		localFunctionValues[lf]=0;
 	}
-
 }
 
 

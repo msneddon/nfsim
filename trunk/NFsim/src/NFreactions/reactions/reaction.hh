@@ -137,7 +137,7 @@ namespace NFcore
 			virtual void prepareForSimulation() {};
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
 			virtual void remove(Molecule *m, unsigned int reactantPos) {};
-			virtual double update_a() {};
+			virtual double update_a() {return 0;};
 
 
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) {};

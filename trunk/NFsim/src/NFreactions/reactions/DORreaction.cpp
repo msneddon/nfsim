@@ -60,8 +60,6 @@ DORRxnClass::DORRxnClass(
 	// vector <int> indexIntoMappingSet;  //list of the index into the transformations for each of the local functions
 	//vector <double> localFunctionValue;  //list of the value of each of the local functions needed to evaluate
 	                                    //the rate law
-
-
 	//Array to double check that we have used all pointer references we have created
 	bool *hasMatched = new bool [transformationSet->getNumOfTransformations(DORreactantIndex)];
 	for(int i=0; i<transformationSet->getNumOfTransformations(DORreactantIndex); i++) hasMatched[i]=false;
@@ -110,7 +108,32 @@ DORRxnClass::DORRxnClass(
 			if(!hasMatched[k]) {
 				cout<<endl<<"Warning!  when creating DORrxnClass: "<<name<<endl;
 				cout<<"Pointer reference: "<<  static_cast<LocalFunctionReference*>(transform)->getPointerName() <<endl;
+				cout<<" that was provided is not used in the local function definition."<<endl;
 	}	}	}
+
+
+	///  Step 3: Wheh! now we can finally get on the business of creating the reactant lists
+	///  and the reactant tree and setting the usual reactionClass parameters
+
+	//Remeber that we are a DOR ReactionClass
+	this->reactionType = ReactionClass::DOR_RXN;
+
+	//Set up the reactant tree
+	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
+
+	//Set up the reactantLists
+	reactantLists = new ReactantList *[n_reactants];
+	for(unsigned int r=0; r<n_reactants; r++) {
+		if((signed)r!=this->DORreactantIndex)
+			reactantLists[r]=(new ReactantList(r,transformationSet,25));
+	}
+
+
+	this->a=0;
+
+
+
+
 
 
 	cout<<endl<<endl<<"got here, at least."<<endl;
@@ -125,23 +148,76 @@ DORRxnClass::~DORRxnClass() {
 
 void DORRxnClass::init() {
 
+	//cout<<"called init."<<endl; exit(1);
+	//Here we have to tell the molecules that they are part of this function
+	//and for single molecule functions, we have to tell them also that they are in
+	//this function
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		reactantTemplates[r]->getMoleculeType()->addReactionClass(this,r);
+	}
 
 
 }
 
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
+
+	cout<<"adding molecule to DORRxnClass"<<endl;
 	if(reactantPos==this->DORreactantIndex) {
+		cout<<" ... as a DOR"<<endl;
+		// handle the DOR reactant
+		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+		if(m->getRxnListMappingId(rxnIndex)>=0) {
+			cout<<"here2"<<endl;
+			if(!reactantTemplates[reactantPos]->compare(m)) {
+				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			}
+		} else {
+			reactantTree->printDetails();
+			ms=reactantTree->pushNextAvailableMappingSet();
+			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
+				//cout<<"got here"<<endl;
+				reactantTree->popLastMappingSet();
+			} else {
+				//we are keeping it, so evaluate the function and confirm the push
+				double localFunctionValue = this->evaluateLocalFunctions(ms);
+				reactantTree->confirmPush(ms->getId(),localFunctionValue);
+				m->setRxnListMappingId(rxnIndex,ms->getId());
+			}
+		}
 
-		ReactantList * rl = new ReactantList(DORreactantIndex,transformationSet,25);
-		MappingSet *ms = rl->pushNextAvailableMappingSet();
-		bool match = this->reactantTemplates[DORreactantIndex]->compare(m,ms);
-		cout<<"first, did we match?:"<<match<<endl;
-		cout<<"now, let us evaluate!"<<endl;
-		evaluateLocalFunctions(ms);
+//		ReactantList * rl = new ReactantList(DORreactantIndex,transformationSet,25);
+//		MappingSet *ms = rl->pushNextAvailableMappingSet();
+//		bool match = this->reactantTemplates[DORreactantIndex]->compare(m,ms);
+//		cout<<"first, did we match?:"<<match<<endl;
+//		cout<<"now, let us evaluate!"<<endl;
+//		evaluateLocalFunctions(ms);
+	} else {
+
+		// handle it normally...
+		cout<<" ... as a normal reactant"<<endl;
+		ReactantList *rl = reactantLists[reactantPos];
+		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+		if(m->getRxnListMappingId(rxnIndex)>=0) {
+			if(!reactantTemplates[reactantPos]->compare(m)) {
+				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			}
+		} else {
+			//try to map it.
+			ms = rl->pushNextAvailableMappingSet();
+			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
+				rl->popLastMappingSet();
+				//we just pushed, then popped, so molecule has not changed...
+			} else {
+				m->setRxnListMappingId(rxnIndex,ms->getId());
+			}
+		}
 	}
-
-
+	cout<<"finished adding"<<endl;
+	return true;
 }
 
 

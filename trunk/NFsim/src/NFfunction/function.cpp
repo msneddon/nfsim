@@ -445,6 +445,7 @@ double LocalFunction::evaluateOn(Molecule *m) {
 	//only on the molecule
 	} else if(evaluationLevel==1) {
 
+
 		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
 		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
 
@@ -452,9 +453,12 @@ double LocalFunction::evaluateOn(Molecule *m) {
 			if(obs[i]->isObservable(m)) obs[i]->straightAdd();
 		}
 
+
+
 		for(unsigned int i=0; i<n_sc; i++) {
 			sc[i]->add(m);
 		}
+
 		double newValue = FuncFactory::Eval(p);
 		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
 			if(m->getMoleculeType()==typeI_mol.at(ti)) {

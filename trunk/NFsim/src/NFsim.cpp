@@ -290,12 +290,11 @@ int main(int argc, const char *argv[])
 
 							//prepare!
 							lf->addTypeIMoleculeDependency(rec);
-							s->prepareForSimulation();
 
 							lf->printDetails();
-							cout<<"reevaluating function on molecule"<<endl;
-							lf->evaluateOn(rec->getMolecule(0));
-							lf->printDetails();
+							//cout<<"reevaluating function on molecule"<<endl;
+							//lf->evaluateOn(rec->getMolecule(0));
+							//lf->printDetails();
 
 
 
@@ -322,13 +321,18 @@ int main(int argc, const char *argv[])
 
 
 							ReactionClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
+							s->addReaction(r);
 
 
-							s->evaluateAllLocalFunctions();
 
-							r->tryToAdd(rec->getMolecule(0), 0);
+						//	s->evaluateAllLocalFunctions();
+							s->prepareForSimulation();
 
 
+							r->tryToAdd(rec->getMolecule(0), rec->getMolecule(0)->getRxnListMappingId(rec->getRxnIndex(r,0)));
+
+							cout<<"yada"<<endl; exit(0);
+							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
 							rec->printDetails();
 							cheR->printDetails();
 
@@ -340,6 +344,7 @@ int main(int argc, const char *argv[])
 							rec->getMolecule(0)->printDetails();
 							cheR->getMolecule(0)->printDetails();
 							cout<<"ending test."<<endl;
+
 						}
 						else{
 

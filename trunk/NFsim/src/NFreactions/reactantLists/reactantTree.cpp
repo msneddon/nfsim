@@ -155,12 +155,13 @@ void ReactantTree::popLastMappingSet() {
 		exit(1);
 	}
 
-	//Clear out the mappingSet (just in case) and decrease the count
+	cout<<msTreePositionMap[n_mappingSets-1]<<endl;
 	if(msTreePositionMap[n_mappingSets-1]>=0) {
 		cerr<<"Can't pop the last mappingSet if it was already confirmed to be in the tree!"<<endl;
 		exit(1);
 	}
 
+	//Clear out the mappingSet (just in case) and decrease the count
 	mappingSets[n_mappingSets-1]->clear();
 	n_mappingSets--;
 }
