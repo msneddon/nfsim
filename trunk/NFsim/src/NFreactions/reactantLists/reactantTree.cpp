@@ -78,7 +78,91 @@ ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, un
 
 }
 
+void ReactantTree::expandTree(int newCapacity) {
+	//Step 1: reallocate new arrays to store the tree, which is the exact same procedure
+	//as creating the tree to begin with.  I name everything with the xx_ prefix to make
+	//sure I'm working with new variables, not existing member variables.
+	int xx_maxElementCount = newCapacity;
+	int xx_treeDepth = (unsigned int)ceil((double)log((double)xx_maxElementCount)/(double)log((double)2));
+	xx_maxElementCount = (unsigned int) ((double)pow((double)2,(double)xx_treeDepth));
+	int xx_numOfNodes = ((unsigned int) ((double)pow((double)2,(double)(xx_treeDepth+1))) ) - 1;
 
+	int xx_firstMappingTreeIndex = xx_maxElementCount;
+
+	double *xx_leftRateFactorSum = new double [xx_numOfNodes+1];
+	int *xx_leftElementCount = new int [xx_numOfNodes+1];
+	int *xx_rightElementCount = new int [xx_numOfNodes+1];
+
+	for(int i=0; i<=xx_numOfNodes; i++) {
+		xx_leftRateFactorSum[i] = 0;
+		xx_leftElementCount[i] = 0;
+		xx_rightElementCount[i] = 0;
+	}
+
+	MappingSet **xx_mappingSets= new MappingSet * [xx_maxElementCount];
+	////Take special precaution here!!  we don't want to actually reallocate the mappingSets!
+	/// because then we would have to recompare each molecule to this template again!
+	/// Instead, we will initialze only the end of this array, and fill in the rest
+	/// of the array with the original elements, putting them in the proper position
+	/// based on their id
+	for(int i=0; i<this->maxElementCount; i++){
+		xx_mappingSets[this->mappingSets[i]->getId()] = this->mappingSets[i];
+	}
+	for(int i=this->maxElementCount; i<xx_maxElementCount; i++) {
+		xx_mappingSets[i] = ts->generateBlankMappingSet(this->reactantIndex,i);
+	}
+
+	/* original allocation procedure, for reference:
+	 * for(int i=0; i<xx_maxElementCount; i++)
+	 * 		xx_mappingSets[i] = ts->generateBlankMappingSet(this->reactantIndex,i);*/
+
+	int *xx_msPositionMap = new int [xx_maxElementCount];
+	for(int i=0; i<xx_maxElementCount; i++) xx_msPositionMap[i]=i;
+	int *xx_msTreePositionMap = new int [xx_maxElementCount];
+	for(int i=0; i<xx_maxElementCount; i++) xx_msTreePositionMap[i]=-1;
+	int *xx_reverseMsTreePositionMap = new int [xx_maxElementCount];
+	for(int i=0; i<xx_maxElementCount; i++) xx_reverseMsTreePositionMap[i]=-1;
+	int xx_n_mappingSets = 0;
+
+	//Step 2: Take each mapping set from the original tree, and reinsert them into the new
+	//tree.  We cannot just copy over the elements for two reasons: 1) most importantly, the position
+	//in the tree will be different because
+
+
+
+
+
+	//Step 3: Delete all the arrays that we are no longer using to free up the memory
+	delete [] this->leftRateFactorSum;
+	delete [] this->leftElementCount;
+	delete [] this->rightElementCount;
+	delete [] this->mappingSets; //remember, just delete the array!  not the actual mappingSets here!
+	delete [] this->msPositionMap;
+	delete [] this->msTreePositionMap;
+	delete [] this->reverseMsTreePositionMap;
+
+
+	//Step 4: copy the newly created arrays over the original arrays
+	this->maxElementCount = xx_maxElementCount;
+	this->treeDepth = xx_treeDepth;
+	this->numOfNodes = xx_numOfNodes;
+
+	this->leftRateFactorSum = xx_leftRateFactorSum;
+	this->leftElementCount = xx_leftElementCount;
+	this->rightElementCount = xx_rightElementCount;
+
+	this->mappingSets = xx_mappingSets;
+
+	this->msPositionMap = xx_msPositionMap;
+
+	this->msTreePositionMap = xx_msTreePositionMap;
+
+	this->reverseMsTreePositionMap = xx_reverseMsTreePositionMap;
+
+	this->n_mappingSets=xx_n_mappingSets;
+
+	this->firstMappingTreeIndex = xx_firstMappingTreeIndex;
+}
 
 
 ReactantTree::~ReactantTree()
@@ -101,8 +185,13 @@ ReactantTree::~ReactantTree()
 
 MappingSet * ReactantTree::pushNextAvailableMappingSet() {
 	//Check that we didn't go over the max
-	if(n_mappingSets >= maxElementCount)
+	if(n_mappingSets >= maxElementCount) {
 		cerr<<"Error in ReactantTree!!!  Adding more than I can take! "<<endl;
+
+		//we have to make ourselves bigger...
+
+
+	}
 
 	n_mappingSets++;
 	return mappingSets[n_mappingSets-1];
@@ -155,9 +244,14 @@ void ReactantTree::popLastMappingSet() {
 		exit(1);
 	}
 
-	cout<<msTreePositionMap[n_mappingSets-1]<<endl;
-	if(msTreePositionMap[n_mappingSets-1]>=0) {
-		cerr<<"Can't pop the last mappingSet if it was already confirmed to be in the tree!"<<endl;
+	//We check here if the mappingSet that we tried to push was in fact confirmed (by seeing
+	//if it had a place in the tree).  If it did have a place in the tree, the MappingSet can
+	//only be removed by calling remove, not by popping.
+	//cout<<msTreePositionMap[mappingSets[n_mappingSets-1]->getId()]<<endl;
+	if(msTreePositionMap[mappingSets[n_mappingSets-1]->getId()]>=0) {
+		this->printDetails();
+		cout<<"Can't pop the last mappingSet if it was already confirmed to be in the tree!"<<endl;
+
 		exit(1);
 	}
 
@@ -362,7 +456,7 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 void ReactantTree::printDetails() {
 
 	cout<<endl<<endl<<"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<endl;
-	cout<<"Printing ReactantTree:"<<endl<<endl;
+	cout<<"Printing ReactantTree: size="<<size()<<endl<<endl;
 	cout<<"MS Array: [ ";
 	for(int i=0; i<maxElementCount; i++)
 		cout<<mappingSets[i]->getId()<<" ";

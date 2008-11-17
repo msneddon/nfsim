@@ -107,7 +107,7 @@ DORRxnClass::DORRxnClass(
 		if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 			if(!hasMatched[k]) {
 				cout<<endl<<"Warning!  when creating DORrxnClass: "<<name<<endl;
-				cout<<"Pointer reference: "<<  static_cast<LocalFunctionReference*>(transform)->getPointerName() <<endl;
+				cout<<"Pointer reference: "<<  static_cast<LocalFunctionReference*>(transform)->getPointerName();
 				cout<<" that was provided is not used in the local function definition."<<endl;
 	}	}	}
 
@@ -120,6 +120,7 @@ DORRxnClass::DORRxnClass(
 
 	//Set up the reactant tree
 	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
+	//reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
 
 	//Set up the reactantLists
 	reactantLists = new ReactantList *[n_reactants];
@@ -128,18 +129,11 @@ DORRxnClass::DORRxnClass(
 			reactantLists[r]=(new ReactantList(r,transformationSet,25));
 	}
 
-
+	//Initialize a to zero
 	this->a=0;
 
 
-
-
-
-
-	cout<<endl<<endl<<"got here, at least."<<endl;
-	//exit(1);
-
-
+	// i think we be done now
 }
 DORRxnClass::~DORRxnClass() {
 
@@ -163,24 +157,32 @@ void DORRxnClass::init() {
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
-	cout<<"adding molecule to DORRxnClass"<<endl;
-	if(reactantPos==this->DORreactantIndex) {
+
+	cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
+	m->printDetails();
+	if(reactantPos==(unsigned)this->DORreactantIndex) {
 		cout<<" ... as a DOR"<<endl;
+
+
+		cout<<"RxnListMappingId: "<<m->getRxnListMappingId(m->getMoleculeType()->getRxnIndex(this,reactantPos))<<endl;
+
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			cout<<"here2"<<endl;
+			cout<<"was in the tree, so checking if we should remove"<<endl;
 			if(!reactantTemplates[reactantPos]->compare(m)) {
+				cout<<"removing..."<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-			}
+			} else { cout<<"not removing"<<endl; }
 		} else {
-			reactantTree->printDetails();
+			cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
 			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
-				//cout<<"got here"<<endl;
+				cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree->popLastMappingSet();
 			} else {
+				cout<<"should be in the tree, so confirm push."<<endl;
 				//we are keeping it, so evaluate the function and confirm the push
 				double localFunctionValue = this->evaluateLocalFunctions(ms);
 				reactantTree->confirmPush(ms->getId(),localFunctionValue);
@@ -188,6 +190,8 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			}
 		}
 
+
+		reactantTree->printDetails();
 //		ReactantList * rl = new ReactantList(DORreactantIndex,transformationSet,25);
 //		MappingSet *ms = rl->pushNextAvailableMappingSet();
 //		bool match = this->reactantTemplates[DORreactantIndex]->compare(m,ms);
@@ -221,9 +225,16 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 }
 
 
+unsigned int DORRxnClass::getReactantCount(unsigned int reactantIndex) const
+{
+	if(reactantIndex==(unsigned)this->DORreactantIndex) {
+		return reactantTree->size();
+	}
+	reactantLists[reactantIndex]->size();
+}
 
-
-//This function takes a given mappingset and looks up the
+//This function takes a given mappingset and looks up the value of its local
+//functions based on the local functions that were defined
 double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 {
 	//Go through each function, and set the value of the function
@@ -231,7 +242,7 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 		Molecule *molObject = ms->get(this->indexIntoMappingSet.at(i))->getMolecule();
 		int index = lfList.at(i)->getIndexOfTypeIFunctionValue(molObject);
 		this->localFunctionValue.at(i)=molObject->getLocalFunctionValue(index);
-		cout<<"found that local function: "<<getName()<<" evaluates to: " <<localFunctionValue.at(i)<<endl;
+		//cout<<"found that local function: "<<getName()<<" evaluates to: " <<localFunctionValue.at(i)<<endl;
 	}
 
 }

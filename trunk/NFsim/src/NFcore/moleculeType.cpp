@@ -575,6 +575,15 @@ void MoleculeType::printObservableCounts()
 }
 
 
+void MoleculeType::printAllMolecules()
+{
+	for( int m=0; m<mList->size(); m++ ) {
+		mList->at(m)->printDetails();
+	}
+
+}
+
+
 void MoleculeType::printDetails() const
 {
 	cout<<"Molecule Type: "<< name << " type ID: " << type_id <<endl;

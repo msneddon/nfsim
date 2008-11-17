@@ -136,12 +136,12 @@ namespace NFcore
 			virtual void init();
 			virtual void prepareForSimulation() {};
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
-			virtual void remove(Molecule *m, unsigned int reactantPos) {};
+			virtual void remove(Molecule *m, unsigned int reactantPos) {cout<<"calling remove in DOR?"<<endl; exit(0);};
 			virtual double update_a() {return 0;};
 
 
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) {};
-			virtual unsigned int getReactantCount(unsigned int reactantIndex) const {};
+			virtual unsigned int getReactantCount(unsigned int reactantIndex) const;
 
 			virtual void printDetails() const {};
 			virtual void printFullDetails() const {};

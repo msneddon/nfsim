@@ -451,7 +451,7 @@ namespace NFcore
 
 			//Debugging function that prints some useful information about this MoleculeType
 			void printDetails() const;
-
+			void printAllMolecules();
 
 
 			//Functionality for local functions

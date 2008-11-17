@@ -91,6 +91,11 @@ namespace NFcore
 
 
 
+
+			void expandTree(int newCapacity);
+
+
+
 			//Once you insert into this tree, you will get the position you were
 			//inserted into.  This will never change until you are removed
 			//int insert(Molecule * m, double rateFactor);
@@ -116,7 +121,6 @@ namespace NFcore
 			//Basic tree parameters and constants
 			int maxElementCount;
 			int treeDepth;
-			int treeFirstMoleculeIndex;
 			int numOfNodes;
 
 			//The tree stored as 3 arrays indexed as:
@@ -150,6 +154,7 @@ namespace NFcore
 			int * reverseMsTreePositionMap;
 
 
+			//bool hasOpenPush;
 
 
 			//The number of mappingSets currently set

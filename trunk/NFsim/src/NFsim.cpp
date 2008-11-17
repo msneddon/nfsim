@@ -329,15 +329,20 @@ int main(int argc, const char *argv[])
 							s->prepareForSimulation();
 
 
-							r->tryToAdd(rec->getMolecule(0), rec->getMolecule(0)->getRxnListMappingId(rec->getRxnIndex(r,0)));
+							//r->tryToAdd(rec->getMolecule(0), rec->getMolecule(0)->getRxnListMappingId(rec->getRxnIndex(r,0)));
 
-							cout<<"yada"<<endl; exit(0);
+
 							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
 							rec->printDetails();
 							cheR->printDetails();
 
 							cout<<endl<<endl<<endl;
 							s->sim(10,10);
+
+
+
+							rec->printAllMolecules();
+							cout<<"yada"<<endl; exit(0);
 
 							lf->printDetails();
 
