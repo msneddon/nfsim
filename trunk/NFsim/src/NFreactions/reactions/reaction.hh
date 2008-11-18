@@ -137,20 +137,30 @@ namespace NFcore
 			virtual void prepareForSimulation() {};
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
 			virtual void remove(Molecule *m, unsigned int reactantPos) {cout<<"calling remove in DOR?"<<endl; exit(0);};
-			virtual double update_a() {return 0;};
+			virtual double update_a();
 
 
-			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) {};
+			virtual int getDORreactantPosition() const { return DORreactantIndex; };
+
+
+
+			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
 			virtual unsigned int getReactantCount(unsigned int reactantIndex) const;
 
-			virtual void printDetails() const {};
+			virtual void printDetails() const;
 			virtual void printFullDetails() const {};
+
+
+			void directAddForDebugging(Molecule *m);
+			void printTreeForDebugging();
+
+			static void test1(System *s);
 
 		protected:
 
 			virtual double evaluateLocalFunctions(MappingSet *ms);
 
-			virtual void pickMappingSets(double randNumber) const {};
+			virtual void pickMappingSets(double randNumber) const;
 
 			ReactantList **reactantLists;
 			ReactantTree *reactantTree;

@@ -377,11 +377,12 @@ void LocalFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 
 
 int LocalFunction::getIndexOfTypeIFunctionValue(Molecule *m) {
+
 	for(unsigned int i=0; i<this->typeI_mol.size(); i++) {
 		if(typeI_mol.at(i)==m->getMoleculeType()) return this->typeI_localFunctionIndex.at(i);
 	}
 	cout<<"Error when getting the index of a Type I function value in LocalFunction:"<<endl;
-	cout<<"Could not find the molecule type as a type I molecule of this function: "<<this->getNiceName()<<endl;
+	cout<<"Could not find the molecule type: '"<<m->getMoleculeType()->getName()<<"' as a type I molecule of this function: "<<this->getNiceName()<<endl;
 	exit(1);
 }
 
@@ -412,7 +413,7 @@ double LocalFunction::evaluateOn(Molecule *m) {
 		list <Molecule *>::iterator molIter;
 
 		//Get the species.  If we are using complex bookkeeping, we should take advantage
-		//of that here, although I don't.
+		//of that here, although I don't here yet.
 		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
 		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
@@ -435,6 +436,7 @@ double LocalFunction::evaluateOn(Molecule *m) {
 			for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
 				if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
 					(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+					(*molIter)->updateDORRxnValues();
 				}
 			}
 		}
@@ -463,6 +465,7 @@ double LocalFunction::evaluateOn(Molecule *m) {
 		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
 			if(m->getMoleculeType()==typeI_mol.at(ti)) {
 				m->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+				m->updateDORRxnValues();
 			}
 		}
 		return newValue;

@@ -66,21 +66,22 @@ namespace NFcore
 			*/
 			void removeMappingSet(unsigned int mappingSetId);
 
-			/*!
-				Randomly selects a MappingSet from the list of available MappingSets.
-			*/
-			void pickRandom(MappingSet *&ms);
 
 			/*!
 				This is the key utility of a reactant tree: given a random value, we can select the next reactant
 				to fire with this function that weights the selection of any particular reactant by
 			*/
-			void getReactantFromValue(MappingSet *&ms, double value, double baseRate);
+			void pickReactantFromValue(MappingSet *&ms, double value, double baseRate);
 
 			/*!
 
 			 */
 			void updateValue(unsigned int mappingSetId, double newRateFactor);
+
+			/*! Returns a MappingSet so that a DOR can evaluate a local function on it.
+
+			 */
+			MappingSet * getMappingSet(unsigned int mappingSetId);
 
 
 
