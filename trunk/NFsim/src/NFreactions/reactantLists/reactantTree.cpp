@@ -124,9 +124,51 @@ void ReactantTree::expandTree(int newCapacity) {
 	for(int i=0; i<xx_maxElementCount; i++) xx_reverseMsTreePositionMap[i]=-1;
 	int xx_n_mappingSets = 0;
 
+
+
 	//Step 2: Take each mapping set from the original tree, and reinsert them into the new
-	//tree.  We cannot just copy over the elements for two reasons: 1) most importantly, the position
-	//in the tree will be different because
+	//tree.  We cannot just copy over the elements because the position
+	//in the tree will be different because the tree is now larger.
+
+	//Loop through the mappingSets
+	double xx_rateFactor = 0; int xx_mappingSetId = 0;
+	for(int i=0; i<this->maxElementCount; i++) {
+		xx_mappingSetId = this->mappingSets[i]->getId();
+		xx_rateFactor = this->leftRateFactorSum[this->msTreePositionMap[xx_mappingSetId]+this->firstMappingTreeIndex];
+
+		int cn = 1;
+
+		//This is where we actually add the pushed mappingSet onto the tree.
+		//Keep going down the tree until we reach the bottom, we know we
+		//are at the bottom because the current node index will be greater
+		// than the firstMoleculeTreeIndex
+		while(cn < xx_firstMappingTreeIndex)
+		{
+			//Pick the side of the tree that has the least number
+			//of elements, or the left side if they are equal
+			if( xx_leftElementCount[cn] <= xx_rightElementCount[cn]) {
+				xx_leftElementCount[cn]++;
+				xx_leftRateFactorSum[cn] += xx_rateFactor;
+				cn = 2*cn;
+			} else {
+				xx_rightElementCount[cn]++;
+				cn = 2*cn+1;
+			}
+		}
+
+		xx_leftRateFactorSum[cn] = xx_rateFactor;
+		xx_leftRateFactorSum[0] += xx_rateFactor;
+
+		//Find the position that we actually want to insert the mapping
+		int xx_msTreeArrayPosition= cn - xx_firstMappingTreeIndex;
+
+		//update our arrays to remember this position in the tree
+		xx_msPositionMap[xx_mappingSetId] = i;  //this does change, and should point to this index, i
+		xx_msTreePositionMap[xx_mappingSetId]=xx_msTreeArrayPosition;  //remember what position in the tree this mappingSet is at
+		xx_reverseMsTreePositionMap[xx_msTreeArrayPosition]=xx_mappingSetId;  //remember what mappingSet is at this tree position
+
+		xx_n_mappingSets++;
+	}
 
 
 
@@ -152,15 +194,10 @@ void ReactantTree::expandTree(int newCapacity) {
 	this->rightElementCount = xx_rightElementCount;
 
 	this->mappingSets = xx_mappingSets;
-
 	this->msPositionMap = xx_msPositionMap;
-
 	this->msTreePositionMap = xx_msTreePositionMap;
-
 	this->reverseMsTreePositionMap = xx_reverseMsTreePositionMap;
-
 	this->n_mappingSets=xx_n_mappingSets;
-
 	this->firstMappingTreeIndex = xx_firstMappingTreeIndex;
 }
 
@@ -186,10 +223,11 @@ ReactantTree::~ReactantTree()
 MappingSet * ReactantTree::pushNextAvailableMappingSet() {
 	//Check that we didn't go over the max
 	if(n_mappingSets >= maxElementCount) {
-		cerr<<"Error in ReactantTree!!!  Adding more than I can take! "<<endl;
+		cout<<"\n\n\n\n\n-------------\nIn ReactantTree!!!  Adding more than I can take! "<<endl;
 
+		expandTree(maxElementCount*2);
 		//we have to make ourselves bigger...
-
+		//exit(1);
 
 	}
 

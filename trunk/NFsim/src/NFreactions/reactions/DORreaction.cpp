@@ -119,7 +119,7 @@ DORRxnClass::DORRxnClass(
 	this->reactionType = ReactionClass::DOR_RXN;
 
 	//Set up the reactant tree
-	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
+	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,4);
 	//reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
 
 	//Set up the reactantLists
@@ -244,5 +244,5 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 		this->localFunctionValue.at(i)=molObject->getLocalFunctionValue(index);
 		//cout<<"found that local function: "<<getName()<<" evaluates to: " <<localFunctionValue.at(i)<<endl;
 	}
-
+	return this->localFunctionValue.at(0);
 }
