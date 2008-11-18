@@ -3,6 +3,8 @@
 
 #include "reaction.hh"
 
+#define DEBUG_MESSAGE 0
+
 
 using namespace std;
 using namespace NFcore;
@@ -17,9 +19,10 @@ DORRxnClass::DORRxnClass(
 		vector <string> &lfArgumentPointerNameList) :
 	ReactionClass(name,baseRate,transformationSet)
 {
-	cout<<"ok, here we go..."<<endl;
+	if(DEBUG_MESSAGE)cout<<"ok, here we go..."<<endl;
 	vector <TemplateMolecule *> dorMolecules;
 
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 1: Find the DOR reactant, and make sure there is only one.  DOR reactants
 	//can be found because they have a LocalFunctionPointer Transformation that keeps
 	//information about the pointer onto either a reactant species or a particular molecule
@@ -47,13 +50,10 @@ DORRxnClass::DORRxnClass(
 		exit(1);
 	}
 
-	cout<<"I determined that the DOR reactant is in fact: "<<DORreactantIndex<<endl;
+	if(DEBUG_MESSAGE)cout<<"I determined that the DOR reactant is in fact: "<<DORreactantIndex<<endl;
+	if(DEBUG_MESSAGE)cout<<"N_reactants: "<<transformationSet->getNreactants();
 
-	cout<<"N_reactants: "<<transformationSet->getNreactants();
-
-
-
-	cout<<endl<<endl<<endl;
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 2: Some bookkeeping so that we can quickly get the function values from a mapping set
 	// Now that we have found the DOR reactant, which can potentially have multiple functions, lets
 	// figure out which functions apply to which
@@ -112,10 +112,11 @@ DORRxnClass::DORRxnClass(
 	}	}	}
 
 
+	//////////////////////////////////////////////////////////////////////////////////////////
 	///  Step 3: Wheh! now we can finally get on the business of creating the reactant lists
 	///  and the reactant tree and setting the usual reactionClass parameters
 
-	//Remeber that we are a DOR ReactionClass
+	//Remember that we are a DOR ReactionClass
 	this->reactionType = ReactionClass::DOR_RXN;
 
 	//Set up the reactant tree
@@ -142,66 +143,52 @@ DORRxnClass::~DORRxnClass() {
 
 void DORRxnClass::init() {
 
-	//cout<<"called init."<<endl; exit(1);
 	//Here we have to tell the molecules that they are part of this function
 	//and for single molecule functions, we have to tell them also that they are in
-	//this function
+	//this function, so they need to update thier value should they be transformed
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		reactantTemplates[r]->getMoleculeType()->addReactionClass(this,r);
 	}
-
-
 }
 
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
-
-	cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
-	m->printDetails();
+	if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
+	if(DEBUG_MESSAGE)m->printDetails();
 	if(reactantPos==(unsigned)this->DORreactantIndex) {
-		cout<<" ... as a DOR"<<endl;
-
-
-		cout<<"RxnListMappingId: "<<m->getRxnListMappingId(m->getMoleculeType()->getRxnIndex(this,reactantPos))<<endl;
+		if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
+		//cout<<"RxnListMappingId: "<<m->getRxnListMappingId(m->getMoleculeType()->getRxnIndex(this,reactantPos))<<endl;
 
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			cout<<"was in the tree, so checking if we should remove"<<endl;
+			if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 			if(!reactantTemplates[reactantPos]->compare(m)) {
-				cout<<"removing..."<<endl;
+				if(DEBUG_MESSAGE)cout<<"removing..."<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-			} else { cout<<"not removing"<<endl; }
+			} else {}
 		} else {
-			cout<<"wasn't in the tree, so trying to push and compare"<<endl;
+			if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
 			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
-				cout<<"shouldn't be in the tree, so we pop"<<endl;
+				if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree->popLastMappingSet();
 			} else {
-				cout<<"should be in the tree, so confirm push."<<endl;
+				if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
 				//we are keeping it, so evaluate the function and confirm the push
 				double localFunctionValue = this->evaluateLocalFunctions(ms);
+				if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 				reactantTree->confirmPush(ms->getId(),localFunctionValue);
 				m->setRxnListMappingId(rxnIndex,ms->getId());
 			}
 		}
-
-
-		reactantTree->printDetails();
-//		ReactantList * rl = new ReactantList(DORreactantIndex,transformationSet,25);
-//		MappingSet *ms = rl->pushNextAvailableMappingSet();
-//		bool match = this->reactantTemplates[DORreactantIndex]->compare(m,ms);
-//		cout<<"first, did we match?:"<<match<<endl;
-//		cout<<"now, let us evaluate!"<<endl;
-//		evaluateLocalFunctions(ms);
 	} else {
 
 		// handle it normally...
-		cout<<" ... as a normal reactant"<<endl;
+		if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
 		ReactantList *rl = reactantLists[reactantPos];
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
@@ -220,7 +207,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			}
 		}
 	}
-	cout<<"finished adding"<<endl;
+	if(DEBUG_MESSAGE)cout<<"finished adding"<<endl;
 	return true;
 }
 
@@ -246,3 +233,150 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 	}
 	return this->localFunctionValue.at(0);
 }
+
+
+double DORRxnClass::update_a() {
+	a = baseRate;
+	for(int i=0; i<n_reactants; i++) {
+		if(i!=DORreactantIndex) {
+			a*=reactantLists[i]->size();
+		} else {
+			a*=reactantTree->getRateFactorSum();
+		}
+	}
+	return a;
+}
+
+void DORRxnClass::pickMappingSets(double randNumber) const
+{
+	//here we cannot just select a random molecule.  This is where all of our hard
+	//work pays off.  We can use the tree to correctly select the next DOR reactant
+	//(as well as all the other reactants.  So here we go...
+	double rateFactorMultiplier = baseRate;
+	for(unsigned int i=0; i<n_reactants; i++) {
+		if(i!=(unsigned)DORreactantIndex) {
+			reactantLists[i]->pickRandom(mappingSet[i]);
+			rateFactorMultiplier*=reactantLists[i]->size();
+		}
+	}
+	reactantTree->pickReactantFromValue(mappingSet[DORreactantIndex],randNumber,rateFactorMultiplier);
+}
+
+void DORRxnClass::notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) {
+	if(reactantIndex==DORreactantIndex) {
+		double newValue = evaluateLocalFunctions(reactantTree->getMappingSet(rxnListIndex));
+		reactantTree->updateValue(rxnListIndex,newValue);
+	} else {
+		cout<<"Internal Error in DORRxnClass::notifyRateFactorChange!!  : trying to change a rate\n";
+		cout<<"factor of a non-DOR reactant.  That means this function was called in error!\n";
+		exit(1);
+	}
+}
+
+
+void DORRxnClass::printDetails() const
+{
+	cout<<"DORRxnClass: " << name <<"  ( baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		if(r!=(unsigned)DORreactantIndex) {
+			cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
+			cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+		} else {
+			cout<<"      -(DOR) "<<reactantTemplates[r]->getMoleculeTypeName();
+			cout<<" (rateFactorSum="<<reactantTree->getRateFactorSum();
+			cout<<", size="<<reactantTree->size()<<")."<<endl;
+		}
+	}
+		if(n_reactants==0)
+			cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+}
+
+
+
+void DORRxnClass::test1(System *s)
+{
+	MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
+
+	vector <Observable *> obs;
+	//TemplateMolecule * rec2 = new TemplateMolecule(rec);
+	//rec2->addStateValue("m","2");
+	//Observable * rec2obs = new Observable("RecM2", rec2);
+	//obs.push_back(rec2obs);
+
+	vector <StateCounter *> sc;
+	StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
+	sc.push_back(scRecM);
+
+	vector <string> paramConstNames; vector <double> paramConstValues;
+
+	LocalFunction *lf = new LocalFunction(s,
+			"openMethSites",
+			"8-RecMSum",
+			obs,sc,paramConstNames,paramConstValues);
+	//lf->setEvaluationLevel(1);
+
+	//prepare!
+	lf->addTypeIMoleculeDependency(rec);
+	lf->printDetails();
+
+
+
+	///////////////////Testing DOR reactions....
+	TemplateMolecule *recTemp = new TemplateMolecule(rec);
+	vector <TemplateMolecule *> templates;
+	templates.push_back( recTemp );
+
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
+	ts->addIncrementStateTransform(recTemp,"m");
+	ts->finalize();
+
+
+
+	vector <LocalFunction *> lfList;
+	lfList.push_back(lf);
+	vector <string> lfPointerNameList;
+	lfPointerNameList.push_back("Pointer1");
+
+	DORRxnClass *r = new DORRxnClass("DorTest",1,ts,lfList,lfPointerNameList);
+	s->addReaction(r);
+
+
+	s->prepareForSimulation();
+	cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
+
+	s->sim(10,50);
+	cout<<endl<<endl<<endl;
+	s->printAllReactions();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//void DORRxnClass::directAddForDebugging(Molecule *m) {
+//	cout<<"don't call this DORRxnClass::directAddForDebugging function anymore!"<<endl;
+//	exit(1);
+//	//ms=reactantTree->pushNextAvailableMappingSet();
+//	//reactantTemplates[DORreactantIndex]->compare(m,ms);
+//	//double localFunctionValue = this->evaluateLocalFunctions(ms);
+//	//reactantTree->confirmPush(ms->getId(),localFunctionValue);
+//	//m->setRxnListMappingId(rxnIndex,ms->getId());
+//}
+//void DORRxnClass::printTreeForDebugging() {
+//	reactantTree->printDetails();
+//}

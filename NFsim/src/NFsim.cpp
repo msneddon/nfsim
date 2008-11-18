@@ -89,6 +89,11 @@
  * with handling the more complicated output required of groups and complexes.  (Basic outputting
  * is handled easily with the System and Observable classes in the NFcore namespace).
  *
+ * Another note for developers: class functions and member variables are generally well
+ * commented in the header file in which they are declared.  So if you are lost in some source
+ * file, and you think there aren't any comments, be sure to check the header file before
+ * you ask for help.
+ *
  *  \section author_sec Authors & Acknowledgments
  * The NFsim code was written and developed by Michael Sneddon with help from James Faeder and
  * Thierry Emonet.  James Faeder wrote the extended BioNetGen code that can output XML encodings
@@ -249,8 +254,11 @@ int main(int argc, const char *argv[])
 
 
 						//Test for local functions ...
-						if(s->getName()=="localFunc"){
+						if(s->getName()=="localFunc2"){
 							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
+							DORRxnClass::test1(s);
+							cout<<"yada"<<endl; exit(0);
+
 
 							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
 							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
@@ -301,7 +309,7 @@ int main(int argc, const char *argv[])
 							///////////////////Testing DOR reactions....
 							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
 							TemplateMolecule *recTemp = new TemplateMolecule(rec);
-							recTemp->addStateValue("m","2");
+							recTemp->addStateValue("m","3");
 							vector <TemplateMolecule *> templates;
 							templates.push_back( recTemp );
 							templates.push_back( cherTemp );
@@ -320,16 +328,11 @@ int main(int argc, const char *argv[])
 							lfPointerNameList.push_back("Pointer1");
 
 
-							ReactionClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
+							DORRxnClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
 							s->addReaction(r);
 
-
-
-						//	s->evaluateAllLocalFunctions();
 							s->prepareForSimulation();
 
-
-							//r->tryToAdd(rec->getMolecule(0), rec->getMolecule(0)->getRxnListMappingId(rec->getRxnIndex(r,0)));
 
 
 							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
@@ -340,14 +343,28 @@ int main(int argc, const char *argv[])
 							s->sim(10,10);
 
 
+							//rec->printAllMolecules();
+							//lf->printDetails();
+							//rec->getMolecule(0)->printDetails();
+							//cheR->getMolecule(0)->printDetails();
 
-							rec->printAllMolecules();
+
+//							cout<<"\n\n\n\n\n----\n\n";
+//							cout<<"rec mol count: "<<rec->getMoleculeCount()<<endl;
+//							for(int i=0; i<rec->getMoleculeCount(); i++) {
+//								r->printTreeForDebugging();
+//								cout<<"adding..."<<endl;
+//								rec->getMolecule(i)->printDetails();
+//								rec->getMolecule(i)->setComponentState("m",3);
+//								rec->getMolecule(i)->printDetails();
+//								r->directAddForDebugging(rec->getMolecule(i));
+//							}
+//							r->printTreeForDebugging();
+
+
+
+
 							cout<<"yada"<<endl; exit(0);
-
-							lf->printDetails();
-
-							rec->getMolecule(0)->printDetails();
-							cheR->getMolecule(0)->printDetails();
 							cout<<"ending test."<<endl;
 
 						}

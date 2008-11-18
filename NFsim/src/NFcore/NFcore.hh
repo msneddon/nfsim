@@ -1,13 +1,6 @@
-//////////////////////////////////////////////////////////
-// NFcore.hh
-//
-// Header file that contains the class declarations and definitions
-// for the primary classes needed by the NFsim program.
-//
-//
-// Michael Sneddon (michael.sneddon@yale.edu)
-//
-//////////////////////////////////////////////////////////
+/*! \file NFcore.hh
+    \brief Contains declarations of core NFsim classes
+*/
 #ifndef NFCORE_HH_
 #define NFCORE_HH_
 
@@ -22,7 +15,7 @@
 #include <queue>
 #include <map>
 
-//
+// Include various NFsim classes from other files
 #include "../NFutil/NFutil.hh"
 #include "../NFreactions/NFreactions.hh"
 #include "moleculeLists/moleculeList.hh"
@@ -30,7 +23,7 @@
 #include "../NFoutput/NFoutput.hh"
 
 #define DEBUG 0   			// Set to 1 to display all debug messages
-#define BASIC_MESSAGE 1		// Set to 1 to display basic messages (eg runtime)
+#define BASIC_MESSAGE 0		// Set to 1 to display basic messages (eg runtime)
 
 
 using namespace std;
@@ -49,7 +42,6 @@ using namespace std;
 namespace NFcore
 {
 
-
 	//Forward declarations to deal with cyclic dependencies
 	class MapGenerator;
 	class MappingSet;
@@ -63,7 +55,7 @@ namespace NFcore
 	class Outputter;
 	class DumpMoleculeType;
 
-	class ModuleType;
+	//class ModuleType;
 
 	/*****************************************
 	 * Class declarations
@@ -85,9 +77,6 @@ namespace NFcore
 
 	class Complex;  /* collection of molecules that are bonded to each
 						other and whose membership dynamically can change*/
-//	class Group; /* collection of molecules that are not necessarily bonded together, but
-//					can share certain properties */
-//	class StateChangeListener;  /*used by molecules to let its group know its state changed */
 
 	class ReactantList;
 
@@ -112,15 +101,22 @@ namespace NFcore
 	{
 		public:
 
-			static int NULL_EVENT_COUNTER;
+			/*!
+				 creates a system with the given name that does not
+				 keep track dynamically of complex formation
+			 */
+			System(string name);
 
-			// Basic constructor and desconstructor methods
-			System(string name);  /* creates a system with the given name that does not
-				                         keep track dynamically of complex formation */
-			System(string name, bool useComplex); /* creates a system with the given name
-				                         that keeps track of complex formation if the useComplex
-				                         parameter is set to true */
-			~System(); /* destroys the system and cleans up all memory associated with it */
+			/*!
+				 creates a system that keeps track of complex formation if
+				 the setComplex parameter is set to true
+			 */
+			System(string name, bool useComplex);
+
+			/*!
+				 destroys the system and cleans up all memory associated with it
+			 */
+			~System();
 
 			// Basic functions to get the properties and objects of the system
 			string getName() const { return name; };
@@ -128,8 +124,6 @@ namespace NFcore
 			bool isOutputtingBinary() { return useBinaryOutput; };
 			double getCurrentTime() const { return current_time; };
 
-//			Group * getGroup(int ID_group) const { return allGroups.at(ID_group); };
-//			int getGroupCount() const { return allGroups.size(); }
 			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
 			Observable * getObservableByName(string obsName);
 			double getAverageGroupValue(string groupName, int valIndex);
@@ -150,7 +144,6 @@ namespace NFcore
 			void addReaction(ReactionClass *reaction);
 			void addNecessaryUpdateReaction(ReactionClass *reaction);
 			int createComplex(Molecule * m);
-//			int addGroup(Group * g);
 
 			bool addGlobalFunction(GlobalFunction *gf);
 			GlobalFunction * getGlobalFunctionByName(string fName);
@@ -178,7 +171,6 @@ namespace NFcore
 			void addLocalFunction(LocalFunction *lf);
 			void getLocalFunction(string funcName) const { cout<<"getLocalFunction not yet implemented."<<endl;exit(1);};
 
-//			void addGroupOutputter(GroupOutputter * go);
 
 			/* functions to output simulation properties to the registered file*/
 			void outputAllObservableNames();
@@ -192,8 +184,7 @@ namespace NFcore
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
 			void printAllObservableCounts(double cSampleTime);
-			void purgeAndPrintAvailableComplexList(); /* ONLY USE FOR DEBUG PURPOSES, AS THIS
-															 DELETES ALL COMPLEX BOOKKEEPING */
+			void purgeAndPrintAvailableComplexList(); /*< ONLY USE FOR DEBUG PURPOSES, AS THIS DELETES ALL COMPLEX BOOKKEEPING */
 			void outputComplexSizes(double cSampleTime);
 			void outputMoleculeTypeCountPerComplex(MoleculeType *m);
 			double outputMeanCount(MoleculeType *m);
@@ -204,8 +195,6 @@ namespace NFcore
 				a_tot+=new_a;
 			}
 
-//			void outputGroupData() { outputGroupData(this->current_time); };
-//			void outputGroupData(double cSampleTime);
 
 
 
@@ -248,67 +237,71 @@ namespace NFcore
 
 			void turnOff_OnTheFlyObs();
 
+
+			/*! keeps track of null events (ie binding events that have
+			    been rejected because molecules are on the same complex)
+			 */
+			static int NULL_EVENT_COUNTER;
+
 		protected:
 
-			// The invariant system properties, created when the system is created
-			string name;         /* arbitrary name of the system  */
-			bool useComplex;     /* parameter that knows if we should be dynamically tracking complexes */
+			///////////////////////////////////////////////////////////////////////////
+			// The invariant system properties, created when the system is created and before
+			// the system is prepared
+			string name;         /*!< arbitrary name of the system  */
+			bool useComplex;     /*!< sets whether or not to dynamically track complexes */
+			bool useBinaryOutput; /*!< set to true to turn on binary output of data */
+			int universalTraversalLimit; /*!< sets depth to traverse molecules when updating reactant lists */
+			bool onTheFlyObservables;    /*!< sets whether or not observables are calculated on the fly */
+		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */
 
-			bool useBinaryOutput;
-
-			int universalTraversalLimit;
-
-
-			// The container objects that maintain the system configuration
-			vector <MoleculeType *> allMoleculeTypes;  /* container of all MoleculeTypes in the simulation */
-			vector <ReactionClass *> allReactions;    /* container of all Reactions in the simulation */
-//			vector <Group *> allGroups;               /* container of all groups in the simulation */
-			vector <Complex * > allComplexes;         /* container of all complexes in the simulation */
-			queue <int> nextAvailableComplex;         /* queue tells us which complexes can be used next */
-
-			vector <Outputter *> allOutputters;
+		    ///////////////////////////////////////////////////////////////////////////
+			// The container objects that maintain the core system configuration
+			vector <MoleculeType *> allMoleculeTypes;  /*!< container of all MoleculeTypes in the simulation */
+			vector <ReactionClass *> allReactions;    /*!< container of all Reactions in the simulation */
+			vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
+			queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
+			vector <Outputter *> allOutputters;    /*! < manages the outputters of the system */
 
 
-			//vector <ModuleType *> allModuleTypes;
+			///////////////////////////////////////////////////////////////////////////
+			// The container objects that maintain the functional expressions
+			vector <GlobalFunction *> globalFunctions;    /*!< container of all global functions available to the system */
+			vector <LocalFunction *> localFunctions;      /*!< container of all local functions available to the system */
+			vector <ReactionClass *> necessaryUpdateRxns; /*!< list of all  reactions that need to update propensity after each step*/
 
-			vector <GlobalFunction *> globalFunctions; /* container of all functions available to the system */
-			vector <LocalFunction *> localFunctions;
-			vector <ReactionClass *> necessaryUpdateRxns;
 
-			bool onTheFlyObservables;
-
+			///////////////////////////////////////////////////////////////////////////
 			// Properties of the system that update in time
-			double a_tot;        /* the sum of all a's (propensities) of all reactions */
-			double current_time; /* keep track of the simulation time */
-			ReactionClass * nextReaction;  /* keep track of the next reaction to fire */
+			double a_tot;        /*< the sum of all a's (propensities) of all reactions */
+			double current_time; /*< keeps track of the simulation time */
+			ReactionClass * nextReaction;  /*< keeps track of the next reaction to fire */
 
-
-			// functions needed only by the system while running a simulation
+			///////////////////////////////////////////////////////////////////////////
+			// protected functions needed only by the system while running a simulation
 			double get_A_tot() const { return a_tot; };
 			double recompute_A_tot();
 			double getNextRxn();
 
 
+			///////////////////////////////////////////////////////////////////////////
 			// Neccessary variables and methods for outputting
 			ofstream outputFileStream; /* the stream to a file to write out the results */
 			void outputGroupDataHeader();
-//			GroupOutputter * go;
-		    bool outputGlobalFunctionValues;
 
 
-
-			//For moleculeTypes to do a quick lookup and see where a particular reaction
-			//is mapped to.  This is an optimization....
-			int **rxnIndexMap;
+			///////////////////////////////////////////////////////////////////////////
+			//random data structures and variables used for optimization....
+			int **rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
+			                        quickly lookup a reaction */
 
 
 		private:
-
+			///////////////////////////////////////////////////////////////////////////
 			//Iterators that allow fast traversal of the object containers
 			vector<MoleculeType *>::iterator molTypeIter;  /* to iterate over allMoleculeType */
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
 			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
-//			vector <Group *>::iterator groupIter;          /* to iterate over allGroups */
 			vector <GlobalFunction *>::iterator functionIter; /* to iterate over Global Functions */
 	};
 
@@ -477,11 +470,12 @@ namespace NFcore
 			int getNumOfTypeIFunctions() const {return locFuncs_typeI.size(); };
 			LocalFunction *getTypeILocalFunction(int index) { return locFuncs_typeI.at(index); };
 			int getNumOfTypeIIFunctions() const {return locFuncs_typeII.size(); };
+			LocalFunction *getTypeIILocalFunction(int index) { return locFuncs_typeII.at(index); };
 
-
-			//For DOR reactions, but it accepts general reaction classes so that NFcore does
-			//not have to reference DORreaction.cpp directly.
-			void addDORreaction(ReactionClass * dorRxn);
+			int getNumOfDORrxns() const { return indexOfDORrxns.size(); };
+			ReactionClass * getDORrxn(int dorRxnIndex) const { return reactions.at(indexOfDORrxns.at(dorRxnIndex)); };
+			int getDORrxnIndex(int dorRxnIndex) const { return indexOfDORrxns.at(dorRxnIndex); };
+			int getDORrxnPosition(int dorRxnIndex) const { return reactionPositions.at(indexOfDORrxns.at(dorRxnIndex)); };
 
 			void setUpLocalFunctionListForMolecules();
 
@@ -522,18 +516,17 @@ namespace NFcore
 			vector <ReactionClass *> reactions; /* List of reactions that this type can be involved with */
 			vector <int> reactionPositions;   /* the position in the reaction for this type of molecule */
 
-		//	vector <int> indexOfDORrxns;
+			vector <int> indexOfDORrxns;
+
 
 			vector <Observable *> observables;  /* list of things to keep track of */
 
 			vector <TemplateMolecule *> allTemplates; /* keep track of all templates that exist of this type
 															so that they are easy to delete from memory at the end */
 
-			 ReactionClass *rxn; /*used so we don't need to redeclare this at every call to updateRxnMembership */
+			ReactionClass *rxn; /*used so we don't need to redeclare this at every call to updateRxnMembership */
 
 
-
-			 //DOR reaction
 
 		private:
 			//Some iterators so we don't have to instantiate a new iterator every time
@@ -628,16 +621,16 @@ namespace NFcore
 			void updateRxnMembership();
 			void removeFromObservables();
 			void addToObservables();
-			void updateDORs();
+			//void updateDORs();
 
-			double getDORvalueFromGroup(string groupName, int valueIndex);
+			//double getDORvalueFromGroup(string groupName, int valueIndex);
 
 
 
-			/* group functions */
-//			void addListener(StateChangeListener * l) { listeners.push_back(l); };
+			/* DOR Functions*/
+			void updateTypeIIFunctions();
+			void updateDORRxnValues();
 
-			void notifyGroupsThatRateMayChange();
 
 
 			/* print functions for debugging */
@@ -712,7 +705,6 @@ namespace NFcore
 			static queue <int> d;
 			static list <Molecule *>::iterator molIter;
 
-//			list <StateChangeListener *>::iterator listenerIter; /* to iterate over groups this molecule is in */
 	};
 
 
@@ -726,6 +718,22 @@ namespace NFcore
 
 	//!  Abstract Base Class that defines the interface for all reaction rules.
 	/*!
+	    A ReactionClass represents the set of reactions implied by a single reaction
+	    rule along with the rate law and propensity of that reaction rule.  ReactionClasses
+	    also store information needed to transform reactants.  A ReactionClass keeps a
+	    reference to every reactant Molecule in the system that might participate in the
+	    rule.  To determine if a particular set of connected Molecules is a possible reactant,
+	    ReactionClasses use TemplateMolecules.  ReactionClasses come in several forms based
+	    on how reactants are chosen and the rate law.  For typical ReactionClasses, each
+	    reactant Molecule has an equal probability of reacting and therefore reactants
+	    are selected to participate at random.  However, for ReactionClasses with rates
+	    that depend functionally on local context, each reactant will have a different
+	    probability and rate of reacting.  Such ReactionClasses have a distribution of rates
+	    and so we refer to them as Distribution of Rates (DOR) Reactions.  DOR Reactions require
+	    special handling because the participating reactants must be chosen based on its
+	    weighted probability of reacting.  There are also reactionClasses that can support
+	    functionally defined rate laws and michaelis-menton style reactions.  All of these
+	    implementing classes are declared in the file reactions.hh.
 	    @author Michael Sneddon
 	*/
 	class ReactionClass
@@ -761,6 +769,10 @@ namespace NFcore
 			virtual void printDetails() const;
 			void fire(double random_A_number);
 
+			//For DOR reactions
+			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;
+			virtual int getDORreactantPosition() const { cerr<<"Trying to get DOR reactant Position from a reaction that is not of type DOR!"<<endl;
+			cerr<<"this is an internal error, and so I will quit."<<endl; exit(1); return -1; };
 
 
 			//The main virtual functions that must be implemented in all implementing classes
@@ -772,7 +784,6 @@ namespace NFcore
 			virtual double update_a() = 0;
 
 
-			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;
 
 
 
@@ -806,12 +817,11 @@ namespace NFcore
 			MappingSet **mappingSet;
 
 			bool onTheFlyObservables;
+			bool isDimerStyle;
+
 
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
-
-
-			bool isDimerStyle;
 	};
 
 
@@ -821,8 +831,22 @@ namespace NFcore
 
 
 
-	//!  Used for matching Molecule objects to a given pattern
+	//!  Used for matching Molecule objects to the given pattern
 	/*!
+	    TemplateMolecules are regular expression like objects needed to identify specific
+	    configurations of connected Molecules.  Individual TemplateMolecules are derived
+	    from a particular MoleculeType and inherit their set of components from their parent
+	    MoleculeType.  TemplateMolecules can be connected to other TemplateMolecules through
+	    component bonds forming the regular expression pattern.  An individual Molecule matches
+	    an individual TemplateMolecule if they are of the same MoleculeType and their
+	    component bonds and state values match.  Any component state not explicitly specified
+	    in a TemplateMolecule is treated as a wild-card and will always match the corresponding
+	    component of a Molecule.  For more complex patterns, an entire connected set of Molecules
+	    is matched to a connected set of TemplateMolecules through a recursive algorithm that
+	    checks for graph isomorphism between the two sets.  The worst case performance of the
+	    recursive matching algorithm is proportional to the number of connected TemplateMolecules
+	    in the pattern.  However, the average performance is much better because a match is rejected
+	    as soon as a single difference in component states or molecule connectivity is found.
         @author Michael Sneddon
 	 */
 	class TemplateMolecule {
@@ -945,15 +969,31 @@ namespace NFcore
 
 	//!  Tracks the counts of predefined observables in the simulation.
 	/*!
+	    Observables keep track of the counts of specific Molecule configurations
+	    in the system.  Observables use TemplateMolecules to determine if a Molecule
+	    configuration should be counted as an Observable.  Users have the choice of
+	    computing Observables on the fly so that they are incrementally updated after
+	    each event or recomputing all Observables before each output step.
         @author Michael Sneddon
 	 */
 	class Observable
 	{
 		public:
+
+			/*!
+				Constructor that creates a basic Observable which monitors the
+				given TemplateMolecule and can be referenced via the alias name
+			*/
 			Observable(string aliasName, TemplateMolecule * templateMolecule);
+
+			/*!
+				 Deconstructor that doesn't do too much.  It doesn't free the memory
+				 associated with the TemplateMolecule because the MoleculeType class
+				 handles that.
+			 */
 			~Observable();
 
-			/* methods used to keep the observable count up to date */
+
 			bool isObservable(Molecule * m) const;
 			void add();
 			void subtract();
@@ -1030,99 +1070,11 @@ namespace NFcore
 			System * system;
 			int ID_complex;
 
-			int diffusionType;
-			double x_pos;
-			double y_pos;
-			double z_pos;
 
 		private:
 			list <Molecule *>::iterator molIter;
 
 	};
-
-
-
-	//!  A defined set of Molecule objects that have some joint property
-	/*!
-        @author Michael Sneddon
-	 */
-//	class Group
-//	{
-//		public:
-//			Group(string groupName, System * s, int stateIndex);
-//			virtual ~Group();
-//
-//			string getName() const { return groupName; };
-//			double getValue(unsigned int valIndex);
-//			int getNumberInGroup() const { return groupMembers.size(); };
-//			Molecule * getMolecule(int mIndex) { return groupMembers.at(mIndex); };
-//
-//			virtual void addToGroup(Molecule * m);
-//			virtual void addToGroupWithoutListener(Molecule * m);
-//
-//			virtual void notify(Molecule *changedMolecule, int oldStateValue, int newStateValue);
-//
-//			/* an function that lets classes that inherit from group update
-//			 * some of its values that are not dependent on state, but rather
-//			 * depend on some outside value at arbitrary points in the simulation */
-//			virtual void updateGroupProperty(double * values, int n_values);
-//
-//			virtual void updateReactionRates();
-//
-//			virtual void printDetails();
-//
-//		protected:
-//			vector <Molecule *> groupMembers;
-//			System * system;
-//
-//			string groupName;
-//			int Group_ID;
-//
-//			vector <char *> valueNames;
-//			vector <double> value;
-//			/* keeps track of the sum of the state values -
-//				                  override notify to change what this does */
-//			int stateIndex;
-//
-//			bool areReactionsUpToDate;
-//
-//			vector <Molecule *>::iterator molIter;
-//	};
-
-
-
-	//!  Listens to state changes in a Molecule and reports back to a Group
-	/*!
-        @author Michael Sneddon
-	 */
-//	class StateChangeListener
-//	{
-//		public:
-//			StateChangeListener(Molecule * m, Group * g, int stateIndex);
-//			~StateChangeListener();
-//
-//			/* called by molecule to alert that state has changed */
-//			void notify(Molecule *changedMolecule, int stateIndexOfChange);
-//
-//			/* called by molecule when the molecule is ready to have
-//			 * all the group's reactions updated */
-//			void updateGroupReactions();
-//
-//			/* simple functions for molecule to talk to this group */
-//			string getGroupName() const { return group->getName(); };
-//			double getValue(int valueIndex) const { return group->getValue(valueIndex); };
-//
-//
-//		protected:
-//			Molecule * molecule;
-//			Group * group;
-//			int oldStateValue;
-//			int newStateValue;
-//
-//			int stateIndex;
-//
-//	};
-
 
 }
 

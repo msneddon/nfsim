@@ -81,7 +81,7 @@ void ReactionClass::fire(double random_A_number)
 {
 
 	fireCounter++; //Remember that we fired
-//	cout<<"firing: "<<name<<endl;
+	//cout<<"firing: "<<name<<endl;
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);
@@ -101,6 +101,7 @@ void ReactionClass::fire(double random_A_number)
 	}
 
 
+
 	//Through the MappingSet, transform all the molecules as neccessary
 	this->transformationSet->transform(this->mappingSet);
 
@@ -110,9 +111,10 @@ void ReactionClass::fire(double random_A_number)
 	{
 		if(onTheFlyObservables) (*molIter)->addToObservables();
 	  	(*molIter)->updateRxnMembership();
-	  	(*molIter)->notifyGroupsThatRateMayChange();
+	  	(*molIter)->updateTypeIIFunctions();
 	}
 //	Molecule::printMoleculeList(products);
+
 
 	//Tidy up
 	products.clear();

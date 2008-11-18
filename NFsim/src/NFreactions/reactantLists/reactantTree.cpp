@@ -1,9 +1,12 @@
 /*
 
+
+
  */
 
 
 #include "reactantTree.hh"
+#define DEBUG_MESSAGE 0
 #include <math.h>
 
 
@@ -79,6 +82,8 @@ ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, un
 }
 
 void ReactantTree::expandTree(int newCapacity) {
+
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 1: reallocate new arrays to store the tree, which is the exact same procedure
 	//as creating the tree to begin with.  I name everything with the xx_ prefix to make
 	//sure I'm working with new variables, not existing member variables.
@@ -107,9 +112,11 @@ void ReactantTree::expandTree(int newCapacity) {
 	/// based on their id
 	for(int i=0; i<this->maxElementCount; i++){
 		xx_mappingSets[this->mappingSets[i]->getId()] = this->mappingSets[i];
+		//xx_msPositionMap[this->mappingSets[i]->getId()] = i;
 	}
 	for(int i=this->maxElementCount; i<xx_maxElementCount; i++) {
 		xx_mappingSets[i] = ts->generateBlankMappingSet(this->reactantIndex,i);
+		//xx_msPositionMap[i] = i;
 	}
 
 	/* original allocation procedure, for reference:
@@ -125,7 +132,7 @@ void ReactantTree::expandTree(int newCapacity) {
 	int xx_n_mappingSets = 0;
 
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 2: Take each mapping set from the original tree, and reinsert them into the new
 	//tree.  We cannot just copy over the elements because the position
 	//in the tree will be different because the tree is now larger.
@@ -163,17 +170,14 @@ void ReactantTree::expandTree(int newCapacity) {
 		int xx_msTreeArrayPosition= cn - xx_firstMappingTreeIndex;
 
 		//update our arrays to remember this position in the tree
-		xx_msPositionMap[xx_mappingSetId] = i;  //this does change, and should point to this index, i
+		//xx_msPositionMap //this does change, and was reset just like the xx_mappingSetArray
 		xx_msTreePositionMap[xx_mappingSetId]=xx_msTreeArrayPosition;  //remember what position in the tree this mappingSet is at
 		xx_reverseMsTreePositionMap[xx_msTreeArrayPosition]=xx_mappingSetId;  //remember what mappingSet is at this tree position
 
 		xx_n_mappingSets++;
 	}
 
-
-
-
-
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 3: Delete all the arrays that we are no longer using to free up the memory
 	delete [] this->leftRateFactorSum;
 	delete [] this->leftElementCount;
@@ -183,7 +187,7 @@ void ReactantTree::expandTree(int newCapacity) {
 	delete [] this->msTreePositionMap;
 	delete [] this->reverseMsTreePositionMap;
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 4: copy the newly created arrays over the original arrays
 	this->maxElementCount = xx_maxElementCount;
 	this->treeDepth = xx_treeDepth;
@@ -210,25 +214,21 @@ ReactantTree::~ReactantTree()
 		msTreePositionMap[i]=0;
 	}
 
-	delete [] leftRateFactorSum;
-	delete [] leftElementCount;
-	delete [] rightElementCount;
+	delete [] this->leftRateFactorSum;
+	delete [] this->leftElementCount;
+	delete [] this->rightElementCount;
+	delete [] this->mappingSets;
+	delete [] this->msPositionMap;
+	delete [] this->msTreePositionMap;
+	delete [] this->reverseMsTreePositionMap;
 }
 
 
-
-
-
-
 MappingSet * ReactantTree::pushNextAvailableMappingSet() {
-	//Check that we didn't go over the max
+	//Check that we didn't go over the max - if we did we have to expand our tree...
 	if(n_mappingSets >= maxElementCount) {
-		cout<<"\n\n\n\n\n-------------\nIn ReactantTree!!!  Adding more than I can take! "<<endl;
-
+		cout<<"-------------\nIn ReactantTree!!!  Adding more than I can take, so I'm expanding! "<<endl;
 		expandTree(maxElementCount*2);
-		//we have to make ourselves bigger...
-		//exit(1);
-
 	}
 
 	n_mappingSets++;
@@ -289,7 +289,6 @@ void ReactantTree::popLastMappingSet() {
 	if(msTreePositionMap[mappingSets[n_mappingSets-1]->getId()]>=0) {
 		this->printDetails();
 		cout<<"Can't pop the last mappingSet if it was already confirmed to be in the tree!"<<endl;
-
 		exit(1);
 	}
 
@@ -316,7 +315,7 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 
 	//Go to that position in the tree, and work up and out
 	unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
-	cout<<"Removing tree index: "<<cn<<endl;
+	if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
 
 	//Get the rate factor from the bottom of the tree and set it to zero
 	double rateFactor = leftRateFactorSum[cn];
@@ -392,16 +391,17 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 }
 
 
-void ReactantTree::getReactantFromValue(MappingSet *&ms, double value, double baseRate) {
+void ReactantTree::pickReactantFromValue(MappingSet *&ms, double value, double baseRate) {
 
-	//First a quick check to make sure we are in bounds (commented out unless we need to debug)
-	//if(value > (leftRateFactorSum[0]*baseRate) )
-	//{
-	//	cerr<<"Something went wrong::: in NFReactantTree, trying to select a molecule";
-	//	cerr<<" with a value greater than the size the total sum"<<endl;
-	//	cerr<<" value: " << value;
-	//	cerr<<" rateFactorSum: " << leftRateFactorSum[0] << " and total " << (leftRateFactorSum[0]*baseRate) << endl;
-	//}
+	//First a quick check to make sure we are in bounds (commented out unless we
+	//suspect an error here and need to debug)
+	if(value > (leftRateFactorSum[0]*baseRate) )
+	{
+		cerr<<"Something went wrong::: in NFReactantTree, trying to select a molecule";
+		cerr<<" with a value greater than the size the total sum"<<endl;
+		cerr<<" value: " << value;
+		cerr<<" rateFactorSum: " << leftRateFactorSum[0] << " and total " << (leftRateFactorSum[0]*baseRate) << endl;
+	}
 
 	//Start from the top of the tree, and based on the given value, determine
 	//where we should end up...
@@ -443,7 +443,7 @@ void ReactantTree::getReactantFromValue(MappingSet *&ms, double value, double ba
 	//if(reactants[molArrayIndex]==0)
 	//{
 	//	cerr<<"!!! in ReactantTree !!!  could not find a molecule from a given value!"<<endl;
-	//	cerr<<"I have: " << numOfMolecules << " molecules! "<<endl;
+	//	cerr<<"I have: " << n_mappingSets << " mappingSets! "<<endl;
 	//}
 }
 
@@ -469,6 +469,11 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 
 	//Get the rate factor from the bottom of the tree and set it to the new rate factor
 	double oldRateFactor = leftRateFactorSum[cn];
+
+	//Make sure there is something to change!  If not, just get out of here!
+	if(oldRateFactor==newRateFactor) return;
+	//cout<<"Updating value from: "<<oldRateFactor<<" to "<< newRateFactor<<endl;
+
 	leftRateFactorSum[cn] = newRateFactor;
 	leftRateFactorSum[0] -= oldRateFactor;
 	leftRateFactorSum[0] += newRateFactor;
@@ -488,6 +493,11 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 	}
 
 	//Ok, we are up to date.  Nothing else changes here...
+}
+
+
+MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) {
+	return mappingSets[msPositionMap[mappingSetId]];
 }
 
 
@@ -533,200 +543,7 @@ void ReactantTree::printDetails() {
 	for(int i=0; i<=numOfNodes; i++)
 		cout<<"\t"<<rightElementCount[i];
 	cout<<endl;
-
-
-	//int * msPositionMap;
-
-	//Given a mappingSet Id, this tells us what position it is in
-	//in the actual tree
-	//int * msTreePositionMap;
-
-	//Given a tree position index, this tells us the mappingSet Id
-	//which we can use to get our mappingSet out of the mappingSets
-	//array
-	//int * reverseMsTreePositionMap;
-
-
 }
-
-
-//int NFReactantTree::insert(Molecule * m, double rateFactor)
-//{
-//	//Check that we didn't go over the max
-//	if(numOfMolecules >= maxElementCount)
-//		cerr<<"Error in ReactantTree!!!  Adding more than I can take! "<<endl;
-//
-//	unsigned int cn = 1; // index of current node
-//
-//	//Keep going down the tree until we reach the bottom
-//	while(cn < firstMoleculeTreeIndex)
-//	{
-//		//Pick the side of the tree that has the least number
-//		//of elements, or the left side if they are equal
-//		if( leftElementCount[cn] <= rightElementCount[cn])
-//		{
-//			//Inserting left, so we have to remember the rateFactor...
-//			leftElementCount[cn]++;
-//			leftRateFactorSum[cn] += rateFactor;
-//			cn = 2*cn;
-//		}
-//		else
-//		{
-//			//Inserting right, so just remember that...
-//			rightElementCount[cn]++;
-//			cn = 2*cn+1;
-//		}
-//	}
-//
-//	leftRateFactorSum[cn] = rateFactor;
-//	leftRateFactorSum[0] += rateFactor;
-//	unsigned int molArrayIndex = cn - firstMoleculeTreeIndex;
-//
-//	reactants[molArrayIndex] = m;
-//
-//	//count the fact that we inserted, then return the result
-//	numOfMolecules++;
-//
-//	return molArrayIndex;
-//}
-//
-//void NFReactantTree::remove(Molecule * m, unsigned int rxnListIndex)
-//{
-//	//Go to that position in the tree, and work up and out
-//	unsigned int cn = rxnListIndex + firstMoleculeTreeIndex;
-//
-//	//Quick error check
-//	//if(reactants[rxnListIndex]!=m)
-//	//	cout<<"we've got problems in remove"<<endl;
-//
-//	//Get the rate factor from the bottom of the tree and set it to zero
-//	double rateFactor = leftRateFactorSum[cn];
-//	leftRateFactorSum[cn] = 0;
-//
-//	if(numOfMolecules<=1)
-//		leftRateFactorSum[0] = 0;
-//	else
-//		leftRateFactorSum[0] -= rateFactor;
-//
-//	//Work our way back up to the root
-//	while(cn>1)
-//	{
-//		unsigned int parent = 	cn/2;
-//		if(cn%2==0)  //Then I was the left child, and we have to make adjustments
-//		{
-//			leftElementCount[parent]--;
-//			leftRateFactorSum[parent] -= rateFactor;
-//		}
-//		else  //I was the right child, and we don't have to make adjustments
-//		{
-//			rightElementCount[parent]--;
-//		}
-//
-//		cn = parent;
-//	}
-//
-//	//Get rid of the molecule
-//	reactants[rxnListIndex] = 0;
-//	numOfMolecules--;
-//}
-//
-//void NFReactantTree::updateValue(Molecule * m, unsigned int rxnListIndex, double newRateFactor)
-//{
-//	//Here we start from the bottom, removing the old value and adding the new value
-//	//Go to that position in the tree, and work up and out
-//	unsigned int cn = rxnListIndex + firstMoleculeTreeIndex;
-//
-//	//Do an error check here
-//	//if(reactants[rxnListIndex]!=m)
-//	//	cout<<"we've got problems in update"<<endl;
-//
-//	//Get the rate factor from the bottom of the tree and set it to the new rate factor
-//	double oldRateFactor = leftRateFactorSum[cn];
-//	leftRateFactorSum[cn] = newRateFactor;
-//	leftRateFactorSum[0] -= oldRateFactor;
-//	leftRateFactorSum[0] += newRateFactor;
-//
-//	//Work our way back up to the root
-//	while(cn>1)
-//	{
-//		unsigned int parent = 	cn/2;
-//		if(cn%2==0)  //Then I was the left child, and we have to make adjustments
-//		{
-//			leftRateFactorSum[parent] -= oldRateFactor;
-//			leftRateFactorSum[parent] += newRateFactor;
-//		}
-//		//In this case, the right child doesn't have to do anything
-//
-//		cn = parent;
-//	}
-//}
-//
-//Molecule * NFReactantTree::getReactantFromValue(double value, double baseRate) const
-//{
-//	//First a quick check to make sure we are in bounds (commented out unless we need it)
-//	//if(value > (leftRateFactorSum[0]*baseRate) )
-//	//{
-//	//	cerr<<"Something went wrong::: in NFReactantTree, trying to select a molecule";
-//	//	cerr<<" with a value greater than the size the total sum"<<endl;
-//	//	cerr<<" value: " << value;
-//	//	cerr<<" rateFactorSum: " << leftRateFactorSum[0] << " and total " << (leftRateFactorSum[0]*baseRate) << endl;
-//	//}
-//
-//	//Start from the top of the tree, and based on the given value, determine
-//	unsigned int cn = 1; // index of current node
-//
-//	//Keep going down the tree until we reach the bottom
-//	while(cn < firstMoleculeTreeIndex)
-//	{
-//		//Pick the side of the tree to go down based on the value
-//		if( value <= (leftRateFactorSum[cn] * baseRate) )
-//		{
-//			// Go down the left path
-//			cn = 2*cn;
-//		}
-//		else
-//		{
-//			// Go down the right path, but first we have to subtract out all
-//			//the left path sums so that we deal with only the remainder
-//			value -= (leftRateFactorSum[cn] * baseRate);
-//			cn = 2*cn+1;
-//		}
-//	}
-//
-//	//Now we should have the value of cn that gives our molecule, so return it
-//	unsigned int molArrayIndex = cn - firstMoleculeTreeIndex;
-//
-//	//Error check again to ensure things are still ok
-//	//if(reactants[molArrayIndex]==0)
-//	//{
-//	//	cerr<<"!!! in NFReactantTree !!!  could not find a molecule from a given value!"<<endl;
-//	//	cerr<<"I have: " << numOfMolecules << " molecules! "<<endl;
-//	//}
-//
-//	return reactants[molArrayIndex];
-//}
-//
-//
-//void NFReactantTree::printDetails() const
-//{
-//	cout<<"Reactant Tree Details:"<<endl;
-//	cout<<"  I have stored " << numOfMolecules << " molecules with a total sum of ";
-//	cout<<leftRateFactorSum[0] <<endl;
-//	for(unsigned int i=0; i<=numOfNodes; i++)
-//		cout<<"\t"<<i;
-//	cout<<endl;
-//	for(unsigned int i=0; i<=numOfNodes; i++)
-//		cout<<"\t"<<leftRateFactorSum[i];
-//	cout<<endl;
-//	for(unsigned int i=0; i<=numOfNodes; i++)
-//		cout<<"\t"<<leftElementCount[i];
-//	cout<<endl;
-//
-//	for(unsigned int i=0; i<=numOfNodes; i++)
-//		cout<<"\t"<<rightElementCount[i];
-//	cout<<endl;
-//
-//}
 
 
 

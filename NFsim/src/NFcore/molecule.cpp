@@ -129,14 +129,39 @@ void Molecule::updateRxnMembership()
 	parentMoleculeType->updateRxnMembership(this);
 }
 
-
-void Molecule::notifyGroupsThatRateMayChange()
+void Molecule::updateTypeIIFunctions()
 {
-	//if(listeners.size()>0) cout<<"    notifying groups that rate may have changed"<<endl;
-//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-//		(*listenerIter)->updateGroupReactions();
+	for(int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
+		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this);
+	}
+}
+void Molecule::updateDORRxnValues()
+{
+	ReactionClass *rxn=0; int rxnIndex=-1, rxnPos=-1;
+	//cout<<"Looping over :"<<parentMoleculeType->getNumOfDORrxns()<<" dor rxns "<<endl;
+	for(int i=0; i<parentMoleculeType->getNumOfDORrxns(); i++) {
+		rxn=parentMoleculeType->getDORrxn(i);
+		rxnIndex=parentMoleculeType->getDORrxnIndex(i);
+		rxnPos=parentMoleculeType->getDORrxnPosition(i);
+
+		//cout<<"found DOR rxn: "<<r->getName()<<endl;
+
+		if(isPrepared) {
+			//If we are in this reaction, then we have to update our value...
+			if(this->getRxnListMappingId(rxnIndex)>=0) {
+
+				//Careful here!  remember to update the propensity of this
+				//reaction in the system after we notify of the rate factor change!
+				double oldA = rxn->get_a();
+				rxn->notifyRateFactorChange(this,rxnPos,this->getRxnListMappingId(rxnIndex));
+				this->parentMoleculeType->getSystem()->update_A_tot(oldA,rxn->update_a());
+			}
+		}
+	}
 
 }
+
+
 
 //void Molecule::updateDORs()
 //{
@@ -155,19 +180,19 @@ void Molecule::notifyGroupsThatRateMayChange()
 //
 //}
 
-double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
-{
-//	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-//	{
-//		if(groupName==(*listenerIter)->getGroupName())
-//			return (*listenerIter)->getValue(valueIndex);
-//	}
-
-	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;
-	cerr<<"    Looking for group: "<<groupName<<" from molecule ";
-	cerr<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
-	exit(1);
-}
+//double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
+//{
+////	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
+////	{
+////		if(groupName==(*listenerIter)->getGroupName())
+////			return (*listenerIter)->getValue(valueIndex);
+////	}
+//
+//	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;
+//	cerr<<"    Looking for group: "<<groupName<<" from molecule ";
+//	cerr<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
+//	exit(1);
+//}
 
 
 

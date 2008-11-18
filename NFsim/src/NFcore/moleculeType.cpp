@@ -8,9 +8,6 @@ using namespace NFcore;
 
 
 
-
-
-
 MoleculeType::MoleculeType(
 	string name,
 	vector <string> &compName,
@@ -350,6 +347,14 @@ void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
 {
 	this->reactions.push_back(r);
 	this->reactionPositions.push_back(rPosition);
+
+	//We also have to check to make sure that if the reaction is a DOR reaction,
+	//we remember it so we can updated it
+	if(r->getRxnType()==ReactionClass::DOR_RXN) {
+		if( r->getDORreactantPosition()==rPosition) {
+			indexOfDORrxns.push_back(reactions.size()-1);
+		}
+	}
 }
 
 

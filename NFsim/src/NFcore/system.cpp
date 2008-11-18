@@ -9,9 +9,8 @@ using namespace NFcore;
 
 int System::NULL_EVENT_COUNTER = 0;
 
-/*!
-   Creates a system that does not keep track of complexes.
- */
+
+
 System::System(string name)
 {
 	this->name = name;
@@ -28,9 +27,6 @@ System::System(string name)
 }
 
 
-/*!
-   Constructor that creates a System that has the option of keeping track of complexes
- */
 System::System(string name, bool useComplex)
 {
 	this->name = name;
@@ -38,7 +34,6 @@ System::System(string name, bool useComplex)
 	current_time = 0;
 	nextReaction = 0;
 	this->useComplex = useComplex;
-//	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
 
 	rxnIndexMap=0;
@@ -48,9 +43,6 @@ System::System(string name, bool useComplex)
 }
 
 
-/*!
-  Standard deconstructor for a system that cleans everything up.
- */
 System::~System()
 {
 	//Delete the rxnIndexMap array
@@ -95,19 +87,8 @@ System::~System()
 		delete gf;
 	}
 
-	//And finally delete all the groups
-//	Group *g;
-//	while(allGroups.size()>0)
-//	{
-//		g = allGroups.back();
-//		allGroups.pop_back();
-//		delete g;
-//	}
 
 	nextReaction = 0;
-
-//	if(go!=NULL)
-//		delete go;
 
 
 	//Need to delete reactions
@@ -228,9 +209,6 @@ void System::dumpOutputters() {
 
 
 
-/*!
-	Some documentation can go here.
-*/
 int System::createComplex(Molecule * m)
 {
 	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
@@ -250,12 +228,6 @@ bool System::addGlobalFunction(GlobalFunction *gf)
 
 
 
-void System::updateGroupProperty(char * groupName, double *value, int n_values)
-{
-	cout<<"Updating group property for groups named: " << groupName << endl;
-	cout<<"!! Not implemented.  I just did nothing! "<<endl;
-
-}
 
 MoleculeType * System::getMoleculeTypeByName(string mName)
 {
@@ -297,34 +269,6 @@ int System::getNumOfMolecules()
 }
 
 
-double System::getAverageGroupValue(string groupName, int valIndex)
-{
-	return 0;
-//	double sum = 0;
-//	int count = 0;
-//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-//	{
-//		string name = (*groupIter)->getName();
-//		if(name==groupName)
-//		{
-//			sum += (*groupIter)->getValue(valIndex);
-//			count ++;
-//		}
-//	}
-//	return (sum/count);
-}
-
-
-void System::updateAllGroupProperty(double *value, int n_values)
-{
-	//cout<<"Updating group property for all groups, new value[0]: " << value[0] << endl;
-
-//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-//	{
-//		(*groupIter)->updateGroupProperty(value, n_values);
-//	}
-
-}
 
 int System::getObservableCount(int moleculeTypeIndex, int observableIndex) const
 {
@@ -362,7 +306,7 @@ void System::purgeAndPrintAvailableComplexList()
 void System::prepareForSimulation()
 {
 	//Note!!  : the order of preparing the system matters!  You have to prepare
-	//some things before others,
+	//some things before others, because certain things require other
 
   	//First, we have to prep all the functions...
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
@@ -560,7 +504,8 @@ double System::stepTo(double stoppingTime)
 	double delta_t = 0;
 	while(current_time<stoppingTime)
 	{
-		//2: Recompute a_tot for this time
+		//2: Recompute a_tot for this time (this is not done here anymore!  reactions must
+		//   be updated with the system as soon as a change to the propensity is made!
 		//recompute_A_tot();
 
 		//3: Select next reaction time (making sure we have something that can react)
@@ -598,7 +543,7 @@ double System::stepTo(double stoppingTime)
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);
 	}
-	cout<<"a_tot="<<a_tot;
+	//cout<<"a_tot="<<a_tot;
 	return current_time;
 }
 
@@ -879,6 +824,8 @@ void System::evaluateAllLocalFunctions() {
 	//Don't do all the work if we don't actually have to...
 	if(localFunctions.size()==0) return;
 
+	cout<<"Evaluating all local functions here in System..."<<endl;
+
 	list <Molecule *> molList;
 	list <Molecule *>::iterator molListIter;
 
@@ -935,35 +882,6 @@ void System::evaluateAllLocalFunctions() {
 	//Now, since we changed things around, we have to update the molecule positions in the
 	//reactant trees of DOR reactions.
 }
-
-
-
-
-
-
-
-
-//void System::addGroupOutputter(GroupOutputter * go)
-//{
-//	this->go = go;
-//}
-
-
-//void System::outputGroupDataHeader()
-//{
-//	if(this->go!=NULL)
-//		go->writeOutputFileHeader();
-//}
-
-
-//void System::outputGroupData(double cSampleTime)
-//{
-//	if(this->go!=NULL)
-//		go->writeStateToOutputFile(cSampleTime);
-//}
-
-
-
 
 
 GlobalFunction * System::getGlobalFunctionByName(string fName) {
