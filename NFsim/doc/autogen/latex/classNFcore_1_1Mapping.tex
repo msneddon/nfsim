@@ -1,0 +1,116 @@
+\section{NFcore::Mapping Class Reference}
+\label{classNFcore_1_1Mapping}\index{NFcore::Mapping@{NFcore::Mapping}}
+{\tt \#include $<$mapping.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Keeps a pointer to a molecule and remembers a single component to act on. 
+
+This is the low level unit that is used by reactions to identify the particular component of a molecule to update or change when a transformation is required. It is maintained by a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} which is just a collection of \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects. The \char`\"{}type\char`\"{} of mapping is identified in the same way as the \char`\"{}type\char`\"{} of transformation. See the \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} class for a list of those types. The \char`\"{}index\char`\"{} simply is the index of the binding site or state of a molecule. It is possible that some \char`\"{}types\char`\"{} do not require an \char`\"{}index\char`\"{} (as in the case of adding or deleting an entire molecule). \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Mapping} (unsigned int {\bf type}, int {\bf index})
+\item 
+{\bf $\sim$Mapping} ()
+\item 
+unsigned int {\bf getType} () const 
+\item 
+int {\bf getIndex} () const 
+\item 
+{\bf Molecule} $\ast$ {\bf getMolecule} () const 
+\item 
+void {\bf clear} ()
+\item 
+bool {\bf setMolecule} ({\bf Molecule} $\ast${\bf m})
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+unsigned int {\bf type}
+\item 
+int {\bf index}
+\item 
+{\bf Molecule} $\ast$ {\bf m}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::Mapping@{NFcore::Mapping}!Mapping@{Mapping}}
+\index{Mapping@{Mapping}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFcore::Mapping::Mapping (unsigned int {\em type}, int {\em index})}\label{classNFcore_1_1Mapping_5066d22e6a3d2fe7c8c6b548d5d14ba5}
+
+
+Creates a new \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} object with the specified \char`\"{}type\char`\"{} (as defined by the types in the \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} class) and a specified \char`\"{}index\char`\"{} which is the binding site or state index (in a \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType}) that this \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} will map onto. The type and index does not (and should not) change during a simulation. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!$\sim$Mapping@{$\sim$Mapping}}
+\index{$\sim$Mapping@{$\sim$Mapping}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFcore::Mapping::$\sim$Mapping ()}\label{classNFcore_1_1Mapping_dddb11d9506033724bf5dc8085ac29c3}
+
+
+Destroys this mapping, but does not delete the molecule it is mapped to. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::Mapping@{NFcore::Mapping}!getType@{getType}}
+\index{getType@{getType}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::Mapping::getType () const}\label{classNFcore_1_1Mapping_b1ae10a65cd858cdb9feb40bcbe2fb59}
+
+
+Returns the type of mapping this is. See \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} for the possible types that can be assigned. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!getIndex@{getIndex}}
+\index{getIndex@{getIndex}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Mapping::getIndex () const}\label{classNFcore_1_1Mapping_c807ce7b6f143ff912f371275c3928f4}
+
+
+Returns the index into either the binding site or state of the \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} this \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} points to. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!getMolecule@{getMolecule}}
+\index{getMolecule@{getMolecule}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule} $\ast$ NFcore::Mapping::getMolecule () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Mapping_b8cae1ff517561ab15f58c5e6de2d737}
+
+
+Once this \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} has been mapped to a molecule, you can get a pointer to that \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} with this function. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!clear@{clear}}
+\index{clear@{clear}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Mapping::clear ()}\label{classNFcore_1_1Mapping_3c0a7e0568a76135688fa1179f922039}
+
+
+This clears the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} by forgetting the \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} that this maps to. It is good practice to call this function after the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} becomes unused (as is done by \doxyref{ReactantList}{p.}{classNFcore_1_1ReactantList}) but it is not always necessary as long as you have another way to keep track of mappings (as ReactionList does). \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!setMolecule@{setMolecule}}
+\index{setMolecule@{setMolecule}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Mapping::setMolecule ({\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1Mapping_d91ef3090e8d9a7f978b0117f5213507}
+
+
+This sets the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} to actually point to a particular \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} in the system. This \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} is remembered until a new \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} is set or the \doxyref{clear()}{p.}{classNFcore_1_1Mapping_3c0a7e0568a76135688fa1179f922039} function is called. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::Mapping@{NFcore::Mapping}!type@{type}}
+\index{type@{type}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::Mapping::type}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Mapping_70ed6e8f5aee2bfa645c8480282d521e}
+
+
+The \char`\"{}type\char`\"{} of mapping this is, taken from the same list of types in the \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} class. \index{NFcore::Mapping@{NFcore::Mapping}!index@{index}}
+\index{index@{index}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Mapping::index}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Mapping_5a4c950ac51d3f308b759f3d0612d20f}
+
+
+The index of the binding site or state that this \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} keeps track of. \index{NFcore::Mapping@{NFcore::Mapping}!m@{m}}
+\index{m@{m}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule}$\ast$ {\bf NFcore::Mapping::m}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Mapping_afbd82d3e5f96a212b779e4f0788c971}
+
+
+A pointer to the \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} that this \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} keeps track of. It can only keep track of one \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} at a time. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mapping.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mapping.cpp}\end{CompactItemize}

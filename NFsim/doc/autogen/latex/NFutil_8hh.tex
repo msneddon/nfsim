@@ -1,0 +1,38 @@
+\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFutil/NFutil.hh File Reference}
+\label{NFutil_8hh}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFutil/NFutil.hh@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFutil/NFutil.hh}}
+
+
+{\tt \#include $<$string$>$}\par
+{\tt \#include $<$exception$>$}\par
+{\tt \#include $<$iostream$>$}\par
+{\tt \#include $<$sstream$>$}\par
+{\tt \#include $<$stdexcept$>$}\par
+\subsection*{Namespaces}
+\begin{CompactItemize}
+\item 
+namespace {\bf NFutil}
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void {\bf NFutil::SEED\_\-RANDOM} (unsigned long seed)
+\begin{CompactList}\small\item\em Seeds the random number generator used in all simulations. \item\end{CompactList}\item 
+double {\bf NFutil::RANDOM} (double max)
+\begin{CompactList}\small\item\em Uniform random number on the interval (0,max]. \item\end{CompactList}\item 
+double {\bf NFutil::RANDOM\_\-CLOSED} ()
+\begin{CompactList}\small\item\em Uniform random number on the interval (0,1). \item\end{CompactList}\item 
+int {\bf NFutil::RANDOM\_\-INT} (unsigned long min, unsigned long max)
+\begin{CompactList}\small\item\em Uniform random number on the interval [min,max]. \item\end{CompactList}\item 
+double {\bf NFutil::RANDOM\_\-GAUSSIAN} ()
+\begin{CompactList}\small\item\em Normally distributed random number with mean 0 and variance 1. \item\end{CompactList}\item 
+double {\bf NFutil::convertToDouble} (const std::string \&s)
+\begin{CompactList}\small\item\em Parses and converts std::string objects to double values. \item\end{CompactList}\item 
+int {\bf NFutil::convertToInt} (const std::string \&s)
+\begin{CompactList}\small\item\em Parses and converts std::string objects to int values. \item\end{CompactList}\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+const double {\bf NFutil::PI} = 3.14159265358979323846
+\item 
+const double {\bf NFutil::NA} = 6.02214179e23
+\end{CompactItemize}

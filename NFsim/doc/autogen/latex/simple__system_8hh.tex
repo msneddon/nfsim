@@ -1,0 +1,31 @@
+\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFtest/simple\_\-system/simple\_\-system.hh File Reference}
+\label{simple__system_8hh}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFtest/simple\_\-system/simple\_\-system.hh@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFtest/simple\_\-system/simple\_\-system.hh}}
+
+
+{\tt \#include \char`\"{}../../NFcore/NFcore.hh\char`\"{}}\par
+{\tt \#include \char`\"{}../../NFreactions/NFreactions.hh\char`\"{}}\par
+{\tt \#include \char`\"{}../../NFreactions/reactions/reaction.hh\char`\"{}}\par
+\subsection*{Namespaces}
+\begin{CompactItemize}
+\item 
+namespace {\bf NFtest\_\-ss}
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void {\bf NFtest\_\-ss::run} ()
+\begin{CompactList}\small\item\em Runs the simple enzymatic type reaction system as an example system. \item\end{CompactList}\item 
+{\bf MoleculeType} $\ast$ {\bf NFtest\_\-ss::createX} ({\bf System} $\ast$s)
+\item 
+{\bf MoleculeType} $\ast$ {\bf NFtest\_\-ss::createY} ({\bf System} $\ast$s)
+\item 
+{\bf ReactionClass} $\ast$ {\bf NFtest\_\-ss::createReactionXDephos} ({\bf MoleculeType} $\ast$molX, double rate)
+\item 
+{\bf ReactionClass} $\ast$ {\bf NFtest\_\-ss::createReactionXYbind} ({\bf MoleculeType} $\ast$molX, {\bf MoleculeType} $\ast$molY, double rate)
+\item 
+{\bf ReactionClass} $\ast$ {\bf NFtest\_\-ss::createReactionXYunbind} ({\bf MoleculeType} $\ast$molX, {\bf MoleculeType} $\ast$molY, double rate)
+\item 
+{\bf ReactionClass} $\ast$ {\bf NFtest\_\-ss::createReactionYphosX} ({\bf MoleculeType} $\ast$molX, {\bf MoleculeType} $\ast$molY, double rate)
+\item 
+void {\bf NFtest\_\-ss::addObs} ({\bf System} $\ast$s, {\bf MoleculeType} $\ast$molX, {\bf MoleculeType} $\ast$molY)
+\end{CompactItemize}

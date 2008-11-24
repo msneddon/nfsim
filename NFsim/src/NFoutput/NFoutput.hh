@@ -53,6 +53,27 @@ namespace NFcore
 			MoleculeType *mt;
 	};
 
+
+	class DumpSystem {
+
+		public:
+			DumpSystem(System *s, vector <double> dumpTimes);
+			~DumpSystem() {};
+
+			void tryToDump(double simTime);
+
+		protected:
+
+			void dumpHeaderFile(double dumpTime);
+			void dumpMoleculeTypeFiles(double dumpTime);
+
+
+			System *s;
+			int currentDumpTimeIndex;
+			vector <double> dumpTimes;
+
+	};
+
 }
 
 

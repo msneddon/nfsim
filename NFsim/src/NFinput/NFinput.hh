@@ -188,7 +188,7 @@ namespace NFinput {
 	double parseAsDouble(map<string,string> &argMap, string argName, double defaultValue);
 
 
-	void parseComplexDump( vector <Outputter> &outputter, string arg );
+
 
 	void walk(System *s);
 
@@ -196,6 +196,9 @@ namespace NFinput {
 
 
 	bool createComplexOutputDumper(string paramStr, System *s, bool verbose);
+	bool createSystemDumper(string paramStr, System *s, bool verbose);
+
+	void parseComplexDump( vector <Outputter> &outputter, string arg );
 }
 
 
