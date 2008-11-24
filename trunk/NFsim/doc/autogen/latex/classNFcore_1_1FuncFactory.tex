@@ -1,0 +1,92 @@
+\section{NFcore::FuncFactory Class Reference}
+\label{classNFcore_1_1FuncFactory}\index{NFcore::FuncFactory@{NFcore::FuncFactory}}
+{\tt \#include $<$NFfunction.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Parses mathmatical functions that can be easily used anywhere. 
+
+Built from the muParser freeware package, this factory creates Parser objects that can be used to evaluate arbitrary functions. The function to evaluate is given as a string (which can contain the given functions or constants below, case sensitive) along with pointers to particular varables that exist. The Parser, when initialized, translates the string into bytecode that can be evaluated fast. At runtime, the bytecode that was created can be evaluated and every time it is evaluated, it uses the current value of the given pointers to variables. Thus, NFsim can use functions of arbitrary complexity for defining reaction rates and parameters.
+
+{\bf Supported functions:} \begin{TabularC}{3}
+\hline
+name\&nbsp\&nbsp&n\_\-args\&nbsp\&nbsp&description \\\hline
+sin&1&sine function (arg is in radians) \\\hline
+cos&1&cosine function \\\hline
+tan&1&tangens function \\\hline
+asin&1&arcus sine function \\\hline
+acos&1&arcus cosine function \\\hline
+atan&1&arcus tangens function \\\hline
+sinh&1&hyperbolic sine function \\\hline
+cosh&1&hyperbolic cosine \\\hline
+tanh&1&hyperbolic tangens function \\\hline
+asinh&1&hyperbolic arcus sine function \\\hline
+acosh&1&hyperbolic arcus tangens function \\\hline
+atanh&1&hyperbolic arcur tangens function \\\hline
+log2&1&logarithm to the base 2 \\\hline
+log10&1&logarithm to the base 10 \\\hline
+log&1&logarithm to the base 10 \\\hline
+ln&1&logarithm to base e (2.71828...) \\\hline
+exp&1&e raised to the power of x \\\hline
+sqrt&1&square root of a value \\\hline
+sign&1&sign function -1 if x$<$0; 1 if x$>$0 \\\hline
+rint&1&round to nearest integer \\\hline
+abs&1&absolute value \\\hline
+if&3&if ... then ... else ... \\\hline
+min&var.&min of all arguments \\\hline
+max&var.&max of all arguments \\\hline
+sum&var.&sum of all arguments \\\hline
+avg&var.&mean value of all arguments \\\hline
+\end{TabularC}
+
+
+{\bf Supported constants} (to a precision of at least 10$^\wedge$-8): \begin{TabularC}{3}
+\hline
+name\&nbsp\&nbsp&value\&nbsp\&nbsp&description \\\hline
+\_\-PI&3.141...&you all know pi, right? \\\hline
+\_\-e&2.718...&the base of natural logs \\\hline
+\_\-Na&6.022...e23&Avogadro's number \\\hline
+\end{TabularC}
+
+
+For muParser documentation, see: {\tt http://muparser.sourceforge.net/} \subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static mu::Parser $\ast$ {\bf create} (string function, vector$<$ string $>$ \&variableNames, vector$<$ double $\ast$ $>$ \&variablePtrs)
+\item 
+static mu::Parser $\ast$ {\bf create} ()
+\item 
+static double {\bf Eval} (mu::Parser $\ast$p)
+\item 
+static void {\bf test} ()
+\end{CompactItemize}
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::FuncFactory@{NFcore::FuncFactory}!create@{create}}
+\index{create@{create}!NFcore::FuncFactory@{NFcore::FuncFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Parser $\ast$ FuncFactory::create (string {\em function}, vector$<$ string $>$ \& {\em variableNames}, vector$<$ double $\ast$ $>$ \& {\em variablePtrs})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1FuncFactory_77b38df3330c3b4b9247e55377016da4}
+
+
+Use this function to create a new function parser that can operate on the given variables. The vectors should contain (in the same order) the variable names and pointers to the actual variable values. Do not use local variables or variables that will be forgotten before the Parser is destroyed. To evaluate functions, you can either just call the \doxyref{Eval()}{p.}{classNFcore_1_1FuncFactory_31bc4b8afdd056b59e80e55dbd28715a} function of the Parser object (as in p-$>$\doxyref{Eval()}{p.}{classNFcore_1_1FuncFactory_31bc4b8afdd056b59e80e55dbd28715a}), or, call the Eval function of \doxyref{FuncFactory}{p.}{classNFcore_1_1FuncFactory} to do error checking (as in FuncFactory::Eval(p)). \index{NFcore::FuncFactory@{NFcore::FuncFactory}!create@{create}}
+\index{create@{create}!NFcore::FuncFactory@{NFcore::FuncFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Parser $\ast$ FuncFactory::create ()\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1FuncFactory_06027d4126ce96a32c7ce001ad7cb733}
+
+
+Creates a function without any variables and without any functions defined. You will have to do that yourself. But, this does add in any predefined constants we want, and that is why this function exists. \index{NFcore::FuncFactory@{NFcore::FuncFactory}!Eval@{Eval}}
+\index{Eval@{Eval}!NFcore::FuncFactory@{NFcore::FuncFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double FuncFactory::Eval (mu::Parser $\ast$ {\em p})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1FuncFactory_31bc4b8afdd056b59e80e55dbd28715a}
+
+
+Evaluates the given Parser object safely, meaning exceptions and errors are caught and program execution is terminated - if you have to do better than simple program termination, well than you can catch your own errors (see the muParser documenation). \index{NFcore::FuncFactory@{NFcore::FuncFactory}!test@{test}}
+\index{test@{test}!NFcore::FuncFactory@{NFcore::FuncFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void FuncFactory::test ()\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1FuncFactory_e3bba8b455353e58dabe2add83a1aeae}
+
+
+Runs a couple tests of the \doxyref{FuncFactory}{p.}{classNFcore_1_1FuncFactory} and the muParser functions to make sure everything is working as promised. (To run this, use the arguements '-test mathFuncParser') 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFfunction/{\bf NFfunction.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFfunction/{\bf funcParser.cpp}\end{CompactItemize}

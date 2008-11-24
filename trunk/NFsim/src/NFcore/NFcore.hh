@@ -54,6 +54,7 @@ namespace NFcore
 
 	class Outputter;
 	class DumpMoleculeType;
+	class DumpSystem;
 
 	//class ModuleType;
 
@@ -164,6 +165,10 @@ namespace NFcore
 			void setOutputToBinary();
 			void registerOutputFileLocation(string filename);
 
+
+			void setDumpOutputter(DumpSystem *ds);
+			void tryToDump();
+
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
@@ -262,6 +267,8 @@ namespace NFcore
 			vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
 			queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
 			vector <Outputter *> allOutputters;    /*! < manages the outputters of the system */
+
+			DumpSystem *ds;
 
 
 			///////////////////////////////////////////////////////////////////////////

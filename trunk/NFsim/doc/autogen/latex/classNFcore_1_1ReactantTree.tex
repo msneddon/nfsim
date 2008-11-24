@@ -1,0 +1,230 @@
+\section{NFcore::ReactantTree Class Reference}
+\label{classNFcore_1_1ReactantTree}\index{NFcore::ReactantTree@{NFcore::ReactantTree}}
+{\tt \#include $<$reactantTree.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Maintains a tree of MappingSets needed by Distribution of Rates Reactions. 
+
+This is one of the more complex classes in NFsim. It is written in order to handle distribution of rates reactions. These types of reactions have many reactants, but each reactant can participate with a different rate. The rate is determined by the module that the reactant is in. Therefore, we need a tree (or we could have also used logarithmic classes) to efficiently select the next reactant weighted by each of its propensities.
+
+A key example of this is in the chemotaxis system. Clusters of receptors influence the rate of CheA autophosphorylation. \subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf ReactantTree} (unsigned int {\bf reactantIndex}, {\bf TransformationSet} $\ast${\bf ts}, unsigned int init\_\-capacity)
+\item 
+{\bf $\sim$ReactantTree} ()
+\item 
+int {\bf size} () const 
+\item 
+{\bf MappingSet} $\ast$ {\bf pushNextAvailableMappingSet} ()
+\item 
+void {\bf confirmPush} (int mappingSetId, double rateFactor)
+\item 
+void {\bf popLastMappingSet} ()
+\item 
+void {\bf removeMappingSet} (unsigned int mappingSetId)
+\item 
+void {\bf pickReactantFromValue} ({\bf MappingSet} $\ast$\&ms, double value, double baseRate)
+\item 
+void {\bf updateValue} (unsigned int mappingSetId, double newRateFactor)
+\item 
+{\bf MappingSet} $\ast$ {\bf getMappingSet} (unsigned int mappingSetId)
+\item 
+void {\bf printDetails} ()
+\item 
+void {\bf expandTree} (int newCapacity)
+\item 
+double {\bf getRateFactorSum} () const 
+\item 
+int {\bf getDepthOfTree} () const 
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+{\bf TransformationSet} $\ast$ {\bf ts}
+\item 
+unsigned int {\bf reactantIndex}
+\item 
+int {\bf maxElementCount}
+\item 
+int {\bf treeDepth}
+\item 
+int {\bf numOfNodes}
+\item 
+double $\ast$ {\bf leftRateFactorSum}
+\item 
+int $\ast$ {\bf leftElementCount}
+\item 
+int $\ast$ {\bf rightElementCount}
+\item 
+{\bf MappingSet} $\ast$$\ast$ {\bf mappingSets}
+\item 
+int $\ast$ {\bf msPositionMap}
+\item 
+int $\ast$ {\bf msTreePositionMap}
+\item 
+int $\ast$ {\bf reverseMsTreePositionMap}
+\item 
+int {\bf n\_\-mappingSets}
+\item 
+unsigned int {\bf firstMappingTreeIndex}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!ReactantTree@{ReactantTree}}
+\index{ReactantTree@{ReactantTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantTree::ReactantTree (unsigned int {\em reactantIndex}, {\bf TransformationSet} $\ast$ {\em ts}, unsigned int {\em init\_\-capacity})}\label{classNFcore_1_1ReactantTree_12da0834fff7d487a8f42292e7f325ae}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!$\sim$ReactantTree@{$\sim$ReactantTree}}
+\index{$\sim$ReactantTree@{$\sim$ReactantTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantTree::$\sim$ReactantTree ()}\label{classNFcore_1_1ReactantTree_aa3f46617dea88f5c2c8c9289bccd991}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!size@{size}}
+\index{size@{size}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::ReactantTree::size () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_54cf9825d714fdc8b35b22c11ba88f60}
+
+
+Returns the number of mappingSets that have been added to this tree \index{NFcore::ReactantTree@{NFcore::ReactantTree}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
+\index{pushNextAvailableMappingSet@{pushNextAvailableMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::pushNextAvailableMappingSet ()}\label{classNFcore_1_1ReactantTree_e4d30fa34fd659adacef3e11a6042a2a}
+
+
+Adds a new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to this tree and returns a pointer to the new mapping set for you to map (usually by comparing to some template molecule). Warning: even if you don't use this mapping set, it will be counted until you pop it! (see \doxyref{popLastMappingSet()}{p.}{classNFcore_1_1ReactantTree_6fab52e4e443fa84cd9c8235f6d21219}). This has a special behavior in the \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree}. This method merely gets you a pointer to the next available mappingset: if you decide to keep the mapping, you have to confirm it. Confirming the mapping actually places it in the tree. If you don't do this, it won't ever be selected by the tree. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!confirmPush@{confirmPush}}
+\index{confirmPush@{confirmPush}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::confirmPush (int {\em mappingSetId}, double {\em rateFactor})}\label{classNFcore_1_1ReactantTree_746fcc68505724658fc30fb282fcc2d7}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!popLastMappingSet@{popLastMappingSet}}
+\index{popLastMappingSet@{popLastMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::popLastMappingSet ()}\label{classNFcore_1_1ReactantTree_6fab52e4e443fa84cd9c8235f6d21219}
+
+
+Removes the very last mappingSet that was added to the list. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!removeMappingSet@{removeMappingSet}}
+\index{removeMappingSet@{removeMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::removeMappingSet (unsigned int {\em mappingSetId})}\label{classNFcore_1_1ReactantTree_4428df5b215ef01bd3371191381719b4}
+
+
+Removes the mapping set with the specified mappingSetId. Be careful here: make sure the mapping set is actually on the list before trying to remove or else this will give you an error! \index{NFcore::ReactantTree@{NFcore::ReactantTree}!pickReactantFromValue@{pickReactantFromValue}}
+\index{pickReactantFromValue@{pickReactantFromValue}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::pickReactantFromValue ({\bf MappingSet} $\ast$\& {\em ms}, double {\em value}, double {\em baseRate})}\label{classNFcore_1_1ReactantTree_0ee274538b6a1e751ac8beea773ed79d}
+
+
+This is the key utility of a reactant tree: given a random value, we can select the next reactant to fire with this function that weights the selection of any particular reactant by \index{NFcore::ReactantTree@{NFcore::ReactantTree}!updateValue@{updateValue}}
+\index{updateValue@{updateValue}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::updateValue (unsigned int {\em mappingSetId}, double {\em newRateFactor})}\label{classNFcore_1_1ReactantTree_0af2332db552c7fc4a80616ef0e5636d}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!getMappingSet@{getMappingSet}}
+\index{getMappingSet@{getMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::getMappingSet (unsigned int {\em mappingSetId})}\label{classNFcore_1_1ReactantTree_dd7bc0c8b40ff70fc7bb164e43d9868d}
+
+
+Returns a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} so that a DOR can evaluate a local function on it. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::printDetails ()}\label{classNFcore_1_1ReactantTree_4eca010018f3bbc6ff27ce59b64bcb81}
+
+
+Outputs basic details about this list - used only for debugging. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!expandTree@{expandTree}}
+\index{expandTree@{expandTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::expandTree (int {\em newCapacity})}\label{classNFcore_1_1ReactantTree_32d694cd16becbce5f75b38bc08c773c}
+
+
+
+
+Take special precaution here!! we don't want to actually reallocate the mappingSets! because then we would have to recompare each molecule to this template again! Instead, we will initialze only the end of this array, and fill in the rest of the array with the original elements, putting them in the proper position based on their id \index{NFcore::ReactantTree@{NFcore::ReactantTree}!getRateFactorSum@{getRateFactorSum}}
+\index{getRateFactorSum@{getRateFactorSum}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::ReactantTree::getRateFactorSum () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_bb9dee084a3bd0a6c9b6957c68c0865e}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!getDepthOfTree@{getDepthOfTree}}
+\index{getDepthOfTree@{getDepthOfTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::ReactantTree::getDepthOfTree () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_98c28c19e8cd616555afc6fabe975107}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!ts@{ts}}
+\index{ts@{ts}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TransformationSet}$\ast$ {\bf NFcore::ReactantTree::ts}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_c1428823f5ce0c2da03b9add496e13c9}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!reactantIndex@{reactantIndex}}
+\index{reactantIndex@{reactantIndex}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactantTree::reactantIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_d1f496c045d8653b32c68843696d7ada}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!maxElementCount@{maxElementCount}}
+\index{maxElementCount@{maxElementCount}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantTree::maxElementCount}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_98df829058fc764be8d85245000aafe0}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!treeDepth@{treeDepth}}
+\index{treeDepth@{treeDepth}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantTree::treeDepth}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_90870dc3688a7f7b2be5dbd90b6f7b2d}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!numOfNodes@{numOfNodes}}
+\index{numOfNodes@{numOfNodes}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantTree::numOfNodes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_11514f01532f7b0f286df1e4d806e3b2}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!leftRateFactorSum@{leftRateFactorSum}}
+\index{leftRateFactorSum@{leftRateFactorSum}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double$\ast$ {\bf NFcore::ReactantTree::leftRateFactorSum}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_55f4c51ac3c0b426cce2b562c89c7d15}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!leftElementCount@{leftElementCount}}
+\index{leftElementCount@{leftElementCount}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::ReactantTree::leftElementCount}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_ba8b6fb6ace2e341974441bac27995b7}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!rightElementCount@{rightElementCount}}
+\index{rightElementCount@{rightElementCount}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::ReactantTree::rightElementCount}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_35f6898d939641c2aaf4990f2718e4d8}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!mappingSets@{mappingSets}}
+\index{mappingSets@{mappingSets}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet}$\ast$$\ast$ {\bf NFcore::ReactantTree::mappingSets}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_c3ce03b2b2393165af3800ea34aed956}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!msPositionMap@{msPositionMap}}
+\index{msPositionMap@{msPositionMap}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::ReactantTree::msPositionMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_dab36f1618fcbc21352d95989432214f}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!msTreePositionMap@{msTreePositionMap}}
+\index{msTreePositionMap@{msTreePositionMap}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::ReactantTree::msTreePositionMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_6e59dc3313cbe0491d401cc9cf7c1a14}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!reverseMsTreePositionMap@{reverseMsTreePositionMap}}
+\index{reverseMsTreePositionMap@{reverseMsTreePositionMap}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::ReactantTree::reverseMsTreePositionMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_8a89ac522a999fdcb4c3e4df60b7f0a5}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!n\_\-mappingSets@{n\_\-mappingSets}}
+\index{n\_\-mappingSets@{n\_\-mappingSets}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantTree::n\_\-mappingSets}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_879ca3d3ae77fc230370d22f0e5d0e2b}
+
+
+\index{NFcore::ReactantTree@{NFcore::ReactantTree}!firstMappingTreeIndex@{firstMappingTreeIndex}}
+\index{firstMappingTreeIndex@{firstMappingTreeIndex}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactantTree::firstMappingTreeIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_484daa5c6461995e503b78e293e902ab}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantTree.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantTree.cpp}\end{CompactItemize}

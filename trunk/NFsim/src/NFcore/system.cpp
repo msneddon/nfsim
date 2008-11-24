@@ -24,6 +24,7 @@ System::System(string name)
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
+	ds=0;
 }
 
 
@@ -40,11 +41,14 @@ System::System(string name, bool useComplex)
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
+	ds=0;
 }
 
 
 System::~System()
 {
+	if(ds!=0) delete ds;
+
 	//Delete the rxnIndexMap array
 	if(rxnIndexMap!=NULL) {
 		for(unsigned int r=0; r<allReactions.size(); r++)
@@ -205,6 +209,15 @@ void System::dumpOutputters() {
 	for(unsigned int i=0; i<allOutputters.size(); i++) {
 		allOutputters.at(i)->output();
 	}
+}
+
+
+void System::setDumpOutputter(DumpSystem *ds) {
+	this->ds=ds;
+}
+void System::tryToDump() {
+	if(ds!=0)
+		ds->tryToDump(this->current_time);
 }
 
 
@@ -427,6 +440,7 @@ double System::sim(double duration, long int sampleTimes)
 
 	double delta_t = 0; unsigned long long iteration = 0, stepIteration = 0;
 	double end_time = current_time+duration;
+	//tryToDump();
 	while(current_time<end_time)
 	{
 		//2: Recompute a_tot for this time
@@ -482,7 +496,10 @@ double System::sim(double duration, long int sampleTimes)
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);
+
+		tryToDump();
 	}
+
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;

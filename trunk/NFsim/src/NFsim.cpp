@@ -191,10 +191,10 @@ int main(int argc, const char *argv[])
 						s->turnOnGlobalFuncOut();
 					}
 
-					if (argMap.find("dc")!=argMap.end()) {
-						if(!NFinput::createComplexOutputDumper(argMap.find("dc")->second, s, verbose)) {
-							cout<<endl<<endl<<"Error when creating complex outputters.  Quitting."<<endl;
-							//delete s;
+					if (argMap.find("dump")!=argMap.end()) {
+						if(!NFinput::createSystemDumper(argMap.find("dump")->second, s, verbose)) {
+							cout<<endl<<endl<<"Error when creating system dump outputters.  Quitting."<<endl;
+							delete s;
 							exit(1);
 						}
 					}
@@ -253,122 +253,119 @@ int main(int argc, const char *argv[])
 						oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
 
 
-						//Test for local functions ...
-						if(s->getName()=="localFunc2"){
-							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
-							DORRxnClass::test1(s);
-							cout<<"yada"<<endl; exit(0);
-
-
-							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
-							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
-
-							Observable *obs_rCheR = s->getObservableByName("r_Cher");
-							vector <TemplateMolecule *> tmList;
-							TemplateMolecule::traverse(obs_rCheR->getTemplateMolecule(),tmList);
-							cout<<"\n----\n"<<tmList.size()<<endl;
-
-
-							vector <Observable *> obs;
-							TemplateMolecule * rec2 = new TemplateMolecule(rec);
-							rec2->addStateValue("m","2");
-							Observable * rec2obs = new Observable("RecM2", rec2);
-							obs.push_back(rec2obs);
-
-							obs.push_back(obs_rCheR);
-
-							vector <StateCounter *> sc;
-							StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
-							sc.push_back(scRecM);
-
-							vector <string> paramConstNames;
-							vector <double> paramConstValues;
-
-							LocalFunction *lf = new LocalFunction(s,
-									"simpleFunc",
-									"RecM2+(RecMSum*(5*5)/sqrt(10))",
-									obs,sc,paramConstNames,paramConstValues);
-
-							LocalFunction *lf2 = new LocalFunction(s,
-								"simpleFunc2",
-								"RecM2+(RecMSum+5)",
-								obs,sc,paramConstNames,paramConstValues);
-
-							lf->setEvaluationLevel(1);
-
-							//prepare!
-							lf->addTypeIMoleculeDependency(rec);
-
-							lf->printDetails();
-							//cout<<"reevaluating function on molecule"<<endl;
-							//lf->evaluateOn(rec->getMolecule(0));
-							//lf->printDetails();
-
-
-
-							///////////////////Testing DOR reactions....
-							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
-							TemplateMolecule *recTemp = new TemplateMolecule(rec);
-							recTemp->addStateValue("m","3");
-							vector <TemplateMolecule *> templates;
-							templates.push_back( recTemp );
-							templates.push_back( cherTemp );
-
-							TransformationSet *ts = new TransformationSet(templates);
-							ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
-							ts->addLocalFunctionReference(recTemp,"Pointer2",LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
-							ts->addStateChangeTransform(recTemp,"m","1");
-							ts->finalize();
-
-
-
-							vector <LocalFunction *> lfList;
-							lfList.push_back(lf);
-							vector <string> lfPointerNameList;
-							lfPointerNameList.push_back("Pointer1");
-
-
-							DORRxnClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
-							s->addReaction(r);
-
-							s->prepareForSimulation();
-
-
-
-							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
-							rec->printDetails();
-							cheR->printDetails();
-
-							cout<<endl<<endl<<endl;
-							s->sim(10,10);
-
-
-							//rec->printAllMolecules();
-							//lf->printDetails();
-							//rec->getMolecule(0)->printDetails();
-							//cheR->getMolecule(0)->printDetails();
-
-
-//							cout<<"\n\n\n\n\n----\n\n";
-//							cout<<"rec mol count: "<<rec->getMoleculeCount()<<endl;
-//							for(int i=0; i<rec->getMoleculeCount(); i++) {
-//								r->printTreeForDebugging();
-//								cout<<"adding..."<<endl;
-//								rec->getMolecule(i)->printDetails();
-//								rec->getMolecule(i)->setComponentState("m",3);
-//								rec->getMolecule(i)->printDetails();
-//								r->directAddForDebugging(rec->getMolecule(i));
-//							}
-//							r->printTreeForDebugging();
-
-
-
-
-							cout<<"yada"<<endl; exit(0);
-							cout<<"ending test."<<endl;
-
-						}
-						else{
+//						//Test for local functions ...
+//						if(s->getName()=="localFunc2"){
+//							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
+//							DORRxnClass::test1(s);
+//							cout<<"yada"<<endl; exit(0);
+//
+//
+//							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
+//							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
+//
+//							Observable *obs_rCheR = s->getObservableByName("r_Cher");
+//							vector <TemplateMolecule *> tmList;
+//							TemplateMolecule::traverse(obs_rCheR->getTemplateMolecule(),tmList);
+//							cout<<"\n----\n"<<tmList.size()<<endl;
+//
+//
+//							vector <Observable *> obs;
+//							TemplateMolecule * rec2 = new TemplateMolecule(rec);
+//							rec2->addStateValue("m","2");
+//							Observable * rec2obs = new Observable("RecM2", rec2);
+//							obs.push_back(rec2obs);
+//
+//							obs.push_back(obs_rCheR);
+//
+//							vector <StateCounter *> sc;
+//							StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
+//							sc.push_back(scRecM);
+//
+//							vector <string> paramConstNames;
+//							vector <double> paramConstValues;
+//
+//							LocalFunction *lf = new LocalFunction(s,
+//									"simpleFunc",
+//									"RecM2+(RecMSum*(5*5)/sqrt(10))",
+//									obs,sc,paramConstNames,paramConstValues);
+//
+//							LocalFunction *lf2 = new LocalFunction(s,
+//								"simpleFunc2",
+//								"RecM2+(RecMSum+5)",
+//								obs,sc,paramConstNames,paramConstValues);
+//
+//							lf->setEvaluationLevel(1);
+//
+//							//prepare!
+//							lf->addTypeIMoleculeDependency(rec);
+//
+//							lf->printDetails();
+//							//cout<<"reevaluating function on molecule"<<endl;
+//							//lf->evaluateOn(rec->getMolecule(0));
+//							//lf->printDetails();
+//
+//
+//
+//							///////////////////Testing DOR reactions....
+//							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
+//							TemplateMolecule *recTemp = new TemplateMolecule(rec);
+//							recTemp->addStateValue("m","3");
+//							vector <TemplateMolecule *> templates;
+//							templates.push_back( recTemp );
+//							templates.push_back( cherTemp );
+//
+//							TransformationSet *ts = new TransformationSet(templates);
+//							ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
+//							ts->addLocalFunctionReference(recTemp,"Pointer2",LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+//							ts->addStateChangeTransform(recTemp,"m","1");
+//							ts->finalize();
+//
+//
+//
+//							vector <LocalFunction *> lfList;
+//							lfList.push_back(lf);
+//							vector <string> lfPointerNameList;
+//							lfPointerNameList.push_back("Pointer1");
+//
+//
+//							DORRxnClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
+//							s->addReaction(r);
+//
+//							s->prepareForSimulation();
+//
+//
+//
+//							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
+//							rec->printDetails();
+//							cheR->printDetails();
+//
+//							cout<<endl<<endl<<endl;
+//							s->sim(10,10);
+//
+//
+//							//rec->printAllMolecules();
+//							//lf->printDetails();
+//							//rec->getMolecule(0)->printDetails();
+//							//cheR->getMolecule(0)->printDetails();
+//
+//
+////							cout<<"\n\n\n\n\n----\n\n";
+////							cout<<"rec mol count: "<<rec->getMoleculeCount()<<endl;
+////							for(int i=0; i<rec->getMoleculeCount(); i++) {
+////								r->printTreeForDebugging();
+////								cout<<"adding..."<<endl;
+////								rec->getMolecule(i)->printDetails();
+////								rec->getMolecule(i)->setComponentState("m",3);
+////								rec->getMolecule(i)->printDetails();
+////								r->directAddForDebugging(rec->getMolecule(i));
+////							}
+////							r->printTreeForDebugging();
+//
+//							cout<<"yada"<<endl; exit(0);
+//							cout<<"ending test."<<endl;
+//
+//						}
+//						else{
 
 
 						//Prepare the system for simulation!!
@@ -389,8 +386,7 @@ int main(int argc, const char *argv[])
 						cout<<endl<<endl;
 						s->printAllReactions();
 			//			s->dumpOutputters();
-
-						}
+//						}
 					}
 					delete s;
 				}

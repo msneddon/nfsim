@@ -87,9 +87,83 @@ double NFinput::parseAsDouble(map<string,string> &argMap,string argName,double d
 
 
 
+bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
+{
+	cout<<"Parsing system dump flag: "<<paramStr<<"\n";
+
+	//First, extract out the times the user wants to dump the observables
+	int b1 = paramStr.find_first_of('[');
+	int b2 = paramStr.find_first_of(']');
+	if(b1>b2) { cout<<"Error in NFinput::createSystemDumper:, ']' was found before '['."<<endl; return false; }
+	if(b1<0 && b2<0) { cout<<"Error in NFinput::createSystemDumper:, enclosing brackets '[' and ']' were not found."<<endl; return false; }
+	if(b1<0) { cout<<"Error in NFinput::createSystemDumper:, '[' was not found."<<endl; return false; }
+	if(b2<0) { cout<<"Error in NFinput::createSystemDumper:, ']' was not found."<<endl; return false; }
+	string timesStr=paramStr.substr(b1+1,b2-b1-1);
+
+	//Create a vector storing the output times
+	string numString=""; vector <double> outputTimes;
+	cout<<"  scheduling system dump for simulation times:";
+	for(unsigned int i=0; i<timesStr.length(); i++) {
+		if(timesStr.at(i)==';') {
+			if(numString.size()==0) continue;
+			try {
+				double doubleVal = NFutil::convertToDouble(numString);
+				if(outputTimes.size()>0) {
+					if(doubleVal<=outputTimes.at(outputTimes.size()-1)) {
+						cout<<"\n\nError in NFinput::creatComplexOutputDumper: output times given \n";
+						cout<<"must be monotonically increasing without any repeated elements.";
+						return false;
+					}
+				}
+				outputTimes.push_back(doubleVal);
+			} catch (std::runtime_error e) {
+				cout<<"\nWarning in NFinput::creatComplexOutputDumper: could not parse time: '"<<numString<<"'"<<endl;
+				cout<<"Ignoring that element."<<endl;
+			}
+			numString="";
+			continue;
+		}
+		numString += timesStr.at(i);
+	}
+	if(numString.size()!=0) {
+		try {
+			double doubleVal = NFutil::convertToDouble(numString);
+			if(outputTimes.size()>0) {
+				if(doubleVal<=outputTimes.at(outputTimes.size()-1)) {
+					cout<<"\nError in NFinput::creatComplexOutputDumper: output times given ";
+					cout<<"must be monotonically increasing without any repeated elements.";
+					return false;
+				}
+			}
+			outputTimes.push_back(doubleVal);
+		} catch (std::runtime_error e) {
+			cout<<"\nWarning in NFinput::creatComplexOutputDumper: could not parse time: '"<<numString<<"'"<<endl;
+			cout<<"Ignoring that element."<<endl;
+		}
+	}
+	if(outputTimes.size()==0) {
+		cout<<" none given.";
+	} else {
+		for(unsigned int i=0; i<outputTimes.size(); i++) {
+			cout<<" "<<outputTimes.at(i)<<";";
+		}
+	}
+	cout<<endl;
+
+
+	DumpSystem *ds = new DumpSystem(s, outputTimes);
+	s->setDumpOutputter(ds);
+	//ds->tryToDump(5.5);
+
+}
+
+
+
 bool NFinput::createComplexOutputDumper(string paramStr, System *s, bool verbose)
 {
-	if(verbose) cout<<"Parsing dump complex (dc) flag: "<<paramStr<<endl;
+	cout<<"Parsing dump complex (dc) flag: "<<paramStr<<endl;
+
+
 
 	//First, extract out the times the user wants to dump the observables
 	int b1 = paramStr.find_first_of('[');
