@@ -199,6 +199,11 @@ namespace NFinput {
 	bool createSystemDumper(string paramStr, System *s, bool verbose);
 
 	void parseComplexDump( vector <Outputter> &outputter, string arg );
+
+
+	bool readRNFargs(map<string,string> argMap, bool verbose);
+	//bool runRNFscript(map<string,string> argMap) {};
+   // bool runRNFscript(System *s, string filename);
 }
 
 
