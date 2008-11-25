@@ -6,8 +6,8 @@ function [results]=readNFdump()
 tic;
 fprintf('\nRunning function readNFdump...\n\n');
 
-baseDirectory='../../test/RNA';
-systemName='rna_synthesis4';
+baseDirectory='../../test/simple_system';
+systemName='simple_system';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
