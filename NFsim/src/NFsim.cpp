@@ -129,6 +129,10 @@ void printLogo(int indent, string version);
 */
 void printHelp(string version);
 
+bool runRNFscript(map<string,string> argMap, bool verbose);
+System *initSystemFromFlags(map<string,string> argMap, bool verbose);
+bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
+
 
 //!  Main executable for the NFsim program.
 /*!
@@ -175,227 +179,18 @@ int main(int argc, const char *argv[])
 		}
 
 
-		//Handle the case of reading from an xml file
+		else if(argMap.find("rnf")!=argMap.end()) {
+			cout<<"handling rnf file, although I don't know what that means yet."<<endl;
+			runRNFscript(argMap,verbose);
+			parsed = true;
+		}
+
+		//Handle the case of reading from an xml file directly
 		else if (argMap.find("xml")!=argMap.end())
 		{
-			string filename = argMap.find("xml")->second;
-			if(!filename.empty())
-			{
-				//Create the system from the XML file
-				System *s = NFinput::initializeFromXML(filename, verbose);
-
-				if(s!=NULL)
-				{
-					//If requested, be sure to output the values of global functions
-					if (argMap.find("ogf")!=argMap.end()) {
-						s->turnOnGlobalFuncOut();
-					}
-
-					if (argMap.find("dump")!=argMap.end()) {
-						if(!NFinput::createSystemDumper(argMap.find("dump")->second, s, verbose)) {
-							cout<<endl<<endl<<"Error when creating system dump outputters.  Quitting."<<endl;
-							delete s;
-							exit(1);
-						}
-					}
-
-
-					if (argMap.find("utl")!=argMap.end()) {
-						int utl = -1;
-						utl = NFinput::parseAsInt(argMap,"utl",utl);
-						s->setUniversalTraversalLimit(utl);
-					}
-
-					if (argMap.find("b")!=argMap.end()) {
-						s->setOutputToBinary();
-					}
-
-			//		string mtName="mRNA";
-			//		MoleculeType *mt = s->getMoleculeTypeByName(mtName);
-			//		Outputter *o = new DumpMoleculeType("complex.out",s,mt);
-			//		s->addOutputter(o);
-
-					//Here we just run some stuff for testing... The output is just
-					if (argMap.find("o")!=argMap.end()) {
-						string outputFileName = argMap.find("o")->second;
-						s->registerOutputFileLocation(outputFileName);
-					} else {
-						if(s->isOutputtingBinary())
-							s->registerOutputFileLocation(s->getName()+"_nf.dat");
-						else {
-							s->registerOutputFileLocation(s->getName()+"_nf.gdat");
-							s->outputAllObservableNames();
-						}
-					}
-
-
-					//turn off on the fly calculation of observables
-					if(argMap.find("notf")!=argMap.end()) {
-						s->turnOff_OnTheFlyObs();
-					}
-
-
-					//If requested, walk through the simulation
-					if (argMap.find("walk")!=argMap.end()) {
-						NFinput::walk(s);
-					}
-					//Otherwise, run as normal
-					else
-					{
-						//Parameters (assigned first to their default values if these parameters
-						//are not explicitly given...
-						double eqTime = 0;
-						double sTime = 10;
-						int oSteps = 10;
-
-						eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
-						sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
-						oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
-
-
-//						//Test for local functions ...
-//						if(s->getName()=="localFunc2"){
-//							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
-//							DORRxnClass::test1(s);
-//							cout<<"yada"<<endl; exit(0);
-//
-//
-//							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
-//							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
-//
-//							Observable *obs_rCheR = s->getObservableByName("r_Cher");
-//							vector <TemplateMolecule *> tmList;
-//							TemplateMolecule::traverse(obs_rCheR->getTemplateMolecule(),tmList);
-//							cout<<"\n----\n"<<tmList.size()<<endl;
-//
-//
-//							vector <Observable *> obs;
-//							TemplateMolecule * rec2 = new TemplateMolecule(rec);
-//							rec2->addStateValue("m","2");
-//							Observable * rec2obs = new Observable("RecM2", rec2);
-//							obs.push_back(rec2obs);
-//
-//							obs.push_back(obs_rCheR);
-//
-//							vector <StateCounter *> sc;
-//							StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
-//							sc.push_back(scRecM);
-//
-//							vector <string> paramConstNames;
-//							vector <double> paramConstValues;
-//
-//							LocalFunction *lf = new LocalFunction(s,
-//									"simpleFunc",
-//									"RecM2+(RecMSum*(5*5)/sqrt(10))",
-//									obs,sc,paramConstNames,paramConstValues);
-//
-//							LocalFunction *lf2 = new LocalFunction(s,
-//								"simpleFunc2",
-//								"RecM2+(RecMSum+5)",
-//								obs,sc,paramConstNames,paramConstValues);
-//
-//							lf->setEvaluationLevel(1);
-//
-//							//prepare!
-//							lf->addTypeIMoleculeDependency(rec);
-//
-//							lf->printDetails();
-//							//cout<<"reevaluating function on molecule"<<endl;
-//							//lf->evaluateOn(rec->getMolecule(0));
-//							//lf->printDetails();
-//
-//
-//
-//							///////////////////Testing DOR reactions....
-//							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
-//							TemplateMolecule *recTemp = new TemplateMolecule(rec);
-//							recTemp->addStateValue("m","3");
-//							vector <TemplateMolecule *> templates;
-//							templates.push_back( recTemp );
-//							templates.push_back( cherTemp );
-//
-//							TransformationSet *ts = new TransformationSet(templates);
-//							ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
-//							ts->addLocalFunctionReference(recTemp,"Pointer2",LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
-//							ts->addStateChangeTransform(recTemp,"m","1");
-//							ts->finalize();
-//
-//
-//
-//							vector <LocalFunction *> lfList;
-//							lfList.push_back(lf);
-//							vector <string> lfPointerNameList;
-//							lfPointerNameList.push_back("Pointer1");
-//
-//
-//							DORRxnClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
-//							s->addReaction(r);
-//
-//							s->prepareForSimulation();
-//
-//
-//
-//							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
-//							rec->printDetails();
-//							cheR->printDetails();
-//
-//							cout<<endl<<endl<<endl;
-//							s->sim(10,10);
-//
-//
-//							//rec->printAllMolecules();
-//							//lf->printDetails();
-//							//rec->getMolecule(0)->printDetails();
-//							//cheR->getMolecule(0)->printDetails();
-//
-//
-////							cout<<"\n\n\n\n\n----\n\n";
-////							cout<<"rec mol count: "<<rec->getMoleculeCount()<<endl;
-////							for(int i=0; i<rec->getMoleculeCount(); i++) {
-////								r->printTreeForDebugging();
-////								cout<<"adding..."<<endl;
-////								rec->getMolecule(i)->printDetails();
-////								rec->getMolecule(i)->setComponentState("m",3);
-////								rec->getMolecule(i)->printDetails();
-////								r->directAddForDebugging(rec->getMolecule(i));
-////							}
-////							r->printTreeForDebugging();
-//
-//							cout<<"yada"<<endl; exit(0);
-//							cout<<"ending test."<<endl;
-//
-//						}
-//						else{
-
-
-						//Prepare the system for simulation!!
-						s->prepareForSimulation();
-
-						//Output some info on the system if we ask for it
-						if(verbose) {
-							cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
-							s->printAllMoleculeTypes();
-							s->printAllReactions();
-							cout<<"-------------------------\n";
-						}
-
-						cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
-						s->equilibriate(eqTime);
-						s->sim(sTime,oSteps);
-
-						cout<<endl<<endl;
-						s->printAllReactions();
-			//			s->dumpOutputters();
-//						}
-					}
-					delete s;
-				}
-				else  {
-					cout<<"Couldn't create a system from your XML file.  I don't know what you did."<<endl;
-				}
-			}
-			else  {
-				cout<<"You must specify an xml file to read."<<endl;
+			System *s = initSystemFromFlags(argMap, verbose);
+			if(s!=NULL) {
+				runFromArgs(s,argMap,verbose);
 			}
 			parsed = true;
 		}
@@ -465,11 +260,135 @@ int main(int argc, const char *argv[])
 
 
 
+bool runRNFscript(map<string,string> argMap, bool verbose)
+{
+	//Step 1: open the file and initialize the argMap
+	if(!NFinput::readRNFargs(argMap, verbose)) {
+		cout<<"Error when running the RNF script."<<endl;
+		return false;
+	}
+
+	//Step 2: using the argMap, set up the system
+	System *s=initSystemFromFlags(argMap,verbose);
+	if(s!=0) {
+
+		//Step 3: run the RNF script
+	//	return NFinput::runRNFscript(argMap);
+	}
+
+	return false;
+}
 
 
+System *initSystemFromFlags(map<string,string> argMap, bool verbose)
+{
+	if (argMap.find("xml")!=argMap.end())
+	{
+		string filename = argMap.find("xml")->second;
+		if(!filename.empty())
+		{
+			//Create the system from the XML file
+			System *s = NFinput::initializeFromXML(filename, verbose);
+
+			if(s!=NULL)
+			{
+				//If requested, be sure to output the values of global functions
+				if (argMap.find("ogf")!=argMap.end()) {
+					s->turnOnGlobalFuncOut();
+				}
+
+				if (argMap.find("dump")!=argMap.end()) {
+					if(!NFinput::createSystemDumper(argMap.find("dump")->second, s, verbose)) {
+						cout<<endl<<endl<<"Error when creating system dump outputters.  Quitting."<<endl;
+						delete s;
+						return 0;
+					}
+				}
+
+				if (argMap.find("utl")!=argMap.end()) {
+					int utl = -1;
+					utl = NFinput::parseAsInt(argMap,"utl",utl);
+					s->setUniversalTraversalLimit(utl);
+				}
+
+				if (argMap.find("b")!=argMap.end()) {
+					s->setOutputToBinary();
+				}
+
+				//Here we just run some stuff for testing... The output is just
+				if (argMap.find("o")!=argMap.end()) {
+					string outputFileName = argMap.find("o")->second;
+					s->registerOutputFileLocation(outputFileName);
+				} else {
+					if(s->isOutputtingBinary())
+						s->registerOutputFileLocation(s->getName()+"_nf.dat");
+					else {
+						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
+						s->outputAllObservableNames();
+					}
+				}
 
 
+				//turn off on the fly calculation of observables
+				if(argMap.find("notf")!=argMap.end()) {
+					s->turnOff_OnTheFlyObs();
+				}
 
+
+				//Finally, return the system if we made it here without problems
+				return s;
+			}
+			else  {
+				cout<<"Couldn't create a system from your XML file.  I don't know what you did."<<endl;
+				return 0;
+			}
+		}
+	} else {
+		cout<<"Couldn't create a system from your XML file.  No -xml [filename] flag given."<<endl;
+	}
+	return 0;
+}
+
+
+bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
+{
+
+	//If requested, walk through the simulation
+	if (argMap.find("walk")!=argMap.end()) {
+		NFinput::walk(s);
+	}
+	//Otherwise, run as normal
+	else
+	{
+		double eqTime = 0;
+		double sTime = 10;
+		int oSteps = 10;
+
+		eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
+		sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+		oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
+
+
+		//Prepare the system for simulation!!
+		s->prepareForSimulation();
+
+		//Output some info on the system if we ask for it
+		if(verbose) {
+			cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
+			s->printAllMoleculeTypes();
+			s->printAllReactions();
+			cout<<"-------------------------\n";
+		}
+
+		cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+		s->equilibriate(eqTime);
+		s->sim(sTime,oSteps);
+
+		cout<<endl<<endl;
+		s->printAllReactions();
+	}
+	return true;
+}
 
 
 
@@ -560,6 +479,251 @@ void printHelp(string version)
 	cout<<""<<endl;
 	cout<<""<<endl;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//string filename = argMap.find("xml")->second;
+//if(!filename.empty())
+//{
+//	//Create the system from the XML file
+//	System *s = NFinput::initializeFromXML(filename, verbose);
+//
+//	if(s!=NULL)
+//	{
+//		//If requested, be sure to output the values of global functions
+//		if (argMap.find("ogf")!=argMap.end()) {
+//			s->turnOnGlobalFuncOut();
+//		}
+//
+//		if (argMap.find("dump")!=argMap.end()) {
+//			if(!NFinput::createSystemDumper(argMap.find("dump")->second, s, verbose)) {
+//				cout<<endl<<endl<<"Error when creating system dump outputters.  Quitting."<<endl;
+//				delete s;
+//				exit(1);
+//			}
+//		}
+//
+//
+//		if (argMap.find("utl")!=argMap.end()) {
+//			int utl = -1;
+//			utl = NFinput::parseAsInt(argMap,"utl",utl);
+//			s->setUniversalTraversalLimit(utl);
+//		}
+//
+//		if (argMap.find("b")!=argMap.end()) {
+//			s->setOutputToBinary();
+//		}
+//
+////		string mtName="mRNA";
+////		MoleculeType *mt = s->getMoleculeTypeByName(mtName);
+////		Outputter *o = new DumpMoleculeType("complex.out",s,mt);
+////		s->addOutputter(o);
+//
+//		//Here we just run some stuff for testing... The output is just
+//		if (argMap.find("o")!=argMap.end()) {
+//			string outputFileName = argMap.find("o")->second;
+//			s->registerOutputFileLocation(outputFileName);
+//		} else {
+//			if(s->isOutputtingBinary())
+//				s->registerOutputFileLocation(s->getName()+"_nf.dat");
+//			else {
+//				s->registerOutputFileLocation(s->getName()+"_nf.gdat");
+//				s->outputAllObservableNames();
+//			}
+//		}
+//
+//
+//		//turn off on the fly calculation of observables
+//		if(argMap.find("notf")!=argMap.end()) {
+//			s->turnOff_OnTheFlyObs();
+//		}
+//
+//
+//		//If requested, walk through the simulation
+//		if (argMap.find("walk")!=argMap.end()) {
+//			NFinput::walk(s);
+//		}
+//		//Otherwise, run as normal
+//		else
+//		{
+//			//Parameters (assigned first to their default values if these parameters
+//			//are not explicitly given...
+//			double eqTime = 0;
+//			double sTime = 10;
+//			int oSteps = 10;
+//
+//			eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
+//			sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+//			oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
+//
+//
+////						//Test for local functions ...
+////						if(s->getName()=="localFunc2"){
+////							cout<<"\n\n\n-------\nEntering local function test!!!"<<endl;
+////							DORRxnClass::test1(s);
+////							cout<<"yada"<<endl; exit(0);
+////
+////
+////							MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
+////							MoleculeType *cheR = s->getMoleculeTypeByName("CheR");
+////
+////							Observable *obs_rCheR = s->getObservableByName("r_Cher");
+////							vector <TemplateMolecule *> tmList;
+////							TemplateMolecule::traverse(obs_rCheR->getTemplateMolecule(),tmList);
+////							cout<<"\n----\n"<<tmList.size()<<endl;
+////
+////
+////							vector <Observable *> obs;
+////							TemplateMolecule * rec2 = new TemplateMolecule(rec);
+////							rec2->addStateValue("m","2");
+////							Observable * rec2obs = new Observable("RecM2", rec2);
+////							obs.push_back(rec2obs);
+////
+////							obs.push_back(obs_rCheR);
+////
+////							vector <StateCounter *> sc;
+////							StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
+////							sc.push_back(scRecM);
+////
+////							vector <string> paramConstNames;
+////							vector <double> paramConstValues;
+////
+////							LocalFunction *lf = new LocalFunction(s,
+////									"simpleFunc",
+////									"RecM2+(RecMSum*(5*5)/sqrt(10))",
+////									obs,sc,paramConstNames,paramConstValues);
+////
+////							LocalFunction *lf2 = new LocalFunction(s,
+////								"simpleFunc2",
+////								"RecM2+(RecMSum+5)",
+////								obs,sc,paramConstNames,paramConstValues);
+////
+////							lf->setEvaluationLevel(1);
+////
+////							//prepare!
+////							lf->addTypeIMoleculeDependency(rec);
+////
+////							lf->printDetails();
+////							//cout<<"reevaluating function on molecule"<<endl;
+////							//lf->evaluateOn(rec->getMolecule(0));
+////							//lf->printDetails();
+////
+////
+////
+////							///////////////////Testing DOR reactions....
+////							TemplateMolecule *cherTemp = new TemplateMolecule(cheR);
+////							TemplateMolecule *recTemp = new TemplateMolecule(rec);
+////							recTemp->addStateValue("m","3");
+////							vector <TemplateMolecule *> templates;
+////							templates.push_back( recTemp );
+////							templates.push_back( cherTemp );
+////
+////							TransformationSet *ts = new TransformationSet(templates);
+////							ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
+////							ts->addLocalFunctionReference(recTemp,"Pointer2",LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+////							ts->addStateChangeTransform(recTemp,"m","1");
+////							ts->finalize();
+////
+////
+////
+////							vector <LocalFunction *> lfList;
+////							lfList.push_back(lf);
+////							vector <string> lfPointerNameList;
+////							lfPointerNameList.push_back("Pointer1");
+////
+////
+////							DORRxnClass *r = new DORRxnClass("DorTest",0.5,ts,lfList,lfPointerNameList);
+////							s->addReaction(r);
+////
+////							s->prepareForSimulation();
+////
+////
+////
+////							cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
+////							rec->printDetails();
+////							cheR->printDetails();
+////
+////							cout<<endl<<endl<<endl;
+////							s->sim(10,10);
+////
+////
+////							//rec->printAllMolecules();
+////							//lf->printDetails();
+////							//rec->getMolecule(0)->printDetails();
+////							//cheR->getMolecule(0)->printDetails();
+////
+////
+//////							cout<<"\n\n\n\n\n----\n\n";
+//////							cout<<"rec mol count: "<<rec->getMoleculeCount()<<endl;
+//////							for(int i=0; i<rec->getMoleculeCount(); i++) {
+//////								r->printTreeForDebugging();
+//////								cout<<"adding..."<<endl;
+//////								rec->getMolecule(i)->printDetails();
+//////								rec->getMolecule(i)->setComponentState("m",3);
+//////								rec->getMolecule(i)->printDetails();
+//////								r->directAddForDebugging(rec->getMolecule(i));
+//////							}
+//////							r->printTreeForDebugging();
+////
+////							cout<<"yada"<<endl; exit(0);
+////							cout<<"ending test."<<endl;
+////
+////						}
+////						else{
+//
+//
+//			//Prepare the system for simulation!!
+//			s->prepareForSimulation();
+//
+//			//Output some info on the system if we ask for it
+//			if(verbose) {
+//				cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
+//				s->printAllMoleculeTypes();
+//				s->printAllReactions();
+//				cout<<"-------------------------\n";
+//			}
+//
+//			cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+//			s->equilibriate(eqTime);
+//			s->sim(sTime,oSteps);
+//
+//			cout<<endl<<endl;
+//			s->printAllReactions();
+////			s->dumpOutputters();
+////						}
+//		}
+//		delete s;
+//	}
+//	else  {
+//		cout<<"Couldn't create a system from your XML file.  I don't know what you did."<<endl;
+//	}
+//}
+//else  {
+//	cout<<"You must specify an xml file to read."<<endl;
+//}
+
+
+
 
 
 
