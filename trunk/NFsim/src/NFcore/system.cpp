@@ -440,7 +440,7 @@ double System::sim(double duration, long int sampleTimes)
 
 	double delta_t = 0; unsigned long long iteration = 0, stepIteration = 0;
 	double end_time = current_time+duration;
-	//tryToDump();
+	tryToDump();
 	while(current_time<end_time)
 	{
 		//2: Recompute a_tot for this time

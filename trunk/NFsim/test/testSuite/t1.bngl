@@ -28,6 +28,13 @@ begin parameters
    
 end parameters
 
+begin molecule type
+  CheY(p~unphos~PHOS)
+  Motor(state~CW~CCW)
+
+end molecule type
+
+
 begin seed species
    CheY(p~unphos) CheYCount
    Motor(state~CW) motorCount

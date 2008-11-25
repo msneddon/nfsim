@@ -184,22 +184,49 @@ namespace NFinput {
 	bool parseArguments(int argc, const char *argv[], map<string,string> &argMap);
 
 
+	//! Looks up the argument in the argMap and tries to parse the value as an integer
+	/*!
+    	@author Michael Sneddon
+	 */
 	int parseAsInt(map<string,string> &argMap, string argName, int defaultValue);
+
+	//! Looks up the argument in the argMap and tries to parse the value as a double
+	/*!
+    	@author Michael Sneddon
+	 */
 	double parseAsDouble(map<string,string> &argMap, string argName, double defaultValue);
 
 
 
-
+	//! Allows the user to walk through the system with an interactive text-based program
+	/*!
+    	@author Michael Sneddon
+	 */
 	void walk(System *s);
 
 
 
-
-	bool createComplexOutputDumper(string paramStr, System *s, bool verbose);
+	//! Parses the cmd line arg that specifies system dumps, and schedules them.
+	/*!
+	    This method works by parsing the argument, initializing the class DumpSystem defined
+	    in the file NFoutput.hh, and adding the DumpSystem to the System.
+    	@author Michael Sneddon
+	 */
 	bool createSystemDumper(string paramStr, System *s, bool verbose);
 
-	void parseComplexDump( vector <Outputter> &outputter, string arg );
 
+
+	//! Parses a matlab style sequence (ie startValue:step:endValue) into the vector
+	/*!
+    	@author Michael Sneddon
+	 */
+	bool parseSequence(string numString, vector <double> &outputTimes);
+
+
+
+
+
+	////////////// Functions that will allow parsing and running of an RNF script file
 
 	bool readRNFargs(map<string,string> argMap, bool verbose);
 	//bool runRNFscript(map<string,string> argMap) {};
