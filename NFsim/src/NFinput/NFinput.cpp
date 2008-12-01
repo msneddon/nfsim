@@ -83,7 +83,7 @@ System * NFinput::initializeFromXML(
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading parameter list..."<<endl;
 		map<string, double> parameter;
-		if(!initParameters(pListOfParameters, parameter, verbose))
+		if(!initParameters(pListOfParameters, s, parameter, verbose))
 		{
 			cout<<"\n\nI failed at parsing your Parameters.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
@@ -168,7 +168,7 @@ System * NFinput::initializeFromXML(
 
 
 
-bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <string,double> &parameter, bool verbose)
+bool NFinput::initParameters(TiXmlElement *pListOfParameters, System *s, map <string,double> &parameter, bool verbose)
 {
 	try {
 		//Loop through all the parameter elements
@@ -214,6 +214,7 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, map <string,double
 
 			//Save the parameter into our parameter map
 			parameter[paramName]=d;
+			s->addParameter(paramName,d);
 			if(verbose) cout<<"\t\t Identified parameter:\t"<<paramName<<"\tValue:"<<d<<endl;
 		}
 		return true;

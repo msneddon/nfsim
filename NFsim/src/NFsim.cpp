@@ -156,14 +156,12 @@ int main(int argc, const char *argv[])
 	if(NFinput::parseArguments(argc, argv, argMap))
 	{
 		//First, find the arguments that we might use in any situation
-		if(argMap.find("v")!=argMap.end()) verbose = true;
+
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
 			cout<<"seeding random number generator with: "<<seed<<endl;
 		}
-
-
 
 		//Handle the case of no parameters
 		if(argMap.empty()) {
@@ -180,8 +178,9 @@ int main(int argc, const char *argv[])
 
 
 		else if(argMap.find("rnf")!=argMap.end()) {
-			cout<<"handling rnf file, although I don't know what that means yet."<<endl;
+			cout<<"handling RNF file"<<endl;
 			runRNFscript(argMap,verbose);
+			if(argMap.find("v")!=argMap.end()) verbose = true;
 			parsed = true;
 		}
 
@@ -263,17 +262,20 @@ int main(int argc, const char *argv[])
 bool runRNFscript(map<string,string> argMap, bool verbose)
 {
 	//Step 1: open the file and initialize the argMap
-	if(!NFinput::readRNFargs(argMap, verbose)) {
+	vector<string> commands;
+	if(!NFinput::readRNFfile(argMap, commands, verbose)) {
 		cout<<"Error when running the RNF script."<<endl;
 		return false;
 	}
+	if(argMap.find("v")!=argMap.end()) verbose = true;
+
 
 	//Step 2: using the argMap, set up the system
 	System *s=initSystemFromFlags(argMap,verbose);
 	if(s!=0) {
-
-		//Step 3: run the RNF script
-	//	return NFinput::runRNFscript(argMap);
+		s->prepareForSimulation();
+		//Step 3: provided the system is set up correctly, run the RNF script
+		return NFinput::runRNFcommands(s,argMap,commands,verbose);
 	}
 
 	return false;
@@ -374,14 +376,14 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 
 		//Output some info on the system if we ask for it
 		if(verbose) {
-			cout<<"\n\nparse appears to be succussful.  Here, check your system:\n";
+			cout<<"\n\nparse appears to be successful.  Here, check your system:\n";
 			s->printAllMoleculeTypes();
 			s->printAllReactions();
 			cout<<"-------------------------\n";
 		}
 
-		cout<<endl<<endl<<endl<<"Equilibriating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
-		s->equilibriate(eqTime);
+		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+		s->equilibrate(eqTime);
 		s->sim(sTime,oSteps);
 
 		cout<<endl<<endl;

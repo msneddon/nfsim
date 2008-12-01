@@ -414,12 +414,21 @@ double System::getNextRxn()
 	return -1;
 }
 
+
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes)
 {
+	sim(duration,sampleTimes,true);
+}
+
+
+/* main simulation loop */
+double System::sim(double duration, long int sampleTimes, bool verbose)
+{
 	System::NULL_EVENT_COUNTER=0;
 	cout.setf(ios::scientific);
-	cout<<"Simulating system for: "<<duration<<" second(s)."<<endl<<endl;
+	cout<<"simulating system for: "<<duration<<" second(s)."<<endl;
+	if(verbose) cout<<"\n";
 
 	//First, output the header for the output of this simulation
 	//outputAllObservableNames();
@@ -469,10 +478,12 @@ double System::sim(double duration, long int sampleTimes)
 				curSampleTime+=dSampleTime;
 			}
 			//printAllReactions();
-			cout<<"Sim time: "<<current_time<<"\tCPU time: ";
-			cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
-			cout<<"\t events: "<<stepIteration<<endl;
-			//cout<<"\tAtot:"<<a_tot<<endl;
+			if(verbose) {
+				cout<<"Sim time: "<<current_time<<"\tCPU time: ";
+				cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
+				cout<<"\t events: "<<stepIteration<<endl;
+				//cout<<"\tAtot:"<<a_tot<<endl;
+			}
 			stepIteration=0;
 		}
 
@@ -501,16 +512,16 @@ double System::sim(double duration, long int sampleTimes)
 	}
 
 
+
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
-    if(BASIC_MESSAGE)
-    {
-    	cout<<endl<<"You just simulated "<< iteration <<" reactions in "<< time << "s\n( ";
-    	cout<<((double)iteration)/time<<" reactions/sec, ";
-    	cout<<(time/((double)iteration))<<" CPU seconds/event )"<< endl;
-    	cout<<"Null events: "<< System::NULL_EVENT_COUNTER;
-    	cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
-    }
+    if(verbose) cout<<"\n";
+    cout<<"   You just simulated "<< iteration <<" reactions in "<< time << "s\n";
+    cout<<"   ( "<<((double)iteration)/time<<" reactions/sec, ";
+    cout<<(time/((double)iteration))<<" CPU seconds/event )"<< endl;
+    cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
+    cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
+
 
 	cout.unsetf(ios::scientific);
 	return current_time;
@@ -593,22 +604,22 @@ void System::singleStep()
 	cout<<"  -System time is now"<<current_time<<endl;
 }
 
-void System::equilibriate(double duration)
+void System::equilibrate(double duration)
 {
-	current_time = 0;
+	double startTime = current_time;
 	stepTo(duration);
-	current_time = 0;
+	current_time = startTime;
 }
 
-void System::equilibriate(double duration, int statusReports)
+void System::equilibrate(double duration, int statusReports)
 {
 	double stepLength = duration / (double)statusReports;
 	double eTime = 0;
 	for(int i=0; i<statusReports; i++)
 	{
-		equilibriate(stepLength);
+		equilibrate(stepLength);
 		eTime+=stepLength;
-		cout<<"Equilibriation has now elapsed for: "<<eTime<<" seconds."<<endl;
+		cout<<"Equilibration has now elapsed for: "<<eTime<<" seconds."<<endl;
 
 	}
 
@@ -925,3 +936,37 @@ Observable * System::getObservableByName(string obsName)
 	cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
+
+
+
+void System::addParameter(string name,double value) {
+	this->paramMap[name]=value;
+}
+double System::getParameter(string name) {
+	return this->paramMap.at(name);
+}
+void System::setParameter(string name, double value) {
+	if(paramMap.find(name)==paramMap.end()) {
+		cout<<"Warning! System parameter: '"<<name<<"' does not exist and will not be updated."<<endl;
+		return;
+	}
+	this->paramMap[name]=value;
+}
+void System::updateSystemWithNewParameters() {
+	cout<<"warning - I did not do anything in the system update!"<<endl;
+}
+void System::printAllParameters() {
+	if(paramMap.size()==0) cout<<"no system parameters to print."<<endl;
+	else cout<<"List of all system parameters:"<<endl;
+	map<string,double>::iterator iter;
+	for( iter = paramMap.begin(); iter != paramMap.end(); iter++ ) {
+		cout << "\t" << iter->first << " = " << iter->second << endl;
+	}
+}
+
+
+
+
+
+
+

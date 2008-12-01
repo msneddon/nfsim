@@ -215,12 +215,12 @@ namespace NFcore
 			Complex * getNextAvailableComplex();
 			void notifyThatComplexIsAvailable(int ID_complex);
 
-
+			double sim(double time, long int sampleTimes);
 
 			/* run the simulation for a given length of time, output all results to the registered
 			 * file.  The number of sample times is the number of times the function will output to
 			 * a file divided equally throughout the elapsed time  */
-			double sim(double time, long int sampleTimes);
+			double sim(double time, long int sampleTimes, bool verbose);
 
 			/* run the simulation up until the stopping time (but not exceding the stopping time. This
 			 * will not output anything to file (so must be done manually) and returns the current time
@@ -230,9 +230,9 @@ namespace NFcore
 			void singleStep();
 
 			/* runs the simulation without output for the given time.  After, the clock is reset to
-			 * zero so that additional simulations can take place */
-			void equilibriate(double duration);
-			void equilibriate(double duration, int statusReports);
+			 * to the start time, so it is as if no time has elapsed */
+			void equilibrate(double duration);
+			void equilibrate(double duration, int statusReports);
 
 
 			//For moleculeTypes to do a quick lookup and see where a particular reaction
@@ -241,6 +241,13 @@ namespace NFcore
 			int getRxnIndex(int rxnId, int rxnPos) const { return rxnIndexMap[rxnId][rxnPos]; };
 
 			void turnOff_OnTheFlyObs();
+
+
+			void addParameter(string name,double value);
+			double getParameter(string name);
+			void setParameter(string name, double value);
+			void updateSystemWithNewParameters();
+			void printAllParameters();
 
 
 			/*! keeps track of null events (ie binding events that have
@@ -302,6 +309,8 @@ namespace NFcore
 			int **rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
 			                        quickly lookup a reaction */
 
+
+			map <string,double> paramMap;
 
 		private:
 			///////////////////////////////////////////////////////////////////////////
