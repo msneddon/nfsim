@@ -27,14 +27,14 @@ void NFinput::walk(System *s)
 		int exitCode = enterMainMenuLoop(s);
 		if(exitCode==0) break;
 	}
-	
+
 	cout<<endl<<"hope you had a good walk."<<endl;
 }
 
 
 
 
-void printMainMenu() 
+void printMainMenu()
 {
 	cout<<"---------------------------"<<endl;
 	cout<<" (0) equilibriate"<<endl;
@@ -60,7 +60,7 @@ int enterMainMenuLoop(System *s)
 			    cout<<"\nEnter equilibriation time: "<<endl;
 			    time = getInput(0.0);
 			    cout<<"\nequilibriating for "<< time <<" seconds.  Please wait..."<<endl;
-			    s->equilibriate(time);
+			    s->equilibrate(time);
 			    break;
 			case 1:
 				cout<<"\nEnter simulation time: "<<endl;
@@ -84,7 +84,7 @@ int enterMainMenuLoop(System *s)
 				exit = true;
 				break;
 		}
-	
+
 		if(exit) break;
 	}
 	return exitCode;
@@ -93,7 +93,7 @@ int enterMainMenuLoop(System *s)
 
 
 
-void printStepMenu() 
+void printStepMenu()
 {
 	cout<<"---------------------------"<<endl;
 	cout<<"(0) step to next reaction"<<endl;
@@ -146,15 +146,15 @@ void enterStepLoop(System *s)
 				exit = true;
 				break;
 		}
-	
+
 		if(exit) break;
 	}
 }
-	
-	
-	
-	
-	
+
+
+
+
+
 void printSpecificMolecule(System *s)
 {
 	while(true)
@@ -164,8 +164,8 @@ void printSpecificMolecule(System *s)
 		for(int m=0; m<s->getNumOfMoleculeTypes(); m++)
 			cout<<" ("<<m<<") "<<s->getMoleculeType(m)->getName()<<" - has "<< s->getMoleculeType(m)->getMoleculeCount()<<" molecules."<<endl;
 		int selection = getInput(-1,s->getNumOfMoleculeTypes()-1);
-		if(selection==-1) break; 
-		
+		if(selection==-1) break;
+
 		while(true)
 		{
 			cout<<endl<<"Select a molecule (0 to "<<s->getMoleculeType(selection)->getMoleculeCount()-1<<", or -1 to exit):"<<endl;
@@ -182,15 +182,15 @@ void printSpecificMoleculeByUid(System *s)
 	{
 		cout<<"Enter the molecule's unique id (or -1 to return):"<<endl;
 		int selection = getInput(-1,Molecule::getUniqueIdCount()-1);
-		if(selection==-1) break; 
-		
+		if(selection==-1) break;
+
 		cout<<endl;
 		Molecule *mol = s->getMoleculeByUid(selection);
 		if(mol!=0) mol->printDetails();
 	}
 }
-	
-void getPrintout(System *s) 
+
+void getPrintout(System *s)
 {
 	cout<<"What would you like to print out?"<<endl;
 	cout<<" (0) all reactions"<<endl;
@@ -242,13 +242,13 @@ void getPrintout(System *s)
 			break;
 	}
 }
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 
 int getInput(int min, int max)
 {

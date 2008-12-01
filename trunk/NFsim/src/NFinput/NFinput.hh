@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include <stdio.h>
 #include <exception>
 
@@ -61,6 +62,7 @@ namespace NFinput {
 	 */
 	bool initParameters(
 			TiXmlElement *pListOfParameters,
+			System *s,
 			map <string,double> &parameter,
 			bool verbose);
 
@@ -228,7 +230,10 @@ namespace NFinput {
 
 	////////////// Functions that will allow parsing and running of an RNF script file
 
-	bool readRNFargs(map<string,string> argMap, bool verbose);
+	bool readRNFfile(map<string,string> &argMap, vector<string> &commands, bool verbose);
+	bool runRNFcommands(System *s, map<string,string> &argMap, vector<string> &commands, bool verbose);
+
+
 	//bool runRNFscript(map<string,string> argMap) {};
    // bool runRNFscript(System *s, string filename);
 }
