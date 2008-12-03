@@ -116,6 +116,12 @@ namespace NFcore {
 
 
 
+//	class Function {
+//	public:
+//		Function();
+//		virtual ~Function();
+//	};
+
 
 	//! Defines functions to be used globally in a simulation.
 	/*!
@@ -134,11 +140,11 @@ namespace NFcore {
 				which is currently handled by the System.
 			*/
 			GlobalFunction(string name,
-					string funcString,
-					vector <string> &argNames,
-					vector <string> &argTypes,
-					vector <string> &paramConstNames,
-					vector <double> &paramConstValues);
+					string funcExpression,
+					vector <string> &varRefNames,
+					vector <string> &varRefTypes,
+					vector <string> &paramNames,
+					System *s);
 
 			/*!
 				Deletes the GlobalFunction along with all of its associated variable and constant parameter information.
@@ -149,6 +155,10 @@ namespace NFcore {
 				This actually initializes the Function Parser so that it can be used.
 			*/
 			void prepareForSimulation(System *s);
+
+			void updateParameters(System *s);
+
+
 
 			/*!
 				Simply gives the name of the function nicely (meaning something like func1()) for debugging / outputing.
@@ -174,13 +184,21 @@ namespace NFcore {
 			void attatchRxn(ReactionClass *r);
 
 
-			int getNumberOfArgs() const { return (int) n_args; };
-			string getArgName(int argIndex) const {
-				if((unsigned)argIndex<n_args && argIndex>=0) return argNames[argIndex];
-				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-			string getArgType(int argIndex) const {
-				if((unsigned)argIndex<n_args && argIndex>=0) return argTypes[argIndex];
-				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
+			int getNumOfVarRefs() const { return (int) n_varRefs; };
+			string getVarRefName(int varRefIndex) const {
+				return varRefNames[varRefIndex];
+			}
+			string getVarRefType(int varRefIndex) const {
+				return varRefTypes[varRefIndex];
+			}
+
+//			int getNumberOfArgs() const { return (int) n_args; };
+//			string getArgName(int argIndex) const {
+//				if((unsigned)argIndex<n_args && argIndex>=0) return argNames[argIndex];
+//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
+//			string getArgType(int argIndex) const {
+//				if((unsigned)argIndex<n_args && argIndex>=0) return argTypes[argIndex];
+//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
 
 			/*!
 				This is the actual Parser object that keeps track of the function and has references to all of its
@@ -192,16 +210,59 @@ namespace NFcore {
 		protected:
 
 			string name;
-			string funcString;
+			string funcExpression;
 
-			unsigned int n_args;
-			string *argNames;
-			string *argTypes;
+			unsigned int n_varRefs;
+			string *varRefNames;
+			string *varRefTypes;
 
-			unsigned int n_paramConst;
+			unsigned int n_params;
 			string *paramNames;
-			double *paramValues;
+
+
+
+//			string name;
+//			string funcString;
+//
+//			unsigned int n_args;
+//			string *argNames;
+//			string *argTypes;
+//
+//			unsigned int n_paramConst;
+//			string *paramNames;
+//			double *paramValues;
 	};
+
+
+
+	class FunctionReference
+	{
+
+		public:
+			FunctionReference(string name, string expression, string referencedFuncName) {
+				this->name = name;
+				this->expression=expression;
+				this->referencedFuncName=referencedFuncName;
+			};
+			~FunctionReference() {};
+
+			string name;
+			string expression;
+			string referencedFuncName;
+
+	};
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

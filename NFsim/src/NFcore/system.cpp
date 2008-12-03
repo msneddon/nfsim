@@ -913,14 +913,34 @@ void System::evaluateAllLocalFunctions() {
 
 
 GlobalFunction * System::getGlobalFunctionByName(string fName) {
+
+	//First, look for the function directly in the list of global functions
 	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 		if((*functionIter)->getName()==fName) {
 			return (*functionIter);
 		}
+
+	//If it's not there, look up the function reference that matches, then look up
+	//the referenced function.
+	for( int i=0; i<(int)functionReferences.size(); i++) {
+		if(functionReferences.at(i)->name==fName) {
+			return getGlobalFunctionByName(functionReferences.at(i)->referencedFuncName);
+		}
+	}
+
+
 	cout<<"!!Warning, the system could not identify the global function: "<<fName<<".\n";
 	cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
+
+
+bool System::addFunctionReference(FunctionReference *fr) {
+	this->functionReferences.push_back(fr);
+}
+
+
+
 
 Observable * System::getObservableByName(string obsName)
 {

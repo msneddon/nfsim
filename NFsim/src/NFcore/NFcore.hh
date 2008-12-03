@@ -50,6 +50,7 @@ namespace NFcore
 	class MoleculeList;
 
 	class GlobalFunction;
+	class FunctionReference;
 	class LocalFunction;
 
 	class Outputter;
@@ -148,6 +149,7 @@ namespace NFcore
 
 			bool addGlobalFunction(GlobalFunction *gf);
 			GlobalFunction * getGlobalFunctionByName(string fName);
+			bool addFunctionReference(FunctionReference *fr);
 
 			/* once all elements are added, we need to prepare and initialize for simulations */
 			void prepareForSimulation();
@@ -280,6 +282,7 @@ namespace NFcore
 
 			///////////////////////////////////////////////////////////////////////////
 			// The container objects that maintain the functional expressions
+			vector <FunctionReference *> functionReferences;
 			vector <GlobalFunction *> globalFunctions;    /*!< container of all global functions available to the system */
 			vector <LocalFunction *> localFunctions;      /*!< container of all local functions available to the system */
 			vector <ReactionClass *> necessaryUpdateRxns; /*!< list of all  reactions that need to update propensity after each step*/

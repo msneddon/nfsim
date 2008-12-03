@@ -15,13 +15,13 @@ FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, Transfor
 	BasicRxnClass(name,1, transformationSet)
 {
 	this->gf=gf;
-	for(int a=0; a<gf->getNumberOfArgs(); a++) {
-		if(gf->getArgType(a)=="MoleculeObservable") {
-			Observable *obs = s->getObservableByName(gf->getArgName(a));
+	for(int vr=0; vr<gf->getNumOfVarRefs(); vr++) {
+		if(gf->getVarRefType(vr)=="Observable") {
+			Observable *obs = s->getObservableByName(gf->getVarRefName(vr));
 			obs->addDependentRxn(this);
 		} else {
 			cerr<<"When creating a FunctionalRxnClass of name: "+name+" you provided a function that\n";
-			cerr<<"depends on an observable type that I can't yet handle! (which is "+gf->getArgType(a)+"\n";
+			cerr<<"depends on an observable type that I can't yet handle! (which is "+gf->getVarRefType(vr)+"\n";
 			cerr<<"try using type: 'MoleculeObservable' for now.\n";
 			cerr<<"quiting..."<<endl; exit(1);
 		}

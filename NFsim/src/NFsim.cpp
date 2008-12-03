@@ -156,12 +156,15 @@ int main(int argc, const char *argv[])
 	if(NFinput::parseArguments(argc, argv, argMap))
 	{
 		//First, find the arguments that we might use in any situation
-
+		if(argMap.find("v")!=argMap.end()) {
+			verbose = true;
+		}
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
 			cout<<"seeding random number generator with: "<<seed<<endl;
 		}
+
 
 		//Handle the case of no parameters
 		if(argMap.empty()) {
@@ -176,11 +179,10 @@ int main(int argc, const char *argv[])
 			parsed = true;
 		}
 
-
+		//If we are running from a RNF script file
 		else if(argMap.find("rnf")!=argMap.end()) {
 			cout<<"handling RNF file"<<endl;
 			runRNFscript(argMap,verbose);
-			if(argMap.find("v")!=argMap.end()) verbose = true;
 			parsed = true;
 		}
 
