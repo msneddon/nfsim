@@ -226,6 +226,105 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, System *s, map <st
 
 
 
+
+
+
+bool createFunction(string name,
+		string expression,
+		vector <string> &argNames,
+		vector <string> &refNames,
+		vector <string> &refTypes,
+		System *s,
+		map <string,double> &parameter,
+		bool verbose)
+{
+
+
+
+	cout<<endl<<endl;
+	cout<<"creating the functions."<<endl;
+
+	//bool referencesFunction = false;
+	//bool hasLocal
+
+	//Step 1: determine if it is local or global
+	if(argNames.size()==0) { //No arguments, so must be a global function...
+		cout<<"must be a global function..."<<endl;
+		vector <string> varRefNames;
+		vector <string> varRefTypes;
+		vector <string> paramNames;
+
+
+		int otherFuncRefCounter=0;
+		for(unsigned int rn=0; rn<refNames.size(); rn++) {
+			refNames.at(rn);
+			if(refTypes.at(rn)=="Function") {
+				cout<<"identified function reference."<<endl;
+				otherFuncRefCounter++;
+			} else if(refTypes.at(rn)=="Constant") {
+				paramNames.push_back(refNames.at(rn));
+			} else {
+				varRefNames.push_back(refNames.at(rn));
+				varRefTypes.push_back(refTypes.at(rn));
+			}
+		}
+
+		//Treat as usual global function
+		if(otherFuncRefCounter==0) {
+
+			//FuncFactory::create();
+			GlobalFunction *gf = new GlobalFunction(name, expression,
+					varRefNames, varRefTypes, paramNames, s);
+			if(!s->addGlobalFunction(gf)) {
+				cerr<<"!!!Error:  Function name '"<<name<<"' has already been used.  You can't have two\n";
+				cerr<<"functions with the same name, so I'll just stop now."<<endl;
+				return false;
+			}
+		}
+		//Treat as special rate law global function
+		else if (otherFuncRefCounter==1) {
+			for(unsigned int rn=0; rn<refNames.size(); rn++) {
+				if(refTypes.at(rn)=="Function") {
+					FunctionReference *fr = new FunctionReference(name,expression,refNames.at(rn));
+					s->addFunctionReference(fr);
+				}
+			}
+
+		} else {
+			cerr<<"!!!Error:  Functions can reference at most one other function!  Quitting."<<endl;
+			return false;
+		}
+
+
+
+
+		return true;
+	}
+	cout<<"must be a local function..."<<endl;
+
+
+
+
+
+
+	cout<<endl<<endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////  New Function Parser
 bool NFinput::initGlobalFunctions(
 	TiXmlElement * pListOfFunctions,
 	System * system,
@@ -234,9 +333,8 @@ bool NFinput::initGlobalFunctions(
 {
 	try {
 		vector <string> argNames;
-		vector <string> argTypes;
-		vector <string> paramNames;
-		vector <double> paramValues;
+		vector <string> refNames;
+		vector <string> refTypes;
 
 		//Loop through the Function tags...
 		TiXmlElement *pFunction;
@@ -250,30 +348,29 @@ bool NFinput::initGlobalFunctions(
 
 			//Read in the Function Name
 			string funcName = pFunction->Attribute("id");
-			if(verbose) cout<<"\t\tReading and Creating Function: "+funcName+"(";
+			if(verbose) cout<<"\t\tReading Function: "+funcName+"(";
 
 
 			//Get the list of arguments for this function
-			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArgs");
+			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArguments");
 			if(pListOfArgs) {
 				//Loop through each arguement
 				TiXmlElement *pArg; bool firstArg = true;
-				for ( pArg = pListOfArgs->FirstChildElement("Arg"); pArg != 0; pArg = pArg->NextSiblingElement("Arg"))
+				for ( pArg = pListOfArgs->FirstChildElement("Argument"); pArg != 0; pArg = pArg->NextSiblingElement("Argument"))
 				{
 					if(verbose && !firstArg) cout<<", ";
 					firstArg=false;
 					//Check again for errors by making sure the argument has a name
-					string argName, argType;
-					if(!pArg->Attribute("id") || !pArg->Attribute("name") || !pArg->Attribute("type")) {
+					string argName;
+					if(!pArg->Attribute("id")) {
 						if(verbose) cout<<" ?? ...\n";
-						cerr<<"!!!Error:  Arg tag in Function: '" + funcName + "' must contain the all attributes including id, name, and type.  Quitting."<<endl;
+						cerr<<"!!!Error:  Argument tag in Function: '" + funcName + "' must contain the id attribute.  Quitting."<<endl;
 						return false;
 					}
 
-					argName = pArg->Attribute("name");
-					argType = pArg->Attribute("type");
+					argName = pArg->Attribute("id");
+
 					argNames.push_back(argName);
-					argTypes.push_back(argType);
 
 					if(verbose) cout<<argName;
 				}
@@ -281,57 +378,78 @@ bool NFinput::initGlobalFunctions(
 			if(verbose) cout<<")"<<endl;
 
 
-			//Get the list of Parameter Constants for this function
-			TiXmlElement *pListOfParamConst = pFunction->FirstChildElement("ListOfParameterConstants");
-			if(pListOfParamConst) {
+			//Get the list of References
+			TiXmlElement *pListOfRefs = pFunction->FirstChildElement("ListOfReferences");
+			if(pListOfRefs) {
 
-				//Loop through each arguement
-				TiXmlElement *pParamConst;
-				for ( pParamConst = pListOfParamConst->FirstChildElement("ParameterConstant"); pParamConst != 0; pParamConst = pParamConst->NextSiblingElement("ParameterConstant"))
+				//Loop through each reference
+				TiXmlElement *pRef;
+				for ( pRef = pListOfRefs->FirstChildElement("Reference"); pRef != 0; pRef = pRef->NextSiblingElement("Reference"))
 				{
 					//Check again for errors by making sure the parameter has a name
-					if(!pParamConst->Attribute("id")) {
-						cerr<<"!!!Error:  ParameterConstant tag in Function: '" + funcName + "' must contain a proper id.  Quitting."<<endl;
+					if(!pRef->Attribute("name")) {
+						cerr<<"!!!Error:  Reference tag in Function: '" + funcName + "' must contain a proper id.  Quitting."<<endl;
+						return false;
+					} else if(!pRef->Attribute("type")) {
+						cerr<<"!!!Error:  Reference tag in Function: '" + funcName + "' must contain a proper type.  Quitting."<<endl;
 						return false;
 					}
+//
+					string refName = pRef->Attribute("name");
+					string refType = pRef->Attribute("type");
 
-					string paramName = pParamConst->Attribute("id");
-					if(parameter.find(paramName)==parameter.end()) {
-						cerr<<"Could not find parameter constant: "<<paramName<<" when creating function "<<funcName<<". Quitting"<<endl;
-						return false;
-					}
-					paramNames.push_back(paramName);
-					paramValues.push_back(parameter.find(paramName)->second);
+					if(verbose) cout<<"Reference: "+refType+" "+refName<<endl;
+
+					refNames.push_back(refName);
+					refTypes.push_back(refType);
 				}
 			}
 
 
 			//Read in the actual function definition
-			TiXmlElement *pDefinition = pFunction->FirstChildElement("Definition");
-			if(pDefinition) {
-				if(!pDefinition->GetText()) {
-					cerr<<"!!!Error:  Definition tag must actually contain a string for the function.  Quitting."<<endl;
+			string funcExpression = "";
+			TiXmlElement *pExpression = pFunction->FirstChildElement("Expression");
+			if(pExpression) {
+				if(!pExpression->GetText()) {
+					cerr<<"!!!Error:  Expression tag must actually contain a string for the function.  Quitting."<<endl;
 										return false;
 				}
-				string functionDefintion = pDefinition->GetText();
-				GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
-				if(!system->addGlobalFunction(gf)) {
-					cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
-					cerr<<"functions with the same name, so I'll just stop now."<<endl;
-					return false;
-				}
-				if(verbose) cout<<"\t\t\t= "<<functionDefintion<<endl;
+				funcExpression = pExpression->GetText();
+				//GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
+				//if(!system->addGlobalFunction(gf)) {
+				//	cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
+				//	cerr<<"functions with the same name, so I'll just stop now."<<endl;
+				//	return false;
+				//}
+				if(verbose) cout<<"\t\t\t = "<<funcExpression<<endl;
 			} else {
-				cerr<<"!!!Error:  Definition tag for a function must exist!  Quitting."<<endl;
+				cerr<<"!!!Error:  Expression tag for a function must exist!  Quitting."<<endl;
 				return false;
 			}
 
+			//Here we actually generate the function or the function generator
+			if(!createFunction(funcName,
+					funcExpression,
+					argNames,
+					refNames,
+					refTypes,
+					system,
+					parameter,
+					verbose)) {
+				return false;
+			}
+
+			//And here we clear our arrays
 			argNames.clear();
-			argTypes.clear();
-			paramNames.clear();
-			paramValues.clear();
+			refNames.clear();
+			refTypes.clear();
 		}
 
+
+
+
+		cout<<"done reading functions!"<<endl;
+	//	exit(0);
 		//Getting here means we read everything we could successfully
 		return true;
 	} catch (...) {
@@ -341,6 +459,136 @@ bool NFinput::initGlobalFunctions(
 		return false;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+//////  Original Function Parser
+//bool NFinput::initGlobalFunctions(
+//	TiXmlElement * pListOfFunctions,
+//	System * system,
+//	map <string,double> &parameter,
+//	bool verbose)
+//{
+//	try {
+//		vector <string> argNames;
+//		vector <string> argTypes;
+//		vector <string> paramNames;
+//		vector <double> paramValues;
+//
+//		//Loop through the Function tags...
+//		TiXmlElement *pFunction;
+//		for ( pFunction = pListOfFunctions->FirstChildElement("Function"); pFunction != 0; pFunction = pFunction->NextSiblingElement("Function"))
+//		{
+//			//Check if MoleculeType tag has a name...
+//			if(!pFunction->Attribute("id")) {
+//				cerr<<"!!!Error:  Function tag must contain the id attribute.  Quitting."<<endl;
+//				return false;
+//			}
+//
+//			//Read in the Function Name
+//			string funcName = pFunction->Attribute("id");
+//			if(verbose) cout<<"\t\tReading and Creating Function: "+funcName+"(";
+//
+//
+//			//Get the list of arguments for this function
+//			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArgs");
+//			if(pListOfArgs) {
+//				//Loop through each arguement
+//				TiXmlElement *pArg; bool firstArg = true;
+//				for ( pArg = pListOfArgs->FirstChildElement("Arg"); pArg != 0; pArg = pArg->NextSiblingElement("Arg"))
+//				{
+//					if(verbose && !firstArg) cout<<", ";
+//					firstArg=false;
+//					//Check again for errors by making sure the argument has a name
+//					string argName, argType;
+//					if(!pArg->Attribute("id") || !pArg->Attribute("name") || !pArg->Attribute("type")) {
+//						if(verbose) cout<<" ?? ...\n";
+//						cerr<<"!!!Error:  Arg tag in Function: '" + funcName + "' must contain the all attributes including id, name, and type.  Quitting."<<endl;
+//						return false;
+//					}
+//
+//					argName = pArg->Attribute("name");
+//					argType = pArg->Attribute("type");
+//					argNames.push_back(argName);
+//					argTypes.push_back(argType);
+//
+//					if(verbose) cout<<argName;
+//				}
+//			}
+//			if(verbose) cout<<")"<<endl;
+//
+//
+//			//Get the list of Parameter Constants for this function
+//			TiXmlElement *pListOfParamConst = pFunction->FirstChildElement("ListOfParameterConstants");
+//			if(pListOfParamConst) {
+//
+//				//Loop through each arguement
+//				TiXmlElement *pParamConst;
+//				for ( pParamConst = pListOfParamConst->FirstChildElement("ParameterConstant"); pParamConst != 0; pParamConst = pParamConst->NextSiblingElement("ParameterConstant"))
+//				{
+//					//Check again for errors by making sure the parameter has a name
+//					if(!pParamConst->Attribute("id")) {
+//						cerr<<"!!!Error:  ParameterConstant tag in Function: '" + funcName + "' must contain a proper id.  Quitting."<<endl;
+//						return false;
+//					}
+//
+//					string paramName = pParamConst->Attribute("id");
+//					if(parameter.find(paramName)==parameter.end()) {
+//						cerr<<"Could not find parameter constant: "<<paramName<<" when creating function "<<funcName<<". Quitting"<<endl;
+//						return false;
+//					}
+//					paramNames.push_back(paramName);
+//					paramValues.push_back(parameter.find(paramName)->second);
+//				}
+//			}
+//
+//
+//			//Read in the actual function definition
+//			TiXmlElement *pDefinition = pFunction->FirstChildElement("Definition");
+//			if(pDefinition) {
+//				if(!pDefinition->GetText()) {
+//					cerr<<"!!!Error:  Definition tag must actually contain a string for the function.  Quitting."<<endl;
+//										return false;
+//				}
+//				string functionDefintion = pDefinition->GetText();
+//				GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
+//				if(!system->addGlobalFunction(gf)) {
+//					cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
+//					cerr<<"functions with the same name, so I'll just stop now."<<endl;
+//					return false;
+//				}
+//				if(verbose) cout<<"\t\t\t= "<<functionDefintion<<endl;
+//			} else {
+//				cerr<<"!!!Error:  Definition tag for a function must exist!  Quitting."<<endl;
+//				return false;
+//			}
+//
+//			argNames.clear();
+//			argTypes.clear();
+//			paramNames.clear();
+//			paramValues.clear();
+//		}
+//
+//
+//
+//		cout<<"done reading functions!"<<endl;
+//		exit(0);
+//		//Getting here means we read everything we could successfully
+//		return true;
+//	} catch (...) {
+//		//Uh oh! we got some unknown exception thrown, so we must abort!
+//		cerr<<"I caught some unknown error when I was trying to parse out a Global Function.\n";
+//		cerr<<"I'm at a loss for words right now, so you're on you're own."<<endl;
+//		return false;
+//	}
+//}
 
 
 
@@ -1636,32 +1884,49 @@ bool NFinput::initReactionRules(
 							cout<<"Only the first RateConstant given will be used..."<<endl;
 						}
 					}
-					else if(rateLawType=="Functional") {
-						//Make sure that the rate constant exists
-						TiXmlElement *pFunction = pRateLaw->FirstChildElement("Function");
-						if(!pFunction) {
-							cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have Function specified!  Quiting"<<endl;
+					else if(rateLawType=="Function") {
+
+
+						if(!pRateLaw->Attribute("name")) {
+							cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: cannot read 'name' attribute!"<<endl;
 							return false;
-						} else {
-							//Get the rate constant value
-							string functionName;
-							if(!pFunction->Attribute("name")) {
-								cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have a valid function 'name'!  Quiting"<<endl;
-								return false;
-							} else {
-								functionName = pFunction->Attribute("name");
-								GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
-
-								if(gf==NULL) {
-									cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
-									cerr<<"the system.  Therefore, I must abort."<<endl;
-									exit(1);
-								}
-
-								//Create the Functional Reaction from the found function...
-								r = new FunctionalRxnClass(rxnName,gf,ts,s);
-							}
 						}
+						string functionName = pRateLaw->Attribute("name");
+						cout<<"found function named: "<<functionName<<endl;
+						GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
+						if(gf==NULL) {
+							cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
+							cerr<<"the system.  Therefore, I must abort."<<endl;
+							return false;
+						}
+
+						r=new FunctionalRxnClass(rxnName,gf,ts,s);
+
+//						//Make sure that the rate constant exists
+//						TiXmlElement *pFunction = pRateLaw->FirstChildElement("Function");
+//						if(!pFunction) {
+//							cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have Function specified!  Quiting"<<endl;
+//							return false;
+//						} else {
+//							//Get the rate constant value
+//							string functionName;
+//							if(!pFunction->Attribute("name")) {
+//								cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have a valid function 'name'!  Quiting"<<endl;
+//								return false;
+//							} else {
+//								functionName = pFunction->Attribute("name");
+//								GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
+//
+//								if(gf==NULL) {
+//									cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
+//									cerr<<"the system.  Therefore, I must abort."<<endl;
+//									exit(1);
+//								}
+//
+//								//Create the Functional Reaction from the found function...
+//								r = new FunctionalRxnClass(rxnName,gf,ts,s);
+//							}
+//						}
 					}
 					else if(rateLawType=="MM") {
 						//Make sure that the rate constant exists
@@ -1759,7 +2024,7 @@ bool NFinput::initReactionRules(
 						cerr<<"  a Michaelis-Menten reaction should be specified as 'MM', and"<<endl;
 						cerr<<"  a functional reaction should be specified as 'Functional'."<<endl;
 						cerr<<"Quitting."<<endl;
-						return false;
+					//	return false;
 					}
 				} // end to the else statement that parses the rate law.
 

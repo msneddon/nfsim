@@ -8,43 +8,33 @@ using namespace mu;
 
 
 GlobalFunction::GlobalFunction(string name,
-		string funcString,
-		vector <string> &argNames,
-		vector <string> &argTypes,
-		vector <string> &paramConstNames,
-		vector <double> &paramConstValues)
+		string funcExpression,
+		vector <string> &varRefNames,
+		vector <string> &varRefTypes,
+		vector <string> &paramNames,
+		System *s)
 {
-	if(argNames.size()!=argTypes.size()) {
-		cerr<<"Trying to create a global function, but your argument vectors don't match up!"<<endl;
-		cerr<<"Quitting!"<<endl;
-		exit(1);
-	}
-
-	if(paramConstNames.size()!=paramConstValues.size()) {
-		cerr<<"Trying to create a global function, but your parameter vectors don't match up!"<<endl;
+	if(varRefNames.size()!=varRefTypes.size()) {
+		cerr<<"Trying to create a global function, but your variable reference vectors don't match up in size!"<<endl;
 		cerr<<"Quitting!"<<endl;
 		exit(1);
 	}
 
 	this->name = name;
-	this->funcString = funcString;
+	this->funcExpression = funcExpression;
 
-	this->n_args=argNames.size();
-	this->argNames = new string[n_args];
-	this->argTypes = new string[n_args];
-	for(unsigned int a=0; a<n_args; a++)
-	{
-		this->argNames[a]=argNames.at(a);
-		this->argTypes[a]=argTypes.at(a);
+	this->n_varRefs=varRefNames.size();
+	this->varRefNames = new string[n_varRefs];
+	this->varRefTypes = new string[n_varRefs];
+	for(unsigned int vr=0; vr<n_varRefs; vr++) {
+		this->varRefNames[vr]=varRefNames.at(vr);
+		this->varRefTypes[vr]=varRefTypes.at(vr);
 	}
 
-	this->n_paramConst=paramConstNames.size();
-	this->paramNames = new string[n_paramConst];
-	this->paramValues = new double[n_paramConst];
-	for(unsigned int i=0; i<n_paramConst; i++)
-	{
-		this->paramNames[i]=paramConstNames.at(i);
-		this->paramValues[i]=paramConstValues.at(i);
+	this->n_params=paramNames.size();
+	this->paramNames = new string[n_params];
+	for(unsigned int i=0; i<n_params; i++) {
+		this->paramNames[i]=paramNames.at(i);
 	}
 	p=0;
 }
@@ -53,10 +43,9 @@ GlobalFunction::GlobalFunction(string name,
 
 GlobalFunction::~GlobalFunction()
 {
-	delete [] argNames;
-	delete [] argTypes;
+	delete [] varRefNames;
+	delete [] varRefTypes;
 	delete [] paramNames;
-	delete [] paramValues;
 	if(p!=NULL) delete p;
 }
 
@@ -67,30 +56,30 @@ void GlobalFunction::prepareForSimulation(System *s)
 {
 	try {
 		p=FuncFactory::create();
-		for(unsigned int a=0; a<n_args; a++)
+		for(unsigned int vr=0; vr<n_varRefs; vr++)
 		{
-			if(argTypes[a]=="MoleculeObservable") {
-				Observable *obs = s->getObservableByName(argNames[a]);
+			if(varRefTypes[vr]=="Observable") {
+				Observable *obs = s->getObservableByName(varRefNames[vr]);
 				if(obs==NULL) {
 					cout<<"When creating global function: "<<this->name<<endl<<" could not find the observable: ";
-					cout<<argNames[a]<<" of type "<<argTypes[a]<<endl;
+					cout<<varRefNames[vr]<<" of type "<<varRefTypes[vr]<<endl;
 					cout<<"Quitting."<<endl;
 					exit(1);
 				}
 				obs->addReferenceToMyself(p);
 			} else {
-				cout<<"Uh oh, an unrecognized argType ("<<argTypes[a]<<") for a function! "<<argNames[a]<<endl;
+				cout<<"here"<<endl;
+				cout<<"Uh oh, an unrecognized argType ("<<varRefTypes[vr]<<") for a function! "<<varRefNames[vr]<<endl;
 				cout<<"Try using the type: \"MoleculeObservable\""<<endl;
 				cout<<"Quitting because this will give unpredicatable results, or just crash."<<endl;
 				exit(1);
 			}
 		}
 
-		for(unsigned int i=0; i<n_paramConst; i++)
-		{
-			p->DefineConst(paramNames[i],paramValues[i]);
+		for(unsigned int i=0; i<n_params; i++) {
+			p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 		}
-		p->SetExpr(this->funcString);
+		p->SetExpr(this->funcExpression);
 	}
 	catch (mu::Parser::exception_type &e)
 	{
@@ -100,6 +89,15 @@ void GlobalFunction::prepareForSimulation(System *s)
 		exit(1);
 	}
 }
+
+void GlobalFunction::updateParameters(System *s) {
+	for(unsigned int i=0; i<n_params; i++) {
+		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
+	}
+
+}
+
+
 
 
 void GlobalFunction::attatchRxn(ReactionClass *r)
@@ -117,13 +115,13 @@ void GlobalFunction::printDetails()
 {
 	cout<<"--------"<<endl;
 	cout<<"Details of Function: '"<< this->name << "'"<<endl;
-	cout<<" ="<<funcString<<endl;
-	cout<<"   -Arguments:"<<endl;
-	for(unsigned int a=0; a<n_args; a++)
-		cout<<"     "<<argTypes[a]<<":  "<<argNames[a]<<endl;
+	cout<<" ="<<funcExpression<<endl;
+	cout<<"   -Variable References:"<<endl;
+	for(unsigned int vr=0; vr<n_varRefs; vr++)
+		cout<<"     "<<varRefTypes[vr]<<":  "<<varRefNames[vr]<<endl;
 	cout<<"   -Constant Parameters:"<<endl;
-	for(unsigned int i=0; i<n_args; i++)
-		cout<<"     "<<paramNames[i]<<" with value of  "<<paramValues[i]<<endl;
+	for(unsigned int i=0; i<n_params; i++)
+		cout<<"     "<<paramNames[i]<<endl;
 
 
 
@@ -141,7 +139,8 @@ void GlobalFunction::printDetails()
 //	}
 //
 
-	cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+	if(p!=0)
+		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 
 }
 
