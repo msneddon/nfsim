@@ -14,6 +14,7 @@ using namespace NFcore;
 FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s) :
 	BasicRxnClass(name,1, transformationSet)
 {
+	this->cf=0;
 	this->gf=gf;
 	for(int vr=0; vr<gf->getNumOfVarRefs(); vr++) {
 		if(gf->getVarRefType(vr)=="Observable") {
@@ -27,9 +28,20 @@ FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, Transfor
 		}
 	}
 }
+
+FunctionalRxnClass::FunctionalRxnClass(string name, CompositeFunction *cf, TransformationSet *transformationSet, System *s) :
+	BasicRxnClass(name,1, transformationSet)
+{
+	this->gf=0;
+	this->cf=cf;
+	this->cf->setGlobalObservableDependency(this,s);
+}
+
+
 FunctionalRxnClass::~FunctionalRxnClass() {};
 
 double FunctionalRxnClass::update_a() {
+	//cout<<"udpating a"<<endl;
 	if(this->onTheFlyObservables==false) {
 		cerr<<"Warning!!  You have on the fly observables turned off, but you are using functional\n";
 		cerr<<"reactions which depend on observables.  Therefore, you cannot turn off onTheFlyObservables!\n";
@@ -41,13 +53,24 @@ double FunctionalRxnClass::update_a() {
 	//for(unsigned int i=0; i<n_reactants; i++)
 	//	a*=reactantLists[i]->size();
 
-	a=FuncFactory::Eval(gf->p);
+	//	cout<<"here"<<endl;
+	if(gf!=0) {
+	//	cout<<"in here"<<endl;
+		a=FuncFactory::Eval(gf->p);
+	} else if(cf!=0) {
+		a=cf->evaluateOn(0);
+	//	cout<<"and here"<<endl;
+	} else {
+		cout<<"Error!  Functional rxn is not properly initialized, but is being used!"<<endl;
+		exit(1);
+	}
+
 	if(a<0) {
 		cout<<"Warning!!  The function you provided for functional rxn: '"<<name<<"' evaluates\n";
 		cout<<"to a value less than zero!  You cannot have a negative propensity!";
-		cout<<"here is the offending function: \n";
-		gf->printDetails();
-		cout<<"\nand the offending reaction: \n";
+		//cout<<"here is the offending function: \n";
+		//gf->printDetails();
+		cout<<"\nhere is the offending reaction: \n";
 		this->printDetails();
 		cout<<"\n\nquitting."<<endl;
 		exit(1);
@@ -56,7 +79,12 @@ double FunctionalRxnClass::update_a() {
 }
 
 void FunctionalRxnClass::printDetails() const {
-	cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+
+	if(gf!=0)
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	else if(cf!=0)
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<cf->evaluateOn(0)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();

@@ -95,6 +95,8 @@ namespace NFcore
 
 		public:
 			FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s);
+			FunctionalRxnClass(string name, CompositeFunction *cf, TransformationSet *transformationSet, System *s);
+
 			virtual ~FunctionalRxnClass();
 
 			virtual double update_a();
@@ -102,6 +104,7 @@ namespace NFcore
 
 		protected:
 			GlobalFunction *gf;
+			CompositeFunction *cf;
 	};
 
 	class MMRxnClass : public BasicRxnClass {

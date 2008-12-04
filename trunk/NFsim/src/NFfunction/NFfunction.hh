@@ -192,14 +192,6 @@ namespace NFcore {
 				return varRefTypes[varRefIndex];
 			}
 
-//			int getNumberOfArgs() const { return (int) n_args; };
-//			string getArgName(int argIndex) const {
-//				if((unsigned)argIndex<n_args && argIndex>=0) return argNames[argIndex];
-//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-//			string getArgType(int argIndex) const {
-//				if((unsigned)argIndex<n_args && argIndex>=0) return argTypes[argIndex];
-//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-
 			/*!
 				This is the actual Parser object that keeps track of the function and has references to all of its
 				arguments.  It is publicly visible, so be careful with it!  Use this variable to evaluate the function.
@@ -218,19 +210,6 @@ namespace NFcore {
 
 			unsigned int n_params;
 			string *paramNames;
-
-
-
-//			string name;
-//			string funcString;
-//
-//			unsigned int n_args;
-//			string *argNames;
-//			string *argTypes;
-//
-//			unsigned int n_paramConst;
-//			string *paramNames;
-//			double *paramValues;
 	};
 
 
@@ -255,17 +234,6 @@ namespace NFcore {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	class StateCounter {
 		public:
 			StateCounter(string name, MoleculeType *mt, string stateName);
@@ -283,10 +251,37 @@ namespace NFcore {
 	};
 
 
+
+
+
+
+
+
+
 	class LocalFunction {
 
 		public:
+
 			LocalFunction(System *s,
+					string name,
+					string originalExpression,
+					string parsedExpression,
+					vector <string> args,
+					vector <string> varRefNames,
+					vector <string> varObservableNames,
+					vector <Observable> varLocalObservables,
+					vector <int> varRefScope,
+					vector <string> paramNames);
+			~LocalFunction();
+
+
+			string getName() const;
+			string getNiceName();
+			string getExpression() const;
+			string getParsedExpression() const;
+
+
+		/*	LocalFunction(System *s,
 					string name,
 					string funcString,
 					vector <Observable *> &observables,
@@ -326,26 +321,47 @@ namespace NFcore {
 //			string getArgType(int argIndex) const {
 //				if(argIndex<n_args && argIndex>=0) return argTypes[argIndex];
 //				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-
+*/
 			mu::Parser *p;
 		protected:
-			//List of observables that this local function depends on
-			Observable ** obs;
-			unsigned int n_obs;
-			int * obsVal;
 
-			StateCounter ** sc;
-			unsigned int n_sc;
 
 			string name;
-			string funcString;
+			string nicename;
+			string originalExpression;
+			string parsedExpression;
 
-			unsigned int n_paramConst;
+			unsigned int n_args;
+			string *argNames;
+
+
+			unsigned int n_params;
 			string *paramNames;
-			double *paramValues;
+
+			unsigned int n_varRefs;
+			string *varRefNames;
+			string *varObservableNames;
+			int *varRefScope;
+			Observable *varLocalObservables;
 
 
-			int evaluationLevel;
+//			//List of observables that this local function depends on
+//			Observable ** obs;
+//			unsigned int n_obs;
+//			int * obsVal;
+//
+//			StateCounter ** sc;
+//			unsigned int n_sc;
+//
+//			string name;
+//			string funcString;
+//
+//			unsigned int n_paramConst;
+//			string *paramNames;
+//			double *paramValues;
+//
+//
+//			int evaluationLevel;
 
 			//Here we store back pointers into both type I and type II molecules
 			//Remember that type I molecules must store the value of this function
@@ -359,6 +375,66 @@ namespace NFcore {
 
 
 	};
+
+
+
+
+	class CompositeFunction {
+			public:
+				CompositeFunction(System *s,
+						string name,
+						string expression,
+						vector <string> &functions,
+						vector <string> &paramNames);
+				~CompositeFunction();
+
+
+				string getName() const {return name;};
+
+				void updateParameters(System *s);
+
+				void finalizeInitialization(System *s);
+
+				void prepareForSimulation(System *s);
+
+
+				void setGlobalObservableDependency(ReactionClass *r, System *s);
+
+				double evaluateOn(Molecule **molList);
+
+
+
+			protected:
+
+				string name;
+				string originalExpression;
+				string parsedExpression;
+
+
+				unsigned int n_allFuncs;
+				string * allFuncNames;
+
+
+
+				unsigned int n_params;
+				string *paramNames;
+
+
+				int n_gfs;
+				string * gfNames;
+				GlobalFunction ** gfs;
+				double * gfValues;
+
+				int n_lfs;
+				string * lfNames;
+				LocalFunction ** lfs;
+				double * lfValues;
+
+				mu::Parser *p;
+
+
+		};
+
 
 
 

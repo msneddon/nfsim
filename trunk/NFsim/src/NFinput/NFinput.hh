@@ -71,7 +71,7 @@ namespace NFinput {
 	/*!
 	   	@author Michael Sneddon
 	*/
-	bool initGlobalFunctions(
+	bool initFunctions(
 		TiXmlElement * pListOfFunctions,
 		System * system,
 		map <string,double> &parameter,

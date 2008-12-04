@@ -19,7 +19,7 @@ DORRxnClass::DORRxnClass(
 		vector <string> &lfArgumentPointerNameList) :
 	ReactionClass(name,baseRate,transformationSet)
 {
-	if(DEBUG_MESSAGE)cout<<"ok, here we go..."<<endl;
+/*	if(DEBUG_MESSAGE)cout<<"ok, here we go..."<<endl;
 	vector <TemplateMolecule *> dorMolecules;
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ DORRxnClass::DORRxnClass(
 	//Initialize a to zero
 	this->a=0;
 
-
+*/
 	// i think we be done now
 }
 DORRxnClass::~DORRxnClass() {
@@ -224,7 +224,7 @@ unsigned int DORRxnClass::getReactantCount(unsigned int reactantIndex) const
 //functions based on the local functions that were defined
 double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 {
-	//Go through each function, and set the value of the function
+	/*//Go through each function, and set the value of the function
 	for(int i=0; i<(signed)lfList.size(); i++) {
 		Molecule *molObject = ms->get(this->indexIntoMappingSet.at(i))->getMolecule();
 		int index = lfList.at(i)->getIndexOfTypeIFunctionValue(molObject);
@@ -232,6 +232,7 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 		//cout<<"found that local function: "<<getName()<<" evaluates to: " <<localFunctionValue.at(i)<<endl;
 	}
 	return this->localFunctionValue.at(0);
+	*/
 }
 
 
@@ -296,59 +297,59 @@ void DORRxnClass::printDetails() const
 
 void DORRxnClass::test1(System *s)
 {
-	MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
-
-	vector <Observable *> obs;
-	//TemplateMolecule * rec2 = new TemplateMolecule(rec);
-	//rec2->addStateValue("m","2");
-	//Observable * rec2obs = new Observable("RecM2", rec2);
-	//obs.push_back(rec2obs);
-
-	vector <StateCounter *> sc;
-	StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
-	sc.push_back(scRecM);
-
-	vector <string> paramConstNames; vector <double> paramConstValues;
-
-	LocalFunction *lf = new LocalFunction(s,
-			"openMethSites",
-			"8-RecMSum",
-			obs,sc,paramConstNames,paramConstValues);
-	//lf->setEvaluationLevel(1);
-
-	//prepare!
-	lf->addTypeIMoleculeDependency(rec);
-	lf->printDetails();
-
-
-
-	///////////////////Testing DOR reactions....
-	TemplateMolecule *recTemp = new TemplateMolecule(rec);
-	vector <TemplateMolecule *> templates;
-	templates.push_back( recTemp );
-
-	TransformationSet *ts = new TransformationSet(templates);
-	ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
-	ts->addIncrementStateTransform(recTemp,"m");
-	ts->finalize();
-
-
-
-	vector <LocalFunction *> lfList;
-	lfList.push_back(lf);
-	vector <string> lfPointerNameList;
-	lfPointerNameList.push_back("Pointer1");
-
-	DORRxnClass *r = new DORRxnClass("DorTest",1,ts,lfList,lfPointerNameList);
-	s->addReaction(r);
-
-
-	s->prepareForSimulation();
-	cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
-
-	s->sim(10,50);
-	cout<<endl<<endl<<endl;
-	s->printAllReactions();
+//	MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
+//
+//	vector <Observable *> obs;
+//	//TemplateMolecule * rec2 = new TemplateMolecule(rec);
+//	//rec2->addStateValue("m","2");
+//	//Observable * rec2obs = new Observable("RecM2", rec2);
+//	//obs.push_back(rec2obs);
+//
+//	vector <StateCounter *> sc;
+//	StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
+//	sc.push_back(scRecM);
+//
+//	vector <string> paramConstNames; vector <double> paramConstValues;
+//
+//	LocalFunction *lf = new LocalFunction(s,
+//			"openMethSites",
+//			"8-RecMSum",
+//			obs,sc,paramConstNames,paramConstValues);
+//	//lf->setEvaluationLevel(1);
+//
+//	//prepare!
+//	lf->addTypeIMoleculeDependency(rec);
+//	lf->printDetails();
+//
+//
+//
+//	///////////////////Testing DOR reactions....
+//	TemplateMolecule *recTemp = new TemplateMolecule(rec);
+//	vector <TemplateMolecule *> templates;
+//	templates.push_back( recTemp );
+//
+//	TransformationSet *ts = new TransformationSet(templates);
+//	ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
+//	ts->addIncrementStateTransform(recTemp,"m");
+//	ts->finalize();
+//
+//
+//
+//	vector <LocalFunction *> lfList;
+//	lfList.push_back(lf);
+//	vector <string> lfPointerNameList;
+//	lfPointerNameList.push_back("Pointer1");
+//
+//	DORRxnClass *r = new DORRxnClass("DorTest",1,ts,lfList,lfPointerNameList);
+//	s->addReaction(r);
+//
+//
+//	s->prepareForSimulation();
+//	cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
+//
+//	s->sim(10,50);
+//	cout<<endl<<endl<<endl;
+//	s->printAllReactions();
 
 }
 

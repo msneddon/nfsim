@@ -32,7 +32,6 @@ void Observable::add() {
 void Observable::subtract() {
 	if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); }
 	count--;
-	//cout<<"subtracting from observable: "<<this->aliasName<<endl;
 	for(rxnIter = dependentRxns.begin(); rxnIter != dependentRxns.end(); rxnIter++ ) {
 		double old_a = (*rxnIter)->get_a();
 		templateMolecule->getMoleculeType()->getSystem()->update_A_tot(old_a,(*rxnIter)->update_a());
