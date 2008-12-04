@@ -477,7 +477,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //				outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
-			//printAllReactions();
 			if(verbose) {
 				cout<<"Sim time: "<<current_time<<"\tCPU time: ";
 				cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
@@ -613,14 +612,18 @@ void System::equilibrate(double duration)
 
 void System::equilibrate(double duration, int statusReports)
 {
-	double stepLength = duration / (double)statusReports;
-	double eTime = 0;
+	if(duration<=0) return;
+
+	if(statusReports<=0) {
+		equilibrate(duration);
+		return;
+	}
+	double stepLength = duration / (double)statusReports; double eTime = 0;
 	for(int i=0; i<statusReports; i++)
 	{
 		equilibrate(stepLength);
 		eTime+=stepLength;
 		cout<<"Equilibration has now elapsed for: "<<eTime<<" seconds."<<endl;
-
 	}
 
 }
@@ -973,6 +976,19 @@ void System::setParameter(string name, double value) {
 	this->paramMap[name]=value;
 }
 void System::updateSystemWithNewParameters() {
+
+	//Update all global functions
+	for(unsigned int i=0; i<this->globalFunctions.size(); i++) {
+		globalFunctions.at(i)->updateParameters(this);
+	}
+
+	//Update all local functions
+
+	//Update all reactions
+
+	//Update Atot (the total propensity of the system)
+	this->recompute_A_tot();
+
 	cout<<"warning - I did not do anything in the system update!"<<endl;
 }
 void System::printAllParameters() {

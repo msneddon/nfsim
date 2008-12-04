@@ -1,0 +1,32 @@
+#  Run NF script for motor.xml
+#  This file shows an example of what can be done with an RNF
+#  script in NFsim.  Just call NFsim with the 
+#
+
+
+#set all NFsim parameters here, such as the name of the
+#xml file we would like to run, and the ogf flag that
+#tells us to output the value of all global functions
+-xml motor.xml
+-ogf
+
+
+
+#begin the script
+begin
+
+
+  echo running the flagellar motor simulation
+
+  eq 100
+
+  sim 100 100
+
+  set Kd 2.4
+  update
+  echo changing Kd to 2.4uM, let's see what happens...
+
+  sim 100 100
+ 
+  print reactions observables
+end
