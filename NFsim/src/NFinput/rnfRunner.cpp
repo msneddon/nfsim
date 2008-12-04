@@ -10,15 +10,7 @@
 using namespace NFinput;
 using namespace std;
 
-void trim(string& str) {
-	size_t startpos = str.find_first_not_of(" \t");
-	size_t endpos = str.find_last_not_of(" \t");
-	if(( string::npos == startpos ) || (string::npos == endpos)) {
-		str="";
-	} else {
-		str = str.substr(startpos,endpos-startpos+1);
-	}
-}
+
 
 
 // reads in the RNF file, and overwrites any argument it finds
@@ -43,14 +35,14 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 					//First, grab the line
 					lineCounter++;
 					getline(rnfFile,line);
-					trim(line);
+					NFutil::trim(line);
 
 					//identify and remove comments
 					int pos = line.find_first_of("#");
 					if(pos!=(int)string::npos) {
 						//cout<<"identified the comment."<<endl;
 						line = line.substr(0,pos);
-						trim(line);
+						NFutil::trim(line);
 					}
 
 					//Skip empty lines (which will also skip entire comment lines)
@@ -101,7 +93,7 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 					} else {
 						argName = line.substr(1,firstWhiteSpace-1);
 						argValue = line.substr(firstWhiteSpace,line.size()-1);
-						trim(argValue);
+						NFutil::trim(argValue);
 					//	cout<<"got argname: '"<<argName<<"'"<<endl;
 					//	cout<<"got argvalue: '"<<argValue<<"'"<<endl;
 					}
@@ -162,7 +154,7 @@ void echo(string command,System *s)
 	int id1=command.find("echo");
 	string message = command.substr(id1+4);
 	//we could add outputting of parameters/variables if we parse them here
-	trim(message);
+	NFutil::trim(message);
 	cout<<message<<endl;
 }
 
@@ -206,7 +198,7 @@ void simulate(string command,System *s, bool verbose)
 {
 	int id1=command.find("sim");
 	string times = command.substr(id1+3);
-	trim(times);
+	NFutil::trim(times);
 
 	int firstWhiteSpace = times.find_first_of(" \t");
 
@@ -219,8 +211,8 @@ void simulate(string command,System *s, bool verbose)
 		oSteps_str = times.substr(firstWhiteSpace,times.size()-1);
 	}
 
-	trim(simTime_str);
-	trim(oSteps_str);
+	NFutil::trim(simTime_str);
+	NFutil::trim(oSteps_str);
 
 	try {
 		simTime=NFutil::convertToDouble(simTime_str);
@@ -241,7 +233,7 @@ void equilibrate(string command,System *s)
 {
 	int id1=command.find("eq");
 	string times = command.substr(id1+3);
-	trim(times);
+	NFutil::trim(times);
 
 	int firstWhiteSpace = times.find_first_of(" \t");
 
@@ -254,8 +246,8 @@ void equilibrate(string command,System *s)
 		oSteps_str = times.substr(firstWhiteSpace,times.size()-1);
 	}
 
-	trim(simTime_str);
-	trim(oSteps_str);
+	NFutil::trim(simTime_str);
+	NFutil::trim(oSteps_str);
 
 	try {
 		simTime=NFutil::convertToDouble(simTime_str);
@@ -278,7 +270,7 @@ void setParameter(string command, System *s) {
 
 	int id1=command.find("set");
 	string paramString = command.substr(id1+3);
-	trim(paramString);
+	NFutil::trim(paramString);
 
 	int firstWhiteSpace = paramString.find_first_of(" \t");
 
@@ -292,8 +284,8 @@ void setParameter(string command, System *s) {
 		paramValue_str = paramString.substr(firstWhiteSpace,paramString.size()-1);
 	}
 
-	trim(paramName);
-	trim(paramValue_str);
+	NFutil::trim(paramName);
+	NFutil::trim(paramValue_str);
 	try {
 		paramValue=NFutil::convertToDouble(paramValue_str);
 		cout<<"Trying to set paramater: '"<<paramName<<"' to value: "<<paramValue<<endl;

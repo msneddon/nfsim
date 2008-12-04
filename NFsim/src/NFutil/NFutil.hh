@@ -114,6 +114,10 @@ namespace NFutil {
 	string toString(int x);
 
 
+	//! Removes leading and trailing whitespace (including tabs) from the string
+	/*!
+	 */
+	void trim(string& str);
 
 
 
