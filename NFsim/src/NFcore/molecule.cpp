@@ -88,7 +88,6 @@ void Molecule::prepareForSimulation()
 	}
 
 
-
 }
 
 void Molecule::setUpLocalFunctionList()
@@ -132,7 +131,7 @@ void Molecule::updateRxnMembership()
 void Molecule::updateTypeIIFunctions()
 {
 	for(int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
-		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this);
+//		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this);
 	}
 }
 void Molecule::updateDORRxnValues()

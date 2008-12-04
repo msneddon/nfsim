@@ -18,7 +18,6 @@ System::System(string name)
 	current_time = 0;
 	nextReaction = 0;
 	this->useComplex = false;
-//	this->go = NULL;
 	this->outputGlobalFunctionValues=false;
 	rxnIndexMap=0;
 	useBinaryOutput=false;
@@ -325,6 +324,9 @@ void System::prepareForSimulation()
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
 
+  	for( int f=0; f<compositeFunctions.size(); f++)
+  		compositeFunctions.at(f)->prepareForSimulation(this);
+
 
 
   	// now we prepare all reactions
@@ -340,6 +342,7 @@ void System::prepareForSimulation()
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->prepareForSimulation();
 
+
 	//If there are local functions to be had, make sure we set up those local function lists in the molecules
 	//before we try to add molecules to reactant lists
 	if(this->localFunctions.size()>0) {
@@ -347,11 +350,15 @@ void System::prepareForSimulation()
 	  		(*molTypeIter)->setUpLocalFunctionListForMolecules();
 	}
 
+
 	this->evaluateAllLocalFunctions();
 
   	//prep each molecule type for the simulation
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
   		(*molTypeIter)->prepareForSimulation();
+
+
+
 
 
 
@@ -852,6 +859,7 @@ void System::addLocalFunction(LocalFunction *lf) {
 
 void System::evaluateAllLocalFunctions() {
 
+	/*
 	//Don't do all the work if we don't actually have to...
 	if(localFunctions.size()==0) return;
 
@@ -912,6 +920,8 @@ void System::evaluateAllLocalFunctions() {
 
 	//Now, since we changed things around, we have to update the molecule positions in the
 	//reactant trees of DOR reactions.
+
+	 */
 }
 
 
@@ -923,23 +933,61 @@ GlobalFunction * System::getGlobalFunctionByName(string fName) {
 			return (*functionIter);
 		}
 
-	//If it's not there, look up the function reference that matches, then look up
+	//If it's not there, look up the global function reference that matches, then look up
 	//the referenced function.
-	for( int i=0; i<(int)functionReferences.size(); i++) {
-		if(functionReferences.at(i)->name==fName) {
-			return getGlobalFunctionByName(functionReferences.at(i)->referencedFuncName);
-		}
-	}
+//	for(int i=0; i<(int)compositeFunctions.size(); i++) {
+//
+//	}
+//
+//	for( int i=0; i<(int)functionReferences.size(); i++) {
+//		if(functionReferences.at(i)->name==fName) {
+//			return getGlobalFunctionByName(functionReferences.at(i)->referencedFuncName);
+//		}
+//	}
 
 
-	cout<<"!!Warning, the system could not identify the global function: "<<fName<<".\n";
-	cout<<"The calling function might catch this, or your program might crash now."<<endl;
+	//cout<<"!!Warning, the system could not identify the global function: "<<fName<<".\n";
+	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
 
+CompositeFunction * System::getCompositeFunctionByName(string fName)
+{
+	for( int i=0; i<(int)compositeFunctions.size(); i++) {
+		if(compositeFunctions.at(i)->getName()==fName) {
+			cout<<"match?"<<endl;
+			return compositeFunctions.at(i);
+		}
+	}
+	//cout<<"!!Warning, the system could not identify the composite function: "<<fName<<".\n";
+	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
+	return 0;
+}
 
-bool System::addFunctionReference(FunctionReference *fr) {
-	this->functionReferences.push_back(fr);
+void System::finalizeCompositeFunctions()
+{
+	for( int i=0; i<(int)compositeFunctions.size(); i++) {
+		compositeFunctions.at(i)->finalizeInitialization(this);
+	}
+}
+
+
+LocalFunction * System::getLocalFunctionByName(string fName)
+{
+	for( int i=0; i<(int)localFunctions.size(); i++) {
+		if(localFunctions.at(i)->getName()==fName) {
+			return localFunctions.at(i);
+		}
+	}
+	//cout<<"!!Warning, the system could not identify the local function: "<<fName<<".\n";
+	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
+	return 0;
+
+}
+
+
+bool System::addCompositeFunction(CompositeFunction *cf) {
+	this->compositeFunctions.push_back(cf);
 }
 
 

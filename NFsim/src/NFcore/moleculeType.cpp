@@ -274,6 +274,8 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 			(*obsIter)->add();
 	}
 
+
+
 	//Check each reaction and add this molecule as a reactant if we have to
 	int r=0;
 	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ ) {
@@ -399,19 +401,17 @@ void MoleculeType::prepareForSimulation()
 		system->registerRxnIndex((*rxnIter)->getRxnId(), reactionPositions.at(r),r);
   	}
 
-	//Our iterators that we will use to loop through every molecule
 
+	//Our iterators that we will use to loop through every molecule
 	Molecule *mol;
   	for( int m=0; m<mList->size(); m++ )
   	{
-  		//cout<<"start here"<<endl;
   		//First prepare the molecule for simulation
   		mol = mList->at(m);
   		mol->prepareForSimulation();
 
   		//Check each observable and see if this molecule should be counted
   		this->addToObservables(mol);
-  		//cout<<"got here"<<endl;
 
   		//Check each reaction and add this molecule as a reactant if we have to
 		for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )

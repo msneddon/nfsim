@@ -18,6 +18,16 @@ bool createLocalFunction(string name,
 			map <string,double> &parameter,
 			bool verbose);
 
+bool createCompositeFunction(string name,
+			string expression,
+			vector <string> &argNames,
+			vector <string> &refNames,
+			vector <string> &refTypes,
+			vector <string> &paramNames,
+			System *s,
+			bool verbose);
+
+
 
 
 bool createFunction(string name,
@@ -29,35 +39,56 @@ bool createFunction(string name,
 		map <string,double> &parameter,
 		bool verbose)
 {
+	cout<<endl;
+	cout<<"creating the function."<<endl;
+
+	vector <string> varRefNames;
+	vector <string> varRefTypes;
+	vector <string> paramNames;
+	int otherFuncRefCounter=0;
+	for(unsigned int rn=0; rn<refNames.size(); rn++) {
+		if(refTypes.at(rn)=="Function") {
+			cout<<"identified function reference."<<endl;
+			otherFuncRefCounter++;
+		} else if(refTypes.at(rn)=="Constant") {
+			paramNames.push_back(refNames.at(rn));
+		} else {
+			varRefNames.push_back(refNames.at(rn));
+			varRefTypes.push_back(refTypes.at(rn));
+		}
+	}
 
 
+	if(otherFuncRefCounter!=0) {
 
-	cout<<endl<<endl;
-	cout<<"creating the functions."<<endl;
+		//Must be a composite function, so parse as such
+		createCompositeFunction(name, expression, argNames, refNames, refTypes, paramNames, s, verbose);
+		return true;
+		//	exit(1);
+	}
+	else if(argNames.size()==0) //&& otherFuncRefCounter==0)
+	{
+		//must be a global function, as we have no arguments, so just create it
+		GlobalFunction *gf = new GlobalFunction(name, expression,
+												varRefNames, varRefTypes, paramNames, s);
+		if(!s->addGlobalFunction(gf)) {
+			cerr<<"!!!Error:  Function name '"<<name<<"' has already been used.  You can't have two\n";
+			cerr<<"functions with the same name, so I'll just stop now."<<endl;
+			return false;
+		}
+		return true;
+	}
 
-	//bool referencesFunction = false;
-	//bool hasLocal
+	// else if(argNames.size()>0 && otherFuncRefCounter==0)
+	//if we got here, we are creating a local function, so call the create local function function.
+	return createLocalFunction(name, expression, argNames, refNames, refTypes, s, parameter, verbose);
+
+/*
 
 	//Step 1: determine if it is local or global
 	if(argNames.size()==0) { //No arguments, so must be a global function...
-		cout<<"must be a global function..."<<endl;
-		vector <string> varRefNames;
-		vector <string> varRefTypes;
-		vector <string> paramNames;
+		cout<<"must be a global function or global composite function..."<<endl;
 
-
-		int otherFuncRefCounter=0;
-		for(unsigned int rn=0; rn<refNames.size(); rn++) {
-			if(refTypes.at(rn)=="Function") {
-				cout<<"identified function reference."<<endl;
-				otherFuncRefCounter++;
-			} else if(refTypes.at(rn)=="Constant") {
-				paramNames.push_back(refNames.at(rn));
-			} else {
-				varRefNames.push_back(refNames.at(rn));
-				varRefTypes.push_back(refTypes.at(rn));
-			}
-		}
 
 		//Treat as usual global function
 		if(otherFuncRefCounter==0) {
@@ -91,10 +122,46 @@ bool createFunction(string name,
 		return true;
 	}
 
-
-	//if we got here, we are creating a local function, so call the create local function function.
-	return createLocalFunction(name, expression, argNames, refNames, refTypes, s, parameter, verbose);
+*/
 }
+
+
+
+
+bool createCompositeFunction(string name,
+			string expression,
+			vector <string> &argNames,
+			vector <string> &refNames,
+			vector <string> &refTypes,
+			vector <string> &paramNames,
+			System *s,
+			bool verbose)
+{
+	cout<<"must be a composite function..."<<endl;
+
+	for(unsigned int rn=0; rn<refNames.size(); rn++) {
+		if(refTypes.at(rn)=="Observable") {
+			cerr<<"Composite Functions (functions that call other functions) cannot have"<<endl;
+			cerr<<"references to observables.  You must put those in base level functions."<<endl;
+			exit(1);
+		}
+	}
+
+	vector <string> functionsCalled;
+	for(unsigned int rn=0; rn<refNames.size(); rn++) {
+		if(refTypes.at(rn)=="Function") {
+			functionsCalled.push_back(refNames.at(rn));
+		}
+	}
+
+
+	CompositeFunction *cf = new CompositeFunction(s,name, expression,functionsCalled,paramNames);
+	s->addCompositeFunction(cf);
+
+	return true;
+}
+
+
 
 
 
@@ -107,17 +174,12 @@ bool createLocalFunction(string name,
 			System *s,
 			map <string,double> &parameter,
 			bool verbose)
-	{
-
-
-
-
+{
 
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	//@todo create a new function to handle these local functions
 	//      handle local functions that reference another function (as in rateLaw1(x))
-
 
 	cout<<"must be a local function..."<<endl;
 
@@ -159,7 +221,7 @@ bool createLocalFunction(string name,
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Observable") {
 			string::size_type sPos=expression.find(refNames.at(rn));
-			for( ; sPos!=string::npos; sPos=sPos=expression.find(refNames.at(rn),sPos+1)) {
+			for( ; sPos!=string::npos; sPos=expression.find(refNames.at(rn),sPos+1)) {
 
 				//first, add this reference to our vector lists
 				obsUsedName.push_back(refNames.at(rn));
@@ -267,7 +329,7 @@ bool createLocalFunction(string name,
 
 
 
-	cout<<endl<<endl<<".."<<endl;
+	//cout<<endl<<endl<<".."<<endl;
 	//exit(1);
 }
 
@@ -286,7 +348,7 @@ bool createLocalFunction(string name,
 
 
 ////  New Function Parser
-bool NFinput::initGlobalFunctions(
+bool NFinput::initFunctions(
 	TiXmlElement * pListOfFunctions,
 	System * system,
 	map <string,double> &parameter,
@@ -330,14 +392,26 @@ bool NFinput::initGlobalFunctions(
 					}
 
 					argName = pArg->Attribute("id");
-
 					argNames.push_back(argName);
-
 					if(verbose) cout<<argName;
 				}
 			}
 			if(verbose) cout<<")"<<endl;
 
+			//Read in the actual function definition
+			string funcExpression = "";
+			TiXmlElement *pExpression = pFunction->FirstChildElement("Expression");
+			if(pExpression) {
+				if(!pExpression->GetText()) {
+					cerr<<"!!!Error:  Expression tag must actually contain a string for the function.  Quitting."<<endl;
+										return false;
+				}
+				funcExpression = pExpression->GetText();
+				if(verbose) cout<<"\t\t\t = "<<funcExpression<<endl;
+			} else {
+				cerr<<"!!!Error:  Expression tag for a function must exist!  Quitting."<<endl;
+				return false;
+			}
 
 			//Get the list of References
 			TiXmlElement *pListOfRefs = pFunction->FirstChildElement("ListOfReferences");
@@ -355,11 +429,11 @@ bool NFinput::initGlobalFunctions(
 						cerr<<"!!!Error:  Reference tag in Function: '" + funcName + "' must contain a proper type.  Quitting."<<endl;
 						return false;
 					}
-//
+
 					string refName = pRef->Attribute("name");
 					string refType = pRef->Attribute("type");
 
-					if(verbose) cout<<"Reference: "+refType+" "+refName<<endl;
+					if(verbose) cout<<"\t\t\t\tReference: "+refType+" "+refName<<endl;
 
 					refNames.push_back(refName);
 					refTypes.push_back(refType);
@@ -367,26 +441,7 @@ bool NFinput::initGlobalFunctions(
 			}
 
 
-			//Read in the actual function definition
-			string funcExpression = "";
-			TiXmlElement *pExpression = pFunction->FirstChildElement("Expression");
-			if(pExpression) {
-				if(!pExpression->GetText()) {
-					cerr<<"!!!Error:  Expression tag must actually contain a string for the function.  Quitting."<<endl;
-										return false;
-				}
-				funcExpression = pExpression->GetText();
-				//GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
-				//if(!system->addGlobalFunction(gf)) {
-				//	cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
-				//	cerr<<"functions with the same name, so I'll just stop now."<<endl;
-				//	return false;
-				//}
-				if(verbose) cout<<"\t\t\t = "<<funcExpression<<endl;
-			} else {
-				cerr<<"!!!Error:  Expression tag for a function must exist!  Quitting."<<endl;
-				return false;
-			}
+
 
 			//Here we actually generate the function or the function generator
 			if(!createFunction(funcName,
@@ -400,6 +455,8 @@ bool NFinput::initGlobalFunctions(
 				return false;
 			}
 
+			cout<<endl<<endl;
+
 			//And here we clear our arrays
 			argNames.clear();
 			refNames.clear();
@@ -407,9 +464,10 @@ bool NFinput::initGlobalFunctions(
 		}
 
 
-
-
-		cout<<"done reading functions!"<<endl;
+		//Once we've read in all the functions, we should take care of finalizing
+		//the composite functions so they properly reference the other functions
+		system->finalizeCompositeFunctions();
+	//	cout<<"done reading functions!"<<endl;
 	//	exit(0);
 		//Getting here means we read everything we could successfully
 		return true;

@@ -94,7 +94,7 @@ System * NFinput::initializeFromXML(
 		else if(pListOfFunctions) cout<<"\n\tReading list of Global Functions..."<<endl;
 		if(pListOfFunctions)
 		{
-			if(!initGlobalFunctions(pListOfFunctions, s, parameter, verbose)) {
+			if(!initFunctions(pListOfFunctions, s, parameter, verbose)) {
 				cout<<"\n\nI failed at parsing your Global Functions.  Check standard error for a report."<<endl;
 				if(s!=NULL) delete s;
 				return NULL;
@@ -1452,7 +1452,9 @@ bool NFinput::initReactionRules(
 				}
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
-				ts->finalize();
+				//We can't finalize the transformation set here anymore! we have to do it just before we create
+				//the reaction because we still have to add function pointers!!
+				//ts->finalize();
 				ReactionClass *r;
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1475,6 +1477,7 @@ bool NFinput::initReactionRules(
 					if(rateLawType=="Ele")
 					{
 						//Create the Elementary Reaction...
+						ts->finalize();
 						r = new BasicRxnClass(rxnName,0,ts);
 
 						//Make sure that the rate constant exists
@@ -1527,21 +1530,75 @@ bool NFinput::initReactionRules(
 					}
 					else if(rateLawType=="Function") {
 
-
+						//make sure the function has a name
 						if(!pRateLaw->Attribute("name")) {
 							cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: cannot read 'name' attribute!"<<endl;
 							return false;
 						}
-						string functionName = pRateLaw->Attribute("name");
-						cout<<"found function named: "<<functionName<<endl;
-						GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
-						if(gf==NULL) {
-							cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
-							cerr<<"the system.  Therefore, I must abort."<<endl;
-							return false;
+
+						//check whether or not we have any arguments to determine if we are
+						//a local or global function...
+						bool isGlobal = true;
+						TiXmlElement *pListOfArgs = pRateLaw->FirstChildElement("ListOfArguments");
+						if(pListOfArgs) {
+							TiXmlElement *pArg;
+							for ( pArg = pListOfArgs->FirstChildElement("Argument"); pArg != 0; pArg = pArg->NextSiblingElement("Argument"))
+							{
+								if(!pArg->Attribute("id") || !pArg->Attribute("type") || !pArg->Attribute("value") ) {
+									cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: Argument tag \n";
+									cerr<<"must have id, type and value attributes defined!"<<endl;
+									return false;
+								}
+								string argId = pArg->Attribute("id");
+								string argType = pArg->Attribute("type");
+								string argValue = pArg->Attribute("value");
+								cout<<"found argument:"<<argId<<" of type "<<argType<<" which points to "<<argValue<<endl;
+								isGlobal=false;
+
+
+								//Get the template molecule we are referring to
+
+								//add a reference to it with the given name
+								if(comps.find(argValue)!=comps.end()){
+									cout<<"found ref to species"<<endl;
+									component c = comps.find(argValue)->second;
+									ts->addLocalFunctionReference(c.t,argId,LocalFunctionReference::SPECIES_FUNCTION);
+								}
+
+								if(reactants.find(argValue)!=reactants.end()) {
+									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+									cout<<"found it!"<<endl;
+								}
+								//ts->addLocalFunctionReference(t,argValue,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+								//ts->addLocalFunctionReference(
+
+
+							}
 						}
 
-						r=new FunctionalRxnClass(rxnName,gf,ts,s);
+
+						if(isGlobal)
+						{
+							cout<<"parsing as global function reaction"<<endl;
+							string functionName = pRateLaw->Attribute("name");
+							cout<<"found function named: "<<functionName<<endl;
+							GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
+							if(gf!=NULL) {
+								ts->finalize();
+								r=new FunctionalRxnClass(rxnName,gf,ts,s);
+							} else {
+								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
+								if(cf==NULL) {
+									cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
+									cerr<<"the system.  Therefore, I must abort."<<endl;
+									return false;
+								}
+								ts->finalize();
+								r=new FunctionalRxnClass(rxnName,cf,ts,s);
+							}
+						}
+
+
 
 //						//Make sure that the rate constant exists
 //						TiXmlElement *pFunction = pRateLaw->FirstChildElement("Function");
@@ -1644,6 +1701,7 @@ bool NFinput::initReactionRules(
 							}
 
 							//Finally, we can make the actual reaction
+							ts->finalize();
 							r = new MMRxnClass(rxnName,kcat,Km,ts);
 
 						}
