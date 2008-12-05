@@ -75,6 +75,8 @@ namespace NFinput {
 		TiXmlElement * pListOfFunctions,
 		System * system,
 		map <string,double> &parameter,
+		TiXmlElement * pListOfObservables,
+		map<string,int> &allowedStates,
 		bool verbose);
 
 	//! Reads the MoleculeType XML block and adds the MoleculeTypes to the system.
@@ -111,6 +113,16 @@ namespace NFinput {
 	bool generateRxnPermutations(vector<map<string,component> > &permutations,
 			map<string,component> &symComps,
 			map<string,component> &symRxnCenter);
+
+	bool readObservable(TiXmlElement *pObs,
+			string observableName,
+			TemplateMolecule *&tm,
+			System *s,
+			map <string,double> &parameter,
+			map<string,int> &allowedStates,
+			bool verbose);
+
+
 
 
 

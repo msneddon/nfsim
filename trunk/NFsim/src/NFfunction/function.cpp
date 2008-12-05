@@ -114,38 +114,54 @@ void GlobalFunction::attatchRxn(ReactionClass *r)
 
 void GlobalFunction::printDetails()
 {
-	cout<<"--------"<<endl;
-	cout<<"Details of Function: '"<< this->name << "'"<<endl;
+	cout<<"Global Function: '"<< this->name << "()'"<<endl;
 	cout<<" ="<<funcExpression<<endl;
 	cout<<"   -Variable References:"<<endl;
-	for(unsigned int vr=0; vr<n_varRefs; vr++)
-		cout<<"     "<<varRefTypes[vr]<<":  "<<varRefNames[vr]<<endl;
+	for(unsigned int vr=0; vr<n_varRefs; vr++) {
+		cout<<"         "<<varRefTypes[vr]<<":  "<<varRefNames[vr]<<" = " << ""<<endl;
+	}
 	cout<<"   -Constant Parameters:"<<endl;
-	for(unsigned int i=0; i<n_params; i++)
-		cout<<"     "<<paramNames[i]<<endl;
+	for(unsigned int i=0; i<n_params; i++) {
+		cout<<"         "<<paramNames[i]<<endl;
+	}
 
 
 
 
 
 //	// Get the map with the variables
-//	Parser::varmap_type variables = p->GetVar();
+//	mu::Parser::varmap_type variables = p->GetVar();
 //	cout << (int)variables.size() << " variables."<<endl;
 //	mu::Parser::varmap_type::const_iterator item = variables.begin();
-//
 //	// Query the variables
 //	for (; item!=variables.end(); ++item)
 //	{
 //	  cout << "  Name: " << item->first << " Address: [0x" << item->second << "]  Value: "<< *(item->second)<<"\n";
 //	}
-//
+
 
 	if(p!=0)
 		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 
 }
 
+void GlobalFunction::printDetails(System *s)
+{
+	cout<<"Global Function: '"<< this->name << "()'"<<endl;
+	cout<<" ="<<funcExpression<<endl;
+	cout<<"   -Variable References:"<<endl;
+	for(unsigned int vr=0; vr<n_varRefs; vr++) {
+		cout<<"         "<<varRefTypes[vr]<<":  "<<varRefNames[vr]<<" = " << s->getObservableByName(varRefNames[vr])->getCount()<<endl;
+	}
+	cout<<"   -Constant Parameters:"<<endl;
+	for(unsigned int i=0; i<n_params; i++) {
+		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+	}
 
+	if(p!=0)
+		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+
+}
 
 
 

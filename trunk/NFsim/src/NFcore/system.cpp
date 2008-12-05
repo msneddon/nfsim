@@ -988,6 +988,7 @@ LocalFunction * System::getLocalFunctionByName(string fName)
 
 bool System::addCompositeFunction(CompositeFunction *cf) {
 	this->compositeFunctions.push_back(cf);
+	return true;
 }
 
 
@@ -1032,6 +1033,12 @@ void System::updateSystemWithNewParameters() {
 
 	//Update all local functions
 
+
+	//Update all composite functions
+	for(unsigned int i=0; i<this->compositeFunctions.size(); i++) {
+		compositeFunctions.at(i)->updateParameters(this);
+	}
+
 	//Update all reactions
 
 	//Update Atot (the total propensity of the system)
@@ -1048,6 +1055,22 @@ void System::printAllParameters() {
 	}
 }
 
+void System::printAllFunctions() {
+	cout<<"System Global Functions: "<<endl;
+	for(unsigned int i=0; i<this->globalFunctions.size(); i++) {
+		globalFunctions.at(i)->printDetails(this);
+	}
+
+	cout<<"\nSystem Composite Functions: "<<endl;
+	for(unsigned int i=0; i<this->compositeFunctions.size(); i++) {
+		compositeFunctions.at(i)->printDetails(this);
+	}
+
+	cout<<"\nSystem Local Functions: "<<endl;
+	for(unsigned int i=0; i<this->localFunctions.size(); i++) {
+		localFunctions.at(i)->printDetails(this);
+	}
+}
 
 
 

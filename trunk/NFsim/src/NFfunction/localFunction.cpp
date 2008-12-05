@@ -27,13 +27,7 @@ using namespace mu;
 string LocalFunction::getName() const {
 	return this->name;
 }
-string LocalFunction::getNiceName() {
-	nicename = name + "(";
-	for(unsigned int i=0;i<n_args; i++) {
-		if(i==0) nicename+=argNames[i];
-		else nicename+=","+argNames[i];
-	}
-	nicename+=")";
+string LocalFunction::getNiceName() const {
 	return nicename;
 }
 string LocalFunction::getExpression() const {
@@ -46,38 +40,39 @@ string LocalFunction::getParsedExpression() const {
 
 
 
+
+
+
+
+
 LocalFunction::LocalFunction(System *s,
 					string name,
 					string originalExpression,
 					string parsedExpression,
-					vector <string> args,
-					vector <string> varRefNames,
-					vector <string> varObservableNames,
-					vector <Observable> varLocalObservables,
-					vector <int> varRefScope,
+					vector <string> &args,
+					vector <string> &varRefNames,
+					vector <string> &varObservableNames,
+					vector <Observable *> & varObservables,
+					vector <int> &varRefScope,
 					vector <string> paramNames)
 {
 	cout<<"Attempting to create local function: "<<name<<endl;
 
 	if(args.size()>1) {
-		cerr<<"For effeciency, local functions currently support a maximum of 1 argument."<<endl;
+		cerr<<"For efficiency, local functions currently support a maximum of 1 argument."<<endl;
+		cerr<<"Quitting now."<<endl;
+		exit(1);
+	}
+	if(args.size()<1) {
+		cerr<<"When creating a local Function, ERROR!! there were no args, so it is a global function."<<endl;
+		cerr<<"Quitting now."<<endl;
 		exit(1);
 	}
 
-
-
 	//Do the basics first...
 	this->name = name;
-	nicename = this->name + "(";
-	for(unsigned int i=0;i<n_args; i++) {
-		if(i==0) nicename+=argNames[i];
-		else nicename+=","+argNames[i];
-	}
-	nicename+=")";
-
 	this->originalExpression=originalExpression;
 	this->parsedExpression=parsedExpression;
-
 
 
 	//Move the vectors into our neat little arrays
@@ -90,10 +85,12 @@ LocalFunction::LocalFunction(System *s,
 	this->n_varRefs=varRefNames.size();
 	this->varRefNames = new string[n_varRefs];
 	this->varObservableNames = new string[n_varRefs];
+	this->varLocalObservables = new Observable *[n_varRefs];
 	this->varRefScope = new int[n_varRefs];
 	for(unsigned int i=0; i<n_varRefs; i++) {
 		this->varRefNames[i] = varRefNames.at(i);
 		this->varObservableNames[i] = varObservableNames.at(i);
+		this->varLocalObservables[i] = varObservables.at(i);
 		this->varRefScope[i] = varRefScope.at(i);
 	}
 
@@ -103,17 +100,22 @@ LocalFunction::LocalFunction(System *s,
 		this->paramNames[i] = paramNames.at(i);
 	}
 
+	//now assemble the nicename
+	nicename = this->name + "(";
+	for(unsigned int i=0;i<n_args; i++) {
+		if(i==0) nicename+=argNames[i];
+		else nicename+=","+argNames[i];
+	}
+	nicename+=")";
+
+
+	cout<<nicename<<endl;
 
 
 
+	p=0;
 
 
-
-
-
-
-
-//nick franco
 /*
 		//Grab the observables that the function requires
 		n_obs=observables.size();
@@ -242,6 +244,41 @@ LocalFunction::LocalFunction(System *s,
 */
 
 }
+
+
+
+
+
+void LocalFunction::printDetails(System *s)
+{
+	cout<<"Local Function: "+this->nicename+"\n";
+	cout<<" = "<<this->originalExpression<<endl;
+	cout<<" parsed expression = "<<this->parsedExpression<<endl;
+
+	cout<<"   -Variable References:"<<endl;
+	for(unsigned int i=0; i<n_varRefs; i++) {
+		if(varRefScope[i]==-1) {
+			cout<<"         "<<varObservableNames[i]<<" (scope=global): ";
+			cout<<s->getObservableByName(varRefNames[i])->getCount()<<endl;
+		} else {
+			cout<<"         "<<varObservableNames[i]<<" (scope=";
+			cout<<argNames[varRefScope[i]]<<") last evaluated to: ";
+			cout<<varLocalObservables[i]->getCount()<<endl;
+		}
+	}
+
+	cout<<"   -Constant Parameters:"<<endl;
+	for(unsigned int i=0; i<n_params; i++) {
+		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+	}
+
+	if(p!=0)
+		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+}
+
+
+
+
 
 
 

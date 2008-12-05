@@ -106,21 +106,6 @@ namespace NFcore {
 
 	};
 
-	//double FuncFactory::PI = 3.14159265358979323846;
-	//double FuncFactory::NA ;
-	//double FuncFactory::E ;
-
-
-
-
-
-
-
-//	class Function {
-//	public:
-//		Function();
-//		virtual ~Function();
-//	};
 
 
 	//! Defines functions to be used globally in a simulation.
@@ -175,6 +160,7 @@ namespace NFcore {
 				parameters as well as what the function currently evaluates to.
 			*/
 			void printDetails();
+			void printDetails(System *s);
 
 
 			/*!
@@ -263,23 +249,25 @@ namespace NFcore {
 		public:
 
 			LocalFunction(System *s,
-					string name,
-					string originalExpression,
-					string parsedExpression,
-					vector <string> args,
-					vector <string> varRefNames,
-					vector <string> varObservableNames,
-					vector <Observable> varLocalObservables,
-					vector <int> varRefScope,
-					vector <string> paramNames);
+								string name,
+								string originalExpression,
+								string parsedExpression,
+								vector <string> &args,
+								vector <string> &varRefNames,
+								vector <string> &varObservableNames,
+								vector <Observable *> & varObservables,
+								vector <int> &varRefScope,
+								vector <string> paramNames);
 			~LocalFunction();
 
 
 			string getName() const;
-			string getNiceName();
+			string getNiceName() const;
 			string getExpression() const;
 			string getParsedExpression() const;
 
+
+			void printDetails(System *s);
 
 		/*	LocalFunction(System *s,
 					string name,
@@ -342,7 +330,7 @@ namespace NFcore {
 			string *varRefNames;
 			string *varObservableNames;
 			int *varRefScope;
-			Observable *varLocalObservables;
+			Observable **varLocalObservables;
 
 
 //			//List of observables that this local function depends on
@@ -402,6 +390,7 @@ namespace NFcore {
 
 				double evaluateOn(Molecule **molList);
 
+				void printDetails(System *s);
 
 
 			protected:

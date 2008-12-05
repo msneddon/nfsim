@@ -91,18 +91,6 @@ System * NFinput::initializeFromXML(
 		}
 
 		if(!verbose) cout<<"-";
-		else if(pListOfFunctions) cout<<"\n\tReading list of Global Functions..."<<endl;
-		if(pListOfFunctions)
-		{
-			if(!initFunctions(pListOfFunctions, s, parameter, verbose)) {
-				cout<<"\n\nI failed at parsing your Global Functions.  Check standard error for a report."<<endl;
-				if(s!=NULL) delete s;
-				return NULL;
-			}
-		}
-
-
-		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of MoleculeTypes..."<<endl;
 		map<string,int> allowedStates;
 		if(!initMoleculeTypes(pListOfMoleculeTypes, s, allowedStates, verbose))
@@ -131,6 +119,20 @@ System * NFinput::initializeFromXML(
 			if(s!=NULL) delete s;
 			return NULL;
 		}
+
+
+
+		if(!verbose) cout<<"-";
+		else if(pListOfFunctions) cout<<"\n\tReading list of Functions..."<<endl;
+		if(pListOfFunctions)
+		{
+			if(!initFunctions(pListOfFunctions, s, parameter, pListOfObservables,allowedStates,verbose)) {
+				cout<<"\n\nI failed at parsing your Global Functions.  Check standard error for a report."<<endl;
+				if(s!=NULL) delete s;
+				return NULL;
+			}
+		}
+
 
 
 		//We have to read reactionRules AFTER observables because sometimes reactions
@@ -1745,7 +1747,54 @@ bool NFinput::initReactionRules(
 }
 
 
+bool NFinput::readObservable(TiXmlElement *pObs,
+		string observableName,
+		TemplateMolecule *&tm,
+		System *s,
+		map <string,double> &parameter,
+		map<string,int> &allowedStates,
+		bool verbose) {
 
+
+	//Now enter into the list of patterns
+	TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
+	if(!pListOfPatterns) {
+		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
+		tm = 0; return true;
+	}
+
+	//Now enter into the specific pattern making sure that it exists
+	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
+	if(!pPattern) {
+		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
+		tm = 0; return true;
+	}
+
+	//Make sure (for the time being) there is only one pattern
+	if(pPattern->NextSiblingElement("Pattern")!=0) {
+		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains multiple patterns!"<<endl;
+		cout<<"                This is not yet supported, so only the first pattern will be read."<<endl;
+	}
+
+	//Go into the list of molecules that make up this pattern
+	TiXmlElement *pListOfMol = pPattern->FirstChildElement("ListOfMolecules");
+	if(!pListOfMol) {
+		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains no molecules in its pattern!"<<endl;
+		tm = 0; return true;
+	}
+
+	//Let the other function (readPattern) gather and create our template
+	map <string, TemplateMolecule *> templates;
+	map <string, component> comps;
+	map <string, component> symMap;
+	tm = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
+	if(tm==NULL) {
+		cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
+		return false;
+	}
+
+	return true;
+}
 
 
 bool NFinput::initObservables(
@@ -1761,8 +1810,10 @@ bool NFinput::initObservables(
 		TiXmlElement *pObs;
 		for ( pObs = pListOfObservables->FirstChildElement("Observable"); pObs != 0; pObs = pObs->NextSiblingElement("Observable"))
 		{
+
+			string observableId="", observableName="", observableType="";
+
 			//First get the observable name
-			string observableId, observableName, observableType;
 			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
 				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
 				return false;
@@ -1774,49 +1825,24 @@ bool NFinput::initObservables(
 
 			if(verbose) cout<<"\t\tCreating Observable: "<<observableName<<endl;
 
-			//Now enter into the list of patterns
-			TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
-			if(!pListOfPatterns) {
-				cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-				continue;
+			TemplateMolecule *tempmol = 0;
+
+			//Call the read observable function...
+			if(!readObservable(pObs,
+					observableName,
+					tempmol,
+					s,
+					parameter,
+					allowedStates,
+					verbose)) return false;
+
+			if(tempmol!=0) {
+				//Finally, let's create the observable
+				MoleculeType *moltype = tempmol->getMoleculeType();
+				Observable *o  = new Observable(observableName.c_str(),tempmol);
+				moltype->addObservable(o);
+				//tempmol->printDetails();
 			}
-
-			//Now enter into the specific pattern making sure that it exists
-			TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
-			if(!pPattern) {
-				cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-				continue;
-			}
-
-			//Make sure (for the time being) there is only one pattern
-			if(pPattern->NextSiblingElement("Pattern")!=0) {
-				cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains multiple patterns!"<<endl;
-				cout<<"                This is not yet supported, so only the first pattern will be read."<<endl;
-			}
-
-			//Go into the list of molecules that make up this pattern
-			TiXmlElement *pListOfMol = pPattern->FirstChildElement("ListOfMolecules");
-			if(!pListOfMol) {
-				cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains no molecules in its pattern!"<<endl;
-				continue;
-			}
-
-			//Let the other function (readPattern) gather and create our template
-			map <string, TemplateMolecule *> templates;
-			map <string, component> comps;
-			map <string, component> symMap;
-			TemplateMolecule *tempmol = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
-			if(tempmol==NULL) {
-				cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
-				return false;
-			}
-
-
-			//Finally, let's create the observable
-			MoleculeType *moltype = tempmol->getMoleculeType();
-			Observable *o  = new Observable(observableName.c_str(),tempmol);
-			moltype->addObservable(o);
-//////////////////////			tempmol->printDetails();
 		}
 
 		//Getting here means success!

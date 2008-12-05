@@ -16,6 +16,8 @@ bool createLocalFunction(string name,
 			vector <string> &refTypes,
 			System *s,
 			map <string,double> &parameter,
+			TiXmlElement * pListOfObservables,
+			map<string,int> &allowedStates,
 			bool verbose);
 
 bool createCompositeFunction(string name,
@@ -37,6 +39,8 @@ bool createFunction(string name,
 		vector <string> &refTypes,
 		System *s,
 		map <string,double> &parameter,
+		TiXmlElement * pListOfObservables,
+		map<string,int> &allowedStates,
 		bool verbose)
 {
 	cout<<endl;
@@ -81,7 +85,9 @@ bool createFunction(string name,
 
 	// else if(argNames.size()>0 && otherFuncRefCounter==0)
 	//if we got here, we are creating a local function, so call the create local function function.
-	return createLocalFunction(name, expression, argNames, refNames, refTypes, s, parameter, verbose);
+	return createLocalFunction(name, expression,
+			argNames, refNames, refTypes,
+			s, parameter, pListOfObservables, allowedStates, verbose);
 
 /*
 
@@ -173,6 +179,8 @@ bool createLocalFunction(string name,
 			vector <string> &refTypes,
 			System *s,
 			map <string,double> &parameter,
+			TiXmlElement * pListOfObservables,
+			map<string,int> &allowedStates,
 			bool verbose)
 {
 
@@ -298,15 +306,75 @@ bool createLocalFunction(string name,
 	vector <string> finalObsUsedExpressionRef;
 	vector <string> finalObsUsedName;
 	vector <int> finalObsUsedScope;
-
+	vector <Observable *> finalLocalObservables;
 	//Fill the final vectors
 	for(unsigned int i=0; i<obsUsedExpressionRef.size(); i++) {
 		if(!markForRemoval.at(i)) {
 			finalObsUsedExpressionRef.push_back(obsUsedExpressionRef.at(i));
 			finalObsUsedName.push_back(obsUsedName.at(i));
 			finalObsUsedScope.push_back(obsUsedScope.at(i));
+			finalLocalObservables.push_back(0);
 		}
 	}
+
+
+	//now from the list of observable names, we have to go back and
+	//actually create observables for these things.  So we'll do that here
+	try {
+		TiXmlElement *pObs;
+		for ( pObs = pListOfObservables->FirstChildElement("Observable");
+			pObs != 0; pObs = pObs->NextSiblingElement("Observable")) {
+
+			string observableId="", observableName="", observableType="";
+			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
+				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
+				return false;
+			} else {
+				observableId = pObs->Attribute("id");
+				observableName = pObs->Attribute("name");
+				observableType = pObs->Attribute("type");
+			}
+
+			for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
+				if(observableName==finalObsUsedName.at(i)) {
+					if(finalObsUsedScope.at(i)!=-1) {
+						TemplateMolecule *tempmol = 0;
+						if(!readObservable(pObs,observableName,tempmol,
+								s,parameter, allowedStates,false)) {
+							return false;
+						}
+						if(tempmol!=0) {
+							Observable *o  = new Observable(observableName.c_str(),tempmol);
+							finalLocalObservables.at(i)=o;
+							// WE DO NOT ADD THIS OBSERVABLE TO THE MOLECULE HERE!!
+						}
+					}
+					break;
+				}
+			}
+		}
+
+	} catch (...) {
+		//oh no, what happened this time?
+		cout<<"Caught an unexpected error when creating observables for this local function."<<endl;
+		return false;
+	}
+
+
+	//make sure everything went as planned
+	for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
+		if(finalObsUsedScope.at(i)!=-1) {
+			if(finalLocalObservables.at(i)==0) {
+				cout<<"Error!! unable to create local function because the reference to\n";
+				cout<<"observable named: '"<<finalObsUsedName.at(i)<<"' was not found."<<endl;
+				return false;
+			}
+		}
+	}
+
+
+
+
 
 
 	//Ah.  and so we get here.  We now have:
@@ -318,19 +386,20 @@ bool createLocalFunction(string name,
 	// 6) the original list of arguments (argNames)
 	// 7) the reduced list of parameter constants (paramNames)
 
-	//so we can finally create our local function creator...
+	//so we can finally create our local function...
 
+	LocalFunction * lf = new LocalFunction(s,name,
+						originalExpression, expression,
+						argNames,
+						finalObsUsedExpressionRef,finalObsUsedName,finalLocalObservables,finalObsUsedScope,
+						paramNames);
 
+	lf->printDetails(s);
+	cout<<"here"<<endl;
 
-	// Functions needed: 1) LocalFuncCreator class
-	//                   2) NFinput::CreateFreeCopyOfObs(obsName)
-	//                   3) update system to handle refs to global or local functions
-
-
-
-
-	//cout<<endl<<endl<<".."<<endl;
-	//exit(1);
+	s->addLocalFunction(lf);
+	cout<<"was added fine."<<endl;
+	return true;
 }
 
 
@@ -352,6 +421,8 @@ bool NFinput::initFunctions(
 	TiXmlElement * pListOfFunctions,
 	System * system,
 	map <string,double> &parameter,
+	TiXmlElement * pListOfObservables,
+	map<string,int> &allowedStates,
 	bool verbose)
 {
 	try {
@@ -451,6 +522,8 @@ bool NFinput::initFunctions(
 					refTypes,
 					system,
 					parameter,
+					pListOfObservables,
+					allowedStates,
 					verbose)) {
 				return false;
 			}
