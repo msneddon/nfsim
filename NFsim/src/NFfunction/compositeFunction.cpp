@@ -179,6 +179,25 @@ void CompositeFunction::prepareForSimulation(System *s)
 }
 
 
+void CompositeFunction::printDetails(System *s) {
+
+	cout<<"Composite Function: '"<< this->name << "()'"<<endl;
+	cout<<" ="<<this->originalExpression<<endl;
+	cout<<"   -Function References:"<<endl;
+	for(unsigned int f=0; f<n_gfs; f++) {
+		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
+	}
+	cout<<"   -Constant Parameters:"<<endl;
+	for(unsigned int i=0; i<n_params; i++) {
+		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+	}
+
+	if(p!=0)
+		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+}
+
+
 double CompositeFunction::evaluateOn(Molecule **molList) {
 
 	//1 evaluate all global functions

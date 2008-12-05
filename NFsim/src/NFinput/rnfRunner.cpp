@@ -161,10 +161,7 @@ void echo(string command,System *s)
 void print(string com,System *s)
 {
 	bool success=false;
-	if(com.find("reactions")!=string::npos || com.find("rxns")!=string::npos ) {
-		cout<<"\n"<<endl; s->printAllReactions();
-		success=true;
-	}
+
 	if(com.find("moleculeTypes")!=string::npos) {
 		cout<<"\n"<<endl; s->printAllMoleculeTypes();
 		success=true;
@@ -173,6 +170,14 @@ void print(string com,System *s)
 		cout<<"\n"<<endl;
 		for(int m=0; m<s->getNumOfMoleculeTypes(); m++)
 			s->getMoleculeType(m)->printAllMolecules();
+		success=true;
+	}
+	if(com.find("reactions")!=string::npos || com.find("rxns")!=string::npos ) {
+		cout<<"\n"<<endl; s->printAllReactions();
+		success=true;
+	}
+	if(com.find("functions")!=string::npos || com.find("funcs")!=string::npos) {
+		cout<<"\n"<<endl; s->printAllFunctions();
 		success=true;
 	}
 	if(com.find("parameters")!=string::npos || com.find("params")!=string::npos) {

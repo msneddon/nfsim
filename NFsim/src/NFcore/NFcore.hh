@@ -154,6 +154,9 @@ namespace NFcore
 			CompositeFunction * getCompositeFunctionByName(string fName);
 			void finalizeCompositeFunctions();
 
+			void printAllFunctions();
+
+
 			LocalFunction * getLocalFunctionByName(string fName);
 			//bool addFunctionReference(FunctionReference *fr);
 
