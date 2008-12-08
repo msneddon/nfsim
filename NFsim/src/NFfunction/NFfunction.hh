@@ -269,6 +269,12 @@ namespace NFcore {
 
 			void printDetails(System *s);
 
+			void prepareForSimulation(System *s);
+			double evaluateOn(Molecule *m, int scope);
+
+
+
+
 		/*	LocalFunction(System *s,
 					string name,
 					string funcString,
@@ -373,6 +379,7 @@ namespace NFcore {
 						string name,
 						string expression,
 						vector <string> &functions,
+						vector <string> & argNames,
 						vector <string> &paramNames);
 				~CompositeFunction();
 
@@ -388,7 +395,7 @@ namespace NFcore {
 
 				void setGlobalObservableDependency(ReactionClass *r, System *s);
 
-				double evaluateOn(Molecule **molList);
+				double evaluateOn(Molecule **molList, int *scope);
 
 				void printDetails(System *s);
 
@@ -404,20 +411,29 @@ namespace NFcore {
 				string * allFuncNames;
 
 
+				unsigned int n_args;
+				string * argNames;
 
 				unsigned int n_params;
 				string *paramNames;
 
-
+				//here are the referenced global functions
 				int n_gfs;
 				string * gfNames;
 				GlobalFunction ** gfs;
 				double * gfValues;
 
+				//stores list of all local functions
 				int n_lfs;
 				string * lfNames;
 				LocalFunction ** lfs;
-				double * lfValues;
+
+				//stores list of all local functions and how they are referenced
+				int n_refLfs;
+				int *refLfInds;
+				string *refLfRefNames;
+				int *refLfScopes;
+				double * refLfValues;
 
 				mu::Parser *p;
 

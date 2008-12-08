@@ -1037,6 +1037,8 @@ namespace NFcore
 			string getAliasName() const { return aliasName; };
 
 			void addReferenceToMyself(mu::Parser * p);
+			void addReferenceToMyself(string referenceName, mu::Parser * p);
+
 
 			void addDependentRxn(ReactionClass *r);
 

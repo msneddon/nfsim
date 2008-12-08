@@ -58,7 +58,7 @@ double FunctionalRxnClass::update_a() {
 	//	cout<<"in here"<<endl;
 		a=FuncFactory::Eval(gf->p);
 	} else if(cf!=0) {
-		a=cf->evaluateOn(0);
+		a=cf->evaluateOn(0,0);
 	//	cout<<"and here"<<endl;
 	} else {
 		cout<<"Error!  Functional rxn is not properly initialized, but is being used!"<<endl;
@@ -83,7 +83,7 @@ void FunctionalRxnClass::printDetails() const {
 	if(gf!=0)
 		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
 	else if(cf!=0)
-		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<cf->evaluateOn(0)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<cf->evaluateOn(0,0)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
 
 	for(unsigned int r=0; r<n_reactants; r++)
 	{

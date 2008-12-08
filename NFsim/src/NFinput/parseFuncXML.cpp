@@ -161,7 +161,7 @@ bool createCompositeFunction(string name,
 	}
 
 
-	CompositeFunction *cf = new CompositeFunction(s,name, expression,functionsCalled,paramNames);
+	CompositeFunction *cf = new CompositeFunction(s,name, expression,functionsCalled,argNames,paramNames);
 	s->addCompositeFunction(cf);
 
 	return true;
