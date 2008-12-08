@@ -18,6 +18,7 @@ CompositeFunction::CompositeFunction(System *s,
 					string name,
 					string expression,
 					vector <string> &functions,
+					vector <string> &argNames,
 					vector <string> &paramNames)
 {
 
@@ -31,6 +32,12 @@ CompositeFunction::CompositeFunction(System *s,
 	this->paramNames = new string[n_params];
 	for(unsigned int i=0; i<n_params; i++) {
 		this->paramNames[i]=paramNames.at(i);
+	}
+
+	this->n_args=argNames.size();
+	this->argNames=new string[n_args];
+	for(unsigned int i=0; i<n_args; i++) {
+		this->argNames[i]=argNames.at(i);
 	}
 
 
@@ -98,11 +105,9 @@ void CompositeFunction::finalizeInitialization(System *s)
 
 	this->n_lfs = lf_tempVector.size();
 	this->lfNames = new string[n_lfs];
-	this->lfValues = new double[n_lfs];
 	this->lfs = new LocalFunction * [n_lfs];
 	for(int i=0; i<n_lfs; i++) {
 		lfNames[i] = lf_tempVector.at(i)->getName();
-		lfValues[i] = 0;
 		lfs[i] = lf_tempVector.at(i);
 	}
 
@@ -137,7 +142,67 @@ void CompositeFunction::finalizeInitialization(System *s)
 
 	///////// do the same for local functions here (can be a bit tricky, because different
 	///////// composite functions will have different numbers of arguments
+	vector <int> lfIndexValues;
+	vector <string> lfReferenceName;
+	vector <int> lfScope;
 
+
+	for(int f=0; f<n_lfs; f++) {
+		string::size_type sPos=parsedExpression.find(lfs[f]->getName());
+		for( ; sPos!=string::npos; sPos=parsedExpression.find(lfNames[f],sPos+1)) {
+
+			string::size_type openPar = parsedExpression.find_first_of('(',sPos);
+			string::size_type closePar = parsedExpression.find_first_of(')',sPos);
+			if(openPar!=string::npos && closePar!=string::npos) {
+				if(closePar>openPar) { //if we got here, we found a valid parenthesis to look at
+					string possibleArg = parsedExpression.substr(openPar+1,closePar-openPar-1);
+					NFutil::trim(possibleArg);
+
+					for(unsigned int a=0; a<n_args; a++) {
+
+						if(possibleArg==argNames[a]) {
+
+							string identifier = "_"+argNames[a];
+							parsedExpression.replace(openPar,closePar-openPar+1,identifier);
+
+							bool found = false;
+							for(int x=0; x<lfIndexValues.size(); x++) {
+								if(lfReferenceName.at(x)==(lfNames[f]+identifier)){
+									found=true;
+								}
+							}
+							if(!found) {
+								lfIndexValues.push_back(f);
+								lfReferenceName.push_back(lfNames[f]+identifier);
+								lfScope.push_back(a);
+							}
+
+							break; //break cause we're done with this scope...
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+	this->n_refLfs=lfIndexValues.size();
+	this->refLfInds = new int[n_refLfs];
+	this->refLfRefNames = new string[n_refLfs];
+	this->refLfScopes = new int[n_refLfs];
+	this->refLfValues = new double[n_refLfs];
+	for(unsigned int i=0; i<lfIndexValues.size(); i++) {
+		this->refLfInds[i]=lfIndexValues.at(i);
+		this->refLfRefNames[i]=lfReferenceName.at(i);
+		this->refLfScopes[i] = lfScope.at(i);
+		this->refLfValues[i]=0;
+	}
+
+
+
+
+	cout<<"now the expression is finally: "<<parsedExpression<<endl;
 
 
 }
@@ -159,6 +224,9 @@ void CompositeFunction::prepareForSimulation(System *s)
 			}
 
 			//Define local function variables here...
+			for(int f=0; f<this->n_refLfs; f++) {
+				p->DefineVar(refLfRefNames[f],&refLfValues[f]);
+			}
 
 			for(unsigned int i=0; i<n_params; i++) {
 				p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
@@ -182,31 +250,63 @@ void CompositeFunction::prepareForSimulation(System *s)
 void CompositeFunction::printDetails(System *s) {
 
 	cout<<"Composite Function: '"<< this->name << "()'"<<endl;
-	cout<<" ="<<this->originalExpression<<endl;
+	cout<<" = "<<this->originalExpression<<endl;
+	cout<<" parsed expression = "<<this->parsedExpression<<endl;
 	cout<<"   -Function References:"<<endl;
-	for(unsigned int f=0; f<n_gfs; f++) {
+	for(int f=0; f<n_gfs; f++) {
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
 	}
-	cout<<"   -Constant Parameters:"<<endl;
-	for(unsigned int i=0; i<n_params; i++) {
-		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+	for(int f=0; f<n_lfs; f++) {
+		cout<<"         local function: "<<lfs[f]->getNiceName()<<endl;
+	}
+
+
+	if(n_args>0) {
+		cout<<"   -Arguments:"<<endl;
+		for(unsigned int a=0; a<n_args; a++)
+			cout<<"         "<<argNames[a]<<endl;
+	}
+
+	if(n_params>0) {
+		cout<<"   -Constant Parameters:"<<endl;
+		for(unsigned int i=0; i<n_params; i++) {
+			cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+		}
 	}
 
 	if(p!=0)
-		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
 }
 
 
-double CompositeFunction::evaluateOn(Molecule **molList) {
+double CompositeFunction::evaluateOn(Molecule **molList, int *scope) {
 
 	//1 evaluate all global functions
 	for(int f=0; f<n_gfs; f++) {
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 	}
 
-
 	//2 evaluate all local functions
+	if(n_lfs>0) {
+
+		cout<<"evaluating composite function with local dependencies."<<endl;
+		if(molList!=0 && scope!=0) {
+
+
+		} else {
+
+			cout<<"Error evaluating composite function: "<<name<<endl;
+			cout<<"This function depends on local functions, but you gave no molecules"<<endl;
+			cout<<"or scope when calling this function.  Time to quit."<<endl;
+			exit(1);
+		}
+
+	}
+
+
+
+
 
 	//evaluate this function
 	return FuncFactory::Eval(p);

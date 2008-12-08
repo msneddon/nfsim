@@ -324,8 +324,12 @@ void System::prepareForSimulation()
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
 
+  	for( int f=0; f<localFunctions.size(); f++)
+  		localFunctions.at(f)->prepareForSimulation(this);
+
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
+
 
 
 

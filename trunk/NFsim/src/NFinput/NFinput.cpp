@@ -1598,6 +1598,21 @@ bool NFinput::initReactionRules(
 								ts->finalize();
 								r=new FunctionalRxnClass(rxnName,cf,ts,s);
 							}
+						} else {
+
+							cout<<"Must refer to a local function."<<endl;
+							string functionName = pRateLaw->Attribute("name");
+							cout<<"found function named: "<<functionName<<endl;
+							LocalFunction *lf = s->getLocalFunctionByName(functionName);
+							if(lf!=NULL) {
+								ts->finalize();
+								//r = new DORrxnClass(rxnName,gf,ts,s);
+							} else {
+
+								cout<<"Must be a composite local function"<<endl;
+
+								continue;
+							}
 						}
 
 

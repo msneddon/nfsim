@@ -267,9 +267,11 @@ void LocalFunction::printDetails(System *s)
 		}
 	}
 
-	cout<<"   -Constant Parameters:"<<endl;
-	for(unsigned int i=0; i<n_params; i++) {
-		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+	if(n_params>0) {
+		cout<<"   -Constant Parameters:"<<endl;
+		for(unsigned int i=0; i<n_params; i++) {
+			cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
+		}
 	}
 
 	if(p!=0)
@@ -281,6 +283,125 @@ void LocalFunction::printDetails(System *s)
 
 
 
+void LocalFunction::prepareForSimulation(System *s) {
+
+	cout<<"preparing local function: "<<this->nicename<<endl;
+
+	//Finally, we can create the local function
+		try {
+			p=FuncFactory::create();
+
+			//Give the local observable to the function so it can be used
+			for(unsigned int i=0; i<n_varRefs; i++) {
+				if(this->varRefScope[i]==-1) { //for global variables, use the global observable
+					s->getObservableByName(this->varObservableNames[i])->addReferenceToMyself(this->varRefNames[i],p);
+				} else { //for local observables, use this function's observable
+					this->varLocalObservables[i]->addReferenceToMyself(this->varRefNames[i],p);
+				}
+			}
+	//
+			//Point the function to the counter
+	//		for(unsigned int i=0; i<n_sc; i++) {
+	//			p->DefineVar(sc[i]->name,&(sc[i]->value));
+	//		}
+	//
+			//Set the constant values
+			for(unsigned int i=0; i<this->n_params; i++) {
+				p->DefineConst(this->paramNames[i],s->getParameter(paramNames[i]));
+			}
+
+			//Finally, we can set the expression
+			p->SetExpr(this->parsedExpression);
+
+		//Catch anything that goes astray
+		} catch (mu::Parser::exception_type &e) {
+			cout<<"Error creating local function "<<name<<" in class LocalFunction!!  This is what happened:"<<endl;
+			cout<< "  "<<e.GetMsg() << endl;
+			cout<<"Quitting."<<endl;
+			exit(1);
+		}
+}
+
+double LocalFunction::evaluateOn(Molecule *m, int scope) {
+
+	cout<<"evaluating local function: "<<this->nicename<<endl;
+
+
+//	if(evaluationLevel==0) {
+//		list <Molecule *> molList;
+//		list <Molecule *>::iterator molIter;
+//
+//		//Get the species.  If we are using complex bookkeeping, we should take advantage
+//		//of that here, although I don't here yet.
+//		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+//		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
+//		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
+//
+//		//Update the observables and counters, as something has changed
+//		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+//			for(unsigned int i=0; i<n_obs; i++)
+//				if(obs[i]->isObservable(*molIter)) obs[i]->straightAdd();
+//			for(unsigned int i=0; i<n_sc; i++) {
+//				//cout<<"adding to sc"<<endl;
+//				sc[i]->add(*molIter);
+//			}
+//		}
+//
+//		//evaluate the function
+//		double newValue = FuncFactory::Eval(p);
+//
+//		//Update the molecules (Type I) that needed this function evaluated...
+//		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+//			for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+//				if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
+//					(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+//					(*molIter)->updateDORRxnValues();
+//				}
+//			}
+//		}
+//		return newValue;
+//
+//	//Evaluation level of 1 means that we search only this molecule when
+//	//evaluating the function - the steps are the same as for the entire species, except we evaluate
+//	//only on the molecule
+//	} else if(evaluationLevel==1) {
+//
+//
+//		for(unsigned int i=0; i<n_obs; i++) obs[i]->clear();
+//		for(unsigned int i=0; i<n_sc; i++) sc[i]->reset();
+//
+//		for(unsigned int i=0; i<n_obs; i++) {
+//			if(obs[i]->isObservable(m)) obs[i]->straightAdd();
+//		}
+//
+//
+//
+//		for(unsigned int i=0; i<n_sc; i++) {
+//			sc[i]->add(m);
+//		}
+//
+//		double newValue = FuncFactory::Eval(p);
+//		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+//			if(m->getMoleculeType()==typeI_mol.at(ti)) {
+//				m->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+//				m->updateDORRxnValues();
+//			}
+//		}
+//		return newValue;
+//
+//
+//	} else {
+//		cout<<"Internal error in LocalFunction::evaluateOn()! trying to evaluate a function with a bad evaluation level."<<endl;
+//		exit(1);
+//	}
+//
+//	//Should never get here...
+//	return 0;
+
+
+
+	return -1;
+}
 
 
 //

@@ -63,3 +63,7 @@ void Observable::addReferenceToMyself(mu::Parser * p) {
 	p->DefineVar(this->aliasName,&count);
 }
 
+void Observable::addReferenceToMyself(string referenceName, mu::Parser * p) {
+	p->DefineVar(referenceName,&count);
+}
+
