@@ -270,9 +270,17 @@ namespace NFcore {
 			void printDetails(System *s);
 
 			void prepareForSimulation(System *s);
+
+
+			double getValue(Molecule *m, int scope);
 			double evaluateOn(Molecule *m, int scope);
 
 
+			void addTypeIMoleculeDependency(MoleculeType *mt);
+
+
+			static const int SPECIES = 0;
+			static const int MOLECULE = 1;
 
 
 		/*	LocalFunction(System *s,
@@ -398,6 +406,11 @@ namespace NFcore {
 				double evaluateOn(Molecule **molList, int *scope);
 
 				void printDetails(System *s);
+
+				int getNumOfArgs() const;
+				string getArgName(int aIndex) const;
+
+				void addTypeIMoleculeDependency(MoleculeType *mt);
 
 
 			protected:

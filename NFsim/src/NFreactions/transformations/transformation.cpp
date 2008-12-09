@@ -133,11 +133,11 @@ void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 
 /////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-LocalFunctionReference::LocalFunctionReference(string PointerName, int type, TemplateMolecule *tm)
+LocalFunctionReference::LocalFunctionReference(string PointerName, int scope, TemplateMolecule *tm)
 	: Transformation(TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 
 	this->PointerName=PointerName;
-	this->type=type;
+	this->scope=scope;
 	this->tm=tm;
 
 }

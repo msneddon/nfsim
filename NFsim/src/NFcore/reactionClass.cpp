@@ -112,6 +112,7 @@ void ReactionClass::fire(double random_A_number)
 		if(onTheFlyObservables) (*molIter)->addToObservables();
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
+	  	(*molIter)->updateDORRxnValues();
 	}
 //	Molecule::printMoleculeList(products);
 

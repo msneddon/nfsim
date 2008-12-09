@@ -132,14 +132,14 @@ namespace NFcore
 					string name,
 					double baseRate,
 					TransformationSet *transformationSet,
-					vector <LocalFunction *> &lfList,
+					CompositeFunction *function,
 					vector <string> &lfArgumentPointerNameList);
 			virtual ~DORRxnClass();
 
 			virtual void init();
 			virtual void prepareForSimulation() {};
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
-			virtual void remove(Molecule *m, unsigned int reactantPos) {cout<<"calling remove in DOR?"<<endl; exit(0);};
+			virtual void remove(Molecule *m, unsigned int reactantPos);
 			virtual double update_a();
 
 
@@ -170,11 +170,25 @@ namespace NFcore
 
 			MappingSet *ms;
 
+
+			CompositeFunction *cf;
+
 			//Parameters to keep track of local functions
 			int DORreactantIndex;
-			vector <LocalFunction *> lfList;
-			vector <int> indexIntoMappingSet;
-			vector <double> localFunctionValue;
+
+			int n_argMolecules;
+			int * argIndexIntoMappingSet;
+			Molecule ** argMappedMolecule;
+			int * argScope;
+
+
+			//vector <int> argIndexIntoMappingSet;
+
+
+
+			//vector <LocalFunction *> lfList;
+			//vector <int> indexIntoMappingSet;
+			//vector <double> localFunctionValue;
 
 //			LocalFunction
 	};

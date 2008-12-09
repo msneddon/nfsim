@@ -74,7 +74,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	return true;
 }
 
-bool TransformationSet::addLocalFunctionReference(TemplateMolecule *t, string PointerName, int type)
+bool TransformationSet::addLocalFunctionReference(TemplateMolecule *t, string PointerName, int scope)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	int reactantIndex = find(t);
@@ -86,7 +86,7 @@ bool TransformationSet::addLocalFunctionReference(TemplateMolecule *t, string Po
 		return false;
 	}
 
-	Transformation *transformation = TransformationFactory::genLocalFunctionReference(PointerName,type,t);
+	Transformation *transformation = TransformationFactory::genLocalFunctionReference(PointerName,scope,t);
 	transformations[reactantIndex].push_back(transformation);
 	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
 	t->addMapGenerator(mg);

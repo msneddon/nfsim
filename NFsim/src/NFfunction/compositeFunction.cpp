@@ -207,12 +207,21 @@ void CompositeFunction::finalizeInitialization(System *s)
 
 }
 
+int CompositeFunction::getNumOfArgs() const {
+	return this->n_args;
+}
+string CompositeFunction::getArgName(int aIndex) const {
+	return this->argNames[aIndex];
+}
+
+
+
 void CompositeFunction::updateParameters(System *s)
 {
-
-
-
-
+	cout<<"Updating parameters for function: "<<name<<endl;
+	for(unsigned int i=0; i<n_params; i++) {
+		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
+	}
 }
 
 void CompositeFunction::prepareForSimulation(System *s)
@@ -277,6 +286,49 @@ void CompositeFunction::printDetails(System *s) {
 
 	if(p!=0)
 		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+
+
+
+//	cout<<"trying something new..."<<endl;
+//	Molecule ** molList = new Molecule *[2];
+//	molList[0] = s->getMoleculeTypeByName("Receptor")->getMolecule(0);
+//	molList[1] = s->getMoleculeTypeByName("Receptor")->getMolecule(1);
+//	int *scope = new int[1];
+//	scope[0]=0;
+//	scope[1]=1;
+//
+//	double x = this->evaluateOn(molList,scope);
+//	cout<<"got final value: "<<x<<endl;
+//
+//	exit(1);
+}
+
+
+
+void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
+
+	for(int i=0; i<n_lfs; i++) {
+		lfs[i]->addTypeIMoleculeDependency(mt);
+	}
+
+//		cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
+//					this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
+//					cout<<"answer: "<<this->refLfValues[i]<<endl;
+//				}
+//
+//				//for (n_refLfs)  set the value by calling the correct local function to evaluate on the specified scope
+//				//which we reference through the given molList.
+//				//this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
+//
+//			} else {
+//
+//				cout<<"Error evaluating composite function: "<<name<<endl;
+//				cout<<"This function depends on local functions, but you gave no molecules"<<endl;
+//				cout<<"or scope when calling this function.  Time to quit."<<endl;
+//				exit(1);
+//		}
+//
+//	}
 }
 
 
@@ -293,6 +345,15 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope) {
 		cout<<"evaluating composite function with local dependencies."<<endl;
 		if(molList!=0 && scope!=0) {
 
+			for(int i=0; i<n_refLfs; i++) {
+				cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
+				this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
+				cout<<"answer: "<<this->refLfValues[i]<<endl;
+			}
+
+			//for (n_refLfs)  set the value by calling the correct local function to evaluate on the specified scope
+			//which we reference through the given molList.
+			//this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
 
 		} else {
 

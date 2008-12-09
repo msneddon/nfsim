@@ -907,7 +907,7 @@ bool NFinput::FindReactionRuleSymmetry(
 				return false;
 			} else {
 				site1 = pDeleteBond->Attribute("site1");
-				site2 = pDeleteBond->Attribute("site2");
+
 			}
 
 			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
@@ -1541,6 +1541,7 @@ bool NFinput::initReactionRules(
 						//check whether or not we have any arguments to determine if we are
 						//a local or global function...
 						bool isGlobal = true;
+						vector <string> funcArgs;
 						TiXmlElement *pListOfArgs = pRateLaw->FirstChildElement("ListOfArguments");
 						if(pListOfArgs) {
 							TiXmlElement *pArg;
@@ -1554,6 +1555,8 @@ bool NFinput::initReactionRules(
 								string argId = pArg->Attribute("id");
 								string argType = pArg->Attribute("type");
 								string argValue = pArg->Attribute("value");
+								funcArgs.push_back(argId);
+
 								cout<<"found argument:"<<argId<<" of type "<<argType<<" which points to "<<argValue<<endl;
 								isGlobal=false;
 
@@ -1564,11 +1567,12 @@ bool NFinput::initReactionRules(
 								if(comps.find(argValue)!=comps.end()){
 									cout<<"found ref to species"<<endl;
 									component c = comps.find(argValue)->second;
-									ts->addLocalFunctionReference(c.t,argId,LocalFunctionReference::SPECIES_FUNCTION);
+									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
 								}
 
 								if(reactants.find(argValue)!=reactants.end()) {
-									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
+
+									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
 									cout<<"found it!"<<endl;
 								}
 								//ts->addLocalFunctionReference(t,argValue,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
@@ -1576,6 +1580,12 @@ bool NFinput::initReactionRules(
 
 
 							}
+						}
+
+
+						cout<<"found args (in vector):"<<endl;
+						for(int i=0; i<funcArgs.size(); i++) {
+							cout<<funcArgs.at(i)<<endl;
 						}
 
 
@@ -1605,13 +1615,28 @@ bool NFinput::initReactionRules(
 							cout<<"found function named: "<<functionName<<endl;
 							LocalFunction *lf = s->getLocalFunctionByName(functionName);
 							if(lf!=NULL) {
-								ts->finalize();
+								cout<<"Error!! call a local function through a composite function always!"<<endl;
+								cout<<"DOR rxn should never directly call a local function."<<endl;
+								exit(1);
+
+
+								//ts->finalize();
 								//r = new DORrxnClass(rxnName,gf,ts,s);
 							} else {
 
 								cout<<"Must be a composite local function"<<endl;
+								ts->finalize();
 
-								continue;
+								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
+								r=new DORRxnClass(rxnName,1,ts,cf,funcArgs);
+										//string name,
+										//double baseRate,
+										//TransformationSet *transformationSet,
+										//CompositeFunction *function,
+										//vector <string> &lfArgumentPointerNameList);
+
+
+								//continue;
 							}
 						}
 
@@ -2036,7 +2061,7 @@ TemplateMolecule *NFinput::readPattern(
 						string compStateValue = pComp->Attribute("state");
 
 						//Make sure the given state is allowed (we allow for wildcards...)
-						if(compStateValue!="*") {
+						if(compStateValue!="*" && compStateValue!="?") {
 							if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
 								cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
 								cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;

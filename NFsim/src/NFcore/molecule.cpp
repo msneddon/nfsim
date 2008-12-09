@@ -130,8 +130,9 @@ void Molecule::updateRxnMembership()
 
 void Molecule::updateTypeIIFunctions()
 {
+	//cout<<"exit!!"<<endl; exit(1);
 	for(int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
-//		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this);
+		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this, LocalFunction::SPECIES);
 	}
 }
 void Molecule::updateDORRxnValues()
@@ -239,6 +240,7 @@ void Molecule::printDetails() const
 		cout<<endl;
 	}
 
+	cout.flush();
 	if(parentMoleculeType->getNumOfTypeIFunctions()>0) {
 		cout<<"      loc funcs:";
 		for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {

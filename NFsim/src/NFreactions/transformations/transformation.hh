@@ -130,20 +130,20 @@ namespace NFcore
 
 	class LocalFunctionReference : public Transformation {
 		public:
-			LocalFunctionReference(string PointerName, int type, TemplateMolecule *tm);
+			LocalFunctionReference(string PointerName, int scope, TemplateMolecule *tm);
 			virtual ~LocalFunctionReference() {};
 			virtual void apply(Mapping *m, MappingSet **ms) {};
 			virtual int getComponentIndex() const { return -1; };
 
-			int getFunctionType() const {return type; };
 			TemplateMolecule *getTemplateObject() const {return tm;};
 			string getPointerName() const { return PointerName; };
+			int getFunctionScope() const {return scope; };
 
 			static const unsigned int SPECIES_FUNCTION=0;
 			static const unsigned int SINGLE_MOLECULE_FUNCTION=1;
 		protected:
 			string PointerName;
-			int type;
+			int scope;
 			TemplateMolecule *tm;
 	};
 
