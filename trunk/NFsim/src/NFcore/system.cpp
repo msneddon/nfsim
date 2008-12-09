@@ -863,9 +863,8 @@ void System::addLocalFunction(LocalFunction *lf) {
 
 void System::evaluateAllLocalFunctions() {
 
-	/*
 	//Don't do all the work if we don't actually have to...
-	if(localFunctions.size()==0) return;
+/*	if(localFunctions.size()==0) return;
 
 	cout<<"Evaluating all local functions here in System..."<<endl;
 
@@ -926,6 +925,9 @@ void System::evaluateAllLocalFunctions() {
 	//reactant trees of DOR reactions.
 
 	 */
+
+
+	//exit(1);
 }
 
 
@@ -1036,12 +1038,17 @@ void System::updateSystemWithNewParameters() {
 	}
 
 	//Update all local functions
-
+	for(unsigned int i=0; i<this->localFunctions.size(); i++) {
+	//	localFunctions.at(i)->updateParameters(this);
+	}
 
 	//Update all composite functions
 	for(unsigned int i=0; i<this->compositeFunctions.size(); i++) {
 		compositeFunctions.at(i)->updateParameters(this);
 	}
+
+	this->evaluateAllLocalFunctions();
+
 
 	//Update all reactions
 

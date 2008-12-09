@@ -201,6 +201,7 @@ void BasicRxnClass::prepareForSimulation()
 
 void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 {
+
 	//First a bit of error checking...
 	if(reactantPos<0 || reactantPos>=n_reactants || m==NULL)
 	{

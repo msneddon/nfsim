@@ -3,7 +3,7 @@
 
 #include "reaction.hh"
 
-#define DEBUG_MESSAGE 0
+#define DEBUG_MESSAGE 1
 
 
 using namespace std;
@@ -15,11 +15,11 @@ DORRxnClass::DORRxnClass(
 		string name,
 		double baseRate,
 		TransformationSet *transformationSet,
-		vector <LocalFunction *> &lfList,
+		CompositeFunction *function,
 		vector <string> &lfArgumentPointerNameList) :
 	ReactionClass(name,baseRate,transformationSet)
 {
-/*	if(DEBUG_MESSAGE)cout<<"ok, here we go..."<<endl;
+	cout<<"ok, here we go..."<<endl;
 	vector <TemplateMolecule *> dorMolecules;
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,7 @@ DORRxnClass::DORRxnClass(
 			Transformation *transform = transformationSet->getTransformation(r,i);
 			cout<<"found transformation of type: "<<transform->getType()<<" for reactant: "<<r<<endl;
 			if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
+
 				if(DORreactantIndex==-1) { DORreactantIndex=r; }
 				else if(DORreactantIndex!=r) {
 					cout<<"Error when creating DORRxnClass: "<<name<<endl;
@@ -51,7 +52,7 @@ DORRxnClass::DORRxnClass(
 	}
 
 	if(DEBUG_MESSAGE)cout<<"I determined that the DOR reactant is in fact: "<<DORreactantIndex<<endl;
-	if(DEBUG_MESSAGE)cout<<"N_reactants: "<<transformationSet->getNreactants();
+	if(DEBUG_MESSAGE)cout<<"N_reactants: "<<transformationSet->getNreactants()<<endl;
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 2: Some bookkeeping so that we can quickly get the function values from a mapping set
@@ -65,13 +66,22 @@ DORRxnClass::DORRxnClass(
 	for(int i=0; i<transformationSet->getNumOfTransformations(DORreactantIndex); i++) hasMatched[i]=false;
 
 	//make sure that we have the right number of functions and argument names
-	if(lfList.size()!=lfArgumentPointerNameList.size()) {
+	if(function->getNumOfArgs()!=lfArgumentPointerNameList.size()) {
 		cout<<"Error when creating DORRxnClass: "<<name<<endl;
-		cout<<"LocalFunctionList size and LocalFunctionArguementPointerNameList size do not match!"<<endl;
+		cout<<"Number of arguments and LocalFunctionArgumentPointerNameList size do not match!"<<endl;
 		exit(1);
 	}
-	for(int i=0; i<(signed)lfList.size(); i++) {
-		cout<<"Received local function: "<< lfList.at(i)->getNiceName()<<endl;
+
+
+	//
+	this->n_argMolecules=lfArgumentPointerNameList.size();
+	argIndexIntoMappingSet =  new int [n_argMolecules];
+	argMappedMolecule = new Molecule *[n_argMolecules];
+	argScope = new int [n_argMolecules];
+
+
+	for(int i=0; i<(int)lfArgumentPointerNameList.size(); i++) {
+		cout<<"Received local function arg: "<< lfArgumentPointerNameList.at(i)<<endl;
 		cout<<" Takes as argument this thang: "<< lfArgumentPointerNameList.at(i)<<endl;
 
 		//Now search for the function argument...
@@ -82,12 +92,19 @@ DORRxnClass::DORRxnClass(
 				LocalFunctionReference *lfr = static_cast<LocalFunctionReference*>(transform);
 				if(lfr->getPointerName()==lfArgumentPointerNameList.at(i)) {
 					cout<<"Found a match here!"<<endl;
+					cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
 					//If we got here, we found a match, so remember the index of the transformation
 					//so we can quickly get the value of the function for any mapping object we try
 					//to push on the reactant Tree.
-					this->lfList.push_back(lfList.at(i));
-					localFunctionValue.push_back(0);
-					indexIntoMappingSet.push_back(k);
+
+					argIndexIntoMappingSet[i] =  k;
+					argMappedMolecule[i] = 0;
+					argScope[i] = lfr->getFunctionScope();
+
+
+					//this->lfList.push_back(lfList.at(i));
+					//localFunctionValue.push_back(0);
+					//indexIntoMappingSet.push_back(k);
 					hasMatched[k]=true;
 					match=true;
 				}
@@ -133,8 +150,22 @@ DORRxnClass::DORRxnClass(
 	//Initialize a to zero
 	this->a=0;
 
+
+	//Set the actual function
+	this->cf = function;
+
+	//Add type I molecule dependencies, so that when this function
+	//is reevaluated on a molecule, the molecule knows to update this reaction
+	for(unsigned int r=0; r<n_reactants; r++) {
+		cf->addTypeIMoleculeDependency(this->reactantTemplates[r]->getMoleculeType());
+	}
+
+
+
+/*
 */
 	// i think we be done now
+	//cout<<"\nexit\n"; exit(0);
 }
 DORRxnClass::~DORRxnClass() {
 
@@ -150,6 +181,36 @@ void DORRxnClass::init() {
 	{
 		reactantTemplates[r]->getMoleculeType()->addReactionClass(this,r);
 	}
+}
+
+
+
+void DORRxnClass::remove(Molecule *m, unsigned int reactantPos) {
+
+	cout<<"removing from a DOR!!"<<endl;
+	if(reactantPos==(unsigned)this->DORreactantIndex) {
+		if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
+
+		// handle the DOR reactant
+		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+		if(m->getRxnListMappingId(rxnIndex)>=0) {
+			if(DEBUG_MESSAGE)cout<<"was in the tree, so we should remove"<<endl;
+			reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		}
+	} else {
+
+		// handle it normally...
+		if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
+		ReactantList *rl = reactantLists[reactantPos];
+		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+		if(m->getRxnListMappingId(rxnIndex)>=0) {
+			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		}
+	}
+	if(DEBUG_MESSAGE)cout<<"finished removing"<<endl;
+
 }
 
 
@@ -217,14 +278,30 @@ unsigned int DORRxnClass::getReactantCount(unsigned int reactantIndex) const
 	if(reactantIndex==(unsigned)this->DORreactantIndex) {
 		return reactantTree->size();
 	}
-	reactantLists[reactantIndex]->size();
+	return reactantLists[reactantIndex]->size();
 }
 
 //This function takes a given mappingset and looks up the value of its local
 //functions based on the local functions that were defined
 double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 {
-	/*//Go through each function, and set the value of the function
+	//Go through each function, and set the value of the function
+	//this->argMappedMolecule
+
+	cout<<"dor is reevaluating its function."<<endl;
+
+	//Grab the molecules needed for the local function to evaluate
+	for(int i=0; i<this->n_argMolecules; i++) {
+		cout<<"here."<<endl;
+		cout<<argMappedMolecule[i]<<"  "<<argIndexIntoMappingSet[i]<<endl;
+		this->argMappedMolecule[i] = ms->get(this->argIndexIntoMappingSet[i])->getMolecule();
+	}
+
+	cout<<"done setting molecules, so know calling the composite function evaluate method."<<endl;
+	return this->cf->evaluateOn(argMappedMolecule,argScope);
+
+	/*Molecule
+
 	for(int i=0; i<(signed)lfList.size(); i++) {
 		Molecule *molObject = ms->get(this->indexIntoMappingSet.at(i))->getMolecule();
 		int index = lfList.at(i)->getIndexOfTypeIFunctionValue(molObject);

@@ -58,6 +58,7 @@ LocalFunction::LocalFunction(System *s,
 {
 	cout<<"Attempting to create local function: "<<name<<endl;
 
+	//Some checks to make sure we are doing things ok
 	if(args.size()>1) {
 		cerr<<"For efficiency, local functions currently support a maximum of 1 argument."<<endl;
 		cerr<<"Quitting now."<<endl;
@@ -108,12 +109,58 @@ LocalFunction::LocalFunction(System *s,
 	}
 	nicename+=")";
 
-
-	cout<<nicename<<endl;
-
-
-
 	p=0;
+
+
+	//Identify the type II molecules - those molecules that when changed
+	//cause this function to change
+	vector <TemplateMolecule *> tmList;
+	vector <MoleculeType *> addedMoleculeTypes;
+
+	cout<<"Now remembering type II molecules..."<<endl;
+	bool hasAdded = false;
+	for(unsigned int i=0; i<n_varRefs; i++) {
+		if(varRefScope[i]==-1) {//handle global scopes
+			TemplateMolecule::traverse(s->getObservableByName(this->varObservableNames[i])->getTemplateMolecule(),tmList);
+		} else {
+			TemplateMolecule::traverse(this->varLocalObservables[i]->getTemplateMolecule(),tmList);
+		}
+		//cout<<"traversed obs "<<i<<" and found: "<<tmList.size()<<" templates\n";
+
+		for(unsigned int t=0; t<tmList.size(); t++) {
+			MoleculeType *mt = tmList.at(t)->getMoleculeType();
+
+			//Make sure we haven't added this molecule type before
+			hasAdded = false;
+			for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+				if(addedMoleculeTypes.at(m)==mt) {
+					hasAdded=true; break;
+				}
+			}
+			if(!hasAdded) {
+				addedMoleculeTypes.push_back(mt);
+			//	cout<<"remembering: "<<mt->getName()<<endl;
+			}
+			//else {
+			//	cout<<"ignoring: "<<mt->getName()<<endl;
+			//}
+		}
+		tmList.clear();
+	}
+
+	//Now actually remember them (and make sure they remember us...)
+	for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+		int index = addedMoleculeTypes.at(m)->addLocalFunc_TypeII(this);
+		this->typeII_mol.push_back(addedMoleculeTypes.at(m));
+		this->typeII_localFunctionIndex.push_back(index);
+	}
+
+
+
+
+
+
+
 
 
 /*
@@ -274,6 +321,18 @@ void LocalFunction::printDetails(System *s)
 		}
 	}
 
+	cout<<"   -Type II Molecules (this function depends on these molecules):"<<endl;
+	for(unsigned int i=0; i<typeII_mol.size(); i++) {
+		cout<<"         "<<typeII_mol.at(i)->getName()<<endl;
+	}
+
+	cout<<"   -Type I Molecules (molecules in a dor rxn that depend on this function):"<<endl;
+		for(unsigned int i=0; i<typeI_mol.size(); i++) {
+			cout<<"         "<<typeI_mol.at(i)->getName()<<endl;
+		}
+
+
+
 	if(p!=0)
 		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
 }
@@ -322,9 +381,158 @@ void LocalFunction::prepareForSimulation(System *s) {
 		}
 }
 
+
+double LocalFunction::getValue(Molecule *m, int scope)
+{
+	cout<<"getting local function value: "<<this->nicename<<endl;
+	cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
+
+	int SPECIES = 0;
+	int MOLECULE = 1;
+
+	if(scope==SPECIES) {
+			cout<<"Species scope"<<endl;
+
+			for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+				if(m->getMoleculeType()==typeI_mol.at(ti)) {
+					return m->getLocalFunctionValue(typeI_localFunctionIndex.at(ti));
+				}
+			}
+
+	} else if(scope==MOLECULE) {
+			cout<<"Molecule scope."<<endl;
+
+			//For each of our variables
+			for(unsigned int i=0; i<n_varRefs; i++) {
+				if(varLocalObservables[i]!=0) {   //If it is local
+					varLocalObservables[i]->clear();  //clear it first
+					if(varLocalObservables[i]->isObservable(m)) {  //recompute observable
+						varLocalObservables[i]->straightAdd();
+					}
+				}
+			}
+
+
+			//Recalculate the function
+			double newValue = FuncFactory::Eval(p);
+
+			return newValue;
+
+
+		} else {
+			cout<<"Internal error in LocalFunction::evaluateOn()! trying to evaluate a function with unknown scope."<<endl;
+			exit(1);
+
+		}
+
+
+
+}
+
+
+
+//This only accepts one molecule, because there can only be one argument
+//if we can have multiple arguments, this must be extended to have an
+//array of molecules (as in a composite function evaluation)
 double LocalFunction::evaluateOn(Molecule *m, int scope) {
 
 	cout<<"evaluating local function: "<<this->nicename<<endl;
+	this->printDetails(m->getMoleculeType()->getSystem());
+
+
+	cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
+
+	int SPECIES = 0;
+	int MOLECULE = 1;
+
+	if(scope==SPECIES) {
+		cout<<"evaluating on Species scope"<<endl;
+
+		list <Molecule *> molList;
+		list <Molecule *>::iterator molIter;
+		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+
+
+		//First, clear out the observables
+		for(unsigned int i=0; i<n_varRefs; i++) {
+			if(varLocalObservables[i]!=0) {
+				varLocalObservables[i]->clear();
+			}
+		}
+
+
+		//recompute the observables
+		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+			for(unsigned int i=0; i<n_varRefs; i++) {
+				if(varLocalObservables[i]!=0) {   //If it is local
+					if(varLocalObservables[i]->isObservable((*molIter))) {  //recompute observable
+						varLocalObservables[i]->straightAdd();
+					}
+				}
+			}
+		}
+
+		//evaluate the function
+		double newValue = FuncFactory::Eval(p);
+
+
+		//Here we have to notify the type I molecules that this function has changed
+		//Update the molecules (Type I) that needed this function evaluated...
+		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+			for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+				if((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
+					(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+					(*molIter)->updateDORRxnValues();
+				}
+			}
+		}
+
+		this->printDetails(m->getMoleculeType()->getSystem());
+		return newValue;
+
+
+
+	} else if(scope==MOLECULE) {
+		cout<<"evaluating on Molecule scope."<<endl;
+
+		//For each of our variables
+		for(unsigned int i=0; i<n_varRefs; i++) {
+			if(varLocalObservables[i]!=0) {   //If it is local
+				varLocalObservables[i]->clear();  //clear it first
+				if(varLocalObservables[i]->isObservable(m)) {  //recompute observable
+					varLocalObservables[i]->straightAdd();
+				}
+			}
+		}
+
+
+		//Recalculate the function
+		double newValue = FuncFactory::Eval(p);
+
+		//Update the function values
+		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+			if(m->getMoleculeType()==typeI_mol.at(ti)) {
+				m->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+				m->updateDORRxnValues();
+			}
+		}
+
+		//return
+
+
+		this->printDetails(m->getMoleculeType()->getSystem());
+		return newValue;
+
+
+	} else {
+		cout<<"Internal error in LocalFunction::evaluateOn()! trying to evaluate a function with unknown scope."<<endl;
+		exit(1);
+
+	}
+
+
+
+
 
 
 //	if(evaluationLevel==0) {
@@ -566,6 +774,8 @@ LocalFunction::~LocalFunction() {
 }
 
 
+
+
 /*void LocalFunction::setEvaluationLevel(int eLevel) {
 
 	if(eLevel<0 || eLevel>1) {
@@ -581,7 +791,7 @@ LocalFunction::~LocalFunction() {
 //This function is generally called by a DOR reaction class once the
 //DOR reaction class has established that the value of this function
 //is required for some moleculetype...
-/*void LocalFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
+void LocalFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 
 	//First, make sure we haven't added this bad boy yet
 	for(unsigned int i=0; i<this->typeI_mol.size(); i++) {
@@ -592,7 +802,7 @@ LocalFunction::~LocalFunction() {
 	int index = mt->addLocalFunc_TypeI(this);
 	this->typeI_mol.push_back(mt);
 	this->typeI_localFunctionIndex.push_back(index);
-}*/
+}
 
 /*
 int LocalFunction::getIndexOfTypeIFunctionValue(Molecule *m) {

@@ -116,7 +116,7 @@ namespace NFcore
 				Adds a create molecule rule, but has not been implemented yet.
 				@author Michael Sneddon
 			*/
-			bool addLocalFunctionReference(TemplateMolecule *t, string PointerName, int type);
+			bool addLocalFunctionReference(TemplateMolecule *t, string PointerName, int scope);
 
 
 			/*!
