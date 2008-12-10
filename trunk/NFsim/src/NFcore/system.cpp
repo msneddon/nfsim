@@ -864,7 +864,7 @@ void System::addLocalFunction(LocalFunction *lf) {
 void System::evaluateAllLocalFunctions() {
 
 	//Don't do all the work if we don't actually have to...
-/*	if(localFunctions.size()==0) return;
+	if(localFunctions.size()==0) return;
 
 	cout<<"Evaluating all local functions here in System..."<<endl;
 
@@ -878,16 +878,6 @@ void System::evaluateAllLocalFunctions() {
 		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++) {
 			Molecule *mol = (*molTypeIter)->getMolecule(m);
 
-			//evaluate all functions on this Molecule that are local to a single molecule
-			for(unsigned int l=0; l<localFunctions.size(); l++) {
-				if(localFunctions.at(l)->getEvaluationLevel()>0) {
-					cout<<"--------------Evaluating local function on single molecule..."<<endl;
-					double val = localFunctions.at(l)->evaluateOn(mol);
-					cout<<"     value of function: "<<val<<endl;
-				}
-			}
-
-
 			//Only continue if we haven't yet evaluated on this complex
 			if(!mol->hasEvaluatedMolecule) {
 
@@ -896,11 +886,9 @@ void System::evaluateAllLocalFunctions() {
 
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
-					if(localFunctions.at(l)->getEvaluationLevel()==0) {
-						cout<<"--------------Evaluating local function on species..."<<endl;
-						double val = localFunctions.at(l)->evaluateOn(mol);
-						cout<<"     value of function: "<<val<<endl;
-					}
+						//cout<<"--------------Evaluating local function on species..."<<endl;
+						double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
+						//cout<<"     value of function: "<<val<<endl;
 
 				}
 
@@ -920,14 +908,6 @@ void System::evaluateAllLocalFunctions() {
 	}
 
 
-
-	//Now, since we changed things around, we have to update the molecule positions in the
-	//reactant trees of DOR reactions.
-
-	 */
-
-
-	//exit(1);
 }
 
 
@@ -1039,7 +1019,7 @@ void System::updateSystemWithNewParameters() {
 
 	//Update all local functions
 	for(unsigned int i=0; i<this->localFunctions.size(); i++) {
-	//	localFunctions.at(i)->updateParameters(this);
+		localFunctions.at(i)->updateParameters(this);
 	}
 
 	//Update all composite functions
@@ -1055,7 +1035,7 @@ void System::updateSystemWithNewParameters() {
 	//Update Atot (the total propensity of the system)
 	this->recompute_A_tot();
 
-	cout<<"warning - I did not do anything in the system update!"<<endl;
+	cout<<"warning - only functions and rxns that depend on functions are updated!"<<endl;
 }
 void System::printAllParameters() {
 	if(paramMap.size()==0) cout<<"no system parameters to print."<<endl;

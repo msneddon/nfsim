@@ -227,7 +227,7 @@ ReactantTree::~ReactantTree()
 MappingSet * ReactantTree::pushNextAvailableMappingSet() {
 	//Check that we didn't go over the max - if we did we have to expand our tree...
 	if(n_mappingSets >= maxElementCount) {
-		cout<<"-------------\nIn ReactantTree!!!  Adding more than I can take, so I'm expanding! "<<endl;
+		//cout<<"-------------\nIn ReactantTree!!!  Adding more than I can take, so I'm expanding! "<<endl;
 		expandTree(maxElementCount*2);
 	}
 
@@ -315,7 +315,7 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 
 	//Go to that position in the tree, and work up and out
 	unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
-	if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
+	//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
 
 	//Get the rate factor from the bottom of the tree and set it to zero
 	double rateFactor = leftRateFactorSum[cn];

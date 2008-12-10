@@ -1,0 +1,56 @@
+#  Run NF script for the Assistance Neighborhood model of chemoreceptors
+#  Using this run script, you can present the system with external stimuli
+#  if the stimuli is encoded in a defined parameter.  This lets you measure
+#  response, as in Fig 2 of Hansen, Endres, & Wingreen, PLOS Comp. Bio, 4,(1) 2008.
+#
+
+
+#set all NFsim parameters here
+-xml assistanceNeighborhood.xml
+#-dump [0:60:3300;]->dump/  #dumps are useful for calculating avg activity after the simulation
+#-v
+-utl 2
+
+
+#begin the script
+begin
+
+  echo running AN Model of Chemotaxis
+
+  set AspConc 0.0
+  update
+
+  eq 200
+  sim 300 60
+
+  set AspConc 0.01
+  update
+  echo adding 0.01mM Aspartate
+  sim 600 60
+  
+  set AspConc 0.1
+  update
+  echo adding 0.1mM Aspartate
+  sim 600 60
+  
+  set AspConc 1.0
+  update
+  echo adding 1.0mM Aspartate
+  sim 600 60
+  
+  set AspConc 10.0
+  update
+  echo adding 10mM Aspartate
+  sim 600 60
+  
+  set AspConc 100
+  update
+  echo adding 100mM Aspartate
+  sim 600 60
+ 
+  #output the rxns when we are finished
+  print rxns
+  
+  
+  echo done.
+end

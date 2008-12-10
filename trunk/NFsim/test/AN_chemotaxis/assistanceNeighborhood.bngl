@@ -1,104 +1,151 @@
+# Example of the capabilities of NFsim.  This is essentially the Assistance
+# Neighborhood model (Hansen, Endres, & Wingreen, PLOS Comp. Bio, 4,(1) 2008)
+# of bacterial chemoreceptors.  The only difference is that in the original
+# study, the authors assume saturated methylation and demethylation kinetics
+# of CheR/CheB, so that the rates do not depend on the number of available
+# enzymatic sites.  For simplicity, and to demonstrate functions in NFsim,
+# we allow the rates to vary with the number of available sites.  Because
+# the rates now vary with available sites, we have to scale the catalytic
+# rates or CheR/CheB by the average number of available sites so that the
+# time scales roughly match the original study.  However, this does not
+# affect steady state activity or qualitative behaviour of the system.
+#
+
+
 begin parameters
- V 1.41e-15 #litres
- Na 6.02e23
 
-pOn 0.4
+	#CheR/CheB binding and unbinding the tether
+	#R & B are not treated as distinct molecules in the original study, so
+	#they are represented as states of the receptor (either bound or not
+	#bound).  That is why the binding rates are in units per second.
+	konR 0.01 #s^-1
+	konB 0.01 #s^-1
+	koffR 0.1 #s^-1
+	koffB 0.1 #s^-1
+	
+	#Methylation and demethylation rates.  Because we do not assume saturated
+	#kinetics (so that the absolute rate depends on the number of available
+	#enzymatic sites) we add a scaling factor so that the "average" rate is
+	#roughly similar to the rates used in the original study.  The scaling factor
+	#is the average neighborhood size (5.4211) times the avg number of sites
+	#available for methylation or demethylation (~6 available to cheR, ~3 available
+	#to cheB)
+	kr 0.1/(5.4211*6) #scaled by avg neighborhood size times avg sites available
+	kb 0.2/(5.4211*3)
+	
+	
+	#Free energy of dimers for different methylation levels, defined in
+	#original study
+	e0 1.0
+	e1 0.5
+	e2 0.0
+	e3 -0.3
+	e4 -0.6
+	e5 -0.85
+	e6 -1.1
+	e7 -2.0
+	e8 -3.0
+	
+	
+	#Binding constants of TAR and TSR to attractant Aspartate, also defined
+	#in the original study
+	Asp_Koff_TAR  0.02 #mM
+	Asp_Kon_TAR   0.5  #mM
+	Asp_Koff_TSR  100  #mM
+	Asp_Kon_TSR   10^6 #mM
+	
+	#Tar and Tsr per cluster
+	TAR_COUNT 6
+	TSR_COUNT 13
+	
+	#Initial aspartate concentration
+	AspConc 0 #mM
 
-konR 0.2
-konB 0.2
-koffR 0.1
-koffB 0.1
-
-kr 0.3
-kb 0.4
+	#Number of clusters we want to simulate.  Assuming a cell has ~16,000 chemoreceptors, that
+	#gives us 420 clusters of 19 receptor dimers
+	ClusterCount 100
 
 end parameters
 
 begin species
 
- ##  Receptor Dimers (named here simply as receptors)
- Receptor(me~3,r~OPEN,b~BOUND,t1,t2,t3,t4,t5,t6) 100
- 
+  ## Clusters of 19 Receptor Dimers, connected in a hexagonal lattice as in
+  ## the original study.
+  RD(m~3,r~OPEN,b~OPEN,t1,t2,t3!1,t4!4,t5!3,t6).RD(m~3,r~OPEN,b~OPEN,t1,t2,t3!2,t4!6,t5!5,t6!1).RD(m~3,r~OPEN,b~OPEN,t1,t2,t3,t4!8,t5!7,t6!2).RD(m~3,r~OPEN,b~OPEN,t1,t2!3,t3!9,t4!13,t5!12,t6).RD(m~3,r~OPEN,b~OPEN,t1!4,t2!5,t3!10,t4!15,t5!14,t6!9).RD(m~3,r~OPEN,b~OPEN,t1!6,t2!7,t3!11,t4!17,t5!16,t6!10).RD(m~3,r~OPEN,b~OPEN,t1!8,t2,t3,t4!19,t5!18,t6!11).RD(m~3,r~OPEN,b~OPEN,t1,t2!12,t3!20,t4!24,t5,t6).RD(m~3,r~OPEN,b~OPEN,t1!13,t2!14,t3!21,t4!26,t5!25,t6!20).RD(m~3,r~OPEN,b~OPEN,t1!15,t2!16,t3!22,t4!28,t5!27,t6!21).RD(m~3,r~OPEN,b~OPEN,t1!17,t2!18,t3!23,t4!30,t5!29,t6!22).RD(m~3,r~OPEN,b~OPEN,t1!19,t2,t3,t4,t5!31,t6!23).RD(m~3,r~OPEN,b~OPEN,t1!24,t2!25,t3!32,t4!35,t5,t6).RD(m~3,r~OPEN,b~OPEN,t1!26,t2!27,t3!33,t4!37,t5!36,t6!32).RD(m~3,r~OPEN,b~OPEN,t1!28,t2!29,t3!34,t4!39,t5!38,t6!33).RD(m~3,r~OPEN,b~OPEN,t1!30,t2!31,t3,t4,t5!40,t6!34).RD(m~3,r~OPEN,b~OPEN,t1!35,t2!36,t3!41,t4,t5,t6).RD(m~3,r~OPEN,b~OPEN,t1!37,t2!38,t3!42,t4,t5,t6!41).RD(m~3,r~OPEN,b~OPEN,t1!39,t2!40,t3,t4,t5,t6!42) ClusterCount
  
 end species
 
+
+begin observables
+
+  ##Observables to keep track of the methylation level
+  ##of individual receptors and receptors in the cluster
+  Molecules R0 RD(m~0)
+  Molecules R1 RD(m~1)
+  Molecules R2 RD(m~2)
+  Molecules R3 RD(m~3)
+  Molecules R4 RD(m~4)
+  Molecules R5 RD(m~5)
+  Molecules R6 RD(m~6)
+  Molecules R7 RD(m~7)
+  Molecules R8 RD(m~8)
+end observables
+
+
+
+begin functions
+
+	#Keeps track of the methylation level for a single dimer, so
+	#that the rates of methylation and demethylation can vary according
+	#to the number available
+	MethLevel(x) = 1*R1(x)+2*R2(x)+3*R3(x)+4*R4(x)+5*R5(x)+6*R6(x)+7*R7(x)+8*R8(x)
+
+    #activity function, the probability for the kinase to be on, defined
+    #as in the original study
+    pOn(x) = 1/(1+(exp(e0*R0(x)+e1*R1(x)+e2*R2(x)+e3*R3(x)+e4*R4(x)+e5*R5(x)+e6*R6(x)+e7*R7(x)+e8*R8(x))*((1.0+(AspConc/Asp_Koff_TAR))/(1.0+(AspConc/Asp_Kon_TAR)))^TAR_COUNT*((1.0+(AspConc/Asp_Koff_TSR)) / (1.0+(AspConc/Asp_Kon_TSR)))^TSR_COUNT))
+  
+    #simplified activity function, for reference
+	#pOn = 1.0 / (1.0 + (exp(FreeEnergyOffsetSum) * TAR_LOG_TERM * TSR_LOG_TERM));
+
+end functions
+
+
+
+
 begin reaction rules
-
-##  R/B binding to a receptor tether
-Receptor(r~OPEN,b~OPEN) <-> Receptor(r~BOUND,b~OPEN) konR,koffR
-Receptor(r~OPEN,b~OPEN) <-> Receptor(r~OPEN,b~BOUND) konB,koffB
-
-##  R methylating the bound receptor
-Receptor(me~0,r~BOUND) -> Receptor(me~1,r~BOUND) kr*8*(1-pOn)
-Receptor(me~1,r~BOUND) -> Receptor(me~2,r~BOUND) kr*7*(1-pOn)
-Receptor(me~2,r~BOUND) -> Receptor(me~3,r~BOUND) kr*6*(1-pOn)
-Receptor(me~3,r~BOUND) -> Receptor(me~4,r~BOUND) kr*5*(1-pOn)
-Receptor(me~4,r~BOUND) -> Receptor(me~5,r~BOUND) kr*4*(1-pOn)
-Receptor(me~5,r~BOUND) -> Receptor(me~6,r~BOUND) kr*3*(1-pOn)
-Receptor(me~6,r~BOUND) -> Receptor(me~7,r~BOUND) kr*2*(1-pOn)
-Receptor(me~7,r~BOUND) -> Receptor(me~8,r~BOUND) kr*1*(1-pOn)
-
-##  B demethylating the bound receptor
-Receptor(me~8,r~BOUND) -> Receptor(me~7,r~BOUND) kb*8*pOn
-Receptor(me~7,r~BOUND) -> Receptor(me~6,r~BOUND) kb*7*pOn
-Receptor(me~6,r~BOUND) -> Receptor(me~5,r~BOUND) kb*6*pOn
-Receptor(me~5,r~BOUND) -> Receptor(me~4,r~BOUND) kb*5*pOn
-Receptor(me~4,r~BOUND) -> Receptor(me~3,r~BOUND) kb*4*pOn
-Receptor(me~3,r~BOUND) -> Receptor(me~2,r~BOUND) kb*3*pOn
-Receptor(me~2,r~BOUND) -> Receptor(me~1,r~BOUND) kb*2*pOn
-Receptor(me~1,r~BOUND) -> Receptor(me~0,r~BOUND) kb*1*pOn
-
-#########  Here we have to consider all the different ways that a receptor
-#########  can be methylated or demethylated from a neighbor
-
-## R methylating a neighbor receptor from me=0 to 1
-Receptor(r~BOUND,t1!1).Receptor(me~0,t4!1) -> Receptor(r~BOUND,t1!1).Receptor(me~1,t4!1) kr*8*(1-pOn)
-Receptor(r~BOUND,t2!1).Receptor(me~0,t5!1) -> Receptor(r~BOUND,t2!1).Receptor(me~1,t5!1) kr*8*(1-pOn)
-Receptor(r~BOUND,t3!1).Receptor(me~0,t6!1) -> Receptor(r~BOUND,t3!1).Receptor(me~1,t6!1) kr*8*(1-pOn)
-Receptor(r~BOUND,t4!1).Receptor(me~0,t1!1) -> Receptor(r~BOUND,t4!1).Receptor(me~1,t1!1) kr*8*(1-pOn)
-Receptor(r~BOUND,t5!1).Receptor(me~0,t2!1) -> Receptor(r~BOUND,t5!1).Receptor(me~1,t2!1) kr*8*(1-pOn)
-Receptor(r~BOUND,t6!1).Receptor(me~0,t3!1) -> Receptor(r~BOUND,t6!1).Receptor(me~1,t3!1) kr*8*(1-pOn)
-
-
-## B demethylating a neighbor receptor from me=8 to 7
-Receptor(b~BOUND,t1!1).Receptor(me~8,t4!1) -> Receptor(b~BOUND,t1!1).Receptor(me~7,t4!1) kb*8*pOn
-Receptor(b~BOUND,t2!1).Receptor(me~8,t5!1) -> Receptor(b~BOUND,t2!1).Receptor(me~7,t5!1) kb*8*pOn
-Receptor(b~BOUND,t3!1).Receptor(me~8,t6!1) -> Receptor(b~BOUND,t3!1).Receptor(me~7,t6!1) kb*8*pOn
-Receptor(b~BOUND,t4!1).Receptor(me~8,t1!1) -> Receptor(b~BOUND,t4!1).Receptor(me~7,t1!1) kb*8*pOn
-Receptor(b~BOUND,t5!1).Receptor(me~8,t2!1) -> Receptor(b~BOUND,t5!1).Receptor(me~7,t2!1) kb*8*pOn
-Receptor(b~BOUND,t6!1).Receptor(me~8,t3!1) -> Receptor(b~BOUND,t6!1).Receptor(me~7,t3!1) kb*8*pOn
-
-
-
-$1::Receptor(b~BOUND,t1!1).Receptor(me~??,t4!1) -> $1::Receptor(b~BOUND,t1!1).Receptor(me~--,t4!1) kb*8*pOn
-
-
-
+	
+	##  R/B binding and unbinding to a receptor tether, only one R or B is
+	##  allowed to bind per dimer
+	RD(r~OPEN,b~OPEN) <-> RD(r~BOUND,b~OPEN) konR,koffR
+	RD(r~OPEN,b~OPEN) <-> RD(r~OPEN,b~BOUND) konB,koffB
+	
+	##  R methylating the bound receptor
+	%x::RD%y(m~?,r~BOUND) -> %x::RD%y(m~PLUS,r~BOUND) kr*(8-MethLevel(y))*(1-pOn(x))
+	
+	##  B demethylating the bound receptor
+	%x::RD%y(m~?,b~BOUND) -> %x::RD%y(m~MINUS,b~BOUND) kb*(MethLevel(y))*pOn(x)
+	
+	##  Assistance Neighborhood methylation and demethylation rules
+	%x::RD%y(m~?,t1!1).RD(r~BOUND,t4!1) -> %x::RD%y(m~PLUS,t1!1).RD(r~BOUND,t4!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	%x::RD%y(m~?,t2!1).RD(r~BOUND,t5!1) -> %x::RD%y(m~PLUS,t2!1).RD(r~BOUND,t5!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	%x::RD%y(m~?,t3!1).RD(r~BOUND,t6!1) -> %x::RD%y(m~PLUS,t3!1).RD(r~BOUND,t6!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	%x::RD%y(m~?,t4!1).RD(r~BOUND,t1!1) -> %x::RD%y(m~PLUS,t4!1).RD(r~BOUND,t1!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	%x::RD%y(m~?,t5!1).RD(r~BOUND,t2!1) -> %x::RD%y(m~PLUS,t5!1).RD(r~BOUND,t2!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	%x::RD%y(m~?,t6!1).RD(r~BOUND,t3!1) -> %x::RD%y(m~PLUS,t6!1).RD(r~BOUND,t3!1) kr*(8-MethLevel(y))*(1-pOn(x))
+	
+	%x::RD%y(m~?,t1!1).RD(b~BOUND,t4!1) -> %x::RD%y(m~MINUS,t1!1).RD(b~BOUND,t4!1) kb*(MethLevel(y))*(pOn(x))
+	%x::RD%y(m~?,t2!1).RD(b~BOUND,t5!1) -> %x::RD%y(m~MINUS,t2!1).RD(b~BOUND,t5!1) kb*(MethLevel(y))*(pOn(x))
+	%x::RD%y(m~?,t3!1).RD(b~BOUND,t6!1) -> %x::RD%y(m~MINUS,t3!1).RD(b~BOUND,t6!1) kb*(MethLevel(y))*(pOn(x))
+	%x::RD%y(m~?,t4!1).RD(b~BOUND,t1!1) -> %x::RD%y(m~MINUS,t4!1).RD(b~BOUND,t1!1) kb*(MethLevel(y))*(pOn(x))
+	%x::RD%y(m~?,t5!1).RD(b~BOUND,t2!1) -> %x::RD%y(m~MINUS,t5!1).RD(b~BOUND,t2!1) kb*(MethLevel(y))*(pOn(x))
+	%x::RD%y(m~?,t6!1).RD(b~BOUND,t3!1) -> %x::RD%y(m~MINUS,t6!1).RD(b~BOUND,t3!1) kb*(MethLevel(y))*(pOn(x))
 
 
 end reaction rules
 
 
-begin observables
-  Molecules r0 Receptor(me~0)
-  Molecules r1 Receptor(me~1)
-  Molecules r2 Receptor(me~2)
-  Molecules r3 Receptor(me~3)
-  Molecules r4 Receptor(me~4)
-  Molecules r5 Receptor(me~5)
-  Molecules r6 Receptor(me~6)
-  Molecules r7 Receptor(me~7)
-  Molecules r8 Receptor(me~8)
-end observables
 
-#generate_network({overwrite=>1});
-#generate_network({max_iter=>1,overwrite=>1});
 
-# equilibration
-#simulate_ode({suffix=>equil,t_end=>10000,n_steps=>10,steady_state=>1});
 
-# stochastic simulation
-#simulate_ode({t_end=>200,n_steps=>1000});
-#simulate_ssa({suffix=>ssa,t_end=>100,n_steps=>100});
 
 writeXML();
