@@ -277,7 +277,7 @@ namespace NFcore {
 
 
 			void addTypeIMoleculeDependency(MoleculeType *mt);
-
+			void updateParameters(System *s);
 
 			static const int SPECIES = 0;
 			static const int MOLECULE = 1;

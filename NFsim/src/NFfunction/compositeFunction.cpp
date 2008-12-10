@@ -342,13 +342,13 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope) {
 	//2 evaluate all local functions
 	if(n_lfs>0) {
 
-		cout<<"evaluating composite function with local dependencies."<<endl;
+	//	cout<<"evaluating composite function with local dependencies."<<endl;
 		if(molList!=0 && scope!=0) {
 
 			for(int i=0; i<n_refLfs; i++) {
-				cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
+				//cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
 				this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
-				cout<<"answer: "<<this->refLfValues[i]<<endl;
+				//cout<<"answer: "<<this->refLfValues[i]<<endl;
 			}
 
 			//for (n_refLfs)  set the value by calling the correct local function to evaluate on the specified scope

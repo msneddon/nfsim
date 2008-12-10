@@ -233,6 +233,7 @@ bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
 	//Here is where we actually create the system dumper
 	DumpSystem *ds = new DumpSystem(s, outputTimes, pathToFolder, verbose);
 	s->setDumpOutputter(ds);
+	return true;
 
 }
 

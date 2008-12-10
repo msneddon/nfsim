@@ -19,7 +19,7 @@ DORRxnClass::DORRxnClass(
 		vector <string> &lfArgumentPointerNameList) :
 	ReactionClass(name,baseRate,transformationSet)
 {
-	cout<<"ok, here we go..."<<endl;
+//	cout<<"ok, here we go..."<<endl;
 	vector <TemplateMolecule *> dorMolecules;
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -137,8 +137,8 @@ DORRxnClass::DORRxnClass(
 	this->reactionType = ReactionClass::DOR_RXN;
 
 	//Set up the reactant tree
-	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,4);
-	//reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
+	//reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,4);
+	reactantTree = new ReactantTree(this->DORreactantIndex,transformationSet,32);
 
 	//Set up the reactantLists
 	reactantLists = new ReactantList *[n_reactants];
@@ -161,11 +161,6 @@ DORRxnClass::DORRxnClass(
 	}
 
 
-
-/*
-*/
-	// i think we be done now
-	//cout<<"\nexit\n"; exit(0);
 }
 DORRxnClass::~DORRxnClass() {
 
@@ -187,21 +182,21 @@ void DORRxnClass::init() {
 
 void DORRxnClass::remove(Molecule *m, unsigned int reactantPos) {
 
-	cout<<"removing from a DOR!!"<<endl;
+//	cout<<"removing from a DOR!!"<<endl;
 	if(reactantPos==(unsigned)this->DORreactantIndex) {
-		if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
+		//if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
 
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			if(DEBUG_MESSAGE)cout<<"was in the tree, so we should remove"<<endl;
+			//if(DEBUG_MESSAGE)cout<<"was in the tree, so we should remove"<<endl;
 			reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
 	} else {
 
 		// handle it normally...
-		if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
+		//if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
 		ReactantList *rl = reactantLists[reactantPos];
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
@@ -209,39 +204,38 @@ void DORRxnClass::remove(Molecule *m, unsigned int reactantPos) {
 			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
 	}
-	if(DEBUG_MESSAGE)cout<<"finished removing"<<endl;
-
+	//if(DEBUG_MESSAGE)cout<<"finished removing"<<endl;
 }
 
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
-	if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
-	if(DEBUG_MESSAGE)m->printDetails();
+	//if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
+	//if(DEBUG_MESSAGE)m->printDetails();
 	if(reactantPos==(unsigned)this->DORreactantIndex) {
-		if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
+	//	if(DEBUG_MESSAGE)cout<<" ... as a DOR"<<endl;
 		//cout<<"RxnListMappingId: "<<m->getRxnListMappingId(m->getMoleculeType()->getRxnIndex(this,reactantPos))<<endl;
 
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
+			//if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 			if(!reactantTemplates[reactantPos]->compare(m)) {
-				if(DEBUG_MESSAGE)cout<<"removing..."<<endl;
+				//if(DEBUG_MESSAGE)cout<<"removing..."<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 			} else {}
 		} else {
-			if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
+			//if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
 			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
-				if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
+				//if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree->popLastMappingSet();
 			} else {
-				if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
+				//if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
 				//we are keeping it, so evaluate the function and confirm the push
 				double localFunctionValue = this->evaluateLocalFunctions(ms);
-				if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+				//if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 				reactantTree->confirmPush(ms->getId(),localFunctionValue);
 				m->setRxnListMappingId(rxnIndex,ms->getId());
 			}
@@ -249,7 +243,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 	} else {
 
 		// handle it normally...
-		if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
+		//if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
 		ReactantList *rl = reactantLists[reactantPos];
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
@@ -268,7 +262,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			}
 		}
 	}
-	if(DEBUG_MESSAGE)cout<<"finished adding"<<endl;
+	//if(DEBUG_MESSAGE)cout<<"finished adding"<<endl;
 	return true;
 }
 
@@ -288,16 +282,16 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 	//Go through each function, and set the value of the function
 	//this->argMappedMolecule
 
-	cout<<"dor is reevaluating its function."<<endl;
+	//cout<<"dor is reevaluating its function."<<endl;
 
 	//Grab the molecules needed for the local function to evaluate
 	for(int i=0; i<this->n_argMolecules; i++) {
-		cout<<"here."<<endl;
-		cout<<argMappedMolecule[i]<<"  "<<argIndexIntoMappingSet[i]<<endl;
+		//cout<<"here."<<endl;
+		//cout<<argMappedMolecule[i]<<"  "<<argIndexIntoMappingSet[i]<<endl;
 		this->argMappedMolecule[i] = ms->get(this->argIndexIntoMappingSet[i])->getMolecule();
 	}
 
-	cout<<"done setting molecules, so know calling the composite function evaluate method."<<endl;
+	//cout<<"done setting molecules, so know calling the composite function evaluate method."<<endl;
 	return this->cf->evaluateOn(argMappedMolecule,argScope);
 
 	/*Molecule
@@ -372,89 +366,5 @@ void DORRxnClass::printDetails() const
 
 
 
-void DORRxnClass::test1(System *s)
-{
-//	MoleculeType *rec = s->getMoleculeTypeByName("Receptor");
-//
-//	vector <Observable *> obs;
-//	//TemplateMolecule * rec2 = new TemplateMolecule(rec);
-//	//rec2->addStateValue("m","2");
-//	//Observable * rec2obs = new Observable("RecM2", rec2);
-//	//obs.push_back(rec2obs);
-//
-//	vector <StateCounter *> sc;
-//	StateCounter *scRecM = new StateCounter("RecMSum", rec, "m");
-//	sc.push_back(scRecM);
-//
-//	vector <string> paramConstNames; vector <double> paramConstValues;
-//
-//	LocalFunction *lf = new LocalFunction(s,
-//			"openMethSites",
-//			"8-RecMSum",
-//			obs,sc,paramConstNames,paramConstValues);
-//	//lf->setEvaluationLevel(1);
-//
-//	//prepare!
-//	lf->addTypeIMoleculeDependency(rec);
-//	lf->printDetails();
-//
-//
-//
-//	///////////////////Testing DOR reactions....
-//	TemplateMolecule *recTemp = new TemplateMolecule(rec);
-//	vector <TemplateMolecule *> templates;
-//	templates.push_back( recTemp );
-//
-//	TransformationSet *ts = new TransformationSet(templates);
-//	ts->addLocalFunctionReference(recTemp,"Pointer1",LocalFunctionReference::SPECIES_FUNCTION);
-//	ts->addIncrementStateTransform(recTemp,"m");
-//	ts->finalize();
-//
-//
-//
-//	vector <LocalFunction *> lfList;
-//	lfList.push_back(lf);
-//	vector <string> lfPointerNameList;
-//	lfPointerNameList.push_back("Pointer1");
-//
-//	DORRxnClass *r = new DORRxnClass("DorTest",1,ts,lfList,lfPointerNameList);
-//	s->addReaction(r);
-//
-//
-//	s->prepareForSimulation();
-//	cout<<"\n\n\n\n\n------------**********-------------\n\n\n\n\n"<<endl;
-//
-//	s->sim(10,50);
-//	cout<<endl<<endl<<endl;
-//	s->printAllReactions();
-
-}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//void DORRxnClass::directAddForDebugging(Molecule *m) {
-//	cout<<"don't call this DORRxnClass::directAddForDebugging function anymore!"<<endl;
-//	exit(1);
-//	//ms=reactantTree->pushNextAvailableMappingSet();
-//	//reactantTemplates[DORreactantIndex]->compare(m,ms);
-//	//double localFunctionValue = this->evaluateLocalFunctions(ms);
-//	//reactantTree->confirmPush(ms->getId(),localFunctionValue);
-//	//m->setRxnListMappingId(rxnIndex,ms->getId());
-//}
-//void DORRxnClass::printTreeForDebugging() {
-//	reactantTree->printDetails();
-//}
