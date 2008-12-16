@@ -6,10 +6,9 @@
 
 
 #set all NFsim parameters here
--xml assistanceNeighborhood.xml
-#-dump [0:60:3300;]->dump/  #dumps are useful for calculating avg activity after the simulation
-#-v
--utl 2
+-xml an2.xml
+#-dump [0:5:3300;]->dump/  #dumps are used for calculating avg activity after the simulation
+-utl 3
 
 
 #begin the script
@@ -20,7 +19,7 @@ begin
   set AspConc 0.0
   update
 
-  eq 200
+  eq 500
   sim 300 60
 
   set AspConc 0.01
