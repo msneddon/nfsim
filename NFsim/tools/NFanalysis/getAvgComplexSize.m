@@ -6,7 +6,7 @@ function [avgSize, totalMolecules, totalComplexes] = getAvgComplexSize(s,molType
 % first, determine which molecule type we are looking for
 molTypeIndex = 1;
 for i=1:length(s(1).molTypes)
-    if molTypeName==s(1).molTypes{i}
+    if strcmp(molTypeName,s(1).molTypes{i})
         molTypeIndex = i;
         fprintf(['molTypeIndex: ',num2str(i),'\n']);
         break;
