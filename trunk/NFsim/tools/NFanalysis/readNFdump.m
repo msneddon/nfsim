@@ -10,8 +10,8 @@ fprintf('\nRunning function readNFdump...\n\n');
 %systemName='simple_system';
 %baseDirectory='../../test/RNA/dump/';
 %systemName='rna_synthesis4';
-baseDirectory='../../test/tlbr/dump/';
-systemName='tlbr';
+baseDirectory='../../test/AN_chemotaxis/dump';
+systemName='an2';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,7 +52,7 @@ for t=1:length(timeString)
     % open the header file
     [fid, message] = fopen(headFileName,'r');
     if(fid==-1)
-        fprintf(['Error when opening the header file named:\n\t', dataFileName, '\n\n']);
+        fprintf(['Error when opening the header file named:\n\t', headFileName, '\n\n']);
         fprintf('Matlab says:\n');
         fprintf(['  ',message,'\n\n']);
         return;
@@ -141,6 +141,7 @@ for t=1:length(timeString)
         data = fread(fid,[columnCount,rowCount],'double')';
 
         allRawData{i}=data;
+        fclose(fid);
 
     end
 

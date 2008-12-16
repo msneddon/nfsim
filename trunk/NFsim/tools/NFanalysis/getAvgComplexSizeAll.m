@@ -1,4 +1,4 @@
-function [avgSize, totalMolecules, totalComplexes] = getAvgComplexSize(s)
+function [avgSize, totalMolecules, totalComplexes] = getAvgComplexSizeAll(s)
 %
 %
 %
