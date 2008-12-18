@@ -22,7 +22,7 @@ CompositeFunction::CompositeFunction(System *s,
 					vector <string> &paramNames)
 {
 
-	cout<<"creating composite function"<<endl;
+	//cout<<"creating composite function"<<endl;
 	this->name = name;
 	this->originalExpression=expression;
 	this->parsedExpression="";
@@ -51,7 +51,24 @@ CompositeFunction::CompositeFunction(System *s,
 }
 CompositeFunction::~CompositeFunction()
 {
+	delete [] allFuncNames;
 
+	delete [] argNames;
+	delete [] paramNames;
+
+	delete [] gfNames;
+	delete [] gfs;
+	delete [] gfValues;
+
+	delete [] lfNames;
+	delete [] lfs;
+
+	delete [] refLfInds;
+	delete [] refLfRefNames;
+	delete [] refLfScopes;
+	delete [] refLfValues;
+
+	if(p!=NULL) delete p;
 
 }
 
@@ -137,7 +154,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 		}
 	}
 
-	cout<<"now the expression is: "<<parsedExpression<<endl;
+//	cout<<"now the expression is: "<<parsedExpression<<endl;
 
 
 	///////// do the same for local functions here (can be a bit tricky, because different
@@ -202,7 +219,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 
 
 
-	cout<<"now the expression is finally: "<<parsedExpression<<endl;
+//	cout<<"now the expression is finally: "<<parsedExpression<<endl;
 
 
 }
@@ -218,7 +235,7 @@ string CompositeFunction::getArgName(int aIndex) const {
 
 void CompositeFunction::updateParameters(System *s)
 {
-	cout<<"Updating parameters for function: "<<name<<endl;
+	//cout<<"Updating parameters for function: "<<name<<endl;
 	for(unsigned int i=0; i<n_params; i++) {
 		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 	}
@@ -227,31 +244,31 @@ void CompositeFunction::updateParameters(System *s)
 void CompositeFunction::prepareForSimulation(System *s)
 {
 	try {
-			p=FuncFactory::create();
-			for(int f=0; f<n_gfs; f++) {
-				p->DefineVar(gfNames[f],&gfValues[f]);
-			}
-
-			//Define local function variables here...
-			for(int f=0; f<this->n_refLfs; f++) {
-				p->DefineVar(refLfRefNames[f],&refLfValues[f]);
-			}
-
-			for(unsigned int i=0; i<n_params; i++) {
-				p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
-			}
-			p->SetExpr(this->parsedExpression);
-		}
-		catch (mu::Parser::exception_type &e)
-		{
-			cout<<"Error preparing function "<<name<<" in class CompositeFunction!!  This is what happened:"<<endl;
-			cout<< "  "<<e.GetMsg() << endl;
-			cout<<"Quitting."<<endl;
-			exit(1);
+		p=FuncFactory::create();
+		for(int f=0; f<n_gfs; f++) {
+			p->DefineVar(gfNames[f],&gfValues[f]);
 		}
 
+		//Define local function variables here...
+		for(int f=0; f<this->n_refLfs; f++) {
+			p->DefineVar(refLfRefNames[f],&refLfValues[f]);
+		}
 
-	cout<<"preparing composite function.."<<endl;
+		for(unsigned int i=0; i<n_params; i++) {
+			p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
+		}
+		p->SetExpr(this->parsedExpression);
+	}
+	catch (mu::Parser::exception_type &e)
+	{
+		cout<<"Error preparing function "<<name<<" in class CompositeFunction!!  This is what happened:"<<endl;
+		cout<< "  "<<e.GetMsg() << endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	}
+
+
+	//cout<<"preparing composite function.."<<this->name<<endl;
 //	exit(0);
 }
 
@@ -310,25 +327,6 @@ void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 	for(int i=0; i<n_lfs; i++) {
 		lfs[i]->addTypeIMoleculeDependency(mt);
 	}
-
-//		cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
-//					this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
-//					cout<<"answer: "<<this->refLfValues[i]<<endl;
-//				}
-//
-//				//for (n_refLfs)  set the value by calling the correct local function to evaluate on the specified scope
-//				//which we reference through the given molList.
-//				//this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
-//
-//			} else {
-//
-//				cout<<"Error evaluating composite function: "<<name<<endl;
-//				cout<<"This function depends on local functions, but you gave no molecules"<<endl;
-//				cout<<"or scope when calling this function.  Time to quit."<<endl;
-//				exit(1);
-//		}
-//
-//	}
 }
 
 

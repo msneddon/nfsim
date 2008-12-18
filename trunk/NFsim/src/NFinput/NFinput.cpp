@@ -907,6 +907,7 @@ bool NFinput::FindReactionRuleSymmetry(
 				return false;
 			} else {
 				site1 = pDeleteBond->Attribute("site1");
+				site2 = pDeleteBond->Attribute("site2");
 
 			}
 
@@ -927,6 +928,7 @@ bool NFinput::FindReactionRuleSymmetry(
 				}
 
 			} else {
+				cout.flush();
 				cerr<<"\nError in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
 				cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
 				cerr<<"Looking for site: "<<site1<<endl;
@@ -1557,7 +1559,7 @@ bool NFinput::initReactionRules(
 								string argValue = pArg->Attribute("value");
 								funcArgs.push_back(argId);
 
-								cout<<"found argument:"<<argId<<" of type "<<argType<<" which points to "<<argValue<<endl;
+								//cout<<"found argument:"<<argId<<" of type "<<argType<<" which points to "<<argValue<<endl;
 								isGlobal=false;
 
 
@@ -1565,7 +1567,7 @@ bool NFinput::initReactionRules(
 
 								//add a reference to it with the given name
 								if(comps.find(argValue)!=comps.end()){
-									cout<<"found ref to species"<<endl;
+									//cout<<"found ref to species"<<endl;
 									component c = comps.find(argValue)->second;
 									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
 								}
@@ -1573,7 +1575,7 @@ bool NFinput::initReactionRules(
 								if(reactants.find(argValue)!=reactants.end()) {
 
 									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
-									cout<<"found it!"<<endl;
+									//cout<<"found it!"<<endl;
 								}
 								//ts->addLocalFunctionReference(t,argValue,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
 								//ts->addLocalFunctionReference(
@@ -1583,17 +1585,15 @@ bool NFinput::initReactionRules(
 						}
 
 
-						cout<<"found args (in vector):"<<endl;
-						for(int i=0; i<funcArgs.size(); i++) {
-							cout<<funcArgs.at(i)<<endl;
-						}
+						//cout<<"found args (in vector):"<<endl;
+						//for(int i=0; i<funcArgs.size(); i++) {
+						//	cout<<funcArgs.at(i)<<endl;
+						//}
 
 
 						if(isGlobal)
 						{
-							cout<<"parsing as global function reaction"<<endl;
 							string functionName = pRateLaw->Attribute("name");
-							cout<<"found function named: "<<functionName<<endl;
 							GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
 							if(gf!=NULL) {
 								ts->finalize();
@@ -1610,63 +1610,20 @@ bool NFinput::initReactionRules(
 							}
 						} else {
 
-							cout<<"Must refer to a local function."<<endl;
 							string functionName = pRateLaw->Attribute("name");
-							cout<<"found function named: "<<functionName<<endl;
 							LocalFunction *lf = s->getLocalFunctionByName(functionName);
 							if(lf!=NULL) {
 								cout<<"Error!! call a local function through a composite function always!"<<endl;
 								cout<<"DOR rxn should never directly call a local function."<<endl;
 								exit(1);
-
-
-								//ts->finalize();
-								//r = new DORrxnClass(rxnName,gf,ts,s);
 							} else {
 
-								cout<<"Must be a composite local function"<<endl;
 								ts->finalize();
 
 								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
 								r=new DORRxnClass(rxnName,1,ts,cf,funcArgs);
-										//string name,
-										//double baseRate,
-										//TransformationSet *transformationSet,
-										//CompositeFunction *function,
-										//vector <string> &lfArgumentPointerNameList);
-
-
-								//continue;
 							}
 						}
-
-
-
-//						//Make sure that the rate constant exists
-//						TiXmlElement *pFunction = pRateLaw->FirstChildElement("Function");
-//						if(!pFunction) {
-//							cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have Function specified!  Quiting"<<endl;
-//							return false;
-//						} else {
-//							//Get the rate constant value
-//							string functionName;
-//							if(!pFunction->Attribute("name")) {
-//								cerr<<"Functional Rate Law definition for "<<rxnName<<" does not have a valid function 'name'!  Quiting"<<endl;
-//								return false;
-//							} else {
-//								functionName = pFunction->Attribute("name");
-//								GlobalFunction *gf = s->getGlobalFunctionByName(functionName);
-//
-//								if(gf==NULL) {
-//									cerr<<"When parsing reaction: '"<<rxnName<<"', could not identify function: '"<<functionName<<"' in\n";
-//									cerr<<"the system.  Therefore, I must abort."<<endl;
-//									exit(1);
-//								}
-//
-//								//Create the Functional Reaction from the found function...
-//								r = new FunctionalRxnClass(rxnName,gf,ts,s);
-//							}
-//						}
 					}
 					else if(rateLawType=="MM") {
 						//Make sure that the rate constant exists

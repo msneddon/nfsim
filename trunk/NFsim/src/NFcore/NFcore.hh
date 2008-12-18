@@ -327,8 +327,13 @@ namespace NFcore
 			map <string,double> paramMap;
 
 		private:
+			list <Molecule *> molList;
+			list <Molecule *>::iterator molListIter;
+
 			///////////////////////////////////////////////////////////////////////////
 			//Iterators that allow fast traversal of the object containers
+
+
 			vector<MoleculeType *>::iterator molTypeIter;  /* to iterate over allMoleculeType */
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
 			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
@@ -641,6 +646,7 @@ namespace NFcore
 			 * which is important when we want to update reactions and complexes */
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
+			void depthFirstSearch(list <Molecule *> &members);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
@@ -677,6 +683,7 @@ namespace NFcore
 
 			/* used for traversing a molecule complex */
 			bool hasVisitedMolecule;
+			bool * hasVisitedBond;
 
 			/* used when reevaluating local functions */
 			bool hasEvaluatedMolecule;

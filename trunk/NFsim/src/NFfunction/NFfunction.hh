@@ -347,6 +347,8 @@ namespace NFcore {
 			Observable **varLocalObservables;
 
 
+			static list <Molecule *> molList;
+			static list <Molecule *>::iterator molIter;
 //			//List of observables that this local function depends on
 //			Observable ** obs;
 //			unsigned int n_obs;
@@ -377,7 +379,6 @@ namespace NFcore {
 
 
 	};
-
 
 
 

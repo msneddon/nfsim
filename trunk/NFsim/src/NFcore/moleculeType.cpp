@@ -485,7 +485,6 @@ void MoleculeType::removeFromRxns(Molecule * m)
 //TypeI local function: this molecule type depends on the value of this
 //evaluated function
 int MoleculeType::addLocalFunc_TypeI(LocalFunction *lf) {
-	cout<<"adding type I local function to "<<name<<endl;
 	locFuncs_typeI.push_back(lf);
 	return locFuncs_typeI.size()-1;
 
@@ -494,7 +493,6 @@ int MoleculeType::addLocalFunc_TypeI(LocalFunction *lf) {
 //TypeII local function: this molecule type, when updated, changes the
 //value of this function
 int MoleculeType::addLocalFunc_TypeII(LocalFunction *lf) {
-	cout<<"adding type II local functions to "<<name<<endl;
 	locFuncs_typeII.push_back(lf);
 	return locFuncs_typeII.size()-1;
 

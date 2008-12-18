@@ -14,8 +14,8 @@ using namespace NFcore;
 
 
 ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity) {
-	cout<<"Creating reactant tree... "<<endl;
-	cout<<"  Initial Capacity: "<< init_capacity <<" molecules, ";
+	//cout<<"Creating reactant tree... "<<endl;
+	//cout<<"  Initial Capacity: "<< init_capacity <<" molecules, ";
 
 	//First set basic properties of the tree
 	this->reactantIndex=reactantIndex;
@@ -74,10 +74,10 @@ ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, un
 
 	this->n_mappingSets = 0;
 
-	cout<<"so setting a limit of " << this->maxElementCount <<" molecules. "<<endl;
-	cout<<"  The depth of the tree will be "<< treeDepth << " and contain ";
-	cout<<numOfNodes<<" nodes."<<endl;
-	cout<<"  The first molecule can be found at tree index "<< firstMappingTreeIndex <<"."<<endl;
+	//cout<<"so setting a limit of " << this->maxElementCount <<" molecules. "<<endl;
+	//cout<<"  The depth of the tree will be "<< treeDepth << " and contain ";
+	//cout<<numOfNodes<<" nodes."<<endl;
+	//cout<<"  The first molecule can be found at tree index "<< firstMappingTreeIndex <<"."<<endl;
 
 }
 

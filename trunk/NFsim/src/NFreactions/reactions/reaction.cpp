@@ -168,16 +168,9 @@ BasicRxnClass::~BasicRxnClass()
 	{
 		//delete reactantTemplates[r]; DO NOT DELETE HERE (MoleculeType has responsibility of
 		//deleting all template molecules of its type now.
-		reactantTemplates[r] = 0;
 		delete reactantLists[r];
 	}
-	delete [] reactantTemplates;
-	delete [] mappingSet;
 	delete [] reactantLists;
-
-
-
-	delete transformationSet;
 }
 
 void BasicRxnClass::init()
