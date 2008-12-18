@@ -3,7 +3,7 @@
 
 #include "reaction.hh"
 
-#define DEBUG_MESSAGE 1
+#define DEBUG_MESSAGE 0
 
 
 using namespace std;
@@ -31,7 +31,7 @@ DORRxnClass::DORRxnClass(
 	for(int r=0; (unsigned)r<n_reactants; r++) {
 		for(int i=0; i<transformationSet->getNumOfTransformations(r); i++) {
 			Transformation *transform = transformationSet->getTransformation(r,i);
-			cout<<"found transformation of type: "<<transform->getType()<<" for reactant: "<<r<<endl;
+//			cout<<"found transformation of type: "<<transform->getType()<<" for reactant: "<<r<<endl;
 			if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 
 				if(DORreactantIndex==-1) { DORreactantIndex=r; }
@@ -81,8 +81,8 @@ DORRxnClass::DORRxnClass(
 
 
 	for(int i=0; i<(int)lfArgumentPointerNameList.size(); i++) {
-		cout<<"Received local function arg: "<< lfArgumentPointerNameList.at(i)<<endl;
-		cout<<" Takes as argument this thang: "<< lfArgumentPointerNameList.at(i)<<endl;
+//		cout<<"Received local function arg: "<< lfArgumentPointerNameList.at(i)<<endl;
+//		cout<<" Takes as argument this thang: "<< lfArgumentPointerNameList.at(i)<<endl;
 
 		//Now search for the function argument...
 		bool match = false;
@@ -91,8 +91,8 @@ DORRxnClass::DORRxnClass(
 			if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 				LocalFunctionReference *lfr = static_cast<LocalFunctionReference*>(transform);
 				if(lfr->getPointerName()==lfArgumentPointerNameList.at(i)) {
-					cout<<"Found a match here!"<<endl;
-					cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
+//					cout<<"Found a match here!"<<endl;
+//					cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
 					//If we got here, we found a match, so remember the index of the transformation
 					//so we can quickly get the value of the function for any mapping object we try
 					//to push on the reactant Tree.
@@ -129,6 +129,8 @@ DORRxnClass::DORRxnClass(
 	}	}	}
 
 
+	delete [] hasMatched;
+
 	//////////////////////////////////////////////////////////////////////////////////////////
 	///  Step 3: Wheh! now we can finally get on the business of creating the reactant lists
 	///  and the reactant tree and setting the usual reactionClass parameters
@@ -164,6 +166,17 @@ DORRxnClass::DORRxnClass(
 }
 DORRxnClass::~DORRxnClass() {
 
+	for(unsigned int r=0; r<n_reactants; r++) {
+		if(this->DORreactantIndex!=r)
+			delete reactantLists[r];
+	}
+
+	delete [] reactantLists;
+	delete reactantTree;
+
+	delete [] argIndexIntoMappingSet;
+	delete [] argMappedMolecule;
+	delete [] argScope;
 
 }
 

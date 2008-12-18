@@ -194,6 +194,7 @@ int main(int argc, const char *argv[])
 				runFromArgs(s,argMap,verbose);
 			}
 			parsed = true;
+			delete s;
 		}
 
 
@@ -277,7 +278,9 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 	if(s!=0) {
 		s->prepareForSimulation();
 		//Step 3: provided the system is set up correctly, run the RNF script
-		return NFinput::runRNFcommands(s,argMap,commands,verbose);
+		bool output = NFinput::runRNFcommands(s,argMap,commands,verbose);
+		delete s;
+		return output;
 	}
 
 	return false;

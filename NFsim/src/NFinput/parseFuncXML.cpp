@@ -43,8 +43,8 @@ bool createFunction(string name,
 		map<string,int> &allowedStates,
 		bool verbose)
 {
-	cout<<endl;
-	cout<<"creating the function."<<endl;
+//	cout<<endl;
+//	cout<<"creating the function."<<endl;
 
 	vector <string> varRefNames;
 	vector <string> varRefTypes;
@@ -52,7 +52,7 @@ bool createFunction(string name,
 	int otherFuncRefCounter=0;
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Function") {
-			cout<<"identified function reference."<<endl;
+//			cout<<"identified function reference."<<endl;
 			otherFuncRefCounter++;
 		} else if(refTypes.at(rn)=="Constant") {
 			paramNames.push_back(refNames.at(rn));
@@ -88,47 +88,6 @@ bool createFunction(string name,
 	return createLocalFunction(name, expression,
 			argNames, refNames, refTypes,
 			s, parameter, pListOfObservables, allowedStates, verbose);
-
-/*
-
-	//Step 1: determine if it is local or global
-	if(argNames.size()==0) { //No arguments, so must be a global function...
-		cout<<"must be a global function or global composite function..."<<endl;
-
-
-		//Treat as usual global function
-		if(otherFuncRefCounter==0) {
-
-			//FuncFactory::create();
-			GlobalFunction *gf = new GlobalFunction(name, expression,
-					varRefNames, varRefTypes, paramNames, s);
-			if(!s->addGlobalFunction(gf)) {
-				cerr<<"!!!Error:  Function name '"<<name<<"' has already been used.  You can't have two\n";
-				cerr<<"functions with the same name, so I'll just stop now."<<endl;
-				return false;
-			}
-		}
-		//Treat as special rate law global function
-		else if (otherFuncRefCounter==1) {
-			for(unsigned int rn=0; rn<refNames.size(); rn++) {
-				if(refTypes.at(rn)=="Function") {
-					FunctionReference *fr = new FunctionReference(name,expression,refNames.at(rn));
-					s->addFunctionReference(fr);
-				}
-			}
-
-		} else {
-			cerr<<"!!!Error:  Functions can reference at most one other function!  Quitting."<<endl;
-			return false;
-		}
-
-
-
-
-		return true;
-	}
-
-*/
 }
 
 
@@ -143,7 +102,7 @@ bool createCompositeFunction(string name,
 			System *s,
 			bool verbose)
 {
-	cout<<"must be a composite function..."<<endl;
+//	cout<<"must be a composite function..."<<endl;
 
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Observable") {
@@ -186,10 +145,8 @@ bool createLocalFunction(string name,
 
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	//@todo create a new function to handle these local functions
-	//      handle local functions that reference another function (as in rateLaw1(x))
 
-	cout<<"must be a local function..."<<endl;
+//	cout<<"must be a local function..."<<endl;
 
 	//Remember the original expression (useful for outputting)
 	string originalExpression = expression;
@@ -208,8 +165,9 @@ bool createLocalFunction(string name,
 
 	if(otherFuncRefCounter==1) {
 		//handle the function reference...
-		cout<<"handling local function reference!  (not yet handled)..."<<endl;
-		return true;
+		cout<<"local function has an reference to another function!"<<endl;
+		cout<<"you should have created this with a composite function constructor!"<<endl;
+		return false;
 	}
 	if(otherFuncRefCounter!=0) {
 		cerr<<"!!!Error:  Functions can reference at most one other function!  Quitting."<<endl;
@@ -393,12 +351,8 @@ bool createLocalFunction(string name,
 						argNames,
 						finalObsUsedExpressionRef,finalObsUsedName,finalLocalObservables,finalObsUsedScope,
 						paramNames);
-
-	lf->printDetails(s);
-	cout<<"here"<<endl;
-
 	s->addLocalFunction(lf);
-	cout<<"was added fine."<<endl;
+	//cout<<"was added fine."<<endl;
 	return true;
 }
 
@@ -527,8 +481,6 @@ bool NFinput::initFunctions(
 					verbose)) {
 				return false;
 			}
-
-			cout<<endl<<endl;
 
 			//And here we clear our arrays
 			argNames.clear();

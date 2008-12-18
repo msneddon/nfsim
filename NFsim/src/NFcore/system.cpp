@@ -90,6 +90,22 @@ System::~System()
 		delete gf;
 	}
 
+	LocalFunction *lf;
+	while(this->localFunctions.size()>0)
+	{
+		lf = localFunctions.back();
+		localFunctions.pop_back();
+		delete lf;
+	}
+
+	CompositeFunction *cf;
+	while(this->compositeFunctions.size()>0)
+	{
+		cf = compositeFunctions.back();
+		compositeFunctions.pop_back();
+		delete cf;
+	}
+
 
 	nextReaction = 0;
 
@@ -861,15 +877,13 @@ void System::addLocalFunction(LocalFunction *lf) {
 	localFunctions.push_back(lf);
 }
 
+
 void System::evaluateAllLocalFunctions() {
 
 	//Don't do all the work if we don't actually have to...
 	if(localFunctions.size()==0) return;
 
-	cout<<"Evaluating all local functions here in System..."<<endl;
-
-	list <Molecule *> molList;
-	list <Molecule *>::iterator molListIter;
+	molList.clear();
 
 	//loop through each moleculeType
 	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
@@ -882,6 +896,7 @@ void System::evaluateAllLocalFunctions() {
 			if(!mol->hasEvaluatedMolecule) {
 
 				//First, grab the molecules in the complex
+				//cout<<"in evaluate all local functions"<<endl;
 				mol->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 
 				//Evaluate all local functions on this complex
@@ -896,6 +911,9 @@ void System::evaluateAllLocalFunctions() {
 				for(molListIter=molList.begin(); molListIter!=molList.end(); molListIter++) {
 					(*molListIter)->hasEvaluatedMolecule=true;
 				}
+
+				//clear the list
+				molList.clear();
 			}
 		}
 	}
@@ -941,7 +959,6 @@ CompositeFunction * System::getCompositeFunctionByName(string fName)
 {
 	for( int i=0; i<(int)compositeFunctions.size(); i++) {
 		if(compositeFunctions.at(i)->getName()==fName) {
-			cout<<"match?"<<endl;
 			return compositeFunctions.at(i);
 		}
 	}

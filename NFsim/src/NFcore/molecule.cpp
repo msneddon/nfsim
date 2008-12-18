@@ -28,9 +28,12 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 
 	this->bond = new Molecule * [numOfComponents];
 	this->indexOfBond = new int [numOfComponents];
+	this->hasVisitedBond = new bool [numOfComponents];
 	for(int b=0; b<numOfComponents; b++) {
 		bond[b]=0; indexOfBond[b]=NOBOND;
+		hasVisitedBond[b] = false;
 	}
+
 
 	hasVisitedMolecule = false;
 	hasEvaluatedMolecule = false;
@@ -39,6 +42,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
 	isObservable = 0;
+	localFunctionValues=0;
 
 	//register this molecule with moleculeType and get some ID values
 	ID_complex = this->parentMoleculeType->createComplex(this);
@@ -57,18 +61,15 @@ Molecule::~Molecule()
 
 	parentMoleculeType = 0;
 
-//	StateChangeListener *l;
-//	while(listeners.size()>0)
-//	{
-//		l = listeners.back();
-//		listeners.pop_back();
-//		delete l;
-//	}
 
 	delete [] isObservable;
 	delete [] component;
 	delete [] indexOfBond;
 	delete [] rxnListMappingId;
+	delete [] hasVisitedBond;
+
+	if(localFunctionValues!=0)
+		delete [] localFunctionValues;
 }
 
 
@@ -427,8 +428,41 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
-	Molecule::breadthFirstSearch(members, this, traversalLimit);
-	return;
+	//always call breadth first search, it is a bit faster
+	//if(traversalLimit>=0)
+		Molecule::breadthFirstSearch(members, this, traversalLimit);
+	//else
+	//	this->depthFirstSearch(members);
+}
+
+
+//Isn't ever called really
+void Molecule::depthFirstSearch(list <Molecule *> &members)
+{
+	if(this->hasVisitedMolecule==true) {
+		return;
+	}
+
+	this->hasVisitedMolecule=true;
+	members.push_back(this);
+
+	int cMax = this->numOfComponents;
+	for(int c=0; c<cMax; c++)
+	{
+		if(hasVisitedBond[c]==true) continue;
+		if(this->isBindingSiteBonded(c))
+		{
+			Molecule *neighbor = this->getBondedMolecule(c);
+			neighbor->hasVisitedBond[indexOfBond[c]]=true;
+			hasVisitedBond[c]=true;
+			neighbor->depthFirstSearch(members);
+		}
+	}
+
+	//clear things out
+	hasVisitedMolecule = false;
+	for(int c=0; c<numOfComponents; c++)
+		hasVisitedBond[c] = false;
 }
 
 

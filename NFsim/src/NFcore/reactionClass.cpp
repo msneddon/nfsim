@@ -60,6 +60,9 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 
 ReactionClass::~ReactionClass()
 {
+	delete [] reactantTemplates;
+	delete transformationSet;
+	delete [] mappingSet;
 
 }
 
