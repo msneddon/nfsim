@@ -142,9 +142,12 @@ LocalFunction::LocalFunction(System *s,
 	}
 
 	//Now actually remember them (and make sure they remember us...)
-	for(unsigned int m=0; m<addedMoleculeTypes.size(); m++) {
+	n_typeIImolecules = addedMoleculeTypes.size();
+	typeII_mol = new MoleculeType * [n_typeIImolecules];
+	for(unsigned int m=0; m<n_typeIImolecules; m++) {
 		int index = addedMoleculeTypes.at(m)->addLocalFunc_TypeII(this);
-		this->typeII_mol.push_back(addedMoleculeTypes.at(m));
+		typeII_mol[m]=addedMoleculeTypes.at(m);
+		//this->typeII_mol.push_back(addedMoleculeTypes.at(m));
 		this->typeII_localFunctionIndex.push_back(index);
 	}
 
@@ -427,8 +430,8 @@ void LocalFunction::printDetails(System *s)
 	}
 
 	cout<<"   -Type II Molecules (this function depends on these molecules):"<<endl;
-	for(unsigned int i=0; i<typeII_mol.size(); i++) {
-		cout<<"         "<<typeII_mol.at(i)->getName()<<endl;
+	for(unsigned int i=0; i<this->n_typeIImolecules; i++) {
+		cout<<"         "<<typeII_mol[i]->getName()<<endl;
 	}
 
 	cout<<"   -Type I Molecules (molecules in a dor rxn that depend on this function):"<<endl;

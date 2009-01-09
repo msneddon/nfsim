@@ -1018,7 +1018,7 @@ void System::addParameter(string name,double value) {
 	this->paramMap[name]=value;
 }
 double System::getParameter(string name) {
-	return this->paramMap.at(name);
+	return this->paramMap.find(name)->second;
 }
 void System::setParameter(string name, double value) {
 	if(paramMap.find(name)==paramMap.end()) {

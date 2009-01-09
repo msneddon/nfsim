@@ -227,7 +227,7 @@ namespace NFcore {
 
 			void add(Molecule *m);
 			void reset() { value=0; };
-			int getValue() const { return value; };
+			int getValue() const { return (int)value; };
 
 
 			string name;
@@ -372,9 +372,14 @@ namespace NFcore {
 			//locally so that it can be used in DOR reactions.  Type II molecules
 			//do not have the local value explicitly, but local functions should still
 			//know 'of' them in case of future speedups that might use this information
+
+			//@todo : change these to arrays from vectors!!!
+
 			vector <MoleculeType *> typeI_mol;
 			vector <int> typeI_localFunctionIndex;
-			vector <MoleculeType *> typeII_mol;
+			int n_typeIImolecules;
+			MoleculeType ** typeII_mol;
+			//vector <MoleculeType *> typeII_mol;
 			vector <int> typeII_localFunctionIndex;
 
 
@@ -450,8 +455,6 @@ namespace NFcore {
 				double * refLfValues;
 
 				mu::Parser *p;
-
-
 		};
 
 
