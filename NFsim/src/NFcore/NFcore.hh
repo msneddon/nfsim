@@ -217,6 +217,8 @@ namespace NFcore
 			void evaluateAllLocalFunctions();
 
 
+			void addObservableForOutput(Observable *o);
+
 			void addOutputter(Outputter *op);
 			void dumpOutputters();
 
@@ -286,6 +288,9 @@ namespace NFcore
 			queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
 			vector <Outputter *> allOutputters;    /*! < manages the outputters of the system */
 
+			vector <Observable *> obsToOutput; /*!< keeps ordered list of pointers to observables for output */
+
+
 			DumpSystem *ds;
 
 
@@ -333,7 +338,7 @@ namespace NFcore
 			///////////////////////////////////////////////////////////////////////////
 			//Iterators that allow fast traversal of the object containers
 
-
+			vector<Observable *>::iterator obsIter;
 			vector<MoleculeType *>::iterator molTypeIter;  /* to iterate over allMoleculeType */
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
 			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
