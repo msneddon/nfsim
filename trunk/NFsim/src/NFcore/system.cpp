@@ -152,6 +152,13 @@ void System::registerOutputFileLocation(string filename)
 	if(outputFileStream.is_open()) { outputFileStream.close(); }
 	if(useBinaryOutput) {
 		outputFileStream.open((filename).c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
+
+		if(!outputFileStream.is_open()) {
+			cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+			cerr<<"quitting."<<endl;
+			exit(1);
+		}
+
 		//ios_base::out -- Set for output only
 		//ios_base::binary --  Set output to binary
 		//ios_base::trunc --  Truncate the file - that is overwrite anything that was already there
@@ -179,10 +186,23 @@ void System::registerOutputFileLocation(string filename)
 
 	} else {
 		outputFileStream.open(filename.c_str());
+
+		if(!outputFileStream.is_open()) {
+			cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+			cerr<<"quitting."<<endl;
+			exit(1);
+		}
+
 		outputFileStream.setf(ios::scientific);
+		outputFileStream.precision(8);
 	}
 
 }
+
+void System::addObservableForOutput(Observable *o) {
+	this->obsToOutput.push_back(o);
+}
+
 
 int System::addMoleculeType(MoleculeType *MoleculeType)
 {
@@ -658,13 +678,33 @@ void System::equilibrate(double duration, int statusReports)
 void System::outputAllObservableNames()
 {
 	if(!useBinaryOutput) {
-		outputFileStream<<"#\tTime";
-		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-			(*molTypeIter)->outputObservableNames(outputFileStream);
+		outputFileStream<<"#          time";
+		//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		//	(*molTypeIter)->outputObservableNames(outputFileStream);
+
+		int totalSpaces = 16;
+
+		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+			string nm = (*obsIter)->getAliasName();
+			int spaces = totalSpaces-nm.length();
+			if(spaces<1) { spaces = 1; }
+			for(int k=0; k<spaces; k++) {
+				outputFileStream<<" ";
+			}
+			outputFileStream<<nm;;
+		}
 
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-				outputFileStream<<"\t"<<(*functionIter)->getNiceName();
+			{
+				string nm = (*functionIter)->getNiceName();
+				int spaces = totalSpaces-nm.length();
+				if(spaces<1) { spaces = 1; }
+				for(int k=0; k<spaces; k++) {
+					outputFileStream<<" ";
+				}
+				outputFileStream<<nm;;
+			}
 		outputFileStream<<endl;
 	} else {
 		cout<<"Warning: You cannot output observable names when outputting in Binary Mode."<<endl;
@@ -691,12 +731,9 @@ void System::outputAllObservableCounts(double cSampleTime)
 		double count=0.0; int oTot=0;
 
 		outputFileStream.write((char *)&cSampleTime, sizeof(double));
-		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-			oTot = (*molTypeIter)->getNumOfObservables();
-			for(int o=0; o<oTot; o++) {
-				count=(double)((*molTypeIter)->getObservable(o)->getCount());
-				outputFileStream.write((char *) &count, sizeof(double));
-			}
+		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+			count=((double)(*obsIter)->getCount());
+			outputFileStream.write((char *) &count, sizeof(double));
 		}
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
@@ -706,13 +743,18 @@ void System::outputAllObservableCounts(double cSampleTime)
 	}
 	else {
 
-		outputFileStream<<"\t"<<cSampleTime;
-		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-			(*molTypeIter)->outputObservableCounts(outputFileStream);
+
+		outputFileStream<<" "<<cSampleTime;
+		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+			outputFileStream<<"  "<<((double)(*obsIter)->getCount());
+		}
+
+		//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		//	(*molTypeIter)->outputObservableCounts(outputFileStream);
 
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-				outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+				outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
 		outputFileStream<<endl;
 	}
 

@@ -1838,6 +1838,7 @@ bool NFinput::initObservables(
 				MoleculeType *moltype = tempmol->getMoleculeType();
 				Observable *o  = new Observable(observableName.c_str(),tempmol);
 				moltype->addObservable(o);
+				s->addObservableForOutput(o);
 				//tempmol->printDetails();
 			}
 		}
@@ -2048,14 +2049,18 @@ TemplateMolecule *NFinput::readPattern(
 						//Only try to parse this bond as a number if the number
 						//of bonds is not the '+' character.  The '+' character implies
 						//that the site is occupied without explicitly specifying who it is
-						//bound to.
-						if(numOfBonds=="+") {
-							numOfBondsInt = -2;
+						//bound to.  Now also handles the wild card character (implying that
+						//it can be bound or unbound - it doesn't matter.
+						const int MUST_BE_OCCUPIED = -2;
+						const int EITHER_WAY_WORKS = -3;
+						if(numOfBonds.compare("+")==0) {
+							numOfBondsInt = MUST_BE_OCCUPIED;
+						} else if(numOfBonds.compare("*")==0) {
+							numOfBondsInt = EITHER_WAY_WORKS;
 						} else {
 							try {
 								numOfBondsInt = NFutil::convertToInt(numOfBonds);
 							} catch (std::runtime_error e) {
-								cout<<"here!"<<endl;
 								cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
 								cerr<<e.what()<<endl;
 								return false;
@@ -2072,8 +2077,11 @@ TemplateMolecule *NFinput::readPattern(
 							return false;
 						}
 
-						if(numOfBondsInt==-2) {
+						if(numOfBondsInt==MUST_BE_OCCUPIED) {
 							occupiedBondSite.push_back(symC->symPermutationName);
+						} else if(numOfBondsInt==EITHER_WAY_WORKS) {
+							//add nothing if either way works of course!  There
+							//is no constraint (the two ways are either bonded or not bonded)
 						} else if(numOfBondsInt==0) {
 							emptyBondSite.push_back(symC->symPermutationName);
 						} else if (numOfBondsInt==1) {

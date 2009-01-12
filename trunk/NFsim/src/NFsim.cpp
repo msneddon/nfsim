@@ -326,6 +326,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				if (argMap.find("o")!=argMap.end()) {
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
+					s->outputAllObservableNames();
 				} else {
 					if(s->isOutputtingBinary())
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
