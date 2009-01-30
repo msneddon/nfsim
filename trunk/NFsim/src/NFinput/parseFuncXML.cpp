@@ -56,6 +56,8 @@ bool createFunction(string name,
 			otherFuncRefCounter++;
 		} else if(refTypes.at(rn)=="Constant") {
 			paramNames.push_back(refNames.at(rn));
+		} else if(refTypes.at(rn)=="ConstantExpression") {
+			paramNames.push_back(refNames.at(rn));
 		} else {
 			varRefNames.push_back(refNames.at(rn));
 			varRefTypes.push_back(refTypes.at(rn));

@@ -42,8 +42,13 @@ namespace NFinput {
 			TemplateMolecule * t;
 			MoleculeType *mt;
 			string name;
+			string uniqueId;
 
 			string symPermutationName;
+
+
+			string numOfBondsLabel;
+			string stateConstraintLabel;
 	};
 
 
@@ -112,7 +117,8 @@ namespace NFinput {
 
 	bool generateRxnPermutations(vector<map<string,component> > &permutations,
 			map<string,component> &symComps,
-			map<string,component> &symRxnCenter);
+			map<string,component> &symRxnCenter,
+			bool verbose);
 
 	bool readObservable(TiXmlElement *pObs,
 			string observableName,
@@ -188,6 +194,9 @@ namespace NFinput {
 			vector < vector <int> > &stateInformation,
 			vector < vector <int> > &bindingSiteInformation,
 			bool verbose);
+
+
+	bool lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap);
 
 
 

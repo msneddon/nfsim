@@ -74,6 +74,7 @@ void ReactionClass::printDetails() const {
 	{
 		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
 		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+		//reactantTemplates[r]->printDetails();
 	}
 	if(n_reactants==0)
 		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
@@ -84,7 +85,7 @@ void ReactionClass::fire(double random_A_number)
 {
 
 	fireCounter++; //Remember that we fired
-	//cout<<"firing: "<<name<<endl;
+//	cout<<"firing: "<<name;
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);
@@ -103,23 +104,31 @@ void ReactionClass::fire(double random_A_number)
 		}
 	}
 
+//	cout<<",  obs removed";
 
 
 	//Through the MappingSet, transform all the molecules as neccessary
 	this->transformationSet->transform(this->mappingSet);
+
+//	cout<<",  transformed updated";
 
 	//Tell each molecule in the list of products to add itself back into
 	//the counts of observables and update its class lists, and update any DOR Groups
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
 		if(onTheFlyObservables) (*molIter)->addToObservables();
+	}
+//	cout<<",  obs updated";
+
+	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	{
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
 	}
 //	Molecule::printMoleculeList(products);
 
-
+//	cout<<",  everything done"<<endl;
 	//Tidy up
 	products.clear();
 }

@@ -91,7 +91,7 @@ void GlobalFunction::prepareForSimulation(System *s)
 }
 
 void GlobalFunction::updateParameters(System *s) {
-	cout<<"Updating parameters for function: "<<name<<endl;
+	//cout<<"Updating parameters for function: "<<name<<endl;
 	for(unsigned int i=0; i<n_params; i++) {
 		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 	}
