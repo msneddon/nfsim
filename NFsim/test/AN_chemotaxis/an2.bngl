@@ -21,11 +21,17 @@
 begin parameters
 
 	# CheR/CheB rates for binding and unbinding the tether.  In the original
-     # study, binding rates are in units of per second (because CheR/CheB are
-     # treated as states of the receptor).  So here, we use the binding rate
-     # . The unbinding rate is unchanged from the original model.
-	konR 0.01 #s^-1
-	konB 0.01 #s^-1
+    # study, binding rates are in units of per second (because CheR/CheB are
+    # treated as states of the receptor).  These rates are not valid here, so
+    # instead we use the binding rate from AgentCell for CheR. The original 
+    # AN model used the same binding rate for CheR and CheB, so we do the 
+    # same thing here.  The unbinding rate is unchanged from the original model.
+    #         Original study, konR=konB=0.01/s
+    #         AgentCell (Emonet, et. al, Bioinfo.2005 21(11):2714-2721;
+    Vol 1.41e-15 #liters
+ 	Na 6.02e23
+ 	konR 2.8e6/(Na*Vol) #2.8uM
+ 	konB 2.8e6/(Na*Vol)
 	koffR 0.1 #s^-1
 	koffB 0.1 #s^-1
 	
@@ -63,15 +69,15 @@ begin parameters
 	AspConc 0 #mM
 
 	# Number of molecules we want to simulate.  Assuming a cell has ~14,000 
-     # chemoreceptors, that gives us ~7000 receptors dimers, and 370 clusters 
-     # of 19 receptor dimers.  The numbers of CheR and CheB are high, but are 
-     # set to give a timescale of adaptation similar to the original model.  In 
-     # a real cell, CheR and CheB will be less (on the order of ~200), but
+    # chemoreceptors, that gives us ~7000 receptors dimers, and 370 clusters 
+    # of 19 receptor dimers.  The numbers of CheR and CheB are high, but are 
+    # set to give a timescale of adaptation similar to the original model.  In 
+    # a real cell, CheR and CheB will be less (on the order of ~200), but
 	# the catalytic rate of methylation/demethylation will likely be faster.
-     # see Li Hazelbauer, J. of Bact.(2004),Vol.186, No.12, p.3687-3694 for
-     # better approximations of the number of molecules in a real cell
+    # see Li Hazelbauer, J. of Bact.(2004),Vol.186, No.12, p.3687-3694 for
+    # better approximations of the number of molecules in a real cell
 	ClusterCount 370
-     CheRCount 500
+    CheRCount 500
 	CheBCount 500
 
 end parameters

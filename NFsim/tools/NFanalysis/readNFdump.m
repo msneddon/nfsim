@@ -39,14 +39,19 @@ for t=1:length(timeString)
 
     %set up the filenames
     time=timeString{t};
-    fprintf(['<<<<<<<<<< Output Time: ',num2str(time), ...
-        's (',num2str(t),' of ',num2str(length(timeString)),') >>>>>>>>>>\n']);
+    
+    stopBar= progressbar(t./length(timeString),0);
+    if (stopBar), break; end
+
+    
+   % fprintf(['<<<<<<<<<< Output Time: ',num2str(time), ...
+   %     's (',num2str(t),' of ',num2str(length(timeString)),') >>>>>>>>>>\n']);
     resStruct=struct(defResStruct);
     resStruct.time=str2double(time);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%
     % First, read in the header file for the set
-    fprintf(['Reading header file: ',systemName,'_nf.',time,'.dump.head\n']);
+    %fprintf(['Reading header file: ',systemName,'_nf.',time,'.dump.head\n']);
     headFileName = [baseDirectory,'/',systemName,'_nf.',time,'.dump.head'];
 
     % open the header file
@@ -117,7 +122,7 @@ for t=1:length(timeString)
     allRawData = cell(length(moleculeNames),1);
 
     for i=1:length(moleculeNames)
-        fprintf(['Reading data file: ',systemName,'_nf.',time,'.dump.',num2str(i-1),'\n']);
+       % fprintf(['Reading data file: ',systemName,'_nf.',time,'.dump.',num2str(i-1),'\n']);
         dataFileName = [baseDirectory,'/',systemName,'_nf.',time,'.dump.',num2str(i-1)];
 
         %Number of columns = 1 for the molecule ID + 1 for the complex ID
@@ -148,12 +153,12 @@ for t=1:length(timeString)
     %Remember the data, and save it to our struct
     resStruct.data = allRawData;
     results = [results;resStruct]; %#ok<AGROW>
-    fprintf('\n');
+   % fprintf('\n');
 end;
 
 
 
-fprintf('done. '); toc;
+%fprintf('done. '); toc;
 
 end %%%% END OF FUNCTION
 
@@ -164,7 +169,7 @@ function [timeString] = getOutputTimes(pathToFolder)
 %
 %
     %first, extract out the actual files
-    pathToFolder
+    pathToFolder;
     folder = dir(pathToFolder);
 
     %set up the timeString to remember the results

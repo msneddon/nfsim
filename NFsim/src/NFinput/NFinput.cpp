@@ -11,19 +11,33 @@ using namespace std;
 
 component::component(TemplateMolecule *t, string name)
 {
+	mt=0;
+	uniqueId="";
+	symPermutationName="";
+	numOfBondsLabel="";
+	stateConstraintLabel="";
+
+
 	this->t=t;
 	this->name = name;
 }
 
 component::component(MoleculeType *mt, string name)
 {
+	t=0;
+	uniqueId="";
+	symPermutationName="";
+	numOfBondsLabel="";
+	stateConstraintLabel="";
+
 	this->mt=mt;
 	this->name = name;
 }
 
 component::~component()
 {
-	t=NULL;
+	t=0;
+	mt=0;
 }
 
 
@@ -755,377 +769,6 @@ bool NFinput::initStartSpecies(
 
 
 
-bool NFinput::FindReactionRuleSymmetry(
-		TiXmlElement * pRxnRule,
-		System * s,
-		map <string,double> &parameter,
-		map<string,int> &allowedStates,
-		map <string, component> &symComps,
-		map <string, component> &symRxnCenter,
-		bool verbose)
-{
-	try {
-		map <string, component> comps;
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//Grab the name of the rule
-		string rxnName;
-		if(!pRxnRule->Attribute("id")) {
-			cerr<<"ReactionRule tag without a valid 'id' attribute.  Quiting"<<endl;
-			return false;
-		} else {
-			rxnName = pRxnRule->Attribute("id");
-		}
-		if(verbose) cout<<"\n\t\tReading Reaction Rule: "<<rxnName<<" to find symmetries...  ";
-
-
-		TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
-		if(!pListOfReactantPatterns) {
-			cout<<"\n!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant patterns!"<<endl;
-			return true;
-		}
-
-		TiXmlElement *pReactant;
-		for ( pReactant = pListOfReactantPatterns->FirstChildElement("ReactantPattern"); pReactant != 0; pReactant = pReactant->NextSiblingElement("ReactantPattern"))
-		{
-			const char *reactantName = pReactant->Attribute("id");
-			if(!reactantName) {
-				cerr<<"\nReactant tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
-				return false;
-			}
-			//if(verbose) cout<<"\t\t\tReading Reactant Pattern: "<<reactantName<<endl;
-
-			//int NumOfSymComps = symComps.size();
-			TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
-			if(pListOfMols) {
-				if(!readPatternForSymmetry(pListOfMols, s, reactantName, comps, symComps, verbose)) return false;
-			}
-			else {
-				cerr<<"\nReactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
-				return false;
-			}
-
-			//cout<<"("<<symComps.size() - NumOfSymComps<<")"<<endl;
-		}
-
-
-		//Read in the list of operations we need to perform in this rule
-		TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
-		if(!pListOfOperations) {
-			cout<<"\n!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no operations!  This rule will do nothing!"<<endl;
-			return true;
-		}
-
-		//First extract out the state changes
-		TiXmlElement *pStateChange;
-		for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange"))
-		{
-			//Make sure all the information about the state change is here
-			string site, finalState;
-			if(!pStateChange->Attribute("site") || !pStateChange->Attribute("finalState")) {
-				cerr<<"\nA specified state change operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-				cerr<<"have a valid site or finalState attribute.  Quitting."<<endl;
-				return false;
-			} else {
-				site = pStateChange->Attribute("site");
-				finalState = pStateChange->Attribute("finalState");
-			}
-
-			if(comps.find(site)!=comps.end()) {
-				component c = comps.find(site)->second;
-				MoleculeType *mt = c.mt;
-
-				if(mt->isEquivalentComponent(c.name)) {
-					symRxnCenter.insert(pair <string, component> (site,c));
-					symComps.erase(site);
-				}
-			} else {
-					cerr<<"\nError in ReactionClass: '"+rxnName+"'."<<endl;
-					cerr<<"It seems that I couldn't find the states you are refering to."<<endl;
-					cerr<<"Looking for site: "<<site<<endl;
-					return false;
-			}
-
-//			try {
-//				component c = comps.find(site)->second;
-//				int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-//				ts->addStateChangeTransform(c.t,c.name,finalStateInt);
-//			} catch (exception& e) {
-//				cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
-//				cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
-//				return false;
-//			}
-		}
-
-
-		//Search for symmetric sites in the bonds that are formed...
-		TiXmlElement *pAddBond;
-		for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond"))
-		{
-			//Make sure all the information about the binding operation is here
-			string site1, site2;
-			if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
-				cerr<<"\nA specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-				cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
-				return false;
-			} else {
-				site1 = pAddBond->Attribute("site1");
-				site2 = pAddBond->Attribute("site2");
-			}
-
-			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
-				component c1 = comps.find(site1)->second;
-				component c2 = comps.find(site2)->second;
-
-				MoleculeType *mt1 = c1.mt;
-				MoleculeType *mt2 = c2.mt;
-
-				if(mt1->isEquivalentComponent(c1.name)) {
-					symRxnCenter.insert(pair <string, component> (site1,c1));
-					symComps.erase(site1);
-				}
-				if(mt2->isEquivalentComponent(c2.name)) {
-					symRxnCenter.insert(pair <string, component> (site2,c2));
-					symComps.erase(site2);
-				}
-			} else {
-				cerr<<"\nError in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
-				cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
-				return false;
-			}
-		}
-
-		//Next extract out removal of bonds
-		TiXmlElement *pDeleteBond;
-		for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond"))
-		{
-			//Make sure all the information about the unbinding operation change is here
-			string site1,site2;
-			if(!pDeleteBond->Attribute("site1") || !pDeleteBond->Attribute("site2")) {
-				cerr<<"\nA specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-				cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
-				return false;
-			} else {
-				site1 = pDeleteBond->Attribute("site1");
-				site2 = pDeleteBond->Attribute("site2");
-
-			}
-
-			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
-				component c1 = comps.find(site1)->second;
-				component c2 = comps.find(site2)->second;
-
-				MoleculeType *mt1 = c1.mt;
-				MoleculeType *mt2 = c2.mt;
-
-				if(mt1->isEquivalentComponent(c1.name)) {
-					symRxnCenter.insert(pair <string, component> (site1,c1));
-					symComps.erase(site1);
-				}
-				if(mt2->isEquivalentComponent(c2.name)) {
-					symRxnCenter.insert(pair <string, component> (site2,c2));
-					symComps.erase(site2);
-				}
-
-			} else {
-				cout.flush();
-				cerr<<"\nError in adding an unbinding operation in ReactionClass: '"+rxnName+"'."<<endl;
-				cerr<<"It seems that I couldn't find the binding sites you are refering to."<<endl;
-				cerr<<"Looking for site: "<<site1<<endl;
-				cerr<<"Or site: "<<site2<<endl;
-				return false;
-			}
-		}
-
-
-		if(verbose)
-		if(symComps.size()>0 || symRxnCenter.size()>0) {
-			cout<<"Found "<< symRxnCenter.size() <<" equivalent components in the rxn center and ";
-			cout<<symComps.size()<<" outside rxn center."<<endl;
-		} else {
-			cout<<"No symmetries found.\n";
-		}
-
-		return true;
-
-	} catch (...) {
-		cout<<"caught something.."<<endl;
-		return false;
-	}
-}
-
-
-
-
-
-bool isValid(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
-	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
-		for(unsigned int j=i+1; j<symRxnCenterComp.size(); j++) {
-			if(symRxnCenterComp.at(i).at(currentPos.at(i)).symPermutationName
-					== symRxnCenterComp.at(j).at(currentPos.at(j)).symPermutationName) return false;
-		}
-	}
-	return true;
-}
-
-
-void dumpState(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
-	cout<<"( ";
-	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
-		cout<<symRxnCenterComp.at(s).at(currentPos.at(s)).symPermutationName<<" ";
-	cout<<")"<<endl;
-}
-
-void createSymMap(map<string,component> & symMap,
-		vector <string> &uniqueId,
-		vector <vector <component> > &symRxnCenterComp,
-		vector <int> &currentPos)
-{
-	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
-	{
-		component c = symRxnCenterComp.at(s).at(currentPos.at(s));
-		component newComp(c.mt, c.name);
-		newComp.symPermutationName = c.symPermutationName;
-		symMap.insert(pair <string, component> (uniqueId.at(s),newComp));
-	}
-}
-
-
-bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutations,
-		map<string,component> &symComps,
-		map<string,component> &symRxnCenter)
-{
-	//First, make sure we have some symmetric sites.  If not, just return and
-	//carry on as normal...
-	//if(symComps.size()==0 && symRxnCenter.size()==0) {
-	if(symRxnCenter.size()==0) {
-		map <string,component> m;
-		permutations.push_back(m);
-		return true;
-	}
-	cout<<"generating permutations..."<<endl;
-
-
-	//Vectors to hold the info we need as we are generating things...
-	vector <vector <component> > symRxnCenterComp;
-	vector <string> uniqueId;
-	vector <int> currentPos;
-
-
-	//First, translate the map into vectors that have the
-	map<string, component>::iterator it;
-	for ( it=symRxnCenter.begin() ; it != symRxnCenter.end(); it++)
-	{
-		//Create a new set to hold all the names of this equivalent site.
-		vector <component> v;
-
-		//Get the generalized component for this site or state
-		component c = (*it).second;
-		int *eq; int n_eq; //here we get the number of equivalent sites
-		//if(c.type==component::BSITE) {
-		c.mt->getEquivalencyClass(eq,n_eq, c.name);
-		//} else if(c.type==component::STATE) {
-		//	c.mt->getEquivalencyStateClass(eq,n_eq, c.name);
-		//}
-
-
-		//Loop through the equivalent sites or states and add it to the vector
-		for(int e=0; e<n_eq; e++) {
-			component newComp(c.mt, c.name);
-			//if(c.type==component::BSITE) {
-			string name(c.mt->getComponentName(eq[e]));
-			newComp.symPermutationName=name;
-			//}
-			//else if(c.type==component::STATE) {
-			//	string name(c.mt->getStateName(eq[e]));
-			//	newComp.symPermutationName=name;
-			//}
-			v.push_back(newComp);
-		}
-
-		//finally put that list of equivalent sites on the main vector
-		symRxnCenterComp.push_back(v);
-		currentPos.push_back(0);
-		uniqueId.push_back((*it).first);
-	}
-
-	// Output for debugging...
-	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
-		cout<<"sym class "<<i<<": ";
-		for(unsigned int j=0; j<symRxnCenterComp.at(i).size(); j++)
-			cout<<symRxnCenterComp.at(i).at(j).symPermutationName<<" ";
-		cout<<endl;
-	}
-
-
-	int dumpCounter = 0;
-	int activeIndex = 0; bool finished=false;
-	if(isValid(symRxnCenterComp, currentPos)) {
-		dumpCounter++;
-		cout<<dumpCounter<<": ";
-		dumpState(symRxnCenterComp, currentPos);
-
-		map<string,component> symMap;
-		createSymMap(symMap,uniqueId,symRxnCenterComp, currentPos);
-		permutations.push_back(symMap);
-	} else {
-		cout<<"Invalid Configuration! : ";
-		dumpState(symRxnCenterComp, currentPos);
-	}
-	while(true) {
-		bool looped = false;
-		while(((unsigned int)currentPos.at(activeIndex)+1)>=symRxnCenterComp.at(activeIndex).size()) {
-			looped=true;
-			currentPos.at(activeIndex)=0;
-			activeIndex++;
-			if((unsigned int)activeIndex>=symRxnCenterComp.size()) { finished=true; break; }
-		}
-		if(finished) break;
-		currentPos.at(activeIndex) = currentPos.at(activeIndex)+1;
-		if(looped) { activeIndex=0; } //Reset to the beginning of the list
-		if(isValid(symRxnCenterComp, currentPos)) {
-			dumpCounter++;
-			cout<<dumpCounter<<": ";
-			dumpState(symRxnCenterComp, currentPos);
-
-			map<string,component> symMap;
-			createSymMap(symMap,uniqueId,symRxnCenterComp, currentPos);
-			permutations.push_back(symMap);
-		} else {
-			cout<<"Invalid Configuration! : ";
-			dumpState(symRxnCenterComp, currentPos);
-		}
-	}
-
-
-	return true;
-}
-
-
-bool lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap) {
-	try {
-		if(symMap.find(id)!=symMap.end()) {
-			component symC = symMap.find(id)->second;
-			c = (&(comps.find(id)->second));
-			c->symPermutationName=symC.symPermutationName;
-		} else {
-			if(comps.find(id)!=comps.end()) {
-				c = (&(comps.find(id)->second));
-				c->symPermutationName = c->name;
-			} else {
-				cerr<<"It seems that I couldn't find the binding sites or states you are refering to."<<endl;
-				cerr<<"Could not find the component that matches the id: "<<id<<endl;
-				return false;
-			}
-		}
-	} catch (exception &e) {
-		cerr<<"There was some problem when looking up the location of a particular component."<<endl;
-		cerr<<"Could not find the component that matches the id: "<<id<<endl;
-		return false;
-	}
-	return true;
-}
-
 
 
 
@@ -1163,7 +806,7 @@ bool NFinput::initReactionRules(
 			//For each possible permuation of the reaction rule, let us create a separate reaction
 			//to keep track of the result...
 			vector < map <string,component> > permutations;
-			generateRxnPermutations(permutations, symComps, symRxnCenter);
+			generateRxnPermutations(permutations, symComps, symRxnCenter,verbose);
 
 			for( unsigned int p=0; p<permutations.size(); p++)
 			{
@@ -1189,6 +832,8 @@ bool NFinput::initReactionRules(
 				map <string,TemplateMolecule *> reactants;
 				map <string, component> comps;
 				vector <TemplateMolecule *> templates;
+
+
 
 				//  Read in the Reactant Patterns for this rule
 				TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
@@ -1855,82 +1500,7 @@ bool NFinput::initObservables(
 
 
 
-bool NFinput::readPatternForSymmetry(
-		TiXmlElement * pListOfMol,
-		System * s,
-		string patternName,
-		map <string, component> &comps,
-		map <string, component> &symComps,
-		bool verbose)
-{
-	TiXmlElement *pMol;
-	for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule"))
-	{
-		//First get the type of molecule and retrieve the moleculeType object from the system
-		string molName, molUid;
-		if(!pMol->Attribute("name") || ! pMol->Attribute("id")) {
-			cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-			return false;
-		} else {
-			molName = pMol->Attribute("name");
-			molUid = pMol->Attribute("id");
-		}
 
-		//Skip anything that is a null molecule
-		if(molName=="Null" || molName=="NULL" || molName=="null") continue;
-		if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
-
-		//Get the moleculeType and create the actual template
-		MoleculeType *moltype = s->getMoleculeTypeByName(molName);
-
-		//Loop through the components of the molecule in order to set state values
-		TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
-		if(pListOfComp)
-		{
-			TiXmlElement *pComp;
-			for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component"))
-			{
-				//Get the basic components of this molecule
-				string compId, compName, compBondCount;
-				if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
-					cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
-					return false;
-				} else {
-					compId = pComp->Attribute("id");
-					compName = pComp->Attribute("name");
-					compBondCount = pComp->Attribute("numberOfBonds");
-				}
-
-
-				//Declare and remember this component...
-				component c(moltype, compName);
-				comps.insert(pair <string, component> (compId,c));
-				if(moltype->isEquivalentComponent(compName)) {
-						symComps.insert(pair <string, component> (compId,c));
-				} //else {/*cout<<"no"<<endl;*/ }  //just a check for debugging
-
-				//Make sure the number of binding sites makes sense here
-				if(pComp->Attribute("numberOfBonds")) {
-					string numOfBonds = pComp->Attribute("numberOfBonds");
-					int numOfBondsInt = -1;
-					if(numOfBonds!="+") {
-						try {
-							numOfBondsInt = NFutil::convertToInt(numOfBonds);
-						} catch (std::runtime_error e) {
-							cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
-							cerr<<e.what()<<endl;
-							return false;
-						}
-					}
-				}
-
-
-			} //end loop over components
-		} //end if statement for compenents to exist
-
-	}
-	return true;
-}
 
 
 

@@ -353,20 +353,31 @@ void System::purgeAndPrintAvailableComplexList()
 //observables.
 void System::prepareForSimulation()
 {
+	cout<<"preparing simulation..."<<endl;
 	//Note!!  : the order of preparing the system matters!  You have to prepare
 	//some things before others, because certain things require other
+
+	//First, set the observables up correctly, so when functions evaluate, they get the
+	//correct values
+	//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+	//	(*molTypeIter)->addAllToObservables();
+	//}
 
   	//First, we have to prep all the functions...
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
 
+  	//cout<<"here 1..."<<endl;
+
   	for( int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
+
+  	//cout<<"here 2..."<<endl;
 
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
-
+  	//cout<<"here 3..."<<endl;
 
 
   	// now we prepare all reactions
@@ -377,11 +388,13 @@ void System::prepareForSimulation()
   		allReactions.at(r)->setRxnId(r);
   	}
 
+  	//cout<<"here 4..."<<endl;
 
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->prepareForSimulation();
 
+	//cout<<"here 5..."<<endl;
 
 	//If there are local functions to be had, make sure we set up those local function lists in the molecules
 	//before we try to add molecules to reactant lists
@@ -390,17 +403,26 @@ void System::prepareForSimulation()
 	  		(*molTypeIter)->setUpLocalFunctionListForMolecules();
 	}
 
+	//cout<<"here 6..."<<endl;
 
-	this->evaluateAllLocalFunctions();
 
   	//prep each molecule type for the simulation
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
   		(*molTypeIter)->prepareForSimulation();
 
+  	//cout<<"here 7..."<<endl;
+
+  	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+  		(*molTypeIter)->addAllToObservables();
+  	}
 
 
+  	//cout<<"here 8..."<<endl;
 
 
+	this->evaluateAllLocalFunctions();
+
+	//cout<<"here 9..."<<endl;
 
   	//if(BASIC_MESSAGE) cout<<"preparing the system...\n";
   	//printIndexAndNames();
@@ -1094,7 +1116,7 @@ void System::updateSystemWithNewParameters() {
 	//Update Atot (the total propensity of the system)
 	this->recompute_A_tot();
 
-	cout<<"warning - only functions and rxns that depend on functions are updated!"<<endl;
+	//cout<<"warning - only functions and rxns that depend on functions are updated!"<<endl;
 }
 void System::printAllParameters() {
 	if(paramMap.size()==0) cout<<"no system parameters to print."<<endl;

@@ -20,11 +20,12 @@ set(gca, 'fontSize', 15);
 
 %%%%% Plot a surface of how the methylation distribution changes in time
 figure;
-surf(x(:,2:10)./sum(x(1,2:10)),'EdgeColor','none','FaceAlpha',1,'FaceLighting','phong');
+surf([0:8],x(:,1)./60,x(:,2:10)./sum(x(1,2:10)),'EdgeColor','none','FaceAlpha',1,'FaceLighting','phong');
 hold on;
 grid on;
 ylabel('Time (minutes)','FontName', 'Arial','fontSize',18);
 xlabel('Methylation Level','FontName', 'Arial','fontSize',18);
+zlabel('Fraction of Receptors','FontName', 'Arial','fontSize',18);
 set(gca, 'TickDir', 'out');
 set(gcf, 'color', 'white');
 set(gca, 'FontName', 'Arial');
@@ -36,7 +37,7 @@ set(gca, 'fontSize', 15);
 r=readNFdump();
 pOn=getAvgLocalFunctionValue(r,'RD');
 figure; plot(getTimeArray(r)./60,pOn,'LineWidth',3,'Color','b'); hold on; 
-axis([0,max(getTimeArray(r)./60),0,1]);
+axis([0,max(getTimeArray(r)./60),0,0.5]);
 xlabel('Time (minutes)','FontName', 'Arial','fontSize',18);
 ylabel('Average Methylation Level','FontName', 'Arial','fontSize',18);
 

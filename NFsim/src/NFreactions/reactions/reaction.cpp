@@ -49,9 +49,7 @@ double FunctionalRxnClass::update_a() {
 		exit(1);
 	}
 
-	//a = 1;
-	//for(unsigned int i=0; i<n_reactants; i++)
-	//	a*=reactantLists[i]->size();
+
 
 	//	cout<<"here"<<endl;
 	if(gf!=0) {
@@ -68,13 +66,26 @@ double FunctionalRxnClass::update_a() {
 	if(a<0) {
 		cout<<"Warning!!  The function you provided for functional rxn: '"<<name<<"' evaluates\n";
 		cout<<"to a value less than zero!  You cannot have a negative propensity!";
-		//cout<<"here is the offending function: \n";
-		//gf->printDetails();
+		cout<<"here is the offending function: \n";
+		gf->printDetails();
 		cout<<"\nhere is the offending reaction: \n";
 		this->printDetails();
 		cout<<"\n\nquitting."<<endl;
 		exit(1);
 	}
+
+	//Finally, use a check to
+	for(unsigned int i=0; i<n_reactants; i++) {
+		if(reactantLists[i]->size()==0 && a>0.000000001) {
+			a=0;
+	//		cout<<"Warning!  Function evaluates to positive rate for a reaction, but"<<endl;
+//			cout<<"one of the reactant lists is empty!"<<endl;
+//			this->printDetails();
+//			cf->printDetails(reactantTemplates[0]->getMoleculeType()->getSystem());
+			//exit(1);
+		}
+	}
+
 	return a;
 }
 

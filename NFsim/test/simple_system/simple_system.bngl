@@ -24,6 +24,9 @@ X(p~1) -> X(p~0) dephos
 X(y,p~0) + Y(x) -> X(y!1,p~0).Y(x!1) kon
 X(y!1,p~0).Y(x!1) -> X(y,p~0) + Y(x) koff
 X(y!1,p~0).Y(x!1) -> X(y,p~1) + Y(x) kcat
+
+
+#X(p~*) -> X(p~PLUS) 5
 end reaction rules
 
 

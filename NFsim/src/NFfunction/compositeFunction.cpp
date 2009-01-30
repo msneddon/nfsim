@@ -282,6 +282,8 @@ void CompositeFunction::printDetails(System *s) {
 	for(int f=0; f<n_gfs; f++) {
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
+
+		gfs[f]->printDetails(s);
 	}
 	for(int f=0; f<n_lfs; f++) {
 		cout<<"         local function: "<<lfs[f]->getNiceName()<<endl;
