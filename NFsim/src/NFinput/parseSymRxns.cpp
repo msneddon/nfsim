@@ -20,7 +20,6 @@ bool NFinput::FindReactionRuleSymmetry(
 	try {
 		map <string, component> comps;
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Grab the name of the rule
 		string rxnName;
 		if(!pRxnRule->Attribute("id")) {
@@ -32,12 +31,14 @@ bool NFinput::FindReactionRuleSymmetry(
 		if(verbose) cout<<"\n\t\tReading Reaction Rule: "<<rxnName<<" to find symmetries...  ";
 
 
+		//Look at the list of patterns
 		TiXmlElement *pListOfReactantPatterns = pRxnRule->FirstChildElement("ListOfReactantPatterns");
 		if(!pListOfReactantPatterns) {
 			cout<<"\n!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant patterns!"<<endl;
 			return true;
 		}
 
+		//Read the pattern for symmetry
 		TiXmlElement *pReactant;
 		for ( pReactant = pListOfReactantPatterns->FirstChildElement("ReactantPattern"); pReactant != 0; pReactant = pReactant->NextSiblingElement("ReactantPattern"))
 		{
@@ -48,7 +49,6 @@ bool NFinput::FindReactionRuleSymmetry(
 			}
 			//if(verbose) cout<<"\t\t\tReading Reactant Pattern: "<<reactantName<<endl;
 
-			//int NumOfSymComps = symComps.size();
 			TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
 			if(pListOfMols) {
 				if(!readPatternForSymmetry(pListOfMols, s, reactantName, comps, symComps, verbose)) return false;
@@ -57,8 +57,6 @@ bool NFinput::FindReactionRuleSymmetry(
 				cerr<<"\nReactant pattern "<<reactantName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
 				return false;
 			}
-
-			//cout<<"("<<symComps.size() - NumOfSymComps<<")"<<endl;
 		}
 
 
@@ -94,20 +92,10 @@ bool NFinput::FindReactionRuleSymmetry(
 				}
 			} else {
 					cerr<<"\nError in ReactionClass: '"+rxnName+"'."<<endl;
-					cerr<<"It seems that I couldn't find the states you are refering to."<<endl;
+					cerr<<"It seems that I couldn't find the states you are referring to."<<endl;
 					cerr<<"Looking for site: "<<site<<endl;
 					return false;
 			}
-
-//			try {
-//				component c = comps.find(site)->second;
-//				int finalStateInt = allowedStates.find(c.t->getMoleculeTypeName()+"_"+c.name+"_"+finalState)->second;
-//				ts->addStateChangeTransform(c.t,c.name,finalStateInt);
-//			} catch (exception& e) {
-//				cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
-//				cerr<<"It seems that either I couldn't find the state, or the final state is not valid."<<endl;
-//				return false;
-//			}
 		}
 
 
@@ -205,7 +193,6 @@ bool NFinput::FindReactionRuleSymmetry(
 				cout<<"\t\t\t\ton the side: "<<endl;
 				for(mapIter=symComps.begin();mapIter!=symComps.end(); mapIter++) {
 					cout<<"\t\t\t\t\t"<<mapIter->first<<"   "<<mapIter->second.name<<endl;
-
 				}
 			} else {
 				cout<<"None found.\n";
@@ -222,25 +209,23 @@ bool NFinput::FindReactionRuleSymmetry(
 
 
 
-
+//////  DEPRECATED
 //makes sure the component hasn't been used yet
-bool isValid(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
-	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
-		for(unsigned int j=i+1; j<symRxnCenterComp.size(); j++) {
-			if(symRxnCenterComp.at(i).at(currentPos.at(i)).symPermutationName
-					== symRxnCenterComp.at(j).at(currentPos.at(j)).symPermutationName) return false;
-		}
-	}
-	return true;
-}
-
-
-void dumpState(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
-	cout<<"( ";
-	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
-		cout<<symRxnCenterComp.at(s).at(currentPos.at(s)).symPermutationName<<" ";
-	cout<<")"<<endl;
-}
+//bool isValid(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
+//	for(unsigned int i=0; i<symRxnCenterComp.size(); i++) {
+//		for(unsigned int j=i+1; j<symRxnCenterComp.size(); j++) {
+//			if(symRxnCenterComp.at(i).at(currentPos.at(i)).symPermutationName
+//					== symRxnCenterComp.at(j).at(currentPos.at(j)).symPermutationName) return false;
+//		}
+//	}
+//	return true;
+//}
+//void dumpState(vector <vector <component> > &symRxnCenterComp, vector <int> &currentPos) {
+//	cout<<"( ";
+//	for(unsigned int s=0; s<symRxnCenterComp.size(); s++)
+//		cout<<symRxnCenterComp.at(s).at(currentPos.at(s)).symPermutationName<<" ";
+//	cout<<")"<<endl;
+//}
 
 void createSymMap(map<string,component> & symMap,
 		vector <string> &uniqueId,
@@ -309,6 +294,7 @@ void createFullSymMaps(
 				else cout<<" [ ";
 			}
 
+			cout.flush();
 			for ( it=symMaps.at(k).at(currentPosition.at(k)).begin() ; it != symMaps.at(k).at(currentPosition.at(k)).end(); it++)
 			{
 				component *c = &it->second;
@@ -325,6 +311,8 @@ void createFullSymMaps(
 				else cout<<"] x";
 			}
 		}
+
+
 		if(verbose) cout<<endl;
 		counter++;
 		permutations.push_back(singlePermutation);
@@ -341,7 +329,11 @@ void createFullSymMaps(
 				isDone = true; break;
 			}
 		} while(true);
+
+
 	}
+
+
 
 	if(verbose) cout<<endl;
 }
@@ -405,16 +397,72 @@ void assembleFullSymmetryList(
 
 
 
-//Checks if a given permutation on molecule components is valid (meaning
-//we don't use the same name twice in any given permutation
+//Build an extended vector object called symmetries that
+//saves all possible names for all possible components
+void assembleFullSymmetryListOnRxnCenter(
+		vector <vector <vector <component> > > &symmetries, //for output
+		vector <string> &moleculeIds,    //also for output
+		map<string,component> &symComps //the input of symmetric components
+		)
+{
+	//cout<<"\n\nreaction centers: "<<endl;
+		map<string, component>::iterator it;
+		for ( it=symComps.begin() ; it != symComps.end(); it++)
+		{
+			//cout<<it->first<<"   "<<it->second.name<<endl;
+
+			//First, get the information about this symmetric component
+			string id = it->first;
+			component c = (*it).second;
+
+			//Next, identify if this component is in a molecule we haven't yet considered...
+			int length = id.find_last_not_of("_")-2;
+			string thisMoleculeId = id.substr(0,length);
+			int moleculeIndex = -1;
+
+			for(unsigned int i=0; i<moleculeIds.size(); i++) {
+				if(moleculeIds.at(i).compare(thisMoleculeId)==0) {
+					moleculeIndex = i; break;
+				}
+			}
+			if(moleculeIndex==-1) {
+				moleculeIndex = moleculeIds.size();
+				moleculeIds.push_back(thisMoleculeId);
+
+				//Create the vector to store all of our potential permutations
+				vector <vector <component> > v;
+				vector <component> symRxnCenterComp;
+				vector <component> symNonRxnCenterComp;
+				v.push_back(symRxnCenterComp);
+				v.push_back(symNonRxnCenterComp);
+				symmetries.push_back(v);
+			}
+
+			//Get the list of equivalent components, and loop over them
+			//to remember them in our new vector we are constructing
+			int *eq; int n_eq; //here we get the number of equivalent sites
+			c.mt->getEquivalencyClass(eq,n_eq, c.name);
+			for(int e=0; e<n_eq; e++) {
+				component newSymComp(c.mt, c.name);
+				string name(c.mt->getComponentName(eq[e]));
+				newSymComp.symPermutationName=name;
+				newSymComp.uniqueId = id;
+				symmetries.at(moleculeIndex).at(0).push_back(newSymComp);
+			}
+		}
+}
+
+
+
+
+
+//Checks only at reaction center (Assumes all symmetries are at reaction center!)
 bool isMoleculePermuationValid(
 		int mId,
 		vector <vector <vector <component> > > &symmetries,
-		vector <bool> &isRxnCenter,
 		vector <vector <int> > &originalPosition,
 		vector <string> &uniqueComponents,
 		vector <int> &currentPosition,
-		vector <vector <vector <string> > > &offRxnCenterSymClasses,
 		vector <map <string,component> > &thisMoleculeSymMap
 		)
 {
@@ -423,11 +471,7 @@ bool isMoleculePermuationValid(
 	vector <string> usedNames;
 	for(unsigned int k=0; k<currentPosition.size(); k++) {
 		component *c;
-		if(isRxnCenter.at(k)) {
-			c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
-		} else {
-			c = &symmetries.at(mId).at(1).at(originalPosition.at(k).at(currentPosition.at(k)));
-		}
+		c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
 
 		for(unsigned int u=0; u<usedNames.size(); u++) {
 			if(usedNames.at(u).compare(c->symPermutationName)==0) {
@@ -437,6 +481,10 @@ bool isMoleculePermuationValid(
 		usedNames.push_back(c->symPermutationName);
 	}
 
+	return true;
+
+
+
 	///// Output for debugging
 	//cout<<"currentPosition (originalPosition) Array"<<endl;
 	//for(unsigned int k=0; k<currentPosition.size(); k++) {
@@ -444,123 +492,8 @@ bool isMoleculePermuationValid(
 	//	cout<<originalPosition.at(k).at(currentPosition.at(k))<<") ";
 	//}
 	//cout<<endl;
-
-
-
-	///////////////////////////////////////////////////////
-	//Second, make sure we haven't already used a rearrangement of this permutation
-	//before by looking at the past maping sets
-
-	//if there is nothing to check, we can stop now
-	if(offRxnCenterSymClasses.at(mId).size()==0) return true;
-
-
-	//Init the mappedValue array
-	vector <vector <string> > mappedValue;
-	for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
-		vector <string> v;
-		for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
-			v.push_back("_");
-		}
-		mappedValue.push_back(v);
-	}
-
-    //Loop through all the past sym maps that we have accepted
-	for(unsigned int k=0; k<thisMoleculeSymMap.size(); k++) {
-
-		//Compare this map to the states to catch any duplicate rearrangements
-
-		//put the values into the mappedValue array
-		for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
-			for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
-				string compSymName = thisMoleculeSymMap.at(k).find(offRxnCenterSymClasses.at(mId).at(j).at(i))->second.symPermutationName;
-				mappedValue.at(j).at(i) = compSymName;
-			}
-		}
-
-		///// Output for debugging
-		//cout<<"\n\n  Mapped states... "<<endl;
-		//for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
-		//	cout<<"   ** Sym Class "<<j<<endl;
-		//	for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
-		//		cout<<"      -Component: "<<offRxnCenterSymClasses.at(mId).at(j).at(i);
-		//		cout<<"  "<<mappedValue.at(j).at(i)<<endl;
-		//	}
-		//}
-
-		//Because we know that each state value is only used once, for each symmetry class,
-		//we just count the number of checks.  If we checked off the same number as the size
-		//of the sym component vector, then we matched them all and so we just have a permutation
-		//on the classes.  Count those as a matched Sym class.  If we matched them all, then
-		//the permutation is not valid...
-
-		int matchedSymClasses = 0;
-		for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) { //loops through each sym class
-
-			if(offRxnCenterSymClasses.at(mId).at(j).size()==1) continue;
-
-
-			int checks = 0;
-			//loop through each component in the sym class
-			for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
-
-				///// Output for debugging
-				//cout<<" LOOKING AT     -Component: "<<offRxnCenterSymClasses.at(mId).at(j).at(i);
-				//cout<<"  "<<mappedValue.at(j).at(i)<<endl;
-
-
-				//Look up what we are trying to map here, from the set of input vectors
-				string componentToBeMapped = "";
-				for(unsigned int t=0; t<currentPosition.size(); t++) {
-
-					//Only look if we are NOT at the reaction center
-					if(isRxnCenter.at(t)) { continue; }
-
-					component *c = &symmetries.at(mId).at(1).at(originalPosition.at(t).at(currentPosition.at(t)));
-
-					//cout<<"    now checking out "<<currentPosition.at(t)<<" ("<<originalPosition.at(t).at(currentPosition.at(t))<<")"<<endl;
-					//cout<<"     "<<c->uniqueId<<endl;
-
-					if(c->uniqueId.compare(offRxnCenterSymClasses.at(mId).at(j).at(i))==0) {
-						componentToBeMapped=c->symPermutationName;
-						//cout<<" in new map, found :"<<componentToBeMapped<<"  "<<c->uniqueId<<endl;
-						break;
-					}
-				}
-				if(componentToBeMapped.empty()) {
-					cout<<"In parseSymRxns.cpp::Nothing mapped to this position, when checking if permutation is valid!!!"<<endl;
-					exit(1);
-				}
-
-
-
-				//See if that was mapped to any other location in the mapped value vector
-				for(unsigned int p=0; p<mappedValue.at(j).size(); p++) {
-					if(componentToBeMapped.compare(mappedValue.at(j).at(p))==0) {
-						checks++;
-					}
-				}
-			}
-			if(checks==(int)offRxnCenterSymClasses.at(mId).at(j).size()) {
-				matchedSymClasses++;
-			} else {
-				break;
-			}
-		}
-
-		//cout<<"Number of matched Sym Classes: "<<matchedSymClasses<<endl;
-
-		//If the number of matched sym classes equals the number of actual
-		//sym classes, then all of our sym classes are a permutation of this
-		//mapping, so this configuration is not valid.
-		if(matchedSymClasses==(int)offRxnCenterSymClasses.at(mId).size()) {
-			return false;
-		}
-	}
-
-	//well, if we got here, everything looks valid...
-	return true;
 }
+
 
 
 //
@@ -682,65 +615,38 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 {
 	//First, make sure we have some symmetric sites.  If not, just return and
 	//carry on as normal...
-	if(symComps.size()==0 && symRxnCenter.size()==0) {
-	//if(symRxnCenter.size()==0) {
+	//if(symComps.size()==0 && symRxnCenter.size()==0) {
+	if(symRxnCenter.size()==0) {
 		map <string,component> m;
 		permutations.push_back(m);
 		return true;
 	}
+
+	/// Output for debugging
+	//map <string,component>::iterator mapIter;
+	//for(mapIter=symComps.begin();mapIter!=symComps.end(); mapIter++) {
+	//	cout<<mapIter->first<<"   "<<mapIter->second.name<<"   bond:"<<mapIter->second.numOfBondsLabel;
+	//	cout<<"  state:"<<mapIter->second.stateConstraintLabel<<endl;
+	//}
+
+
 	if(verbose) cout<<"\t\t\tGenerating symmetric permutations..."<<endl;
 
-	///// Output for debugging
-	//	map <string,component>::iterator mapIter;
-	//	for(mapIter=symComps.begin();mapIter!=symComps.end(); mapIter++) {
-	//		cout<<mapIter->first<<"   "<<mapIter->second.name<<"   bond:"<<mapIter->second.numOfBondsLabel;
-	//		cout<<"  state:"<<mapIter->second.stateConstraintLabel<<endl;
-	//	}
-	//	exit(1);
-
-	/*For each molecule template in the pattern, we need to have the list of
-	 * all the symmetric
-
-	Strategy: generate every possible permutation, remove the ones that are clearly not
-	valid.  Then, when we create the template molecules from those permutations later
-
-	*/
-
-	//Some vectors to store the full symmetry list and the molecule names
 	vector <vector <vector <component> > > symmetries;
 	vector <string> moleculeIds;
 
-	//Assemble the full list of all possible states that each component,
-	//either at the reaction center or not, can be in.
-	assembleFullSymmetryList(symmetries,moleculeIds,symRxnCenter,true);
-	assembleFullSymmetryList(symmetries,moleculeIds,symComps,false);
+	//Assemble the list of possible components for each symmetric class on a reaction center
+	assembleFullSymmetryListOnRxnCenter(symmetries,moleculeIds,symRxnCenter);
 
-	//Now assemble the sym classes that are off the reaction center
-	//to tell us if ordering matters in the permutations...
-	vector <vector <vector <string> > > offRxnCenterSymClasses;
-	assembleOffRxnCenterSymClasses(
-			offRxnCenterSymClasses,
-			moleculeIds,
-			symComps);
-
-
-	///// Output for debugging
-	//	for(unsigned int i=0; i<symmetries.size(); i++) {
-	//		cout<<">>>> "<<moleculeIds.at(i)<<endl;
-	//		vector <component> symRxnCenterComp = symmetries.at(i).at(0);
-	//		vector <component> symNonRxnCenterComp = symmetries.at(i).at(1);
-	//
-	//		cout<<"  ** Rxn Center Components: "<<endl;
-	//		for(unsigned int k=0; k<symRxnCenterComp.size(); k++) {
-	//			cout<<"      -(" <<symRxnCenterComp.at(k).uniqueId<<"-"<<symRxnCenterComp.at(k).name<<")  "<<symRxnCenterComp.at(k).symPermutationName<<endl;
-	//		}
-	//
-	//		cout<<"  ** Other Symmetric Components: "<<endl;
-	//		for(unsigned int k=0; k<symNonRxnCenterComp.size(); k++) {
-	//			cout<<"      -(" <<symNonRxnCenterComp.at(k).uniqueId<<"-"<<symNonRxnCenterComp.at(k).name<<")  "<<symNonRxnCenterComp.at(k).symPermutationName<<endl;
-	//		}
+	//Some more output for debugging
+	//for(unsigned int i=0; i<symmetries.size(); i++) {
+	//	cout<<">>>> "<<moleculeIds.at(i)<<endl;
+	//	vector <component> symRxnCenterComp = symmetries.at(i).at(0);
+	//	cout<<"  ** Rxn Center Components: "<<endl;
+	//	for(unsigned int k=0; k<symRxnCenterComp.size(); k++) {
+	//		cout<<"      -(" <<symRxnCenterComp.at(k).uniqueId<<"-"<<symRxnCenterComp.at(k).name<<")  "<<symRxnCenterComp.at(k).symPermutationName<<endl;
 	//	}
-
+	//}
 
 	//Something to hold all of our intermediate symmetric site maps
 	//which will be for each molecule, there is a vector of maps
@@ -756,7 +662,7 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 
 		//extract out the necessary information
 		vector <component> symRxnCenterComp = symmetries.at(mId).at(0);
-		vector <component> symNonRxnCenterComp = symmetries.at(mId).at(1);
+		//vector <component> symNonRxnCenterComp = symmetries.at(mId).at(1);
 
 
 		// Here we assemble the list of unique components.  For each permutation,
@@ -779,30 +685,14 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 				originalPosition.push_back(v);
 			}
 		}
-		for(unsigned int k=0; k<symNonRxnCenterComp.size(); k++) {
-			bool found = false;
-			for(unsigned int i=0; i<uniqueComponents.size(); i++) {
-				if(uniqueComponents.at(i).compare(symNonRxnCenterComp.at(k).uniqueId)==0) {
-					originalPosition.at(i).push_back(k);
-					found=true; break;
-				}
-			}
-			if(!found) {
-				uniqueComponents.push_back(symNonRxnCenterComp.at(k).uniqueId);
-				isRxnCenter.push_back(false);
-				vector <int> v; v.push_back(k);
-				originalPosition.push_back(v);
-			}
-		}
-
 		///// Output for debugging
-		//		cout<<"\n\nUnique Components:"<<endl;
-		//		for(unsigned int i=0; i<uniqueComponents.size(); i++) {
-		//			cout<<uniqueComponents.at(i)<<"  count: " << originalPosition.at(i).size()<<endl;
-		//			for(unsigned int j=0; j<originalPosition.at(i).size(); j++) {
-		//				cout<<" index location: "<<originalPosition.at(i).at(j)<<endl;
-		//			}
-		//		} cout<<endl;
+		//cout<<"\n\nUnique Components:"<<endl;
+		//for(unsigned int i=0; i<uniqueComponents.size(); i++) {
+		//	cout<<uniqueComponents.at(i)<<"  count: " << originalPosition.at(i).size()<<endl;
+		//	for(unsigned int j=0; j<originalPosition.at(i).size(); j++) {
+		//		cout<<" index location: "<<originalPosition.at(i).at(j)<<endl;
+		//	}
+		//} cout<<endl;
 
 
 		vector <int> currentPosition;
@@ -814,8 +704,7 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 		{
 			//Determine if the current permutation is valid...
 			bool isValid = isMoleculePermuationValid(mId,
-					symmetries,isRxnCenter,originalPosition,uniqueComponents,currentPosition,
-					offRxnCenterSymClasses,
+					symmetries,originalPosition,uniqueComponents,currentPosition,
 					thisMoleculeSymMap);
 
 			//If it is valid, then we have to add it to the list of permutations on this molecule
@@ -827,19 +716,19 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 						symmetries,isRxnCenter,originalPosition,currentPosition);
 				thisMoleculeSymMap.push_back(moleculeSymMapForThisPermutation);
 
-				///// Output for debugging
-//				cout<<"   [ ";
-//				for(unsigned int k=0; k<currentPosition.size(); k++) {
-//					component *c;
-//					if(isRxnCenter.at(k)) {
-//						c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
-//						cout<<"*";
-//					} else {
-//						c = &symmetries.at(mId).at(1).at(originalPosition.at(k).at(currentPosition.at(k)));
-//					}
-//					cout<<c->symPermutationName<<" ";
-//				}
-//				cout<<" ]"<<endl;
+				/// Output for debugging
+				//cout<<"   [ ";
+				//for(unsigned int k=0; k<currentPosition.size(); k++) {
+				//	component *c;
+				//	if(isRxnCenter.at(k)) {
+				//		c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
+				//		cout<<"*";
+				//	} else {
+				//		c = &symmetries.at(mId).at(1).at(originalPosition.at(k).at(currentPosition.at(k)));
+				//	}
+				//	cout<<c->symPermutationName<<" ";
+				//}
+				//cout<<" ]"<<endl;
 			}
 
 
@@ -860,15 +749,492 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 
 		}
 
-
 		//Finally, add the symmetric maps of this molecule to the list...
 		symMaps.push_back(thisMoleculeSymMap);
 	}
 
-
-	//With our sym maps for each molecule assembled, we can arrange them into permutations
+	//and here we can create the symmetric permutation map
 	createFullSymMaps(permutations, symMaps, verbose);
+
 	return true;
+}
+
+
+bool NFinput::lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap) {
+	try {
+		if(symMap.find(id)!=symMap.end()) {
+			component symC = symMap.find(id)->second;
+			c = (&(comps.find(id)->second));
+			c->symPermutationName=symC.symPermutationName;
+		} else {
+			if(comps.find(id)!=comps.end()) {
+				c = (&(comps.find(id)->second));
+				c->symPermutationName = c->name;
+			} else {
+				cerr<<"It seems that I couldn't find the binding sites or states you are refering to."<<endl;
+				cerr<<"Could not find the component that matches the id: "<<id<<endl;
+				return false;
+			}
+		}
+	} catch (exception &e) {
+		cerr<<"There was some problem when looking up the location of a particular component."<<endl;
+		cerr<<"Could not find the component that matches the id: "<<id<<endl;
+		return false;
+	}
+	return true;
+}
+
+bool NFinput::readPatternForSymmetry(
+		TiXmlElement * pListOfMol,
+		System * s,
+		string patternName,
+		map <string, component> &comps,
+		map <string, component> &symComps,
+		bool verbose)
+{
+	TiXmlElement *pMol;
+	for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule"))
+	{
+		//First get the type of molecule and retrieve the moleculeType object from the system
+		string molName, molUid;
+		if(!pMol->Attribute("name") || ! pMol->Attribute("id")) {
+			cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating pattern '"<<patternName<<"'. Quitting"<<endl;
+			return false;
+		} else {
+			molName = pMol->Attribute("name");
+			molUid = pMol->Attribute("id");
+		}
+
+		//Skip anything that is a null molecule
+		if(molName=="Null" || molName=="NULL" || molName=="null") continue;
+		if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
+
+		//Get the moleculeType and create the actual template
+		MoleculeType *moltype = s->getMoleculeTypeByName(molName);
+
+		//Loop through the components of the molecule
+		TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
+		if(pListOfComp)
+		{
+			TiXmlElement *pComp;
+			for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component"))
+			{
+				//Get the basic components of this molecule
+				string compId, compName, compBondCount, compStateLabel;
+				if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
+					cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
+					return false;
+				} else {
+					compId = pComp->Attribute("id");
+					compName = pComp->Attribute("name");
+					compBondCount = pComp->Attribute("numberOfBonds");
+					compStateLabel = "none";
+					if(pComp->Attribute("state")) {
+						compStateLabel = pComp->Attribute("state");
+					}
+				}
+
+
+				//Declare and remember this component...
+				component c(moltype, compName);
+				c.numOfBondsLabel=compBondCount;
+				c.stateConstraintLabel=compStateLabel;
+				comps.insert(pair <string, component> (compId,c));
+
+				if(moltype->isEquivalentComponent(compName)) {
+						symComps.insert(pair <string, component> (compId,c));
+				} //else {/*cout<<"no"<<endl;*/ }  //just a check for debugging
+
+				//Make sure the number of binding sites makes sense here
+				if(pComp->Attribute("numberOfBonds")) {
+					string numOfBonds = pComp->Attribute("numberOfBonds");
+					int numOfBondsInt = -1;
+					if(numOfBonds!="+" && numOfBonds!="*") {
+						try {
+							numOfBondsInt = NFutil::convertToInt(numOfBonds);
+						} catch (std::runtime_error e) {
+							cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
+							cerr<<e.what()<<endl;
+							return false;
+						}
+					}
+				}
+
+
+			} //end loop over components
+		} //end if statement for compenents to exist
+
+	}
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////// OLD VERSION
+//Checks if a given permutation on molecule components is valid (meaning
+//we don't use the same name twice in any given permutation
+//bool isMoleculePermuationValid(
+//		int mId,
+//		vector <vector <vector <component> > > &symmetries,
+//		vector <bool> &isRxnCenter,
+//		vector <vector <int> > &originalPosition,
+//		vector <string> &uniqueComponents,
+//		vector <int> &currentPosition,
+//		vector <vector <vector <string> > > &offRxnCenterSymClasses,
+//		vector <map <string,component> > &thisMoleculeSymMap
+//		)
+//{
+//	//First check if this permutation is self consistent (meaning each
+//	//unique component is mapped to only one symmetric component)
+//	vector <string> usedNames;
+//	for(unsigned int k=0; k<currentPosition.size(); k++) {
+//		component *c;
+//		if(isRxnCenter.at(k)) {
+//			c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
+//		} else {
+//			c = &symmetries.at(mId).at(1).at(originalPosition.at(k).at(currentPosition.at(k)));
+//		}
+//
+//		for(unsigned int u=0; u<usedNames.size(); u++) {
+//			if(usedNames.at(u).compare(c->symPermutationName)==0) {
+//				return false;
+//			}
+//		}
+//		usedNames.push_back(c->symPermutationName);
+//	}
+//
+//	///// Output for debugging
+//	//cout<<"currentPosition (originalPosition) Array"<<endl;
+//	//for(unsigned int k=0; k<currentPosition.size(); k++) {
+//	//	cout<<currentPosition.at(k)<<" (";
+//	//	cout<<originalPosition.at(k).at(currentPosition.at(k))<<") ";
+//	//}
+//	//cout<<endl;
+//
+//
+//
+//	///////////////////////////////////////////////////////
+//	//Second, make sure we haven't already used a rearrangement of this permutation
+//	//before by looking at the past maping sets
+//
+//	//if there is nothing to check, we can stop now
+//	if(offRxnCenterSymClasses.at(mId).size()==0) return true;
+//
+//
+//	//Init the mappedValue array
+//	vector <vector <string> > mappedValue;
+//	for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
+//		vector <string> v;
+//		for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
+//			v.push_back("_");
+//		}
+//		mappedValue.push_back(v);
+//	}
+//
+//    //Loop through all the past sym maps that we have accepted
+//	for(unsigned int k=0; k<thisMoleculeSymMap.size(); k++) {
+//
+//		//Compare this map to the states to catch any duplicate rearrangements
+//
+//		//put the values into the mappedValue array
+//		for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
+//			for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
+//				string compSymName = thisMoleculeSymMap.at(k).find(offRxnCenterSymClasses.at(mId).at(j).at(i))->second.symPermutationName;
+//				mappedValue.at(j).at(i) = compSymName;
+//			}
+//		}
+//
+//		///// Output for debugging
+//		//cout<<"\n\n  Mapped states... "<<endl;
+//		//for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) {
+//		//	cout<<"   ** Sym Class "<<j<<endl;
+//		//	for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
+//		//		cout<<"      -Component: "<<offRxnCenterSymClasses.at(mId).at(j).at(i);
+//		//		cout<<"  "<<mappedValue.at(j).at(i)<<endl;
+//		//	}
+//		//}
+//
+//		//Because we know that each state value is only used once, for each symmetry class,
+//		//we just count the number of checks.  If we checked off the same number as the size
+//		//of the sym component vector, then we matched them all and so we just have a permutation
+//		//on the classes.  Count those as a matched Sym class.  If we matched them all, then
+//		//the permutation is not valid...
+//
+//		int matchedSymClasses = 0;
+//		for(unsigned int j=0; j<offRxnCenterSymClasses.at(mId).size(); j++) { //loops through each sym class
+//
+//			if(offRxnCenterSymClasses.at(mId).at(j).size()==1) continue;
+//
+//
+//			int checks = 0;
+//			//loop through each component in the sym class
+//			for(unsigned int i=0; i<offRxnCenterSymClasses.at(mId).at(j).size(); i++) {
+//
+//				///// Output for debugging
+//				//cout<<" LOOKING AT     -Component: "<<offRxnCenterSymClasses.at(mId).at(j).at(i);
+//				//cout<<"  "<<mappedValue.at(j).at(i)<<endl;
+//
+//
+//				//Look up what we are trying to map here, from the set of input vectors
+//				string componentToBeMapped = "";
+//				for(unsigned int t=0; t<currentPosition.size(); t++) {
+//
+//					//Only look if we are NOT at the reaction center
+//					if(isRxnCenter.at(t)) { continue; }
+//
+//					component *c = &symmetries.at(mId).at(1).at(originalPosition.at(t).at(currentPosition.at(t)));
+//
+//					//cout<<"    now checking out "<<currentPosition.at(t)<<" ("<<originalPosition.at(t).at(currentPosition.at(t))<<")"<<endl;
+//					//cout<<"     "<<c->uniqueId<<endl;
+//
+//					if(c->uniqueId.compare(offRxnCenterSymClasses.at(mId).at(j).at(i))==0) {
+//						componentToBeMapped=c->symPermutationName;
+//						//cout<<" in new map, found :"<<componentToBeMapped<<"  "<<c->uniqueId<<endl;
+//						break;
+//					}
+//				}
+//				if(componentToBeMapped.empty()) {
+//					cout<<"In parseSymRxns.cpp::Nothing mapped to this position, when checking if permutation is valid!!!"<<endl;
+//					exit(1);
+//				}
+//
+//
+//
+//				//See if that was mapped to any other location in the mapped value vector
+//				for(unsigned int p=0; p<mappedValue.at(j).size(); p++) {
+//					if(componentToBeMapped.compare(mappedValue.at(j).at(p))==0) {
+//						checks++;
+//					}
+//				}
+//			}
+//			if(checks==(int)offRxnCenterSymClasses.at(mId).at(j).size()) {
+//				matchedSymClasses++;
+//			} else {
+//				break;
+//			}
+//		}
+//
+//		//cout<<"Number of matched Sym Classes: "<<matchedSymClasses<<endl;
+//
+//		//If the number of matched sym classes equals the number of actual
+//		//sym classes, then all of our sym classes are a permutation of this
+//		//mapping, so this configuration is not valid.
+//		if(matchedSymClasses==(int)offRxnCenterSymClasses.at(mId).size()) {
+//			return false;
+//		}
+//	}
+//
+//	//well, if we got here, everything looks valid...
+//	return true;
+//}
+
+
+
+//	bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutations,
+//			map<string,component> &symComps,
+//			map<string,component> &symRxnCenter,
+//			bool verbose)
+//	{
+//		//First, make sure we have some symmetric sites.  If not, just return and
+//		//carry on as normal...
+//		if(symComps.size()==0 && symRxnCenter.size()==0) {
+//		//if(symRxnCenter.size()==0) {
+//			map <string,component> m;
+//			permutations.push_back(m);
+//			return true;
+//		}
+//
+//	///// Output for debugging
+//	//	map <string,component>::iterator mapIter;
+//	//	for(mapIter=symComps.begin();mapIter!=symComps.end(); mapIter++) {
+//	//		cout<<mapIter->first<<"   "<<mapIter->second.name<<"   bond:"<<mapIter->second.numOfBondsLabel;
+//	//		cout<<"  state:"<<mapIter->second.stateConstraintLabel<<endl;
+//	//	}
+//	//	exit(1);
+//
+//	/*For each molecule template in the pattern, we need to have the list of
+//	 * all the symmetric
+//
+//	Strategy: generate every possible permutation, remove the ones that are clearly not
+//	valid.  Then, when we create the template molecules from those permutations later
+//
+//	*/
+//
+//	//Some vectors to store the full symmetry list and the molecule names
+//	vector <vector <vector <component> > > symmetries;
+//	vector <string> moleculeIds;
+//
+//	//Assemble the full list of all possible states that each component,
+//	//either at the reaction center or not, can be in.
+//	assembleFullSymmetryList(symmetries,moleculeIds,symRxnCenter,true);
+//	assembleFullSymmetryList(symmetries,moleculeIds,symComps,false);
+//
+//	//Now assemble the sym classes that are off the reaction center
+//	//to tell us if ordering matters in the permutations...
+//	vector <vector <vector <string> > > offRxnCenterSymClasses;
+//	assembleOffRxnCenterSymClasses(
+//			offRxnCenterSymClasses,
+//			moleculeIds,
+//			symComps);
+//
+//
+//	///// Output for debugging
+//		for(unsigned int i=0; i<symmetries.size(); i++) {
+//			cout<<">>>> "<<moleculeIds.at(i)<<endl;
+//			vector <component> symRxnCenterComp = symmetries.at(i).at(0);
+//			vector <component> symNonRxnCenterComp = symmetries.at(i).at(1);
+//
+//			cout<<"  ** Rxn Center Components: "<<endl;
+//			for(unsigned int k=0; k<symRxnCenterComp.size(); k++) {
+//				cout<<"      -(" <<symRxnCenterComp.at(k).uniqueId<<"-"<<symRxnCenterComp.at(k).name<<")  "<<symRxnCenterComp.at(k).symPermutationName<<endl;
+//			}
+//
+//			cout<<"  ** Other Symmetric Components: "<<endl;
+//			for(unsigned int k=0; k<symNonRxnCenterComp.size(); k++) {
+//				cout<<"      -(" <<symNonRxnCenterComp.at(k).uniqueId<<"-"<<symNonRxnCenterComp.at(k).name<<")  "<<symNonRxnCenterComp.at(k).symPermutationName<<endl;
+//			}
+//		}
+//
+//
+//	//Something to hold all of our intermediate symmetric site maps
+//	//which will be for each molecule, there is a vector of maps
+//	//that map component ids in the pattern to component names
+//	vector <vector <map <string,component> > > symMaps;
+//
+//
+//	// Now, from the full list, generate all permutations for each molecule
+//	for(unsigned int mId=0; mId<symmetries.size(); mId++)
+//	{
+//		//a vector containing the set of mappings for the molecule
+//		vector <map <string,component> > thisMoleculeSymMap;
+//
+//		//extract out the necessary information
+//		vector <component> symRxnCenterComp = symmetries.at(mId).at(0);
+//		vector <component> symNonRxnCenterComp = symmetries.at(mId).at(1);
+//
+//
+//		// Here we assemble the list of unique components.  For each permutation,
+//		// we want each unique component assigned only once.
+//		vector <bool> isRxnCenter;
+//		vector <vector <int> > originalPosition;
+//		vector <string> uniqueComponents;
+//		for(unsigned int k=0; k<symRxnCenterComp.size(); k++) {
+//			bool found = false;
+//			for(unsigned int i=0; i<uniqueComponents.size(); i++) {
+//				if(uniqueComponents.at(i).compare(symRxnCenterComp.at(k).uniqueId)==0) {
+//					originalPosition.at(i).push_back(k);
+//					found=true; break;
+//				}
+//			}
+//			if(!found) {
+//				uniqueComponents.push_back(symRxnCenterComp.at(k).uniqueId);
+//				isRxnCenter.push_back(true);
+//				vector <int> v; v.push_back(k);
+//				originalPosition.push_back(v);
+//			}
+//		}
+//		for(unsigned int k=0; k<symNonRxnCenterComp.size(); k++) {
+//			bool found = false;
+//			for(unsigned int i=0; i<uniqueComponents.size(); i++) {
+//				if(uniqueComponents.at(i).compare(symNonRxnCenterComp.at(k).uniqueId)==0) {
+//					originalPosition.at(i).push_back(k);
+//					found=true; break;
+//				}
+//			}
+//			if(!found) {
+//				uniqueComponents.push_back(symNonRxnCenterComp.at(k).uniqueId);
+//				isRxnCenter.push_back(false);
+//				vector <int> v; v.push_back(k);
+//				originalPosition.push_back(v);
+//			}
+//		}
+//
+//		///// Output for debugging
+//		//		cout<<"\n\nUnique Components:"<<endl;
+//		//		for(unsigned int i=0; i<uniqueComponents.size(); i++) {
+//		//			cout<<uniqueComponents.at(i)<<"  count: " << originalPosition.at(i).size()<<endl;
+//		//			for(unsigned int j=0; j<originalPosition.at(i).size(); j++) {
+//		//				cout<<" index location: "<<originalPosition.at(i).at(j)<<endl;
+//		//			}
+//		//		} cout<<endl;
+//
+//
+//		vector <int> currentPosition;
+//		for(unsigned int i=0; i<uniqueComponents.size(); i++) currentPosition.push_back(0);
+//
+//
+//		bool isDone = false;
+//		while(!isDone)
+//		{
+//			//Determine if the current permutation is valid...
+//			bool isValid = isMoleculePermuationValid(mId,
+//					symmetries,isRxnCenter,originalPosition,uniqueComponents,currentPosition,
+//					offRxnCenterSymClasses,
+//					thisMoleculeSymMap);
+//
+//			//If it is valid, then we have to add it to the list of permutations on this molecule
+//			if(isValid) {
+//
+//				//Create the sym Map for this molecule
+//				map <string,component> moleculeSymMapForThisPermutation;
+//				createMoleculeSymMap(moleculeSymMapForThisPermutation,mId,
+//						symmetries,isRxnCenter,originalPosition,currentPosition);
+//				thisMoleculeSymMap.push_back(moleculeSymMapForThisPermutation);
+//
+//				///// Output for debugging
+////				cout<<"   [ ";
+////				for(unsigned int k=0; k<currentPosition.size(); k++) {
+////					component *c;
+////					if(isRxnCenter.at(k)) {
+////						c = &symmetries.at(mId).at(0).at(originalPosition.at(k).at(currentPosition.at(k)));
+////						cout<<"*";
+////					} else {
+////						c = &symmetries.at(mId).at(1).at(originalPosition.at(k).at(currentPosition.at(k)));
+////					}
+////					cout<<c->symPermutationName<<" ";
+////				}
+////				cout<<" ]"<<endl;
+//			}
+//
+//
+//			// go to the next permutation, by ratcheting up like an odometer
+//			int currentComponent = uniqueComponents.size()-1;
+//			do {
+//				currentPosition.at(currentComponent)++;
+//				if(currentPosition.at(currentComponent)>=(int)originalPosition.at(currentComponent).size()) {
+//					currentPosition.at(currentComponent) = 0;
+//					currentComponent--;
+//				} else {
+//					break;
+//				}
+//				if(currentComponent<0) {
+//					isDone = true; break;
+//				}
+//			} while(true);
+//
+//		}
+//
+//
+//		//Finally, add the symmetric maps of this molecule to the list...
+//		symMaps.push_back(thisMoleculeSymMap);
+//	}
+//
+//
+//	//With our sym maps for each molecule assembled, we can arrange them into permutations
+//	createFullSymMaps(permutations, symMaps, verbose);
+//	return true;
 
 /////////////////////////// END OF NEW CODE
 
@@ -1048,113 +1414,4 @@ bool NFinput::generateRxnPermutations(vector<map<string,component> > &permutatio
 //
 //	exit(1);
 //	return true;
-}
-
-
-bool NFinput::lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap) {
-	try {
-		if(symMap.find(id)!=symMap.end()) {
-			component symC = symMap.find(id)->second;
-			c = (&(comps.find(id)->second));
-			c->symPermutationName=symC.symPermutationName;
-		} else {
-			if(comps.find(id)!=comps.end()) {
-				c = (&(comps.find(id)->second));
-				c->symPermutationName = c->name;
-			} else {
-				cerr<<"It seems that I couldn't find the binding sites or states you are refering to."<<endl;
-				cerr<<"Could not find the component that matches the id: "<<id<<endl;
-				return false;
-			}
-		}
-	} catch (exception &e) {
-		cerr<<"There was some problem when looking up the location of a particular component."<<endl;
-		cerr<<"Could not find the component that matches the id: "<<id<<endl;
-		return false;
-	}
-	return true;
-}
-
-bool NFinput::readPatternForSymmetry(
-		TiXmlElement * pListOfMol,
-		System * s,
-		string patternName,
-		map <string, component> &comps,
-		map <string, component> &symComps,
-		bool verbose)
-{
-	TiXmlElement *pMol;
-	for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule"))
-	{
-		//First get the type of molecule and retrieve the moleculeType object from the system
-		string molName, molUid;
-		if(!pMol->Attribute("name") || ! pMol->Attribute("id")) {
-			cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating pattern '"<<patternName<<"'. Quitting"<<endl;
-			return false;
-		} else {
-			molName = pMol->Attribute("name");
-			molUid = pMol->Attribute("id");
-		}
-
-		//Skip anything that is a null molecule
-		if(molName=="Null" || molName=="NULL" || molName=="null") continue;
-		if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
-
-		//Get the moleculeType and create the actual template
-		MoleculeType *moltype = s->getMoleculeTypeByName(molName);
-
-		//Loop through the components of the molecule
-		TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
-		if(pListOfComp)
-		{
-			TiXmlElement *pComp;
-			for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component"))
-			{
-				//Get the basic components of this molecule
-				string compId, compName, compBondCount, compStateLabel;
-				if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
-					cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of pattern '"<<patternName<<"'. Quitting"<<endl;
-					return false;
-				} else {
-					compId = pComp->Attribute("id");
-					compName = pComp->Attribute("name");
-					compBondCount = pComp->Attribute("numberOfBonds");
-					compStateLabel = "none";
-					if(pComp->Attribute("state")) {
-						compStateLabel = pComp->Attribute("state");
-					}
-				}
-
-
-				//Declare and remember this component...
-				component c(moltype, compName);
-				c.numOfBondsLabel=compBondCount;
-				c.stateConstraintLabel=compStateLabel;
-				comps.insert(pair <string, component> (compId,c));
-
-				if(moltype->isEquivalentComponent(compName)) {
-						symComps.insert(pair <string, component> (compId,c));
-				} //else {/*cout<<"no"<<endl;*/ }  //just a check for debugging
-
-				//Make sure the number of binding sites makes sense here
-				if(pComp->Attribute("numberOfBonds")) {
-					string numOfBonds = pComp->Attribute("numberOfBonds");
-					int numOfBondsInt = -1;
-					if(numOfBonds!="+" && numOfBonds!="*") {
-						try {
-							numOfBondsInt = NFutil::convertToInt(numOfBonds);
-						} catch (std::runtime_error e) {
-							cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
-							cerr<<e.what()<<endl;
-							return false;
-						}
-					}
-				}
-
-
-			} //end loop over components
-		} //end if statement for compenents to exist
-
-	}
-	return true;
-}
+//}

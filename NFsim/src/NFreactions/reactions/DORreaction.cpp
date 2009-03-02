@@ -305,7 +305,19 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 	}
 
 	//cout<<"done setting molecules, so know calling the composite function evaluate method."<<endl;
-	return this->cf->evaluateOn(argMappedMolecule,argScope);
+	int * reactantCounts = new int[this->n_reactants];
+	for(int r=0; r<n_reactants; r++) {
+		if(r==(unsigned)this->DORreactantIndex) {
+			reactantCounts[r]= reactantTree->size();
+		}
+		else {
+			reactantCounts[r]=reactantLists[r]->size();
+		}
+	}
+
+	double value = this->cf->evaluateOn(argMappedMolecule,argScope, reactantCounts, n_reactants);
+	delete [] reactantCounts;
+	return value;
 
 	/*Molecule
 

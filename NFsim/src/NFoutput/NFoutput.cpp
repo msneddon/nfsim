@@ -20,9 +20,6 @@ Outputter::~Outputter() {
 
 
 
-
-
-
 //! Careful!  potentially dangerous function.  use with care.
 /*!
  */

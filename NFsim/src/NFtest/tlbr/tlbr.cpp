@@ -186,11 +186,10 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	cout<<"kOff: " <<koff<<endl;
 	cout<<"N_l:  " <<n_L<<endl;
 	cout<<"N_r:  " <<n_R<<endl;
-	cout<<"blah!!"<<endl;
 
 
 	//Create the system with ligands, receptors, and reactions
-	System * s = new System("TLBR",false);
+	System * s = new System("TLBR",true);
 	vector<vector<string> > v;
 	MoleculeType * L = createL(s,n_L);
 	L->addEquivalentComponents(v);
@@ -219,7 +218,7 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	s->sim(simTime,3);
 
 	string x = "";
-	cout<<"waiting."<<endl;
+	cout<<"waiting for you to enter something."<<endl;
 	cin>>x;
 
 	s->printAllReactions();
@@ -326,7 +325,6 @@ MoleculeType * NFtest_tlbr::createR(System * s, int count)
 //Create reactions where a free ligand binds a receptor
 void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeType * R, double rate)
 {
-
 	{ // Reaction r0 binds l0
 		TemplateMolecule *lTemp = new TemplateMolecule(L);
 		lTemp->addEmptyBindingSite("r0");
@@ -358,6 +356,7 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 
 		TransformationSet *ts = new TransformationSet(templates);
 		ts->addBindingTransform(lTemp,"r1", rTemp, "l0");
+
 		ts->finalize();
 
 		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l0)",rate,ts);
@@ -445,6 +444,7 @@ void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeTy
 
 void NFtest_tlbr::createUnbindingRxns(System * s, MoleculeType * R, double rate)
 {
+
 	{ // Unbind l0
 		TemplateMolecule *rTemp = new TemplateMolecule(R);
 		rTemp->addOccupiedBindingSite("l0");
@@ -480,7 +480,7 @@ void NFtest_tlbr::createUnbindingRxns(System * s, MoleculeType * R, double rate)
 void NFtest_tlbr::createCrossLinkingRxns(System * s, MoleculeType * L, MoleculeType *R, double rate)
 {
 	int traversalLimit = 2;
-	bool doNotAllowSameComplex = false;
+	bool doNotAllowSameComplex = true;
 
 	///////// r0 binds l0 ////////////////////////////////////////
 	{/////////// Variant 1

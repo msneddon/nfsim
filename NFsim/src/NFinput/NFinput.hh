@@ -59,6 +59,7 @@ namespace NFinput {
 	 */
 	System * initializeFromXML(
 			string filename,
+			bool blockSameComplexBinding,
 			bool verbose);
 
 	//! Reads the parameter XML block and puts them in the parameter map.
@@ -152,6 +153,7 @@ namespace NFinput {
 			System * system,
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
+			bool blockSameComplexBinding,
 			bool verbose);
 
 	//! Reads an observable XML block and adds the new observables to the system.

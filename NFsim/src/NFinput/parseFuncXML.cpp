@@ -43,8 +43,8 @@ bool createFunction(string name,
 		map<string,int> &allowedStates,
 		bool verbose)
 {
-//	cout<<endl;
-//	cout<<"creating the function."<<endl;
+
+	if(expression.size()==0) return true;
 
 	vector <string> varRefNames;
 	vector <string> varRefTypes;
@@ -52,7 +52,6 @@ bool createFunction(string name,
 	int otherFuncRefCounter=0;
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Function") {
-//			cout<<"identified function reference."<<endl;
 			otherFuncRefCounter++;
 		} else if(refTypes.at(rn)=="Constant") {
 			paramNames.push_back(refNames.at(rn));
@@ -85,6 +84,11 @@ bool createFunction(string name,
 		return true;
 	}
 
+
+//	if(expression.size()==0) {
+//		cerr<<"!!!Error:  Local function named '"<<name<<"' has no Expression!\n";
+//		return false;
+//	}
 	// else if(argNames.size()>0 && otherFuncRefCounter==0)
 	//if we got here, we are creating a local function, so call the create local function function.
 	return createLocalFunction(name, expression,
@@ -404,7 +408,7 @@ bool NFinput::initFunctions(
 			//Get the list of arguments for this function
 			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArguments");
 			if(pListOfArgs) {
-				//Loop through each arguement
+				//Loop through each argument
 				TiXmlElement *pArg; bool firstArg = true;
 				for ( pArg = pListOfArgs->FirstChildElement("Argument"); pArg != 0; pArg = pArg->NextSiblingElement("Argument"))
 				{
@@ -430,14 +434,18 @@ bool NFinput::initFunctions(
 			TiXmlElement *pExpression = pFunction->FirstChildElement("Expression");
 			if(pExpression) {
 				if(!pExpression->GetText()) {
-					cerr<<"!!!Error:  Expression tag must actually contain a string for the function.  Quitting."<<endl;
-										return false;
+					if(funcName.substr(0,9).compare("reactant_")!=0) {
+						cout<<"\n!!!Warning:  Expression tag for function "+funcName +" does not exist!  Function will not be generated."<<endl;
+					}
+					continue;
+					//return false;
 				}
 				funcExpression = pExpression->GetText();
 				if(verbose) cout<<"\t\t\t = "<<funcExpression<<endl;
 			} else {
-				cerr<<"!!!Error:  Expression tag for a function must exist!  Quitting."<<endl;
-				return false;
+				cout<<"\n!!!Warning:  Expression tag for a function does not exist!  Function will not be generated."<<endl;
+				continue;
+				//return false;
 			}
 
 			//Get the list of References
@@ -490,7 +498,6 @@ bool NFinput::initFunctions(
 			refTypes.clear();
 		}
 
-
 		//Once we've read in all the functions, we should take care of finalizing
 		//the composite functions so they properly reference the other functions
 		system->finalizeCompositeFunctions();
@@ -500,7 +507,7 @@ bool NFinput::initFunctions(
 		return true;
 	} catch (...) {
 		//Uh oh! we got some unknown exception thrown, so we must abort!
-		cerr<<"I caught some unknown error when I was trying to parse out a Global Function.\n";
+		cerr<<"I caught some unknown error when I was trying to parse out a function.\n";
 		cerr<<"I'm at a loss for words right now, so you're on you're own."<<endl;
 		return false;
 	}

@@ -10,8 +10,9 @@ fprintf('\nRunning function readNFdump...\n\n');
 %systemName='simple_system';
 %baseDirectory='../../test/RNA/dump/';
 %systemName='rna_synthesis4';
-baseDirectory='../../test/AN_chemotaxis/dump';
-systemName='an2';
+%baseDirectory='../../test/complexTest/dump/';
+baseDirectory='../../test/tlbr/dump/';
+systemName='tlbr';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,8 +41,8 @@ for t=1:length(timeString)
     %set up the filenames
     time=timeString{t};
     
-    stopBar= progressbar(t./length(timeString),0);
-    if (stopBar), break; end
+ %   stopBar= progressbar(t./length(timeString),0);
+ %   if (stopBar), break; end
 
     
    % fprintf(['<<<<<<<<<< Output Time: ',num2str(time), ...
@@ -156,8 +157,7 @@ for t=1:length(timeString)
    % fprintf('\n');
 end;
 
-
-
+%close(stopBar);
 %fprintf('done. '); toc;
 
 end %%%% END OF FUNCTION

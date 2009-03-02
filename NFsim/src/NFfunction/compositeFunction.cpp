@@ -68,6 +68,8 @@ CompositeFunction::~CompositeFunction()
 	delete [] refLfScopes;
 	delete [] refLfValues;
 
+	delete [] reactantCount;
+
 	if(p!=NULL) delete p;
 
 }
@@ -127,6 +129,9 @@ void CompositeFunction::finalizeInitialization(System *s)
 		lfNames[i] = lf_tempVector.at(i)->getName();
 		lfs[i] = lf_tempVector.at(i);
 	}
+
+
+
 
 
 
@@ -218,10 +223,71 @@ void CompositeFunction::finalizeInitialization(System *s)
 
 
 
+	// Parse out the ability to get reactant counts in composite reactions
 
-//	cout<<"now the expression is finally: "<<parsedExpression<<endl;
+
+	int maxReactantIndex = 0;
+	string::size_type sPos=parsedExpression.find("reactant_");
+	for( ; sPos!=string::npos; sPos=parsedExpression.find("reactant_",sPos+1)) {
+		string::size_type openPar = parsedExpression.find_first_of('(',sPos);
+		string::size_type closePar = parsedExpression.find_first_of(')',sPos);
+		if(openPar!=string::npos && closePar!=string::npos) {
+			if(closePar>openPar) { //if we got here, we found a valid parenthesis to look at
+				string inBetween = parsedExpression.substr(openPar+1,closePar-openPar-1);
+				NFutil::trim(inBetween);
+				if(inBetween.size()==0) {
+					parsedExpression.replace(openPar,closePar-openPar+1,"");
+				}
+			}
+		}
+
+		string numOneDigit = parsedExpression.substr(sPos+9,1);
+		string numTwoDigits = parsedExpression.substr(sPos+9,2);
+		NFutil::trim(numTwoDigits);
 
 
+
+		int iOneDigit;
+		try {
+			iOneDigit = NFutil::convertToInt(numOneDigit);
+		} catch (std::runtime_error e) {
+			cerr<<"When referencing a reactant, you must include the reactant number"<<endl;
+			cerr<<e.what()<<endl;
+			exit(1);
+		}
+
+		bool isTwoDigitNumber = true;
+		if(numTwoDigits.size()<2) {
+			isTwoDigitNumber = false;
+		} else {
+			//cout<<endl<<numTwoDigits<<endl;
+			try {
+				int i = NFutil::convertToInt(numTwoDigits);
+			} catch (std::runtime_error e) {
+				isTwoDigitNumber = false;
+			}
+		}
+
+		if(isTwoDigitNumber) {
+			cerr<<"When referencing a reactant, you can only reference reactant numbers up to 9."<<endl;
+			exit(1);
+		}
+
+		if(iOneDigit>maxReactantIndex) maxReactantIndex = iOneDigit;
+	}
+
+
+	//cout<<"now the expression is finally: "<<parsedExpression<<endl;
+	//cout<<" max reactant index: "<<maxReactantIndex<<endl;
+
+
+	this->n_reactantCounts = maxReactantIndex;
+	reactantCount = new double[n_reactantCounts];
+	for(int r=0; r<n_reactantCounts; r++) {
+		reactantCount[r]=0;
+	}
+
+	//cout<<"done"<<endl;
 }
 
 int CompositeFunction::getNumOfArgs() const {
@@ -257,6 +323,12 @@ void CompositeFunction::prepareForSimulation(System *s)
 		for(unsigned int i=0; i<n_params; i++) {
 			p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 		}
+
+		for(int r=0; r<n_reactantCounts; r++) {
+			string reactantStr = "reactant_"+NFutil::toString((r+1));
+			p->DefineVar(reactantStr,&reactantCount[r]);
+		}
+
 		p->SetExpr(this->parsedExpression);
 	}
 	catch (mu::Parser::exception_type &e)
@@ -332,7 +404,7 @@ void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 }
 
 
-double CompositeFunction::evaluateOn(Molecule **molList, int *scope) {
+double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curReactantCounts, int n_reactants) {
 
 	//1 evaluate all global functions
 	for(int f=0; f<n_gfs; f++) {
@@ -365,6 +437,14 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope) {
 
 	}
 
+
+	//3 update reactant counts as need be
+	if(n_reactants<this->n_reactantCounts) {
+		cerr<<"Not given enough reactants for this composite function!"<<this->name<<endl;
+	}
+	for(int r=0; r<n_reactantCounts; r++) {
+		reactantCount[r]=curReactantCounts[r];
+	}
 
 
 

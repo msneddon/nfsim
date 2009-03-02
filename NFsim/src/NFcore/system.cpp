@@ -561,12 +561,15 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//4: Select next reaction class based on smallest j,
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
-		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
+//		cout<<endl<<endl<<endl<<"-----------------------------------------------"<<endl;
+//		cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		//Output selected reaction for debugging
 		//cout<<"\nFiring: "<< endl;
 		//nextReaction->printDetails();
 		//cout<<endl<<endl;
 
+//		this->printAllReactions();
+//		this->printAllObservableCounts(this->current_time);
 
 		//Increment time
 		iteration++;

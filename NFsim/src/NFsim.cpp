@@ -28,18 +28,18 @@
  *
  * \section intro_sec Overview
  *
- * NFsim is fully generalized stochastic reaction network simulator designed
+ * NFsim is a generalized stochastic reaction network simulator designed
  * to handle systems with a large (or even infinite) state space.  It has a
  * number of features that make it ideal for handling large and complex
  * biochemical systems, such as functionally defined rate laws and reactions
- * that depend on a local context.  NFsim is designed to operate with the BioNetGen
+ * that depend on local context.  NFsim is designed to operate with the BioNetGen
  * Language (http://bionetgen.org/).  The new version of BNG is able to
  * generate an XML encoded form of the BNG Language, which NFsim can take as input.
  *
  * For more details on setting up, running, and getting output from an NFsim simulation
  * see the User Manual.  The User Manual also has additional information for new
  * developers.  The Manual is available online along with examples here:
- * http://emonet.biology.yale.edu/NFsim
+ * http://emonet.biology.yale.edu/nfsim
  *
  *
  *
@@ -100,13 +100,14 @@
  * of the BNGL.
  *
  * Special thanks to other members of the Emonet lab, particularly William Pontius, Garrit Jentsch,
- * and Oleksii Sliusarenko for helpful feedback.  For questions or assistance with the code, please contact
- * michael.sneddon@yale.edu.
+ * and Oleksii Sliusarenko for helpful feedback.  For questions or assistance with the code, please
+ * contact michael.sneddon@yale.edu.
  *
  *
  */
-#include "NFsim.hh"
 
+
+#include "NFsim.hh"
 
 
 #include <iostream>
@@ -116,21 +117,36 @@
 using namespace std;
 
 
-//!  Outputs an Ascii NFsim logo.
+//! Outputs an Ascii NFsim logo.
 /*!
   @author Michael Sneddon
 */
 void printLogo(int indent, string version);
 
 
-//!  Outputs a friendly help message.
+//! Outputs a friendly help message.
 /*!
   @author Michael Sneddon
 */
 void printHelp(string version);
 
+//! Executes an RNF script from the command line arguments.
+/*!
+  @author Michael Sneddon
+*/
 bool runRNFscript(map<string,string> argMap, bool verbose);
+
+//! Initializes a System object from the arguments
+/*!
+  @author Michael Sneddon
+*/
 System *initSystemFromFlags(map<string,string> argMap, bool verbose);
+
+
+//! Runs a given System with the specified arguments
+/*!
+  @author Michael Sneddon
+*/
 bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 
 //!  Main executable for the NFsim program.
@@ -140,15 +156,14 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 int main(int argc, const char *argv[])
 {
 	string versionNumber = "1.01";
-
-
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
 	start = clock();
+
+
 	///////////////////////////////////////////////////////////
-
-
+    // Begin Execution
 	bool parsed = false;
 	bool verbose = false;
 	map<string,string> argMap;
@@ -178,23 +193,21 @@ int main(int argc, const char *argv[])
 			parsed = true;
 		}
 
-		//If we are running from a RNF script file
+		//If we are running from a RNF script file...
 		else if(argMap.find("rnf")!=argMap.end()) {
 			cout<<"handling RNF file"<<endl;
 			runRNFscript(argMap,verbose);
 			parsed = true;
 		}
 
-		//Built in AgentCell simulation (for demonstration purposes)
+		//A built in AgentCell simulation (for demonstration purposes)
 		else if (argMap.find("agentcell")!=argMap.end())
 		{
 			runAgentCell(argMap,verbose);
 			parsed = true;
 		}
 
-		///////////////////////
-		//  Main entry point for basic XML file...
-		//  Handle the case of reading from an xml file directly
+		//  Main entry point for a basic XML file...
 		else if (argMap.find("xml")!=argMap.end())
 		{
 			System *s = initSystemFromFlags(argMap, verbose);
@@ -206,9 +219,7 @@ int main(int argc, const char *argv[])
 		}
 
 
-
-
-		//Handle the case of running a test
+		//Handle the case of running a predefined test
 		else if (argMap.find("test")!=argMap.end())
 		{
 			string test = argMap.find("test")->second;
@@ -241,11 +252,10 @@ int main(int argc, const char *argv[])
 			else {
 				cout<<"You must specify a test to run."<<endl;
 			}
-
 			parsed = true;
 		}
 
-		//Finally, give the logo to anyone who wants it
+		//Finally, always give the logo to anyone who calls for it
 		if (argMap.find("logo")!=argMap.end())
 		{
 			cout<<endl<<endl;
@@ -256,7 +266,7 @@ int main(int argc, const char *argv[])
 		}
 	}
 
-
+    // If we could not successfully parse the parameters, tell the user
 	if(!parsed) {
 		cout<<"Could not identify what you want to do.  Try running the -help flag for advice."<<endl;
 	}
@@ -289,6 +299,8 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 		s->prepareForSimulation();
 		//Step 3: provided the system is set up correctly, run the RNF script
 		bool output = NFinput::runRNFcommands(s,argMap,commands,verbose);
+
+		s->printAllComplexes();
 		delete s;
 		return output;
 	}
@@ -299,13 +311,22 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 
 System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 {
+	//Find the xml file that defines the system
 	if (argMap.find("xml")!=argMap.end())
 	{
 		string filename = argMap.find("xml")->second;
 		if(!filename.empty())
 		{
 			//Create the system from the XML file
-			System *s = NFinput::initializeFromXML(filename, verbose);
+			// flag for blocking same complex binding.  If given,
+			// then a molecule is blocked from binding another if
+			// it is in the same complex
+			bool blockSameComplexBinding = false;
+			if (argMap.find("bscb")!=argMap.end())
+				blockSameComplexBinding = true;
+
+			//Actually create the system
+			System *s = NFinput::initializeFromXML(filename,blockSameComplexBinding,verbose);
 
 			if(s!=NULL)
 			{
@@ -314,6 +335,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->turnOnGlobalFuncOut();
 				}
 
+				// Also set the dumper to output at specified time intervals
 				if (argMap.find("dump")!=argMap.end()) {
 					if(!NFinput::createSystemDumper(argMap.find("dump")->second, s, verbose)) {
 						cout<<endl<<endl<<"Error when creating system dump outputters.  Quitting."<<endl;
@@ -322,17 +344,19 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 				}
 
+				// Set the universal traversal limit
 				if (argMap.find("utl")!=argMap.end()) {
 					int utl = -1;
 					utl = NFinput::parseAsInt(argMap,"utl",utl);
 					s->setUniversalTraversalLimit(utl);
 				}
 
+				// set the output to binary
 				if (argMap.find("b")!=argMap.end()) {
 					s->setOutputToBinary();
 				}
 
-				//Here we just run some stuff for testing... The output is just
+				//Register the output file location, if given
 				if (argMap.find("o")!=argMap.end()) {
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
@@ -346,12 +370,10 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 				}
 
-
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();
 				}
-
 
 				//Finally, return the system if we made it here without problems
 				return s;
@@ -370,7 +392,6 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 
 bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 {
-
 	//If requested, walk through the simulation
 	if (argMap.find("walk")!=argMap.end()) {
 		NFinput::walk(s);
@@ -378,14 +399,16 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	//Otherwise, run as normal
 	else
 	{
+		// default simulation time is 10 seconds outputting
+		// once per second
 		double eqTime = 0;
 		double sTime = 10;
 		int oSteps = 10;
 
+		//Get the simulation time that the user wants
 		eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 		sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 		oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
-
 
 		//Prepare the system for simulation!!
 		s->prepareForSimulation();
@@ -395,15 +418,19 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 			cout<<"\n\nparse appears to be successful.  Here, check your system:\n";
 			s->printAllMoleculeTypes();
 			s->printAllReactions();
+			s->printAllObservableCounts(0);
 			cout<<"-------------------------\n";
 		}
 
+		// Do the run
 		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 		s->equilibrate(eqTime);
 		s->sim(sTime,oSteps);
 
-		cout<<endl<<endl;
-		s->printAllReactions();
+		if(verbose) {
+			cout<<endl<<endl;
+			s->printAllReactions();
+		}
 	}
 	return true;
 }
