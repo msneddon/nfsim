@@ -176,6 +176,7 @@ MoleculeType::~MoleculeType()
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
 {
 	this->n_eqComp = identicalComponents.size();
+	eqCompOriginalName = new string [n_eqComp];
 	eqCompName=new string * [n_eqComp];
 	eqCompIndex=new int *[n_eqComp];
 	eqCompSizes=new int [n_eqComp];
@@ -185,6 +186,10 @@ void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalC
 		eqCompName[i] = new string [eqCompSizes[i]];
 		eqCompIndex[i] = new int [eqCompSizes[i]];
 		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(k==0) {
+				string tempString = identicalComponents.at(i).at(k);
+				eqCompOriginalName[i] = tempString.substr(0,tempString.size()-1);
+			}
 			eqCompName[i][k] = identicalComponents.at(i).at(k);
 			eqCompIndex[i][k] = getCompIndexFromName(eqCompName[i][k]);
 		}
@@ -194,7 +199,7 @@ void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalC
 
 bool MoleculeType::isIntegerComponent(string cName) const {
 	for(int c=0; c<numOfComponents; c++)
-			if(cName==compName[c]) {
+			if(compName[c].compare(cName)==0) {
 				return this->isIntegerCompState[c];
 			}
 	cerr<<"!!! error !!! cannot find site name "<< cName << " in MoleculeType: "<<name;
@@ -216,9 +221,8 @@ bool MoleculeType::isIntegerComponent(int cIndex) const {
 
 bool MoleculeType::isEquivalentComponent(string cName) const {
 	for(int i=0; i<n_eqComp; i++) {
-		for(int k=0; k<eqCompSizes[i]; k++) {
-			if(eqCompName[i][k]==cName)
-				return true;
+		if(eqCompOriginalName[i].compare(cName)==0) {
+			return true;
 		}
 	}
 	return false;
@@ -234,15 +238,22 @@ bool MoleculeType::isEquivalentComponent(int cIndex) const {
 }
 void MoleculeType::getEquivalencyClass(int *&components, int &n_components, string cName) const {
 	for(int i=0; i<n_eqComp; i++) {
-		for(int k=0; k<eqCompSizes[i]; k++) {
-			if(eqCompName[i][k]==cName) {
-				components = eqCompIndex[i];
-				n_components=eqCompSizes[i];
-			}
+		if(eqCompOriginalName[i].compare(cName)==0) {
+			components = eqCompIndex[i];
+			n_components=eqCompSizes[i];
+			return;
 		}
 	}
 }
-
+int MoleculeType::getEquivalencyClassNumber(string cName) const {
+	for(int i=0; i<n_eqComp; i++) {
+		if(eqCompOriginalName[i].compare(cName)==0) {
+				return i;
+		}
+	}
+	cerr<<"Could not find equivalency class number for component named: "<<cName<<"!!!"<<endl;
+	exit(1);
+}
 
 
 

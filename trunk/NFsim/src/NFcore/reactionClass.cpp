@@ -85,7 +85,7 @@ void ReactionClass::fire(double random_A_number)
 {
 
 	fireCounter++; //Remember that we fired
-//	cout<<"firing: "<<name;
+	//cout<<"firing: "<<name;
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);
@@ -93,18 +93,19 @@ void ReactionClass::fire(double random_A_number)
 	//Generate the set of possible products that we need to update
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
-	//cout<<"found: "<<products.size()<<" products."<<endl;
+	//cout<<"\nfound: "<<products.size()<<" products."<<endl;
 	//Loop through the products and remove them from thier observables
 	//cout<<"------------------------------------------"<<endl;
 	if(this->onTheFlyObservables) {
 		for( molIter = products.begin(); molIter != products.end(); molIter++ )
 		{
-			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getMoleculeID()<<endl;
+			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getUniqueID()<<endl;
+			//(*molIter)->printDetails();
 			(*molIter)->removeFromObservables();
 		}
 	}
 
-//	cout<<",  obs removed";
+	//cout<<",  obs removed";
 
 
 	//Through the MappingSet, transform all the molecules as neccessary
@@ -120,11 +121,13 @@ void ReactionClass::fire(double random_A_number)
 	}
 //	cout<<",  obs updated";
 
+	//cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
+	  	//(*molIter)->printDetails();
 	}
 //	Molecule::printMoleculeList(products);
 

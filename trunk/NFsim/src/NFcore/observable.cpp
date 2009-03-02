@@ -30,7 +30,12 @@ void Observable::add() {
 
 
 void Observable::subtract() {
-	if(count==0){ cout<<"Error in observable count!!"<<endl; exit(1); }
+	if(count==0){
+		cout<<"Error in observable count!! Removing from an empty observable!"<<endl;
+		cout<<"Observable named: "<<this->aliasName<<endl;
+		exit(1);
+	}
+	//cout<<"subracting from obs: "<<this->aliasName<<endl;
 	count--;
 	for(rxnIter = dependentRxns.begin(); rxnIter != dependentRxns.end(); rxnIter++ ) {
 		double old_a = (*rxnIter)->get_a();

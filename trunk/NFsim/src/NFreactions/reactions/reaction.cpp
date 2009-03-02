@@ -56,7 +56,12 @@ double FunctionalRxnClass::update_a() {
 	//	cout<<"in here"<<endl;
 		a=FuncFactory::Eval(gf->p);
 	} else if(cf!=0) {
-		a=cf->evaluateOn(0,0);
+		int * reactantCounts = new int[this->n_reactants];
+		for(unsigned int r=0; r<n_reactants; r++) {
+			reactantCounts[r]=reactantLists[r]->size();
+		}
+		a=cf->evaluateOn(0,0, reactantCounts, n_reactants);
+		delete [] reactantCounts;
 	//	cout<<"and here"<<endl;
 	} else {
 		cout<<"Error!  Functional rxn is not properly initialized, but is being used!"<<endl;
@@ -93,8 +98,16 @@ void FunctionalRxnClass::printDetails() const {
 
 	if(gf!=0)
 		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
-	else if(cf!=0)
-		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<cf->evaluateOn(0,0)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	else if(cf!=0) {
+		int * reactantCounts = new int[this->n_reactants];
+		for(unsigned int r=0; r<n_reactants; r++) {
+			reactantCounts[r]=reactantLists[r]->size();
+		}
+		double value=cf->evaluateOn(0,0, reactantCounts, n_reactants);
+		delete [] reactantCounts;
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<value<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+
+	}
 
 	for(unsigned int r=0; r<n_reactants; r++)
 	{

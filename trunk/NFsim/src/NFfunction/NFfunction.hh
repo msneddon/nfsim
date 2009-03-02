@@ -409,7 +409,7 @@ namespace NFcore {
 
 				void setGlobalObservableDependency(ReactionClass *r, System *s);
 
-				double evaluateOn(Molecule **molList, int *scope);
+				double evaluateOn(Molecule **molList, int *scope, int *curReactantCounts, int n_reactants);
 
 				void printDetails(System *s);
 
@@ -446,6 +446,10 @@ namespace NFcore {
 				int n_lfs;
 				string * lfNames;
 				LocalFunction ** lfs;
+
+
+				int n_reactantCounts;
+				double * reactantCount;
 
 				//stores list of all local functions and how they are referenced
 				int n_refLfs;

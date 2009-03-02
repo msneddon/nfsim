@@ -22,6 +22,8 @@
 #include "../NFfunction/NFfunction.hh"
 #include "../NFoutput/NFoutput.hh"
 
+#include "templateMolecule.hh"
+
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 0		// Set to 1 to display basic messages (eg runtime)
 
@@ -58,7 +60,8 @@ namespace NFcore
 	class DumpMoleculeType;
 	class DumpSystem;
 
-	//class ModuleType;
+	class TemplateMolecule;
+
 
 	/*****************************************
 	 * Class declarations
@@ -71,8 +74,8 @@ namespace NFcore
 
 	class MoleculeType;  /* indicates the "type" of molecule */
 	class Molecule;  /* the actual class that represents instances of a molecule */
-	class TemplateMolecule; /* used to determine if a molecule matches a particular pattern
-	                           think of these as regular expressions for molecule comparison */
+	//class TemplateMolecule; /* used to determine if a molecule matches a particular pattern
+	//                           think of these as regular expressions for molecule comparison */
 
 	class ReactionClass; /* defines a reaction class, (in other words, a rxn rule) */
 
@@ -408,10 +411,14 @@ namespace NFcore
 
 
 			//set of functions that deal with equivalent (aka symmetric) components
+			int getNumOfEquivalencyClasses() const { return this->n_eqComp; };
+			string *getEquivalencyClassCompNames() const { return this->eqCompOriginalName; };
 			void addEquivalentComponents(vector <vector <string> > &identicalComponents);
 			bool isEquivalentComponent(string cName) const;
 			bool isEquivalentComponent(int cIndex) const;
 			void getEquivalencyClass(int *&components, int &n_components, string cName) const;
+			int getEquivalencyClassNumber(string cName) const;
+
 
 			bool isIntegerComponent(string cName) const;
 			bool isIntegerComponent(int cIndex) const;
@@ -545,6 +552,7 @@ namespace NFcore
 
 			//set of variables to keep track of equivalent (aka symmetric) components
 			int n_eqComp;
+			string *eqCompOriginalName;
 			int * eqCompSizes;
 			string **eqCompName;
 			int **eqCompIndex;
@@ -870,141 +878,6 @@ namespace NFcore
 
 
 
-
-
-
-	//!  Used for matching Molecule objects to the given pattern
-	/*!
-	    TemplateMolecules are regular expression like objects needed to identify specific
-	    configurations of connected Molecules.  Individual TemplateMolecules are derived
-	    from a particular MoleculeType and inherit their set of components from their parent
-	    MoleculeType.  TemplateMolecules can be connected to other TemplateMolecules through
-	    component bonds forming the regular expression pattern.  An individual Molecule matches
-	    an individual TemplateMolecule if they are of the same MoleculeType and their
-	    component bonds and state values match.  Any component state not explicitly specified
-	    in a TemplateMolecule is treated as a wild-card and will always match the corresponding
-	    component of a Molecule.  For more complex patterns, an entire connected set of Molecules
-	    is matched to a connected set of TemplateMolecules through a recursive algorithm that
-	    checks for graph isomorphism between the two sets.  The worst case performance of the
-	    recursive matching algorithm is proportional to the number of connected TemplateMolecules
-	    in the pattern.  However, the average performance is much better because a match is rejected
-	    as soon as a single difference in component states or molecule connectivity is found.
-        @author Michael Sneddon
-	 */
-	class TemplateMolecule {
-	public:
-		TemplateMolecule(MoleculeType * parentMoleculeType);
-		~TemplateMolecule();
-
-		/* get functions */
-		MoleculeType * getMoleculeType() const { return parentMoleculeType; };
-		string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
-
-		unsigned int getNumCompareStates() const { return stateIndex.size(); };
-		unsigned int getStateIndex(int state) const { return stateIndex.at(state); };
-		unsigned int getStateValue(int state) const { return stateValue.at(state); };
-
-		unsigned int getNumBindingSites() const { return bonds.size(); };
-		bool isBindingSiteOpen(int bIndex) const;// { return bonds.at(bIndex)->isOpen(); };
-		bool isBindingSiteBonded(int bIndex) const; //{ return bonds.at(bIndex)->isBonded(); };
-		TemplateMolecule * getBondedTemplateMolecule(int bIndex) const;
-		unsigned int getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex);
-
-		int getBindingSiteIndex(int bIndex) const;
-		int getBindingSiteIndexOfBondedTemplate(int bIndex) const ;
-
-
-		//int compareAll(TemplateMolecule *tm1, TemplateMolecule *tm2);
-
-		/* set functions */
-		void setHasVisited(int bSite);
-		unsigned int addEmptyBindingSite(int bSiteIndex);
-		unsigned int addEmptyBindingSite(const char * bSiteName);
-		void addOccupiedBindingSite(const char * bSiteName);
-		static void bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2);
-		static void bind(TemplateMolecule *t1, const char * bSiteName1, TemplateMolecule *t2, const char * bSiteName2);
-
-		void addStateValue(int cIndex, int stateValue);
-		void addStateValue(string cName, int stateValue);
-		void addStateValue(string cName, string stateValue);
-		void addNotStateValue(char * stateName, int notStateValue);
-		void clear() {
-			this->matchMolecule = 0;
-			for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false;
-			hasVisited=false; };
-
-
-		/* the primary function and purpose of a template molecule
-			   is to compare itself to an instance of a molecule */
-		bool compare(Molecule * m);
-		static bool compareBreadthFirst(TemplateMolecule *tm, Molecule *m);
-
-		//general function used to get a list of all the template molecules connected to
-		//this template molecule through bonds.
-		static void traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList);
-
-		/*
-		 * Used to check if a particular state value matches - used when parsing an xml file and
-		 * generating reaction transformations.
-		 */
-		bool isStateValue(const char * stateName, int stateValue);
-		bool isBonded(const char * bSiteName);
-
-
-	//	void addTemplateMapping(TemplateMapping *tm);
-	//	bool compare(Molecule * m, MappingSet *mappingSet);
-
-
-
-		void printDetails() const;
-
-
-
-
-		///////////////////////////////////////////////////////////////////
-		void addMapGenerator(MapGenerator *mg);
-		bool compare(Molecule *m, MappingSet *ms);
-		bool contains(TemplateMolecule *tempMol);
-
-
-		Molecule * matchMolecule;
-		vector <bool> hasVisitedBond; //Change this to array for slight performance gain...
-
-
-		/////////////////////////////////////////////////////////
-		bool hasVisited;
-
-	protected:
-
-
-
-		MoleculeType *parentMoleculeType;  // ptr to indicate type of molecule
-		vector <int> stateIndex; // saves index into state array of MoleculeType
-		vector <int> stateValue; // saves the value we need to have in the state array
-
-		vector <int> notStateIndex;
-		vector <int> notStateValue;
-
-		vector <int> bSiteIndex; // saves index into bSite array in MoleculeType
-		vector <TemplateMolecule *> bonds; // tells us a binding site
-		vector <int> bSiteIndexOfBond;
-
-		vector <int> sitesThatMustBeOccupied; //
-
-
-
-		vector <MapGenerator *> mapGenerators;
-		vector <MapGenerator *>::iterator mgIter;
-		vector <int>::iterator intVecIter;
-
-
-		static queue <TemplateMolecule *> tmq;
-		static queue <Molecule *> mq;
-		static list <TemplateMolecule *> tml;
-		static queue <int> d;
-		static list <TemplateMolecule *>::iterator tmIter;
-
-	};
 
 
 

@@ -59,7 +59,7 @@ class AgentCell;
 			public:
 	               LinearEnvironment() {
 	                    this->slope=pow(10,-6.5);
-	                    this->intercept=1e-6;
+	                    this->intercept=0;//1e-6;
 	               };
 				LinearEnvironment(double slope, double intercept) {
 	                    this->slope=slope;

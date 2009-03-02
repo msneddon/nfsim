@@ -13,9 +13,9 @@ using namespace std;
 
 void runAgentCell(map<string,string> argMap, bool verbose)
 {
-	clock_t start,finish;
-	double time;
-	start = clock();
+	clock_t acstart,acfinish;
+	double actime;
+
 
 	cout<<"Running AgentCell Emulator."<<endl;
 	if (argMap.find("xml")!=argMap.end())
@@ -25,7 +25,7 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 			if(!filename.empty())
 			{
 				cout<<"Reading file:"+ filename<<endl;
-				s=NFinput::initializeFromXML(filename,verbose);
+				s=NFinput::initializeFromXML(filename,false,verbose);
 				if (argMap.find("b")!=argMap.end()) s->setOutputToBinary();
 			}
 			if(s!=0) { cout<<" success."<<endl; }
@@ -73,9 +73,17 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 			if(argMap.find("constEnvironment")!=argMap.end()) {
 				cout<<"Environment:   "<<"Constant"<<endl;
 				e= new ConstantEnvironment(0);
+			} else if(argMap.find("linearEnvironment")!=argMap.end()) {
+				double slope = pow(10,-8.0);
+				slope = NFinput::parseAsDouble(argMap,"linearEnvironment",slope);
+				double intercept = 0;
+				intercept = NFinput::parseAsDouble(argMap,"zIntercept",intercept);
+				cout<<"Environment:   "<<"Linear Gradient (slope: "<<slope<<", intercept: "<<intercept<<")"<<endl;
+				e = new LinearEnvironment(slope,intercept);
 			} else {
-				cout<<"Environment:   "<<"Linear Gradient"<<endl;
-				e = new LinearEnvironment();
+				double slope = pow(10,-8.0);
+				cout<<"Environment:   "<<"Linear Gradient (default, slope: "<<slope<<", intercept: 0)"<<endl;
+				e = new LinearEnvironment(slope,0);
 			}
 
 			cout<<"Eq time:       "<<eqTime<<"s"<<endl;
@@ -100,12 +108,16 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 			cout<<endl<<endl;
 			string outputFolder;
 			for(int i=0; i<nCells; i++) {
+				acstart = clock();
 				outputFolder = oDir+"/c" + NFutil::toString((i+1))+"/";
 
 				string molTrajFileName = outputFolder+"molTraj.out";
 				s->registerOutputFileLocation(molTrajFileName);
 				s->prepareForSimulation();
-				s->outputAllObservableNames();
+				if (argMap.find("b")==argMap.end()) {
+					s->outputAllObservableNames();
+				}
+
 
 
 				//Create the cell
@@ -125,16 +137,15 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 				ac->stepTo(simTime,dt);
 
 
-
-				finish = clock();
-				time = (double(finish)-double(start))/CLOCKS_PER_SEC;
-				cout<<"done.  Elapsed CPU time: "<< time << "s"<<endl<<endl;
+				acfinish = clock();
+				actime = (double(acfinish)-double(acstart))/CLOCKS_PER_SEC;
+				cout<<"done.  Elapsed CPU time: "<< actime << "s"<<endl<<endl;
 
 				delete s;
 
 				if(i<(nCells-1)) {
 					cout<<endl<<endl<<"Reinitializing system..."<<endl;
-					s=NFinput::initializeFromXML(filename,false);
+					s=NFinput::initializeFromXML(filename,false,false);
 					if (argMap.find("b")!=argMap.end()) {
 						s->setOutputToBinary();
 					}

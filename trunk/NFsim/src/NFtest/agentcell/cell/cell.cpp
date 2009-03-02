@@ -259,6 +259,10 @@ double AgentCell::stepTo(double endTime, double dt)
 	cout<<"start -------------------------------------- end"<<endl;
 	cout<<"      ";
 
+	int CWrot = 0;
+	int CCWrot = 0;
+	int swim = 0;
+	int tumble = 0;
 	while(currentTime<=endTime)
 	{
 		//First we output the current information
@@ -280,8 +284,10 @@ double AgentCell::stepTo(double endTime, double dt)
 		//Use the history to determine motor state
 		if(meanCheYp>cheYpThreshold) {
 			motorState = this->CW;
+			CWrot++;
 		} else {
 			motorState = this->CCW;
+			CCWrot++;
 		}
 
 
@@ -289,8 +295,10 @@ double AgentCell::stepTo(double endTime, double dt)
 		this->lastFlagellaState=flagellaState;
 		if(motorState == this->CW) {
 			flagellaState = this->APART;
+			tumble++;
 		} else {
 			flagellaState = this->BUNDLED;
+			swim++;
 		}
 		if(flagellaState==this->APART) {
 			if(apartDuration<(dt/2)) {
@@ -326,12 +334,10 @@ double AgentCell::stepTo(double endTime, double dt)
 		double L = env->getLigConc(pos[X],pos[Y],pos[Z],currentTime);
 		if(L!=currentLigConc)
 		{
+			currentLigConc=L;
 			this->system->setParameter("L",currentLigConc);
 			this->system->updateSystemWithNewParameters();
 		}
-
-
-
 
 		currentStep++;
 		if(currentStep%progressStep==0) {
@@ -340,6 +346,8 @@ double AgentCell::stepTo(double endTime, double dt)
 	}
 
 	cout<<endl;
+	cout<<"Final CW bias: "<<((float)CWrot/((float)CCWrot+(float)CWrot))<<endl;
+	cout<<"Swimming bias: "<<(float)swim/((float)swim+(float)tumble)<<endl;
 	return currentTime;
 }
 

@@ -62,6 +62,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	}
 
 	// 2) Create a Transformation object to remember the information
+	//cout<<"Adding state change transform to value: "<<finalStateValue<<endl;
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
 	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue);
 
@@ -236,8 +237,31 @@ bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1,
 bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteName, TemplateMolecule *t2, string bSiteName2)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+
+	TemplateMolecule *tToTransform = 0;
+	if(t==0 && t2==0) {
+		cerr<<"Error in transformation set! when creating unbinding transform!"<<endl;
+		cerr<<"Both molecules you gave me are null!\n";
+		return false;
+	} else if(t2==0) {
+		tToTransform = t;
+	} else if(t==0) {
+		tToTransform = t2;
+	} else {
+		// they are both real, so randomly pick t1
+		tToTransform=t;
+
+		//Check for symmetric unbinding (should do a better check here!
+		if(t->getMoleculeType()==t2->getMoleculeType())  {
+			if(bSiteName==bSiteName2) {
+				hasSymUnbinding=true;
+				cout<<"setting sym unbinding reaction!"<<endl;
+			}
+		}
+	}
+
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
-	int reactantIndex = find(t);
+	int reactantIndex = find(tToTransform);
 	if(reactantIndex==-1) {
 		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
 		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
@@ -247,7 +271,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	}
 
 	// 2) Create a Transformation object to remember the information
-	unsigned int cIndex = t->getMoleculeType()->getCompIndexFromName(bSiteName);
+	unsigned int cIndex = tToTransform->getMoleculeType()->getCompIndexFromName(bSiteName);
 	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex);
 
 	// 3) Add the transformation object to the TransformationSet
@@ -255,15 +279,8 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 
 	// 3) Create a MapGenerator object and add it to the templateMolecule
 	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
-	t->addMapGenerator(mg);
+	tToTransform->addMapGenerator(mg);
 
-
-	if(t->getMoleculeType()==t2->getMoleculeType())  {
-		if(bSiteName==bSiteName2) {
-			hasSymUnbinding=true;
-			cout<<"setting sym unbinding reaction!"<<endl;
-		}
-	}
 	return true;
 }
 
@@ -370,7 +387,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
-	//bool isPresent = false;
+	bool isPresent = false;
 	list <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		if(mappingSets[r]->hasDeletionTransform()) continue;  //if we are deleting this guy, it doesn't have to get updated
@@ -382,16 +399,18 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 		/*
 		 * I thought that making sure we don't go over the same molecule multiple
 		 * times would make the code faster - but this is rarely used for most rxn
-		 * systems, so it is commented out for now.  But it may help in some cases! */
+		 * systems, so it is commented out for now.  But actually, we do have to check
+		 * because if have the same molecule in here twice, then it can mess up our
+		 * observable lists... */
 		//For each of the molecules that we possibly affect, traverse the neighborhood
 		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 
-//		bool isPresent=false;
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-//			if((*molIter)==molecule) { isPresent = true; break;}
-//		}
-//
-//		if(!isPresent)
+		isPresent=false;
+		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+			if((*molIter)==molecule) { isPresent = true; break;}
+		}
+
+		if(!isPresent)
 			molecule->traverseBondedNeighborhood(products,traversalLimit);
 
 	}
