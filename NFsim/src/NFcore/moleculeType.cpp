@@ -74,6 +74,16 @@ MoleculeType::MoleculeType(
 }
 
 
+string MoleculeType::getComponentName(int cIndex) const {
+	if(cIndex>=this->numOfComponents) {
+		cerr<<"in MoleculeType:getComponentName, can't get that component!"<<endl;
+		cerr<<"looking for cIndex: "<<cIndex<<endl;
+		cerr<<"I only have: "<<numOfComponents<<" components."<<endl;
+		exit(2);
+	}
+	return this->compName[cIndex];
+}
+
 void MoleculeType::init(
 	string name,
 	vector <string> &compName,
@@ -441,6 +451,8 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 	{
 		rxn=reactions.at(r);
 		double oldA = rxn->get_a();
+		//cout<<"\n\n\n\n*****************"<<endl;
+		//cout<<"looking at rxn: "<<rxn->getName()<<endl;
 		rxn->tryToAdd(m, reactionPositions.at(r));
 		this->system->update_A_tot(oldA,rxn->update_a());
   	}

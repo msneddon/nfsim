@@ -51,7 +51,7 @@ void Observable::addDependentRxn(ReactionClass *r) {
 
 bool Observable::isObservable(Molecule * m) const {
 
-	//cout<<"comparing obs: "<<this->aliasName<<" to: "<<endl;
+	//cout<<"\n\n\ncomparing obs: "<<this->aliasName<<" to: "<<endl;
 	//m->printDetails();
 	//templateMolecule->printDetails();
 	bool answer = templateMolecule->compare(m);

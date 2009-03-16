@@ -85,7 +85,7 @@ void ReactionClass::fire(double random_A_number)
 {
 
 	fireCounter++; //Remember that we fired
-	//cout<<"firing: "<<name;
+	//cout<<"firing: "<<name<<endl;;
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);

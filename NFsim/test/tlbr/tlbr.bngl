@@ -4,21 +4,21 @@ begin parameters
 	
 
 	## Performance test
-	nR 10000000
+	#nR 10000000
 	
-	Lig_tot nR-(0.0667*nR)
-	Rec_tot 0.0667*nR
-	cTot 0.84	
-	koff 0.01
-	beta 0.1  # vary beta from 0.01 to 1000
+	#Lig_tot nR-(0.0667*nR)
+	#Rec_tot 0.0667*nR
+	#cTot 0.84	
+	#koff 0.01
+	#beta 0.1  # vary beta from 0.01 to 1000
 
 	
 	## Ramping Trajectory
-	#Lig_tot  2000
-	#Rec_tot  3000
-	#cTot     0.11
-	#beta     16.8
-	#koff     0.01
+	Lig_tot  2000
+	Rec_tot  3000
+	cTot     0.11
+	beta     16.8
+	koff     0.01
 	
 	
 	## Peaking Trajectory

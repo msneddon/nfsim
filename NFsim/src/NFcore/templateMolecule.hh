@@ -13,7 +13,6 @@ namespace NFcore
 	class Molecule;
 	class MappingSet;
 
-
 	//!  Used for matching Molecule objects to the given pattern
 	/*!
 	    TemplateMolecules are regular expression like objects needed to identify specific
@@ -34,158 +33,134 @@ namespace NFcore
 	 */
 	class TemplateMolecule {
 	public:
-		TemplateMolecule(MoleculeType * parentMoleculeType);
+		TemplateMolecule(MoleculeType * moleculeType);
 		~TemplateMolecule();
 
+
 		/* get functions */
-		MoleculeType * getMoleculeType() const { return parentMoleculeType; };
+		MoleculeType *getMoleculeType() const {return moleculeType;};
 		string getMoleculeTypeName() const;
 
-		unsigned int getNumCompareStates() const { return stateIndex.size(); };
-		unsigned int getStateIndex(int state) const { return stateIndex.at(state); };
-		unsigned int getStateValue(int state) const { return stateValue.at(state); };
 
-		unsigned int getNumBindingSites() const { return bonds.size(); };
-		bool isBindingSiteOpen(int bIndex) const;// { return bonds.at(bIndex)->isOpen(); };
-		bool isBindingSiteBonded(int bIndex) const; //{ return bonds.at(bIndex)->isBonded(); };
-		TemplateMolecule * getBondedTemplateMolecule(int bIndex) const;
-		unsigned int getTemplateBsiteIndexFromMoleculeBsiteIndex(int molBsiteIndex);
+		/* functions that allow you to set constraints */
+		void addEmptyComponent(string cName);
+		void addBoundComponent(string cName);
+		void addComponentConstraint(string cName, string stateName);
+		void addComponentConstraint(string cName, int stateValue);
+		void addComponentExclusion(string cName, string stateName);
+		void addComponentExclusion(string cName, int stateValue);
+		void addBond(string thisBsiteName,TemplateMolecule *t2, string bSiteName2);
 
-		int getBindingSiteIndex(int bIndex) const;
-		int getBindingSiteIndexOfBondedTemplate(int bIndex) const ;
+		/* functions that allow you to set constraints for symmetric sites */
+		const static int EMPTY=0;
+		const static int OCCUPIED=1;
+		const static int NO_CONSTRAINT=-1;
+		void addSymCompConstraint(string cName, string uniqueId,
+				int bondState,int stateConstraint);
+		void addSymBond(string thisBsiteName, string thisCompId,
+				TemplateMolecule *t2, string bSiteName2);
 
+		/* static function for binding two templates together */
+		static void bind(TemplateMolecule *t1, string bSiteName1, string compId1,
+				TemplateMolecule *t2, string bSiteName2, string compId2);
 
-		//int compareAll(TemplateMolecule *tm1, TemplateMolecule *tm2);
+		/* functions that provide mapping capabilities */
+		void addMapGenerator(MapGenerator *mg);
 
-		/* set functions */
-		void setHasVisited(int bSite);
-
-
-		// add constraints....
-		int addEmptyBindingSite(string bSiteName);
-
-		void addOccupiedBindingSite(string bSiteName);
-		static void bind(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2);
-		static void bind(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2);
-
-		void addStateValue(int cIndex, int stateValue);
-		void addStateValue(string cName, int stateValue);
-		void addStateValue(string cName, string stateValue);
-		void addNotStateValue(string stateName, int notStateValue);
-
-
-
-		void clear() {
-			this->matchMolecule = 0;
-			for(unsigned int i=0; i<hasVisitedBond.size(); i++) hasVisitedBond.at(i) = false;
-			hasVisited=false; };
-
-
-		/* the primary function and purpose of a template molecule
-			   is to compare itself to an instance of a molecule */
-		bool compare(Molecule * m);
-		static bool compareBreadthFirst(TemplateMolecule *tm, Molecule *m);
-
-		//general function used to get a list of all the template molecules connected to
-		//this template molecule through bonds.
+		/* functions that are needed to perform TemplateMolecule operations */
+		bool contains(TemplateMolecule *tempMol);
 		static void traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList);
 
-		/*
-		 * Used to check if a particular state value matches - used when parsing an xml file and
-		 * generating reaction transformations.
-		 */
-		bool isStateValue(string stateName, int stateValue);
-		bool isBonded(string bSiteName);
-
-
-	//	void addTemplateMapping(TemplateMapping *tm);
-	//	bool compare(Molecule * m, MappingSet *mappingSet);
-
-
-
-		void printDetails() const;
-
-
-		static const int NO_CONSTRAINT = -1;
-		static const int IS_EMPTY = 0;
-		static const int IS_OCCUPIED=1;
-		void addSymComponentConstraint(string name, int bondState, int stateConstraint);
-
-		///////////////////////////////////////////////////////////////////
-		void addMapGenerator(MapGenerator *mg);
+		/* functions that are needed to match to a molecule instance */
+		bool compare(Molecule *m);
 		bool compare(Molecule *m, MappingSet *ms);
-		bool contains(TemplateMolecule *tempMol);
+		void clear();
+		bool tryToMap(Molecule *toMap, string toMapComponent,
+				Molecule *mappedFrom, string mappedFromComponent);
+		bool isSymMapValid();
 
 
-		Molecule * matchMolecule;
-		vector <bool> hasVisitedBond; //Change this to array for slight performance gain...
+        /* functions that handle output for debugging and error messages */
+		void printErrorAndExit(string message);
+		void printDetails();
+		void printDetails(ostream &o);
 
-
-		/////////////////////////////////////////////////////////
-		bool hasVisited;
 
 	protected:
 
+		MoleculeType *moleculeType;
 
-		int addEmptyBindingSite(int bSiteIndex);
-
-		MoleculeType *parentMoleculeType;  // ptr to indicate type of molecule
-		vector <int> stateIndex; // saves index into state array of MoleculeType
-		vector <int> stateValue; // saves the value we need to have in the state array
-
-		vector <int> notStateIndex;
-		vector <int> notStateValue;
-
-		vector <int> bSiteIndex; // saves index into bSite array in MoleculeType
-		vector <TemplateMolecule *> bonds; // tells us a binding site
-		vector <int> bSiteIndexOfBond;
-
-		vector <int> sitesThatMustBeOccupied; //
+		// Handling of transformations
+		int n_mapGenerators;
+		MapGenerator **mapGenerators;
 
 
+		///////////////////////////////
+		////  There are two classes of things we have to match that must
+		////  be handled separately...
+		////  1) unique components
+		////  2) symmetric components
 
-		vector <MapGenerator *> mapGenerators;
-		vector <MapGenerator *>::iterator mgIter;
-		vector <int>::iterator intVecIter;
+
+		// Which of the unique components must be empty (no bonds)
+		int n_emptyComps;
+		int *emptyComps;
+
+		// Which of the unique components must be occupied (bonded to something, something
+		// that is not specified)
+		int n_occupiedComps;
+		int *occupiedComps;
+
+		// State value constraints
+		int n_compStateConstraint;
+		int *compStateConstraint_Comp; //index of the constrained component
+		int *compStateConstraint_Constraint; //the constrained value
+
+		// State value exclusions (state != exclusion)
+		int n_compStateExclusion;
+		int *compStateExclusion_Comp;
+		int *compStateExclusion_Exclusion;
+
+		// The set of connections that a particular site is connected to
+		int n_bonds;
+		int *bondComp;
+		string *bondCompName;
+		TemplateMolecule **bondPartner;
+		string *bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
+		int *bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
+		bool *hasVisitedBond;
 
 
-		static queue <TemplateMolecule *> tmq;
-		static queue <Molecule *> mq;
-		static list <TemplateMolecule *> tml;
+		//////////  Handling symmetric components
+		int n_symComps;
+		string *symCompName;
+		string *symCompUniqueId; //Used to match up a particular component when creating bonds
+		int *symCompStateConstraint;
+		int *symCompBoundState;  //either Empty (0), Occupied (1), or No constraint(2)
+		TemplateMolecule **symBondPartner; //the bound template, if this component is bound
+		string *symBondPartnerCompName;
+		int *symBondPartnerCompIndex;
+		vector < vector <int> > canBeMappedTo; //might want to change this to a 2d array for memory/speed?
+		bool *hasTraversedDownSym;
+
+		//Used when matching to a given molecule
+		int n_totalComps;
+		bool *isSymCompMapped;
+		bool *compIsAlwaysMapped;
+
+		Molecule *matchMolecule;
+		bool hasVisitedThis;
+
+
+		//For depth first traversals on a template molecule
+		static queue <TemplateMolecule *> q;
 		static queue <int> d;
+		static vector <TemplateMolecule *>::iterator tmVecIter;
 		static list <TemplateMolecule *>::iterator tmIter;
-
-
-
-
-		bool checkBasicSymConstraints(Molecule *m);
-
-
-
-		bool hasSymmetricConstraint;
-		int nComponents;
-		bool * isComponentMapped;
-		bool * componentIsAlwaysMapped;
-
-		vector <string> symComponentNames;
-		vector <int> symComponentBondState;
-		vector <int> symComponentConstraintValue;
-
-		vector <TemplateMolecule *> symBondedTo;
-
-		// @TODO add not constraint value on sym states
-
-
-		//vector <string> symEmptyBindingSite;
-		//vector <string> symOccupiedBindingSite;
-
-		//vector <string> symStateConstraint;
-		//vector <int> symStateConstraintValue;
-
-		//vector <string> symNotStateConstraint;
-		//vector <int> symNotStateConstraintValue;
 
 	};
 
 }
+
+
 #endif

@@ -155,7 +155,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 */
 int main(int argc, const char *argv[])
 {
-	string versionNumber = "1.01";
+	string versionNumber = "1.02";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;

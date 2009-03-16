@@ -144,6 +144,7 @@ begin reaction rules
 	
 	##  R/B binding and unbinding to a receptor tether, only one R or B is
 	##  allowed to bind per dimer, the active site must also be free
+	Tether Binding CheR :\
 	RD(r,b) + CheR(tether,active) -> CheR(tether!1,active).RD(r!1,b) konR
 	RD(r,b) + CheB(tether,active) -> CheB(tether!1,active).RD(r,b!1) konB
 	

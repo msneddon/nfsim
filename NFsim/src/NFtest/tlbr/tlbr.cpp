@@ -325,523 +325,523 @@ MoleculeType * NFtest_tlbr::createR(System * s, int count)
 //Create reactions where a free ligand binds a receptor
 void NFtest_tlbr::createFreeBindingRxns(System * s, MoleculeType * L, MoleculeType * R, double rate)
 {
-	{ // Reaction r0 binds l0
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r0", rTemp, "l0");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l0)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-
-	{ // Reaction r1 binds l0
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r1", rTemp, "l0");
-
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l0)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-
-	{ // Reaction r2 binds l0
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r2", rTemp, "l0");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l0)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-
-	{ // Reaction r0 binds l1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l1");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r0", rTemp, "l1");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l1)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-
-	{ // Reaction r1 binds l1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l1");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r1", rTemp, "l1");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l1)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-
-	{ // Reaction r2 binds l1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l1");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addBindingTransform(lTemp,"r2", rTemp, "l1");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l1)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
+//	{ // Reaction r0 binds l0
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r0", rTemp, "l0");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l0)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//
+//	{ // Reaction r1 binds l0
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r1", rTemp, "l0");
+//
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l0)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//
+//	{ // Reaction r2 binds l0
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r2", rTemp, "l0");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l0)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//
+//	{ // Reaction r0 binds l1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l1");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r0", rTemp, "l1");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r0-l1)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//
+//	{ // Reaction r1 binds l1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l1");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r1", rTemp, "l1");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r1-l1)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//
+//	{ // Reaction r2 binds l1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l1");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp ); templates.push_back( lTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addBindingTransform(lTemp,"r2", rTemp, "l1");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("FreeBinding(r2-l1)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
 }
 
 
 void NFtest_tlbr::createUnbindingRxns(System * s, MoleculeType * R, double rate)
 {
 
-	{ // Unbind l0
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addOccupiedBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addUnbindingTransform(rTemp,"l0",NULL, "");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("Unbind(l0)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
-	{ // Unbind l1
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addOccupiedBindingSite("l1");
-
-		vector <TemplateMolecule *> templates; templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		ts->addUnbindingTransform(rTemp,"l1", NULL, "");
-		ts->finalize();
-
-		ReactionClass *r = new BasicRxnClass("Unbind(l1)",rate,ts);
-		r->setTraversalLimit(2);
-		s->addReaction(r);
-	}
+//	{ // Unbind l0
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addOccupiedBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addUnbindingTransform(rTemp,"l0",NULL, "");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("Unbind(l0)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
+//	{ // Unbind l1
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addOccupiedBindingSite("l1");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		ts->addUnbindingTransform(rTemp,"l1", NULL, "");
+//		ts->finalize();
+//
+//		ReactionClass *r = new BasicRxnClass("Unbind(l1)",rate,ts);
+//		r->setTraversalLimit(2);
+//		s->addReaction(r);
+//	}
 }
 
 
 
 void NFtest_tlbr::createCrossLinkingRxns(System * s, MoleculeType * L, MoleculeType *R, double rate)
 {
-	int traversalLimit = 2;
-	bool doNotAllowSameComplex = true;
-
-	///////// r0 binds l0 ////////////////////////////////////////
-	{/////////// Variant 1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addOccupiedBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 1)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 2
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addOccupiedBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 2)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 3
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addOccupiedBindingSite("r1");
-		lTemp->addOccupiedBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 3)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-
-
-	///////// r1 binds l0 ////////////////////////////////////////
-	{/////////// Variant 1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addOccupiedBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 1)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 2
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addOccupiedBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 2)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 3
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addOccupiedBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addOccupiedBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 3)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-
-
-	///////// r2 binds l0 ////////////////////////////////////////
-	{/////////// Variant 1
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addOccupiedBindingSite("r0");
-		lTemp->addEmptyBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 1)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 2
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addEmptyBindingSite("r0");
-		lTemp->addOccupiedBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 2)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-	{/////////// Variant 3
-		TemplateMolecule *lTemp = new TemplateMolecule(L);
-		lTemp->addOccupiedBindingSite("r0");
-		lTemp->addOccupiedBindingSite("r1");
-		lTemp->addEmptyBindingSite("r2");
-
-		TemplateMolecule *rTemp = new TemplateMolecule(R);
-		rTemp->addEmptyBindingSite("l0");
-
-		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-		TransformationSet *ts = new TransformationSet(templates);
-		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
-		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
-		ts->finalize();
-		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 3)",rate,ts);
-		r->setTraversalLimit(traversalLimit);
-		s->addReaction(r);
-	}
-
-	////////////////////////////////////////////////////////////////////////
-
-
-	///////// r0 binds l1 ////////////////////////////////////////
-		{/////////// Variant 1
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addEmptyBindingSite("r0");
-			lTemp->addOccupiedBindingSite("r1");
-			lTemp->addEmptyBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 1)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 2
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addEmptyBindingSite("r0");
-			lTemp->addEmptyBindingSite("r1");
-			lTemp->addOccupiedBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 2)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 3
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addEmptyBindingSite("r0");
-			lTemp->addOccupiedBindingSite("r1");
-			lTemp->addOccupiedBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 3)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-
-
-		///////// r1 binds l1 ////////////////////////////////////////
-		{/////////// Variant 1
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addEmptyBindingSite("r0");
-			lTemp->addEmptyBindingSite("r1");
-			lTemp->addOccupiedBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 1)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 2
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addOccupiedBindingSite("r0");
-			lTemp->addEmptyBindingSite("r1");
-			lTemp->addEmptyBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 2)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 3
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addOccupiedBindingSite("r0");
-			lTemp->addEmptyBindingSite("r1");
-			lTemp->addOccupiedBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 3)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-
-
-		///////// r2 binds l1 ////////////////////////////////////////
-		{/////////// Variant 1
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addOccupiedBindingSite("r0");
-			lTemp->addEmptyBindingSite("r1");
-			lTemp->addEmptyBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 1)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 2
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addEmptyBindingSite("r0");
-			lTemp->addOccupiedBindingSite("r1");
-			lTemp->addEmptyBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 2)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
-		{/////////// Variant 3
-			TemplateMolecule *lTemp = new TemplateMolecule(L);
-			lTemp->addOccupiedBindingSite("r0");
-			lTemp->addOccupiedBindingSite("r1");
-			lTemp->addEmptyBindingSite("r2");
-
-			TemplateMolecule *rTemp = new TemplateMolecule(R);
-			rTemp->addEmptyBindingSite("l1");
-
-			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
-
-			TransformationSet *ts = new TransformationSet(templates);
-			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
-			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
-			ts->finalize();
-			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 3)",rate,ts);
-			r->setTraversalLimit(traversalLimit);
-			s->addReaction(r);
-		}
+//	int traversalLimit = 2;
+//	bool doNotAllowSameComplex = true;
+//
+//	///////// r0 binds l0 ////////////////////////////////////////
+//	{/////////// Variant 1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addOccupiedBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 1)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 2
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addOccupiedBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 2)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 3
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addOccupiedBindingSite("r1");
+//		lTemp->addOccupiedBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r0",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r0-l0, 3)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//
+//
+//	///////// r1 binds l0 ////////////////////////////////////////
+//	{/////////// Variant 1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addOccupiedBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 1)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 2
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addOccupiedBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 2)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 3
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addOccupiedBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addOccupiedBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r1",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r1-l0, 3)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//
+//
+//	///////// r2 binds l0 ////////////////////////////////////////
+//	{/////////// Variant 1
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addOccupiedBindingSite("r0");
+//		lTemp->addEmptyBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 1)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 2
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addEmptyBindingSite("r0");
+//		lTemp->addOccupiedBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 2)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//	{/////////// Variant 3
+//		TemplateMolecule *lTemp = new TemplateMolecule(L);
+//		lTemp->addOccupiedBindingSite("r0");
+//		lTemp->addOccupiedBindingSite("r1");
+//		lTemp->addEmptyBindingSite("r2");
+//
+//		TemplateMolecule *rTemp = new TemplateMolecule(R);
+//		rTemp->addEmptyBindingSite("l0");
+//
+//		vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//		TransformationSet *ts = new TransformationSet(templates);
+//		if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l0"); }
+//		else { ts->addBindingTransform(lTemp,"r2",rTemp,"l0"); }
+//		ts->finalize();
+//		ReactionClass *r=new BasicRxnClass("CrossLink(r2-l0, 3)",rate,ts);
+//		r->setTraversalLimit(traversalLimit);
+//		s->addReaction(r);
+//	}
+//
+//	////////////////////////////////////////////////////////////////////////
+//
+//
+//	///////// r0 binds l1 ////////////////////////////////////////
+//		{/////////// Variant 1
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addEmptyBindingSite("r0");
+//			lTemp->addOccupiedBindingSite("r1");
+//			lTemp->addEmptyBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 1)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 2
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addEmptyBindingSite("r0");
+//			lTemp->addEmptyBindingSite("r1");
+//			lTemp->addOccupiedBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 2)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 3
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addEmptyBindingSite("r0");
+//			lTemp->addOccupiedBindingSite("r1");
+//			lTemp->addOccupiedBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r0",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r0",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r0-l1, 3)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//
+//
+//		///////// r1 binds l1 ////////////////////////////////////////
+//		{/////////// Variant 1
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addEmptyBindingSite("r0");
+//			lTemp->addEmptyBindingSite("r1");
+//			lTemp->addOccupiedBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 1)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 2
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addOccupiedBindingSite("r0");
+//			lTemp->addEmptyBindingSite("r1");
+//			lTemp->addEmptyBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 2)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 3
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addOccupiedBindingSite("r0");
+//			lTemp->addEmptyBindingSite("r1");
+//			lTemp->addOccupiedBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r1",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r1",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r1-l1, 3)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//
+//
+//		///////// r2 binds l1 ////////////////////////////////////////
+//		{/////////// Variant 1
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addOccupiedBindingSite("r0");
+//			lTemp->addEmptyBindingSite("r1");
+//			lTemp->addEmptyBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 1)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 2
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addEmptyBindingSite("r0");
+//			lTemp->addOccupiedBindingSite("r1");
+//			lTemp->addEmptyBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 2)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
+//		{/////////// Variant 3
+//			TemplateMolecule *lTemp = new TemplateMolecule(L);
+//			lTemp->addOccupiedBindingSite("r0");
+//			lTemp->addOccupiedBindingSite("r1");
+//			lTemp->addEmptyBindingSite("r2");
+//
+//			TemplateMolecule *rTemp = new TemplateMolecule(R);
+//			rTemp->addEmptyBindingSite("l1");
+//
+//			vector <TemplateMolecule *> templates; templates.push_back( lTemp ); templates.push_back( rTemp );
+//
+//			TransformationSet *ts = new TransformationSet(templates);
+//			if(doNotAllowSameComplex) { ts->addBindingSeparateComplexTransform(lTemp,"r2",rTemp,"l1"); }
+//			else { ts->addBindingTransform(lTemp,"r2",rTemp,"l1"); }
+//			ts->finalize();
+//			ReactionClass *r=new BasicRxnClass("CrossLink(r2-l1, 3)",rate,ts);
+//			r->setTraversalLimit(traversalLimit);
+//			s->addReaction(r);
+//		}
 }
 
 

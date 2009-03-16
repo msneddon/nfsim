@@ -164,7 +164,6 @@ System * NFinput::initializeFromXML(
 			return NULL;
 		}
 
-
 		/////////////////////////////////////////
 		// Parse is finally over!  Now we just have to take care of some final details.
 
@@ -678,6 +677,12 @@ bool NFinput::initStartSpecies(
 				if(verbose) cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
 
 
+
+
+
+
+				vector <string> usedComponentNames;
+
 				//Loop through the components of the molecule in order to set state values
 				TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
 				if(pListOfComp)
@@ -696,6 +701,51 @@ bool NFinput::initStartSpecies(
 							compName = pComp->Attribute("name");
 							compBondCount = pComp->Attribute("numberOfBonds");
 						}
+
+
+						//cout<<" parsing comp: "<<compName<<endl;
+
+						//First, if the site is symmetric, we have to relabel it correctly...
+						if(mt->isEquivalentComponent(compName)) {
+							cout<<"is eq"<<endl;
+							int *eqCompClass; int n_eqComp;
+							mt->getEquivalencyClass(eqCompClass,n_eqComp,compName);
+
+
+							bool couldPlaceSymComp=false;
+							for(int eq=0; eq<n_eqComp;eq++) {
+								string eqCompNameToCompare=mt->getComponentName(eqCompClass[eq]);
+								cout<<"comparing to: "<<eqCompNameToCompare<<endl;
+								bool foundMatch=false;
+								for(int ucn=0;ucn<usedComponentNames.size(); ucn++) {
+									if(usedComponentNames.at(ucn).compare(eqCompNameToCompare)==0) {
+										foundMatch=true; break;
+									}
+								}
+								if(!foundMatch) {
+									cout<<" not used, using."<<endl;
+									usedComponentNames.push_back(eqCompNameToCompare);
+									compName=eqCompNameToCompare;
+									couldPlaceSymComp=true;
+									break;
+								} else {
+									cout<<" used, moving on."<<endl;
+								}
+							}
+							if(!couldPlaceSymComp) {
+								cout<<"Too many symmetric sites specified, when creating species: "<<speciesName<<endl;
+								return false;
+							}
+						} else {
+							for(int ucn=0;ucn<usedComponentNames.size(); ucn++) {
+								if(usedComponentNames.at(ucn).compare(compName)==0) {
+									cout<<"Specified the same component multiple times, when creating species: "<<speciesName<<endl;
+									return false;
+								}
+							}
+							usedComponentNames.push_back(compName);
+						}
+
 
 						//If it is a state, treat it as such
 						string compStateValue;
@@ -727,12 +777,14 @@ bool NFinput::initStartSpecies(
 				{
 					cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
 				}
+				usedComponentNames.clear();
 
 
-				int eqClassCount = mt->getNumOfEquivalencyClasses();
-				int *currentCount = new int[eqClassCount];
-				for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
-				string *eqCompNames = mt->getEquivalencyClassCompNames();
+				//We dont' have to do this anymore, because we handled it earlier!
+				//int eqClassCount = mt->getNumOfEquivalencyClasses();
+				//int *currentCount = new int[eqClassCount];
+				//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
+				//string *eqCompNames = mt->getEquivalencyClassCompNames();
 
 				//loop to create the actual molecules of this type
 				vector <Molecule *> currentM;
@@ -740,26 +792,26 @@ bool NFinput::initStartSpecies(
 				for(int m=0; m<specCountInteger; m++)
 				{
 					Molecule *m = mt->genDefaultMolecule();
-					for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
+					//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
 
 					//Loop through the states and set the ones we need to set
 					int k=0;
 					for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ ) {
-						if(mt->isEquivalentComponent((*snIter))) {
-							int eqNum = mt->getEquivalencyClassNumber((*snIter));
-							std::stringstream numStream; numStream << currentCount[eqNum];
-							string postFix = numStream.str();
-							m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
-							currentCount[eqNum]++;
-						} else {
+						//if(mt->isEquivalentComponent((*snIter))) {
+						//	int eqNum = mt->getEquivalencyClassNumber((*snIter));
+						//	std::stringstream numStream; numStream << currentCount[eqNum];
+						//	string postFix = numStream.str();
+						//	m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
+						//	currentCount[eqNum]++;
+						//} else {
 							m->setComponentState((*snIter), (int)stateValue.at(k));
-						}
+						//}
 					}
 
 					molecules.at(molecules.size()-1).push_back(m);
 				}
 
-				delete [] currentCount;
+				//delete [] currentCount;
 
 				//Reset the states for the next wave...
 				stateName.clear();
@@ -1688,9 +1740,9 @@ TemplateMolecule *NFinput::readPattern(
 					// Handle equivalent components off reaction center differently
 					// it is off reaction center if 1) it is an eq component and 2) it is not in the symMap
 					if(symMap.find(compId)==symMap.end() && moltype->isEquivalentComponent(compName)) {
-						//cout<<"we should treat this as a symmetric constraint"<<endl;
-						//cout<<"equivalent type! :"<<compName<<endl;
-						int stateConstraint = TemplateMolecule::NO_CONSTRAINT;
+						cout<<"we should treat this as a symmetric constraint"<<endl;
+						cout<<"equivalent type! :"<<compName<<endl;
+						int stateConstraint = -1;
 						if(pComp->Attribute("state")) {
 							string compStateValue = pComp->Attribute("state");
 							if(compStateValue!="*" && compStateValue!="?") {
@@ -1714,8 +1766,10 @@ TemplateMolecule *NFinput::readPattern(
 							const int MUST_BE_OCCUPIED = -2;
 							const int EITHER_WAY_WORKS = -3;
 							if(numOfBonds.compare("+")==0) {
-								bondConstraint = TemplateMolecule::IS_OCCUPIED;
+								bondConstraint = TemplateMolecule::OCCUPIED;
 							} else if(numOfBonds.compare("*")==0) {
+								bondConstraint = TemplateMolecule::NO_CONSTRAINT;
+							} else if(numOfBonds.compare("?")==0) {
 								bondConstraint = TemplateMolecule::NO_CONSTRAINT;
 							} else {
 								try {
@@ -1727,18 +1781,19 @@ TemplateMolecule *NFinput::readPattern(
 								}
 
 								if(numOfBondsInt==0) {
-									bondConstraint = TemplateMolecule::IS_EMPTY;
+									bondConstraint = TemplateMolecule::EMPTY;
 								} else if (numOfBondsInt==1) {
-									bondConstraint = TemplateMolecule::IS_OCCUPIED;
+									bondConstraint = TemplateMolecule::OCCUPIED;
+									bSiteSiteMapping[compId] = compName;
+									bSiteMolMapping[compId] = tMolecules.size();
 								} else {
-									cerr<<"in here?"<<endl;
 									cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
 									cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
 									return false;
 								}
 							}
 						}
-						tempmol->addSymComponentConstraint(compName,bondConstraint,stateConstraint);
+						tempmol->addSymCompConstraint(compName,compId,bondConstraint,stateConstraint);
 
 
 					//////////////////////////////////////////////////////
@@ -1789,6 +1844,8 @@ TemplateMolecule *NFinput::readPattern(
 								numOfBondsInt = MUST_BE_OCCUPIED;
 							} else if(numOfBonds.compare("*")==0) {
 								numOfBondsInt = EITHER_WAY_WORKS;
+							} else if(numOfBonds.compare("?")==0) {
+								numOfBondsInt = EITHER_WAY_WORKS;
 							} else {
 								try {
 									numOfBondsInt = NFutil::convertToInt(numOfBonds);
@@ -1799,7 +1856,7 @@ TemplateMolecule *NFinput::readPattern(
 								}
 							}
 
-							//cout<<"bond value: "<< compId <<" " <<numOfBondsInt;
+							//cout<<"bond value: "<< compId <<"    -  " <<numOfBondsInt<<"\n";
 
 							//Look up this site in case we have some symmetry going on...
 							component *symC;
@@ -1820,8 +1877,6 @@ TemplateMolecule *NFinput::readPattern(
 								bSiteSiteMapping[compId] = symC->symPermutationName;
 								bSiteMolMapping[compId] = tMolecules.size();
 							} else {
-
-								cerr<<"in here 2?"<<endl;
 								cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
 								cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
 								return false;
@@ -1841,16 +1896,21 @@ TemplateMolecule *NFinput::readPattern(
 			int k=0;
 			for(strVecIter = stateName.begin(); strVecIter != stateName.end(); k++, strVecIter++ )
 			{
-				tempmol->addStateValue((*strVecIter).c_str(),(int)stateValue.at(k));
+				tempmol->addComponentConstraint(*strVecIter,(int)stateValue.at(k));
 			}
 			for(strVecIter = emptyBondSite.begin(); strVecIter != emptyBondSite.end(); strVecIter++ )
 			{
-				tempmol->addEmptyBindingSite((*strVecIter).c_str());
+				tempmol->addEmptyComponent(*strVecIter);
 			}
 			for(strVecIter = occupiedBondSite.begin(); strVecIter != occupiedBondSite.end(); strVecIter++ )
 			{
-				tempmol->addOccupiedBindingSite((*strVecIter).c_str());
+				tempmol->addBoundComponent(*strVecIter);
 			}
+
+
+
+			//tempmol->printDetails();
+
 
 			//Update our data storage with the new template and empty out the things we don't need
 			templates.insert(pair <string, TemplateMolecule *> (molUid,tempmol));
@@ -1860,7 +1920,6 @@ TemplateMolecule *NFinput::readPattern(
 			emptyBondSite.clear();
 			occupiedBondSite.clear();
 		}
-
 
 		//Here is where we add the bonds to the template molecules in the pattern
 		TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
@@ -1886,6 +1945,21 @@ TemplateMolecule *NFinput::readPattern(
 				//Get the information on this bond that tells us which molecules to connect
 				try {
 
+//					cout<<"here"<<endl;
+//					cout<<"bSite1: "<<bSite1<<endl;
+//					cout<<"bSite2: "<<bSite2<<endl;
+//
+//					cout<<"bSiteSiteMapping"<<endl;
+//					for ( std::map< string, string>::const_iterator iter = bSiteSiteMapping.begin();
+//					iter != bSiteSiteMapping.end(); ++iter )
+//						cout << iter->first << '\t' << iter->second << '\n';
+//					cout<<"bSiteMolMapping"<<endl;
+//					for ( std::map< string, string>::const_iterator iter = bSiteSiteMapping.begin();
+//					iter != bSiteSiteMapping.end(); ++iter )
+//						cout << iter->first << '\t' << iter->second << '\n';
+
+
+
 					//First look up the info from the component maps
 					if(		bSiteSiteMapping.find(bSite1)!=bSiteSiteMapping.end() &&
 							bSiteMolMapping.find(bSite1)!=bSiteMolMapping.end() &&
@@ -1897,7 +1971,8 @@ TemplateMolecule *NFinput::readPattern(
 						int bSiteMolIndex1 = bSiteMolMapping.find(bSite1)->second;
 						string bSiteName2 = bSiteSiteMapping.find(bSite2)->second;
 						int bSiteMolIndex2 = bSiteMolMapping.find(bSite2)->second;
-						TemplateMolecule::bind(tMolecules.at(bSiteMolIndex1),bSiteName1.c_str(),tMolecules.at(bSiteMolIndex2),bSiteName2.c_str());
+						TemplateMolecule::bind(tMolecules.at(bSiteMolIndex1),bSiteName1.c_str(),bSite1,
+								tMolecules.at(bSiteMolIndex2),bSiteName2.c_str(),bSite2);
 
 						//Erase the bonds to make sure we don't add them again
 						bSiteSiteMapping.erase(bSite1);
@@ -1905,12 +1980,19 @@ TemplateMolecule *NFinput::readPattern(
 						bSiteSiteMapping.erase(bSite2);
 						bSiteMolMapping.erase(bSite2);
 					} else {
+
+						cerr<<"here"<<endl;
 						cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
 						cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
 						cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
 						return false;
 					}
 				} catch (exception& e) {
+
+					cerr<<e.what()<<endl;
+
+					cerr<<"now here"<<endl;
+
 					cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
 					cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
 					cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
@@ -1922,18 +2004,31 @@ TemplateMolecule *NFinput::readPattern(
 		//Now, we have to loop through all the bonds that we did not explicitly use, but that we set to bonded
 		//this must be a constraint on our pattern.
 		try {
-			map<string,string>::iterator strMapit;
-			for(strMapit = bSiteSiteMapping.begin(); strMapit != bSiteSiteMapping.end(); strMapit++ ) {
-				string bSiteId = (*strMapit).first;
-				string bSiteName = (*strMapit).second;
-				int bSiteMolIndex = bSiteMolMapping.find(bSiteId)->second;
-				tMolecules.at(bSiteMolIndex)->addOccupiedBindingSite(bSiteName.c_str());
-			}
+//			map<string,string>::iterator strMapit;
+//			for(strMapit = bSiteSiteMapping.begin(); strMapit != bSiteSiteMapping.end(); strMapit++ ) {
+//				string bSiteId = (*strMapit).first;
+//				string bSiteName = (*strMapit).second;
+//				int bSiteMolIndex = bSiteMolMapping.find(bSiteId)->second;
+//
+//				//skip symmetric sites here, because we already considered them earlier...
+//				if(tMolecules.at(bSiteMolIndex)->getMoleculeType()->isEquivalentComponent(bSiteName.c_str())) {
+//					continue;
+//				}
+//
+//				tMolecules.at(bSiteMolIndex)->addOccupiedBindingSite(bSiteName.c_str());
+//			}
 		} catch (exception& e) {
 			cerr<<"Something went wacky when I was parsing pattern '"<<patternName<<"'."<<endl;
 			cerr<<"It happened as I was trying to add an occupied binding site to a template molecule."<<endl;
 			return false;
 		}
+
+
+		//Print out all the templates we made...
+		//for(int k=0; k<tMolecules.size(); k++) {
+		//	tMolecules.at(k)->printDetails(cout);
+		//}
+
 
 
 		//Grab the first template molecule from the list, and arbitrarily set this as the root
@@ -2154,6 +2249,8 @@ bool NFinput::readProductPattern(
 					bSiteSiteMapping.erase(bSite2);
 					bSiteMolMapping.erase(bSite2);
 				} catch (exception& e) {
+					cerr<<"here we are"<<endl;
+
 					cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating product pattern '"<<patternName<<"'. "<<endl;
 					cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
 					cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
