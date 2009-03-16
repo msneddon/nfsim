@@ -414,7 +414,7 @@
       </Species>
     </ListOfSpecies>
     <ListOfReactionRules>
-      <ReactionRule id="RR1" name="Rule1">
+      <ReactionRule id="RR1" name="Tether Binding CheR ">
         <ListOfReactantPatterns>
           <ReactantPattern id="RR1_RP1">
             <ListOfMolecules>

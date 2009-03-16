@@ -20,7 +20,7 @@ begin
   set Asp_Koff_TAR  0.02 #mM
   set Asp_Kon_TAR   0.5  #mM
   set Asp_Koff_TSR  100  #mM
-  set Asp_Kon_TSR   10^6 #mM
+  set Asp_Kon_TSR   10e6 #mM
   set TAR_COUNT 6
   set TSR_COUNT 13
   

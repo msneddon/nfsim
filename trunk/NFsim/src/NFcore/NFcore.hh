@@ -401,7 +401,7 @@ namespace NFcore
 
 			//Function to access component information
 			int getNumOfComponents() const { return numOfComponents; };
-			string getComponentName(int cIndex) const { return compName[cIndex]; };
+			string getComponentName(int cIndex) const;
 			void getPossibleComponentStates(int cIndex, list <string> &nameList);
 			int getDefaultComponentState(int cIndex) const { return defaultCompState[cIndex]; };
 
@@ -683,7 +683,8 @@ namespace NFcore
 
 
 			/* print functions for debugging */
-			void printDetails() const;
+			void printDetails();
+			void printDetails(ostream &o);
 			static void printMoleculeList(list <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };

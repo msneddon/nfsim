@@ -223,31 +223,33 @@ void Molecule::setComponentState(string cName, int newValue) {
 }
 
 
-
-void Molecule::printDetails() const
+void Molecule::printDetails() {
+	this->printDetails(cout);
+}
+void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
-	cout<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	cout<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
-	cout<<"      components: ";
+	o<<"++ Molecule instance of type: " << parentMoleculeType->getName();
+	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
-		if(c!=0)cout<<"                  ";
-		cout<< parentMoleculeType->getComponentName(c) <<"=";
-		cout<<parentMoleculeType->getComponentStateName(c,component[c]);
-		cout<<"\tbond=";
-		if(bond[c]==NOBOND) cout<<"empty";
-		else cout<<bond[c]->getUniqueID();
-		cout<<endl;
+		if(c!=0)o<<"                  ";
+		o<< parentMoleculeType->getComponentName(c) <<"=";
+		o<<parentMoleculeType->getComponentStateName(c,component[c]);
+		o<<"\tbond=";
+		if(bond[c]==NOBOND) o<<"empty";
+		else o<<bond[c]->getUniqueID();
+		o<<endl;
 	}
 
-	cout.flush();
+	o.flush();
 	if(parentMoleculeType->getNumOfTypeIFunctions()>0) {
-		cout<<"      loc funcs:";
+		o<<"      loc funcs:";
 		for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
-			if(lf!=0) cout<<"                  ";
-			cout<<"  "<<parentMoleculeType->getTypeILocalFunction(lf)->getNiceName();
-			cout<<"="<<localFunctionValues[lf]<<"\n";
+			if(lf!=0) o<<"                  ";
+			o<<"  "<<parentMoleculeType->getTypeILocalFunction(lf)->getNiceName();
+			o<<"="<<localFunctionValues[lf]<<"\n";
 		}
 	}
 }
@@ -283,14 +285,14 @@ Molecule * Molecule::getBondedMolecule(int cIndex) const
 void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 {
 	if(m1->bond[cIndex1]!=NOBOND || m2->bond[cIndex2]!=NOBOND) {
-		cout<<"Trying to bond "<< m1->getMoleculeTypeName() << "_"<<m1->getUniqueID()<<"(";
-		cout<<m1->getMoleculeType()->getComponentName(cIndex1)<<") & ";
-		cout<< m2->getMoleculeTypeName()<<"_"<<m2->getUniqueID()<<"(";
-		cout<<m2->getMoleculeType()->getComponentName(cIndex2)<<")\n";
-		cout<<" to sites that are already occupied!  Check rxn rules!!\n";
+		cerr<<"Trying to bond "<< m1->getMoleculeTypeName() << "_"<<m1->getUniqueID()<<"(";
+		cerr<<m1->getMoleculeType()->getComponentName(cIndex1)<<") & ";
+		cerr<< m2->getMoleculeTypeName()<<"_"<<m2->getUniqueID()<<"(";
+		cerr<<m2->getMoleculeType()->getComponentName(cIndex2)<<")\n";
+		cerr<<" to sites that are already occupied!  Check rxn rules!!\n";
 
-		m1->printDetails();
-		m2->printDetails();
+		m1->printDetails(cerr);
+		m2->printDetails(cerr);
 		exit(1);
 	}
 
@@ -323,13 +325,14 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 	Molecule *m2 = m1->bond[cIndex];
 	if(m2==NULL)
 	{
-		cout<<endl<<endl<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
-		cout<<"Trying to unbind a binding site that is not bound!!  Check rxn rules! Quitting."<<endl;
-		cout<<endl<<endl<<"The molecule is:"<<endl;
-		m1->printDetails();
-		cout<<endl<<"The site trying to be unbound was: ";
-		cout<<m1->getMoleculeType()->getComponentName(cIndex)<<endl;
-		exit(1);
+		cerr<<endl<<endl<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+		cerr<<"Your universal traversal limit was probably set too low, so some updates were not correct!"<<endl;
+		cerr<<"Trying to unbind a binding site that is not bound!!  Check rxn rules, and traversal limits! Quitting."<<endl;
+		cerr<<endl<<endl<<"The molecule is:"<<endl;
+		m1->printDetails(cerr);
+		cerr<<endl<<"The site trying to be unbound was: ";
+		cerr<<m1->getMoleculeType()->getComponentName(cIndex)<<endl;
+		exit(3);
 	}
 
 
@@ -371,6 +374,13 @@ list <Molecule *>::iterator Molecule::molIter;
 
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
+	if(m==0) {
+		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
+		cerr<<"Likely an internal error where a MappingSet is on a list and\n";
+		cerr<<"is not actually mapped to any molecule!";
+		exit(3);
+	}
+
 	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
 	//queue <Molecule *> q;
 	//queue <int> d;
@@ -436,7 +446,8 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 }
 
 
-//Isn't ever called really
+//Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
+//because it is depth first
 void Molecule::depthFirstSearch(list <Molecule *> &members)
 {
 	if(this->hasVisitedMolecule==true) {
