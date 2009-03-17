@@ -325,8 +325,14 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			if (argMap.find("bscb")!=argMap.end())
 				blockSameComplexBinding = true;
 
+			bool turnOnComplexBookkeeping = false;
+			if (argMap.find("cb")!=argMap.end())
+				turnOnComplexBookkeeping = true;
+
 			//Actually create the system
-			System *s = NFinput::initializeFromXML(filename,blockSameComplexBinding,verbose);
+			bool cb = false;
+			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
+			System *s = NFinput::initializeFromXML(filename,cb,verbose);
 
 			if(s!=NULL)
 			{
