@@ -1,0 +1,291 @@
+\section{TiXmlElement Class Reference}
+\label{classTiXmlElement}\index{TiXmlElement@{TiXmlElement}}
+{\tt \#include $<$tinyxml.h$>$}
+
+Inheritance diagram for TiXmlElement::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3cm]{classTiXmlElement}
+\end{center}
+\end{figure}
+
+
+\subsection{Detailed Description}
+The element is a container class. It has a value, the element name, and can contain other elements, text, comments, and unknowns. Elements also contain an arbitrary number of attributes. \subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf TiXmlElement} (const char $\ast$in\_\-value)
+\begin{CompactList}\small\item\em Construct an element. \item\end{CompactList}\item 
+{\bf TiXmlElement} (const {\bf TiXmlElement} \&)
+\item 
+void {\bf operator=} (const {\bf TiXmlElement} \&base)
+\item 
+virtual {\bf $\sim$TiXmlElement} ()
+\item 
+const char $\ast$ {\bf Attribute} (const char $\ast$name) const 
+\item 
+const char $\ast$ {\bf Attribute} (const char $\ast$name, int $\ast$i) const 
+\item 
+const char $\ast$ {\bf Attribute} (const char $\ast$name, double $\ast$d) const 
+\item 
+int {\bf QueryIntAttribute} (const char $\ast$name, int $\ast$\_\-value) const 
+\item 
+int {\bf QueryDoubleAttribute} (const char $\ast$name, double $\ast$\_\-value) const 
+\begin{CompactList}\small\item\em QueryDoubleAttribute examines the attribute - see \doxyref{QueryIntAttribute()}{p.}{classTiXmlElement_ea0bfe471380f281c5945770ddbf52b9}. \item\end{CompactList}\item 
+int {\bf QueryFloatAttribute} (const char $\ast$name, float $\ast$\_\-value) const 
+\begin{CompactList}\small\item\em QueryFloatAttribute examines the attribute - see \doxyref{QueryIntAttribute()}{p.}{classTiXmlElement_ea0bfe471380f281c5945770ddbf52b9}. \item\end{CompactList}\item 
+void {\bf SetAttribute} (const char $\ast$name, const char $\ast$\_\-value)
+\item 
+void {\bf SetAttribute} (const char $\ast$name, int {\bf value})
+\item 
+void {\bf SetDoubleAttribute} (const char $\ast$name, double {\bf value})
+\item 
+void {\bf RemoveAttribute} (const char $\ast$name)
+\item 
+const {\bf TiXmlAttribute} $\ast$ {\bf FirstAttribute} () const 
+\begin{CompactList}\small\item\em Access the first attribute in this element. \item\end{CompactList}\item 
+{\bf TiXmlAttribute} $\ast$ {\bf FirstAttribute} ()
+\item 
+const {\bf TiXmlAttribute} $\ast$ {\bf LastAttribute} () const 
+\begin{CompactList}\small\item\em Access the last attribute in this element. \item\end{CompactList}\item 
+{\bf TiXmlAttribute} $\ast$ {\bf LastAttribute} ()
+\item 
+const char $\ast$ {\bf GetText} () const 
+\item 
+virtual {\bf TiXmlNode} $\ast$ {\bf Clone} () const 
+\begin{CompactList}\small\item\em Creates a new Element and returns it - the returned element is a copy. \item\end{CompactList}\item 
+virtual void {\bf Print} (FILE $\ast$cfile, int depth) const 
+\item 
+virtual const char $\ast$ {\bf Parse} (const char $\ast$p, {\bf TiXmlParsingData} $\ast$data, {\bf TiXmlEncoding} encoding)
+\item 
+virtual const {\bf TiXmlElement} $\ast$ {\bf ToElement} () const 
+\begin{CompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \item\end{CompactList}\item 
+virtual {\bf TiXmlElement} $\ast$ {\bf ToElement} ()
+\begin{CompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \item\end{CompactList}\item 
+virtual bool {\bf Accept} ({\bf TiXmlVisitor} $\ast$visitor) const 
+\end{CompactItemize}
+\subsection*{Protected Member Functions}
+\begin{CompactItemize}
+\item 
+void {\bf CopyTo} ({\bf TiXmlElement} $\ast$target) const 
+\item 
+void {\bf ClearThis} ()
+\item 
+const char $\ast$ {\bf ReadValue} (const char $\ast$in, {\bf TiXmlParsingData} $\ast$prevData, {\bf TiXmlEncoding} encoding)
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{TiXmlElement@{TiXmlElement}!TiXmlElement@{TiXmlElement}}
+\index{TiXmlElement@{TiXmlElement}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TiXmlElement::TiXmlElement (const char $\ast$ {\em in\_\-value})}\label{classTiXmlElement_01bc3ab372d35da08efcbbe65ad90c60}
+
+
+Construct an element. 
+
+\index{TiXmlElement@{TiXmlElement}!TiXmlElement@{TiXmlElement}}
+\index{TiXmlElement@{TiXmlElement}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TiXmlElement::TiXmlElement (const {\bf TiXmlElement} \& {\em copy})}\label{classTiXmlElement_1ca4465f3c2eac6a60e641cd7f1d9f7e}
+
+
+\index{TiXmlElement@{TiXmlElement}!$\sim$TiXmlElement@{$\sim$TiXmlElement}}
+\index{$\sim$TiXmlElement@{$\sim$TiXmlElement}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TiXmlElement::$\sim$TiXmlElement ()\hspace{0.3cm}{\tt  [virtual]}}\label{classTiXmlElement_a049a47c5081c0d021968666360da261}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{TiXmlElement@{TiXmlElement}!operator=@{operator=}}
+\index{operator=@{operator=}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::operator= (const {\bf TiXmlElement} \& {\em base})}\label{classTiXmlElement_f5cd4156e082ef3bf23adfe0ed173340}
+
+
+\index{TiXmlElement@{TiXmlElement}!Attribute@{Attribute}}
+\index{Attribute@{Attribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::Attribute (const char $\ast$ {\em name}) const}\label{classTiXmlElement_c1e4691e9375ba4e665dce7e46a50a9c}
+
+
+Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_c1e4691e9375ba4e665dce7e46a50a9c} returns the value for the attribute of that name, or null if none exists. \index{TiXmlElement@{TiXmlElement}!Attribute@{Attribute}}
+\index{Attribute@{Attribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::Attribute (const char $\ast$ {\em name}, int $\ast$ {\em i}) const}\label{classTiXmlElement_a9192e80567b5042dbded80b78c44339}
+
+
+Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_c1e4691e9375ba4e665dce7e46a50a9c} returns the value for the attribute of that name, or null if none exists. If the attribute exists and can be converted to an integer, the integer value will be put in the return 'i', if 'i' is non-null. \index{TiXmlElement@{TiXmlElement}!Attribute@{Attribute}}
+\index{Attribute@{Attribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::Attribute (const char $\ast$ {\em name}, double $\ast$ {\em d}) const}\label{classTiXmlElement_ec4f727f8aa49b51248d80125d173136}
+
+
+Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_c1e4691e9375ba4e665dce7e46a50a9c} returns the value for the attribute of that name, or null if none exists. If the attribute exists and can be converted to an double, the double value will be put in the return 'd', if 'd' is non-null. \index{TiXmlElement@{TiXmlElement}!QueryIntAttribute@{QueryIntAttribute}}
+\index{QueryIntAttribute@{QueryIntAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int TiXmlElement::QueryIntAttribute (const char $\ast$ {\em name}, int $\ast$ {\em \_\-value}) const}\label{classTiXmlElement_ea0bfe471380f281c5945770ddbf52b9}
+
+
+QueryIntAttribute examines the attribute - it is an alternative to the \doxyref{Attribute()}{p.}{classTiXmlElement_c1e4691e9375ba4e665dce7e46a50a9c} method with richer error checking. If the attribute is an integer, it is stored in 'value' and the call returns TIXML\_\-SUCCESS. If it is not an integer, it returns TIXML\_\-WRONG\_\-TYPE. If the attribute does not exist, then TIXML\_\-NO\_\-ATTRIBUTE is returned. \index{TiXmlElement@{TiXmlElement}!QueryDoubleAttribute@{QueryDoubleAttribute}}
+\index{QueryDoubleAttribute@{QueryDoubleAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int TiXmlElement::QueryDoubleAttribute (const char $\ast$ {\em name}, double $\ast$ {\em \_\-value}) const}\label{classTiXmlElement_898d7730ecc341f0bffc7a9dadbf1ce7}
+
+
+QueryDoubleAttribute examines the attribute - see \doxyref{QueryIntAttribute()}{p.}{classTiXmlElement_ea0bfe471380f281c5945770ddbf52b9}. 
+
+\index{TiXmlElement@{TiXmlElement}!QueryFloatAttribute@{QueryFloatAttribute}}
+\index{QueryFloatAttribute@{QueryFloatAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int TiXmlElement::QueryFloatAttribute (const char $\ast$ {\em name}, float $\ast$ {\em \_\-value}) const\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlElement_a04d3af11601ef5a5f88295203a843be}
+
+
+QueryFloatAttribute examines the attribute - see \doxyref{QueryIntAttribute()}{p.}{classTiXmlElement_ea0bfe471380f281c5945770ddbf52b9}. 
+
+\index{TiXmlElement@{TiXmlElement}!SetAttribute@{SetAttribute}}
+\index{SetAttribute@{SetAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::SetAttribute (const char $\ast$ {\em name}, const char $\ast$ {\em \_\-value})}\label{classTiXmlElement_bf0b3bd7f0e4c746a89ec6e7f101fc32}
+
+
+Sets an attribute of name to a given value. The attribute will be created if it does not exist, or changed if it does. \index{TiXmlElement@{TiXmlElement}!SetAttribute@{SetAttribute}}
+\index{SetAttribute@{SetAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::SetAttribute (const char $\ast$ {\em name}, int {\em value})}\label{classTiXmlElement_ce6f4be75e373726d4774073d666d1a7}
+
+
+Sets an attribute of name to a given value. The attribute will be created if it does not exist, or changed if it does. \index{TiXmlElement@{TiXmlElement}!SetDoubleAttribute@{SetDoubleAttribute}}
+\index{SetDoubleAttribute@{SetDoubleAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::SetDoubleAttribute (const char $\ast$ {\em name}, double {\em value})}\label{classTiXmlElement_0d1dd975d75496778177e35abfe0ec0b}
+
+
+Sets an attribute of name to a given value. The attribute will be created if it does not exist, or changed if it does. \index{TiXmlElement@{TiXmlElement}!RemoveAttribute@{RemoveAttribute}}
+\index{RemoveAttribute@{RemoveAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::RemoveAttribute (const char $\ast$ {\em name})}\label{classTiXmlElement_56979767deca794376b1dfa69a525b2a}
+
+
+Deletes an attribute with the given name. \index{TiXmlElement@{TiXmlElement}!FirstAttribute@{FirstAttribute}}
+\index{FirstAttribute@{FirstAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlAttribute}$\ast$ TiXmlElement::FirstAttribute () const\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlElement_516054c9073647d6cb29b6abe9fa0592}
+
+
+Access the first attribute in this element. 
+
+\index{TiXmlElement@{TiXmlElement}!FirstAttribute@{FirstAttribute}}
+\index{FirstAttribute@{FirstAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlAttribute}$\ast$ TiXmlElement::FirstAttribute ()\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlElement_4b33780fc565d38d6b54f640e0cf1737}
+
+
+\index{TiXmlElement@{TiXmlElement}!LastAttribute@{LastAttribute}}
+\index{LastAttribute@{LastAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlAttribute}$\ast$ TiXmlElement::LastAttribute () const\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlElement_86191b49f9177be132b85b14655f1381}
+
+
+Access the last attribute in this element. 
+
+\index{TiXmlElement@{TiXmlElement}!LastAttribute@{LastAttribute}}
+\index{LastAttribute@{LastAttribute}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlAttribute}$\ast$ TiXmlElement::LastAttribute ()\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlElement_222f81cf06155cd108f2a68d4d176004}
+
+
+\index{TiXmlElement@{TiXmlElement}!GetText@{GetText}}
+\index{GetText@{GetText}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::GetText () const}\label{classTiXmlElement_a6dedd8a146acf3b1bc0903deb2d411a}
+
+
+Convenience function for easy access to the text inside an element. Although easy and concise, \doxyref{GetText()}{p.}{classTiXmlElement_a6dedd8a146acf3b1bc0903deb2d411a} is limited compared to getting the \doxyref{TiXmlText}{p.}{classTiXmlText} child and accessing it directly.
+
+If the first child of 'this' is a \doxyref{TiXmlText}{p.}{classTiXmlText}, the \doxyref{GetText()}{p.}{classTiXmlElement_a6dedd8a146acf3b1bc0903deb2d411a} returns the character string of the Text node, else null is returned.
+
+This is a convenient method for getting the text of simple contained text: 
+
+\footnotesize\begin{verbatim}
+		<foo>This is text</foo>
+		const char* str = fooElement->GetText();
+		\end{verbatim}
+\normalsize
+
+
+'str' will be a pointer to \char`\"{}This is text\char`\"{}.
+
+Note that this function can be misleading. If the element foo was created from this XML: 
+
+\footnotesize\begin{verbatim}
+		<foo><b>This is text</b></foo> 
+		\end{verbatim}
+\normalsize
+
+
+then the value of str would be null. The first child node isn't a text node, it is another element. From this XML: 
+
+\footnotesize\begin{verbatim}
+		<foo>This is <b>text</b></foo> 
+		\end{verbatim}
+\normalsize
+ \doxyref{GetText()}{p.}{classTiXmlElement_a6dedd8a146acf3b1bc0903deb2d411a} will return \char`\"{}This is \char`\"{}.
+
+WARNING: \doxyref{GetText()}{p.}{classTiXmlElement_a6dedd8a146acf3b1bc0903deb2d411a} accesses a child node - don't become confused with the similarly named \doxyref{TiXmlHandle::Text()}{p.}{classTiXmlHandle_9fc739c8a18d160006f82572fc143d13} and \doxyref{TiXmlNode::ToText()}{p.}{classTiXmlNode_3ddfbcac78fbea041fad57e5c6d60a03} which are safe type casts on the referenced node. \index{TiXmlElement@{TiXmlElement}!Clone@{Clone}}
+\index{Clone@{Clone}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlElement::Clone () const\hspace{0.3cm}{\tt  [virtual]}}\label{classTiXmlElement_13f6df105ebb1e8dc636e75cc883be32}
+
+
+Creates a new Element and returns it - the returned element is a copy. 
+
+
+
+Implements {\bf TiXmlNode} \doxyref{}{p.}{classTiXmlNode_4508cc3a2d7a98e96a54cc09c37a78a4}.\index{TiXmlElement@{TiXmlElement}!Print@{Print}}
+\index{Print@{Print}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::Print (FILE $\ast$ {\em cfile}, int {\em depth}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classTiXmlElement_d9d0c008866982ab8d9aafae7e14d692}
+
+
+All TinyXml classes can print themselves to a filestream or the string class (\doxyref{TiXmlString}{p.}{classTiXmlString} in non-STL mode, std::string in STL mode.) Either or both cfile and str can be null.
+
+This is a formatted print, and will insert tabs and newlines.
+
+(For an unformatted stream, use the $<$$<$ operator.) 
+
+Implements {\bf TiXmlBase} \doxyref{}{p.}{classTiXmlBase_0de56b3f2ef14c65091a3b916437b512}.\index{TiXmlElement@{TiXmlElement}!Parse@{Parse}}
+\index{Parse@{Parse}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::Parse (const char $\ast$ {\em p}, {\bf TiXmlParsingData} $\ast$ {\em data}, {\bf TiXmlEncoding} {\em encoding})\hspace{0.3cm}{\tt  [virtual]}}\label{classTiXmlElement_f95c9165159fd9dfdcc5b894a3fcf85b}
+
+
+
+
+Implements {\bf TiXmlBase} \doxyref{}{p.}{classTiXmlBase_00e4edb0219d00a1379c856e5a1d2025}.\index{TiXmlElement@{TiXmlElement}!ToElement@{ToElement}}
+\index{ToElement@{ToElement}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlElement}$\ast$ TiXmlElement::ToElement () const\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classTiXmlElement_c5b8d0e25fa23fd9acbb6d146082901c}
+
+
+Cast to a more defined type. Will return null not of the requested type. 
+
+
+
+Reimplemented from {\bf TiXmlNode} \doxyref{}{p.}{classTiXmlNode_72abed96dc9667ab9e0a2a275301bb1c}.\index{TiXmlElement@{TiXmlElement}!ToElement@{ToElement}}
+\index{ToElement@{ToElement}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlElement}$\ast$ TiXmlElement::ToElement ()\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classTiXmlElement_9def86337ea7a755eb41cac980f60c7a}
+
+
+Cast to a more defined type. Will return null not of the requested type. 
+
+
+
+Reimplemented from {\bf TiXmlNode} \doxyref{}{p.}{classTiXmlNode_a65d000223187d22a4dcebd7479e9ebc}.\index{TiXmlElement@{TiXmlElement}!Accept@{Accept}}
+\index{Accept@{Accept}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlElement::Accept ({\bf TiXmlVisitor} $\ast$ {\em visitor}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classTiXmlElement_31ab28cc3b892a69254391d6bbe08df3}
+
+
+Walk the XML tree visiting this node and all of its children. 
+
+Implements {\bf TiXmlNode} \doxyref{}{p.}{classTiXmlNode_cc0f88b7462c6cb73809d410a4f5bb86}.\index{TiXmlElement@{TiXmlElement}!CopyTo@{CopyTo}}
+\index{CopyTo@{CopyTo}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::CopyTo ({\bf TiXmlElement} $\ast$ {\em target}) const\hspace{0.3cm}{\tt  [protected]}}\label{classTiXmlElement_9e0c1983b840de4134f1f6bf7af00b0f}
+
+
+\index{TiXmlElement@{TiXmlElement}!ClearThis@{ClearThis}}
+\index{ClearThis@{ClearThis}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlElement::ClearThis ()\hspace{0.3cm}{\tt  [protected]}}\label{classTiXmlElement_5670933ec2d7d9763b9891acc05d7f7d}
+
+
+\index{TiXmlElement@{TiXmlElement}!ReadValue@{ReadValue}}
+\index{ReadValue@{ReadValue}!TiXmlElement@{TiXmlElement}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlElement::ReadValue (const char $\ast$ {\em in}, {\bf TiXmlParsingData} $\ast$ {\em prevData}, {\bf TiXmlEncoding} {\em encoding})\hspace{0.3cm}{\tt  [protected]}}\label{classTiXmlElement_c786bce103042d3837c4cc2ff6967d41}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/TinyXML/{\bf tinyxml.h}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/TinyXML/{\bf tinyxml.cpp}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/TinyXML/{\bf tinyxmlparser.cpp}\end{CompactItemize}

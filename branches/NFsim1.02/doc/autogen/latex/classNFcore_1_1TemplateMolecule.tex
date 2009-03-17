@@ -1,0 +1,419 @@
+\section{NFcore::TemplateMolecule Class Reference}
+\label{classNFcore_1_1TemplateMolecule}\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+{\tt \#include $<$NFcore.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Used for matching \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects to the given pattern. 
+
+TemplateMolecules are regular expression like objects needed to identify specific configurations of connected Molecules. Individual TemplateMolecules are derived from a particular \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType} and inherit their set of components from their parent \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType}. TemplateMolecules can be connected to other TemplateMolecules through component bonds forming the regular expression pattern. An individual \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} matches an individual \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} if they are of the same \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType} and their component bonds and state values match. Any component state not explicitly specified in a \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} is treated as a wild-card and will always match the corresponding component of a \doxyref{Molecule}{p.}{classNFcore_1_1Molecule}. For more complex patterns, an entire connected set of Molecules is matched to a connected set of TemplateMolecules through a recursive algorithm that checks for graph isomorphism between the two sets. The worst case performance of the recursive matching algorithm is proportional to the number of connected TemplateMolecules in the pattern. However, the average performance is much better because a match is rejected as soon as a single difference in component states or molecule connectivity is found. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf TemplateMolecule} ({\bf MoleculeType} $\ast${\bf parentMoleculeType})
+\item 
+{\bf $\sim$TemplateMolecule} ()
+\item 
+{\bf MoleculeType} $\ast$ {\bf getMoleculeType} () const 
+\item 
+string {\bf getMoleculeTypeName} () const 
+\item 
+unsigned int {\bf getNumCompareStates} () const 
+\item 
+unsigned int {\bf getStateIndex} (int state) const 
+\item 
+unsigned int {\bf getStateValue} (int state) const 
+\item 
+unsigned int {\bf getNumBindingSites} () const 
+\item 
+bool {\bf isBindingSiteOpen} (int bIndex) const 
+\item 
+bool {\bf isBindingSiteBonded} (int bIndex) const 
+\item 
+{\bf TemplateMolecule} $\ast$ {\bf getBondedTemplateMolecule} (int bIndex) const 
+\item 
+unsigned int {\bf getTemplateBsiteIndexFromMoleculeBsiteIndex} (int molBsiteIndex)
+\item 
+int {\bf getBindingSiteIndex} (int bIndex) const 
+\item 
+int {\bf getBindingSiteIndexOfBondedTemplate} (int bIndex) const 
+\item 
+void {\bf setHasVisited} (int bSite)
+\item 
+unsigned int {\bf addEmptyBindingSite} (int {\bf bSiteIndex})
+\item 
+unsigned int {\bf addEmptyBindingSite} (const char $\ast$bSiteName)
+\item 
+void {\bf addOccupiedBindingSite} (const char $\ast$bSiteName)
+\item 
+void {\bf addStateValue} (int cIndex, int {\bf stateValue})
+\item 
+void {\bf addStateValue} (string cName, int {\bf stateValue})
+\item 
+void {\bf addStateValue} (string cName, string {\bf stateValue})
+\item 
+void {\bf addNotStateValue} (char $\ast$stateName, int {\bf notStateValue})
+\item 
+void {\bf clear} ()
+\item 
+bool {\bf compare} ({\bf Molecule} $\ast$m)
+\item 
+bool {\bf isStateValue} (const char $\ast$stateName, int {\bf stateValue})
+\item 
+bool {\bf isBonded} (const char $\ast$bSiteName)
+\item 
+void {\bf printDetails} () const 
+\item 
+void {\bf addMapGenerator} ({\bf MapGenerator} $\ast$mg)
+\item 
+bool {\bf compare} ({\bf Molecule} $\ast$m, {\bf MappingSet} $\ast$ms)
+\item 
+bool {\bf contains} ({\bf TemplateMolecule} $\ast$tempMol)
+\end{CompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static void {\bf bind} ({\bf TemplateMolecule} $\ast$t1, int bSiteIndex1, {\bf TemplateMolecule} $\ast$t2, int bSiteIndex2)
+\item 
+static void {\bf bind} ({\bf TemplateMolecule} $\ast$t1, const char $\ast$bSiteName1, {\bf TemplateMolecule} $\ast$t2, const char $\ast$bSiteName2)
+\item 
+static bool {\bf compareBreadthFirst} ({\bf TemplateMolecule} $\ast$tm, {\bf Molecule} $\ast$m)
+\item 
+static void {\bf traverse} ({\bf TemplateMolecule} $\ast$tempMol, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList)
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+{\bf Molecule} $\ast$ {\bf matchMolecule}
+\item 
+vector$<$ bool $>$ {\bf hasVisitedBond}
+\item 
+bool {\bf hasVisited}
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+{\bf MoleculeType} $\ast$ {\bf parentMoleculeType}
+\item 
+vector$<$ int $>$ {\bf stateIndex}
+\item 
+vector$<$ int $>$ {\bf stateValue}
+\item 
+vector$<$ int $>$ {\bf notStateIndex}
+\item 
+vector$<$ int $>$ {\bf notStateValue}
+\item 
+vector$<$ int $>$ {\bf bSiteIndex}
+\item 
+vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf bonds}
+\item 
+vector$<$ int $>$ {\bf bSiteIndexOfBond}
+\item 
+vector$<$ int $>$ {\bf sitesThatMustBeOccupied}
+\item 
+vector$<$ {\bf MapGenerator} $\ast$ $>$ {\bf mapGenerators}
+\item 
+vector$<$ {\bf MapGenerator} $\ast$ $>$::iterator {\bf mgIter}
+\item 
+vector$<$ int $>$::iterator {\bf intVecIter}
+\end{CompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{CompactItemize}
+\item 
+static queue$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf tmq}
+\item 
+static queue$<$ {\bf Molecule} $\ast$ $>$ {\bf mq}
+\item 
+static list$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf tml}
+\item 
+static queue$<$ int $>$ {\bf d}
+\item 
+static list$<$ {\bf TemplateMolecule} $\ast$ $>$::iterator {\bf tmIter}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!TemplateMolecule@{TemplateMolecule}}
+\index{TemplateMolecule@{TemplateMolecule}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TemplateMolecule::TemplateMolecule ({\bf MoleculeType} $\ast$ {\em parentMoleculeType})}\label{classNFcore_1_1TemplateMolecule_18809f40358f7cb077d2c44fc8821023}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!$\sim$TemplateMolecule@{$\sim$TemplateMolecule}}
+\index{$\sim$TemplateMolecule@{$\sim$TemplateMolecule}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TemplateMolecule::$\sim$TemplateMolecule ()}\label{classNFcore_1_1TemplateMolecule_ff8689a86d59928c281bfb4913662ebe}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getMoleculeType@{getMoleculeType}}
+\index{getMoleculeType@{getMoleculeType}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$ NFcore::TemplateMolecule::getMoleculeType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_25cfe4ae1c6676b6f17aa60bab6bf38e}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getMoleculeTypeName@{getMoleculeTypeName}}
+\index{getMoleculeTypeName@{getMoleculeTypeName}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::TemplateMolecule::getMoleculeTypeName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_bf4e930b51cbca90cef03a7f2f6e1f91}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getNumCompareStates@{getNumCompareStates}}
+\index{getNumCompareStates@{getNumCompareStates}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::TemplateMolecule::getNumCompareStates () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_9864f00588af66b6ab121126b7e5940d}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getStateIndex@{getStateIndex}}
+\index{getStateIndex@{getStateIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::TemplateMolecule::getStateIndex (int {\em state}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_c22068c0366d045f27743ddc6cfb5b30}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getStateValue@{getStateValue}}
+\index{getStateValue@{getStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::TemplateMolecule::getStateValue (int {\em state}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_e259dab2133cc3d0ca5d3a45e0c0779d}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getNumBindingSites@{getNumBindingSites}}
+\index{getNumBindingSites@{getNumBindingSites}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::TemplateMolecule::getNumBindingSites () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_c8b1df0680b7fca83941dcebc3c04a3b}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!isBindingSiteOpen@{isBindingSiteOpen}}
+\index{isBindingSiteOpen@{isBindingSiteOpen}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::isBindingSiteOpen (int {\em bIndex}) const}\label{classNFcore_1_1TemplateMolecule_518188bf875df66a5eafab4bc76750a5}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!isBindingSiteBonded@{isBindingSiteBonded}}
+\index{isBindingSiteBonded@{isBindingSiteBonded}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::isBindingSiteBonded (int {\em bIndex}) const}\label{classNFcore_1_1TemplateMolecule_9f483af861fed0bcc027a1e600921e3c}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getBondedTemplateMolecule@{getBondedTemplateMolecule}}
+\index{getBondedTemplateMolecule@{getBondedTemplateMolecule}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule} $\ast$ TemplateMolecule::getBondedTemplateMolecule (int {\em bIndex}) const}\label{classNFcore_1_1TemplateMolecule_56b52a159630f4e30dbf0c59ecd1d6e4}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getTemplateBsiteIndexFromMoleculeBsiteIndex@{getTemplateBsiteIndexFromMoleculeBsiteIndex}}
+\index{getTemplateBsiteIndexFromMoleculeBsiteIndex@{getTemplateBsiteIndexFromMoleculeBsiteIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex (int {\em molBsiteIndex})}\label{classNFcore_1_1TemplateMolecule_3d7ae94bce205d064b343ff7ed33dcf4}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getBindingSiteIndex@{getBindingSiteIndex}}
+\index{getBindingSiteIndex@{getBindingSiteIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int TemplateMolecule::getBindingSiteIndex (int {\em bIndex}) const}\label{classNFcore_1_1TemplateMolecule_acb5ce36c5451d29bd1b281bb771c073}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!getBindingSiteIndexOfBondedTemplate@{getBindingSiteIndexOfBondedTemplate}}
+\index{getBindingSiteIndexOfBondedTemplate@{getBindingSiteIndexOfBondedTemplate}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int TemplateMolecule::getBindingSiteIndexOfBondedTemplate (int {\em bIndex}) const}\label{classNFcore_1_1TemplateMolecule_2cde07a7fd747c899a5784dfe69af915}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!setHasVisited@{setHasVisited}}
+\index{setHasVisited@{setHasVisited}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::setHasVisited (int {\em bSite})}\label{classNFcore_1_1TemplateMolecule_c4370f845b15f0b9a5b9b4afdc96b830}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addEmptyBindingSite@{addEmptyBindingSite}}
+\index{addEmptyBindingSite@{addEmptyBindingSite}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int TemplateMolecule::addEmptyBindingSite (int {\em bSiteIndex})}\label{classNFcore_1_1TemplateMolecule_041757d1cdca06b4b0cf493bf6568db0}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addEmptyBindingSite@{addEmptyBindingSite}}
+\index{addEmptyBindingSite@{addEmptyBindingSite}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int TemplateMolecule::addEmptyBindingSite (const char $\ast$ {\em bSiteName})}\label{classNFcore_1_1TemplateMolecule_0563d7400a863a07f58e17e14a3f45aa}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addOccupiedBindingSite@{addOccupiedBindingSite}}
+\index{addOccupiedBindingSite@{addOccupiedBindingSite}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addOccupiedBindingSite (const char $\ast$ {\em bSiteName})}\label{classNFcore_1_1TemplateMolecule_dc640a59b89392319bc1d15169305747}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!bind@{bind}}
+\index{bind@{bind}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::bind ({\bf TemplateMolecule} $\ast$ {\em t1}, int {\em bSiteIndex1}, {\bf TemplateMolecule} $\ast$ {\em t2}, int {\em bSiteIndex2})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TemplateMolecule_ef73b19d8d76b383a93e96eb6481c0da}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!bind@{bind}}
+\index{bind@{bind}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::bind ({\bf TemplateMolecule} $\ast$ {\em t1}, const char $\ast$ {\em bSiteName1}, {\bf TemplateMolecule} $\ast$ {\em t2}, const char $\ast$ {\em bSiteName2})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TemplateMolecule_e10f35c1de7516b227e46ceee6a9119b}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addStateValue@{addStateValue}}
+\index{addStateValue@{addStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addStateValue (int {\em cIndex}, int {\em stateValue})}\label{classNFcore_1_1TemplateMolecule_f111359f8390c6d142685f2035f83c48}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addStateValue@{addStateValue}}
+\index{addStateValue@{addStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addStateValue (string {\em cName}, int {\em stateValue})}\label{classNFcore_1_1TemplateMolecule_a4fea34f93eff125fd196c6d53765187}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addStateValue@{addStateValue}}
+\index{addStateValue@{addStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addStateValue (string {\em cName}, string {\em stateValue})}\label{classNFcore_1_1TemplateMolecule_f8667dbdb492cee06a252e709ed08f5a}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addNotStateValue@{addNotStateValue}}
+\index{addNotStateValue@{addNotStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addNotStateValue (char $\ast$ {\em stateName}, int {\em notStateValue})}\label{classNFcore_1_1TemplateMolecule_951ebb12f9de9400ea35709adfca9f02}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!clear@{clear}}
+\index{clear@{clear}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::TemplateMolecule::clear ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TemplateMolecule_ea124ed6cd05482016af5916fdd65e07}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!compare@{compare}}
+\index{compare@{compare}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::compare ({\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1TemplateMolecule_dac92538749b45a82777db76c28804d8}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!compareBreadthFirst@{compareBreadthFirst}}
+\index{compareBreadthFirst@{compareBreadthFirst}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::compareBreadthFirst ({\bf TemplateMolecule} $\ast$ {\em tm}, {\bf Molecule} $\ast$ {\em m})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TemplateMolecule_b779d281df7600ad4ed6b745ce43123d}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!traverse@{traverse}}
+\index{traverse@{traverse}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::traverse ({\bf TemplateMolecule} $\ast$ {\em tempMol}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \& {\em tmList})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TemplateMolecule_68e76bfbbbc8d15895be6d14a6a1a077}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!isStateValue@{isStateValue}}
+\index{isStateValue@{isStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::isStateValue (const char $\ast$ {\em stateName}, int {\em stateValue})}\label{classNFcore_1_1TemplateMolecule_ecf4ee2f997f24491b881c6aae3a66b4}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!isBonded@{isBonded}}
+\index{isBonded@{isBonded}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::isBonded (const char $\ast$ {\em bSiteName})}\label{classNFcore_1_1TemplateMolecule_505f69aceeb8a6ace7e69a90b85d9143}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::printDetails () const}\label{classNFcore_1_1TemplateMolecule_b64b34c8bea880c43deb2fd3af41bcfd}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!addMapGenerator@{addMapGenerator}}
+\index{addMapGenerator@{addMapGenerator}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TemplateMolecule::addMapGenerator ({\bf MapGenerator} $\ast$ {\em mg})}\label{classNFcore_1_1TemplateMolecule_cc9478c7921761487431ed9d8e463bde}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!compare@{compare}}
+\index{compare@{compare}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::compare ({\bf Molecule} $\ast$ {\em m}, {\bf MappingSet} $\ast$ {\em ms})}\label{classNFcore_1_1TemplateMolecule_e84c1aff5b94d861b8dce24c0a315e90}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!contains@{contains}}
+\index{contains@{contains}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TemplateMolecule::contains ({\bf TemplateMolecule} $\ast$ {\em tempMol})}\label{classNFcore_1_1TemplateMolecule_a27d048a53de5c3b70861f344fb691ee}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!matchMolecule@{matchMolecule}}
+\index{matchMolecule@{matchMolecule}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule}$\ast$ {\bf NFcore::TemplateMolecule::matchMolecule}}\label{classNFcore_1_1TemplateMolecule_aefbbaee8416bf5e6a246c71cf50dcbe}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!hasVisitedBond@{hasVisitedBond}}
+\index{hasVisitedBond@{hasVisitedBond}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$bool$>$ {\bf NFcore::TemplateMolecule::hasVisitedBond}}\label{classNFcore_1_1TemplateMolecule_553ca5fa9999084ebfa05a6a16b8dc46}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!hasVisited@{hasVisited}}
+\index{hasVisited@{hasVisited}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::TemplateMolecule::hasVisited}}\label{classNFcore_1_1TemplateMolecule_efe31cefc1b73324281955c26f47f2c8}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!parentMoleculeType@{parentMoleculeType}}
+\index{parentMoleculeType@{parentMoleculeType}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$ {\bf NFcore::TemplateMolecule::parentMoleculeType}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_4fadfb2edf9140478010fcf85769d5c9}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!stateIndex@{stateIndex}}
+\index{stateIndex@{stateIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::stateIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_f387aee763a12680ee21ed5b4fbcf9ba}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!stateValue@{stateValue}}
+\index{stateValue@{stateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::stateValue}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_263b06067b4b75eb9e2b813b7091a34b}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!notStateIndex@{notStateIndex}}
+\index{notStateIndex@{notStateIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::notStateIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_4e18e3d743fa87708ea510350c4a39e5}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!notStateValue@{notStateValue}}
+\index{notStateValue@{notStateValue}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::notStateValue}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_f56e04515cd626cf95c22a2d19ea026d}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!bSiteIndex@{bSiteIndex}}
+\index{bSiteIndex@{bSiteIndex}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::bSiteIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_9b6509eda1be2762f417be4dd5016838}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!bonds@{bonds}}
+\index{bonds@{bonds}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf TemplateMolecule} $\ast$$>$ {\bf NFcore::TemplateMolecule::bonds}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_8dfc9f2d43a13c62bf3db0157a1a5066}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!bSiteIndexOfBond@{bSiteIndexOfBond}}
+\index{bSiteIndexOfBond@{bSiteIndexOfBond}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::bSiteIndexOfBond}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_8bcfbc787b4b4b2f8c89d236647b0cb3}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!sitesThatMustBeOccupied@{sitesThatMustBeOccupied}}
+\index{sitesThatMustBeOccupied@{sitesThatMustBeOccupied}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::TemplateMolecule::sitesThatMustBeOccupied}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_b87aad2f18228a757035842d6b2461ae}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!mapGenerators@{mapGenerators}}
+\index{mapGenerators@{mapGenerators}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf MapGenerator} $\ast$$>$ {\bf NFcore::TemplateMolecule::mapGenerators}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_d0bdbc66000c196e69ef5c4ec05e5ea3}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!mgIter@{mgIter}}
+\index{mgIter@{mgIter}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf MapGenerator} $\ast$$>$::iterator {\bf NFcore::TemplateMolecule::mgIter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_bab3c83610a214c86f617e16a786b8c0}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!intVecIter@{intVecIter}}
+\index{intVecIter@{intVecIter}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$::iterator {\bf NFcore::TemplateMolecule::intVecIter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TemplateMolecule_f4384f9df07c8a5fc8ff2f1c784814ae}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!tmq@{tmq}}
+\index{tmq@{tmq}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}queue$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf TemplateMolecule::tmq}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TemplateMolecule_2f19e60fa9fa6b593c8ed5f983febc45}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!mq@{mq}}
+\index{mq@{mq}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}queue$<$ {\bf Molecule} $\ast$ $>$ {\bf TemplateMolecule::mq}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TemplateMolecule_2bb80e3be418d2d42bfc3574ffce0a0a}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!tml@{tml}}
+\index{tml@{tml}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf TemplateMolecule::tml}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TemplateMolecule_45ddadcd93b737ab0d03d43127476f30}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!d@{d}}
+\index{d@{d}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}queue$<$ int $>$ {\bf TemplateMolecule::d}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TemplateMolecule_7130714e23c16f0e05a5718da7ca2d17}
+
+
+\index{NFcore::TemplateMolecule@{NFcore::TemplateMolecule}!tmIter@{tmIter}}
+\index{tmIter@{tmIter}!NFcore::TemplateMolecule@{NFcore::TemplateMolecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<$ {\bf TemplateMolecule} $\ast$ $>$::iterator {\bf TemplateMolecule::tmIter}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TemplateMolecule_207ae59afecdf8af7cf2c6a564d43e08}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf templateMolecule.cpp}\end{CompactItemize}

@@ -1,0 +1,153 @@
+# 
+
+
+begin parameters
+
+Na 6.02e23 #Avogadro number
+Volume 150e-6/1000 #in liter
+NumberOfCell 1
+DensityOfCell NumberOfCell/Volume
+
+
+
+#Global Parameters
+k2 10
+        
+kOn_IL2_IL2Ra   (1.4e+007)/(Na*Volume)     # k1on in /pMol/s    Wang and Smith  1.4e+007/1e12
+kOff_IL2_IL2Ra  0.4  #k1off
+kOn_IL2Ra_IL2Rb (k2/(3e4*DensityOfCell/Na))/(Na*Volume)    # k2on
+kOff_IL2Ra_IL2Rb 2.3e-4      # k2off     Wang and Smith 2.3e-4
+
+
+kCat_stat5 (.1/1000)
+kDephos_Stat5 0.01
+
+kDeg 1/900
+#kDeg  1e-8
+
+kOnChrom_Stat5 (1/(1000*24*3600))*10
+kTranscription_IL2 ((1e-10*1e-4*Na)/1e5)/(24*3600)
+
+
+#Rates for IL2Ra synthesis...
+kOnChrom_IL2Ra (1/(1000*24*3600))*1000
+kOffChrom_IL2Ra 200
+
+kTranscription_IL2Ra_on ((1e-10*1e-4*Na)/1e5)/(24*3600)*10
+kTranscription_IL2Ra_off ((1e-10*1e-4*Na)/1e5)/(24*3600)/10
+
+kDeg_IL2Ra 1e-5
+
+
+# rate for making IL2Rb
+kOnChrom_IL2Rb (1/(1000*24*3600))*10000
+kOffChrom_IL2Rb 200
+
+kTranscription_IL2Rb_on 1
+kTranscription_IL2Rb_off 1e-1 
+
+
+kDeg_IL2Rb 1e-4
+
+IL2_conc 100 # pM
+
+end parameters
+
+
+begin species
+#IL2(site)         (IL2_conc*1e-12*Volume*Na)
+IL2(site)  0
+IL2Ra(siteIL2,siteIL2Rb)  0
+IL2Rb(siteIL2Ra,siteStat5) 1000
+Stat5(p~U,chr) 2000
+
+ChromatinIL2(siteS5) 2
+ChromatinIL2Ra(siteS5) 2
+ChromatinIL2Rb(siteS5) 2
+
+Trash() 0
+Null() 1
+
+
+end species
+
+
+
+
+begin reaction rules
+
+###  IL2 can bind IL2Ra, which can then bind IL2Rb
+IL2(site) + IL2Ra(siteIL2,siteIL2Rb) <-> IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb) kOn_IL2_IL2Ra,kOff_IL2_IL2Ra
+IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb) + IL2Rb(siteIL2Ra) <-> IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb!2).IL2Rb(siteIL2Ra!2) kOn_IL2Ra_IL2Rb,kOff_IL2Ra_IL2Rb
+
+
+###  Stat5 gets phos in one step, and can auto dephos
+IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb!2).IL2Rb(siteIL2Ra!2,siteStat5) + Stat5(p~U) -> IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb!2).IL2Rb(siteIL2Ra!2,siteStat5) + Stat5(p~P) kCat_stat5
+Stat5(p~P) -> Stat5(p~U) kDephos_Stat5
+
+### Degredation of the complex
+IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb!2).IL2Rb(siteIL2Ra!2,siteStat5) -> Trash() kDeg
+
+
+
+### Synthesis reactions of IL2
+ChromatinIL2(siteS5) + Stat5(p~P,chr) -> ChromatinIL2(siteS5!1).Stat5(p~P,chr!1) kOnChrom_Stat5
+ChromatinIL2(siteS5) -> ChromatinIL2(siteS5) + IL2(site) kTranscription_IL2
+
+
+
+
+
+### Synthesis reactionsof IL2Ra
+ChromatinIL2Ra(siteS5) + Stat5(p~P,chr) -> ChromatinIL2Ra(siteS5!1).Stat5(p~P,chr!1)  kOnChrom_IL2Ra
+ChromatinIL2Ra(siteS5!1).Stat5(p~U,chr!1) -> ChromatinIL2Ra(siteS5) + Stat5(p~U,chr) kOffChrom_IL2Ra
+
+ChromatinIL2Ra(siteS5!1).Stat5(p~P,chr!1) -> ChromatinIL2Ra(siteS5!1).Stat5(p~P,chr!1) + IL2Ra(siteIL2,siteIL2Rb) kTranscription_IL2Ra_on
+ChromatinIL2Ra(siteS5) -> ChromatinIL2Ra(siteS5) + IL2Ra(siteIL2,siteIL2Rb) kTranscription_IL2Ra_off
+
+IL2Ra(siteIL2,siteIL2Rb) -> Trash() kDeg_IL2Ra
+
+### Synthesis of ILR2b
+ChromatinIL2Rb(siteS5) + Stat5(p~P,chr) -> ChromatinIL2Rb(siteS5!1).Stat5(p~P,chr!1)  kOnChrom_IL2Rb
+ChromatinIL2Rb(siteS5!1).Stat5(p~U,chr!1) -> ChromatinIL2Rb(siteS5) + Stat5(p~U,chr) kOffChrom_IL2Rb
+
+ChromatinIL2Rb(siteS5!1).Stat5(p~P,chr!1) -> ChromatinIL2Rb(siteS5!1).Stat5(p~P,chr!1) + IL2Rb(siteIL2Ra,siteStat5) kTranscription_IL2Rb_on
+ChromatinIL2Rb(siteS5) -> ChromatinIL2Rb(siteS5) + IL2Rb(siteIL2Ra,siteStat5) kTranscription_IL2Rb_off
+
+## deg of ILR2b
+IL2Rb(siteIL2Ra,siteStat5) -> Trash() kDeg_IL2Rb
+
+end reaction rules
+
+
+begin observables
+
+Molecules    IL2_free          IL2(site)
+Molecules    IL2Ra_free        IL2Ra(siteIL2,siteIL2Rb)
+Molecules    IL2Rb_free        IL2Rb(siteIL2Ra)
+Molecules    IL2Rb_total       IL2Rb()
+Molecules    IL2_IL2Ra         IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb) 
+Molecules    IL2_IL2Ra_IL2Rb   IL2(site!1).IL2Ra(siteIL2!1,siteIL2Rb!2).IL2Rb(siteIL2Ra!2)
+#Molecules   IL2Ra_IL2Rb       IL2Ra(siteIL2,siteIL2Rb!2).IL2Rb(siteIL2Ra!2)
+Molecules    StatPhos	           Stat5(p~P)
+Molecules    ChromIL2_open     ChromatinIL2(siteS5)
+Molecules    ChromIL2_Stat5     ChromatinIL2(siteS5!1).Stat5(chr!1)
+
+
+
+end observables
+
+
+
+#writeXML();
+
+
+generate_network({overwrite=>1});
+#saveConcentrations();
+#simulate_ode({suffix=>ode,t_end=>90000,n_steps=>1000});
+#resetConcentrations();
+simulate_ssa({suffix=>ssa,t_end=>270000,n_steps=>3000});
+
+
+
+
