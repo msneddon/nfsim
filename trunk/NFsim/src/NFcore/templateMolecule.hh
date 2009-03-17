@@ -41,6 +41,16 @@ namespace NFcore
 		MoleculeType *getMoleculeType() const {return moleculeType;};
 		string getMoleculeTypeName() const;
 
+		int getN_symComps() const {return n_symComps; };
+		int getN_symCompBonds() const {
+			int symCompBondCounter=0;
+			for(int i=0; i<n_symComps; i++) {
+				if(symBondPartner[i]!=0) symCompBondCounter++;
+			}
+			return symCompBondCounter;
+		}
+		int getN_mapGenerators() const { return n_mapGenerators; }
+
 
 		/* functions that allow you to set constraints */
 		void addEmptyComponent(string cName);

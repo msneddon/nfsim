@@ -707,7 +707,7 @@ bool NFinput::initStartSpecies(
 
 						//First, if the site is symmetric, we have to relabel it correctly...
 						if(mt->isEquivalentComponent(compName)) {
-							cout<<"is eq"<<endl;
+							//cout<<"is eq"<<endl;
 							int *eqCompClass; int n_eqComp;
 							mt->getEquivalencyClass(eqCompClass,n_eqComp,compName);
 
@@ -715,7 +715,7 @@ bool NFinput::initStartSpecies(
 							bool couldPlaceSymComp=false;
 							for(int eq=0; eq<n_eqComp;eq++) {
 								string eqCompNameToCompare=mt->getComponentName(eqCompClass[eq]);
-								cout<<"comparing to: "<<eqCompNameToCompare<<endl;
+								//cout<<"comparing to: "<<eqCompNameToCompare<<endl;
 								bool foundMatch=false;
 								for(int ucn=0;ucn<usedComponentNames.size(); ucn++) {
 									if(usedComponentNames.at(ucn).compare(eqCompNameToCompare)==0) {
@@ -723,13 +723,13 @@ bool NFinput::initStartSpecies(
 									}
 								}
 								if(!foundMatch) {
-									cout<<" not used, using."<<endl;
+									//cout<<" not used, using."<<endl;
 									usedComponentNames.push_back(eqCompNameToCompare);
 									compName=eqCompNameToCompare;
 									couldPlaceSymComp=true;
 									break;
 								} else {
-									cout<<" used, moving on."<<endl;
+									//cout<<" used, moving on."<<endl;
 								}
 							}
 							if(!couldPlaceSymComp) {
@@ -1740,8 +1740,8 @@ TemplateMolecule *NFinput::readPattern(
 					// Handle equivalent components off reaction center differently
 					// it is off reaction center if 1) it is an eq component and 2) it is not in the symMap
 					if(symMap.find(compId)==symMap.end() && moltype->isEquivalentComponent(compName)) {
-						cout<<"we should treat this as a symmetric constraint"<<endl;
-						cout<<"equivalent type! :"<<compName<<endl;
+						//cout<<"we should treat this as a symmetric constraint"<<endl;
+						//cout<<"equivalent type! :"<<compName<<endl;
 						int stateConstraint = -1;
 						if(pComp->Attribute("state")) {
 							string compStateValue = pComp->Attribute("state");
@@ -2004,19 +2004,19 @@ TemplateMolecule *NFinput::readPattern(
 		//Now, we have to loop through all the bonds that we did not explicitly use, but that we set to bonded
 		//this must be a constraint on our pattern.
 		try {
-//			map<string,string>::iterator strMapit;
-//			for(strMapit = bSiteSiteMapping.begin(); strMapit != bSiteSiteMapping.end(); strMapit++ ) {
-//				string bSiteId = (*strMapit).first;
-//				string bSiteName = (*strMapit).second;
-//				int bSiteMolIndex = bSiteMolMapping.find(bSiteId)->second;
-//
-//				//skip symmetric sites here, because we already considered them earlier...
-//				if(tMolecules.at(bSiteMolIndex)->getMoleculeType()->isEquivalentComponent(bSiteName.c_str())) {
-//					continue;
-//				}
-//
-//				tMolecules.at(bSiteMolIndex)->addOccupiedBindingSite(bSiteName.c_str());
-//			}
+			map<string,string>::iterator strMapit;
+			for(strMapit = bSiteSiteMapping.begin(); strMapit != bSiteSiteMapping.end(); strMapit++ ) {
+				string bSiteId = (*strMapit).first;
+				string bSiteName = (*strMapit).second;
+				int bSiteMolIndex = bSiteMolMapping.find(bSiteId)->second;
+
+				//skip symmetric sites here, because we already considered them earlier...
+				if(tMolecules.at(bSiteMolIndex)->getMoleculeType()->isEquivalentComponent(bSiteName.c_str())) {
+					continue;
+				}
+
+				tMolecules.at(bSiteMolIndex)->addBoundComponent(bSiteName);
+			}
 		} catch (exception& e) {
 			cerr<<"Something went wacky when I was parsing pattern '"<<patternName<<"'."<<endl;
 			cerr<<"It happened as I was trying to add an occupied binding site to a template molecule."<<endl;

@@ -11,6 +11,7 @@ using namespace NFcore;
 
 ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *transformationSet)
 {
+	//cout<<"\n\ncreating reaction "<<name<<endl;
 	isDimerStyle=false;
 	//Setup the basic properties of this reactionClass
 	this->name = name;
@@ -23,8 +24,44 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 	//Set up the template molecules from the transformationSet
 	this->n_reactants = transformationSet->getNreactants();
 	this->reactantTemplates = new TemplateMolecule *[n_reactants];
+	vector <TemplateMolecule*> tmList;
+	vector <int> hasMapGenerator;
 	for(unsigned int r=0; r<n_reactants; r++)
-		reactantTemplates[r] = transformationSet->getTemplateMolecule(r);
+	{
+		//The main reactant should be the one that is getting modified...
+		//In other words, we select the reactant that has at least one map generator, and
+		//to minimize mistakes, with the least sym sites...
+		TemplateMolecule *curTemplate = transformationSet->getTemplateMolecule(r);
+		TemplateMolecule::traverse(curTemplate,tmList);
+		//cout<<"Was going to pick: "<<endl;
+		//curTemplate->printDetails();
+
+		//First, single out all the templates that have at least one map generator
+		for(unsigned int i=0; i<tmList.size(); i++) {
+			//cout<<"looking at:"<<endl;
+			//tmList.at(i)->printDetails();
+
+			if(tmList.at(i)->getN_mapGenerators()>0) {
+				hasMapGenerator.push_back(i);
+			}
+		}
+
+		//Find the one with the least sym comp bonds...
+		int minSymSites = 999999;
+		for(unsigned int k=0; k<hasMapGenerator.size(); k++) {
+			if(tmList.at(hasMapGenerator.at(k))->getN_symCompBonds()<minSymSites) {
+				curTemplate = tmList.at(hasMapGenerator.at(k));
+				minSymSites = curTemplate->getN_symCompBonds();
+			}
+		}
+
+		//cout<<"instead picked:"<<endl;
+		//curTemplate->printDetails();
+		//cout<<" N sym bonds: "<<curTemplate->getN_symCompBonds()<<endl;
+
+		reactantTemplates[r] = curTemplate;
+		tmList.clear(); hasMapGenerator.clear();
+	}
 	mappingSet = new MappingSet *[n_reactants];
 
 
