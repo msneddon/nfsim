@@ -2030,6 +2030,68 @@ TemplateMolecule *NFinput::readPattern(
 		//}
 
 
+		//Now we have to find disjointed sets - that is whenever we have a Template
+		//Molecule that is connected, but not explicitly through bonds, we have to
+		//connect them via the connectedTo specification
+
+
+		//cout<<"checking for disjoint sets..."<<endl;
+		bool hasDisjointedSets=false;
+		vector <vector <TemplateMolecule *> > sets;
+		vector <int> uniqueSetId; int setCount=0;
+		for(unsigned int i=0; i<tMolecules.size(); i++) {
+
+			//First see if this template was already found in a previous set.
+			//if it was, then we don't have to traverse
+			bool alreadyFound = false;
+			for(unsigned int j=0; j<i; j++) {
+				//search set J for this template
+				for(unsigned int kj=0; kj<sets.at(j).size(); kj++) {
+					if(sets.at(j).at(kj)==tMolecules.at(i)) {
+						alreadyFound = true;
+						break;
+					}
+				}
+				//If we found it, remember the uniqueSetId of set J
+				if(alreadyFound) {
+					uniqueSetId.push_back(uniqueSetId.at(j));
+					vector <TemplateMolecule *> thisSet;
+					sets.push_back(thisSet);
+					break;
+				}
+			}
+			if(alreadyFound) { continue; }
+			else {
+				//If we have not found this molecule before, then
+				//it must be in a new set, so we traverse and remember that set
+
+				uniqueSetId.push_back(setCount);
+				setCount++;
+				vector <TemplateMolecule *> thisSet;
+				TemplateMolecule::traverse(tMolecules.at(i),thisSet);
+				sets.push_back(thisSet);
+			}
+		}
+
+		//cout<<"Unique Set Ids for the templates: "<<endl;
+		//for(unsigned int i=0; i<uniqueSetId.size(); i++) {
+		//	cout<<uniqueSetId.at(i)<<endl;
+		//}
+
+		if(setCount>1) { hasDisjointedSets=true; }
+
+
+		if(hasDisjointedSets) {
+			cout<<"Found disjoint sets."<<endl<<endl;
+			cout<<"Cannot handle disjoint sets yet.  (As in A(b).B(a))"<<endl;
+			cout<<"I'm working on it!"<<endl;
+			exit(1);
+
+		}
+		//else { cout<<"No disjointed sets."<<endl; };
+
+
+
 
 		//Grab the first template molecule from the list, and arbitrarily set this as the root
 		if(tMolecules.empty()){

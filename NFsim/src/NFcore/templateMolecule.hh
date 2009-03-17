@@ -60,6 +60,7 @@ namespace NFcore
 		void addComponentExclusion(string cName, string stateName);
 		void addComponentExclusion(string cName, int stateValue);
 		void addBond(string thisBsiteName,TemplateMolecule *t2, string bSiteName2);
+		void addConnectedTo(TemplateMolecule *t2);
 
 		/* functions that allow you to set constraints for symmetric sites */
 		const static int EMPTY=0;
@@ -139,6 +140,12 @@ namespace NFcore
 		string *bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
 		int *bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
 		bool *hasVisitedBond;
+
+
+		//This stores disjoint sets, in other words, this Template is
+		//connected to some other Template via
+		int n_connectedTo;
+		TemplateMolecule ** connectedTo;
 
 
 		//////////  Handling symmetric components

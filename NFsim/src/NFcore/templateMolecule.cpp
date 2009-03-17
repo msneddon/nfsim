@@ -41,6 +41,11 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	this->bondPartnerCompIndex=new int[0];
 	this->hasVisitedBond=new bool[0];
 
+	this->n_connectedTo=0;
+	this->connectedTo=new TemplateMolecule*[n_connectedTo];
+
+
+
 	//Init symmetric site matchers...
 	this->n_symComps=0;
 	this->symCompName=new string[0];
@@ -90,6 +95,8 @@ TemplateMolecule::~TemplateMolecule() {
 	delete [] bondPartnerCompName;
 	delete [] bondPartnerCompIndex;
 	delete [] hasVisitedBond;
+
+	delete [] connectedTo;
 
 	delete [] symCompName;
 	delete [] symCompBoundState;
@@ -202,7 +209,7 @@ void TemplateMolecule::addComponentExclusion(string cName, string stateName) {
 }
 void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	if(moleculeType->isEquivalentComponent(cName)) {
-			printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
+		printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 
@@ -220,6 +227,19 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	compStateExclusion_Exclusion=newExclusion_Exclusion;
 	n_compStateExclusion++;
 	compIsAlwaysMapped[compIndex]=true;
+}
+
+
+void TemplateMolecule::addConnectedTo(TemplateMolecule *t2) {
+
+	TemplateMolecule **newConnectedTo = new TemplateMolecule * [n_connectedTo+1];
+	for(int i=0; i<n_connectedTo; i++) {
+		newConnectedTo[i]=connectedTo[i];
+	}
+	newConnectedTo[n_connectedTo]=t2;
+	delete [] connectedTo;
+	connectedTo=newConnectedTo;
+	n_connectedTo++;
 }
 
 
