@@ -122,6 +122,8 @@ void Complex::updateComplexMembership(Molecule * m)
 	//optimization
 	if(m->getComplexID()!=this->ID_complex) { cerr<< "ERROR IN COMPLEX!!! "<<endl; return; }
 
+
+
 	//Get list of things this molecule is still connected to
 	list <Molecule *> members;
 	m->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
@@ -159,6 +161,10 @@ void Complex::updateComplexMembership(Molecule * m)
 	complexMembers.remove_if(IsInWrongComplex(this->ID_complex));
 
 
+
+	//update new complex in reactions?
+
+	//
 
 	//done!
 }
