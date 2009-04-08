@@ -37,6 +37,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 
 	hasVisitedMolecule = false;
 	hasEvaluatedMolecule = false;
+	isMatchedTo=0;
 	rxnListMappingId = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();

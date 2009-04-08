@@ -50,7 +50,7 @@ namespace NFcore
 			return symCompBondCounter;
 		}
 		int getN_mapGenerators() const { return n_mapGenerators; }
-
+		int getN_connectedTo() const { return n_connectedTo; };
 
 		/* functions that allow you to set constraints */
 		void addEmptyComponent(string cName);
@@ -60,7 +60,7 @@ namespace NFcore
 		void addComponentExclusion(string cName, string stateName);
 		void addComponentExclusion(string cName, int stateValue);
 		void addBond(string thisBsiteName,TemplateMolecule *t2, string bSiteName2);
-		void addConnectedTo(TemplateMolecule *t2);
+		void addConnectedTo(TemplateMolecule *t2, int otherConToIndex);
 
 		/* functions that allow you to set constraints for symmetric sites */
 		const static int EMPTY=0;
@@ -99,7 +99,10 @@ namespace NFcore
 
 	protected:
 
+		static int TotalTemplateMoleculeCount;
+
 		MoleculeType *moleculeType;
+		int uniqueTemplateID;
 
 		// Handling of transformations
 		int n_mapGenerators;
@@ -146,6 +149,8 @@ namespace NFcore
 		//connected to some other Template via
 		int n_connectedTo;
 		TemplateMolecule ** connectedTo;
+		bool *hasTraversedDownConnectedTo;
+		int *otherTemplateConnectedToIndex;
 
 
 		//////////  Handling symmetric components

@@ -1122,14 +1122,31 @@ bool NFinput::initReactionRules(
 
 					if(!lookup(c1, site1, comps, symMap)) return false;
 					if(!lookup(c2, site2, comps, symMap)) return false;
-					if(!blockSameComplexBinding) {
+
+					//Make sure we only block binding on the same complex if they were on separate reactants
+					//if this is an internal binding, then we have to allow it, even if we have the flag
+					//that blocks same complex binding...
+					//cout<<site1<<endl;
+					//cout<<site2<<endl;
+
+					string reactantNum1=site1.substr(0,site1.find_first_of("_"));
+					string reactantNum2=site2.substr(0,site2.find_first_of("_"));
+					if(reactantNum1.compare(reactantNum2)==0) {
+						//this means that they were on the same reactant, so we should always add
+						//this as a normal binding reaction...
 						if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
 					} else {
-						if(!ts->addBindingSeparateComplexTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
-					}
-						if(verbose) {
-						cout<<"\t\t\t***Identified binding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
-						cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
+
+						//Otherwise, we should check how we should add this reaction, depending on the input flags
+						if(!blockSameComplexBinding) {
+							if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
+						} else {
+							if(!ts->addBindingSeparateComplexTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
+						}
+							if(verbose) {
+							cout<<"\t\t\t***Identified binding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
+							cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
+						}
 					}
 
 
@@ -2073,19 +2090,64 @@ TemplateMolecule *NFinput::readPattern(
 			}
 		}
 
-		//cout<<"Unique Set Ids for the templates: "<<endl;
-		//for(unsigned int i=0; i<uniqueSetId.size(); i++) {
-		//	cout<<uniqueSetId.at(i)<<endl;
-		//}
+//		cout<<"Unique Set Ids for the templates: "<<endl;
+//		for(unsigned int i=0; i<uniqueSetId.size(); i++) {
+//			cout<<uniqueSetId.at(i)<<endl;
+//		}
 
 		if(setCount>1) { hasDisjointedSets=true; }
 
 
 		if(hasDisjointedSets) {
-			cout<<"Found disjoint sets."<<endl<<endl;
-			cout<<"Cannot handle disjoint sets yet.  (As in A(b).B(a))"<<endl;
-			cout<<"I'm working on it!"<<endl;
-			exit(1);
+			if(!s->isUsingComplex()) {
+				cout.flush();
+				cerr<<"Disjoint pattern found, but complex bookkeeping is turned off!"<<endl;
+				cerr<<"Rerun with the -cb flag"<<endl;
+				exit(1);
+			}
+
+			cout<<"\nFound disjoint sets. (As in A().B(), with no explicit connection through components)\n";
+			cout<<"Warning!  I can only handle disjoint sets properly if the reaction center occurs\n";
+			cout<<"in only one of the sets.  IF the match can happen multiple times, this code will\n";
+			cout<<"only find the first match, and may return errors!  so be careful!\n";
+			cout<<"This may still work out fine, however, if the pattern can match a complex\n";
+			cout<<"at most once..."<<endl;
+			//cout<<"Warning! I probably cannot handle disjoint sets yet.  (As in A().B())"<<endl;
+			cout<<"I'm working on it!"<<endl<<endl;
+
+
+			//Add the connected-to connections
+			int tm1=0; int tm2=0;
+
+			//connect them in order, 0 to 1, then 1 to 2, then 2 to 3...
+			for(int cSet=0; cSet<(setCount-1); cSet++) {
+
+				//cout<<"Matching up set: "<<cSet<<" to "<<cSet+1<<endl;
+				for(unsigned int i=0; i<tMolecules.size(); i++) {
+					if(uniqueSetId.at(i)==cSet) { tm1=i; break; }
+				}
+				for(unsigned int i=0; i<tMolecules.size(); i++) {
+					if(uniqueSetId.at(i)==(cSet+1)) { tm2=i; break; }
+				}
+				int ctIndex1=tMolecules.at(tm1)->getN_connectedTo();
+				int ctIndex2=tMolecules.at(tm2)->getN_connectedTo();
+				tMolecules.at(tm1)->addConnectedTo(tMolecules.at(tm2),ctIndex2);
+				tMolecules.at(tm2)->addConnectedTo(tMolecules.at(tm1),ctIndex1);
+			}
+
+
+			//for(unsigned int i=0; i<tMolecules.size(); i++) {
+			//	tMolecules.at(i).addConnectedTo(tMolecules.at())
+			//	tMolecules.at(i)->printDetails();
+			//}
+
+			//cout<<"traversing...  let's see if we got everyone:"<<endl;
+			//vector <TemplateMolecule *> tmList;
+			//TemplateMolecule::traverse(tMolecules.at(1),tmList);
+			//for(unsigned int i=0; i<tmList.size(); i++) {
+			//	tmList.at(i)->printDetails();
+			//}
+
 
 		}
 		//else { cout<<"No disjointed sets."<<endl; };

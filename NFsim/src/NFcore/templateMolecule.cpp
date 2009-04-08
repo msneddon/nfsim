@@ -12,10 +12,13 @@ queue <int> TemplateMolecule::d;
 vector <TemplateMolecule *>::iterator TemplateMolecule::tmVecIter;
 list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
+int TemplateMolecule::TotalTemplateMoleculeCount=0;
+
 
 /*! Only constructor for TemplateMolecules */
 TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	this->moleculeType=moleculeType;
+	this->uniqueTemplateID=TotalTemplateMoleculeCount++;
 
 	this->n_mapGenerators=0;
 	this->mapGenerators=new MapGenerator*[0];
@@ -43,6 +46,8 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 
 	this->n_connectedTo=0;
 	this->connectedTo=new TemplateMolecule*[n_connectedTo];
+	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
+	this->otherTemplateConnectedToIndex=new int[n_connectedTo];
 
 
 
@@ -97,6 +102,8 @@ TemplateMolecule::~TemplateMolecule() {
 	delete [] hasVisitedBond;
 
 	delete [] connectedTo;
+	delete [] hasTraversedDownConnectedTo;
+	delete [] otherTemplateConnectedToIndex;
 
 	delete [] symCompName;
 	delete [] symCompBoundState;
@@ -230,15 +237,23 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 }
 
 
-void TemplateMolecule::addConnectedTo(TemplateMolecule *t2) {
+void TemplateMolecule::addConnectedTo(TemplateMolecule *t2, int otherConToIndex) {
 
 	TemplateMolecule **newConnectedTo = new TemplateMolecule * [n_connectedTo+1];
+	bool * newHasTraversedDownConnectedTo = new bool[n_connectedTo+1];
+	int * newOtherTemplateConnectedToIndex = new int[n_connectedTo+1];
 	for(int i=0; i<n_connectedTo; i++) {
 		newConnectedTo[i]=connectedTo[i];
+		newHasTraversedDownConnectedTo[i] = false;
+		newOtherTemplateConnectedToIndex[i]=otherTemplateConnectedToIndex[i];
 	}
 	newConnectedTo[n_connectedTo]=t2;
+	newHasTraversedDownConnectedTo[n_connectedTo]=false;
+	newOtherTemplateConnectedToIndex[n_connectedTo] = otherConToIndex;
 	delete [] connectedTo;
 	connectedTo=newConnectedTo;
+	hasTraversedDownConnectedTo=newHasTraversedDownConnectedTo;
+	otherTemplateConnectedToIndex=newOtherTemplateConnectedToIndex;
 	n_connectedTo++;
 }
 
@@ -258,36 +273,45 @@ void TemplateMolecule::printDetails() {
 
 void TemplateMolecule::printDetails(ostream &o) {
 	o<<"-----------------------------\n";
-	o<<"TemplateMolecule of type: "<< moleculeType->getName();
+	o<<"TemplateMolecule of type:   "<< moleculeType->getName();
+	o<<", with id: "<<this->uniqueTemplateID;
+
+	o<<"\n  Connected-to:                       ";
+	if(n_connectedTo==0)o<<"none";
+	for(int i=0;i<n_connectedTo; i++) {
+		o<<connectedTo[i]->getMoleculeTypeName()<<"("<<connectedTo[i]->uniqueTemplateID<<")";
+	    o<<",at other index:"<<otherTemplateConnectedToIndex[i]<<"   ";
+	}
+
 	o<<"\n  Empty Binding Site Constraints:      ";
 	if(n_emptyComps==0)o<<"none";
 	for(int i=0;i<n_emptyComps; i++)
-		cout<<moleculeType->getComponentName(emptyComps[i])<<"(index="<<emptyComps[i]<<")  ";
+		o<<moleculeType->getComponentName(emptyComps[i])<<"(index="<<emptyComps[i]<<")  ";
 
 	o<<"\n  Occupied Binding Site Constraints:   ";
 	if(n_occupiedComps==0)o<<"none";
 	for(int i=0;i<n_occupiedComps; i++)
-		cout<<moleculeType->getComponentName(occupiedComps[i])<<"(index="<<occupiedComps[i]<<")  ";
+		o<<moleculeType->getComponentName(occupiedComps[i])<<"(index="<<occupiedComps[i]<<")  ";
 
 	o<<"\n  State Value Constraints:             ";
 	if(n_compStateConstraint==0)o<<"none";
 	for(int i=0;i<n_compStateConstraint; i++) {
-		cout<<moleculeType->getComponentName(compStateConstraint_Comp[i])<<"(index="<<compStateConstraint_Comp[i]<<")=";
-		cout<<moleculeType->getComponentStateName(compStateConstraint_Comp[i],compStateConstraint_Constraint[i])<<" ";
+		o<<moleculeType->getComponentName(compStateConstraint_Comp[i])<<"(index="<<compStateConstraint_Comp[i]<<")=";
+		o<<moleculeType->getComponentStateName(compStateConstraint_Comp[i],compStateConstraint_Constraint[i])<<" ";
 	}
 
 	o<<"\n  State Value Exclusions:              ";
 	if(n_compStateExclusion==0)o<<"none";
 	for(int i=0;i<n_compStateExclusion; i++) {
-		cout<<moleculeType->getComponentName(compStateExclusion_Comp[i])<<"(index="<<compStateExclusion_Exclusion[i]<<")=";
-		cout<<moleculeType->getComponentStateName(compStateExclusion_Comp[i],compStateExclusion_Exclusion[i])<<" ";
+		o<<moleculeType->getComponentName(compStateExclusion_Comp[i])<<"(index="<<compStateExclusion_Exclusion[i]<<")=";
+		o<<moleculeType->getComponentStateName(compStateExclusion_Comp[i],compStateExclusion_Exclusion[i])<<" ";
 	}
 
 	o<<"\n  Bond Constraints:                    ";
 	if(n_bonds==0)o<<"none";
 	for(int i=0;i<n_bonds; i++) {
-		cout<<moleculeType->getComponentName(bondComp[i])<<"(index="<<bondComp[i]<<"):";
-		cout<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<")";
+		o<<moleculeType->getComponentName(bondComp[i])<<"(index="<<bondComp[i]<<"):";
+		o<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<")";
 	}
 
 	o<<"\n  Symmetric Constraints:               ";
@@ -558,7 +582,16 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 					d.push(currentDepth+1);
 		}	}	}
 
-
+		//Finally, also loop through the "connected-to" molecules
+		for(int b=0; b<cTM->n_connectedTo;b++) {
+			if(cTM->connectedTo[b]!=0) {
+				TemplateMolecule *neighbor = cTM->connectedTo[b];
+				if(!neighbor->hasVisitedThis) {
+					neighbor->hasVisitedThis=true;
+					t.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+		}	}	}
 	}
 
 	//clear the hasVisitedMolecule values
@@ -599,29 +632,40 @@ void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolec
 		d.pop();
 
 		//Loop through the bonds for the non-symmetric case
-				for(int b=0; b<cTM->n_bonds; b++) {
+		for(int b=0; b<cTM->n_bonds; b++) {
 
-					//If we are connected through this bond, retrieve the connection
-					if(cTM->bondPartner[b]!=0) {
-						TemplateMolecule *neighbor = cTM->bondPartner[b];
-						if(!neighbor->hasVisitedThis) {
-							neighbor->hasVisitedThis=true;
-							tmList.push_back(neighbor);
-							q.push(neighbor);
-							d.push(currentDepth+1);
-				}	}	}
+		//If we are connected through this bond, retrieve the connection
+		if(cTM->bondPartner[b]!=0) {
+			TemplateMolecule *neighbor = cTM->bondPartner[b];
+			if(!neighbor->hasVisitedThis) {
+				neighbor->hasVisitedThis=true;
+				tmList.push_back(neighbor);
+				q.push(neighbor);
+				d.push(currentDepth+1);
+		}	}	}
 
-				//Loop through the bonds for the symmetric sites, because
-				//we should add those as well
-				for(int b=0; b<cTM->n_symComps;b++) {
-					if(cTM->symBondPartner[b]!=0) {
-						TemplateMolecule *neighbor = cTM->symBondPartner[b];
-						if(!neighbor->hasVisitedThis) {
-							neighbor->hasVisitedThis=true;
-							tmList.push_back(neighbor);
-							q.push(neighbor);
-							d.push(currentDepth+1);
-				}	}	}
+		//Loop through the bonds for the symmetric sites, because
+		//we should add those as well
+		for(int b=0; b<cTM->n_symComps;b++) {
+			if(cTM->symBondPartner[b]!=0) {
+				TemplateMolecule *neighbor = cTM->symBondPartner[b];
+				if(!neighbor->hasVisitedThis) {
+					neighbor->hasVisitedThis=true;
+					tmList.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+		}	}	}
+
+		//Finally, also loop through the "connected-to" molecules
+		for(int b=0; b<cTM->n_connectedTo;b++) {
+			if(cTM->connectedTo[b]!=0) {
+				TemplateMolecule *neighbor = cTM->connectedTo[b];
+				if(!neighbor->hasVisitedThis) {
+					neighbor->hasVisitedThis=true;
+					tmList.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+		}	}	}
 	}
 
 	//clear the has visitedMolecule values
@@ -636,7 +680,10 @@ void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolec
 
 
 void TemplateMolecule::clear() {
-	matchMolecule=0;
+	if(matchMolecule!=0) {
+		matchMolecule->isMatchedTo=0;
+		matchMolecule=0;
+	}
 	for(int b=0; b<n_bonds; b++) hasVisitedBond[b]=false;
 
 	if(n_symComps>0) {
@@ -644,6 +691,11 @@ void TemplateMolecule::clear() {
 			canBeMappedTo.at(c).clear();
 		}
 	}
+
+	for(int t=0; t<n_connectedTo; t++) {
+		hasTraversedDownConnectedTo[t]=false;
+	}
+
 	//cout<<"clear"<<endl;
 }
 
@@ -863,6 +915,10 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 	//this->printDetails();
 	//cout<<"comparing to: "<<endl;
 	//m->printDetails();
+	//if(m->isMatchedTo!=0) {
+	//	if(m->isMatchedTo==this) {return true; }
+	//	else { clear(); return false; }
+	//}
 
 	//First check if we've been here before, and return accordingly
 	if(this->matchMolecule!=0) {
@@ -904,6 +960,7 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 	//cout<<"all the basic things match."<<endl;
 	//Good, good - everything matches so let's set our match molecule
 	matchMolecule = m;
+	m->isMatchedTo=this;
 
 
 	//Now for the tricky and fun part.  The actual traversal....
@@ -971,6 +1028,36 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 		}
 
 	}
+
+	//Check connected-to molecules
+	for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
+
+		if(hasTraversedDownConnectedTo[cTo]) continue;
+
+		list <Molecule *> molList;
+		list <Molecule *>::iterator molIter;
+		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+
+		bool canMatch=false;
+		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+			if((*molIter)->isMatchedTo!=0) continue;
+
+			//remember that we went down this route before, so we don't just go back and forth
+			//between connectedTo bonds...
+			connectedTo[cTo]->hasTraversedDownConnectedTo[otherTemplateConnectedToIndex[cTo]]=true;
+			canMatch=connectedTo[cTo]->compare((*molIter),ms);
+
+			if(canMatch) break;
+		}
+		if(!canMatch) {
+			clear(); return false;
+		}
+
+	}
+
+
+
+
 
 	//cout<<"non-symmetric bonds match"<<endl;
 

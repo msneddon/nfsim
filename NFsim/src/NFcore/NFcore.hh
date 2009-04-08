@@ -698,6 +698,7 @@ namespace NFcore
 			/* used for traversing a molecule complex */
 			bool hasVisitedMolecule;
 			bool * hasVisitedBond;
+			TemplateMolecule *isMatchedTo;
 
 			/* used when reevaluating local functions */
 			bool hasEvaluatedMolecule;
