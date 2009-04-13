@@ -1,0 +1,74 @@
+#  Run NF script for the extended Assistance Neighborhood model of chemoreceptors
+#  Using this run script, you can present the system with external stimuli.  This 
+#  lets you measure the response of the system, as in Fig 2 of Hansen, Endres, 
+#  & Wingreen, PLOS Comp. Bio, 4,(1) 2008.
+#
+
+
+#set all NFsim parameters here first
+-xml an2.xml
+#-dump [0:5:3300;]->dump/  #used for calculating avg activity after the simulation
+-utl 3
+
+
+#begin the script
+begin
+
+  echo running AN Model of Chemotaxis
+
+  ## wildtype default
+  set Asp_Koff_TAR  0.02 #mM
+  set Asp_Kon_TAR   0.5  #mM
+  set Asp_Koff_TSR  100  #mM
+  set Asp_Kon_TSR   10e6 #mM
+  set TAR_COUNT 6
+  set TSR_COUNT 13
+  
+  ## mutant 1: 
+  #set Asp_Koff_TAR  0.06 #mM
+  #set TAR_COUNT 19
+  #set TSR_COUNT 0
+  
+  ## mutant 2: 
+  #set Asp_Koff_TAR  0.02 #mM
+  #set TAR_COUNT 19
+  #set TSR_COUNT 0
+
+
+  ##  now, present the appropriate stimuli
+  set AspConc 0.0
+  update
+  eq 500
+  sim 300 60
+
+  set AspConc 0.01
+  update
+  echo adding 0.01mM Aspartate
+  sim 600 60
+  
+  set AspConc 0.1
+  update
+  echo adding 0.1mM Aspartate
+  sim 600 60
+  
+  set AspConc 1.0
+  update
+  echo adding 1.0mM Aspartate
+  sim 600 60
+  
+  set AspConc 10.0
+  update
+  echo adding 10mM Aspartate
+  sim 600 60
+  
+  set AspConc 100
+  update
+  echo adding 100mM Aspartate
+  sim 600 60
+ 
+  #output the rxns when we are finished
+  print rxns
+  
+  
+  echo done.
+end

@@ -1,0 +1,53 @@
+begin parameters
+
+	RecClusterTotal 4
+	kp 0.5
+	km 0.5
+
+end parameters
+
+
+
+begin species
+	Receptor(m~2,r1,r2!1).Receptor(m~2,r1!1,r2!2).Receptor(m~2,r1!2,r2!3).Receptor(m~2,r1!3,r2) RecClusterTotal
+	CheR(r) 5
+
+end species
+
+
+
+begin reaction rules
+	
+
+	Receptor(m~0) -> Receptor(m~1) kp
+	Receptor(m~1) -> Receptor(m~2) kp
+	Receptor(m~2) -> Receptor(m~3) kp
+	Receptor(m~3) -> Receptor(m~4) kp
+
+	Receptor(m~4) -> Receptor(m~3) km
+	Receptor(m~3) -> Receptor(m~2) km
+	Receptor(m~2) -> Receptor(m~1) km
+	Receptor(m~1) -> Receptor(m~0) km
+
+
+end reaction rules
+
+
+
+
+begin observables
+
+	Molecules  R0     Receptor(m~0)
+	Molecules  R1     Receptor(m~1)
+	Molecules  R2     Receptor(m~2)
+	Molecules  R3     Receptor(m~3)
+	Molecules  R4     Receptor(m~4)
+
+	Molecules r_Cher  Receptor(r1!1).CheR(r!1)
+
+end observables
+	
+
+
+
+writeXML();

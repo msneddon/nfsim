@@ -1,0 +1,72 @@
+
+########################################################################
+#  This is a simple Goldbeter-Koshland Switch system that was used
+#  by Barik et. al.
+
+
+########################################################################
+
+
+
+begin parameters
+
+	D_tot 900
+	E_tot 4500
+	S_tot 0
+	Sp_tot 900
+
+	#Rate parameters for Sp -> S with enzyme D
+	k1d 0.05555
+	km1d 0.83
+	k2d 0.17
+	KmD = (km1d+k2d)/k1d   #Note: this parameter is not used
+
+
+	#Rate parameters for S->Sp with enzyme E
+	k1e 0.05
+	km1e 0.8
+	k2e 0.1
+	KmE = (km1e+k2e)/k1e  #Note: this parameter is not used
+
+end parameters
+
+
+
+begin species
+	D(s)     D_tot
+	E(s)     E_tot
+	S(p~U,d,e)  S_tot
+	S(p~P,d,e)  Sp_tot
+end species
+
+
+
+begin reaction rules
+	
+	# Enzymatic reaction of D converting Sp->S
+	D(s) + S(p~P,d,e) <-> D(s!1).S(p~P,d!1,e)  k1d,km1d
+	D(s!1).S(p~P,d!1,e) -> D(s) + S(p~U,d,e)  k2d
+
+	# Enzymatic reaction of E converting Sp->S
+	E(s) + S(p~U,d,e) <-> E(s!1).S(p~U,d,e!1)  k1e, km1e
+	E(s!1).S(p~U,d,e!1) -> E(s) + S(p~P,d,e) k2d
+
+end reaction rules
+
+
+
+
+begin observables
+
+	Molecules  S      S(p~U)
+	Molecules  Sp     S(p~P)
+
+end observables
+	
+
+
+generate_network({overwrite=>1});
+simulate_ssa({t_end=>1000,n_steps=>100});
+
+
+writeXML();
