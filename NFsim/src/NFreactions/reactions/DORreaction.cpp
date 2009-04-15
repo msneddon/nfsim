@@ -231,6 +231,14 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+
+		if(reactantTree->getHasClonedMappings()) {
+			if(m->getRxnListMappingId(rxnIndex)>=0) {
+				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			}
+		}
+
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
 			//if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 			if(!reactantTemplates[reactantPos]->compare(m)) {
@@ -241,7 +249,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			//if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
+			if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms)) {
 				//if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree->popLastMappingSet();
 			} else {
@@ -255,25 +263,59 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		}
 	} else {
 
-		// handle it normally...
-		//if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
+		//Get the specified reactantList
 		ReactantList *rl = reactantLists[reactantPos];
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
-		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			if(!reactantTemplates[reactantPos]->compare(m)) {
+
+		if(rl->getHasClonedMappings()) {
+			if(m->getRxnListMappingId(rxnIndex)>=0) {
 				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 			}
+		}
+
+		//Here we get the standard update...
+		if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
+		{
+			if(!reactantTemplates[reactantPos]->compare(m)) {
+				//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
+				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			}
+
 		} else {
-			//try to map it.
+			//Try to map it!
 			ms = rl->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,ms)) {
-				rl->popLastMappingSet();
-				//we just pushed, then popped, so molecule has not changed...
+			if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+				//we must remove, if we did not match.  This will also remove
+				//everything that was cloned off of the mapping set
+				rl->removeMappingSet(ms->getId());
 			} else {
 				m->setRxnListMappingId(rxnIndex,ms->getId());
 			}
 		}
+
+
+
+//		// handle it normally...
+//		//if(DEBUG_MESSAGE)cout<<" ... as a normal reactant"<<endl;
+//		ReactantList *rl = reactantLists[reactantPos];
+//		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+//		if(m->getRxnListMappingId(rxnIndex)>=0) {
+//			if(!reactantTemplates[reactantPos]->compare(m)) {
+//				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+//				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+//			}
+//		} else {
+//			//try to map it.
+//			ms = rl->pushNextAvailableMappingSet();
+//			if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+//				rl->popLastMappingSet();
+//				//we just pushed, then popped, so molecule has not changed...
+//			} else {
+//				m->setRxnListMappingId(rxnIndex,ms->getId());
+//			}
+//		}
 	}
 	//if(DEBUG_MESSAGE)cout<<"finished adding"<<endl;
 	return true;

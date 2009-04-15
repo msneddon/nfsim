@@ -273,6 +273,12 @@ void ReactantTree::confirmPush(int mappingSetId, double rateFactor) {
 	//msPositionMap[mappingSetId];  //this does not change
 	msTreePositionMap[mappingSetId]=msTreeArrayPosition;  //remember what position in the tree this mappingSet is at
 	reverseMsTreePositionMap[msTreeArrayPosition]=mappingSetId;  //remember what mappingSet is at this tree position
+
+
+	// Check if this mapping set has clones... if so we must confirm them too...
+	if(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping()!=MappingSet::NO_CLONE) {
+		confirmPush(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping(),rateFactor);
+	}
 }
 
 
@@ -293,8 +299,14 @@ void ReactantTree::popLastMappingSet() {
 	}
 
 	//Clear out the mappingSet (just in case) and decrease the count
+	unsigned int clone = mappingSets[n_mappingSets-1]->getClonedMapping();
 	mappingSets[n_mappingSets-1]->clear();
 	n_mappingSets--;
+
+	if(clone!=MappingSet::NO_CLONE) {
+		this->removeMappingSet(clone);
+	}
+
 }
 
 
@@ -304,49 +316,54 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 	int msTreeArrayPosition = msTreePositionMap[mappingSetId];
 
 	//First some error checking...
-	if(msTreeArrayPosition<0) {
-		cerr<<"Trying to remove a MappingSet from a reactantTree when the MappingSet is not in the tree!"<<endl;
-		exit(1);
-	}
+	//if(msTreeArrayPosition<0) {
+	//	cerr<<"Trying to remove a MappingSet from a reactantTree when the MappingSet is not in the tree!"<<endl;
+	//	exit(1);
+	//}
 	if(n_mappingSets==0) {
 		cerr<<"Trying to remove from an empty ReactantTree!!"<<endl;
 		exit(1);
 	}
 
-	//Go to that position in the tree, and work up and out
-	unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
-	//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
+	//If we have already confirmed this push on the tree, we must take it out of
+	//the tree.  IF we didn't find this on the tree, then perhaps it just wasn't
+	//pushed on yet.
+	if(msTreeArrayPosition>=0) {
+		//Go to that position in the tree, and work up and out
+		unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
+		//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
 
-	//Get the rate factor from the bottom of the tree and set it to zero
-	double rateFactor = leftRateFactorSum[cn];
-	leftRateFactorSum[cn] = 0;
+		//Get the rate factor from the bottom of the tree and set it to zero
+		double rateFactor = leftRateFactorSum[cn];
+		leftRateFactorSum[cn] = 0;
 
-	if(n_mappingSets<=1)
-		leftRateFactorSum[0] = 0;
-	else
-		leftRateFactorSum[0] -= rateFactor;
+		if(n_mappingSets<=1)
+			leftRateFactorSum[0] = 0;
+		else
+			leftRateFactorSum[0] -= rateFactor;
 
-	//Work our way back up to the root
-	while(cn>1)
-	{
-		unsigned int parent = 	cn/2;
-		if(cn%2==0)  //Then I was the left child, and we have to make adjustments
+		//Work our way back up to the root
+		while(cn>1)
 		{
-			leftElementCount[parent]--;
-			leftRateFactorSum[parent] -= rateFactor;
+			unsigned int parent = 	cn/2;
+			if(cn%2==0)  //Then I was the left child, and we have to make adjustments
+			{
+				leftElementCount[parent]--;
+				leftRateFactorSum[parent] -= rateFactor;
+			}
+			else  //I was the right child, and we don't have to make adjustments
+			{
+				rightElementCount[parent]--;
+			}
+			cn = parent;
 		}
-		else  //I was the right child, and we don't have to make adjustments
-		{
-			rightElementCount[parent]--;
-		}
-		cn = parent;
+
+		//Now, remove this guy from the tree array by telling the arrays
+		//that this leaf in the tree is empty and this mappingSet is not
+		//in the tree
+		msTreePositionMap[mappingSetId] = -1;
+		reverseMsTreePositionMap[msTreeArrayPosition] = -1;
 	}
-
-	//Now, remove this guy from the tree array by telling the arrays
-	//that this leaf in the tree is empty and this mappingSet is not
-	//in the tree
-	msTreePositionMap[mappingSetId] = -1;
-	reverseMsTreePositionMap[msTreeArrayPosition] = -1;
 
 
 	//At this point, the tree is up to date, but we still have to get rid of the empty mappingSet
@@ -384,10 +401,16 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 	msPositionMap[mappingSets[pos]->getId()] = pos;
 
 	//Make sure we clear what we don't need
+	unsigned int clone = mappingSets[n_mappingSets-1]->getClonedMapping();
 	tempMappingSet->clear();
 
 	//Remember to mark the removal on our counter...
 	n_mappingSets--;
+
+	//Remove all the clones as well
+	if(clone!=MappingSet::NO_CLONE) {
+		this->removeMappingSet(clone);
+	}
 }
 
 
@@ -457,7 +480,7 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 	//So first, get the index of this map in the tree which we will set as the
 	//current node.  Then we will work back up.
 	unsigned int treeIndex = msTreePositionMap[mappingSetId];
-	if(treeIndex<0 || treeIndex>maxElementCount) {
+	if(treeIndex<(unsigned int)0 || treeIndex>(unsigned int)maxElementCount) {
 		cout<<"Error in ReacantTree! Trying to update a node that is not in the tree!"<<endl;
 		exit(1);
 	}
@@ -492,16 +515,23 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 		cn = parent;
 	}
 
+
+	// Check if this mapping set has clones... if so we must update them too...
+	if(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping()!=MappingSet::NO_CLONE) {
+		confirmPush(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping(),newRateFactor);
+	}
+
+
 	//Ok, we are up to date.  Nothing else changes here...
 }
 
 
-MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) {
+MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) const {
 	return mappingSets[msPositionMap[mappingSetId]];
 }
 
 
-void ReactantTree::printDetails() {
+void ReactantTree::printDetails() const {
 
 	cout<<endl<<endl<<"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<endl;
 	cout<<"Printing ReactantTree: size="<<size()<<endl<<endl;

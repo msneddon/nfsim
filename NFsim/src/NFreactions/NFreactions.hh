@@ -9,6 +9,7 @@
 #include "../NFcore/NFcore.hh"
 
 //Include the local header files needed for reactions
+#include "reactantLists/reactantContainer.hh"
 #include "reactantLists/reactantList.hh"
 #include "reactantLists/reactantTree.hh"
 #include "transformations/transformationSet.hh"
