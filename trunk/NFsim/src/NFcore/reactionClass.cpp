@@ -12,6 +12,7 @@ using namespace NFcore;
 ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *transformationSet)
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
+
 	isDimerStyle=false;
 	//Setup the basic properties of this reactionClass
 	this->name = name;
@@ -32,9 +33,7 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 		//In other words, we select the reactant that has at least one map generator, and
 		//to minimize mistakes, with the least sym sites...
 		TemplateMolecule *curTemplate = transformationSet->getTemplateMolecule(r);
-		TemplateMolecule::traverse(curTemplate,tmList);
-		//cout<<"Was going to pick: "<<endl;
-		//curTemplate->printDetails();
+		TemplateMolecule::traverse(curTemplate,tmList,TemplateMolecule::FIND_ALL);
 
 		//First, single out all the templates that have at least one map generator
 		for(unsigned int i=0; i<tmList.size(); i++) {
@@ -55,19 +54,125 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 			}
 		}
 
-		//cout<<"instead picked:"<<endl;
-		//curTemplate->printDetails();
-		//cout<<" N sym bonds: "<<curTemplate->getN_symCompBonds()<<endl;
-
 		reactantTemplates[r] = curTemplate;
 		tmList.clear(); hasMapGenerator.clear();
 	}
 	mappingSet = new MappingSet *[n_reactants];
 
 
+
+
+
+	//Here, if we identify that there are disjoint sets in this pattern, from
+	//the connected-to syntax, then we have to flag the ones that we actually
+	//have to traverse down...
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		tmList.clear();
+
+		// Get the connected set of molecules
+		TemplateMolecule *curTemplate = reactantTemplates[r];
+		TemplateMolecule::traverse(curTemplate,tmList,TemplateMolecule::FIND_ALL);
+
+		//Label the unique sets, and only continue if we have more than one set
+		vector <vector <TemplateMolecule *> > sets;
+		vector <int> uniqueSetId;
+		int setCount = TemplateMolecule::getNumDisjointSets(tmList,sets,uniqueSetId);
+		if(setCount<=1) continue;
+
+
+		//count the number of map generators (rxn centers) in each set
+		vector <int> numMapGenerators;
+		for(int s=0; s<setCount; s++) { numMapGenerators.push_back(0); }
+
+		int curTemplateSetId = -1;
+		for(unsigned int t=0;t<tmList.size();t++) {
+			if(tmList.at(t)==curTemplate) {
+				curTemplateSetId = uniqueSetId.at(t);
+			}
+			int n_maps = numMapGenerators.at(uniqueSetId.at(t));
+			numMapGenerators.at(uniqueSetId.at(t)) = n_maps+tmList.at(t)->getN_mapGenerators();
+		}
+
+		// Debug output
+		//cout<<"found "<<setCount<<" unique sets."<<endl;
+		//cout<<"found that reactant molecule head is in set: "<<curTemplateSetId<<endl;
+		//for(int s=0; s<setCount; s++) {
+		//	cout<<"set: "<<s<<" has "<<numMapGenerators.at(s)<<" map generators."<<endl;
+		//}
+		//for(unsigned int i=0; i<tmList.size(); i++) {
+		//	cout<<"looking at:"<<endl;
+		//	tmList.at(i)->printDetails();
+		//}
+
+
+		//Lets rearrange the connected-to elements so that the one head is listed as
+		//connected to all other molecules.  This will better suit our needs.
+
+		// first, clear out the old connections
+		for(unsigned int i=0; i<tmList.size(); i++) {
+			tmList.at(i)->clearConnectedTo();
+		}
+
+		// add back the connections, but always through the head template
+		int rxnCenterSets = 1;
+		int curSet=0;
+		for(unsigned int i=0; i<uniqueSetId.size(); i++) {
+			if(uniqueSetId.at(i)==curTemplateSetId) {
+				if(curSet==curTemplateSetId) curSet++;
+				continue;
+			}
+			if(uniqueSetId.at(i)==curSet) {
+				bool otherHasRxnCenter = false;
+				if(numMapGenerators.at(curSet)>0) {
+					otherHasRxnCenter=true;
+					rxnCenterSets++;
+				}
+				TemplateMolecule *otherTemplate = tmList.at(i);
+				int ctIndex1=curTemplate->getN_connectedTo();
+				int ctIndex2=otherTemplate->getN_connectedTo();
+				curTemplate->addConnectedTo(otherTemplate,ctIndex2,otherHasRxnCenter);
+				otherTemplate->addConnectedTo(curTemplate,ctIndex1);
+				curSet++;
+			}
+		}
+
+		if(rxnCenterSets>2) {
+			cout.flush();
+			cerr<<"\n\n   Error in Reaction Rule: "<<name<<endl;
+			cerr<<"   You created a reaction with a pattern that includes the connected-to\n";
+			cerr<<"   syntax (ie: A().B()).  You included 3 or more disjoint sets of molecules\n";
+			cerr<<"   where there are more than 2 sets with rxn centers.  This may work ok, \n";
+			cerr<<"   but you really shouldn't ever do something this crazy, so I'm just going\n";
+			cerr<<"   to stop you now.  Goodbye.\n"<<endl;
+			exit(1);
+		}
+
+
+
+		//cout<<"++++++++++++++++"<<endl;
+		//for(unsigned int i=0; i<tmList.size(); i++) {
+		//	tmList.at(i)->printDetails();
+		//}
+
+
+
+
+		//Finally, clear out the data structures.
+		for(unsigned int i=0; i<sets.size(); i++) sets.at(i).clear();
+		sets.clear(); uniqueSetId.clear();
+		numMapGenerators.clear();
+	}
+
+
+	//cout<<"good, very good."<<endl;
+	//exit(0);
+
+
+
 	//Check here to see if we have molecule types that are the same across different reactants
 	//Because if so, we will give a warning
-	if(n_reactants>2) cerr<<"Warning!! You created a reaction ("<< name <<") that has more than 2 reactants.  This has not been tested!"<<endl;
+	if(n_reactants>2) cerr<<"Warning!! You created a reaction ("<< name <<") that has more than 2 reactants.  This has not been extensively tested!"<<endl;
 	if(n_reactants==2)
 	{
 		//If the reactants are of the same type, then we have to make a few special considerations
@@ -120,7 +225,6 @@ void ReactionClass::printDetails() const {
 
 void ReactionClass::fire(double random_A_number)
 {
-
 	fireCounter++; //Remember that we fired
 	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
 
@@ -170,7 +274,7 @@ void ReactionClass::fire(double random_A_number)
 	}
 	//Molecule::printMoleculeList(products);
 
-//	cout<<",  everything done"<<endl;
+	//	cout<<",  everything done"<<endl;
 	//Tidy up
 	products.clear();
 }

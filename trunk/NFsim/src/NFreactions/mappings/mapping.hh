@@ -79,6 +79,14 @@ namespace NFcore
 			 */
 			bool setMolecule(Molecule *m);
 
+
+			static void clone(Mapping *original, Mapping *newClone);
+
+
+			void printDetails() const;
+			void printDetails(ostream &o) const;
+
+
 		protected:
 
 			/*!

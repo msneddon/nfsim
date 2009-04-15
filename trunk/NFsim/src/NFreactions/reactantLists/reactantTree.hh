@@ -11,6 +11,7 @@ namespace NFcore
 	//Forward Declarations
 	class TransformationSet;
 	class MappingSet;
+	class ReactantContainer;
 
 
 	//!  Maintains a tree of MappingSets needed by Distribution of Rates Reactions
@@ -27,17 +28,17 @@ namespace NFcore
 	 *
 	 *
 	 */
-	class ReactantTree {
+	class ReactantTree : public ReactantContainer {
 
 
 		public:
 			ReactantTree(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity);
-			~ReactantTree();
+			virtual ~ReactantTree();
 
 			/*!
 				Returns the number of mappingSets that have been added to this tree
 			*/
-			int size() const { return n_mappingSets; };
+			virtual int size() const { return n_mappingSets; };
 
 			/*!
 				Adds a new MappingSet to this tree and returns a pointer to the new mapping set for you
@@ -48,7 +49,7 @@ namespace NFcore
 				the mapping actually places it in the tree.  If you don't do this, it won't ever be selected
 				by the tree.
 			*/
-			MappingSet * pushNextAvailableMappingSet();
+			virtual MappingSet * pushNextAvailableMappingSet();
 
 
 			void confirmPush(int mappingSetId, double rateFactor);
@@ -58,13 +59,13 @@ namespace NFcore
 			/*!
 				Removes the very last mappingSet that was added to the list.
 			*/
-			void popLastMappingSet();
+			virtual void popLastMappingSet();
 
 			/*!
 				Removes the mapping set with the specified mappingSetId.  Be careful here: make sure the mapping
 				set is actually on the list before trying to remove or else this will give you an error!
 			*/
-			void removeMappingSet(unsigned int mappingSetId);
+			virtual void removeMappingSet(unsigned int mappingSetId);
 
 
 			/*!
@@ -81,14 +82,14 @@ namespace NFcore
 			/*! Returns a MappingSet so that a DOR can evaluate a local function on it.
 
 			 */
-			MappingSet * getMappingSet(unsigned int mappingSetId);
+			virtual MappingSet * getMappingSet(unsigned int mappingSetId) const;
 
 
 
 			/*!
 				Outputs basic details about this list - used only for debugging.
 			*/
-			void printDetails();
+			virtual void printDetails() const;
 
 
 
@@ -135,7 +136,6 @@ namespace NFcore
 
 			//The actual list of mappingSets, stored as a list
 			MappingSet ** mappingSets;
-
 
 
 			/////  below are three arrays that are necessary to quickly grab a particular
