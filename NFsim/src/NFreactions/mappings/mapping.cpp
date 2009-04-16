@@ -46,8 +46,12 @@ void NFcore::Mapping::printDetails(ostream &o) const
 {
 	o<<"M("<<index<<","<<type<<"): mapped to: ";
 	//cout<<"here"<<endl;
-	if(m!=NULL) o<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID();
+	if(m!=NULL) {
+		o<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID();
+		m->printDetails();
+	}
 	else o<<"nothing.";
+
 }
 
 

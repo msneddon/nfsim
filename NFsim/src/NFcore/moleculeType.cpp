@@ -157,6 +157,7 @@ MoleculeType::~MoleculeType()
 	}
 	delete [] eqCompName;
 	delete [] eqCompIndex;
+	delete [] eqCompOriginalName;
 
 
 
