@@ -34,6 +34,16 @@ MappingSet::~MappingSet()
 	delete [] mappings;
 }
 
+void MappingSet::clear() {
+	this->clonedMappingSet=NO_CLONE;
+	for(unsigned int t=0; t<n_mappings; t++) {
+		mappings[t]->clear();
+	}
+
+}
+
+
+
 bool MappingSet::set(unsigned int mappingIndex, Molecule *m)
 {
 	mappings[mappingIndex]->setMolecule(m);

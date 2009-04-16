@@ -69,7 +69,13 @@ namespace NFcore
 			 	of these functions.
 			    @author Michael Sneddon
 			 */
-			void clear() { this->clonedMappingSet=NO_CLONE; };
+			void clear(); /*{
+				this->clonedMappingSet=NO_CLONE;
+				for(unsigned int t=0; t<n_mappings; t++) {
+					mappings[t]->clear();
+				}
+
+			};*/
 
 
 

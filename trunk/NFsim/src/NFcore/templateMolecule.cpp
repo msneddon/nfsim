@@ -48,6 +48,7 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	this->connectedTo=new TemplateMolecule*[n_connectedTo];
 	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
 	this->otherTemplateConnectedToIndex=new int[n_connectedTo];
+	this->connectedToHasRxnCenter=new bool[n_connectedTo];
 
 
 
@@ -76,6 +77,10 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//
 	this->matchMolecule=0;
 	this->hasVisitedThis=false;
+
+	//finally, we have to register this template molecule with the molecule
+	//type so that we can easily destroy them at the end.
+	this->moleculeType->addTemplateMolecule(this);
 }
 
 
@@ -93,6 +98,7 @@ TemplateMolecule::~TemplateMolecule() {
 	delete [] compStateConstraint_Constraint;
 	delete [] compStateExclusion_Comp;
 	delete [] compStateExclusion_Exclusion;
+	delete [] symCompUniqueId;
 
 	delete [] bondComp;
 	delete [] bondCompName;
@@ -247,6 +253,7 @@ void TemplateMolecule::clearConnectedTo()
 	this->connectedTo=new TemplateMolecule*[n_connectedTo];
 	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
 	this->otherTemplateConnectedToIndex=new int[n_connectedTo];
+	this->connectedToHasRxnCenter=new bool[n_connectedTo];
 }
 
 void TemplateMolecule::addConnectedTo(TemplateMolecule *t2, int otherConToIndex) {
@@ -269,6 +276,9 @@ void TemplateMolecule::addConnectedTo(TemplateMolecule *t2, int otherConToIndex,
 	newOtherTemplateConnectedToIndex[n_connectedTo] = otherConToIndex;
 	newConnectedToHasRxnCenter[n_connectedTo] = otherHasRxnCenter;
 	delete [] connectedTo;
+	delete [] hasTraversedDownConnectedTo;
+	delete [] otherTemplateConnectedToIndex;
+	delete [] connectedToHasRxnCenter;
 	connectedTo=newConnectedTo;
 	hasTraversedDownConnectedTo=newHasTraversedDownConnectedTo;
 	otherTemplateConnectedToIndex=newOtherTemplateConnectedToIndex;
@@ -1246,6 +1256,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				else {
 					canMatchThis=connectedTo[cTo]->compare((*molIter),rc,lastMappingSets.at(lastMappingSets.size()-1));
 					if(canMatchThis) {
+						rc->notifyPresenceOfClonedMappings();
 						canMatch = true;
 						MappingSet * newMS = rc->pushNextAvailableMappingSet();
 						MappingSet::clone(lastMappingSets.at(lastMappingSets.size()-1),newMS);
@@ -1265,9 +1276,9 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			}
 
 		}
-		if(lastMappingSets.size()>2) {
-			rc->notifyPresenceOfClonedMappings();
-		}
+		//if(lastMappingSets.size()>2) {
+		//	rc->notifyPresenceOfClonedMappings();
+		//}
 
 		if(lastMappingSets.size()>1) {
 			lastMappingSets.at(lastMappingSets.size()-2)->clearClonedMapping();

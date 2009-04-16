@@ -13,7 +13,11 @@
 using namespace NFcore;
 
 
-ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity) {
+ReactantTree::ReactantTree(
+		unsigned int reactantIndex,
+		TransformationSet *ts,
+		unsigned int init_capacity)
+{
 	//cout<<"Creating reactant tree... "<<endl;
 	//cout<<"  Initial Capacity: "<< init_capacity <<" molecules, ";
 
@@ -78,11 +82,30 @@ ReactantTree::ReactantTree(unsigned int reactantIndex, TransformationSet *ts, un
 	//cout<<"  The depth of the tree will be "<< treeDepth << " and contain ";
 	//cout<<numOfNodes<<" nodes."<<endl;
 	//cout<<"  The first molecule can be found at tree index "<< firstMappingTreeIndex <<"."<<endl;
-
 }
 
-void ReactantTree::expandTree(int newCapacity) {
 
+ReactantTree::~ReactantTree()
+{
+	for(int i=0; i<maxElementCount; i++)
+	{
+		delete mappingSets[i];
+		msTreePositionMap[i]=0;
+	}
+
+	delete [] this->leftRateFactorSum;
+	delete [] this->leftElementCount;
+	delete [] this->rightElementCount;
+	delete [] this->mappingSets;
+	delete [] this->msPositionMap;
+	delete [] this->msTreePositionMap;
+	delete [] this->reverseMsTreePositionMap;
+}
+
+
+
+void ReactantTree::expandTree(int newCapacity)
+{
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//Step 1: reallocate new arrays to store the tree, which is the exact same procedure
 	//as creating the tree to begin with.  I name everything with the xx_ prefix to make
@@ -104,6 +127,7 @@ void ReactantTree::expandTree(int newCapacity) {
 		xx_rightElementCount[i] = 0;
 	}
 
+
 	MappingSet **xx_mappingSets= new MappingSet * [xx_maxElementCount];
 	////Take special precaution here!!  we don't want to actually reallocate the mappingSets!
 	/// because then we would have to recompare each molecule to this template again!
@@ -112,11 +136,9 @@ void ReactantTree::expandTree(int newCapacity) {
 	/// based on their id
 	for(int i=0; i<this->maxElementCount; i++){
 		xx_mappingSets[this->mappingSets[i]->getId()] = this->mappingSets[i];
-		//xx_msPositionMap[this->mappingSets[i]->getId()] = i;
 	}
 	for(int i=this->maxElementCount; i<xx_maxElementCount; i++) {
 		xx_mappingSets[i] = ts->generateBlankMappingSet(this->reactantIndex,i);
-		//xx_msPositionMap[i] = i;
 	}
 
 	/* original allocation procedure, for reference:
@@ -140,7 +162,7 @@ void ReactantTree::expandTree(int newCapacity) {
 	//Loop through the mappingSets
 	double xx_rateFactor = 0; int xx_mappingSetId = 0;
 	for(int i=0; i<this->maxElementCount; i++) {
-		xx_mappingSetId = this->mappingSets[i]->getId();
+		xx_mappingSetId = xx_mappingSets[i]->getId(); //mappingSets[i]->getId();
 		xx_rateFactor = this->leftRateFactorSum[this->msTreePositionMap[xx_mappingSetId]+this->firstMappingTreeIndex];
 
 		int cn = 1;
@@ -203,28 +225,15 @@ void ReactantTree::expandTree(int newCapacity) {
 	this->reverseMsTreePositionMap = xx_reverseMsTreePositionMap;
 	this->n_mappingSets=xx_n_mappingSets;
 	this->firstMappingTreeIndex = xx_firstMappingTreeIndex;
+
 }
 
 
-ReactantTree::~ReactantTree()
+
+
+
+MappingSet * ReactantTree::pushNextAvailableMappingSet()
 {
-	for(int i=0; i<maxElementCount; i++)
-	{
-		delete mappingSets[i];
-		msTreePositionMap[i]=0;
-	}
-
-	delete [] this->leftRateFactorSum;
-	delete [] this->leftElementCount;
-	delete [] this->rightElementCount;
-	delete [] this->mappingSets;
-	delete [] this->msPositionMap;
-	delete [] this->msTreePositionMap;
-	delete [] this->reverseMsTreePositionMap;
-}
-
-
-MappingSet * ReactantTree::pushNextAvailableMappingSet() {
 	//Check that we didn't go over the max - if we did we have to expand our tree...
 	if(n_mappingSets >= maxElementCount) {
 		//cout<<"-------------\nIn ReactantTree!!!  Adding more than I can take, so I'm expanding! "<<endl;
@@ -236,7 +245,21 @@ MappingSet * ReactantTree::pushNextAvailableMappingSet() {
 }
 
 
-void ReactantTree::confirmPush(int mappingSetId, double rateFactor) {
+void ReactantTree::confirmPush(int mappingSetId, double rateFactor)
+{
+
+	//Here we have to check that we didn't already put this guy into the tree
+	//somewhere.  A mappingset can get into a tree, if something is pushed, then
+	//the tree expanded (which automatically puts all pushed mappingsets on the tree)
+	//and then we call this function.  Without this check, it is possible to
+	//add a mappingset twice on the tree (once during expand, and once here) which
+	//leads to very annoying debugging problems.  So if we did that, then we have
+	//to remove the element first, before we can confirm the push.
+	int duplicate_msTreeArrayPosition = msTreePositionMap[mappingSetId];
+	if(duplicate_msTreeArrayPosition>=0) {
+		this->removeFromTreeOnly(duplicate_msTreeArrayPosition,mappingSetId);
+	}
+
 
 	unsigned int cn = 1; // index of current node
 
@@ -306,63 +329,65 @@ void ReactantTree::popLastMappingSet() {
 	if(clone!=MappingSet::NO_CLONE) {
 		this->removeMappingSet(clone);
 	}
-
 }
 
 
-void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 
-	//first get the position of this mappingSet in the tree
-	int msTreeArrayPosition = msTreePositionMap[mappingSetId];
+void ReactantTree::removeFromTreeOnly(int msTreeArrayPosition, unsigned int mappingSetId)
+{
+	//Go to that position in the tree, and work up and out
+	unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
+	//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
 
-	//First some error checking...
-	//if(msTreeArrayPosition<0) {
-	//	cerr<<"Trying to remove a MappingSet from a reactantTree when the MappingSet is not in the tree!"<<endl;
-	//	exit(1);
-	//}
+	//Get the rate factor from the bottom of the tree and set it to zero
+	double rateFactor = leftRateFactorSum[cn];
+	leftRateFactorSum[cn] = 0;
+
+	if(n_mappingSets<=1)
+		leftRateFactorSum[0] = 0;
+	else
+		leftRateFactorSum[0] -= rateFactor;
+
+	//Work our way back up to the root
+	while(cn>1)
+	{
+		unsigned int parent = 	cn/2;
+		if(cn%2==0)  //Then I was the left child, and we have to make adjustments
+		{
+			leftElementCount[parent]--;
+			leftRateFactorSum[parent] -= rateFactor;
+		}
+		else  //I was the right child, and we don't have to make adjustments
+		{
+			rightElementCount[parent]--;
+		}
+		cn = parent;
+	}
+
+	//Now, remove this guy from the tree array by telling the arrays
+	//that this leaf in the tree is empty and this mappingSet is not
+	//in the tree
+	msTreePositionMap[mappingSetId] = -1;
+	reverseMsTreePositionMap[msTreeArrayPosition] = -1;
+}
+
+
+void ReactantTree::removeMappingSet(unsigned int mappingSetId)
+{
 	if(n_mappingSets==0) {
 		cerr<<"Trying to remove from an empty ReactantTree!!"<<endl;
 		exit(1);
 	}
 
+	//first get the position of this mappingSet in the tree
+	int msTreeArrayPosition = msTreePositionMap[mappingSetId];
+
+
 	//If we have already confirmed this push on the tree, we must take it out of
 	//the tree.  IF we didn't find this on the tree, then perhaps it just wasn't
 	//pushed on yet.
 	if(msTreeArrayPosition>=0) {
-		//Go to that position in the tree, and work up and out
-		unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
-		//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
-
-		//Get the rate factor from the bottom of the tree and set it to zero
-		double rateFactor = leftRateFactorSum[cn];
-		leftRateFactorSum[cn] = 0;
-
-		if(n_mappingSets<=1)
-			leftRateFactorSum[0] = 0;
-		else
-			leftRateFactorSum[0] -= rateFactor;
-
-		//Work our way back up to the root
-		while(cn>1)
-		{
-			unsigned int parent = 	cn/2;
-			if(cn%2==0)  //Then I was the left child, and we have to make adjustments
-			{
-				leftElementCount[parent]--;
-				leftRateFactorSum[parent] -= rateFactor;
-			}
-			else  //I was the right child, and we don't have to make adjustments
-			{
-				rightElementCount[parent]--;
-			}
-			cn = parent;
-		}
-
-		//Now, remove this guy from the tree array by telling the arrays
-		//that this leaf in the tree is empty and this mappingSet is not
-		//in the tree
-		msTreePositionMap[mappingSetId] = -1;
-		reverseMsTreePositionMap[msTreeArrayPosition] = -1;
+		removeFromTreeOnly(msTreeArrayPosition,mappingSetId);
 	}
 
 
@@ -414,7 +439,8 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId) {
 }
 
 
-void ReactantTree::pickReactantFromValue(MappingSet *&ms, double value, double baseRate) {
+void ReactantTree::pickReactantFromValue(MappingSet *&ms, double value, double baseRate)
+{
 
 	//First a quick check to make sure we are in bounds (commented out unless we
 	//suspect an error here and need to debug)
@@ -451,8 +477,10 @@ void ReactantTree::pickReactantFromValue(MappingSet *&ms, double value, double b
 	//Now we should have the value of cn that gives our molecule, so return it
 	unsigned int msTreeArrayPosition = cn - firstMappingTreeIndex;
 
+
 	//Given the position in the tree, retrieve the mappingSetId
 	unsigned int mappingSetId = reverseMsTreePositionMap[msTreeArrayPosition];
+
 
 	//Given the mappingSetId, we can get the position of the mappingSet in the list
 	//of mappingSets
@@ -518,7 +546,7 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 
 	// Check if this mapping set has clones... if so we must update them too...
 	if(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping()!=MappingSet::NO_CLONE) {
-		confirmPush(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping(),newRateFactor);
+		updateValue(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping(),newRateFactor);
 	}
 
 
@@ -526,7 +554,8 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 }
 
 
-MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) const {
+MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) const
+{
 	return mappingSets[msPositionMap[mappingSetId]];
 }
 
@@ -573,6 +602,7 @@ void ReactantTree::printDetails() const {
 	for(int i=0; i<=numOfNodes; i++)
 		cout<<"\t"<<rightElementCount[i];
 	cout<<endl;
+
 }
 
 

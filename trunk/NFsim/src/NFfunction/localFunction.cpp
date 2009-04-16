@@ -354,6 +354,8 @@ LocalFunction::~LocalFunction() {
 	delete [] varObservableNames;
 	delete [] varRefScope;
 	delete [] varLocalObservables;
+	delete [] typeII_mol;
+
 
 	if(p!=NULL) delete p;
 }
