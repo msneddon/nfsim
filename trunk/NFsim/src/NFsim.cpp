@@ -143,11 +143,6 @@ bool runRNFscript(map<string,string> argMap, bool verbose);
 System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 
 
-//! Runs a given System with the specified arguments
-/*!
-  @author Michael Sneddon
-*/
-bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 
 //!  Main executable for the NFsim program.
 /*!

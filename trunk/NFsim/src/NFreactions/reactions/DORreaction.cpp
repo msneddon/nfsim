@@ -438,6 +438,9 @@ void DORRxnClass::printDetails() const
 			cout<<", size="<<reactantTree->size()<<")."<<endl;
 		}
 	}
+
+	this->printFullDetails();
+
 		if(n_reactants==0)
 			cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
 }

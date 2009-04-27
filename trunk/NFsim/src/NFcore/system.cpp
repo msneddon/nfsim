@@ -490,7 +490,7 @@ double System::getNextRxn()
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes)
 {
-	sim(duration,sampleTimes,true);
+	return sim(duration,sampleTimes,true);
 }
 
 

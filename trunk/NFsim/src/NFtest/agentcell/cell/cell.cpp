@@ -14,6 +14,15 @@ using namespace std;
 
 unsigned int AgentCell::cellIdCounter = 0;
 
+
+const double AgentCell::DefaultGammaAlpha = 4.;
+const double AgentCell::DefaultGammaBeta = 1./18.32045567939674;
+const double AgentCell::DefaultGammaOffset = -4.606176605609249;
+
+const double AgentCell::DefaultSpeed = 20; //uM per second
+const double AgentCell::DefaultRotDifConst = 0.06205; // rad^2/s
+
+
 AgentCell::AgentCell(
 		System *s,
 		Environment *e,

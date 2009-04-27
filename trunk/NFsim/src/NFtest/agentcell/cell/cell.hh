@@ -132,14 +132,15 @@ class AgentCell
 		double currentLigConc;
 
 
+		//Distribution of new swim direction angles, matched to experimental observations
+		// With shape = 4, scale = 18.32045567939674, location = -4.606176605609249
+		// These variables are now initialized in cell.cpp
+		static const double DefaultGammaAlpha;// = 4.;
+		static const double DefaultGammaBeta;// = 1./18.32045567939674;
+		static const double DefaultGammaOffset;// = -4.606176605609249;
 
-		// With shape = 4 scale = 18.32045567939674 location = -4.606176605609249 it
-		static const double DefaultGammaAlpha = 4.;
-		static const double DefaultGammaBeta = 1./18.32045567939674;
-		static const double DefaultGammaOffset = -4.606176605609249;
-
-		static const double DefaultSpeed = 20; //uM per second
-		static const double DefaultRotDifConst = 0.06205; // rad^2/s
+		static const double DefaultSpeed;// = 20; //uM per second
+		static const double DefaultRotDifConst;// = 0.06205; // rad^2/s
 
 
 

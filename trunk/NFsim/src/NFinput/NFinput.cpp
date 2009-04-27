@@ -791,7 +791,7 @@ bool NFinput::initStartSpecies(
 				molecules.push_back(currentM);
 				for(int m=0; m<specCountInteger; m++)
 				{
-					Molecule *m = mt->genDefaultMolecule();
+					Molecule *mol = mt->genDefaultMolecule();
 					//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
 
 					//Loop through the states and set the ones we need to set
@@ -804,11 +804,11 @@ bool NFinput::initStartSpecies(
 						//	m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
 						//	currentCount[eqNum]++;
 						//} else {
-							m->setComponentState((*snIter), (int)stateValue.at(k));
+							mol->setComponentState((*snIter), (int)stateValue.at(k));
 						//}
 					}
 
-					molecules.at(molecules.size()-1).push_back(m);
+					molecules.at(molecules.size()-1).push_back(mol);
 				}
 
 				//delete [] currentCount;
