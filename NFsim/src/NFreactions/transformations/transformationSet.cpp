@@ -411,7 +411,10 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list<Molecul
 		}
 
 		if(!isPresent)
+		{
 			molecule->traverseBondedNeighborhood(products,traversalLimit);
+			//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
+		}
 
 	}
 	//cout<<"All together, we have: "<<products.size()<<endl;

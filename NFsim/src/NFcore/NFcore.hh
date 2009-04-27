@@ -708,6 +708,12 @@ namespace NFcore
 			static const int NOBOND = 0;
 			static const int NOINDEX = -1;
 
+
+			//void addDependentUpdateMolecule(Molecule *m);
+			//void removeDependentUpdateMolecule(Molecule *m);
+			//void traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit);
+
+
 		protected:
 
 
@@ -751,11 +757,20 @@ namespace NFcore
 			int * rxnListMappingId;
 			int nReactions;
 
+
+			// dependent update molecule list, so that when this molecule updates,
+			// it necessarily updates whatever is on this list.  This list will capture non
+			// local interactions that need to be maintained that result from the connected-to syntax
+			// list <Molecule *> dependentUpdateMolecules
+			//list <Molecule *> dependentUpdateMolecules;
+
+
 		private:
 
 			static queue <Molecule *> q;
 			static queue <int> d;
 			static list <Molecule *>::iterator molIter;
+			//static list <Molecule *>::iterator molIter2;
 
 	};
 
