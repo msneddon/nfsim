@@ -73,16 +73,25 @@ void NFtest_ss::run()
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are the rates and are in
 	//      arbitrary units here.  In general, the rates should be in units of per second.
-	ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
-	ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
-	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
-	ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
+	//ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
+	//ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
+	//ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
+	//ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
 
-	s->addReaction(x_dephos);
-	s->addReaction(rXbindY);
-	s->addReaction(rXunbindY);
-	s->addReaction(rYphosX);
+	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
+	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
+	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
+	ReactionClass *rCompartmentYphosX = createReactionCompYphosX(molX, molY, kCat);
 
+
+	//s->addReaction(x_dephos);
+	//s->addReaction(rXbindY);
+	//s->addReaction(rXunbindY);
+	//s->addReaction(rYphosX);
+	s->addReaction(rCompartmentxDephos);
+	s->addReaction(rCompartmentXbindY);
+	s->addReaction(rCompartmentXunbindY);
+	s->addReaction(rCompartmentYphosX);
 
 	//  5)  Add the observables that we want to track throughout the simulation.  Again, to
 	//      see how this is done, see the function below.
@@ -352,8 +361,136 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 	return r;
 }
 
+ReactionClass * NFtest_ss::createReactionCompXDephos(MoleculeType *molX, double rate)
+{
+	//Here is your first glimpse at defining a reaction rule.  This is the simplist rule
+	//as it only has a single state change operation.  There are several straightforward steps.
+	//First, you have to define the set of TemplateMolecules that represent the possible reactants.
+	//Here, we create a templateMolecule representing molecules of type X, and set the state to
+	//be phosphorylated.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	xTemp->addComponentConstraint("p","Phos");
 
 
+	//We have to create a vector (basically a storage array) for the Template Molecules that we
+	//want to add to our reaction.  We do this using the standard library class std::vector.  We
+	//only have one reactant in this reaction, so we just put it on the vector.
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp );
+
+
+	//Once we have our set of templateMolecules defined, we can specify the transformations on
+	//those molecules. To do this, we create a TransformationSet object passing in the templates
+	//Next, we use the TransformationSet functionality to specify the transform.  Here we specify
+	//that the transformation should apply to the template molecule (defined above) and it should
+	//change the state of "p" to a value of zero (which means unphosphorylated in our system).
+	//Finally, once we have added all operations we want (there is no limit!), we have to finalize
+	//our transformationSet.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addStateChangeTransform(xTemp,"p","Unphos");
+	ts->finalize();
+
+
+	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
+	//set that you just created.  It will take care of the rest!
+	ReactionClass *r = new CompartmentReaction("Comp_X_dephos",rate,ts);
+	return r;
+}
+
+ReactionClass * NFtest_ss::createReactionCompXYbind(MoleculeType *molX,MoleculeType *molY, double rate)
+{
+	//Now we want to create a binding reaction.  This is a little trickier, but still not too bad.
+	//First we need to create TemplateMolecules to represent our two reactants, Molecule X and
+	//Molecule Y.  Remember to specify that Mol X has an empty binding site for y and that
+	//Y has an empty binding site for X!  This is not done for you and can lead to errors if
+	//you try to bind a site that is already bound!  Also, we want to bind only if X is not
+	//phosphorylated.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	xTemp->addEmptyComponent("y");
+	xTemp->addComponentConstraint("p","Unphos");
+	TemplateMolecule *yTemp = new TemplateMolecule(molY);
+	yTemp->addEmptyComponent("x");
+
+
+	//Again, we create the vector of templates to store our reactants.  There are two reactants
+	//involved, so we have to add both of them to our templates vector.  Remember that only the
+	//primary reactants should be added to this vector!  If we had another molecule, say Z, that
+	//is bound to Y, we would have to choose to add either Y or Z to the second reactant, not both!
+	//In general, there will only be one or two templates added to this vector (for unimolecular and
+	//bimolecular reactions) no matter how many templates are actually involved!  Reactions are still
+	//able to access all of them, however, by traversing the bonds of these two "head" molecules.
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp );
+	templates.push_back( yTemp );
+
+	//Again, create a TransformationSet with the templates, add the binding operation between X and
+	//Y by specifying the sites that are binding, (ordering between x and y do not matter in this
+	//function) and finalize the TransformationSet.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addBindingTransform(xTemp,"y", yTemp, "x");
+	ts->finalize();
+
+	//Create and return the reaction!
+	ReactionClass *r = new CompartmentReaction("Comp_Y_bind_X",rate,ts);
+	return r;
+}
+
+ReactionClass * NFtest_ss::createReactionCompXYunbind(MoleculeType *molX, MoleculeType *molY, double rate)
+{
+	//Now its time for the unbinding reaction.  For a reactant to match the unbinding reaction,
+	//the molecules X and Y must be bound.  To do this, again create the two template molecules for
+	//X and Y, and now we must specify that they are bound through the named binding sites.  We
+	//do that with the bind function in the TemplateMolecule class.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	TemplateMolecule *yTemp = new TemplateMolecule(molY);
+	TemplateMolecule::bind(xTemp,"y","",yTemp,"x","");
+
+	//Like before, we create the vector of templates.  Notice that this is a unimolecular reaction!
+	//even though there are two templates, only one "species" or reactant is involved.  Therefore, we
+	//have to only insert one of the templates into this list.  It doesn't matter whether it is
+	//the template for X or the template for Y.  Just pick one!
+	vector <TemplateMolecule *> templates;
+	templates.push_back( yTemp );
+
+	//Again, here we go with the transformationSet.  We only have to specify one unbinding transform.
+	//Either Y unbinds, or X unbinds, but not both.  Here, I arbitrarily choose molecule X to unbind
+	//its binding site at site "y".  The templates take care of the fact that Molecule Y is on the other
+	//end and also has to be updated when this is called.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addUnbindingTransform(xTemp,"y",yTemp,"y");
+	ts->finalize();
+
+	//Create the reaction in the usual way.
+	ReactionClass *r = new CompartmentReaction("Comp_Y_unbind_X",rate,ts);
+	return r;
+}
+
+
+ReactionClass * NFtest_ss::createReactionCompYphosX(MoleculeType *molX, MoleculeType *molY, double rate)
+{
+	//This function demonstrates how you can create reactions with multiple transformations.  Just
+	//as we did for the unbinding reaction, we create the templates and bind them.  We would also
+	//like to specify that molecule X must be dephosphorylated for this reaction to fire, so add
+	//that constraint too.
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	xTemp->addComponentConstraint("p",0);
+	TemplateMolecule *yTemp = new TemplateMolecule(molY);
+	TemplateMolecule::bind(xTemp,"y","",yTemp,"x","");
+
+	//Again, just like in the unbinding reaction, just add one of the templates to the vector
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp );
+
+	//Create the transformation set.  Add all the operations you want and finalize once you are done.
+	TransformationSet *ts = new TransformationSet(templates);
+	ts->addUnbindingTransform(xTemp,"y",yTemp,"x");
+	ts->addStateChangeTransform(xTemp,"p","Phos");
+	ts->finalize();
+
+	//Return the Reaction.
+	ReactionClass *r = new CompartmentReaction("Comp_Y_phos_X",rate, ts);
+	return r;
+}
 
 
 

@@ -11,6 +11,7 @@ namespace NFcore
 	//Forward Declarations
 	class TransformationSet;
 	class MappingSet;
+	class ReactantContainer;
 
 
 	//!  Maintains a tree of MappingSets needed by Distribution of Rates Reactions
@@ -18,7 +19,7 @@ namespace NFcore
 	 *  This is one of the more complex classes in NFsim.  It is written in order to handle
 	 *  distribution of rates reactions.  These types of reactions have many reactants, but
 	 *  each reactant can participate with a different rate.  The rate is determined by the
-	 *  module that the reactant is in.  Therefore, we need a tree (or we could have also
+	 *  set of molecules that the reactant is connected to.  Therefore, we need a tree (or we could have also
 	 *  used logarithmic classes) to efficiently select the next reactant weighted by
 	 *  each of its propensities.
 	 *
@@ -27,44 +28,61 @@ namespace NFcore
 	 *
 	 *
 	 */
-	class ReactantTree {
+	class ReactantTree : public ReactantContainer {
 
 
 		public:
+
+			/*!
+				Create a reactant tree, based on the given transformation set (so we can create mappings
+				at the given reactant index.  The tree will be initialized such that it can immediately
+				hold the number of objects specified by the init_capacity.
+			*/
 			ReactantTree(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity);
-			~ReactantTree();
+
+
+			/*!
+				Standard deconstructor for the tree
+			*/
+			virtual ~ReactantTree();
 
 			/*!
 				Returns the number of mappingSets that have been added to this tree
 			*/
-			int size() const { return n_mappingSets; };
+			virtual int size() const { return n_mappingSets; };
 
 			/*!
 				Adds a new MappingSet to this tree and returns a pointer to the new mapping set for you
 				to map (usually by comparing to some template molecule).  Warning: even if you don't use
-				this mapping set, it will be counted until you pop it! (see popLastMappingSet()).  This has
+				this mapping set, it will be counted until you pop it or remove it! (see removeMappingSet()).  This has
 				a special behavior in the ReactantTree.  This method merely gets you a pointer to the next
 				available mappingset: if you decide to keep the mapping, you have to confirm it. Confirming
 				the mapping actually places it in the tree.  If you don't do this, it won't ever be selected
 				by the tree.
 			*/
-			MappingSet * pushNextAvailableMappingSet();
+			virtual MappingSet * pushNextAvailableMappingSet();
 
 
+			/*!
+				Once you have pushed on the next available mappingSet, you have to confirm that push.  In
+				the event that mappingsets are cloned, this will confirm all mappingsets that have been
+				cloned off of the given mapping set.
+			*/
 			void confirmPush(int mappingSetId, double rateFactor);
 
 
 
 			/*!
-				Removes the very last mappingSet that was added to the list.
+				Removes the very last mappingSet that was added to the list.  You should actually now
+				use the removeMappingSet function instead, just to be careful.
 			*/
-			void popLastMappingSet();
+			virtual void popLastMappingSet();
 
 			/*!
 				Removes the mapping set with the specified mappingSetId.  Be careful here: make sure the mapping
 				set is actually on the list before trying to remove or else this will give you an error!
 			*/
-			void removeMappingSet(unsigned int mappingSetId);
+			virtual void removeMappingSet(unsigned int mappingSetId);
 
 
 			/*!
@@ -74,47 +92,55 @@ namespace NFcore
 			void pickReactantFromValue(MappingSet *&ms, double value, double baseRate);
 
 			/*!
-
+				When a local function value changes, it must update the value in the reactant tree.  This
+				method allows you to update values without changing the mappingSet membership of this tree.
 			 */
 			void updateValue(unsigned int mappingSetId, double newRateFactor);
 
-			/*! Returns a MappingSet so that a DOR can evaluate a local function on it.
-
+			/*!
+				Returns a MappingSet so that a DOR can evaluate a local function on it.
 			 */
-			MappingSet * getMappingSet(unsigned int mappingSetId);
+			virtual MappingSet * getMappingSet(unsigned int mappingSetId) const;
 
 
 
 			/*!
-				Outputs basic details about this list - used only for debugging.
+				Outputs basic details about this tree - used only for debugging, because
+				it really does print out everything
 			*/
-			void printDetails();
+			virtual void printDetails() const;
 
 
 
 
-			void expandTree(int newCapacity);
-
-
-
-			//Once you insert into this tree, you will get the position you were
-			//inserted into.  This will never change until you are removed
-			//int insert(Molecule * m, double rateFactor);
-			//void remove(Molecule * m, unsigned int rxnListIndex);
-
-
-
-			//void updateValue(Molecule * m, unsigned int rxnListIndex, double newRateFactor);
-			//Molecule * getReactantFromValue(double value, double baseRate) const;
-
-
-			//int getNumOfMolecules() const { return numOfMolecules; };
+			/*!
+				Returns the combined rate factor sum of this tree, which is needed by
+				the DOR reactionclass in order to properly update its propensity
+			*/
 			double getRateFactorSum() const { return leftRateFactorSum[0]; };
+
+
+			/*!
+				Returns the depth of the tree (which you shouldn't ever really need...)
+			*/
 			int getDepthOfTree() const { return treeDepth; };
-			//void printDetails() const;
 
 
 		protected:
+
+			/*!
+				Removes a mapping set from the tree only.  This method should only be
+				used by the tree!
+			*/
+			void removeFromTreeOnly(int msTreeArrayPosition, unsigned int mappingSetId);
+
+			/*!
+				If we try to add more than this tree can handle, we have to expand it.  Because
+				the tree is a complete binary tree, this will necessarily double its capacity,
+				or enlarge it more depending on the given new capacity.
+			*/
+			void expandTree(int newCapacity);
+
 
 			TransformationSet *ts;       //Keeps track of the set of transformations
 			unsigned int reactantIndex;  //the index of the tree
@@ -150,12 +176,8 @@ namespace NFcore
 			int * msTreePositionMap;
 
 			//Given a tree position index, this tells us the mappingSet Id
-			//which we can use to get our mappingSet out of the mappingSets
-			//array
+			//which we can use to get our mappingSet out of the mappingSets array
 			int * reverseMsTreePositionMap;
-
-
-			//bool hasOpenPush;
 
 
 			//The number of mappingSets currently set

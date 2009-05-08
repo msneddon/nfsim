@@ -33,7 +33,7 @@ void NFcore::test()
 //	stateValues = new int [numOfStates];
 //	stateValues[0] = 1;
 //	MoleculeType *molY = new MoleculeType("MolY",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
-//
+
 //	molX->populateWithDefaultMolecules(500);
 //	molY->populateWithDefaultMolecules(500);
 //
@@ -47,9 +47,9 @@ void NFcore::test()
 //	xTemp1->addStateValue("p",1);
 //	TemplateMolecule *yTemp2 = new TemplateMolecule(molY);
 //	yTemp2->addStateValue("m",1);
-//	//TemplateMolecule::bind(xTemp1,"y",yTemp2,"x");
-//	//xTemp2->printDetails();
-//
+	//TemplateMolecule::bind(xTemp1,"y",yTemp2,"x");
+	//xTemp2->printDetails();
+
 //	TemplateMolecule *xTemp3 = new TemplateMolecule(molX);
 //	xTemp3->addStateValue("p",1);
 //	TemplateMolecule *xTemp4 = new TemplateMolecule(molX);
@@ -80,7 +80,7 @@ void NFcore::test()
 //
 //	ReactantList * rl_0 = new ReactantList(0, t, 15);
 //	ReactantList * rl_1 = new ReactantList(1, t, 15);
-//	//rl->printDetails();
+	//rl->printDetails();
 //
 //
 //
@@ -104,11 +104,11 @@ void NFcore::test()
 //	rl_0->printDetails();
 //	rl_1->printDetails();
 //
-//	//cout<<"ms->getId() = "<<ms->getId()<<endl;
-//	//rl->removeMappingSet(5);
+	//cout<<"ms->getId() = "<<ms->getId()<<endl;
+	//rl->removeMappingSet(5);
 //
 //
-//	//rl->printDetails();
+	//rl->printDetails();
 //
 //
 //
@@ -162,7 +162,9 @@ void NFcore::test_simple()
 //	stateNames[0] = "p";
 //	int * stateValues = new int [numOfStates];
 //	stateValues[0] = 1;
-//	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,numOfStates,bSiteNames,numOfBsites,s);
+//	MoleculeType *molX = new MoleculeType("MolX",stateNames,stateValues,bSiteNames,numOfBsites,s);
+
+
 //	molX->populateWithDefaultMolecules(500);
 //	molX->getMolecule(0)->printDetails();
 //

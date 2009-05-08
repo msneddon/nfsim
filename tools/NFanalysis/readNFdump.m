@@ -1,4 +1,4 @@
-function [results]=readNFdump()
+function [results]=readNFdump(baseDirectory,systemName)
 %
 %
 %
@@ -11,8 +11,8 @@ fprintf('\nRunning function readNFdump...\n\n');
 %baseDirectory='../../test/RNA/dump/';
 %systemName='rna_synthesis4';
 %baseDirectory='../../test/complexTest/dump/';
-baseDirectory='../../test/tlbr/dump/';
-systemName='tlbr';
+%baseDirectory='../../test/tlbr/dump/';
+%systemName='tlbr';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -158,7 +158,7 @@ for t=1:length(timeString)
 end;
 
 %close(stopBar);
-%fprintf('done. '); toc;
+fprintf('done. '); toc;
 
 end %%%% END OF FUNCTION
 

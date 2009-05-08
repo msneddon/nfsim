@@ -52,7 +52,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="src/NFscheduler|Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -1349,7 +1349,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="src/NFscheduler|Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -2647,7 +2647,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="src/NFscheduler|Compartments" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

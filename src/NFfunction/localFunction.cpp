@@ -114,9 +114,15 @@ LocalFunction::LocalFunction(System *s,
 	bool hasAdded = false;
 	for(unsigned int i=0; i<n_varRefs; i++) {
 		if(varRefScope[i]==-1) {//handle global scopes
-			TemplateMolecule::traverse(s->getObservableByName(this->varObservableNames[i])->getTemplateMolecule(),tmList);
+			TemplateMolecule::traverse(
+					s->getObservableByName(this->varObservableNames[i])->getTemplateMolecule(),
+					tmList,
+					TemplateMolecule::FIND_ALL);
 		} else {
-			TemplateMolecule::traverse(this->varLocalObservables[i]->getTemplateMolecule(),tmList);
+			TemplateMolecule::traverse(
+					this->varLocalObservables[i]->getTemplateMolecule(),
+					tmList,
+					TemplateMolecule::FIND_ALL);
 		}
 		//cout<<"traversed obs "<<i<<" and found: "<<tmList.size()<<" templates\n";
 
@@ -348,6 +354,8 @@ LocalFunction::~LocalFunction() {
 	delete [] varObservableNames;
 	delete [] varRefScope;
 	delete [] varLocalObservables;
+	delete [] typeII_mol;
+
 
 	if(p!=NULL) delete p;
 }

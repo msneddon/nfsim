@@ -600,7 +600,7 @@ namespace NFcore
 		public:
 
 			/* constructors / deconstuctors */
-			Molecule(MoleculeType * parentMoleculeType, int listId);
+			Molecule(MoleculeType * parentMoleculeType, int listId, int compartmentId = 0);
 			~Molecule();
 
 			/* basic get functions for name, type, complex, and IDs*/
@@ -708,6 +708,12 @@ namespace NFcore
 			static const int NOBOND = 0;
 			static const int NOINDEX = -1;
 
+			/* Moves the molecule to the specified compartment
+			 * 0 specifies the molecule in no or global compartment */
+			void moveToCompartment(unsigned int argCompartmentId);
+
+			unsigned int getCompartmentId();
+
 		protected:
 
 
@@ -751,11 +757,15 @@ namespace NFcore
 			int * rxnListMappingId;
 			int nReactions;
 
+			//Used to keep track of which compartment the molecule is in
+			unsigned int compartmentId;
+
 		private:
 
 			static queue <Molecule *> q;
 			static queue <int> d;
 			static list <Molecule *>::iterator molIter;
+			//static list <Molecule *>::iterator molIter2;
 
 	};
 
@@ -796,6 +806,7 @@ namespace NFcore
 			static const int BASIC_RXN = 0;
 			static const int DOR_RXN = 1;
 			static const int OBS_DEPENDENT_RXN = 2;
+			static const int COMPARTMENT_RXN = 3;
 
 
 
