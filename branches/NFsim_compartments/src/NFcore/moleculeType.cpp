@@ -157,6 +157,7 @@ MoleculeType::~MoleculeType()
 	}
 	delete [] eqCompName;
 	delete [] eqCompIndex;
+	delete [] eqCompOriginalName;
 
 
 
@@ -270,7 +271,7 @@ int MoleculeType::getEquivalencyClassNumber(string cName) const {
 
 string MoleculeType::getComponentStateName(int cIndex, int cValue) {
 	if(cValue==Molecule::NOSTATE) return "NO_STATE";
-	if(cValue>possibleCompStates.size() || cValue<0)
+	if((int)cValue>possibleCompStates.size() || cValue<0)
 		return "?-value was: "+NFutil::toString(cValue);
 	return possibleCompStates.at(cIndex).at(cValue);
 }

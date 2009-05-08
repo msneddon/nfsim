@@ -8,6 +8,7 @@
 #include "../../NFcore/NFcore.hh"
 #include "../../NFreactions/NFreactions.hh"
 #include "../../NFreactions/reactions/reaction.hh"
+#include "../../NFreactions/Compartment/CompartmentReaction.h"
 
 
 //NFcore is the primary namespace of the NFsim program.  It contains
@@ -86,6 +87,34 @@ namespace NFtest_ss
 	 */
 	ReactionClass * createReactionYphosX(MoleculeType *molX, MoleculeType *molY, double rate);
 
+	/*!
+		Creates a compartment dephosphorlyation reaction consisting of a single state change.
+		This is the first step towards reaction diffusion systems.  This is a good place
+		to start for learning to simulate compartment reactions.
+		@author Kelly Stanton
+	 */
+	ReactionClass * createReactionCompXDephos(MoleculeType *molX, double rate);
+
+	/*!
+		Creates a compartment binding reaction between X and Y.  Look here to see how bimolecular reactions
+		such as binding reactions can be defined.
+		@author Kelly Stanton
+	 */
+	ReactionClass * createReactionCompXYbind(MoleculeType *molX,MoleculeType *molY, double rate);
+
+	/*!
+		Creates a compartment unbinding reaction between X and Y.  Look here to see how unbinding reactions
+		can be defined.
+		@author Kelly Stanton
+	 */
+	ReactionClass * createReactionCompXYunbind(MoleculeType *molX, MoleculeType *molY, double rate);
+
+	/*!
+		Creates a compartment catalytic step of the enzymatic reaction in this simple system.  Look here
+		to learn how to create reactions that include multiple transformations of the reactants.
+		@author Kelly Stanton
+	 */
+	ReactionClass * createReactionCompYphosX(MoleculeType *molX, MoleculeType *molY, double rate);
 
 
 

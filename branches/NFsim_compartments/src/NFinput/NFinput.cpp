@@ -717,7 +717,7 @@ bool NFinput::initStartSpecies(
 								string eqCompNameToCompare=mt->getComponentName(eqCompClass[eq]);
 								//cout<<"comparing to: "<<eqCompNameToCompare<<endl;
 								bool foundMatch=false;
-								for(int ucn=0;ucn<usedComponentNames.size(); ucn++) {
+								for(unsigned int ucn=0;ucn<usedComponentNames.size(); ucn++) {
 									if(usedComponentNames.at(ucn).compare(eqCompNameToCompare)==0) {
 										foundMatch=true; break;
 									}
@@ -737,7 +737,7 @@ bool NFinput::initStartSpecies(
 								return false;
 							}
 						} else {
-							for(int ucn=0;ucn<usedComponentNames.size(); ucn++) {
+							for(unsigned int ucn=0;ucn<usedComponentNames.size(); ucn++) {
 								if(usedComponentNames.at(ucn).compare(compName)==0) {
 									cout<<"Specified the same component multiple times, when creating species: "<<speciesName<<endl;
 									return false;
@@ -791,7 +791,7 @@ bool NFinput::initStartSpecies(
 				molecules.push_back(currentM);
 				for(int m=0; m<specCountInteger; m++)
 				{
-					Molecule *m = mt->genDefaultMolecule();
+					Molecule *mol = mt->genDefaultMolecule();
 					//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
 
 					//Loop through the states and set the ones we need to set
@@ -804,11 +804,11 @@ bool NFinput::initStartSpecies(
 						//	m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
 						//	currentCount[eqNum]++;
 						//} else {
-							m->setComponentState((*snIter), (int)stateValue.at(k));
+							mol->setComponentState((*snIter), (int)stateValue.at(k));
 						//}
 					}
 
-					molecules.at(molecules.size()-1).push_back(m);
+					molecules.at(molecules.size()-1).push_back(mol);
 				}
 
 				//delete [] currentCount;
@@ -1780,8 +1780,8 @@ TemplateMolecule *NFinput::readPattern(
 							string numOfBonds = pComp->Attribute("numberOfBonds");
 							int numOfBondsInt = -1;
 
-							const int MUST_BE_OCCUPIED = -2;
-							const int EITHER_WAY_WORKS = -3;
+							//const int MUST_BE_OCCUPIED = -2;
+							//const int EITHER_WAY_WORKS = -3;
 							if(numOfBonds.compare("+")==0) {
 								bondConstraint = TemplateMolecule::OCCUPIED;
 							} else if(numOfBonds.compare("*")==0) {
@@ -2053,68 +2053,28 @@ TemplateMolecule *NFinput::readPattern(
 
 
 		//cout<<"checking for disjoint sets..."<<endl;
-		bool hasDisjointedSets=false;
 		vector <vector <TemplateMolecule *> > sets;
-		vector <int> uniqueSetId; int setCount=0;
-		for(unsigned int i=0; i<tMolecules.size(); i++) {
-
-			//First see if this template was already found in a previous set.
-			//if it was, then we don't have to traverse
-			bool alreadyFound = false;
-			for(unsigned int j=0; j<i; j++) {
-				//search set J for this template
-				for(unsigned int kj=0; kj<sets.at(j).size(); kj++) {
-					if(sets.at(j).at(kj)==tMolecules.at(i)) {
-						alreadyFound = true;
-						break;
-					}
-				}
-				//If we found it, remember the uniqueSetId of set J
-				if(alreadyFound) {
-					uniqueSetId.push_back(uniqueSetId.at(j));
-					vector <TemplateMolecule *> thisSet;
-					sets.push_back(thisSet);
-					break;
-				}
-			}
-			if(alreadyFound) { continue; }
-			else {
-				//If we have not found this molecule before, then
-				//it must be in a new set, so we traverse and remember that set
-
-				uniqueSetId.push_back(setCount);
-				setCount++;
-				vector <TemplateMolecule *> thisSet;
-				TemplateMolecule::traverse(tMolecules.at(i),thisSet);
-				sets.push_back(thisSet);
-			}
-		}
+		vector <int> uniqueSetId;
+		int setCount = TemplateMolecule::getNumDisjointSets(tMolecules,sets,uniqueSetId);
 
 //		cout<<"Unique Set Ids for the templates: "<<endl;
 //		for(unsigned int i=0; i<uniqueSetId.size(); i++) {
 //			cout<<uniqueSetId.at(i)<<endl;
 //		}
 
-		if(setCount>1) { hasDisjointedSets=true; }
 
+		if(setCount>1) {
+			// Possibly, we might want to enforce complex bookkeeping for such reactions....
+			//if(!s->isUsingComplex()) {
+			//	cout.flush();
+			//	cerr<<"Disjoint pattern found, but complex bookkeeping is turned off!"<<endl;
+			//	cerr<<"Rerun with the -cb flag"<<endl;
+			//	exit(1);
+			//}
 
-		if(hasDisjointedSets) {
-			if(!s->isUsingComplex()) {
-				cout.flush();
-				cerr<<"Disjoint pattern found, but complex bookkeeping is turned off!"<<endl;
-				cerr<<"Rerun with the -cb flag"<<endl;
-				exit(1);
-			}
-
-			cout<<"\nFound disjoint sets. (As in A().B(), with no explicit connection through components)\n";
-			cout<<"Warning!  I can only handle disjoint sets properly if the reaction center occurs\n";
-			cout<<"in only one of the sets.  IF the match can happen multiple times, this code will\n";
-			cout<<"only find the first match, and may return errors!  so be careful!\n";
-			cout<<"This may still work out fine, however, if the pattern can match a complex\n";
-			cout<<"at most once..."<<endl;
-			//cout<<"Warning! I probably cannot handle disjoint sets yet.  (As in A().B())"<<endl;
-			cout<<"I'm working on it!"<<endl<<endl;
-
+			cout<<"\nFound disjoint sets in a pattern. (As in A().B(), with no explicit connection through components)\n";
+			cout<<"Warning!  These type of patterns can be dangerous!!  They also make NFsim run slower!\n";
+			cout<<"If you can express this pattern without this syntax, it is highly advised!\n"<<endl;
 
 			//Add the connected-to connections
 			int tm1=0; int tm2=0;
@@ -2150,10 +2110,6 @@ TemplateMolecule *NFinput::readPattern(
 
 
 		}
-		//else { cout<<"No disjointed sets."<<endl; };
-
-
-
 
 		//Grab the first template molecule from the list, and arbitrarily set this as the root
 		if(tMolecules.empty()){

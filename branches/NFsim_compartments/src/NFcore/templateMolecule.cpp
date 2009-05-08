@@ -48,6 +48,7 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	this->connectedTo=new TemplateMolecule*[n_connectedTo];
 	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
 	this->otherTemplateConnectedToIndex=new int[n_connectedTo];
+	this->connectedToHasRxnCenter=new bool[n_connectedTo];
 
 
 
@@ -76,6 +77,10 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//
 	this->matchMolecule=0;
 	this->hasVisitedThis=false;
+
+	//finally, we have to register this template molecule with the molecule
+	//type so that we can easily destroy them at the end.
+	this->moleculeType->addTemplateMolecule(this);
 }
 
 
@@ -93,6 +98,7 @@ TemplateMolecule::~TemplateMolecule() {
 	delete [] compStateConstraint_Constraint;
 	delete [] compStateExclusion_Comp;
 	delete [] compStateExclusion_Exclusion;
+	delete [] symCompUniqueId;
 
 	delete [] bondComp;
 	delete [] bondCompName;
@@ -104,6 +110,7 @@ TemplateMolecule::~TemplateMolecule() {
 	delete [] connectedTo;
 	delete [] hasTraversedDownConnectedTo;
 	delete [] otherTemplateConnectedToIndex;
+	delete [] connectedToHasRxnCenter;
 
 	delete [] symCompName;
 	delete [] symCompBoundState;
@@ -236,24 +243,46 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	compIsAlwaysMapped[compIndex]=true;
 }
 
+void TemplateMolecule::clearConnectedTo()
+{
+	delete [] connectedTo;
+	delete [] hasTraversedDownConnectedTo;
+	delete [] otherTemplateConnectedToIndex;
+	delete [] connectedToHasRxnCenter;
+	this->n_connectedTo=0;
+	this->connectedTo=new TemplateMolecule*[n_connectedTo];
+	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
+	this->otherTemplateConnectedToIndex=new int[n_connectedTo];
+	this->connectedToHasRxnCenter=new bool[n_connectedTo];
+}
 
 void TemplateMolecule::addConnectedTo(TemplateMolecule *t2, int otherConToIndex) {
+	addConnectedTo(t2,otherConToIndex,false);
+}
+void TemplateMolecule::addConnectedTo(TemplateMolecule *t2, int otherConToIndex,bool otherHasRxnCenter) {
 
 	TemplateMolecule **newConnectedTo = new TemplateMolecule * [n_connectedTo+1];
 	bool * newHasTraversedDownConnectedTo = new bool[n_connectedTo+1];
 	int * newOtherTemplateConnectedToIndex = new int[n_connectedTo+1];
+	bool *newConnectedToHasRxnCenter = new bool[n_connectedTo+1];
 	for(int i=0; i<n_connectedTo; i++) {
 		newConnectedTo[i]=connectedTo[i];
 		newHasTraversedDownConnectedTo[i] = false;
 		newOtherTemplateConnectedToIndex[i]=otherTemplateConnectedToIndex[i];
+		newConnectedToHasRxnCenter[i]=connectedToHasRxnCenter[i];
 	}
 	newConnectedTo[n_connectedTo]=t2;
 	newHasTraversedDownConnectedTo[n_connectedTo]=false;
 	newOtherTemplateConnectedToIndex[n_connectedTo] = otherConToIndex;
+	newConnectedToHasRxnCenter[n_connectedTo] = otherHasRxnCenter;
 	delete [] connectedTo;
+	delete [] hasTraversedDownConnectedTo;
+	delete [] otherTemplateConnectedToIndex;
+	delete [] connectedToHasRxnCenter;
 	connectedTo=newConnectedTo;
 	hasTraversedDownConnectedTo=newHasTraversedDownConnectedTo;
 	otherTemplateConnectedToIndex=newOtherTemplateConnectedToIndex;
+	connectedToHasRxnCenter = newConnectedToHasRxnCenter;
 	n_connectedTo++;
 }
 
@@ -279,8 +308,9 @@ void TemplateMolecule::printDetails(ostream &o) {
 	o<<"\n  Connected-to:                       ";
 	if(n_connectedTo==0)o<<"none";
 	for(int i=0;i<n_connectedTo; i++) {
-		o<<connectedTo[i]->getMoleculeTypeName()<<"("<<connectedTo[i]->uniqueTemplateID<<")";
-	    o<<",at other index:"<<otherTemplateConnectedToIndex[i]<<"   ";
+		o<<"["<<connectedTo[i]->getMoleculeTypeName()<<"("<<connectedTo[i]->uniqueTemplateID<<")";
+	    o<<",other index:"<<otherTemplateConnectedToIndex[i];
+	    o<<","<<this->connectedToHasRxnCenter[i]<<"]   ";
 	}
 
 	o<<"\n  Empty Binding Site Constraints:      ";
@@ -608,7 +638,7 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 }
 
 
-void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList)
+void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList, bool skipConnectedTo)
 {
 	//cout<<"traversing"<<endl;
 	//the queues and lists should be static for efficiency
@@ -656,16 +686,18 @@ void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolec
 					d.push(currentDepth+1);
 		}	}	}
 
-		//Finally, also loop through the "connected-to" molecules
-		for(int b=0; b<cTM->n_connectedTo;b++) {
-			if(cTM->connectedTo[b]!=0) {
-				TemplateMolecule *neighbor = cTM->connectedTo[b];
-				if(!neighbor->hasVisitedThis) {
-					neighbor->hasVisitedThis=true;
-					tmList.push_back(neighbor);
-					q.push(neighbor);
-					d.push(currentDepth+1);
-		}	}	}
+		if(!skipConnectedTo) {
+			//Finally, also loop through the "connected-to" molecules
+			for(int b=0; b<cTM->n_connectedTo;b++) {
+				if(cTM->connectedTo[b]!=0) {
+					TemplateMolecule *neighbor = cTM->connectedTo[b];
+					if(!neighbor->hasVisitedThis) {
+						neighbor->hasVisitedThis=true;
+						tmList.push_back(neighbor);
+						q.push(neighbor);
+						d.push(currentDepth+1);
+			}	}	}
+		}
 	}
 
 	//clear the has visitedMolecule values
@@ -702,7 +734,7 @@ void TemplateMolecule::clear() {
 
 bool TemplateMolecule::compare(Molecule *m)
 {
-	return compare(m,0);
+	return compare(m,0,0);
 }
 
 
@@ -769,6 +801,47 @@ bool TemplateMolecule::tryToMap(Molecule *toMap, string toMapComponent,
 
 
 	return true;
+}
+
+int TemplateMolecule::getNumDisjointSets(vector < TemplateMolecule * > &tMolecules,
+				vector <vector <TemplateMolecule *> > &sets,
+				vector <int> &uniqueSetId)
+{
+	int setCount=0;
+	for(unsigned int i=0; i<tMolecules.size(); i++)
+	{
+		//First see if this template was already found in a previous set.
+		//if it was, then we don't have to traverse
+		bool alreadyFound = false;
+		for(unsigned int j=0; j<i; j++) {
+			//search set J for this template
+			for(unsigned int kj=0; kj<sets.at(j).size(); kj++) {
+				if(sets.at(j).at(kj)==tMolecules.at(i)) {
+					alreadyFound = true;
+					break;
+				}
+			}
+			//If we found it, remember the uniqueSetId of set J
+			if(alreadyFound) {
+				uniqueSetId.push_back(uniqueSetId.at(j));
+				vector <TemplateMolecule *> thisSet;
+				sets.push_back(thisSet);
+				break;
+			}
+		}
+		if(alreadyFound) { continue; }
+		else {
+			//If we have not found this molecule before, then
+			//it must be in a new set, so we traverse and remember that set
+
+			uniqueSetId.push_back(setCount);
+			setCount++;
+			vector <TemplateMolecule *> thisSet;
+			TemplateMolecule::traverse(tMolecules.at(i),thisSet,TemplateMolecule::SKIP_CONNECTED_TO);
+			sets.push_back(thisSet);
+		}
+	}
+	return setCount;
 }
 
 bool TemplateMolecule::isSymMapValid()
@@ -910,7 +983,7 @@ bool TemplateMolecule::isSymMapValid()
 //  return true;
 }
 
-bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
+bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms)
 {
 	//this->printDetails();
 	//cout<<"comparing to: "<<endl;
@@ -997,7 +1070,7 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 			if(canMap) {
 				//cout<<"from non sym, can map, going down sym site"<<endl;
 				this->hasVisitedBond[b]=true;
-				bool match=t2->compare(m2,ms);
+				bool match=t2->compare(m2,rc,ms);
 				if(!match) {
 					clear(); return false;
 				}
@@ -1021,42 +1094,13 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 			this->hasVisitedBond[b]=true;
 
 			//Now traverse onto this molecule, and make sure we match down the list
-			bool match=t2->compare(m2,ms);
+			bool match=t2->compare(m2,rc,ms);
 			if(!match) {
 				clear(); return false;
 			}
 		}
 
 	}
-
-	//Check connected-to molecules
-	for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
-
-		if(hasTraversedDownConnectedTo[cTo]) continue;
-
-		list <Molecule *> molList;
-		list <Molecule *>::iterator molIter;
-		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
-
-		bool canMatch=false;
-		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
-			if((*molIter)->isMatchedTo!=0) continue;
-
-			//remember that we went down this route before, so we don't just go back and forth
-			//between connectedTo bonds...
-			connectedTo[cTo]->hasTraversedDownConnectedTo[otherTemplateConnectedToIndex[cTo]]=true;
-			canMatch=connectedTo[cTo]->compare((*molIter),ms);
-
-			if(canMatch) break;
-		}
-		if(!canMatch) {
-			clear(); return false;
-		}
-
-	}
-
-
-
 
 
 	//cout<<"non-symmetric bonds match"<<endl;
@@ -1121,7 +1165,7 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 					bool canMap = t2->tryToMap(m2,symBondPartnerCompName[c],m,this->symCompName[c]);
 					if(canMap) {
 						//cout<<"comparing down symmetric site.."<<endl;
-						bool match=t2->compare(m2,ms);
+						bool match=t2->compare(m2,rc,ms);
 						if(!match) { continue; } //keep going if we can't match
 					}
 				} else { //Phew!  we can check this guy normally.
@@ -1135,7 +1179,7 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 					}
 
 					//Now traverse onto this molecule, and make sure we match down the list
-					bool match=t2->compare(m2,ms);
+					bool match=t2->compare(m2,rc,ms);
 					if(!match) { continue; }
 				}
 			}
@@ -1167,17 +1211,83 @@ bool TemplateMolecule::compare(Molecule *m, MappingSet *ms)
 
 
 	//If we were given a mappingSet, then map this molecule
-	//with all the generators we've got
+	//with all the generators we've got (NOTE that we have to do this BEFORE we
+	//look at connected molecules, so that when we clone, we also clone maps onto
+	//this molecule
 	if(ms!=0) {
 		for(int i=0;i<n_mapGenerators; i++) {
 			mapGenerators[i]->map(ms,m);
 		}
 	}
 
-	clear();
-//	cout<<"match"<<endl;
-//	cout<<"--------------"<<endl;
 
+	//Check connected-to molecules
+	if(n_connectedTo>0) {
+
+		vector <MappingSet *> lastMappingSets;
+		lastMappingSets.push_back(ms);
+
+		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
+
+			if(hasTraversedDownConnectedTo[cTo]) continue;
+
+			list <Molecule *> molList;
+			list <Molecule *>::iterator molIter;
+			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+
+			bool canMatch=false;
+			for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+				if((*molIter)->isMatchedTo!=0) continue;
+
+				//remember that we went down this route before, so we don't just go back and forth
+				//between connectedTo bonds...
+				bool canMatchThis = false;
+				connectedTo[cTo]->hasTraversedDownConnectedTo[otherTemplateConnectedToIndex[cTo]]=true;
+
+				//If the other set has a reaction center, then the other set
+				//is merely context, so we only have to find a single instance of it
+				//and return as soon as we have matched.
+				if(!connectedToHasRxnCenter[cTo]) {
+					canMatchThis=connectedTo[cTo]->compare((*molIter));
+					if(canMatchThis) { canMatch=true; continue; }
+				}
+
+				// otherwise, we have to do more work...
+				else {
+					canMatchThis=connectedTo[cTo]->compare((*molIter),rc,lastMappingSets.at(lastMappingSets.size()-1));
+					if(canMatchThis) {
+						rc->notifyPresenceOfClonedMappings();
+						canMatch = true;
+						MappingSet * newMS = rc->pushNextAvailableMappingSet();
+						MappingSet::clone(lastMappingSets.at(lastMappingSets.size()-1),newMS);
+						lastMappingSets.push_back(newMS);
+					}
+				}
+			}
+			if(!canMatch) {
+				//cout<<"could not match this!"<<endl;
+				//Clear out all mapping sets that we tried to assign.  We can do this
+				//easily by just clearing the clone pointer from the original mappingset
+				//
+				//ms->clearClonedMapping();
+				//if(lastMappingSets.size()>1)
+				//	rc->removeMappingSet(lastMappingSets.at(1)->getId());
+				clear(); return false;
+			}
+
+		}
+		//if(lastMappingSets.size()>2) {
+		//	rc->notifyPresenceOfClonedMappings();
+		//}
+
+		if(lastMappingSets.size()>1) {
+			lastMappingSets.at(lastMappingSets.size()-2)->clearClonedMapping();
+			rc->removeMappingSet(lastMappingSets.at(lastMappingSets.size()-1)->getId());
+		}
+	}
+	///  End handle connected-to
+
+	clear();
 	return true;
 }
 

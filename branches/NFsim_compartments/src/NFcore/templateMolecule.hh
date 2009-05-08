@@ -12,6 +12,7 @@ namespace NFcore
 	class MapGenerator;
 	class Molecule;
 	class MappingSet;
+	class ReactantContainer;
 
 	//!  Used for matching Molecule objects to the given pattern
 	/*!
@@ -61,6 +62,9 @@ namespace NFcore
 		void addComponentExclusion(string cName, int stateValue);
 		void addBond(string thisBsiteName,TemplateMolecule *t2, string bSiteName2);
 		void addConnectedTo(TemplateMolecule *t2, int otherConToIndex);
+		void addConnectedTo(TemplateMolecule *t2, int otherConToIndex,bool otherHasRxnCenter);
+		void clearConnectedTo();
+
 
 		/* functions that allow you to set constraints for symmetric sites */
 		const static int EMPTY=0;
@@ -80,11 +84,20 @@ namespace NFcore
 
 		/* functions that are needed to perform TemplateMolecule operations */
 		bool contains(TemplateMolecule *tempMol);
-		static void traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList);
+
+		const static bool FIND_ALL = false;
+		const static bool SKIP_CONNECTED_TO = true;
+		static void traverse(TemplateMolecule *tempMol, vector <TemplateMolecule *> &tmList, bool skipConnectedTo);
+
+		/* searches the list of template molecules and identifies the number of disjoint
+		   sets, and also returns the mapping onto those sets*/
+		static int getNumDisjointSets(vector < TemplateMolecule * > &tMolecules,
+				vector <vector <TemplateMolecule *> > &sets,
+				vector <int> &uniqueSetId);
 
 		/* functions that are needed to match to a molecule instance */
 		bool compare(Molecule *m);
-		bool compare(Molecule *m, MappingSet *ms);
+		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms);
 		void clear();
 		bool tryToMap(Molecule *toMap, string toMapComponent,
 				Molecule *mappedFrom, string mappedFromComponent);
@@ -151,6 +164,7 @@ namespace NFcore
 		TemplateMolecule ** connectedTo;
 		bool *hasTraversedDownConnectedTo;
 		int *otherTemplateConnectedToIndex;
+		bool *connectedToHasRxnCenter;
 
 
 		//////////  Handling symmetric components

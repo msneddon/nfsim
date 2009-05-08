@@ -63,7 +63,9 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
 {
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
-	if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID() && m->getIndex() == m2->getIndex()) {
+	//Currently, this is set to block all binding events that happen internally to a single
+	//molecule.  I think this is reasonable to do...
+	if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
 		System::NULL_EVENT_COUNTER++;
 	} else {
 		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());

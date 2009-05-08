@@ -143,11 +143,6 @@ bool runRNFscript(map<string,string> argMap, bool verbose);
 System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 
 
-//! Runs a given System with the specified arguments
-/*!
-  @author Michael Sneddon
-*/
-bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 
 //!  Main executable for the NFsim program.
 /*!
@@ -155,6 +150,9 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 */
 int main(int argc, const char *argv[])
 {
+	//TODO testing remove this later
+	NFtest_ss::run();
+	//End TODO
 	string versionNumber = "1.02";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
@@ -300,7 +298,7 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 		//Step 3: provided the system is set up correctly, run the RNF script
 		bool output = NFinput::runRNFcommands(s,argMap,commands,verbose);
 
-		s->printAllComplexes();
+		//s->printAllComplexes();
 		delete s;
 		return output;
 	}

@@ -15,7 +15,7 @@ int Molecule::uniqueIdCount = 0;
 // Molecule Constructor
 //
 //
-Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
+Molecule::Molecule(MoleculeType * parentMoleculeType, int listId, int argCompartmentId)
 {
 	if(DEBUG) cout<<"-creating molecule instance of type " << parentMoleculeType->getName() << endl;
 	this->parentMoleculeType = parentMoleculeType;
@@ -44,6 +44,9 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	isPrepared = false;
 	isObservable = 0;
 	localFunctionValues=0;
+	//Initialize this molecule to the compartment specified
+	//or no compartment if not specified
+	compartmentId = argCompartmentId;
 
 	//register this molecule with moleculeType and get some ID values
 	ID_complex = this->parentMoleculeType->createComplex(this);
@@ -162,6 +165,22 @@ void Molecule::updateDORRxnValues()
 	}
 
 }
+
+///////////////
+//  MOLECULE_DEPENDENT_UPDATE_ADDITION
+//void Molecule::addDependentUpdateMolecule(Molecule *m) {
+//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
+//		if((*molIter)->getUniqueID()==m->getUniqueID())
+//			return;
+//	dependentUpdateMolecules.push_back(m);
+//}
+//void Molecule::removeDependentUpdateMolecule(Molecule *m) {
+//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
+//		if((*molIter)->getUniqueID()==m->getUniqueID()) {
+//			dependentUpdateMolecules.erase(molIter);
+//		}
+//}
+////////////////
 
 
 
@@ -437,6 +456,21 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 }
 
 
+//void Molecule::traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit)
+//{
+//	traverseBondedNeighborhood(members,traversalLimit);
+//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
+//	{
+//		bool isPresent=false;
+//		for( molIter2 = members.begin(); molIter2 != members.end(); molIter2++ ) {
+//			if((*molIter)==(*molIter2)) { isPresent = true; break;}
+//		}
+//		if(!isPresent) members.push_back((*molIter));
+//	}
+//
+//}
+
+
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
@@ -489,7 +523,15 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
 	}
 }
 
+void Molecule::moveToCompartment(unsigned int argCompartmentId)
+{
+	compartmentId = argCompartmentId;
+}
 
+unsigned int Molecule::getCompartmentId()
+{
+	return compartmentId;
+}
 
 
 
