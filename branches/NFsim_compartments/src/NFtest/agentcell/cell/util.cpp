@@ -1,5 +1,6 @@
 #include "util.hh"
 #include <iostream>
+#include <cstdlib>
 
 using namespace ChemotaxisUtil;
 using namespace std;
@@ -11,8 +12,8 @@ using namespace std;
  * with alpha and beta parameters.  The mean of such a distribution is alpha / beta
  * and the variance is alpha / beta^2.  Often, parameters for the gamma distribution
  * are given as the shape (k) and the scale (theta) in which case alpha = k and
- * beta = 1/theta.  
- * 
+ * beta = 1/theta.
+ *
  */
 GammaSampler::GammaSampler(double alpha, double beta)
 {
@@ -38,7 +39,7 @@ void GammaSampler::init(double alpha, double beta, double meanShift)
 
 
 //Algorithm for generating random numbers from a gamma distribution, this
-//code is modified for c++ using random number generators from NFsim 
+//code is modified for c++ using random number generators from NFsim
 //from Numerical Recipies, 3rd edition, page 369-371.
 double GammaSampler::gen()
 {
@@ -50,7 +51,7 @@ double GammaSampler::gen()
 		} while (v<=0);
 		v=v*v*v;
 		u=RANDOM_CLOSED();
-	} while ( (u > (1.-0.331*x*x*x*x)) 
+	} while ( (u > (1.-0.331*x*x*x*x))
 			&& ((log(u)) > ((0.5*x*x)+a1*(1.-v+log(v)))) ); //this line is rarely executed
 	if(alpha==oalpha)
 		return (a1*v/beta) +meanShift;
@@ -91,31 +92,31 @@ void ChemotaxisUtil::genUniformRandRotation3d(double rotMatrix[3][3])
 		u0 = 2.*RANDOM_CLOSED()-1.;
 		u1 = 2.*RANDOM_CLOSED()-1.;
 	} while((u0*u0+u1*u1)>1.);
-	
+
 	do {
 		u2 = 2.*RANDOM_CLOSED()-1.;
 		u3 = 2.*RANDOM_CLOSED()-1.;
 	} while((u2*u2+u3*u3)>1.);
-	
-	
+
+
 	//Use those points to generate a single random point on a 4d sphere
 	float x0 = u0;
 	float x1 = u1;
 	float temp = sqrt( (1.-u0*u0-u1*u1) / (u2*u2+u3*u3) );
 	float x2 = u2 * temp;
 	float x3 = u3 * temp;
-	
+
 	//Based on that sphere, we can do some simple multiplication to get
 	//our rotation matrix.  As a bonus: no need for calling those slow trig functions!
 	//rotMatrix[row][col]
 	rotMatrix[0][0] = 1.-2.*(x1*x1+x2*x2);
 	rotMatrix[0][1] = 2.*(x0*x1-x3*x2);
 	rotMatrix[0][2] = 2.*(x0*x2+x3*x1);
-	
+
 	rotMatrix[1][0] = 2.*(x0*x1+x3*x2);
 	rotMatrix[1][1] = 1.-2.*(x0*x0+x2*x2);
 	rotMatrix[1][2] = 2.*(x1*x2-x3*x0);
-	
+
 	rotMatrix[2][0] = 2.*(x0*x2-x3*x1);
 	rotMatrix[2][1] = 2.*(x1*x2+x3*x0);
 	rotMatrix[2][2] = 1.-2.*(x0*x0+x1*x1);
@@ -129,15 +130,15 @@ void ChemotaxisUtil::genRot3dAboutAxis(double rotMatrix[3][3], double axis[3], d
 	double mag = sqrt(axis[0]*axis[0]+axis[1]*axis[1]+axis[2]*axis[2]);
 	double u1 = axis[0]/=mag; double u2 = axis[1]/=mag; double u3 = axis[2]/=mag;
 	double c=cos(angleInRad); double s=sin(angleInRad);
-	
+
 	rotMatrix[0][0] = (1.-c)*u1*u1+c;
 	rotMatrix[0][1] = (1.-c)*u1*u2-s*u3;
 	rotMatrix[0][2] = (1.-c)*u1*u3+s*u2;
-	
+
 	rotMatrix[1][0] = (1.-c)*u1*u2+s*u3;
 	rotMatrix[1][1] = (1.-c)*u2*u2+c;
 	rotMatrix[1][2] = (1.-c)*u2*u3-s*u1;
-	
+
 	rotMatrix[2][0] = (1.-c)*u1*u3-s*u2;
 	rotMatrix[2][1] = (1.-c)*u2*u3+s*u1;
 	rotMatrix[2][2] = (1.-c)*u3*u3+c;
@@ -152,7 +153,7 @@ void ChemotaxisUtil::genRotFromAngles(double rotMatrix[3][3], double angleX, dou
 	double cosX = cos(angleX), sinX = sin(angleX);
 	double cosY = cos(angleY), sinY = sin(angleY);
 	double cosZ = cos(angleZ), sinZ = sin(angleZ);
-	
+
 	//Generate the rotation matrix
 	rotMatrix[0][0] = cosZ*cosY;;
 	rotMatrix[0][1] = -sinZ*cosX + cosZ*sinY*sinX;
