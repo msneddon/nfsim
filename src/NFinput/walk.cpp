@@ -1,4 +1,5 @@
 #include "NFinput.hh"
+#include <limits.h>
 
 #include <iostream>
 

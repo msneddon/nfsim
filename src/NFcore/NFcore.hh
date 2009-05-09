@@ -4,6 +4,7 @@
 #ifndef NFCORE_HH_
 #define NFCORE_HH_
 
+#include <cstdlib>
 //Include stl IO and string functionality
 #include <iostream>
 #include <fstream>
