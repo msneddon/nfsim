@@ -28,6 +28,8 @@
 #ifndef NFSIM_HH_
 #define NFSIM_HH_
 
+//Include "mpi.h" in Scheduler.h first
+#include "NFscheduler/Scheduler.h"
 
 //Include the core files needed to run the simulation
 #include "NFcore/NFcore.hh"
@@ -44,6 +46,7 @@
 #include  "NFtest/tlbr/tlbr.hh"
 #include  "NFtest/agentcell/agentcell.hh"
 
+bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 
 
 //! Runs a given System with the specified arguments
@@ -53,7 +56,7 @@
 bool runFromArgs(System *s, map<string,string> argMap, bool verbose);
 
 
-
+System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 
 
 

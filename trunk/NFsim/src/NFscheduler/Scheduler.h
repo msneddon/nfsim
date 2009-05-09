@@ -1,8 +1,11 @@
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
 
+#ifdef NF_MPI
 #include "mpi.h"
+#endif
 
+#include "NFstream.h"
 #include "../NFsim.hh"
 
 #include <vector>
@@ -15,11 +18,12 @@
 using namespace std;
 
 #define MASTER 0
-#define TAG    99             // universal MPI tag
+#define TAG_MSG  99   
+#define TAG_DATA 98
 #define MSG_DATA_SIZE (1<<20)
 #define MAX_MPI_SIZE  4096
 
-enum {cmd_free=0, rpt_ready, rpt_done};
+enum {cmd_free=0, cmd_job, cmd_pre_data_ack, cmd_data_ack, rpt_ready, rpt_pre_data, rpt_data, rpt_done};
 
 struct job {
 	string filename;
@@ -76,6 +80,8 @@ void findandreplace(string &source, string find, string replace);
 
 void printFileLineOutput();
 
+void push_stream(int rank, NFstream& strm);
+
 void send_to_slave(int slave, int tag, int datalen, char *data);
 
 void send_to_master(int myid, int tag, int datalen, char *data);
@@ -84,5 +90,6 @@ void recv_from_slave();
 
 void recv_from_master();
 
+void perr(const char*);
 
 #endif /* SCHEDULER_H_ */
