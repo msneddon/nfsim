@@ -3,7 +3,8 @@
 
 #include <math.h>
 #include <fstream>
-
+#include "../NFscheduler/NFstream.h"
+#include "../NFscheduler/Scheduler.h"
 
 #define ATOT_TOLERANCE 1e-11
 
@@ -11,7 +12,6 @@ using namespace std;
 using namespace NFcore;
 
 int System::NULL_EVENT_COUNTER = 0;
-
 
 
 System::System(string name)
@@ -167,7 +167,7 @@ void System::registerOutputFileLocation(string filename)
 		//ios_base::trunc --  Truncate the file - that is overwrite anything that was already there
 
 		//Also, output a header file to keep track of the number
-		ofstream headerFile;
+		NFstream headerFile;
 		int tabCount=0;
 		headerFile.open((filename+".head").c_str());
 		headerFile<<"#\tTime"; tabCount++;
@@ -1150,8 +1150,19 @@ void System::printAllFunctions() {
 	}
 }
 
+NFstream& System::getOutputFileStream()
+{
+    return outputFileStream;
+}
 
+// friend functions
+template<class T>
+NFstream& operator<<(NFstream& nfstream, const T& value) 
+{
+    if (nfstream.useFile_) 
+	nfstream.file_ << value;
+    else
+	nfstream.str_ << value;
 
-
-
-
+    return nfstream;
+}

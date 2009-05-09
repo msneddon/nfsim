@@ -148,8 +148,12 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 /*!
   @author Michael Sneddon
 */
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
+
+	// Check if scheduler should handle the work
+	if (!schedulerInterpreter(&argc, &argv)) return 0;
+
 	string versionNumber = "1.02";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
@@ -162,7 +166,7 @@ int main(int argc, const char *argv[])
 	bool parsed = false;
 	bool verbose = false;
 	map<string,string> argMap;
-	if(NFinput::parseArguments(argc, argv, argMap))
+	if(NFinput::parseArguments(argc, const_cast<const char**>(argv), argMap))
 	{
 		//First, find the arguments that we might use in any situation
 		if(argMap.find("v")!=argMap.end()) {
@@ -274,7 +278,7 @@ int main(int argc, const char *argv[])
     cout<<endl<<"done.  Total CPU time: "<< time << "s"<<endl<<endl;
     return 0;
 }
-
+ 
 
 
 bool runRNFscript(map<string,string> argMap, bool verbose)
@@ -409,7 +413,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		//Get the simulation time that the user wants
 		eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 		sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
-		oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)sTime);
+		oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
 		//Prepare the system for simulation!!
 		s->prepareForSimulation();

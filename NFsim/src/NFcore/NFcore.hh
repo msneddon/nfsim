@@ -16,6 +16,7 @@
 #include <map>
 
 // Include various NFsim classes from other files
+#include "../NFscheduler/NFstream.h"
 #include "../NFutil/NFutil.hh"
 #include "../NFreactions/NFreactions.hh"
 #include "moleculeLists/moleculeList.hh"
@@ -265,6 +266,7 @@ namespace NFcore
 			void updateSystemWithNewParameters();
 			void printAllParameters();
 
+	                NFstream& getOutputFileStream();
 
 			/*! keeps track of null events (ie binding events that have
 			    been rejected because molecules are on the same complex)
@@ -322,7 +324,8 @@ namespace NFcore
 
 			///////////////////////////////////////////////////////////////////////////
 			// Neccessary variables and methods for outputting
-			ofstream outputFileStream; /* the stream to a file to write out the results */
+			//ofstream outputFileStream; /* the stream to a file to write out the results */
+			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			void outputGroupDataHeader();
 
 
@@ -430,8 +433,8 @@ namespace NFcore
 			unsigned long int getObservableCount(int obsIndex) const;
 			void removeFromObservables(Molecule * m);
 			void addToObservables(Molecule * m);
-			void outputObservableNames(ofstream &fout);
-			void outputObservableCounts(ofstream &fout);
+			void outputObservableNames(NFstream &fout);
+			void outputObservableCounts(NFstream &fout);
 			void printObservableNames();
 			void printObservableCounts();
 

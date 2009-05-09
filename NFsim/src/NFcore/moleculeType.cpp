@@ -579,13 +579,13 @@ void MoleculeType::addToObservables(Molecule *m)
 }
 
 
-void MoleculeType::outputObservableNames(ofstream &fout)
+void MoleculeType::outputObservableNames(NFstream &fout)
 {
 	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
 		fout<<"\t"<<(*obsIter)->getAliasName();
 }
 
-void MoleculeType::outputObservableCounts(ofstream &fout)
+void MoleculeType::outputObservableCounts(NFstream &fout)
 {
 	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
 		fout<<"\t"<<(*obsIter)->getCount();
@@ -652,6 +652,17 @@ void MoleculeType::printDetails() const
 }
 
 
+// friend functions
+template<class T>
+NFstream& operator<<(NFstream& nfstream, const T& value) 
+{
+    if (nfstream.useFile_) 
+	nfstream.file_ << value;
+    else
+	nfstream.str_ << value;
+
+    return nfstream;
+}
 
 
 
