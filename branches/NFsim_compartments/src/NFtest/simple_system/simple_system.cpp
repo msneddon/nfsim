@@ -73,21 +73,23 @@ void NFtest_ss::run()
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are the rates and are in
 	//      arbitrary units here.  In general, the rates should be in units of per second.
-	//ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
-	//ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
-	//ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
-	//ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
+	ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
+	ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
+	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
+	ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
 
+	CompartmentReaction::nCompartments = 1;
 	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
 	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
 	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
 	ReactionClass *rCompartmentYphosX = createReactionCompYphosX(molX, molY, kCat);
 
-
-	//s->addReaction(x_dephos);
-	//s->addReaction(rXbindY);
-	//s->addReaction(rXunbindY);
-	//s->addReaction(rYphosX);
+	/*
+	s->addReaction(x_dephos);
+	s->addReaction(rXbindY);
+	s->addReaction(rXunbindY);
+	s->addReaction(rYphosX);
+	*/
 	s->addReaction(rCompartmentxDephos);
 	s->addReaction(rCompartmentXbindY);
 	s->addReaction(rCompartmentXunbindY);
@@ -393,7 +395,8 @@ ReactionClass * NFtest_ss::createReactionCompXDephos(MoleculeType *molX, double 
 
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
 	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new CompartmentReaction("Comp_X_dephos",rate,ts);
+	ReactionClass *r = new CompartmentReaction("X_dephos",rate,ts);
+	//ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts);
 	return r;
 }
 
