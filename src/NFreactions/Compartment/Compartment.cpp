@@ -60,6 +60,7 @@ void Compartment::pickMappingSets(MappingSet** mappingSet, double random_A_numbe
 
 double Compartment::update_a()
 {
+	a=1;
 	for(unsigned int i=0; i<n_reactants; i++)
 		a*=reactantLists[i]->size();
 	a*=m_pParentReaction->baseRate;
@@ -76,6 +77,47 @@ void Compartment::init(CompartmentReaction* thisReactionClass)
 
 inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
+	//Get the specified reactantList
+	rl = reactantLists[reactantPos];
+
+	//Check if the molecule is in this list
+	int rxnIndex = m->getMoleculeType()->getRxnIndex(m_pParentReaction,reactantPos);
+	//cout<<"got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
+
+
+	//If this reaction has multiple instances, we always remove them all!
+	// then we remap because other mappings may have changed.  Yes, this may
+	// be more ineffecient, but it is the fast implementation
+	if(rl->getHasClonedMappings()) {
+		if(m->getRxnListMappingId(rxnIndex)>=0) {
+			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		}
+	}
+
+	//Here we get the standard update...
+	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
+	{
+		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m)) {
+			//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
+			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		}
+
+	} else {
+		//Try to map it!
+		ms = rl->pushNextAvailableMappingSet();
+		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+			//we must remove, if we did not match.  This will also remove
+			//everything that was cloned off of the mapping set
+			rl->removeMappingSet(ms->getId());
+		} else {
+			m->setRxnListMappingId(rxnIndex,ms->getId());
+		}
+	}
+
+	return true;
+	/*
 	//Get the specified reactantList
 	rl = reactantLists[reactantPos];
 
@@ -99,4 +141,5 @@ inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos)
 		}
 	}
 	return true;
+	*/
 }

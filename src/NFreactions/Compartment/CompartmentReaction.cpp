@@ -7,19 +7,34 @@
 
 #include "CompartmentReaction.h"
 
-
-CompartmentReaction::CompartmentReaction(string name, double argbaseRate, TransformationSet *argtransformationSet) :
+unsigned int CompartmentReaction::nCompartments = 0;
+CompartmentReaction::CompartmentReaction(string name, double baseRate, TransformationSet *transformationSet) :
 	ReactionClass(name,baseRate,transformationSet)
 {
 	this->reactionType = COMPARTMENT_RXN;  //set as normal reaction here, but deriving reaction classes can change this
+	if(nCompartments <1)
+	{
+		throw "Number of compartments not initialized";
+	}
+
+	for(unsigned int ii=0; ii<nCompartments; ii++)
+	{
+		// create the compartment
+		m_mapCompartmentList.insert(
+				pair<unsigned int, Compartment*>(
+						ii,
+						new Compartment(ii,baseRate,transformationSet,n_reactants,this)));
+	}
+
 }
 
 CompartmentReaction::~CompartmentReaction()
 {
 	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
-	for(unsigned int ii=0; ii<m_mapCompartmentList.size(); ii++)
+	static map<unsigned int,Compartment*>::iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
-		delete m_mapCompartmentList[ii];
+		delete cmpIter->second;
 	}
 }
 
@@ -36,14 +51,11 @@ inline bool CompartmentReaction::tryToAdd(Molecule *m, unsigned int reactantPos)
 			exit(1);
 		}
 	}
-	// if the compartment this molecule exists in doesnt exist in this reaction
+
+	// if the compartment doesnt exists
 	if(m_mapCompartmentList.find(m->getCompartmentId()) == m_mapCompartmentList.end())
 	{
-		// create it
-		m_mapCompartmentList.insert(
-				pair<unsigned int, Compartment*>(
-						m->getCompartmentId(),
-						new Compartment(m->getCompartmentId(),baseRate,transformationSet,n_reactants,this)));
+		throw "Dereferencing a null compartment!";
 	}
 	// Try to add the molecule to the compartment.
 	return m_mapCompartmentList[m->getCompartmentId()]->tryToAdd(m,reactantPos);
@@ -53,9 +65,10 @@ inline bool CompartmentReaction::tryToAdd(Molecule *m, unsigned int reactantPos)
 double CompartmentReaction::update_a()
 {
 	a = 0;
-	for(unsigned int i=0; i<m_mapCompartmentList.size(); i++)
+	static map<unsigned int,Compartment*>::iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
-		a+=m_mapCompartmentList[i]->update_a();
+		a+=cmpIter->second->update_a();
 	}
 	return a;
 }
@@ -63,9 +76,10 @@ double CompartmentReaction::update_a()
 
 void CompartmentReaction::init()
 {
-	for(unsigned int i=0; i<m_mapCompartmentList.size(); i++)
+	static map<unsigned int,Compartment*>::iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
-		m_mapCompartmentList[i]->init(this);
+		cmpIter->second->init(this);
 	}
 }
 
@@ -110,18 +124,20 @@ void CompartmentReaction::notifyRateFactorChange(Molecule * m, int reactantIndex
 unsigned int CompartmentReaction::getReactantCount(unsigned int reactantIndex) const
 {
 	unsigned int nReactants = 0;
-	for(unsigned int ii = 0; ii < m_mapCompartmentList.size(); ii ++)
+	static map<unsigned int,Compartment*>::const_iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
-		nReactants = nReactants + m_mapCompartmentList.find(ii)->second->getReactantCount(reactantIndex);
+		nReactants = nReactants + cmpIter->second->getReactantCount(reactantIndex);
 	}
 	return nReactants;
 }
 void CompartmentReaction::printFullDetails() const
 {
 	cout<<"BasicRxnClass: "<<name<<endl;
-	for(unsigned int ii=0; ii<m_mapCompartmentList.size(); ii++)
+	static map<unsigned int,Compartment*>::const_iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
-		m_mapCompartmentList.find(ii)->second->printDetails();
+		cmpIter->second->printDetails();
 	}
 }
 void CompartmentReaction::pickMappingSets(double random_A_number) const

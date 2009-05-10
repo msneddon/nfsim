@@ -46,6 +46,8 @@ public:
 	//prints information about this reaction.  Mainly used for debugging
 	virtual void printFullDetails() const;
 
+	//Number of compartments in the system
+	static unsigned int nCompartments;
 protected:
 	//Choose a mappingSet at random
 	virtual void pickMappingSets(double randNumber) const;
