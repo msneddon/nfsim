@@ -46,6 +46,10 @@ public:
 	//prints information about this reaction.  Mainly used for debugging
 	virtual void printFullDetails() const;
 
+	//restrict this reaction to firing only in the specified compartment
+	//this is done by changing the propensity of each compartment
+	void restrictToCompartment(unsigned int compartmentId);
+
 	//Number of compartments in the system
 	static unsigned int nCompartments;
 protected:

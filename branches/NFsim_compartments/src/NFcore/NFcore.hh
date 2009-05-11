@@ -479,7 +479,7 @@ namespace NFcore
 			void updateRxnMembership(Molecule * m);
 
 			/* auto populate with default molecules */
-			void populateWithDefaultMolecules(int moleculeCount);
+			void populateWithDefaultMolecules(int moleculeCount, unsigned int compartmentId = 0);
 
 			/* this method assumes all molecules in the simulation
 			 * have been defined, and all reaction classes and observables

@@ -117,6 +117,7 @@ namespace NFtest_ss
 	ReactionClass * createReactionCompYphosX(MoleculeType *molX, MoleculeType *molY, double rate);
 
 
+	ReactionClass * createReactionCompTransfer(MoleculeType *molX, double rate);
 
 	/*!
 		Creates the observables used in the Simple System.  Look at this function to

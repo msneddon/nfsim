@@ -64,6 +64,8 @@ protected:
 	unsigned int m_iCompId;
 	//propensity
 	double a;
+	//Whether this compartment is used or not
+	bool active;
 };
 
 #endif /* COMPARTMENT_H_ */

@@ -62,6 +62,12 @@ namespace NFcore
 			bool addStateChangeTransform(TemplateMolecule *t, string cName, int finalStateValue);
 
 			/*!
+				Adds a Compartment change transformation on the given TemplateMolecule
+				@author Kelly Stanton
+			*/
+			bool addCompartmentChangeTransform(TemplateMolecule *t, unsigned int finalCompartmentId);
+
+			/*!
 				Adds a state change transformation on the given TemplateMolecule (that must have been included
 				in the original vector of TemplateMolecules) along with the stateName and final value
 				of the state to be transformed.

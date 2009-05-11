@@ -42,8 +42,13 @@ void NFtest_ss::run()
 	 */
 
 	//First we define some parameters for rates and counts
-	int numOfMoleculeY = 3011;
-	int numOfMoleculeX = 6022;
+	//int numOfMoleculeY = 3011;
+	//int numOfMoleculeX = 6022;
+	int numOfMoleculeYCompartment0 = 3011;
+	int numOfMoleculeXCompartment0 = 6022;
+	int numOfMoleculeYCompartment1 = 11;
+	int numOfMoleculeXCompartment1 = 22;
+
 	double dephosRate = 0.2;
 	double kOn = 0.0003;
 	double kOff = 0.2;
@@ -66,8 +71,12 @@ void NFtest_ss::run()
 	//  3)  Instantiate the actual molecules (this populate function is the easiest way, but you can do it
 	//      manually as well by creating each molecule separately - see the MoleculeType::populate function for
 	//      an example on how this can be done).
-	molY->populateWithDefaultMolecules(numOfMoleculeY);
-	molX->populateWithDefaultMolecules(numOfMoleculeX);
+	//molY->populateWithDefaultMolecules(numOfMoleculeY);
+	//molX->populateWithDefaultMolecules(numOfMoleculeX);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
+	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
+	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
 
 
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
@@ -78,7 +87,8 @@ void NFtest_ss::run()
 	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
 	ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
 
-	CompartmentReaction::nCompartments = 1;
+	CompartmentReaction::nCompartments = 2;
+	ReactionClass *rCompartmentTransfer = createReactionCompTransfer(molX, 0.5);
 	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
 	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
 	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
@@ -90,6 +100,7 @@ void NFtest_ss::run()
 	s->addReaction(rXunbindY);
 	s->addReaction(rYphosX);
 	*/
+	s->addReaction(rCompartmentTransfer);
 	s->addReaction(rCompartmentxDephos);
 	s->addReaction(rCompartmentXbindY);
 	s->addReaction(rCompartmentXunbindY);
@@ -395,7 +406,7 @@ ReactionClass * NFtest_ss::createReactionCompXDephos(MoleculeType *molX, double 
 
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
 	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new CompartmentReaction("X_dephos",rate,ts);
+	ReactionClass *r = new CompartmentReaction("Comp_X_dephos",rate,ts);
 	//ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts);
 	return r;
 }
@@ -465,6 +476,7 @@ ReactionClass * NFtest_ss::createReactionCompXYunbind(MoleculeType *molX, Molecu
 
 	//Create the reaction in the usual way.
 	ReactionClass *r = new CompartmentReaction("Comp_Y_unbind_X",rate,ts);
+	((CompartmentReaction*)r)->restrictToCompartment(0);
 	return r;
 }
 
@@ -495,6 +507,24 @@ ReactionClass * NFtest_ss::createReactionCompYphosX(MoleculeType *molX, Molecule
 	return r;
 }
 
+ReactionClass * NFtest_ss::createReactionCompTransfer(MoleculeType *molX, double rate)
+{
+	//define template molecule
+	TemplateMolecule *xTemp = new TemplateMolecule(molX);
+	xTemp->addComponentConstraint("p","Phos");
+
+	vector <TemplateMolecule *> templates;
+	templates.push_back( xTemp );
+
+
+	TransformationSet *ts = new TransformationSet(templates);
+	//ts->addStateChangeTransform(xTemp,"p","Unphos");
+	ts->addCompartmentChangeTransform(xTemp,1);
+	ts->finalize();
+
+	ReactionClass *r = new CompartmentReaction("Transfer0-1",rate,ts);
+	return r;
+}
 
 
 
