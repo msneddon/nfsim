@@ -21,6 +21,12 @@ namespace NFcore
 			static Transformation * genStateChangeTransform(unsigned int cIndex, int newValue);
 
 			/*!
+				Generates a compartment change Transformation.
+				@author Kelly Stanton
+			 */
+			static Transformation * genCompartmentChangeTransform(unsigned int newCompartmentId);
+
+			/*!
 			 	Generates a binding transformation for one of the two binding sites in the binding Transform.  You will
 			 	have to tell it where the other Transformation object lives (TransformationSet has this information).
 			    @author Michael Sneddon
@@ -106,6 +112,9 @@ namespace NFcore
 			/*!		*/
 			static const unsigned int DECREMENT_STATE = 7;
 
+			/*!		*/
+			static const unsigned int COMPARTMENT_CHANGE = 9;
+
 
 
 			////////////////////////////////
@@ -170,6 +179,17 @@ namespace NFcore
 		protected:
 			int cIndex;
 			int newValue;
+	};
+
+	class CompartmentChangeTransform : public Transformation {
+			public:
+				CompartmentChangeTransform(unsigned int newCompartment);
+				virtual ~CompartmentChangeTransform() {};
+				virtual void apply(Mapping *m, MappingSet **ms);
+				virtual int getComponentIndex() const {return cIndex;};
+			protected:
+				int cIndex;
+				int newCompartmentId;
 	};
 
 	class BindingTransform : public Transformation {

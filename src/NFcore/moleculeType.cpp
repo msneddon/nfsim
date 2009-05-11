@@ -385,9 +385,9 @@ void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
 
 
 
-void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
+void MoleculeType::populateWithDefaultMolecules(int moleculeCount, unsigned int compartmentId)
 {
-	if(DEBUG) cout<< " Populating "<< this->name << " with " << moleculeCount << " molecule(s)";
+	if(DEBUG) cout<< " Populating "<< this->name << " with " << moleculeCount << " molecule(s)" << " in Compartment "<<compartmentId;
 	if(DEBUG) cout<< " for a total of " << mList->size()+moleculeCount << " molecule(s)."<<endl;
 	//mInstances.reserve(mInstances.size()+moleculeCount);
 	for(int m=0; m<moleculeCount; m++)
@@ -395,7 +395,10 @@ void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 		if(DEBUG) cout<<" ("<<m+1<<") ";
 
 		//Create the molecule (which knows how many components to make)
-		this->genDefaultMolecule();
+		Molecule* m = this->genDefaultMolecule();
+
+		// put it in the correct compartment
+		m->moveToCompartment(compartmentId);
 		//new Molecule(this);
 
 		//Add the molecule to the list of molecules so we save it (does this automatically now!!!! )

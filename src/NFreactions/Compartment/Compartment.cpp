@@ -19,6 +19,7 @@ Compartment::Compartment(
 	n_reactants = nReactants;
 	m_pParentReaction = parentReaction;
 	m_iCompId = compId;
+	active = true;
 		//Set up the reactantLists
 	for(unsigned int r=0; r<nReactants; r++)
 		reactantLists[r]=(new ReactantList(r,transformationSet,25));
@@ -60,6 +61,8 @@ void Compartment::pickMappingSets(MappingSet** mappingSet, double random_A_numbe
 
 double Compartment::update_a()
 {
+	// We return 0 propensity for inactive compartments to fire
+	if(!active) return 0;
 	a=1;
 	for(unsigned int i=0; i<n_reactants; i++)
 		a*=reactantLists[i]->size();

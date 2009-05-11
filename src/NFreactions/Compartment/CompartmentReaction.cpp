@@ -177,3 +177,13 @@ void CompartmentReaction::pickMappingSets(double random_A_number) const
 	chosenComp->pickMappingSets(mappingSet, leftover_random_A_number);
 }
 
+void CompartmentReaction::restrictToCompartment(unsigned int compartmentId)
+{
+	static map<unsigned int,Compartment*>::iterator cmpIter;
+	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
+	{
+		cmpIter->second->active = false;
+	}
+	m_mapCompartmentList[compartmentId]->active = true;
+}
+

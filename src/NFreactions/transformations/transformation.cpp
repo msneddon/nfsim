@@ -19,7 +19,20 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 	m->getMolecule()->setComponentState(cIndex,newValue);
 }
 
-
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+CompartmentChangeTransform::CompartmentChangeTransform(unsigned int newCompartmentId) :
+	Transformation(TransformationFactory::COMPARTMENT_CHANGE)
+{
+	// cIndex is not needed for compartment change but we set it anyways
+	// to provide compatibility
+	this->cIndex = 0;
+	this->newCompartmentId = newCompartmentId;
+}
+void CompartmentChangeTransform::apply(Mapping *m, MappingSet **ms)
+{
+	m->getMolecule()->moveToCompartment(newCompartmentId);
+}
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -156,6 +169,10 @@ NFcore::Transformation * TransformationFactory::genEmptyTransform()
 NFcore::Transformation * TransformationFactory::genStateChangeTransform(unsigned int stateIndex, int newStateValue)
 {
 	return new StateChangeTransform(stateIndex, newStateValue);
+}
+NFcore::Transformation * TransformationFactory::genCompartmentChangeTransform(unsigned int newCompartmentId)
+{
+	return new CompartmentChangeTransform(newCompartmentId);
 }
 NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 {
