@@ -525,6 +525,8 @@ namespace NFcore
 			int getDORrxnIndex(int dorRxnIndex) const { return indexOfDORrxns.at(dorRxnIndex); };
 			int getDORrxnPosition(int dorRxnIndex) const { return reactionPositions.at(indexOfDORrxns.at(dorRxnIndex)); };
 
+			ReactionClass * getRxnAt( int index) {return reactions.at(index); };
+			int getRxnPos (int index) const { return reactionPositions.at(index); };
 			void setUpLocalFunctionListForMolecules();
 
 		protected:
@@ -642,6 +644,11 @@ namespace NFcore
 					this->rxnListMappingId[rxnIndex] = rxnListMappingId;
 			};
 
+			int getRxnListCompartmentMappingId(int rxnIndex) const { return rxnListCompartmentMappingId[rxnIndex]; };
+			void setRxnListCompartmentMappingId(int rxnIndex, int rxnListCompartmentMappingId) {
+					this->rxnListCompartmentMappingId[rxnIndex] = rxnListCompartmentMappingId;
+			};
+
 			/* set functions for states, bonds, and complexes */
 			//void setState(const char * stateName, int value);
 			//void setState(int stateIndex, int value);
@@ -714,6 +721,8 @@ namespace NFcore
 			void moveToCompartment(unsigned int argCompartmentId);
 
 			unsigned int getCompartmentId();
+			unsigned int getPrevCompartmentId();
+
 
 		protected:
 
@@ -758,8 +767,14 @@ namespace NFcore
 			int * rxnListMappingId;
 			int nReactions;
 
+			//Used to keep track of which compartment in the reactions this molecule is in...
+			// should be same size as  rxnlistMappingId, int nReactions;
+			int * rxnListCompartmentMappingId;
+
 			//Used to keep track of which compartment the molecule is in
 			unsigned int compartmentId;
+			//And where it was previously
+			unsigned int prevCompartmentId;
 
 		private:
 

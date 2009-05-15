@@ -78,16 +78,39 @@ void Compartment::init(CompartmentReaction* thisReactionClass)
 	}
 }
 
-inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos)
+inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos, int rxnIndex)
+{
+	//Try to map it!
+	//Get the specified reactantList
+	ReactantList *rl = reactantLists[reactantPos];
+	ms = rl->pushNextAvailableMappingSet();
+	if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+		//we must remove, if we did not match.  This will also remove
+		//everything that was cloned off of the mapping set
+		rl->removeMappingSet(ms->getId());
+	} else {
+		m->setRxnListMappingId(rxnIndex,ms->getId());
+		m->setRxnListCompartmentMappingId(rxnIndex,m->getCompartmentId());
+	}
+
+	return true;
+}
+void Compartment::tryToRemove(Molecule *m, unsigned int reactantPos, int rxnIndex)
 {
 	//Get the specified reactantList
-	rl = reactantLists[reactantPos];
+	ReactantList *rl = reactantLists[reactantPos];
+	if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m))
+	{
+		rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+		m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		m->setRxnListCompartmentMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+	}
+}
 
-	//Check if the molecule is in this list
-	int rxnIndex = m->getMoleculeType()->getRxnIndex(m_pParentReaction,reactantPos);
-	//cout<<"got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
-
-
+void Compartment::removeClones(Molecule *m, unsigned int reactantPos, int rxnIndex)
+{
+	//Get the specified reactantList
+	ReactantList *rl = reactantLists[reactantPos];
 	//If this reaction has multiple instances, we always remove them all!
 	// then we remap because other mappings may have changed.  Yes, this may
 	// be more ineffecient, but it is the fast implementation
@@ -95,54 +118,7 @@ inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos)
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
 			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			m->setRxnListCompartmentMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
 	}
-
-	//Here we get the standard update...
-	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
-	{
-		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m)) {
-			//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-		}
-
-	} else {
-		//Try to map it!
-		ms = rl->pushNextAvailableMappingSet();
-		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m,rl,ms)) {
-			//we must remove, if we did not match.  This will also remove
-			//everything that was cloned off of the mapping set
-			rl->removeMappingSet(ms->getId());
-		} else {
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-	}
-
-	return true;
-	/*
-	//Get the specified reactantList
-	rl = reactantLists[reactantPos];
-
-	//Check if the molecule is in this list
-	int rxnIndex = m->getMoleculeType()->getRxnIndex(m_pParentReaction,reactantPos);
-
-	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
-	{
-		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m)) {
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-		}
-
-	} else {
-		//Try to map it!
-		if(!m_pParentReaction->reactantTemplates[reactantPos]->compare(m,rl,ms)) {
-			rl->popLastMappingSet();
-			//we just pushed, then popped, so we a has not changed...
-		} else {
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-	}
-	return true;
-	*/
 }

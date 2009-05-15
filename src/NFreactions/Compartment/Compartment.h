@@ -43,8 +43,11 @@ public:
 	//Get and update the propensity
 	double update_a();
 	//Try to add the molecule to this reaction rule
-	virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
-
+	virtual bool tryToAdd(Molecule *m, unsigned int reactantPos, int rxnIndex);
+	//Removese a molecule from this reaction rule
+	virtual void tryToRemove(Molecule *m, unsigned int reactantPos, int rxnIndex);
+	//remove clone mappings
+	void removeClones(Molecule *m, unsigned int reactantPos, int rxnIndex);
 
 protected:
 	// number of reactants in this compartment

@@ -75,7 +75,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	return true;
 }
 
-bool TransformationSet::addCompartmentChangeTransform(TemplateMolecule *t, unsigned int finalCompartmentId)
+bool TransformationSet::addSingleCompartmentChangeTransform(TemplateMolecule *t, unsigned int finalCompartmentId)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
@@ -89,7 +89,32 @@ bool TransformationSet::addCompartmentChangeTransform(TemplateMolecule *t, unsig
 	}
 
 	// 2) Create a Transformation object to remember the information
-	Transformation *transformation = TransformationFactory::genCompartmentChangeTransform(finalCompartmentId);
+	Transformation *transformation = TransformationFactory::genSingleCompartmentChangeTransform(finalCompartmentId);
+
+	// 3) Add the transformation object to the TransformationSet
+	transformations[reactantIndex].push_back(transformation);
+
+	// 3) Create a MapGenerator object and add it to the templateMolecule
+	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+	t->addMapGenerator(mg);
+	return true;
+}
+
+bool TransformationSet::addFullCompartmentChangeTransform(TemplateMolecule *t, unsigned int finalCompartmentId)
+{
+	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
+	// 1) Check that the template molecule is contained in one of the reactant templates we have
+	int reactantIndex = find(t);
+	if(reactantIndex==-1) {
+		cerr<<"Couldn't find the template you gave me!  In transformation set - addCompartmentChangeTransform!\n";
+		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
+		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		return false;
+	}
+
+	// 2) Create a Transformation object to remember the information
+	Transformation *transformation = TransformationFactory::genFullCompartmentChangeTransform(finalCompartmentId);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);

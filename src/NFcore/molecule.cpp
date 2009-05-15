@@ -1,7 +1,7 @@
 #include <iostream>
 #include "NFcore.hh"
 #include <queue>
-
+#include "../NFreactions/Compartment/Compartment.h"
 
 using namespace std;
 using namespace NFcore;
@@ -47,6 +47,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId, int argCompart
 	//Initialize this molecule to the compartment specified
 	//or no compartment if not specified
 	compartmentId = argCompartmentId;
+	prevCompartmentId = compartmentId;
 
 	//register this molecule with moleculeType and get some ID values
 	ID_complex = this->parentMoleculeType->createComplex(this);
@@ -82,8 +83,13 @@ void Molecule::prepareForSimulation()
 	if(isPrepared) return;
 	nReactions = parentMoleculeType->getReactionCount();
 	this->rxnListMappingId = new int[nReactions];
+	//TODO we may want to make this only if this molecule participates in compartment reactions
+	this->rxnListCompartmentMappingId = new int[nReactions];
 	for(int r=0; r<nReactions; r++)
+	{
 		rxnListMappingId[r] = -1;
+		rxnListCompartmentMappingId[r] = -1;
+	}
 	isPrepared = true;
 
 	//We do not belong to any observable... yet.
@@ -523,14 +529,34 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
 	}
 }
 
+// only works on compartment reactions
 void Molecule::moveToCompartment(unsigned int argCompartmentId)
 {
+	// change the Id the mapping will get updated during the
+	// tryToAdd step
+	unsigned int prevCompartmentId = compartmentId;
 	compartmentId = argCompartmentId;
+	/*
+	// loop through the reactions this molecule participates in
+	for(int ii=0; ii < parentMoleculeType->getReactionCount(); ii++ )
+	{
+		// make sure its a compartment reaction
+		ReactionClass* tmpReaction = parentMoleculeType->getRxnAt(ii);
+		if(tmpReaction->getRxnType() == ReactionClass::COMPARTMENT_RXN)
+		{
+			((CompartmentReaction*)tmpReaction)->moveMolToCompartment(this, oldCompartment, compartmentId, parentMoleculeType->getRxnPos(ii));
+		}
+	}
+	*/
 }
 
 unsigned int Molecule::getCompartmentId()
 {
 	return compartmentId;
+}
+unsigned int Molecule::getPrevCompartmentId()
+{
+	return prevCompartmentId;
 }
 
 
