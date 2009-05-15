@@ -21,10 +21,16 @@ namespace NFcore
 			static Transformation * genStateChangeTransform(unsigned int cIndex, int newValue);
 
 			/*!
-				Generates a compartment change Transformation.
+				Generates a compartment change Transformation on only the templatemolecule in the complex.
 				@author Kelly Stanton
 			 */
-			static Transformation * genCompartmentChangeTransform(unsigned int newCompartmentId);
+			static Transformation * genSingleCompartmentChangeTransform(unsigned int newCompartmentId);
+
+			/*!
+				Generates a compartment change Transformation that affects the whole complex.
+				@author Kelly Stanton
+			 */
+			static Transformation * genFullCompartmentChangeTransform(unsigned int newCompartmentId);
 
 			/*!
 			 	Generates a binding transformation for one of the two binding sites in the binding Transform.  You will
@@ -181,16 +187,26 @@ namespace NFcore
 			int newValue;
 	};
 
-	class CompartmentChangeTransform : public Transformation {
+	class SingleCompartmentChangeTransform : public Transformation {
 			public:
-				CompartmentChangeTransform(unsigned int newCompartment);
-				virtual ~CompartmentChangeTransform() {};
+				SingleCompartmentChangeTransform(unsigned int newCompartment);
+				virtual ~SingleCompartmentChangeTransform() {};
 				virtual void apply(Mapping *m, MappingSet **ms);
 				virtual int getComponentIndex() const {return cIndex;};
 			protected:
 				int cIndex;
 				int newCompartmentId;
 	};
+	class FullCompartmentChangeTransform : public Transformation {
+				public:
+					FullCompartmentChangeTransform(unsigned int newCompartment);
+					virtual ~FullCompartmentChangeTransform() {};
+					virtual void apply(Mapping *m, MappingSet **ms);
+					virtual int getComponentIndex() const {return cIndex;};
+				protected:
+					int cIndex;
+					int newCompartmentId;
+		};
 
 	class BindingTransform : public Transformation {
 		public:

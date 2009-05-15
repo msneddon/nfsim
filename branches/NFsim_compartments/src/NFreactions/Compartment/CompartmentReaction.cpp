@@ -51,14 +51,52 @@ inline bool CompartmentReaction::tryToAdd(Molecule *m, unsigned int reactantPos)
 			exit(1);
 		}
 	}
+	// gather a little background on this molecule and reaction pair
 
-	// if the compartment doesnt exists
-	if(m_mapCompartmentList.find(m->getCompartmentId()) == m_mapCompartmentList.end())
+	//look up the index
+	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
+	//Find the reaction ID of this molecule in this reaction if it is in this reaction at all if not -1
+	int rxnId = m->getRxnListMappingId(rxnIndex);
+	//Find the compartment that this Molecule is currently in in this reaction  if not -1
+	int oldCompartmentId = m->getRxnListCompartmentMappingId(rxnIndex);
+	// New Compartment is taken from the transformed molecule
+	int newCompartmentId = m->getCompartmentId();
+
+	// first off this is a compartment reaction and must have a compartment ID if its in the molecule
+	// if its not in a compartment
+	if(oldCompartmentId < 0)
+	{
+		if(rxnId<0) // and its not in this reaction
+		{
+			// then lets initialize it to the compartment that it is located in
+			oldCompartmentId = newCompartmentId;
+		}
+		else // oops no compartment but its in this reaction
+		{
+			throw "No compartment RxnListCompartmentMappingId associated with this compartment reaction for which there is a RxnListMappingId";
+		}
+	}
+	// if either the source or target compartment do not exist
+	if(m_mapCompartmentList.find(oldCompartmentId) == m_mapCompartmentList.end()
+			||m_mapCompartmentList.find(newCompartmentId) == m_mapCompartmentList.end()
+			|| m_mapCompartmentList[oldCompartmentId] == NULL
+			|| m_mapCompartmentList[newCompartmentId] == NULL)
 	{
 		throw "Dereferencing a null compartment!";
 	}
-	// Try to add the molecule to the compartment.
-	return m_mapCompartmentList[m->getCompartmentId()]->tryToAdd(m,reactantPos);
+
+	// remove clones first
+	m_mapCompartmentList[oldCompartmentId]->removeClones(m,reactantPos,rxnIndex);
+	m_mapCompartmentList[m->getCompartmentId()]->removeClones(m,reactantPos,rxnIndex);
+
+	//Here we get the standard update...
+	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
+	{
+		m_mapCompartmentList[oldCompartmentId]->tryToRemove(m, reactantPos, rxnIndex);
+	} else {
+		m_mapCompartmentList[m->getCompartmentId()]->tryToAdd(m, reactantPos, rxnIndex);
+	}
+	return true;
 }
 
 
@@ -98,20 +136,13 @@ void CompartmentReaction::remove(Molecule *m, unsigned int reactantPos)
 		exit(1);
 	}
 
-
-	//Get the specified reactantList
-	ReactantList *rl = m_mapCompartmentList[m->getCompartmentId()]->reactantLists[reactantPos];
-
-	//Check if the molecule is in this list
+	// get the reaction index
 	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 
-	bool isInRxn = (m->getRxnListMappingId(rxnIndex)>=0);
-
-
-	if(isInRxn)
+	// check to make sure this molecule is in this reaction and that the compartment is also filled out
+	if((m->getRxnListMappingId(rxnIndex)>=0) && (m->getRxnListCompartmentMappingId(rxnIndex)>=0))
 	{
-		rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-		m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+		m_mapCompartmentList[m->getRxnListCompartmentMappingId(rxnIndex)]->tryToRemove(m, reactantPos, rxnIndex);
 	}
 }
 
@@ -186,4 +217,3 @@ void CompartmentReaction::restrictToCompartment(unsigned int compartmentId)
 	}
 	m_mapCompartmentList[compartmentId]->active = true;
 }
-

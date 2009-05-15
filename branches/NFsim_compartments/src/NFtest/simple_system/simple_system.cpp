@@ -172,6 +172,7 @@ void NFtest_ss::run()
 	//associated with the system, so we don't ever have to remember to delete individual reactions, molecules
 	//moleculeTypes, etc...
 	delete s;
+	exit(1);
 }
 
 
@@ -519,7 +520,7 @@ ReactionClass * NFtest_ss::createReactionCompTransfer(MoleculeType *molX, double
 
 	TransformationSet *ts = new TransformationSet(templates);
 	//ts->addStateChangeTransform(xTemp,"p","Unphos");
-	ts->addCompartmentChangeTransform(xTemp,1);
+	ts->addFullCompartmentChangeTransform(xTemp,1);
 	ts->finalize();
 
 	ReactionClass *r = new CompartmentReaction("Transfer0-1",rate,ts);

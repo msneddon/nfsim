@@ -50,8 +50,12 @@ public:
 	//this is done by changing the propensity of each compartment
 	void restrictToCompartment(unsigned int compartmentId);
 
+	// Changes the compartment the specified molecule is in for this reaction
+	//void moveMolToCompartment(Molecule* m, unsigned int oldCompartmentId, unsigned int newCompartmentId, unsigned int reactantPos);
+
 	//Number of compartments in the system
 	static unsigned int nCompartments;
+
 protected:
 	//Choose a mappingSet at random
 	virtual void pickMappingSets(double randNumber) const;

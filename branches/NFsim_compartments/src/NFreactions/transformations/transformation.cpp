@@ -21,7 +21,7 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-CompartmentChangeTransform::CompartmentChangeTransform(unsigned int newCompartmentId) :
+SingleCompartmentChangeTransform::SingleCompartmentChangeTransform(unsigned int newCompartmentId) :
 	Transformation(TransformationFactory::COMPARTMENT_CHANGE)
 {
 	// cIndex is not needed for compartment change but we set it anyways
@@ -29,9 +29,35 @@ CompartmentChangeTransform::CompartmentChangeTransform(unsigned int newCompartme
 	this->cIndex = 0;
 	this->newCompartmentId = newCompartmentId;
 }
-void CompartmentChangeTransform::apply(Mapping *m, MappingSet **ms)
+void SingleCompartmentChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->moveToCompartment(newCompartmentId);
+}
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+FullCompartmentChangeTransform::FullCompartmentChangeTransform(unsigned int newCompartmentId) :
+	Transformation(TransformationFactory::COMPARTMENT_CHANGE)
+{
+	// cIndex is not needed for compartment change but we set it anyways
+	// to provide compatibility
+	this->cIndex = 0;
+	this->newCompartmentId = newCompartmentId;
+}
+void FullCompartmentChangeTransform::apply(Mapping *m, MappingSet **ms)
+{
+	// move the current molecule
+	m->getMolecule()->moveToCompartment(newCompartmentId);
+
+	// Propagate through complex and change all the molecules it is connected to as well
+	list <Molecule *> members;
+	m->getMolecule()->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
+	list<Molecule *>::iterator memIter;
+	for(memIter = members.begin(); memIter != members.end(); memIter++)
+	{
+		Molecule* tmpMolecule = (*memIter);
+		tmpMolecule->moveToCompartment(newCompartmentId);
+	}
 }
 
 ///////////////////////////////////////////////////////////////
@@ -170,9 +196,13 @@ NFcore::Transformation * TransformationFactory::genStateChangeTransform(unsigned
 {
 	return new StateChangeTransform(stateIndex, newStateValue);
 }
-NFcore::Transformation * TransformationFactory::genCompartmentChangeTransform(unsigned int newCompartmentId)
+NFcore::Transformation * TransformationFactory::genSingleCompartmentChangeTransform(unsigned int newCompartmentId)
 {
-	return new CompartmentChangeTransform(newCompartmentId);
+	return new SingleCompartmentChangeTransform(newCompartmentId);
+}
+NFcore::Transformation * TransformationFactory::genFullCompartmentChangeTransform(unsigned int newCompartmentId)
+{
+	return new FullCompartmentChangeTransform(newCompartmentId);
 }
 NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 {
