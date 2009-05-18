@@ -69,6 +69,8 @@ protected:
 	double a;
 	//Whether this compartment is used or not
 	bool active;
+	//Volume of this compartment
+	double volume;
 };
 
 #endif /* COMPARTMENT_H_ */
