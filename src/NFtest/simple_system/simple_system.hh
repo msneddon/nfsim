@@ -43,7 +43,7 @@ namespace NFtest_ss
 	/*!
 		@author Kelly Stanton
 	 */
-	void NFtest_ss::runCompartmentSystem()
+	void runCompartmentSystem();
 
 
 	/*!
