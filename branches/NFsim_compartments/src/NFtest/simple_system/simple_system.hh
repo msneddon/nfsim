@@ -39,6 +39,11 @@ namespace NFtest_ss
 	 */
 	void run();
 
+	//!  Runs the Compartment enzymatic type reaction system as an example system.
+	/*!
+		@author Kelly Stanton
+	 */
+	void NFtest_ss::runCompartmentSystem()
 
 
 	/*!

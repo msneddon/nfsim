@@ -151,7 +151,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 int main(int argc, const char *argv[])
 {
 	//TODO testing remove this later
-	NFtest_ss::run();
+	NFtest_ss::runCompartmentSystem();
 	//End TODO
 	string versionNumber = "1.02";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
