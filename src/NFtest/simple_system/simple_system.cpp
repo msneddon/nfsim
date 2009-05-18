@@ -42,12 +42,8 @@ void NFtest_ss::run()
 	 */
 
 	//First we define some parameters for rates and counts
-	//int numOfMoleculeY = 3011;
-	//int numOfMoleculeX = 6022;
-	int numOfMoleculeYCompartment0 = 3011;
-	int numOfMoleculeXCompartment0 = 6022;
-	int numOfMoleculeYCompartment1 = 11;
-	int numOfMoleculeXCompartment1 = 22;
+	int numOfMoleculeY = 3011;
+	int numOfMoleculeX = 6022;
 
 	double dephosRate = 0.2;
 	double kOn = 0.0003;
@@ -71,40 +67,22 @@ void NFtest_ss::run()
 	//  3)  Instantiate the actual molecules (this populate function is the easiest way, but you can do it
 	//      manually as well by creating each molecule separately - see the MoleculeType::populate function for
 	//      an example on how this can be done).
-	//molY->populateWithDefaultMolecules(numOfMoleculeY);
-	//molX->populateWithDefaultMolecules(numOfMoleculeX);
-	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
-	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
-	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
-	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
+	molY->populateWithDefaultMolecules(numOfMoleculeY);
+	molX->populateWithDefaultMolecules(numOfMoleculeX);
 
 
 	//  4)  Create the reactions and add them to the system.  These are calls to specific functions
 	//      below where I set up the details of the reactions.  The numbers are the rates and are in
 	//      arbitrary units here.  In general, the rates should be in units of per second.
-	ReactionClass * x_dephos = createReactionXDephos(molX, dephosRate);
+	ReactionClass *x_dephos = createReactionXDephos(molX, dephosRate);
 	ReactionClass *rXbindY = createReactionXYbind(molX, molY, kOn);
 	ReactionClass *rXunbindY = createReactionXYunbind(molX, molY, kOff);
 	ReactionClass *rYphosX = createReactionYphosX(molX, molY, kCat);
 
-	CompartmentReaction::nCompartments = 2;
-	ReactionClass *rCompartmentTransfer = createReactionCompTransfer(molX, 0.5);
-	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
-	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
-	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
-	ReactionClass *rCompartmentYphosX = createReactionCompYphosX(molX, molY, kCat);
-
-	/*
 	s->addReaction(x_dephos);
 	s->addReaction(rXbindY);
 	s->addReaction(rXunbindY);
 	s->addReaction(rYphosX);
-	*/
-	s->addReaction(rCompartmentTransfer);
-	s->addReaction(rCompartmentxDephos);
-	s->addReaction(rCompartmentXbindY);
-	s->addReaction(rCompartmentXunbindY);
-	s->addReaction(rCompartmentYphosX);
 
 	//  5)  Add the observables that we want to track throughout the simulation.  Again, to
 	//      see how this is done, see the function below.
@@ -174,7 +152,92 @@ void NFtest_ss::run()
 	delete s;
 	exit(1);
 }
+void NFtest_ss::runCompartmentSystem()
+{
+	cout<<"Running the Compartment system"<<endl;
 
+	/**
+	 *
+	 * This example is a good starting point to learn the basics of the underlying NFsim
+	 * code and what happens behind the scenes.  Generally, you will specify the system
+	 * through BioNetGen and NFsim will just parse the resulting xml model specification
+	 * file.  However, for learning the code, there is nothing better than hardcoding a
+	 * simple system yourself and learning which functions get called when.
+	 *
+	 * So, as a simple demonstration of how to create and run a simulation, here is an example
+	 * where we have a system that looks like this:
+	 *
+	 * X(p~1) -> X(p~0)
+	 * X(y,p~0) + Y(x) <-> X(y!1,p~0).Y(x!1)
+	 * X(y!1,p~0).Y(x!1) -> X(y,p~1) + Y(x)
+	 *
+	 * This is basically a simple enzymatic reaction where Y is the enzyme which can
+	 * phosphorylate X, and X can auto-dephosphorylate.  This system has basic binding,
+	 * unbinding, and state change reactions along with a reaction that unbinds and has
+	 * a state change.  Below are the numbered steps of getting this system together by
+	 * hardcoding the reaction rules.  Notice the functions defined at the end that do
+	 * the actual work.
+	 *
+	 * To run this example, call the NFsim program as follows:
+	 *
+	 *        ./NFsim6 -test simple_system
+	 *
+	 */
+
+	//First we define some parameters for rates and counts
+	int numOfMoleculeYCompartment0 = 3011;
+	int numOfMoleculeXCompartment0 = 6022;
+	int numOfMoleculeYCompartment1 = 11;
+	int numOfMoleculeXCompartment1 = 22;
+
+	double dephosRate = 0.2;
+	double kOn = 0.0003;
+	double kOff = 0.2;
+	double kCat = 0.1;
+
+
+
+	CompartmentReaction::nCompartments = 2;
+
+	System *s = new System("Compartment System");
+
+	MoleculeType *molX = createX(s);
+	MoleculeType *molY = createY(s);
+
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
+	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
+	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
+
+	ReactionClass *rCompartmentTransfer = createReactionCompTransfer(molX, 0.5);
+	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
+	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
+	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
+	ReactionClass *rCompartmentYphosX = createReactionCompYphosX(molX, molY, kCat);
+
+	s->addReaction(rCompartmentTransfer);
+	s->addReaction(rCompartmentxDephos);
+	s->addReaction(rCompartmentXbindY);
+	s->addReaction(rCompartmentXunbindY);
+	s->addReaction(rCompartmentYphosX);
+
+	addObs(s, molX, molY);
+
+	s->prepareForSimulation();
+	s->printAllReactions();
+
+	s->registerOutputFileLocation("simple_system_output.txt");
+	s->outputAllObservableNames();
+
+	s->sim(500,500);
+
+	s->outputAllObservableCounts();
+
+	s->printAllReactions();
+
+	delete s;
+	exit(1);
+}
 
 
 
