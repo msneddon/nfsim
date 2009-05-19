@@ -17,6 +17,7 @@ CompartmentReaction::CompartmentReaction(string name, double baseRate, Transform
 		throw "Number of compartments not initialized";
 	}
 
+	// create the correct number of compartments
 	for(unsigned int ii=0; ii<nCompartments; ii++)
 	{
 		// create the compartment
@@ -24,6 +25,15 @@ CompartmentReaction::CompartmentReaction(string name, double baseRate, Transform
 				pair<unsigned int, Compartment*>(
 						ii,
 						new Compartment(ii,baseRate,transformationSet,n_reactants,this)));
+	}
+
+	//Create the interactions based on the template molecules contained in the
+	// transformation set
+	CompartmentInteraction* tmp = new CompartmentInteraction(this);
+	m_vectInteractionList.push_back(tmp);
+	for(unsigned int ii=0; ii < n_reactants; ii++)
+	{
+		//tmp->addCompartmentMolecule(reactantTemplates[ii]->getCompartmentConstraint())
 	}
 
 }
@@ -35,6 +45,11 @@ CompartmentReaction::~CompartmentReaction()
 	for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
 	{
 		delete cmpIter->second;
+	}
+	static vector<CompartmentInteraction*>::iterator interactionIter;
+	for(interactionIter = m_vectInteractionList.begin(); interactionIter != m_vectInteractionList.end(); interactionIter++)
+	{
+		delete *interactionIter;
 	}
 }
 
@@ -217,3 +232,8 @@ void CompartmentReaction::restrictToCompartment(unsigned int compartmentId)
 	}
 	m_mapCompartmentList[compartmentId]->active = true;
 }
+//void CompartmentReaction::addCompartmentInteraction(vector<unsigned int> CompartmentIdList)
+//{
+//	CompartmentInteraction* tmp = new CompartmentInteraction(this, CompartmentIdList);
+//	m_vectInteractionList.push_back(tmp);
+//}

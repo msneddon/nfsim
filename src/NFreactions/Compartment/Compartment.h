@@ -15,6 +15,7 @@
 
 #include "../NFreactions.hh"
 #include "CompartmentReaction.h"
+#include "CompartmentInteraction.h"
 #include<string>
 
 using namespace NFcore;
@@ -22,6 +23,7 @@ using namespace std;
 class CompartmentReaction;
 class Compartment {
 	friend class CompartmentReaction;
+	friend class CompartmentInteraction;
 public:
 	//Constructor
 	Compartment(

@@ -78,6 +78,9 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	this->matchMolecule=0;
 	this->hasVisitedThis=false;
 
+	// init this template molecule with no compartment constraint
+	this->m_compartmentConstraint = -1;
+
 	//finally, we have to register this template molecule with the molecule
 	//type so that we can easily destroy them at the end.
 	this->moleculeType->addTemplateMolecule(this);
@@ -1291,4 +1294,12 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	return true;
 }
 
+void TemplateMolecule::setCompartmentConstraint(int compartmentId)
+{
+	this->m_compartmentConstraint = compartmentId;
+}
+int TemplateMolecule::getCompartmentConstraint()
+{
+	return this->m_compartmentConstraint;
+}
 
