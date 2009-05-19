@@ -156,48 +156,24 @@ void NFtest_ss::runCompartmentSystem()
 {
 	cout<<"Running the Compartment system"<<endl;
 
-	/**
-	 *
-	 * This example is a good starting point to learn the basics of the underlying NFsim
-	 * code and what happens behind the scenes.  Generally, you will specify the system
-	 * through BioNetGen and NFsim will just parse the resulting xml model specification
-	 * file.  However, for learning the code, there is nothing better than hardcoding a
-	 * simple system yourself and learning which functions get called when.
-	 *
-	 * So, as a simple demonstration of how to create and run a simulation, here is an example
-	 * where we have a system that looks like this:
-	 *
-	 * X(p~1) -> X(p~0)
-	 * X(y,p~0) + Y(x) <-> X(y!1,p~0).Y(x!1)
-	 * X(y!1,p~0).Y(x!1) -> X(y,p~1) + Y(x)
-	 *
-	 * This is basically a simple enzymatic reaction where Y is the enzyme which can
-	 * phosphorylate X, and X can auto-dephosphorylate.  This system has basic binding,
-	 * unbinding, and state change reactions along with a reaction that unbinds and has
-	 * a state change.  Below are the numbered steps of getting this system together by
-	 * hardcoding the reaction rules.  Notice the functions defined at the end that do
-	 * the actual work.
-	 *
-	 * To run this example, call the NFsim program as follows:
-	 *
-	 *        ./NFsim6 -test simple_system
-	 *
-	 */
-
 	//First we define some parameters for rates and counts
-	int numOfMoleculeYCompartment0 = 3011;
-	int numOfMoleculeXCompartment0 = 6022;
-	int numOfMoleculeYCompartment1 = 11;
-	int numOfMoleculeXCompartment1 = 22;
+	int numOfMoleculeYCompartment0 = 30;
+	int numOfMoleculeXCompartment0 = 60;
+	int numOfMoleculeYCompartment1 = 30;
+	int numOfMoleculeXCompartment1 = 60;
+	int numOfMoleculeYCompartment2 = 30;
+	int numOfMoleculeXCompartment2 = 60;
+	int numOfMoleculeYCompartment3 = 30;
+	int numOfMoleculeXCompartment3 = 60;
+	int numOfMoleculeYCompartment4 = 30;
+	int numOfMoleculeXCompartment4 = 60;
 
 	double dephosRate = 0.2;
 	double kOn = 0.0003;
 	double kOff = 0.2;
 	double kCat = 0.1;
 
-
-
-	CompartmentReaction::nCompartments = 2;
+	CompartmentReaction::nCompartments = 5;
 
 	System *s = new System("Compartment System");
 
@@ -205,9 +181,15 @@ void NFtest_ss::runCompartmentSystem()
 	MoleculeType *molY = createY(s);
 
 	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
-	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
-	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
-	molX->populateWithDefaultMolecules(numOfMoleculeYCompartment0,1);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment0,0);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment1,1);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment1,1);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment2,2);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment2,2);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment3,3);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment3,3);
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment4,4);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment4,4);
 
 	ReactionClass *rCompartmentTransfer = createReactionCompTransfer(molX, 0.5);
 	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
@@ -440,38 +422,22 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 
 ReactionClass * NFtest_ss::createReactionCompXDephos(MoleculeType *molX, double rate)
 {
-	//Here is your first glimpse at defining a reaction rule.  This is the simplist rule
-	//as it only has a single state change operation.  There are several straightforward steps.
-	//First, you have to define the set of TemplateMolecules that represent the possible reactants.
-	//Here, we create a templateMolecule representing molecules of type X, and set the state to
-	//be phosphorylated.
+
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addComponentConstraint("p","Phos");
+	xTemp->setCompartmentConstraint(0);
 
-
-	//We have to create a vector (basically a storage array) for the Template Molecules that we
-	//want to add to our reaction.  We do this using the standard library class std::vector.  We
-	//only have one reactant in this reaction, so we just put it on the vector.
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp );
 
-
-	//Once we have our set of templateMolecules defined, we can specify the transformations on
-	//those molecules. To do this, we create a TransformationSet object passing in the templates
-	//Next, we use the TransformationSet functionality to specify the transform.  Here we specify
-	//that the transformation should apply to the template molecule (defined above) and it should
-	//change the state of "p" to a value of zero (which means unphosphorylated in our system).
-	//Finally, once we have added all operations we want (there is no limit!), we have to finalize
-	//our transformationSet.
 	TransformationSet *ts = new TransformationSet(templates);
 	ts->addStateChangeTransform(xTemp,"p","Unphos");
 	ts->finalize();
 
+	// make a vector of compartment IDs of interacting compartments to consider
+	// for this reaction
+	CompartmentReaction *r = new CompartmentReaction("Comp_X_dephos",rate,ts);
 
-	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
-	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new CompartmentReaction("Comp_X_dephos",rate,ts);
-	//ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts);
 	return r;
 }
 

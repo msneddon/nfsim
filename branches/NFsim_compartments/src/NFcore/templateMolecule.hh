@@ -110,6 +110,9 @@ namespace NFcore
 		void printDetails(ostream &o);
 
 
+		// accessors for compartment constraint
+		void setCompartmentConstraint(int compartmentId);
+		int getCompartmentConstraint();
 	protected:
 
 		static int TotalTemplateMoleculeCount;
@@ -142,6 +145,9 @@ namespace NFcore
 		int n_compStateConstraint;
 		int *compStateConstraint_Comp; //index of the constrained component
 		int *compStateConstraint_Constraint; //the constrained value
+
+		// Compartment constraints
+		int m_compartmentConstraint;
 
 		// State value exclusions (state != exclusion)
 		int n_compStateExclusion;

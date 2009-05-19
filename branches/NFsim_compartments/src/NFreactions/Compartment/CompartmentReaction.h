@@ -2,7 +2,7 @@
  * CompartmentReaction.h
  *
  *  Created on: Apr 13, 2009
- *      Author: kstanton
+ *      Author: Kelly Stanton
  *
  *      The CompartmentReaction class specifies an extended version of the ReactionClass
  *      it adds functionality for storing molecules and the molecule lists in a list
@@ -17,13 +17,16 @@
 #include "../NFreactions.hh"
 
 #include "Compartment.h"
+#include "CompartmentInteraction.h"
 #include <vector>
 using namespace NFcore;
 using namespace std;
 
 class Compartment;
+class CompartmentInteraction;
 class CompartmentReaction: public NFcore::ReactionClass {
 	friend class Compartment;
+	friend class CompartmentInteraction;
 public:
 	//Constructor
 	CompartmentReaction(string name, double baseRate, TransformationSet *transformationSet);
@@ -53,6 +56,9 @@ public:
 	// Changes the compartment the specified molecule is in for this reaction
 	//void moveMolToCompartment(Molecule* m, unsigned int oldCompartmentId, unsigned int newCompartmentId, unsigned int reactantPos);
 
+	//add an interaction between compartments
+	//void addCompartmentInteraction(vector<unsigned int> CompartmentIdList);
+
 	//Number of compartments in the system
 	static unsigned int nCompartments;
 
@@ -62,6 +68,9 @@ protected:
 
 	//note maps are access in log(n) time
 	map<unsigned int,Compartment*> m_mapCompartmentList;
+
+	//vector of interactions that this reaction can handle
+	vector<CompartmentInteraction*> m_vectInteractionList;
 };
 
 #endif /* COMPARTMENTREACTION_H_ */
