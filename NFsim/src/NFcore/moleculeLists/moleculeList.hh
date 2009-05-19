@@ -26,9 +26,9 @@ namespace NFcore
 			/*!
 				Create a new MoleculeList that stores the given type of molecule with
 				an initial capacity (that is dynamically expanded if you add more than
-				the given capacity of molecules)
+				the given capacity of molecules).
 			*/
-			MoleculeList(MoleculeType *mt, int init_capacity);
+			MoleculeList(MoleculeType *mt, int init_capacity, int finalCapacity);
 
 			/*!
 				Deletes the list and all Molecule objects associated with this list.  A
@@ -71,6 +71,8 @@ namespace NFcore
 			*/
 			void printDetails();
 
+			static const int NO_LIMIT = -1;
+
 		protected:
 
 			/*! The number of Molecule objects currently on the list */
@@ -81,6 +83,9 @@ namespace NFcore
 
 			/*! The maximum number of Molecules that can be added before the list resizes itself */
 			int capacity;
+
+			/*! The maximum number of Molecules that can be added, period. */
+			int finalCapacity;
 
 			/*! Keeps track of the type of molecule stored by this list */
 			MoleculeType *mt;

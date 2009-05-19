@@ -57,7 +57,7 @@
  *
  *  -oSteps [num of steps] = specifies the number of times to output during the simulation
  *
- *  -eq [Duration in sec] = specifies the length of time to equilibriate before simulating
+ *  -eq [Duration in sec] = specifies the length of time to equilibrate before simulating
  *
  *  -o [filename] = specifies the name of the output file
  *
@@ -65,9 +65,11 @@
  *
  *  -b = output in binary (faster, but output is not human readable)
  *
- * -utl [integer] = universal traversal limit, see manual
+ *  -utl [integer] = universal traversal limit, see manual
  *
- * -notf = disables On the Fly Observables, see manual
+ *  -notf = disables On the Fly Observables, see manual
+ *
+ *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
  *
  *  \section devel_sec Developers
@@ -328,10 +330,15 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			if (argMap.find("cb")!=argMap.end())
 				turnOnComplexBookkeeping = true;
 
+			int globalMoleculeLimit = 100000;
+			if (argMap.find("gml")!=argMap.end()) {
+				globalMoleculeLimit = NFinput::parseAsInt(argMap,"gml",globalMoleculeLimit);
+			}
+
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
-			System *s = NFinput::initializeFromXML(filename,cb,verbose);
+			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose);
 
 			if(s!=NULL)
 			{

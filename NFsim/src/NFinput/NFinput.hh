@@ -60,6 +60,7 @@ namespace NFinput {
 	System * initializeFromXML(
 			string filename,
 			bool blockSameComplexBinding,
+			int globalMoleculeLimit,
 			bool verbose);
 
 	//! Reads the parameter XML block and puts them in the parameter map.

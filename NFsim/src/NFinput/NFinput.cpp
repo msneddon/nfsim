@@ -45,6 +45,7 @@ component::~component()
 System * NFinput::initializeFromXML(
 		string filename,
 		bool blockSameComplexBinding,
+		int globalMoleculeLimit,
 		bool verbose)
 {
 	if(!verbose) cout<<"reading xml file ("+filename+")  [";
@@ -68,14 +69,15 @@ System * NFinput::initializeFromXML(
 		//Make sure the basics are there
 		string modelName;
 		if(!pModel->Attribute("id"))  {
-			s=new System("nameless");
+			if(!blockSameComplexBinding) s=new System("nameless",false,globalMoleculeLimit);
+			else s=new System("nameless",true,globalMoleculeLimit);
 			if(verbose) cout<<"\tNo System name given, so I'm calling your system: "<<s->getName()<<endl;
 		}
 		else  {
 			modelName=pModel->Attribute("id");
 			//We have to add complex bookkeeping if we are blocking same complex binding
-			if(!blockSameComplexBinding) s=new System(modelName);
-			else s = new System(modelName,true);
+			if(!blockSameComplexBinding) s=new System(modelName,false,globalMoleculeLimit);
+			else s=new System(modelName,true,globalMoleculeLimit);
 			if(verbose) cout<<"\tCreating system: "<<s->getName()<<endl;
 		}
 
@@ -1169,10 +1171,31 @@ bool NFinput::initReactionRules(
 							id = pDelete->Attribute("id");
 							if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"."<<endl;
 							//cout<<"id: "<<id<<endl;
-							component c = comps.find(id)->second;
+
+							//Here we can check if we are referencing a Molecule for deletion (As opposed to
+							//the entire complex).  We cannot handle this yet, so for now we just get rid of
+							//this designation, and delete the entire complex.
+							int M_position = id.find_first_of("M");
+							if(M_position>=0) {
+								id = id.substr(0,M_position-1);
+								if(verbose) cout<<"\t\t\t\tCannot delete molecule yet, so deleting whole pattern: "+id<<"."<<endl;
+							}
+
+							if(comps.find(id)!=comps.end()) {
+								component c = comps.find(id)->second;
+
+
+
+								if(!ts->addDeleteMolecule(c.t)) return false;
+							} else {
+								cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
+
+								cerr<<"Invalid read!  Looking for "<<id<<" but could not find it!"<<endl;
+								exit(1);
+							}
 							//cout<<"Templates.size() "<<templates.size()<<endl;
 							//c.t->printDetails();
-							if(!ts->addDeleteMolecule(c.t)) return false;
+
 						} catch (exception& e) {
 							cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
 							cerr<<"It seems that I couldn't find the molecule to delete that you are refering to. (I was looking for ID: "<<pDelete->Attribute("id")<<endl;
@@ -2262,22 +2285,36 @@ bool NFinput::readProductPattern(
 					if(pComp->Attribute("numberOfBonds")) {
 						string numOfBonds = pComp->Attribute("numberOfBonds");
 						int numOfBondsInt = -1;
-						try {
-							numOfBondsInt = NFutil::convertToInt(numOfBonds);
-						} catch (std::runtime_error e) {
-							cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
-							cerr<<e.what()<<endl;
-							return false;
+						//string bondConstraint;
+
+						//const int MUST_BE_OCCUPIED = -2;
+						//const int EITHER_WAY_WORKS = -3;
+						if(numOfBonds.compare("+")==0) {
+							//bondConstraint = TemplateMolecule::OCCUPIED;
+							//numOfBondsInt=1;
+						} else if(numOfBonds.compare("*")==0) {
+							//bondConstraint = TemplateMolecule::NO_CONSTRAINT;
+						} else if(numOfBonds.compare("?")==0) {
+							//bondConstraint = TemplateMolecule::NO_CONSTRAINT;
+						} else {
+							try {
+								numOfBondsInt = NFutil::convertToInt(numOfBonds);
+							} catch (std::runtime_error e) {
+								cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
+								cerr<<e.what()<<endl;
+								return false;
+							}
+							if (numOfBondsInt==1) {
+								bSiteSiteMapping[compId] = compName;
+								bSiteMolMapping[compId] = currentMoleculeTypeIndex;
+							} else if (numOfBondsInt!=0) {
+								cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
+								cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
+								return false;
+							}
 						}
 
-						if (numOfBondsInt==1) {
-							bSiteSiteMapping[compId] = compName;
-							bSiteMolMapping[compId] = currentMoleculeTypeIndex;
-						} else if (numOfBondsInt!=0) {
-							cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
-							cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
-							return false;
-						}
+
 					}
 				} //end loop over components
 			} //end if statement for compenents to exist

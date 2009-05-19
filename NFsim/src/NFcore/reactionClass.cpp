@@ -267,6 +267,7 @@ void ReactionClass::fire(double random_A_number)
 //	cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
+		//if((*molIter)->isMolDead()) continue;  // skip over molecules that we just removed...
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
@@ -274,7 +275,7 @@ void ReactionClass::fire(double random_A_number)
 	}
 	//Molecule::printMoleculeList(products);
 
-	//	cout<<",  everything done"<<endl;
+	//cout<<",  everything done"<<endl;
 	//Tidy up
 	products.clear();
 }

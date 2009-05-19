@@ -121,6 +121,12 @@ namespace NFcore
 			System(string name, bool useComplex);
 
 			/*!
+				creates a system that keeps track of complex formation if
+				the setComplex parameter is set to true
+			*/
+			System(string name, bool useComplex, int globalMoleculeLimit);
+
+			/*!
 				 destroys the system and cleans up all memory associated with it
 			 */
 			~System();
@@ -130,6 +136,7 @@ namespace NFcore
 			bool isUsingComplex() { return useComplex; };
 			bool isOutputtingBinary() { return useBinaryOutput; };
 			double getCurrentTime() const { return current_time; };
+			int getGlobalMoleculeLimit() const { return globalMoleculeLimit; };
 
 			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
 			Observable * getObservableByName(string obsName);
@@ -284,6 +291,7 @@ namespace NFcore
 			int universalTraversalLimit; /*!< sets depth to traverse molecules when updating reactant lists */
 			bool onTheFlyObservables;    /*!< sets whether or not observables are calculated on the fly */
 		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */
+		    int globalMoleculeLimit; /*< total number of any particular molecule that can be created, default=100,000 */
 
 		    ///////////////////////////////////////////////////////////////////////////
 			// The container objects that maintain the core system configuration
@@ -327,6 +335,10 @@ namespace NFcore
 			//ofstream outputFileStream; /* the stream to a file to write out the results */
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			void outputGroupDataHeader();
+
+
+			void outputAllPropensities(double time, int rxnFired);
+			ofstream propensityDumpStream;
 
 
 			///////////////////////////////////////////////////////////////////////////
@@ -721,7 +733,6 @@ namespace NFcore
 
 
 			bool isPrepared;
-
 
 			/* Set of IDs which identifies uniquely this molecule */
 			int ID_complex;

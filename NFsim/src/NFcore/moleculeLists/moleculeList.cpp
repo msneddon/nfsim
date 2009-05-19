@@ -3,11 +3,12 @@
 
 using namespace NFcore;
 
-MoleculeList::MoleculeList(MoleculeType *mt, int init_capacity)
+MoleculeList::MoleculeList(MoleculeType *mt, int init_capacity, int finalCapacity)
 {
 	this->n_molecules = 0;
 	this->lastAllocated = 0;
 	this->capacity = init_capacity;
+	this->finalCapacity=finalCapacity;
 	this->mt = mt;
 
 	this->molPos = new int [init_capacity];
@@ -54,6 +55,18 @@ int MoleculeList::create(Molecule *&m)
 			newCapacity = capacity+50000;
 		} else {
 			newCapacity=capacity*2;
+		}
+
+		if(capacity>finalCapacity && finalCapacity!=MoleculeList::NO_LIMIT) {
+			cout.flush();
+			cerr<<"Error in Simulation!  Creating space for "<<capacity;
+			cerr<<" copies of MoleculeType: "<<m->getMoleculeTypeName()<<endl<<endl;
+			cerr<<"There is currently an imposed limit of: "<<finalCapacity<< " molecules per MoleculeType."<<endl;
+			cerr<<"This is done to keep your operating system from crashing, due to excessive system size."<<endl;
+			cerr<<"If you need to have more molecules, rerun with the -gml [int] flag to increase the size."<<endl;
+			cerr<<"For instance, to increase the limit to 1 million, write: -gml 1000000."<<endl;
+			cerr<<"Better luck next time!"<<endl;
+			exit(1);
 		}
 
 		//Copy everything over to new arrays that are double the size

@@ -92,6 +92,11 @@ void Molecule::prepareForSimulation()
 
 }
 
+
+
+
+
+
 void Molecule::setUpLocalFunctionList()
 {
 	localFunctionValues=new double[parentMoleculeType->getNumOfTypeIFunctions()];

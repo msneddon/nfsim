@@ -124,7 +124,7 @@ void DumpSystem::dumpHeaderFile(double dumpTime) {
 	for(int i=0; i<s->getNumOfMoleculeTypes(); i++) {
 		MoleculeType *mt = s->getMoleculeType(i);
 		for(int k=0; k<mt->getNumOfTypeIFunctions(); k++) {
-			ofs<<"\t"<<i<<"\t"<<k<<"\t"<<mt->getTypeIILocalFunction(k)->getName()<<"\n";
+			ofs<<"\t"<<i<<"\t"<<k<<"\t"<<mt->getTypeILocalFunction(k)->getName()<<"\n";
 		}
 	}
 

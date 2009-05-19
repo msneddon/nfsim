@@ -22,6 +22,7 @@ System::System(string name)
 	nextReaction = 0;
 	this->useComplex = false;
 	this->outputGlobalFunctionValues=false;
+	this->globalMoleculeLimit = 100000;
 	rxnIndexMap=0;
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
@@ -38,6 +39,7 @@ System::System(string name, bool useComplex)
 	nextReaction = 0;
 	this->useComplex = useComplex;
 	this->outputGlobalFunctionValues=false;
+	this->globalMoleculeLimit = 100000;
 
 	rxnIndexMap=0;
 	useBinaryOutput=false;
@@ -45,6 +47,26 @@ System::System(string name, bool useComplex)
 	universalTraversalLimit=-1;
 	ds=0;
 }
+
+System::System(string name, bool useComplex, int globalMoleculeLimit)
+{
+	this->name = name;
+	this->a_tot = 0;
+	current_time = 0;
+	nextReaction = 0;
+	this->useComplex = useComplex;
+	this->globalMoleculeLimit=globalMoleculeLimit;
+	this->outputGlobalFunctionValues=false;
+
+	rxnIndexMap=0;
+	useBinaryOutput=false;
+	onTheFlyObservables=true;
+	universalTraversalLimit=-1;
+	ds=0;
+
+
+}
+
 
 
 System::~System()
@@ -124,6 +146,10 @@ System::~System()
 
 	//Close our connections to output files
 	outputFileStream.close();
+
+
+	propensityDumpStream.close();
+
 }
 
 
@@ -522,6 +548,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	double delta_t = 0; unsigned long long iteration = 0, stepIteration = 0;
 	double end_time = current_time+duration;
 	tryToDump();
+
 	while(current_time<end_time)
 	{
 		//2: Recompute a_tot for this time
@@ -583,9 +610,11 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		nextReaction->fire(randElement);
 
 		tryToDump();
+		//	outputAllPropensities(current_time, nextReaction->getRxnId());
 	}
 
 
+	cout<<"Final Atot = "<<this->a_tot<<endl;
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -1150,6 +1179,49 @@ void System::printAllFunctions() {
 	}
 }
 
+void System::outputAllPropensities(double time, int rxnFired)
+{
+	if(!propensityDumpStream.is_open()) {
+
+		string filename = this->name+"_propensity.txt";
+		propensityDumpStream.open(filename.c_str());
+
+
+		if(!outputFileStream.is_open()) {
+				cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+				cerr<<"quitting."<<endl;
+				exit(1);
+		}
+
+		propensityDumpStream<<"time rxn";
+		for(unsigned int r=0; r<allReactions.size(); r++) {
+			propensityDumpStream<<" ";
+			propensityDumpStream<<allReactions[r]->getName();
+			for(int rl=0; rl<allReactions[r]->getNumOfReactants(); rl++) {
+				propensityDumpStream<<" rL"<<NFutil::toString(rl);
+			}
+		}
+		propensityDumpStream<<endl;
+	}
+
+	propensityDumpStream<<time<<" "<<allReactions.at(rxnFired)->getName();
+	for(unsigned int r=0; r<allReactions.size(); r++) {
+		propensityDumpStream<<" ";
+			propensityDumpStream<<allReactions[r]->get_a();
+			for(int rl=0; rl<allReactions[r]->getNumOfReactants(); rl++) {
+				propensityDumpStream<<" "<<NFutil::toString((int)allReactions[r]->getReactantCount(rl));
+		}
+	}
+	propensityDumpStream<<endl;
+
+
+}
+
+
+
+
+
+
 NFstream& System::getOutputFileStream()
 {
     return outputFileStream;
@@ -1157,9 +1229,9 @@ NFstream& System::getOutputFileStream()
 
 // friend functions
 template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value) 
+NFstream& operator<<(NFstream& nfstream, const T& value)
 {
-    if (nfstream.useFile_) 
+    if (nfstream.useFile_)
 	nfstream.file_ << value;
     else
 	nfstream.str_ << value;
