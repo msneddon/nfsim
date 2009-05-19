@@ -131,7 +131,7 @@ void MoleculeType::init(
 	this->type_id = this->system->addMoleculeType(this);
 
 
-	mList = new MoleculeList(this,2);
+	mList = new MoleculeList(this,2,system->getGlobalMoleculeLimit());
 	n_eqComp = 0;
 }
 
@@ -298,13 +298,13 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 			(*obsIter)->add();
 	}
 
+	this->updateRxnMembership(mol);
 
-
-	//Check each reaction and add this molecule as a reactant if we have to
-	int r=0;
-	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ ) {
-		(*rxnIter)->tryToAdd(mol, reactionPositions.at(r));
-	}
+//	//Check each reaction and add this molecule as a reactant if we have to
+//	int r=0;
+//	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ ) {
+//		(*rxnIter)->tryToAdd(mol, reactionPositions.at(r));
+//	}
 
 }
 
@@ -485,7 +485,7 @@ void MoleculeType::removeFromObservables(Molecule *m)
 	int o=0;
   	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
   		//Only subtract if m happened to be an observable... this saves us a compare call
-  		if(m->isObs(o)) { //(*obsIter)->isObservable(m)){
+  		if((*obsIter)->isObservable(m)){
 			(*obsIter)->subtract();
   		}
   		o++;
@@ -654,9 +654,9 @@ void MoleculeType::printDetails() const
 
 // friend functions
 template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value) 
+NFstream& operator<<(NFstream& nfstream, const T& value)
 {
-    if (nfstream.useFile_) 
+    if (nfstream.useFile_)
 	nfstream.file_ << value;
     else
 	nfstream.str_ << value;
