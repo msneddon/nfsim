@@ -729,10 +729,17 @@ namespace NFcore
 			//void traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit);
 
 
+			bool isMolAlive() const { return !isDead; };
+			bool isMolDead() const { return isDead; };
+			void kill() { isDead = true; };
+			void create() { isDead = false; };
+
+
 		protected:
 
 
 			bool isPrepared;
+			bool isDead;
 
 			/* Set of IDs which identifies uniquely this molecule */
 			int ID_complex;

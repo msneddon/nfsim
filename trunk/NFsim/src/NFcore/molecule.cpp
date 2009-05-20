@@ -42,6 +42,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
+	isDead = true;
 	isObservable = 0;
 	localFunctionValues=0;
 

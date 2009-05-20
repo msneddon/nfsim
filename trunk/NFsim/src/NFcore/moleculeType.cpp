@@ -283,6 +283,7 @@ Molecule *MoleculeType::genDefaultMolecule()
 {
 	Molecule *m;
 	mList->create(m);
+	m->create();
 	return m;
 }
 
@@ -291,6 +292,7 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 {
 	//First prepare the molecule for simulation
 	mol->prepareForSimulation();
+	mol->create();
 
 	//Check each observable and see if this molecule should be counted
 	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ) {
@@ -312,9 +314,19 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 
 void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 {
-	mList->remove(m->getMolListId());
+	//Remove this guy from the list, the observables list, and from all rxns
+	mList->remove(m->getMolListId(), m);
 	removeFromObservables(m);
 	removeFromRxns(m);
+
+	//We also have to remove all bonds
+	for(int c=0; c<getNumOfComponents(); c++) {
+		if(m->isBindingSiteBonded(c)) {
+			Molecule::unbind(m,c);
+		}
+	}
+
+	m->kill();
 }
 
 

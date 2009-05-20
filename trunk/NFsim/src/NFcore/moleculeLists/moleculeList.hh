@@ -58,7 +58,7 @@ namespace NFcore
 			/*!
 				Removes a Molecule from this list with the given ID.
 			*/
-			void remove(int listId);
+			void remove(int listId, Molecule *m);
 
 			/*!
 				Removes the very last Molecule on the list (which is the one you just

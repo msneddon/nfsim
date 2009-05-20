@@ -260,6 +260,7 @@ void ReactionClass::fire(double random_A_number)
 	//the counts of observables and update its class lists, and update any DOR Groups
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
+		if((*molIter)->isMolDead()) continue;
 		if(onTheFlyObservables) (*molIter)->addToObservables();
 	}
 //	cout<<",  obs updated";
@@ -267,7 +268,7 @@ void ReactionClass::fire(double random_A_number)
 //	cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-		//if((*molIter)->isMolDead()) continue;  // skip over molecules that we just removed...
+		if((*molIter)->isMolDead()) { cout<<"here"<<endl; continue; } // skip over molecules that we just removed...
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();

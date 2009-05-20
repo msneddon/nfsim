@@ -99,7 +99,7 @@ int MoleculeList::create(Molecule *&m)
 }
 
 
-void MoleculeList::remove(int listId)
+void MoleculeList::remove(int listId, Molecule *m)
 {
 	//Make sure this mappingSet is not empty
 	if(n_molecules==0) {
@@ -112,7 +112,9 @@ void MoleculeList::remove(int listId)
 
 	//Make sure the position is valid (not out of bounds of the List)
 	if(pos+1>(n_molecules)) {
-		cout<<"Error in MoleculeList:  you can't remove a mappingSet that has been cleared! (trying to remove: "<< listId << " in pos " << pos <<" but size is: "<<size()<<endl;
+		cout<<"Error in MoleculeList:  you can't remove a molecule that is not in the simulation! (trying to remove: "<< listId << " in pos " << pos <<" but size is: "<<size()<<endl;
+		m->printDetails();
+		exit(1);
 		return;
 	}
 
