@@ -368,9 +368,14 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	if(deleteList.size()>0) {
 		list <Molecule *> allMolecules;
 		list <Molecule *>::iterator it;
+
+		//The default behavior is to delete everything that A is connected to, so we
+		//have to loop over this list
 		for(it = deleteList.begin(); it!=deleteList.end(); it++) {
 			(*it)->traverseBondedNeighborhood(allMolecules,ReactionClass::NO_LIMIT);
 		}
+
+		//Each molecule that this one is connected to must be removed
 		for(it = allMolecules.begin(); it!=allMolecules.end(); it++) {
 			(*it)->getMoleculeType()->removeMoleculeFromRunningSystem((*it));
 		}
