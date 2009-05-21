@@ -17,16 +17,16 @@
 #include "../NFreactions.hh"
 
 #include "Compartment.h"
-#include "CompartmentInteraction.h"
+#include "CompartmentSubPropensity.h"
 #include <vector>
 using namespace NFcore;
 using namespace std;
 
-class Compartment;
-class CompartmentInteraction;
+class CompartmentReactantList;
+class CompartmentSubPropensity;
 class CompartmentReaction: public NFcore::ReactionClass {
-	friend class Compartment;
-	friend class CompartmentInteraction;
+	friend class CompartmentReactantList;
+	friend class CompartmentSubPropensity;
 public:
 	//Constructor
 	CompartmentReaction(string name, double baseRate, TransformationSet *transformationSet);
@@ -56,21 +56,29 @@ public:
 	// Changes the compartment the specified molecule is in for this reaction
 	//void moveMolToCompartment(Molecule* m, unsigned int oldCompartmentId, unsigned int newCompartmentId, unsigned int reactantPos);
 
-	//add an interaction between compartments
-	//void addCompartmentInteraction(vector<unsigned int> CompartmentIdList);
+	//Must call before using the compartmentReaction class
+	static void SetNumCompartments(unsigned int nCompartments);
+	static void addConnectivity(unsigned int compartmentId1, unsigned int compartmentId2);
 
-	//Number of compartments in the system
-	static unsigned int nCompartments;
 
 protected:
+
+	//add an interaction between compartments
+	void addCompartmentInteraction(unsigned int CompartmentIdList[]);
+
 	//Choose a mappingSet at random
 	virtual void pickMappingSets(double randNumber) const;
 
 	//note maps are access in log(n) time
-	map<unsigned int,Compartment*> m_mapCompartmentList;
+	map<unsigned int,CompartmentReactantList*> m_mapCompartmentList;
 
 	//vector of interactions that this reaction can handle
-	vector<CompartmentInteraction*> m_vectInteractionList;
+	vector<CompartmentSubPropensity*> m_vectInteractionList;
+
+	//Number of compartments in the system
+	static unsigned int nCompartments;
+	//keeps track of compartment connections
+	static map<unsigned int,vector<unsigned int> > m_mapCompartmentConnectivity;
 };
 
 #endif /* COMPARTMENTREACTION_H_ */
