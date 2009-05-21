@@ -173,7 +173,11 @@ void NFtest_ss::runCompartmentSystem()
 	double kOff = 0.2;
 	double kCat = 0.1;
 
-	CompartmentReaction::nCompartments = 5;
+	CompartmentReaction::SetNumCompartments(5);
+	CompartmentReaction::addConnectivity(0,1);
+	CompartmentReaction::addConnectivity(1,2);
+	CompartmentReaction::addConnectivity(2,3);
+	CompartmentReaction::addConnectivity(3,4);
 
 	System *s = new System("Compartment System");
 
@@ -452,8 +456,10 @@ ReactionClass * NFtest_ss::createReactionCompXYbind(MoleculeType *molX,MoleculeT
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addEmptyComponent("y");
 	xTemp->addComponentConstraint("p","Unphos");
+	xTemp->setCompartmentConstraint(0);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	yTemp->addEmptyComponent("x");
+	yTemp->setCompartmentConstraint(1);
 
 
 	//Again, we create the vector of templates to store our reactants.  There are two reactants

@@ -7,7 +7,7 @@
 
 #include "Compartment.h"
 
-Compartment::Compartment(
+CompartmentReactantList::CompartmentReactantList(
 		unsigned int compId,
 		double dbBaseRate,
 		TransformationSet* transformationSet,
@@ -24,7 +24,7 @@ Compartment::Compartment(
 	for(unsigned int r=0; r<nReactants; r++)
 		reactantLists[r]=(new ReactantList(r,transformationSet,25));
 }
-Compartment::~Compartment()
+CompartmentReactantList::~CompartmentReactantList()
 {
 	if(DEBUG) cout<<"Destorying rxn Compartment: "<<name<<endl;
 
@@ -36,16 +36,18 @@ Compartment::~Compartment()
 	}
 	delete [] reactantLists;
 }
-unsigned int Compartment::getReactantCount(unsigned int reactantIndex) const
+unsigned int CompartmentReactantList::getReactantCount(unsigned int reactantIndex) const
 {
 	return reactantLists[reactantIndex]->size();
 }
-void Compartment::printDetails() const
+void CompartmentReactantList::printDetails() const
 {
 	for(unsigned int i=0; i<n_reactants; i++)
 		reactantLists[i]->printDetails();
 }
-void Compartment::pickMappingSets(MappingSet** mappingSet, double random_A_number) const
+// now handled by CompartmentSubPropensity
+/*
+void CompartmentReactantList::pickMappingSets(MappingSet** mappingSet, double random_A_number) const
 {
 	//Note here that we completely ignore the argument.  The argument is only
 	//used for DOR reactions because we need that number to select the reactant to fire
@@ -58,19 +60,21 @@ void Compartment::pickMappingSets(MappingSet** mappingSet, double random_A_numbe
 		reactantLists[ii]->pickRandom(mappingSet[ii]);
 	}
 }
-
-double Compartment::update_a()
+*/
+// now handled by CompartmentSubPropensity
+/*
+double CompartmentReactantList::update_a()
 {
 	// We return 0 propensity for inactive compartments to fire
 	if(!active) return 0;
 	a=1;
 	for(unsigned int i=0; i<n_reactants; i++)
 		a*=reactantLists[i]->size();
-	a*=m_pParentReaction->baseRate;
+
 	return a;
 }
-
-void Compartment::init(CompartmentReaction* thisReactionClass)
+*/
+void CompartmentReactantList::init(CompartmentReaction* thisReactionClass)
 {
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
@@ -78,7 +82,7 @@ void Compartment::init(CompartmentReaction* thisReactionClass)
 	}
 }
 
-inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos, int rxnIndex)
+inline bool CompartmentReactantList::tryToAdd(Molecule *m, unsigned int reactantPos, int rxnIndex)
 {
 	//Try to map it!
 	//Get the specified reactantList
@@ -95,7 +99,7 @@ inline bool Compartment::tryToAdd(Molecule *m, unsigned int reactantPos, int rxn
 
 	return true;
 }
-void Compartment::tryToRemove(Molecule *m, unsigned int reactantPos, int rxnIndex)
+void CompartmentReactantList::tryToRemove(Molecule *m, unsigned int reactantPos, int rxnIndex)
 {
 	//Get the specified reactantList
 	ReactantList *rl = reactantLists[reactantPos];
@@ -107,7 +111,7 @@ void Compartment::tryToRemove(Molecule *m, unsigned int reactantPos, int rxnInde
 	}
 }
 
-void Compartment::removeClones(Molecule *m, unsigned int reactantPos, int rxnIndex)
+void CompartmentReactantList::removeClones(Molecule *m, unsigned int reactantPos, int rxnIndex)
 {
 	//Get the specified reactantList
 	ReactantList *rl = reactantLists[reactantPos];

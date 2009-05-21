@@ -15,35 +15,41 @@
 
 #include "../NFreactions.hh"
 #include "CompartmentReaction.h"
-#include "CompartmentInteraction.h"
+#include "CompartmentSubPropensity.h"
 #include<string>
 
 using namespace NFcore;
 using namespace std;
 class CompartmentReaction;
-class Compartment {
+class CompartmentReactantList {
 	friend class CompartmentReaction;
-	friend class CompartmentInteraction;
+	friend class CompartmentSubPropensity;
 public:
 	//Constructor
-	Compartment(
+	CompartmentReactantList(
 			unsigned int compId,
 			double dbBaseRate,
 			TransformationSet* transformationSet,
 			unsigned int nReactants,
 			CompartmentReaction*);
 	//Destructor
-	virtual ~Compartment();
+	virtual ~CompartmentReactantList();
 	//initialization
 	void init(CompartmentReaction* thisReactionClass);
 	//Gets the number of reactants
 	unsigned int getReactantCount(unsigned int reactantIndex) const;
+
+	// this was moved to compartmentSubPropensity
 	//Selects a random mapping set
-	void pickMappingSets(MappingSet** mappingSet, double random_A_number) const;
+	//void pickMappingSets(MappingSet** mappingSet, double random_A_number) const;
+
 	//Prints details of the reaction mainly used for debugging
 	void printDetails() const;
+
+	// this was moved to CompartmentSubPropensity
 	//Get and update the propensity
-	double update_a();
+	//double update_a();
+
 	//Try to add the molecule to this reaction rule
 	virtual bool tryToAdd(Molecule *m, unsigned int reactantPos, int rxnIndex);
 	//Removese a molecule from this reaction rule
