@@ -157,16 +157,16 @@ void NFtest_ss::runCompartmentSystem()
 	cout<<"Running the Compartment system"<<endl;
 
 	//First we define some parameters for rates and counts
-	int numOfMoleculeYCompartment0 = 30;
-	int numOfMoleculeXCompartment0 = 60;
-	int numOfMoleculeYCompartment1 = 30;
-	int numOfMoleculeXCompartment1 = 60;
-	int numOfMoleculeYCompartment2 = 30;
-	int numOfMoleculeXCompartment2 = 60;
-	int numOfMoleculeYCompartment3 = 30;
-	int numOfMoleculeXCompartment3 = 60;
-	int numOfMoleculeYCompartment4 = 30;
-	int numOfMoleculeXCompartment4 = 60;
+	int numOfMoleculeYCompartment0 = 3000;
+	int numOfMoleculeXCompartment0 = 6000;
+	int numOfMoleculeYCompartment1 = 3000;
+	int numOfMoleculeXCompartment1 = 6000;
+	int numOfMoleculeYCompartment2 = 3000;
+	int numOfMoleculeXCompartment2 = 6000;
+	int numOfMoleculeYCompartment3 = 3000;
+	int numOfMoleculeXCompartment3 = 6000;
+	int numOfMoleculeYCompartment4 = 3000;
+	int numOfMoleculeXCompartment4 = 6000;
 
 	double dephosRate = 0.2;
 	double kOn = 0.0003;
