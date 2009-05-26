@@ -23,12 +23,15 @@ CompartmentSubPropensity::CompartmentSubPropensity(
 		// take the list of compartments in this interaction
 	this->m_parentCompartmentReaction = parentCompartmentReaction;
 	this->n_reactants = n_reactants;
-	this->m_CompartmentIdList = CompartmentIdList;
-
+	this->m_CompartmentIdList = new unsigned int[this->n_reactants];
+	for(unsigned int ii = 0; ii < n_reactants; ii++)
+	{
+		this->m_CompartmentIdList[ii] = CompartmentIdList[ii];
+	}
 }
 
 CompartmentSubPropensity::~CompartmentSubPropensity() {
-
+	delete this->m_CompartmentIdList;
 }
 
 double CompartmentSubPropensity::update_a()
