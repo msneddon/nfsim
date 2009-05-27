@@ -45,6 +45,12 @@ namespace NFtest_ss
 	 */
 	void runCompartmentSystem();
 
+	//!  Runs the Compartment enzymatic type reaction system as an example system that mimics the simple system setup.
+	/*!
+		@author Kelly Stanton
+	 */
+	void runCompartmentSimpleSystem();
+
 
 	/*!
 		Creates Molecule of type X for the simple system.  In this system, X is the
