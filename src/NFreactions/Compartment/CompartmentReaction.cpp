@@ -70,6 +70,13 @@ CompartmentReaction::CompartmentReaction(string name, double baseRate, Transform
 					this->addCompartmentInteraction((unsigned int[]){cmpVectIter->first,*cmpConnectedVectIter});
 				}
 			}
+			// Add interactions drawing reactants from the same compartments
+			static map<unsigned int,CompartmentReactantList*>::iterator cmpIter;
+			for(cmpIter = m_mapCompartmentList.begin(); cmpIter != m_mapCompartmentList.end(); cmpIter++)
+			{
+				this->addCompartmentInteraction((unsigned int[]){cmpIter->first,cmpIter->first});
+			}
+
 		}
 		// if the first reactant is universal
 		else if(cpt1 == (unsigned int)-1)
@@ -80,6 +87,8 @@ CompartmentReaction::CompartmentReaction(string name, double baseRate, Transform
 			{
 				this->addCompartmentInteraction((unsigned int[]){*cmpConnectedVectIter,cpt2});
 			}
+			// add interaction for drawing reactants from the same compartment
+			this->addCompartmentInteraction((unsigned int[]){cpt2,cpt2});
 
 		}
 		// if the second reactant is universal
@@ -91,6 +100,8 @@ CompartmentReaction::CompartmentReaction(string name, double baseRate, Transform
 			{
 				this->addCompartmentInteraction((unsigned int[]){cpt1,*cmpConnectedVectIter});
 			}
+			// add interaction for drawing reactants from the same compartment
+			this->addCompartmentInteraction((unsigned int[]){cpt1,cpt1});
 		}
 		// if neither reactant is universal
 		else

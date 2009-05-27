@@ -224,6 +224,58 @@ void NFtest_ss::runCompartmentSystem()
 	delete s;
 	exit(1);
 }
+void NFtest_ss::runCompartmentSimpleSystem()
+{
+	cout<<"Running the Compartment system"<<endl;
+
+	//First we define some parameters for rates and counts
+	int numOfMoleculeYCompartment0 = 3011;
+	int numOfMoleculeXCompartment0 = 6022;
+
+	double dephosRate = 0.2;
+	double kOn = 0.0003;
+	double kOff = 0.2;
+	double kCat = 0.1;
+
+	CompartmentReaction::SetNumCompartments(1);
+
+	System *s = new System("Compartment System");
+
+	MoleculeType *molX = createX(s);
+	MoleculeType *molY = createY(s);
+
+	molY->populateWithDefaultMolecules(numOfMoleculeYCompartment0,0);
+	molX->populateWithDefaultMolecules(numOfMoleculeXCompartment0,0);
+
+	//ReactionClass *rCompartmentTransfer = createReactionCompTransfer(molX, 0.5);
+	ReactionClass *rCompartmentxDephos = createReactionCompXDephos(molX, dephosRate);
+	ReactionClass *rCompartmentXbindY = createReactionCompXYbind(molX, molY, kOn);
+	ReactionClass *rCompartmentXunbindY = createReactionCompXYunbind(molX, molY, kOff);
+	ReactionClass *rCompartmentYphosX = createReactionCompYphosX(molX, molY, kCat);
+
+	//s->addReaction(rCompartmentTransfer);
+	s->addReaction(rCompartmentxDephos);
+	s->addReaction(rCompartmentXbindY);
+	s->addReaction(rCompartmentXunbindY);
+	s->addReaction(rCompartmentYphosX);
+
+	addObs(s, molX, molY);
+
+	s->prepareForSimulation();
+	s->printAllReactions();
+
+	s->registerOutputFileLocation("compartment_simple_system_output.txt");
+	s->outputAllObservableNames();
+
+	s->sim(500,500);
+
+	s->outputAllObservableCounts();
+
+	s->printAllReactions();
+
+	delete s;
+	exit(1);
+}
 
 
 
@@ -429,7 +481,7 @@ ReactionClass * NFtest_ss::createReactionCompXDephos(MoleculeType *molX, double 
 
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addComponentConstraint("p","Phos");
-	xTemp->setCompartmentConstraint(0);
+	//xTemp->setCompartmentConstraint(0);
 
 	vector <TemplateMolecule *> templates;
 	templates.push_back( xTemp );
@@ -456,10 +508,10 @@ ReactionClass * NFtest_ss::createReactionCompXYbind(MoleculeType *molX,MoleculeT
 	TemplateMolecule *xTemp = new TemplateMolecule(molX);
 	xTemp->addEmptyComponent("y");
 	xTemp->addComponentConstraint("p","Unphos");
-	xTemp->setCompartmentConstraint(0);
+	//xTemp->setCompartmentConstraint(0);
 	TemplateMolecule *yTemp = new TemplateMolecule(molY);
 	yTemp->addEmptyComponent("x");
-	yTemp->setCompartmentConstraint(1);
+	//yTemp->setCompartmentConstraint(1);
 
 
 	//Again, we create the vector of templates to store our reactants.  There are two reactants
@@ -512,7 +564,6 @@ ReactionClass * NFtest_ss::createReactionCompXYunbind(MoleculeType *molX, Molecu
 
 	//Create the reaction in the usual way.
 	ReactionClass *r = new CompartmentReaction("Comp_Y_unbind_X",rate,ts);
-	((CompartmentReaction*)r)->restrictToCompartment(0);
 	return r;
 }
 
