@@ -177,6 +177,7 @@ namespace NFcore
 			bool getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit);
 
 			bool hasSymUnbindingTransform() const { return hasSymUnbinding; };
+			bool hasSymBindingTransform() const { return hasSymBinding; };
 
 
 			int getNumOfTransformations(int reactantIndex) const { return transformations[reactantIndex].size();};
@@ -211,6 +212,7 @@ namespace NFcore
 
 			vector <Transformation *> addMoleculeTransformations;
 			bool hasSymUnbinding;
+			bool hasSymBinding;
 	};
 
 }

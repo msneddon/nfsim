@@ -172,11 +172,11 @@ MoleculeType::~MoleculeType()
 	}
 
 	//Delete all observables of this type that exist
-	Observable *o;
-	while(observables.size()>0)
+	MoleculesObservable *o;
+	while(molObs.size()>0)
 	{
-		o = observables.back();
-		observables.pop_back();
+		o = molObs.back();
+		molObs.pop_back();
 		delete o;
 	}
 
@@ -283,7 +283,7 @@ Molecule *MoleculeType::genDefaultMolecule()
 {
 	Molecule *m;
 	mList->create(m);
-	m->create();
+	m->setAlive(true);
 	return m;
 }
 
@@ -292,12 +292,19 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 {
 	//First prepare the molecule for simulation
 	mol->prepareForSimulation();
-	mol->create();
+	mol->setAlive(true);
 
 	//Check each observable and see if this molecule should be counted
-	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ) {
-		if((*obsIter)->isObservable(mol))
-			(*obsIter)->add();
+	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ ) {
+		int matches = (*molObsIter)->isObservable(mol);
+		for(int k=0; k<matches; k++) { (*molObsIter)->add(); }
+
+		//////////////////////////////////////////////////////////////////
+		//!! @TODO FIX ME!!!
+//		if(mol->getComplex()!=0) {
+//			Complex *c = mol->getComplex();
+//			this->system->addNewComplexToSpeciesObservables(c);
+//		}
 	}
 
 	this->updateRxnMembership(mol);
@@ -319,6 +326,7 @@ void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 	removeFromObservables(m);
 	removeFromRxns(m);
 
+
 	//We also have to remove all bonds
 	for(int c=0; c<getNumOfComponents(); c++) {
 		if(m->isBindingSiteBonded(c)) {
@@ -326,7 +334,7 @@ void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 		}
 	}
 
-	m->kill();
+	m->setAlive(false);
 }
 
 
@@ -346,14 +354,14 @@ void MoleculeType::addTemplateMolecule(TemplateMolecule *t)
 		cout<<"!!!!Error: trying to add molecule of type " << t->getMoleculeTypeName() << " to MoleculeType " << name << endl;
 }
 
-
-string MoleculeType::getObservableAlias(int obsIndex) const {
-	return observables.at(obsIndex)->getAliasName();
+string MoleculeType::getMolObsName(int obsIndex) const {
+	return molObs.at(obsIndex)->getName();
 }
 
-unsigned long int MoleculeType::getObservableCount(int obsIndex) const {
-	return observables.at(obsIndex)->getCount();
+int MoleculeType::getMolObsCount(int obsIndex) const {
+	return molObs.at(obsIndex)->getCount();
 }
+
 
 
 int MoleculeType::getCompIndexFromName(string cName) const
@@ -494,13 +502,11 @@ int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 void MoleculeType::removeFromObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule was counted, and if so, remove
-	int o=0;
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ ){
+  	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
+  	{
   		//Only subtract if m happened to be an observable... this saves us a compare call
-  		if((*obsIter)->isObservable(m)){
-			(*obsIter)->subtract();
-  		}
-  		o++;
+  		int matches = (*molObsIter)->isObservable(m);
+  		for(int k=0; k<matches; k++) { (*molObsIter)->subtract(); }
 	}
 }
 
@@ -551,23 +557,24 @@ int MoleculeType::addLocalFunc_TypeII(LocalFunction *lf) {
 
 void MoleculeType::addAllToObservables()
 {
+	/////  WARNING:: when calling this function, be sure to clear all observables
+	/////  first, because this function will not clear observables.
+
 	//Check each observable and see if this molecule should be counted
-	Molecule *mol; int o=0;
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++){
-  		(*obsIter)->clear();
+	Molecule *mol; int o=0; int matches=0;
+  	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
+  	{
   		for( int m=0; m<mList->size(); m++ )
   		{
   			mol = mList->at(m);
-  		  	if((*obsIter)->isObservable(mol)) {
-  		  		(*obsIter)->straightAdd();
-  		  		mol->setIsObs(o,true);
-  		  	} else {
-  		  		mol->setIsObs(o,false);
-  		  	}
+  			matches = (*molObsIter)->isObservable(mol);
+  			for(int k=0; k<matches; k++) {
+  				(*molObsIter)->add();
+  			}
+  			mol->setIsObs(o,matches);
   		}
   		o++;
 	}
-
 }
 
 
@@ -576,14 +583,15 @@ void MoleculeType::addToObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule should be counted
 	int o=0;
-  	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++){
+  	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++){
 		//cout<<"Comparing(in add: "<<endl;
 		//m->printDetails();
-		if((*obsIter)->isObservable(m)) {
-			(*obsIter)->add();
-			m->setIsObs(o,true);
-		} else {
-			m->setIsObs(o,false);
+
+		int matches = (*molObsIter)->isObservable(m);
+		m->setIsObs(o,matches);
+
+		for(int k=0; k<matches; k++) {
+			(*molObsIter)->add();
 		}
 		o++;
 	}
@@ -591,28 +599,28 @@ void MoleculeType::addToObservables(Molecule *m)
 }
 
 
-void MoleculeType::outputObservableNames(NFstream &fout)
+void MoleculeType::outputMolObsNames(NFstream &fout)
 {
-	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-		fout<<"\t"<<(*obsIter)->getAliasName();
+	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
+		fout<<"\t"<<(*molObsIter)->getName();
 }
 
-void MoleculeType::outputObservableCounts(NFstream &fout)
+void MoleculeType::outputMolObsCounts(NFstream &fout)
 {
-	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-		fout<<"\t"<<(*obsIter)->getCount();
+	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
+		fout<<"\t"<<(*molObsIter)->getCount();
 }
 
-void MoleculeType::printObservableNames()
+void MoleculeType::printMolObsNames()
 {
-	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-		cout<<"\t"<<(*obsIter)->getAliasName();
+	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
+		cout<<"\t"<<(*molObsIter)->getName();
 }
 
-void MoleculeType::printObservableCounts()
+void MoleculeType::printMolObsCounts()
 {
-	for(obsIter = observables.begin(); obsIter != observables.end(); obsIter++ )
-		cout<<"\t"<<(*obsIter)->getCount();
+	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
+		cout<<"\t"<<(*molObsIter)->getCount();
 }
 
 
@@ -660,7 +668,7 @@ void MoleculeType::printDetails() const
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
 	cout<<"   -has "<< reactions.size() <<" reactions"<<endl;
 //	cout<<"        of which "<< indexOfDORrxns.size() <<" are DOR rxns. "<<endl;
-	cout<<"   -has "<< observables.size() <<" observables " <<endl;
+	cout<<"   -has "<< molObs.size() <<" molecules observables " <<endl;
 }
 
 

@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 	// Check if scheduler should handle the work
 	if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.02";
+	string versionNumber = "1.03";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
     cout<<endl<<"done.  Total CPU time: "<< time << "s"<<endl<<endl;
     return 0;
 }
- 
+
 
 
 bool runRNFscript(map<string,string> argMap, bool verbose)

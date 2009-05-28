@@ -197,11 +197,10 @@ void getPrintout(System *s)
 	cout<<" (1) all MoleculeTypes"<<endl;
 	cout<<" (2) all index values and names"<<endl;
 	cout<<" (3) all complexes"<<endl;
-	cout<<" (4) all modules"<<endl;
-	cout<<" (5) all observables"<<endl;
-	cout<<" (6) specific reaction"<<endl;
-	cout<<" (7) specific molecule by MoleculeType"<<endl;
-	cout<<" (8) specific molecule by unique ID"<<endl;
+	cout<<" (4) all observables"<<endl;
+	cout<<" (5) specific reaction"<<endl;
+	cout<<" (6) specific molecule by MoleculeType"<<endl;
+	cout<<" (7) specific molecule by unique ID"<<endl;
 	int selection = getInput(0,8);
 	switch(selection) {
 		case 0:
@@ -222,21 +221,17 @@ void getPrintout(System *s)
 			break;
 		case 4:
 			cout<<endl<<endl;
-			s->printAllGroups();
+			s->printAllObservableCounts(s->getCurrentTime());
 			break;
 		case 5:
 			cout<<endl<<endl;
-			s->printAllObservableCounts(s->getCurrentTime());
+			s->getReaction(0)->printDetails();
 			break;
 		case 6:
 			cout<<endl<<endl;
-			s->getReaction(0)->printDetails();
-			break;
-		case 7:
-			cout<<endl<<endl;
 			printSpecificMolecule(s);
 			break;
-		case 8:
+		case 7:
 			cout<<endl<<endl;
 			printSpecificMoleculeByUid(s);
 			break;

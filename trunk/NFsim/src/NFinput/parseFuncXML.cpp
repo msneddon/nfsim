@@ -281,60 +281,94 @@ bool createLocalFunction(string name,
 		}
 	}
 
-
 	//now from the list of observable names, we have to go back and
-	//actually create observables for these things.  So we'll do that here
-	try {
-		TiXmlElement *pObs;
-		for ( pObs = pListOfObservables->FirstChildElement("Observable");
-			pObs != 0; pObs = pObs->NextSiblingElement("Observable")) {
-
-			string observableId="", observableName="", observableType="";
-			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
-				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
-				return false;
-			} else {
-				observableId = pObs->Attribute("id");
-				observableName = pObs->Attribute("name");
-				observableType = pObs->Attribute("type");
-			}
-
-			for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
-				if(observableName==finalObsUsedName.at(i)) {
-					if(finalObsUsedScope.at(i)!=-1) {
-						TemplateMolecule *tempmol = 0;
-						if(!readObservable(pObs,observableName,tempmol,
-								s,parameter, allowedStates,false)) {
-							return false;
-						}
-						if(tempmol!=0) {
-							Observable *o  = new Observable(observableName.c_str(),tempmol);
-							finalLocalObservables.at(i)=o;
-							// WE DO NOT ADD THIS OBSERVABLE TO THE MOLECULE HERE!!
-						}
-					}
-					break;
-				}
-			}
-		}
-
-	} catch (...) {
-		//oh no, what happened this time?
-		cout<<"Caught an unexpected error when creating observables for this local function."<<endl;
-		return false;
-	}
-
-
-	//make sure everything went as planned
-	for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
+	//actually create new observables for these things, by cloning existing
+	//observables.  So we'll do that here.
+	for(unsigned int i=0; i<finalObsUsedName.size(); i++) {
 		if(finalObsUsedScope.at(i)!=-1) {
-			if(finalLocalObservables.at(i)==0) {
-				cout<<"Error!! unable to create local function because the reference to\n";
-				cout<<"observable named: '"<<finalObsUsedName.at(i)<<"' was not found."<<endl;
+			Observable *systemObs=s->getObservableByName(finalObsUsedName.at(i));
+			if(systemObs==0) {
+				cout.flush();
+				cerr<<"Error!! unable to create local function '"<<name<<"' because the reference to\n";
+				cerr<<"observable named: '"<<finalObsUsedName.at(i)<<"' was not found."<<endl;
 				return false;
 			}
+
+			finalLocalObservables.at(i) = systemObs->clone();
 		}
 	}
+
+//  DEPRECATED - original version for matching up observables, now handled by cloning existing ones
+//	//now from the list of observable names, we have to go back and
+//	//actually create observables for these things.  So we'll do that here
+//	try {
+//		TiXmlElement *pObs;
+//		for ( pObs = pListOfObservables->FirstChildElement("Observable");
+//			pObs != 0; pObs = pObs->NextSiblingElement("Observable")) {
+//
+//			string observableId="", observableName="", observableType="";
+//			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
+//				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
+//				return false;
+//			} else {
+//				observableId = pObs->Attribute("id");
+//				observableName = pObs->Attribute("name");
+//				observableType = pObs->Attribute("type");
+//			}
+//
+//			for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
+//				if(observableName==finalObsUsedName.at(i)) {
+//					if(finalObsUsedScope.at(i)!=-1) {
+//
+//						Observable *systemObs=s->getObservableByName(observableName);
+//						if(systemObs==0) {
+//							cerr<<"Observable in local function "<<name<<" was not found."<<endl;
+//							return false;
+//						}
+//
+//						finalLocalObservables.at(i) = systemObs->clone();
+////						if(observableType.compare("Molecules")==0) {
+////							cout<<"In local function!!!  Creating an observable!!"<<endl;
+////							vector <TemplateMolecule *> tmList;
+////							readObservableForTemplateMolecules(pObs,observableName,tmList,
+////									s,parameter,allowedStates,false);
+////						} else if()
+////
+//
+////						TemplateMolecule *tempmol = 0;
+////						if(!readObservable(pObs,observableName,tempmol,
+////								s,parameter, allowedStates,false)) {
+////							return false;
+////						}
+////						if(tempmol!=0) {
+////							Observable *o  = new Observable(observableName.c_str(),tempmol);
+////							finalLocalObservables.at(i)=o;
+////							// WE DO NOT ADD THIS OBSERVABLE TO THE MOLECULE HERE!!
+////						}
+//					}
+//					break;
+//				}
+//			}
+//		}
+//
+//	} catch (...) {
+//		//oh no, what happened this time?
+//		cout<<"Caught an unexpected error when creating observables for this local function."<<endl;
+//		return false;
+//	}
+//
+//
+//	//make sure everything went as planned
+//	for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
+//		if(finalObsUsedScope.at(i)!=-1) {
+//			if(finalLocalObservables.at(i)==0) {
+//				cout<<"Error!! unable to create local function because the reference to\n";
+//				cout<<"observable named: '"<<finalObsUsedName.at(i)<<"' was not found."<<endl;
+//				return false;
+//			}
+//		}
+//	}
+//  END DEPRECATED CODE
 
 
 

@@ -17,6 +17,12 @@ Complex::~Complex()
 {
 }
 
+bool Complex::isAlive() {
+	if(complexMembers.size()==0) return false;
+	return (*complexMembers.begin())->isAlive();
+}
+
+
 int Complex::getMoleculeCountOfType(MoleculeType *m)
 {
 	int count = 0;

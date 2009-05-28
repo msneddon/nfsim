@@ -1048,7 +1048,6 @@ bool NFinput::initReactionRules(
 
 						//Here, we handle your typical state change operation
 						try {
-							//cout<<"Looking up: "<<c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState<<endl;
 							if(allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)==allowedStates.end()) {
 								cout<<"Error! in NFinput, when looking up state: "<<c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState<<endl;
 								cout<<"Could not find this in the list of allowed states!  exiting!"<<endl;
@@ -1563,52 +1562,119 @@ bool NFinput::initReactionRules(
 }
 
 
-bool NFinput::readObservable(TiXmlElement *pObs,
+bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 		string observableName,
-		TemplateMolecule *&tm,
+		vector <TemplateMolecule *> &tmList,
 		System *s,
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
 		bool verbose) {
 
 
-	//Now enter into the list of patterns
 	TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
 	if(!pListOfPatterns) {
 		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-		tm = 0; return true;
+		return true;
 	}
+
+
+	map <string, TemplateMolecule *> templates;
+
+	//Read the pattern for symmetry
+	TiXmlElement *pPattern;
+	for ( pPattern = pListOfPatterns->FirstChildElement("Pattern"); pPattern != 0; pPattern = pPattern->NextSiblingElement("Pattern"))
+	{
+		const char *patternName = pPattern->Attribute("id");
+		if(!patternName) {
+			cerr<<"Pattern tag in observable "<<observableName<<" without a valid 'id' attribute.  Quiting"<<endl;
+			return false;
+		}
+		//cout<<"   --- reading pattern "<<patternName<<" for symmetry"<<endl;
+		TiXmlElement *pListOfMols = pPattern->FirstChildElement("ListOfMolecules");
+		if(pListOfMols) {
+
+			map <string, component> comps;
+			map <string, component> symComps;
+			map <string, component> symMap;
+
+			//First, read the pattern for symmetry - if symmetries exist
+			if(!readPatternForSymmetry(pListOfMols, s, patternName, comps, symComps, verbose)) return false;
+
+			//Get the permutations that were created from the symmetries
+			vector <map<string,component> > permutations;
+			if(!generateRxnPermutations(permutations,symComps,symComps,verbose)) return false;
+
+			//For each valid permutation, create a template molecule that can match it
+			for( unsigned int p=0; p<permutations.size(); p++)
+			{
+				map <string,component> symMap = permutations.at(p);
+				map <string,TemplateMolecule *> allTemplatesMap;
+				TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
+				if(tm==NULL) return false;
+				tmList.push_back(tm);
+			}
+		}
+		else {
+			cerr<<"Observable pattern in observable "<<observableName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+			return false;
+		}
+	}
+
+
+	//for(int i=0; i<tmList.size(); i++) {
+	//	tmList.at(i)->printDetails();
+	//}
+	//cout<<"done reading them in."<<endl;
+
 
 	//Now enter into the specific pattern making sure that it exists
-	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
-	if(!pPattern) {
-		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-		tm = 0; return true;
-	}
+	//	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
+	//	if(!pPattern) {
+	//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
+	//		tm = 0; return true;
+	//	}
 
-	//Make sure (for the time being) there is only one pattern
-	if(pPattern->NextSiblingElement("Pattern")!=0) {
-		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains multiple patterns!"<<endl;
-		cout<<"                This is not yet supported, so only the first pattern will be read."<<endl;
-	}
 
-	//Go into the list of molecules that make up this pattern
-	TiXmlElement *pListOfMol = pPattern->FirstChildElement("ListOfMolecules");
-	if(!pListOfMol) {
-		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains no molecules in its pattern!"<<endl;
-		tm = 0; return true;
-	}
 
-	//Let the other function (readPattern) gather and create our template
-	map <string, TemplateMolecule *> templates;
-	map <string, component> comps;
-	map <string, component> symMap;
-	tm = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
-	if(tm==NULL) {
-		cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
-		return false;
-	}
-
+//
+//
+//	//Now enter into the list of patterns
+//	TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
+//	if(!pListOfPatterns) {
+//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
+//		tm = 0; return true;
+//	}
+//
+//	//Now enter into the specific pattern making sure that it exists
+//	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
+//	if(!pPattern) {
+//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
+//		tm = 0; return true;
+//	}
+//
+//	//Make sure (for the time being) there is only one pattern
+//	if(pPattern->NextSiblingElement("Pattern")!=0) {
+//		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains multiple patterns!"<<endl;
+//		cout<<"                This is not yet supported, so only the first pattern will be read."<<endl;
+//	}
+//
+//	//Go into the list of molecules that make up this pattern
+//	TiXmlElement *pListOfMol = pPattern->FirstChildElement("ListOfMolecules");
+//	if(!pListOfMol) {
+//		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains no molecules in its pattern!"<<endl;
+//		tm = 0; return true;
+//	}
+//
+//	//Let the other function (readPattern) gather and create our template
+//	map <string, TemplateMolecule *> templates;
+//	map <string, component> comps;
+//	map <string, component> symMap;
+//	tm = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
+//	if(tm==NULL) {
+//		cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
+//		return false;
+//	}
+//
 	return true;
 }
 
@@ -1623,13 +1689,15 @@ bool NFinput::initObservables(
 	try {
 		//We will parse this in a similar manner to parsing species, except to say that we don't create
 		//actual molecules, just template molecules.
+
+		//First, we loop over all instances of the <Observable> tag
 		TiXmlElement *pObs;
 		for ( pObs = pListOfObservables->FirstChildElement("Observable"); pObs != 0; pObs = pObs->NextSiblingElement("Observable"))
 		{
 
 			string observableId="", observableName="", observableType="";
 
-			//First get the observable name
+			//First get the observable name, id, and type
 			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
 				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
 				return false;
@@ -1638,28 +1706,83 @@ bool NFinput::initObservables(
 				observableName = pObs->Attribute("name");
 				observableType = pObs->Attribute("type");
 			}
+			if(verbose) cout<<"\t\tCreating Observable: '"<<observableName<<"' of type: '"<<observableType<<"'"<<endl;
 
-			if(verbose) cout<<"\t\tCreating Observable: "<<observableName<<endl;
 
-			TemplateMolecule *tempmol = 0;
+			//Depending on the type of observable, we have to create it in a particular way
+			NFutil::trim(observableType);
+			if(observableType.compare("Molecules")==0)
+			{
+				//First, handle Molecules observables, which are counted for every instance
+				//of the given pattern throughout the entire system (so when using identical component
+				//names, a single molecule can match the pattern in potentially many ways.  This is
+				//handled by cloning each of the ways that a molecule can match as a different template
+				//molecule
 
-			//Call the read observable function...
-			if(!readObservable(pObs,
-					observableName,
-					tempmol,
-					s,
-					parameter,
-					allowedStates,
-					verbose)) return false;
+				//First, read in the pattern as a list of template molecules, which creates the needed
+				//symmetric templateMolecules as mentioned above
+				vector <TemplateMolecule *> tmList;
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,verbose)) {return false;}
 
-			if(tempmol!=0) {
-				//Finally, let's create the observable
-				MoleculeType *moltype = tempmol->getMoleculeType();
-				Observable *o  = new Observable(observableName.c_str(),tempmol);
-				moltype->addObservable(o);
-				s->addObservableForOutput(o);
-				//tempmol->printDetails();
+				//Create the observable, which in this case, is a MoleculesObservable
+				MoleculesObservable *mo = new MoleculesObservable(observableName,tmList);
+
+				//Add the observable to each molecule type that will have to check in with this observable
+				//Generally, there is just one - but if there are multiple patterns, then we have to match
+				//each one separately...
+				vector <MoleculeType *> addedMolTypes;
+				for(unsigned int k=0; k<tmList.size(); k++) {
+					bool alreadyAdded = false;
+					for(unsigned int mtc=0; mtc<addedMolTypes.size(); mtc++) {
+						if(addedMolTypes.at(mtc)==tmList.at(k)->getMoleculeType()) {
+							alreadyAdded = true;
+							break;
+						}
+					}
+					if(alreadyAdded) continue;
+					tmList.at(k)->getMoleculeType()->addMolObs(mo);
+					addedMolTypes.push_back(tmList.at(k)->getMoleculeType());
+				}
+
+				//Finally, add the observable to the system so that we can keep track of it for output
+				s->addObservableForOutput(mo);
+
 			}
+			else if(observableType.compare("Species")==0) {
+
+				cout<<"\nWarning!! Creating a Species Observable!  NFsim does not keep track of Species"<<endl;
+				cout<<"by default, so this type of observable requires complex bookkeeping to be turned on"<<endl;
+				cout<<"which makes NFsim run slower.  Be sure that you need this observable!\n"<<endl;
+
+				if(!s->isUsingComplex()) {
+					cerr<<"You have not turned on complex book keeping, so I can not run you simulation"<<endl;
+					cerr<<"because your simulation has a Species observable."<<endl;
+					return false;
+				}
+
+				//First, read in the pattern as a list of template molecules, which creates the needed
+				//symmetric templateMolecules as mentioned above
+				vector <TemplateMolecule *> tmList;
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,verbose)) {return false;}
+
+				SpeciesObservable *so = new SpeciesObservable(observableName,tmList);
+				s->addObservableForOutput(so);
+
+
+
+
+
+
+
+
+
+
+			} else {
+				cerr<<"Cannot create an Observable of type '"<<observableType<<"'."<<endl;
+				cerr<<"The only valid types in NFsim are: 'Molecules' and 'Species', case sensitive."<<endl;
+				return false;
+			}
+
 		}
 
 		//Getting here means success!

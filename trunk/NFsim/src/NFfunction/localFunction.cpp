@@ -113,16 +113,20 @@ LocalFunction::LocalFunction(System *s,
 //	cout<<"Now remembering type II molecules..."<<endl;
 	bool hasAdded = false;
 	for(unsigned int i=0; i<n_varRefs; i++) {
+
+		//Go through each template molecule from each observable, and remember the moleculetypes
+		//that we will need to keep track of
+		TemplateMolecule **tmHeads=0; int n_tmHeads=0;
 		if(varRefScope[i]==-1) {//handle global scopes
-			TemplateMolecule::traverse(
-					s->getObservableByName(this->varObservableNames[i])->getTemplateMolecule(),
-					tmList,
-					TemplateMolecule::FIND_ALL);
-		} else {
-			TemplateMolecule::traverse(
-					this->varLocalObservables[i]->getTemplateMolecule(),
-					tmList,
-					TemplateMolecule::FIND_ALL);
+			s->getObservableByName(this->varObservableNames[i])->getTemplateMoleculeList(n_tmHeads,tmHeads);
+			for(int k=0; k<n_tmHeads; k++) {
+				TemplateMolecule::traverse(tmHeads[k],tmList,TemplateMolecule::FIND_ALL);
+			}
+		} else { //handle local scopes
+			this->varLocalObservables[i]->getTemplateMoleculeList(n_tmHeads,tmHeads);
+			for(int k=0; k<n_tmHeads; k++) {
+				TemplateMolecule::traverse(tmHeads[k],tmList,TemplateMolecule::FIND_ALL);
+			}
 		}
 		//cout<<"traversed obs "<<i<<" and found: "<<tmList.size()<<" templates\n";
 
@@ -150,7 +154,7 @@ LocalFunction::LocalFunction(System *s,
 	//Now actually remember them (and make sure they remember us...)
 	n_typeIImolecules = addedMoleculeTypes.size();
 	typeII_mol = new MoleculeType * [n_typeIImolecules];
-	for(unsigned int m=0; m<n_typeIImolecules; m++) {
+	for(int m=0; m<n_typeIImolecules; m++) {
 		int index = addedMoleculeTypes.at(m)->addLocalFunc_TypeII(this);
 		typeII_mol[m]=addedMoleculeTypes.at(m);
 		//this->typeII_mol.push_back(addedMoleculeTypes.at(m));
@@ -200,6 +204,9 @@ double LocalFunction::getValue(Molecule *m, int scope)
 //	cout<<"getting local function value: "<<this->nicename<<endl;
 //	cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
 
+	//Scope in this sense relates to how the local observable
+	//is calculated.  Species is calculated across the entire connected set of molecules,
+	//while molecule scope is calculated on THIS molecule only.
 	int SPECIES = 0;
 	int MOLECULE = 1;
 
@@ -216,11 +223,19 @@ double LocalFunction::getValue(Molecule *m, int scope)
 //		cout<<"Molecule scope."<<endl;
 
 		//For each of our variables
+		int matches = 0;
 		for(unsigned int i=0; i<n_varRefs; i++) {
 			if(varLocalObservables[i]!=0) {   //If it is local
-				varLocalObservables[i]->clear();  //clear it first
-				if(varLocalObservables[i]->isObservable(m)) {  //recompute observable
-					varLocalObservables[i]->straightAdd();
+				if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
+					varLocalObservables[i]->clear();  //clear it first
+					matches = varLocalObservables[i]->isObservable(m);
+					for(int k=0; k<matches; k++) {
+						varLocalObservables[i]->straightAdd();
+					}
+				} else {
+					cerr<<"Error in LocalFunction::evaluateOn()! cannot handle Species observable when"<<endl;
+					cerr<<"evaluating on a single molecule."<<endl;
+					exit(1);
 				}
 			}
 		}
@@ -263,23 +278,39 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 
 
-		//First, clear out the observables
+		//First, clear out all the observables
 		for(unsigned int i=0; i<n_varRefs; i++) {
 			if(varLocalObservables[i]!=0) {
 				varLocalObservables[i]->clear();
 			}
 		}
 
-
 		//recompute the observables
+		int matches = 0;
 		for(molIter=molList.begin(); molIter!=molList.end(); molIter++) {
+
+			//Loop over each observable
 			for(unsigned int i=0; i<n_varRefs; i++) {
 				if(varLocalObservables[i]!=0) {   //If it is local
-					if(varLocalObservables[i]->isObservable((*molIter))) {  //recompute observable
-						varLocalObservables[i]->straightAdd();
+
+					//If the observable is of type MOLECULES
+					if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
+						varLocalObservables[i]->clear();  //clear it first
+						matches = varLocalObservables[i]->isObservable(m);
+						for(int k=0; k<matches; k++) {
+							varLocalObservables[i]->straightAdd();
+						}
+					}
+
+					//If the observables is of a different type
+					else {
+						cerr<<"Error in LocalFunction::evaluateOn()! cannot handle Species observable when"<<endl;
+						cerr<<"evaluating on a single molecule."<<endl;
+						exit(1);
 					}
 				}
 			}
+
 		}
 
 		//evaluate the function
@@ -303,16 +334,23 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 	} else if(scope==LocalFunction::MOLECULE) {
 		//cout<<"evaluating on Molecule scope."<<endl;
 
-		//For each of our variables
+
+		int matches = 0;
 		for(unsigned int i=0; i<n_varRefs; i++) {
 			if(varLocalObservables[i]!=0) {   //If it is local
-				varLocalObservables[i]->clear();  //clear it first
-				if(varLocalObservables[i]->isObservable(m)) {  //recompute observable
-					varLocalObservables[i]->straightAdd();
+				if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
+					varLocalObservables[i]->clear();  //clear it first
+					matches = varLocalObservables[i]->isObservable(m);
+					for(int k=0; k<matches; k++) {
+						varLocalObservables[i]->straightAdd();
+					}
+				} else {
+					cerr<<"Error in LocalFunction::evaluateOn()! cannot handle Species observable when"<<endl;
+					cerr<<"evaluating on a single molecule."<<endl;
+					exit(1);
 				}
 			}
 		}
-
 
 		//Recalculate the function
 		double newValue = FuncFactory::Eval(p);
