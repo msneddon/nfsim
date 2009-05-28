@@ -42,15 +42,16 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
-	isDead = true;
 	isObservable = 0;
 	localFunctionValues=0;
+	//isDead = true;
 
 	//register this molecule with moleculeType and get some ID values
 	ID_complex = this->parentMoleculeType->createComplex(this);
 	ID_type = this->parentMoleculeType->getTypeID();
 	ID_unique = Molecule::uniqueIdCount++;
 	this->listId = listId;
+	isAliveInSim = false;
 }
 
 // Molecule Deconstructor
@@ -85,9 +86,9 @@ void Molecule::prepareForSimulation()
 	isPrepared = true;
 
 	//We do not belong to any observable... yet.
-	isObservable=new bool [parentMoleculeType->getNumOfObservables()];
-	for(int o=0;o<parentMoleculeType->getNumOfObservables(); o++) {
-		isObservable[o]=false;
+	isObservable=new int [parentMoleculeType->getNumOfMolObs()];
+	for(int o=0;o<parentMoleculeType->getNumOfMolObs(); o++) {
+		isObservable[o]=0;
 	}
 
 

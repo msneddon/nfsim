@@ -104,10 +104,23 @@ namespace NFcore
 		bool isSymMapValid();
 
 
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		static bool checkSymmetryAroundBond(TemplateMolecule *tm, int cIndex) { return false; };
+		static bool checkSymmetryAroundBond(TemplateMolecule *tm, string cName) { return false; };
+
+		static bool isEquivalent(TemplateMolecule *tm1, TemplateMolecule *tm2);
+
+
         /* functions that handle output for debugging and error messages */
 		void printErrorAndExit(string message);
 		void printDetails();
 		void printDetails(ostream &o);
+
+
+		string getPatternString();
+		void printPattern();
+		void printPattern(ostream &o);
+
 
 
 	protected:

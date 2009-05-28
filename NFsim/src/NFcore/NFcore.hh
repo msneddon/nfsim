@@ -24,6 +24,7 @@
 #include "../NFoutput/NFoutput.hh"
 
 #include "templateMolecule.hh"
+#include "observable.hh"
 
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 0		// Set to 1 to display basic messages (eg runtime)
@@ -62,7 +63,9 @@ namespace NFcore
 	class DumpSystem;
 
 	class TemplateMolecule;
-
+	class Observable;
+	class MoleculesObservable;
+	class SpeciesObservable;
 
 	/*****************************************
 	 * Class declarations
@@ -138,7 +141,7 @@ namespace NFcore
 			double getCurrentTime() const { return current_time; };
 			int getGlobalMoleculeLimit() const { return globalMoleculeLimit; };
 
-			int getObservableCount(int moleculeTypeIndex, int observableIndex) const;
+			int getMolObsCount(int moleculeTypeIndex, int observableIndex) const;
 			Observable * getObservableByName(string obsName);
 			double getAverageGroupValue(string groupName, int valIndex);
 
@@ -177,10 +180,6 @@ namespace NFcore
 
 			void setUniversalTraversalLimit(int utl);
 
-			// A set of methods that allows us to update group properties for a subset of groups,
-			// or for all groups externally during the execution of a simulation */
-			void updateGroupProperty(char * groupName, double *value, int n_values);
-			void updateAllGroupProperty(double *value, int n_values);
 
 
 			/* tell the system where to ouptut results*/
@@ -207,7 +206,6 @@ namespace NFcore
 			/* functions that print out other information to the console */
 			void printAllComplexes();
 			void printAllReactions();
-			void printAllGroups();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
 			void printAllObservableCounts(double cSampleTime);
@@ -273,7 +271,7 @@ namespace NFcore
 			void updateSystemWithNewParameters();
 			void printAllParameters();
 
-	                NFstream& getOutputFileStream();
+	        NFstream& getOutputFileStream();
 
 			/*! keeps track of null events (ie binding events that have
 			    been rejected because molecules are on the same complex)
@@ -302,7 +300,7 @@ namespace NFcore
 			vector <Outputter *> allOutputters;    /*! < manages the outputters of the system */
 
 			vector <Observable *> obsToOutput; /*!< keeps ordered list of pointers to observables for output */
-
+			vector <Observable *> speciesObservables;
 
 			DumpSystem *ds;
 
@@ -439,16 +437,16 @@ namespace NFcore
 			bool isIntegerComponent(int cIndex) const;
 
 			//functions that handle the observables
-			int getNumOfObservables() const { return observables.size(); };
-			string getObservableAlias(int obsIndex) const;
-			Observable * getObservable(int obsIndex) const { return observables.at(obsIndex); };
-			unsigned long int getObservableCount(int obsIndex) const;
+			int getNumOfMolObs() const { return (int)molObs.size(); };
+			string getMolObsName(int obsIndex) const;
+			MoleculesObservable * getMolObs(int obsIndex) const { return molObs.at(obsIndex); };
+			int getMolObsCount(int obsIndex) const;
 			void removeFromObservables(Molecule * m);
 			void addToObservables(Molecule * m);
-			void outputObservableNames(NFstream &fout);
-			void outputObservableCounts(NFstream &fout);
-			void printObservableNames();
-			void printObservableCounts();
+			void outputMolObsNames(NFstream &fout);
+			void outputMolObsCounts(NFstream &fout);
+			void printMolObsNames();
+			void printMolObsCounts();
 
 
 
@@ -477,7 +475,7 @@ namespace NFcore
 
 			//Adds the basic components that this MoleculeType needs to reference
 			void addReactionClass(ReactionClass * r, int rPosition);
-			void addObservable(Observable * o) { observables.push_back(o); }; //could add check here to make sure observable is of this type
+			void addMolObs(MoleculesObservable * mo) { molObs.push_back(mo); }; //could add check here to make sure observable is of this type
 			int createComplex(Molecule *m) { return system->createComplex(m); };
 			void addTemplateMolecule(TemplateMolecule *t);
 
@@ -582,7 +580,7 @@ namespace NFcore
 			vector <int> indexOfDORrxns;
 
 
-			vector <Observable *> observables;  /* list of things to keep track of */
+			vector <MoleculesObservable *> molObs;  /* list of things to keep track of */
 
 			vector <TemplateMolecule *> allTemplates; /* keep track of all templates that exist of this type
 															so that they are easy to delete from memory at the end */
@@ -594,7 +592,7 @@ namespace NFcore
 		private:
 			//Some iterators so we don't have to instantiate a new iterator every time
 			vector<Molecule *>::iterator molIter;  /* to iterate over mInstances */
-			vector<Observable *>::iterator obsIter; /* to iterate over observables */
+			vector<MoleculesObservable *>::iterator molObsIter; /* to iterate over observables */
 			vector <ReactionClass *>::iterator rxnIter; /* to iterate over reactions */
 	};
 
@@ -623,6 +621,8 @@ namespace NFcore
 			string getMoleculeTypeName() const { return parentMoleculeType->getName(); };
 			MoleculeType * getMoleculeType() const { return parentMoleculeType; };
 			int getUniqueID() const { return ID_unique; };
+			bool isAlive() const { return isAliveInSim; };
+			void setAlive(bool isAlive) { isAliveInSim = isAlive; };
 
 			void setComplexID(int currentComplex) { this->ID_complex=currentComplex; }
 
@@ -706,8 +706,8 @@ namespace NFcore
 			static const int NOT_IN_RXN = -1;
 
 
-			bool isObs(int oIndex) const { return isObservable[oIndex]; };
-			void setIsObs(int oIndex, bool isObs) { isObservable[oIndex]=isObs; };
+			int isObs(int oIndex) const { return isObservable[oIndex]; };
+			void setIsObs(int oIndex, int isObs) { isObservable[oIndex]=isObs; };
 
 
 			/* used for traversing a molecule complex */
@@ -729,17 +729,19 @@ namespace NFcore
 			//void traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit);
 
 
-			bool isMolAlive() const { return !isDead; };
-			bool isMolDead() const { return isDead; };
-			void kill() { isDead = true; };
-			void create() { isDead = false; };
+			//Unnecessary functions now that were once used to
+			//mark a molecule that is not in the simulation
+			//bool isMolAlive() const { return !isDead; };
+			//bool isMolDead() const { return isDead; };
+			//void kill() { isDead = true; };
+			//void create() { isDead = false; };
 
 
 		protected:
 
 
 			bool isPrepared;
-			bool isDead;
+			bool isAliveInSim;
 
 			/* Set of IDs which identifies uniquely this molecule */
 			int ID_complex;
@@ -770,8 +772,8 @@ namespace NFcore
 			double *localFunctionValues;
 
 
-
-			bool *isObservable;
+			//keep track of which observables I match (and how many times I match it)
+			int *isObservable;
 
 
 			//Used to keep track of which reactions this molecule is in...
@@ -920,63 +922,7 @@ namespace NFcore
 
 
 
-	//!  Tracks the counts of predefined observables in the simulation.
-	/*!
-	    Observables keep track of the counts of specific Molecule configurations
-	    in the system.  Observables use TemplateMolecules to determine if a Molecule
-	    configuration should be counted as an Observable.  Users have the choice of
-	    computing Observables on the fly so that they are incrementally updated after
-	    each event or recomputing all Observables before each output step.
-        @author Michael Sneddon
-	 */
-	class Observable
-	{
-		public:
 
-			/*!
-				Constructor that creates a basic Observable which monitors the
-				given TemplateMolecule and can be referenced via the alias name
-			*/
-			Observable(string aliasName, TemplateMolecule * templateMolecule);
-
-			/*!
-				 Deconstructor that doesn't do too much.  It doesn't free the memory
-				 associated with the TemplateMolecule because the MoleculeType class
-				 handles that.
-			 */
-			~Observable();
-
-
-			bool isObservable(Molecule * m) const;
-			void add();
-			void subtract();
-
-
-			void clear() { count=0; };
-			void straightAdd() {count++;};
-
-			/* methods used to get observable information */
-			unsigned long int getCount() const {return (unsigned long int) count;};
-			string getAliasName() const { return aliasName; };
-
-			void addReferenceToMyself(mu::Parser * p);
-			void addReferenceToMyself(string referenceName, mu::Parser * p);
-
-
-			void addDependentRxn(ReactionClass *r);
-
-			TemplateMolecule * getTemplateMolecule() const { return templateMolecule; };
-
-
-		protected:
-			string aliasName;   /* The name that will be output for this observable */
-			TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */
-			double count; /* the number of molecules that match this observable, its a double so that functions can use it (as a reference) */
-
-			vector <ReactionClass *> dependentRxns;/* signifies that some reaction's propensity depends on this observable */
-			vector <ReactionClass *>::iterator rxnIter;
-
-	};
 
 
 
@@ -990,6 +936,8 @@ namespace NFcore
 			Complex(System * s, int ID_complex, Molecule * m);
 			~Complex();
 
+
+			bool isAlive();
 			int getComplexID() const { return ID_complex; };
 			int getComplexSize() const {return complexMembers.size();};
 			int getMoleculeCountOfType(MoleculeType *m);
@@ -1020,14 +968,16 @@ namespace NFcore
 			double getYpos() { return 0; };
 			double getZpos() { return 0; };
 
-		protected:
+			//This is public so that anybody can access the molecules quickly
 			list <Molecule *> complexMembers;
+			list <Molecule *>::iterator molIter;
+
+		protected:
 			System * system;
 			int ID_complex;
 
 
 		private:
-			list <Molecule *>::iterator molIter;
 
 	};
 

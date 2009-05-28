@@ -10,6 +10,8 @@ using namespace NFcore;
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
 {
 	this->hasSymUnbinding=false;
+	this->hasSymBinding = true;
+
 	//cout<<"creating transformationSet..."<<endl;
 	//Remember our reactants
 	this->n_reactants = reactantTemplates.size();

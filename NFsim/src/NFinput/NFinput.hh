@@ -122,9 +122,11 @@ namespace NFinput {
 			map<string,component> &symRxnCenter,
 			bool verbose);
 
-	bool readObservable(TiXmlElement *pObs,
+
+	bool readObservableForTemplateMolecules(
+			TiXmlElement *pObs,
 			string observableName,
-			TemplateMolecule *&tm,
+			vector <TemplateMolecule *> &tmList,
 			System *s,
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,

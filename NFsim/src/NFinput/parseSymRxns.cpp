@@ -849,7 +849,7 @@ bool NFinput::readPatternForSymmetry(
 				if(pComp->Attribute("numberOfBonds")) {
 					string numOfBonds = pComp->Attribute("numberOfBonds");
 					int numOfBondsInt = -1;
-					if(numOfBonds!="+" && numOfBonds!="*") {
+					if(numOfBonds!="+" && numOfBonds!="*" &&numOfBonds!="?") {
 						try {
 							numOfBondsInt = NFutil::convertToInt(numOfBonds);
 						} catch (std::runtime_error e) {

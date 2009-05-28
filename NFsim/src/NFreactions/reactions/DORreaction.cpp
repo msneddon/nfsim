@@ -430,19 +430,21 @@ void DORRxnClass::printDetails() const
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		if(r!=(unsigned)DORreactantIndex) {
-			cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
-			cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+			cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
+			cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
 		} else {
-			cout<<"      -(DOR) "<<reactantTemplates[r]->getMoleculeTypeName();
-			cout<<" (rateFactorSum="<<reactantTree->getRateFactorSum();
-			cout<<", size="<<reactantTree->size()<<")."<<endl;
+
+			cout<<"      -(DOR) |"<< this->getReactantCount(r)<<" mappings|\t";
+			cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+			cout<<"             (rateFactorSum="<<reactantTree->getRateFactorSum();
+			cout<<")."<<endl;
 		}
 	}
 
-	this->printFullDetails();
+	//this->printFullDetails();
 
-		if(n_reactants==0)
-			cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+	if(n_reactants==0)
+		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
 }
 
 

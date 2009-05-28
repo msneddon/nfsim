@@ -1292,3 +1292,273 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 }
 
 
+
+string addStateConstraint(string original, string compName, string newConstraint)
+{
+	int id1 = original.find("(",0);
+	int idx = original.find(compName,id1);
+	if(idx!=string::npos) {
+		return original.insert(idx+compName.size(),newConstraint);
+	}
+
+	//if we couldn't fid this state in the string already, then it only appears in the
+	//state constraint list, and so we must add a wild card to the bonded state as well
+	//This is why you have to add the bonds first.
+	return original+compName+newConstraint+"!?,";
+}
+
+//Returns true if something changed, false otherwise
+// side effects: updates the original string
+string addBondConstraint(string original, string compName, int bondNumber)
+{
+	int id1 = original.find("(",0);
+	int idx = original.find(compName,id1);
+	if(idx!=string::npos) {
+		//Only add it if it wasn't added before
+		if(original.at(idx+compName.size())=='!')
+			return original;
+		return original.insert(idx+compName.size(),"!"+NFutil::toString(bondNumber));
+	}
+	return original+compName+"!"+NFutil::toString(bondNumber)+",";
+}
+
+
+
+string TemplateMolecule::getPatternString() {
+
+	vector <TemplateMolecule *> tmList;
+	vector <string> patternString;
+	TemplateMolecule::traverse(this,tmList,false);
+
+	//First put in the basic information, from non symmetric constraints...
+	for(unsigned int t=0; t<tmList.size(); t++) {
+		TemplateMolecule *tm = tmList.at(t);
+		MoleculeType * mt = tm->getMoleculeType();
+		string str = mt->getName() + "(";
+
+		//Go through and assign empty or occupied binding sites
+		for(int c=0; c<tm->n_emptyComps; c++)
+			str += mt->getComponentName(tm->emptyComps[c]) + ",";
+		for(int c=0; c<tm->n_occupiedComps; c++)
+			str += mt->getComponentName(tm->occupiedComps[c]) + "!+,";
+
+		patternString.push_back(str);
+	}
+//	for(unsigned int t=0; t<tmList.size(); t++) {
+//		string str = patternString.at(t);
+//		cout<<"1: "<<str<<endl;
+//	}
+
+	//Now, put in the bond connections
+	int bondNumber = 1;
+	for(unsigned int t=0; t<tmList.size(); t++) {
+		TemplateMolecule *tm = tmList.at(t);
+		string str = patternString.at(t);
+
+		for(int c=0; c<tm->n_bonds; c++) {
+			//If we are bonded to an equivalent component, then we skip this and handle it later
+			if(tm->bondPartner[c]->moleculeType->isEquivalentComponent(tm->bondPartnerCompName[c])) continue;
+
+			string newStr = addBondConstraint(str,tm->bondCompName[c],bondNumber);
+			if(newStr.compare(str)!=0){
+				str = newStr;
+				for(unsigned int k=0; k<tmList.size(); k++) {
+					if(tm->bondPartner[c]==tmList.at(k)) {
+						patternString.at(k)=addBondConstraint(patternString.at(k),tm->bondPartnerCompName[c],bondNumber);
+						break;
+					}
+				}
+				bondNumber++;
+			}
+		}
+
+		patternString.at(t)=str;
+	}
+//	for(unsigned int t=0; t<tmList.size(); t++) {
+//		string str = patternString.at(t);
+//		cout<<"2: "<<str<<endl;
+//	}
+
+	//Put in the component states (MUST BE DONE AFTER PUTTING IN THE BONDS!)
+	for(unsigned int t=0; t<tmList.size(); t++) {
+		TemplateMolecule *tm = tmList.at(t);
+		MoleculeType * mt = tm->getMoleculeType();
+		string str = patternString.at(t);
+
+
+		//Add in the states
+		for(int c=0; c<tm->n_compStateConstraint; c++)
+		{
+			string compName = mt->getComponentName(tm->compStateConstraint_Comp[c]);
+			string compState = mt->getComponentStateName(tm->compStateConstraint_Comp[c], tm->compStateConstraint_Constraint[c]);
+			str = addStateConstraint(str,compName, "~"+compState);
+		}
+
+		patternString.at(t)=str;
+	}
+//	for(unsigned int t=0; t<tmList.size(); t++) {
+//		string str = patternString.at(t);
+//		cout<<"3: "<<str<<endl;
+//	}
+
+
+	//We need to create these vectors to remember if we are connecting
+	//a symmetric component to another symmetric component, so that we can
+	//correctly label the bond numbers
+	vector <int> knownBondTMindex;
+	vector <int> knownBondCompIndex;
+	vector <int> knownBondNumber;
+
+
+	//Put in the symmetric components
+	for(unsigned int t=0; t<tmList.size(); t++) {
+		TemplateMolecule *tm = tmList.at(t);
+		MoleculeType * mt = tm->getMoleculeType();
+		string str = patternString.at(t);
+
+		for(int c=0; c<tm->n_symComps; c++)
+		{
+			str+=tm->symCompName[c];
+			if(tm->symCompStateConstraint[c]!=TemplateMolecule::NO_CONSTRAINT) {
+				int compIndex = mt->getCompIndexFromName(tm->symCompName[c]+"1");
+				str+="~"+mt->getComponentStateName(compIndex,tm->symCompStateConstraint[c]);
+			}
+
+			if(tm->symBondPartner[c]!=0) {
+
+				int currentBondNumber = -1;
+				for(unsigned int jj=0; jj<knownBondTMindex.size(); jj++) {
+					if(knownBondTMindex.at(jj)==t && knownBondCompIndex.at(jj)==c) {
+						currentBondNumber = knownBondNumber.at(jj);
+					}
+				}
+
+				if(currentBondNumber!=-1) {
+					//Handle the case that we already know this bond number...
+					str+="!"+NFutil::toString(currentBondNumber);
+				}
+				else if(tm->symBondPartner[c]->moleculeType->isEquivalentComponent(tm->symBondPartnerCompName[c])) {
+					//Handle the case where the symBondPartner is connected to some other sym component
+					for(unsigned int k=0; k<tmList.size(); k++) {
+						if(tm->symBondPartner[c] == tmList.at(k)) {
+							if((int)k>c) {  //check here, so we only add this bond in once
+								str+="!"+NFutil::toString(bondNumber);
+
+								//remember that we added this bond number here
+								knownBondTMindex.push_back(k);
+								TemplateMolecule *tm2 = tm->symBondPartner[c];
+								bool found = false;
+								for(int kk=0; kk<tm2->n_symComps; kk++) {
+									if(tm2->symBondPartner[kk]==tm) {
+										knownBondCompIndex.push_back(kk);
+										found = true; break;
+									}
+								}
+								if(!found) {
+									cout.flush();
+									cerr<<"WARNING!  Problems in templateMolecule function getPatternString()"<<endl;
+									knownBondCompIndex.push_back(-1);
+								}
+								knownBondNumber.push_back(bondNumber);
+								bondNumber++;
+							}
+						}
+					}
+
+				} else {
+					//Handle the case where the symBondPartner is connected to a non-sym component
+					str+="!"+NFutil::toString(bondNumber);
+					for(unsigned int k=0; k<tmList.size(); k++) {
+						if(tm->symBondPartner[c] == tmList.at(k)) {
+							patternString.at(k)=addBondConstraint(patternString.at(k),tm->symBondPartnerCompName[c],bondNumber);
+							break;
+						}
+					}
+					bondNumber++;
+				}
+
+			}
+			else if(tm->symCompBoundState[c]==TemplateMolecule::OCCUPIED) {
+				str+="!+";
+			} else if(tm->symCompBoundState[c]==TemplateMolecule::NO_CONSTRAINT) {
+				str+="!?";
+			}
+			str+=",";
+		}
+		patternString.at(t)=str;
+	}
+//	for(unsigned int t=0; t<tmList.size(); t++) {
+//		string str = patternString.at(t);
+//		cout<<"4: "<<str<<endl;
+//	}
+
+
+	//Finally, put them all together
+	string finalString = "";
+	for(unsigned int ps=0; ps<patternString.size(); ps++) {
+		if(ps>0) finalString+=".";
+
+		string str = patternString.at(ps);
+		//Take out the last inserted comma, if there was one
+		if(str.at(str.size()-1)==',') str = str.substr(0,str.size()-1);
+		finalString +=str + ")";
+	}
+
+	return finalString;
+}
+void TemplateMolecule::printPattern() {
+	printPattern(cout);
+}
+void TemplateMolecule::printPattern(ostream &o) {
+	o<<getPatternString();
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////
+//  Functions needed to check for symmetries in binding / unbinding reactions
+bool checkBasicStates(TemplateMolecule *tm1, TemplateMolecule *tm2) {
+
+	return true;
+}
+
+
+bool TemplateMolecule::isEquivalent(TemplateMolecule *tm1, TemplateMolecule *tm2) {
+
+	//First get a list of all the molecules: we can't start comparing directly
+	//
+	vector <TemplateMolecule *> tmList1;
+	vector <TemplateMolecule *> tmList2;
+	TemplateMolecule::traverse(tm1,tmList1,false);
+	TemplateMolecule::traverse(tm2,tmList2,false);
+
+
+
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

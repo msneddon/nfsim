@@ -147,9 +147,7 @@ System::~System()
 	//Close our connections to output files
 	outputFileStream.close();
 
-
 	propensityDumpStream.close();
-
 }
 
 
@@ -166,8 +164,6 @@ void System::setOutputToBinary()
 		cerr<<"So I'm just going to stop now."<<endl;
 		exit(1);
 	}
-
-
 }
 
 void System::turnOff_OnTheFlyObs() {
@@ -198,9 +194,9 @@ void System::registerOutputFileLocation(string filename)
 		headerFile.open((filename+".head").c_str());
 		headerFile<<"#\tTime"; tabCount++;
 		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-			int oTot = (*molTypeIter)->getNumOfObservables();
+			int oTot = (*molTypeIter)->getNumOfMolObs();
 			for(int o=0; o<oTot; o++) {
-				headerFile<<"\t"<<(*molTypeIter)->getObservable(o)->getAliasName();
+				headerFile<<"\t"<<(*molTypeIter)->getMolObs(o)->getName();
 				tabCount++;
 			}
 		}
@@ -229,6 +225,8 @@ void System::registerOutputFileLocation(string filename)
 }
 
 void System::addObservableForOutput(Observable *o) {
+	if(o->getType()==Observable::SPECIES)
+		this->speciesObservables.push_back(o);
 	this->obsToOutput.push_back(o);
 }
 
@@ -347,9 +345,9 @@ int System::getNumOfMolecules()
 
 
 
-int System::getObservableCount(int moleculeTypeIndex, int observableIndex) const
+int System::getMolObsCount(int moleculeTypeIndex, int observableIndex) const
 {
-	return allMoleculeTypes.at(moleculeTypeIndex)->getObservableCount(observableIndex);
+	return allMoleculeTypes.at(moleculeTypeIndex)->getMolObsCount(observableIndex);
 }
 
 Complex * System::getNextAvailableComplex()
@@ -441,9 +439,13 @@ void System::prepareForSimulation()
 
   	//cout<<"here 7..."<<endl;
 
-  	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-  		(*molTypeIter)->addAllToObservables();
-  	}
+  	//add all the molecules to the appropriate observables
+  	//NOT NECESSARY - molecules are added to observables when they are prepared
+  	//for(obsIter=obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
+  	//	(*obsIter)->clear();
+  	//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
+  	//	(*molTypeIter)->addAllToObservables();
+  	//}
 
 
   	//cout<<"here 8..."<<endl;
@@ -613,9 +615,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//	outputAllPropensities(current_time, nextReaction->getRxnId());
 	}
 
-
-	cout<<"Final Atot = "<<this->a_tot<<endl;
-
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
     if(verbose) cout<<"\n";
@@ -742,7 +741,7 @@ void System::outputAllObservableNames()
 		int totalSpaces = 16;
 
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
-			string nm = (*obsIter)->getAliasName();
+			string nm = (*obsIter)->getName();
 			int spaces = totalSpaces-nm.length();
 			if(spaces<1) { spaces = 1; }
 			for(int k=0; k<spaces; k++) {
@@ -778,8 +777,20 @@ void System::outputAllObservableCounts()
 void System::outputAllObservableCounts(double cSampleTime)
 {
 	if(!onTheFlyObservables) {
+		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
+			(*obsIter)->clear();
 		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
 			(*molTypeIter)->addAllToObservables();
+		}
+
+		int match = 0;
+		for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
+			if((*complexIter)->isAlive()) {
+				for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
+					match = (*obsIter)->isObservable((*complexIter));
+					for(int k=0; k<match; k++) (*obsIter)->straightAdd();
+				}
+			}
 		}
 	}
 
@@ -800,14 +811,10 @@ void System::outputAllObservableCounts(double cSampleTime)
 	}
 	else {
 
-
 		outputFileStream<<" "<<cSampleTime;
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
 			outputFileStream<<"  "<<((double)(*obsIter)->getCount());
 		}
-
-		//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		//	(*molTypeIter)->outputObservableCounts(outputFileStream);
 
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
@@ -822,16 +829,16 @@ void System::outputAllObservableCounts(double cSampleTime)
 void System::printAllObservableCounts(double cSampleTime)
 {
 	cout<<"Time";
-	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		(*molTypeIter)->printObservableNames();
+	for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
+		cout<<"\t"<<(*obsIter)->getName();
 	if(outputGlobalFunctionValues)
 		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 			cout<<"\t"<<(*functionIter)->getNiceName();
 	cout<<endl;
 
   	cout<<cSampleTime;
-	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		(*molTypeIter)->printObservableCounts();
+	for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
+		cout<<"\t"<<(*obsIter)->getCount();
 	if(outputGlobalFunctionValues)
 		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 			cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
@@ -855,17 +862,6 @@ void System::printAllReactions()
 		(*rxnIter)->printDetails();
 	}
 	cout<<endl;
-}
-
-void System::printAllGroups()
-{
-	cout<<"can't print all groups: groups not available in this build"<<endl;
-//	cout<<"All System Groups:"<<endl;
-//	for(groupIter = allGroups.begin(); groupIter != allGroups.end(); groupIter++ )
-//	{
-//		(*groupIter)->printDetails();
-//	}
-//	cout<<endl;
 }
 
 
@@ -1098,16 +1094,15 @@ bool System::addCompositeFunction(CompositeFunction *cf) {
 
 Observable * System::getObservableByName(string obsName)
 {
-	for(unsigned mt=0; mt<allMoleculeTypes.size(); mt++) {
-		for(int ob=0; ob<allMoleculeTypes.at(mt)->getNumOfObservables(); ob++ ) {
-			string name = allMoleculeTypes.at(mt)->getObservableAlias(ob);
-			if(obsName==name) {
-				return allMoleculeTypes.at(mt)->getObservable(ob);
-			}
+	for(unsigned int i=0; i<obsToOutput.size(); i++) {
+		if(obsToOutput.at(i)->getName().compare(obsName)==0) {
+			return obsToOutput.at(i);
 		}
 	}
-	cout<<"!!Warning, the system could not identify the observable: "<<obsName<<".\n";
-	cout<<"The calling function might catch this, or your program might crash now."<<endl;
+
+	cout.flush();
+	cerr<<"!!Warning, the system could not identify the observable: "<<obsName<<".\n";
+	cerr<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
 

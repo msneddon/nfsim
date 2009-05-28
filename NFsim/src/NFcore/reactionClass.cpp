@@ -211,15 +211,16 @@ ReactionClass::~ReactionClass()
 
 
 void ReactionClass::printDetails() const {
-	cout<<"ReactionClass: " << name <<"  ( baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	cout<< name <<"  ( baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
-		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
-		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
+		cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
 		//reactantTemplates[r]->printDetails();
 	}
 	if(n_reactants==0)
 		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+	cout<<"\n";
 }
 
 
@@ -260,7 +261,7 @@ void ReactionClass::fire(double random_A_number)
 	//the counts of observables and update its class lists, and update any DOR Groups
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-		if((*molIter)->isMolDead()) continue;
+	//	if((*molIter)->isMolDead()) continue;
 		if(onTheFlyObservables) (*molIter)->addToObservables();
 	}
 //	cout<<",  obs updated";
@@ -268,7 +269,7 @@ void ReactionClass::fire(double random_A_number)
 //	cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-		if((*molIter)->isMolDead()) { cout<<"here"<<endl; continue; } // skip over molecules that we just removed...
+	//	if((*molIter)->isMolDead()) { continue; } // skip over molecules that we just removed...  don't actually need this check
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();

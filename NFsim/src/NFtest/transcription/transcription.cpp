@@ -233,14 +233,14 @@ void NFtest_transcription::addObs(System * s, MoleculeType *molRNA)
 
 	//Now, we create an observable from the templateMolecule and give it a name
 	//that will be used in the output.
-	Observable * obsTotalRNA = new Observable("RNA",totalRNA);
+	MoleculesObservable * obsTotalRNA = new MoleculesObservable("RNA",totalRNA);
 
 
 	//Finally, we have to add the observable to the MoleculeType that is being observed.  If you
 	//don't add to the correct moleculeType, the count will always be zero!  And that's it!  Adding
 	//to the moleculeType will record the observable with the system, and this observable will
 	//always output correctly.
-	molRNA->addObservable(obsTotalRNA);
+	molRNA->addMolObs(obsTotalRNA);
 }
 
 
