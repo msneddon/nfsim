@@ -53,6 +53,9 @@ namespace NFcore
 			*/
 			~TransformationSet();
 
+
+			int getNumOfReactants() const { return n_reactants; };
+
 			/*!
 				Adds a state change transformation on the given TemplateMolecule (that must have been included
 				in the original vector of TemplateMolecules) along with the stateName and final value

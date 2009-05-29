@@ -202,6 +202,8 @@ namespace NFcore
 			void outputAllObservableNames();
 			void outputAllObservableCounts();
 			void outputAllObservableCounts(double cSampleTime);
+			int getNumOfSpeciesObs() const;
+			Observable * getSpeciesObs(int index) const;
 
 			/* functions that print out other information to the console */
 			void printAllComplexes();
@@ -837,7 +839,7 @@ namespace NFcore
 
 
 
-			ReactionClass(string name, double rate, TransformationSet *transformationSet);
+			ReactionClass(string name, double rate, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
 			int getNumOfReactants() const { return n_reactants; };
@@ -896,6 +898,8 @@ namespace NFcore
 			int reactionType;
 			unsigned int n_reactants;
 
+			System * system;
+
 			double baseRate;
 			double a;
 			unsigned int fireCounter;
@@ -912,6 +916,10 @@ namespace NFcore
 
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
+
+			//Used by the reaction class to make sure that it only updates
+			//each complex once (for observables, and matchOnce reactants)
+			vector <int> updatedComplexes;
 	};
 
 
@@ -971,6 +979,8 @@ namespace NFcore
 			//This is public so that anybody can access the molecules quickly
 			list <Molecule *> complexMembers;
 			list <Molecule *>::iterator molIter;
+
+
 
 		protected:
 			System * system;

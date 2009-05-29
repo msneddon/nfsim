@@ -80,6 +80,7 @@ namespace NFcore
 			void add();
 			void straightAdd();
 			void subtract();
+			void straightSubtract();
 			void clear() { count=0; };
 
 			int getCount() const { return (int)count; };

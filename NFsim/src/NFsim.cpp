@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 //    NFsim: The Network Free Stochastic Simulator
-//    A software framework for efficient simulation of biochemical reaction
+//    A software platform for efficient simulation of biochemical reaction
 //    systems with a large or infinite state space.
 //
-//    Copyright (C) 2008  Michael Sneddon, James Faeder, Thierry Emonet
+//    Copyright (C) 2009  Michael W. Sneddon, James R. Faeder, Thierry Emonet
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -442,6 +442,8 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		if(verbose) {
 			cout<<endl<<endl;
 			s->printAllReactions();
+			cout<<endl;
+			s->printAllObservableCounts(s->getCurrentTime());
 		}
 	}
 	return true;

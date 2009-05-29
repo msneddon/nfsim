@@ -14,7 +14,7 @@ namespace NFcore
 
 	class BasicRxnClass : public ReactionClass {
 		public:
-			BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet);
+			BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet, System *s);
 			virtual ~BasicRxnClass();
 
 			virtual void init();
@@ -70,7 +70,7 @@ namespace NFcore
 	class MMRxnClass : public BasicRxnClass {
 
 		public:
-			MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet );
+			MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet, System *s);
 			virtual ~MMRxnClass();
 
 			virtual double update_a();
@@ -92,7 +92,8 @@ namespace NFcore
 					double baseRate,
 					TransformationSet *transformationSet,
 					CompositeFunction *function,
-					vector <string> &lfArgumentPointerNameList);
+					vector <string> &lfArgumentPointerNameList,
+					System *s);
 			virtual ~DORRxnClass();
 
 			virtual void init();

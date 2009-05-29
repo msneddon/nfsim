@@ -130,6 +130,7 @@ namespace NFinput {
 			System *s,
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
+			int obsType,
 			bool verbose);
 
 

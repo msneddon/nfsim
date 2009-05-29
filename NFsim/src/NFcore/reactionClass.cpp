@@ -9,9 +9,10 @@ using namespace NFcore;
 
 
 
-ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *transformationSet)
+ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *transformationSet, System *s)
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
+	this->system=s;
 
 	isDimerStyle=false;
 	//Setup the basic properties of this reactionClass
@@ -239,12 +240,44 @@ void ReactionClass::fire(double random_A_number)
 	//Loop through the products and remove them from thier observables
 	//cout<<"------------------------------------------"<<endl;
 	if(this->onTheFlyObservables) {
+
 		for( molIter = products.begin(); molIter != products.end(); molIter++ )
 		{
 			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getUniqueID()<<endl;
 			//(*molIter)->printDetails();
 			(*molIter)->removeFromObservables();
 		}
+
+		//If we have Species observables in the product complexes, remove them from the count
+		if(system->getNumOfSpeciesObs()>0) {
+			bool found = false;
+			// we can assume that complex bookkeeping is on, and that each reactant
+			// is in a separate (and single) complex
+			int matches = 0;
+			for(int k=0; k<transformationSet->getNumOfReactants(); k++) {
+
+				//First make sure we don't check the same complex twice
+				int complexId = mappingSet[k]->get(0)->getMolecule()->getComplexID();
+				found = false;
+				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
+					if(updatedComplexes.at(k2)==complexId) {
+						found = true;
+						break;
+					}
+					cout<<"in here"<<endl;
+				}
+				if(found) continue;
+				updatedComplexes.push_back(complexId);
+
+				Complex *c = mappingSet[k]->get(0)->getMolecule()->getComplex();
+				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+					matches = system->getSpeciesObs(i)->isObservable(c);
+					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightSubtract();
+				}
+			}
+			updatedComplexes.clear();
+		}
+
 	}
 
 	//cout<<",  obs removed";
@@ -259,10 +292,41 @@ void ReactionClass::fire(double random_A_number)
 
 	//Tell each molecule in the list of products to add itself back into
 	//the counts of observables and update its class lists, and update any DOR Groups
-	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	if(onTheFlyObservables)
 	{
-	//	if((*molIter)->isMolDead()) continue;
-		if(onTheFlyObservables) (*molIter)->addToObservables();
+		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+		{
+			//	if((*molIter)->isMolDead()) continue;
+			(*molIter)->addToObservables();
+		}
+
+		//If we have Species observables in the product complexes, add them back to the count
+		if(system->getNumOfSpeciesObs()>0) {
+			// we can assume that complex bookkeeping is on, and that each reactant
+			bool found = false;
+			for( molIter = products.begin(); molIter != products.end(); molIter++ )
+			{
+				int complexId = (*molIter)->getComplexID();
+				found = false;
+				for(unsigned int k=0; k<updatedComplexes.size(); k++) {
+					if(updatedComplexes.at(k)==complexId) {
+						found = true;
+						break;
+					}
+				}
+				if(found) continue;
+				updatedComplexes.push_back(complexId);
+
+				Complex *c = (*molIter)->getComplex();
+				int matches = 0;
+				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+					matches = system->getSpeciesObs(i)->isObservable(c);
+					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightAdd();
+				}
+			}
+
+			updatedComplexes.clear();
+		}
 	}
 //	cout<<",  obs updated";
 
@@ -276,6 +340,9 @@ void ReactionClass::fire(double random_A_number)
 	 // 	(*molIter)->printDetails();
 	}
 	//Molecule::printMoleculeList(products);
+
+
+
 
 	//cout<<",  everything done"<<endl;
 	//Tidy up

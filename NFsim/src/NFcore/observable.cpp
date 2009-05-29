@@ -50,6 +50,11 @@ void Observable::straightAdd()
 	count++;
 }
 
+void Observable::straightSubtract()
+{
+	count--;
+}
+
 void Observable::subtract()
 {
 	if(count==0){
@@ -202,10 +207,6 @@ int SpeciesObservable::isObservable(Molecule *m) const
 
 int SpeciesObservable::isObservable(Complex *c) const
 {
-	cerr<<"Comparing a Species observable '"<<obsName<<"'!"<<endl;
-	cerr<<"Species observables are not yet working!  Quitting."<<endl;
-	exit(1);
-	c->printDetails();
 	int matches = 0;
 	for(int t=0; t<n_templates; t++) {
 		for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
@@ -218,7 +219,6 @@ int SpeciesObservable::isObservable(Complex *c) const
 		}
 	}
 
-	cout<<"Num of matches: "<<matches<<endl;
 	return matches;
 }
 
