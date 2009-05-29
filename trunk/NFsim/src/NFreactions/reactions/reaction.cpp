@@ -12,7 +12,7 @@ using namespace NFcore;
 
 
 FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s) :
-	BasicRxnClass(name,1, transformationSet)
+	BasicRxnClass(name,1, transformationSet,s)
 {
 	this->cf=0;
 	this->gf=gf;
@@ -30,7 +30,7 @@ FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, Transfor
 }
 
 FunctionalRxnClass::FunctionalRxnClass(string name, CompositeFunction *cf, TransformationSet *transformationSet, System *s) :
-	BasicRxnClass(name,1, transformationSet)
+	BasicRxnClass(name,1, transformationSet,s)
 {
 	this->gf=0;
 	this->cf=cf;
@@ -126,8 +126,8 @@ void FunctionalRxnClass::printDetails() const {
 
 
 
-MMRxnClass::MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet ) :
-	BasicRxnClass(name,1,transformationSet)
+MMRxnClass::MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet,System *s) :
+	BasicRxnClass(name,1,transformationSet,s)
 {
 	this->Km = Km;
 	this->kcat = kcat;
@@ -170,8 +170,8 @@ void MMRxnClass::printDetails() const {
 
 
 
-BasicRxnClass::BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet) :
-	ReactionClass(name,baseRate,transformationSet)
+BasicRxnClass::BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet, System *s) :
+	ReactionClass(name,baseRate,transformationSet,s)
 {
 	this->reactionType = BASIC_RXN;  //set as normal reaction here, but deriving reaction classes can change this
 	reactantLists = new ReactantList *[n_reactants];

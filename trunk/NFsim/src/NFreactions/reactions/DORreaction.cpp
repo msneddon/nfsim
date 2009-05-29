@@ -16,8 +16,8 @@ DORRxnClass::DORRxnClass(
 		double baseRate,
 		TransformationSet *transformationSet,
 		CompositeFunction *function,
-		vector <string> &lfArgumentPointerNameList) :
-	ReactionClass(name,baseRate,transformationSet)
+		vector <string> &lfArgumentPointerNameList, System *s) :
+	ReactionClass(name,baseRate,transformationSet,s)
 {
 //	cout<<"ok, here we go..."<<endl;
 	vector <TemplateMolecule *> dorMolecules;

@@ -171,14 +171,7 @@ MoleculeType::~MoleculeType()
 		delete t;
 	}
 
-	//Delete all observables of this type that exist
-	MoleculesObservable *o;
-	while(molObs.size()>0)
-	{
-		o = molObs.back();
-		molObs.pop_back();
-		delete o;
-	}
+
 
 
 	delete mList;

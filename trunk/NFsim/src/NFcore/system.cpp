@@ -63,8 +63,6 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
-
-
 }
 
 
@@ -88,6 +86,16 @@ System::~System()
 		allReactions.pop_back();
 		delete r;
 	}
+
+	//Delete all observables of this type that exist
+	Observable *o;
+	while(obsToOutput.size()>0)
+	{
+		o = obsToOutput.back();
+		obsToOutput.pop_back();
+		delete o;
+	}
+
 
 	//Delete all MoleculeTypes (which deletes all molecules and templates)
 	MoleculeType *s;
@@ -171,6 +179,15 @@ void System::turnOff_OnTheFlyObs() {
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->turnOff_OnTheFlyObs();
 }
+
+int System::getNumOfSpeciesObs() const {
+	return (int)speciesObservables.size();
+}
+Observable * System::getSpeciesObs(int index) const
+{
+	return speciesObservables.at(index);
+}
+
 
 void System::registerOutputFileLocation(string filename)
 {
@@ -446,6 +463,19 @@ void System::prepareForSimulation()
   	//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   	//	(*molTypeIter)->addAllToObservables();
   	//}
+
+  	//Add the complexes to Species observables
+  	int match = 0;
+  	for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
+  	  	(*obsIter)->clear();
+  	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
+  		if((*complexIter)->isAlive()) {
+  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
+  				match = (*obsIter)->isObservable((*complexIter));
+  				for(int k=0; k<match; k++) (*obsIter)->straightAdd();
+  			}
+  		}
+  	}
 
 
   	//cout<<"here 8..."<<endl;

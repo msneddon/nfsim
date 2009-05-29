@@ -252,7 +252,7 @@ ReactionClass * NFtest_ss::createReactionXDephos(MoleculeType *molX, double rate
 
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
 	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts);
+	ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts,molX->getSystem());
 	return r;
 }
 
@@ -291,7 +291,7 @@ ReactionClass * NFtest_ss::createReactionXYbind(MoleculeType *molX,MoleculeType 
 	ts->finalize();
 
 	//Create and return the reaction!
-	ReactionClass *r = new BasicRxnClass("Y_bind_X",rate,ts);
+	ReactionClass *r = new BasicRxnClass("Y_bind_X",rate,ts,molX->getSystem());
 	return r;
 }
 
@@ -321,7 +321,7 @@ ReactionClass * NFtest_ss::createReactionXYunbind(MoleculeType *molX, MoleculeTy
 	ts->finalize();
 
 	//Create the reaction in the usual way.
-	ReactionClass *r = new BasicRxnClass("Y_unbind_X",rate,ts);
+	ReactionClass *r = new BasicRxnClass("Y_unbind_X",rate,ts,molX->getSystem());
 	return r;
 }
 
@@ -348,7 +348,7 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 	ts->finalize();
 
 	//Return the Reaction.
-	ReactionClass *r = new BasicRxnClass("Y_phos_X",rate, ts);
+	ReactionClass *r = new BasicRxnClass("Y_phos_X",rate, ts,molX->getSystem());
 	return r;
 }
 

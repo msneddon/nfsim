@@ -1296,7 +1296,7 @@ bool NFinput::initReactionRules(
 					{
 						//Create the Elementary Reaction...
 						ts->finalize();
-						r = new BasicRxnClass(rxnName,0,ts);
+						r = new BasicRxnClass(rxnName,0,ts,s);
 
 						//Make sure that the rate constant exists
 						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
@@ -1435,7 +1435,7 @@ bool NFinput::initReactionRules(
 								ts->finalize();
 
 								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
-								r=new DORRxnClass(rxnName,1,ts,cf,funcArgs);
+								r=new DORRxnClass(rxnName,1,ts,cf,funcArgs,s);
 							}
 						}
 					}
@@ -1515,7 +1515,7 @@ bool NFinput::initReactionRules(
 
 							//Finally, we can make the actual reaction
 							ts->finalize();
-							r = new MMRxnClass(rxnName,kcat,Km,ts);
+							r = new MMRxnClass(rxnName,kcat,Km,ts,s);
 
 						}
 					}
@@ -1568,6 +1568,7 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 		System *s,
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
+		int obsType,
 		bool verbose) {
 
 
@@ -1593,26 +1594,47 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 		TiXmlElement *pListOfMols = pPattern->FirstChildElement("ListOfMolecules");
 		if(pListOfMols) {
 
-			map <string, component> comps;
-			map <string, component> symComps;
-			map <string, component> symMap;
-
-			//First, read the pattern for symmetry - if symmetries exist
-			if(!readPatternForSymmetry(pListOfMols, s, patternName, comps, symComps, verbose)) return false;
-
-			//Get the permutations that were created from the symmetries
-			vector <map<string,component> > permutations;
-			if(!generateRxnPermutations(permutations,symComps,symComps,verbose)) return false;
-
-			//For each valid permutation, create a template molecule that can match it
-			for( unsigned int p=0; p<permutations.size(); p++)
+			//We only need to create a new template molecule for each case of symmetry
+			//if the observable is a Molecules type
+			if(obsType==Observable::MOLECULES)
 			{
-				map <string,component> symMap = permutations.at(p);
+				map <string, component> comps;
+				map <string, component> symComps;
+				map <string, component> symMap;
+
+				//First, read the pattern for symmetry - if symmetries exist
+				if(!readPatternForSymmetry(pListOfMols, s, patternName, comps, symComps, verbose)) return false;
+
+				//Get the permutations that were created from the symmetries
+				vector <map<string,component> > permutations;
+				if(!generateRxnPermutations(permutations,symComps,symComps,verbose)) return false;
+
+				//For each valid permutation, create a template molecule that can match it
+				for( unsigned int p=0; p<permutations.size(); p++)
+				{
+					map <string,component> symMap = permutations.at(p);
+					map <string,TemplateMolecule *> allTemplatesMap;
+					TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
+					if(tm==NULL) return false;
+					tmList.push_back(tm);
+				}
+			}
+
+			//Otherwise, we only have to match once, so we do this for species
+			else if(obsType==Observable::SPECIES) {
+
 				map <string,TemplateMolecule *> allTemplatesMap;
+				map <string, component> comps;
+				map <string, component> symMap;
+
 				TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
 				if(tm==NULL) return false;
 				tmList.push_back(tm);
 			}
+
+			//if the observable was not a valid type, we don't read anything
+			else {}
+
 		}
 		else {
 			cerr<<"Observable pattern in observable "<<observableName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
@@ -1722,7 +1744,7 @@ bool NFinput::initObservables(
 				//First, read in the pattern as a list of template molecules, which creates the needed
 				//symmetric templateMolecules as mentioned above
 				vector <TemplateMolecule *> tmList;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,verbose)) {return false;}
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,Observable::MOLECULES,verbose)) {return false;}
 
 				//Create the observable, which in this case, is a MoleculesObservable
 				MoleculesObservable *mo = new MoleculesObservable(observableName,tmList);
@@ -1757,22 +1779,17 @@ bool NFinput::initObservables(
 				if(!s->isUsingComplex()) {
 					cerr<<"You have not turned on complex book keeping, so I can not run you simulation"<<endl;
 					cerr<<"because your simulation has a Species observable."<<endl;
+					cerr<<"Rerun NFsim with the -cb flag."<<endl;
 					return false;
 				}
 
 				//First, read in the pattern as a list of template molecules, which creates the needed
 				//symmetric templateMolecules as mentioned above
 				vector <TemplateMolecule *> tmList;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,verbose)) {return false;}
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,Observable::SPECIES,verbose)) {return false;}
 
 				SpeciesObservable *so = new SpeciesObservable(observableName,tmList);
 				s->addObservableForOutput(so);
-
-
-
-
-
-
 
 
 
