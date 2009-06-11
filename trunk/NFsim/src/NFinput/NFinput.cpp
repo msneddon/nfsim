@@ -1565,6 +1565,8 @@ bool NFinput::initReactionRules(
 bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 		string observableName,
 		vector <TemplateMolecule *> &tmList,
+		vector <string> &stochRelation,
+		vector <int> &stochQuantity,
 		System *s,
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
@@ -1590,6 +1592,27 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 			cerr<<"Pattern tag in observable "<<observableName<<" without a valid 'id' attribute.  Quiting"<<endl;
 			return false;
 		}
+
+		string relation = "";
+		int quantity = -1;
+
+		if(pPattern->Attribute("relation")) {
+			if(pPattern->Attribute("quantity")) {
+				relation = pPattern->Attribute("relation");
+				try {
+				quantity = NFutil::convertToInt(pPattern->Attribute("quantity"));
+				} catch (std::runtime_error e) {
+					cerr<<"I couldn't parse the 'quantity' value when creating pattern: "<<patternName<<endl;
+					cerr<<e.what()<<endl;
+					return false;
+				}
+			} else {
+				cerr<<"Error when creating observable: "<<observableName<<": relation attribute for stoichiometric\n";
+				cerr<<"observable was found without a matching quantity attribute."<<endl;
+				return false;
+			}
+		}
+
 		//cout<<"   --- reading pattern "<<patternName<<" for symmetry"<<endl;
 		TiXmlElement *pListOfMols = pPattern->FirstChildElement("ListOfMolecules");
 		if(pListOfMols) {
@@ -1617,6 +1640,13 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 					TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
 					if(tm==NULL) return false;
 					tmList.push_back(tm);
+
+					if(!relation.empty()) {
+						cerr<<"Error when creating observable: "<<observableName<<": a stoichiometric observable found for\n";
+						cerr<<"observable of type Molecules.  Currently, NFsim only handles stoichiometric Species\n";
+						cerr<<"observables for effeciency.  Rewrite this observable as type 'Species'."<<endl;
+						return false;
+					}
 				}
 			}
 
@@ -1630,6 +1660,11 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 				TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
 				if(tm==NULL) return false;
 				tmList.push_back(tm);
+				stochRelation.push_back(relation);
+				stochQuantity.push_back(quantity);
+				if(verbose && !relation.empty()) {
+					cout<<"\t\t\t\t\tHas stoichiometric constraint: '"<<relation<<" "<<quantity<<"'"<<endl;
+				}
 			}
 
 			//if the observable was not a valid type, we don't read anything
@@ -1730,7 +1765,6 @@ bool NFinput::initObservables(
 			}
 			if(verbose) cout<<"\t\tCreating Observable: '"<<observableName<<"' of type: '"<<observableType<<"'"<<endl;
 
-
 			//Depending on the type of observable, we have to create it in a particular way
 			NFutil::trim(observableType);
 			if(observableType.compare("Molecules")==0)
@@ -1744,7 +1778,9 @@ bool NFinput::initObservables(
 				//First, read in the pattern as a list of template molecules, which creates the needed
 				//symmetric templateMolecules as mentioned above
 				vector <TemplateMolecule *> tmList;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,Observable::MOLECULES,verbose)) {return false;}
+				vector <string> stochRelation;
+				vector <int> stochQuantity;
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::MOLECULES,verbose)) {return false;}
 
 				//Create the observable, which in this case, is a MoleculesObservable
 				MoleculesObservable *mo = new MoleculesObservable(observableName,tmList);
@@ -1786,9 +1822,11 @@ bool NFinput::initObservables(
 				//First, read in the pattern as a list of template molecules, which creates the needed
 				//symmetric templateMolecules as mentioned above
 				vector <TemplateMolecule *> tmList;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,s,parameter,allowedStates,Observable::SPECIES,verbose)) {return false;}
+				vector <string> stochRelation;
+				vector <int> stochQuantity;
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::SPECIES,verbose)) {return false;}
 
-				SpeciesObservable *so = new SpeciesObservable(observableName,tmList);
+				SpeciesObservable *so = new SpeciesObservable(observableName,tmList,stochRelation,stochQuantity);
 				s->addObservableForOutput(so);
 
 
@@ -2291,6 +2329,8 @@ TemplateMolecule *NFinput::readPattern(
 		component c(finalTemplate, "");
 		comps.insert(pair <string, component> (patternName,c));
 
+
+		if(verbose) { cout<<"\t\t\t\t => Final processed pattern: "<<finalTemplate->getPatternString()<<endl; }
 		return finalTemplate;
 	} catch (...) {
 		//Here's our final catch all!

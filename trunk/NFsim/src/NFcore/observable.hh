@@ -98,6 +98,7 @@ namespace NFcore
 
 
 			//Indentifiers
+			static const int NO_RELATION = -1;
 			static const int EQUALS = 0;
 			static const int NOT_EQUALS = 1;
 			static const int GREATER_THAN = 2;
@@ -159,7 +160,7 @@ namespace NFcore
 	class SpeciesObservable : public Observable
 	{
 		public:
-			SpeciesObservable(string name, vector <TemplateMolecule *> &tmList);
+			SpeciesObservable(string name, vector <TemplateMolecule *> &tmList, vector <string> &stochRelation, vector <int> &stochQuantity);
 
 			virtual ~SpeciesObservable();
 
@@ -170,6 +171,9 @@ namespace NFcore
 
 		protected:
 
+			// information for processing stochiometric observables
+			int *relation;
+			int *quantity;
 
 
 

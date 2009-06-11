@@ -127,6 +127,8 @@ namespace NFinput {
 			TiXmlElement *pObs,
 			string observableName,
 			vector <TemplateMolecule *> &tmList,
+			vector <string> &stochRelation,
+			vector <int> &stochQuantity,
 			System *s,
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
