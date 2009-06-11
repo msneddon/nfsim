@@ -59,12 +59,12 @@ int MoleculeList::create(Molecule *&m)
 
 		if(capacity>finalCapacity && finalCapacity!=MoleculeList::NO_LIMIT) {
 			cout.flush();
-			cerr<<"Error in Simulation!  Creating space for "<<capacity;
-			cerr<<" copies of MoleculeType: "<<m->getMoleculeTypeName()<<endl<<endl;
-			cerr<<"There is currently an imposed limit of: "<<finalCapacity<< " molecules per MoleculeType."<<endl;
-			cerr<<"This is done to keep your operating system from crashing, due to excessive system size."<<endl;
-			cerr<<"If you need to have more molecules, rerun with the -gml [int] flag to increase the size."<<endl;
-			cerr<<"For instance, to increase the limit to 1 million, write: -gml 1000000."<<endl;
+			cerr<<"\n\nError in Simulation!  Creating space for "<<capacity;
+			cerr<<" copies of a MoleculeType: '"<<mt->getName()<<"'.\n\n";
+			cerr<<"There is currently an imposed limit of: "<<finalCapacity<< " molecules \nper MoleculeType. ";
+			cerr<<"This is done to keep your operating system \nfrom crashing, due to excessive system size.";
+			cerr<<"  If you need \nto have more molecules, rerun with the -gml [int] flag \nto increase the limit.";
+			cerr<<"  For instance, to increase the limit \nto 1 million, write: -gml 1000000.\n\n";
 			cerr<<"Better luck next time!"<<endl;
 			exit(1);
 		}

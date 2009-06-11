@@ -169,13 +169,51 @@ int MoleculesObservable::isObservable(Complex *c) const
 ///////////////////////////////////////////////////////////////////
 
 
-SpeciesObservable::SpeciesObservable(string name, vector <TemplateMolecule *> &tmList) :
+SpeciesObservable::SpeciesObservable(string name, vector <TemplateMolecule *> &tmList, vector <string> &stochRelation, vector <int> &stochQuantity) :
 	Observable(name)
 {
 	n_templates=tmList.size();
 	templateMolecules = new TemplateMolecule * [n_templates];
 	for(int t=0; t<n_templates; t++) {
 		templateMolecules[t] = tmList.at(t);
+	}
+
+
+	relation = new int [n_templates];
+	quantity = new int [n_templates];
+	for(int t=0; t<n_templates; t++) {
+		if(stochRelation.at(t).empty()) {
+			relation[t]=NO_RELATION;
+			quantity[t]=-1;
+
+		} else if (stochRelation.at(t).compare("==")==0) {
+			relation[t]=EQUALS;
+			quantity[t]=stochQuantity.at(t);
+
+		} else if (stochRelation.at(t).compare("!=")==0) {
+			relation[t]=NOT_EQUALS;
+			quantity[t]=stochQuantity.at(t);
+
+		} else if (stochRelation.at(t).compare(">")==0) {
+			relation[t]=GREATER_THAN;
+			quantity[t]=stochQuantity.at(t);
+
+		} else if (stochRelation.at(t).compare("<")==0) {
+			relation[t]=LESS_THAN;
+			quantity[t]=stochQuantity.at(t);
+
+		} else if (stochRelation.at(t).compare(">=")==0) {
+			relation[t]=GREATOR_OR_EQUAL_TO;
+			quantity[t]=stochQuantity.at(t);
+
+		} else if (stochRelation.at(t).compare("<=")==0) {
+			relation[t]=LESS_THAN_OR_EQUAL_TO;
+			quantity[t]=stochQuantity.at(t);
+
+		} else {
+			relation[t]=NO_RELATION;
+			quantity[t]=-1;
+		}
 	}
 
 	this->type=Observable::SPECIES;
@@ -192,9 +230,11 @@ SpeciesObservable::~SpeciesObservable()
 //observables are generally only cloned in this way for local functions
 Observable * SpeciesObservable::clone() {
 	vector <TemplateMolecule *> tmList;
+	cout<<"in clone species observable, this is not yet updated to handle stoch observables.  fix me."<<endl;
+	exit(1);
 	for(int t=0; t<n_templates; t++)
 		tmList.push_back(templateMolecules[t]);
-	return new SpeciesObservable(obsName+"_clone",tmList);
+	return 0; //new SpeciesObservable(obsName+"_clone",tmList);
 }
 
 int SpeciesObservable::isObservable(Molecule *m) const
@@ -209,13 +249,47 @@ int SpeciesObservable::isObservable(Complex *c) const
 {
 	int matches = 0;
 	for(int t=0; t<n_templates; t++) {
-		for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
 
-			//For each template, we only have to find one match, then we match for sure.
-			if(templateMolecules[t]->compare((*c->molIter))) {
-				matches++;
-				break;
+		if(relation[t]==NO_RELATION) {
+			for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
+				//For each template, we only have to find one match, then we match for sure.
+				if(templateMolecules[t]->compare((*c->molIter))) {
+					matches++;
+					break;
+				}
 			}
+		}
+
+		//Handle stoichiometric observables
+		else {
+			int localMatches = 0;
+			for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
+				//For each template, we only have to find one match, then we match for sure.
+				if(templateMolecules[t]->compare((*c->molIter))) {
+					localMatches++;
+				}
+			}
+
+			if(relation[t]==EQUALS) {
+				if(localMatches==quantity[t]) matches++;
+
+			} else if(relation[t]==NOT_EQUALS) {
+				if(localMatches!=quantity[t]) matches++;
+
+			} else if(relation[t]==GREATER_THAN) {
+				if(localMatches>quantity[t]) matches++;
+
+			} else if(relation[t]==LESS_THAN) {
+				if(localMatches<quantity[t]) matches++;
+
+			} else if(relation[t]==GREATOR_OR_EQUAL_TO) {
+				if(localMatches>=quantity[t]) matches++;
+
+			} else if(relation[t]==LESS_THAN_OR_EQUAL_TO) {
+				if(localMatches<=quantity[t]) matches++;
+
+			}
+
 		}
 	}
 
