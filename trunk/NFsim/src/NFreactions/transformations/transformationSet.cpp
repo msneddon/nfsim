@@ -293,7 +293,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	Adds a delete rule to the given TemplateMolecule.
 	@author Michael Sneddon
 */
-bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
+bool TransformationSet::addDeleteMolecule(TemplateMolecule *t, int deletionType) {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	int reactantIndex = find(t);
 	if(reactantIndex==-1) {
@@ -303,7 +303,7 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t) {
 		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
 		return false;
 	}
-	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform();
+	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform(deletionType);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -360,7 +360,13 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 		{
 			if(transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE) {
 				Mapping *m1 = ms->get(t);
-				deleteList.push_back(m1->getMolecule());
+				if(transformations[r].at(t)->getRemovalType()==TransformationFactory::COMPLETE_SPECIES_REMOVAL) {
+					m1->getMolecule()->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
+				} else if (transformations[r].at(t)->getRemovalType()==TransformationFactory::DELETE_MOLECULES) {
+					deleteList.push_back(m1->getMolecule());
+				}
+
+
 			} else {
 				transformations[r].at(t)->apply(ms->get(t),mappingSets);
 			}
@@ -368,20 +374,15 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	}
 
 	if(deleteList.size()>0) {
-		list <Molecule *> allMolecules;
 		list <Molecule *>::iterator it;
 
-		//The default behavior is to delete everything that A is connected to, so we
-		//have to loop over this list
+		//Each molecule that is on the list must be dealt with
 		for(it = deleteList.begin(); it!=deleteList.end(); it++) {
-			(*it)->traverseBondedNeighborhood(allMolecules,ReactionClass::NO_LIMIT);
-		}
-
-		//Each molecule that this one is connected to must be removed
-		for(it = allMolecules.begin(); it!=allMolecules.end(); it++) {
 			(*it)->getMoleculeType()->removeMoleculeFromRunningSystem((*it));
 		}
+		deleteList.clear();
 	}
+
 
 	int size = addMoleculeTransformations.size();
 	if(size>0) {

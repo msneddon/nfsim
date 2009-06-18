@@ -106,7 +106,7 @@ namespace NFcore
 				implemented yet, so it may take other parameters.
 				@author Michael Sneddon
 			*/
-			bool addDeleteMolecule(TemplateMolecule *t);
+			bool addDeleteMolecule(TemplateMolecule *t, int deletionType);
 
 			/*!
 				Adds a create molecule rule, but has not been implemented yet.
