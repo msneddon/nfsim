@@ -44,19 +44,18 @@ namespace NFcore
 			static Transformation * genUnbindingTransform(unsigned int bSiteIndex);
 
 			/*!
-			 	Generates an Add Molecule transformation.  Currently, this is not yet
-			 	implemented.
+			 	Generates an Add Molecule transformation.
 			    @author Michael Sneddon
 			 */
 			static Transformation * genAddMoleculeTransform(SpeciesCreator *sc);
 
 			/*!
-			 	Generates a removal of a molecule from the system.  Currently this is
-			 	not yet implemented.
+			 	Generates a removal of a molecule from the system.  The removalType specifies
+			 	how the molecule should be removed (either everything that is connected, or just
+			 	the molecules, or just the molecules conditional on how it is connected)
 			    @author Michael Sneddon
 			 */
-			static Transformation * genRemoveMoleculeTransform();
-
+			static Transformation * genRemoveMoleculeTransform(int removalType);
 			/*!
 			 	Generates an empty transformation.  This is used in cases where there is
 			 	a reactant that is not transformed in a reaction, but that still needs
@@ -76,6 +75,18 @@ namespace NFcore
 			    @author Michael Sneddon
 			*/
 			static Transformation * genDecrementStateTransform(unsigned int cIndex);
+
+
+
+			/*! Indicates that a delete transform deletes the entire connected species */
+			static const int COMPLETE_SPECIES_REMOVAL = 0;
+
+			/*! Indicates that a delete transform deletes only the pointed-to molecule */
+			static const int DELETE_MOLECULES = 1;
+
+			/*! Delete only pointed-to molecules, only if deleting it creates only one remaining species*/
+			static const int DELETE_MOLECULES_NO_KEYWORD = 2;
+
 
 
 
@@ -123,6 +134,7 @@ namespace NFcore
 			int getType() const { return type; }
 			virtual void apply(Mapping *m, MappingSet **ms) = 0;
 			virtual int getComponentIndex() const = 0;
+			virtual int getRemovalType() { return -1; };
 		protected:
 			int type;
 	};
@@ -215,10 +227,15 @@ namespace NFcore
 
 	class RemoveMoleculeTransform : public Transformation {
 		public:
-			RemoveMoleculeTransform() : Transformation(TransformationFactory::REMOVE) {};
+			RemoveMoleculeTransform(int removalType);
 			virtual ~RemoveMoleculeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {cout<<"You should not get a component index from a RemoveMoleculeTransform!!"<<endl; exit(1); return -1;};
+			virtual int getRemovalType() { return removalType; };
+
+		protected:
+			int removalType;
+
 	};
 
 

@@ -126,6 +126,12 @@ void AddMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
+RemoveMoleculeTransform::RemoveMoleculeTransform(int removalType) :
+	Transformation(TransformationFactory::REMOVE) {
+	this->removalType=removalType;
+}
+
+
 void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	cout<<"!! Warning: calling apply on a RemoveMoleculeTransform!  This cannot be handled here!"<<endl;
@@ -178,9 +184,9 @@ NFcore::Transformation * TransformationFactory::genAddMoleculeTransform(SpeciesC
 {
 	return new AddMoleculeTransform(sc);
 }
-NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform()
+NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform(int removalType)
 {
-	return new RemoveMoleculeTransform();
+	return new RemoveMoleculeTransform(removalType);
 }
 
 

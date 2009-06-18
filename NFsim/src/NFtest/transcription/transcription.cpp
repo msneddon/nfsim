@@ -189,7 +189,7 @@ ReactionClass * NFtest_transcription::createReactionRNAdegrades(MoleculeType *mo
 	templates.push_back( rnaTemp );
 
 	TransformationSet *ts = new TransformationSet(templates);
-	ts->addDeleteMolecule(rnaTemp);
+	ts->addDeleteMolecule(rnaTemp,0);
 	ts->finalize();
 
 	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation

@@ -80,6 +80,7 @@ bool NFinput::FindReactionRuleSymmetry(
 			} else {
 				site = pStateChange->Attribute("site");
 				finalState = pStateChange->Attribute("finalState");
+				if(site.find("RP")>=0) continue;
 			}
 
 			if(comps.find(site)!=comps.end()) {
@@ -112,6 +113,10 @@ bool NFinput::FindReactionRuleSymmetry(
 			} else {
 				site1 = pAddBond->Attribute("site1");
 				site2 = pAddBond->Attribute("site2");
+
+				//Skip this if we are adding a bond in the product pattern....
+				if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
+
 			}
 
 			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
@@ -149,6 +154,9 @@ bool NFinput::FindReactionRuleSymmetry(
 			} else {
 				site1 = pDeleteBond->Attribute("site1");
 				site2 = pDeleteBond->Attribute("site2");
+
+				//Skip this if we are messing with a bond in the product pattern....
+				if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 
 			}
 

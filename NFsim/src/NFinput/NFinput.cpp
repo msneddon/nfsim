@@ -996,7 +996,6 @@ bool NFinput::initReactionRules(
 				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
 				TransformationSet *ts = new TransformationSet(templates);
 
-
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//Read in the list of operations we need to perform in this rule
 				TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
@@ -1084,6 +1083,8 @@ bool NFinput::initReactionRules(
 					} else {
 						site1 = pDeleteBond->Attribute("site1");
 						site2 = pDeleteBond->Attribute("site2");
+						//Skip this if we are messing with a bond in the product pattern....
+						if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 					}
 
 
@@ -1107,6 +1108,7 @@ bool NFinput::initReactionRules(
 				TiXmlElement *pAddBond;
 				for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond"))
 				{
+
 					//Make sure all the information about the binding operation is here
 					string site1, site2;
 					if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
@@ -1116,6 +1118,9 @@ bool NFinput::initReactionRules(
 					} else {
 						site1 = pAddBond->Attribute("site1");
 						site2 = pAddBond->Attribute("site2");
+
+						//Skip this if we are messing with a bond in the product pattern....
+						if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 					}
 
 					component *c1;
@@ -1160,32 +1165,84 @@ bool NFinput::initReactionRules(
 				for ( pDelete = pListOfOperations->FirstChildElement("Delete"); pDelete != 0; pDelete = pDelete->NextSiblingElement("Delete"))
 				{
 					//Make sure all the information about the state change is here
-					string id;
-					if(!pDelete->Attribute("id")) {
+					string id,delMolKeyword;
+					if(!pDelete->Attribute("id") || !pDelete->Attribute("DeleteMolecules")) {
 						cerr<<"A specified delete operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-						cerr<<"have a valid id attribute.  Quitting."<<endl;
+						cerr<<"have a valid id attribute or a DeleteMolecules attribute.  Quitting."<<endl;
 						return false;
 					} else {
 						try {
 							id = pDelete->Attribute("id");
-							if(verbose) cout<<"\t\t\t***Identified deletion of pattern: "+id<<"."<<endl;
-							//cout<<"id: "<<id<<endl;
+							delMolKeyword = pDelete->Attribute("DeleteMolecules");
+
 
 							//Here we can check if we are referencing a Molecule for deletion (As opposed to
-							//the entire complex).  We cannot handle this yet, so for now we just get rid of
-							//this designation, and delete the entire complex.
+							//the entire complex)
 							int M_position = id.find_first_of("M");
 							if(M_position>=0) {
-								id = id.substr(0,M_position-1);
-								if(verbose) cout<<"\t\t\t\tCannot delete molecule yet, so deleting whole pattern: "+id<<"."<<endl;
-							}
+								if(verbose) {
+									cout<<"\t\t\t***Identified deletion of molecule: "+id<<". ";
+									if(delMolKeyword.compare("0")==0) {
+										cout<<"DeleteMolecules keyword is turned off."<<endl;
+									} else {
+										cout<<"DeleteMolecules keyword is turned on."<<endl;
+									}
+								}
 
-							if(comps.find(id)!=comps.end()) {
+
+								//Pointing to just a single molecule, so retrieve that molecule
+								cout<<"pointing to just a single molecule, so retrieve it."<<endl;
 								component c = comps.find(id)->second;
 
+								if(delMolKeyword.compare("0")==0) {
+									//Pointing to a single molecule, no DeleteMolecules keyword, so delete it conditional
+									cout<<"No delete molecule keyword, so delete this molecule, conditional on"
+											"the fact that it cannot create multiple additional species."<<endl;
+
+									//Give a warning, because the behavior of this function is very strange indeed!!!
+									cerr<<"\nERROR 002!  You created a reaction ("+rxnName+") that deletes a molecule, but you did not use"<<endl;
+									cerr<<"the 'DeleteMolecules' keyword.  Thus, conforming with BNGL specification, this rule will not"<<endl;
+									cerr<<"delete the molecule IF the deletion creates two disjoint species that are no longer connected."<<endl;
+									cerr<<"NFsim doesn't believe in this weird behavior, so NFsim enforces the use of the DeleteMolecules "<<endl;
+									cerr<<"keyword in such situations, as in this rule.  So go update your rule now.\n"<<endl;
+									return false;
+
+									if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES_NO_KEYWORD)) return false;
+								} else {
+									//Pointing to a single molecule, DeleteMolecules keyword is on, so delete it regardless
+									//cout<<"Using the DeleteMolecules keyword, so delete only the molecules"
+									//	" that are being pointed to..."<<endl;
+									if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES)) return false;
+
+								}
+							}
+
+							else if(comps.find(id)!=comps.end()) {
+								if(verbose) {
+									cout<<"\t\t\t***Identified deletion of complete species: "+id<<". ";
+									if(delMolKeyword.compare("0")==0) {
+										cout<<"DeleteMolecules keyword is turned off."<<endl;
+									} else {
+										cout<<"DeleteMolecules keyword is turned on."<<endl;
+									}
+								}
 
 
-								if(!ts->addDeleteMolecule(c.t)) return false;
+								if(delMolKeyword.compare("0")==0) {
+									//Pointing to the whole complex, no DeleteMolecules keyword, so delete it all!
+									//cout<<"Pointing to the whole complex, without DeleteMolecules keyword, so delete it and all connected..."<<endl;
+									component c = comps.find(id)->second;
+									if(!ts->addDeleteMolecule(c.t,TransformationFactory::COMPLETE_SPECIES_REMOVAL)) return false;
+								} else {
+									//Pointing to the whole complex, DeleteMolecules keyword is turned on.  This throws an
+									//error because if DeleteMolecules is turned on, then we should
+									cout<<"ERROR 000!"<<endl;
+									return false;
+								}
+
+
+
+
 							} else {
 								cerr<<"Error in adding an delete molecule operation in ReactionClass: '"+rxnName+"'."<<endl;
 
@@ -1206,6 +1263,7 @@ bool NFinput::initReactionRules(
 				}
 
 				//Finally, figure out any new creations
+				vector <string> addedProductPatterns;
 				TiXmlElement *pAdd;
 				for ( pAdd = pListOfOperations->FirstChildElement("Add"); pAdd != 0; pAdd = pAdd->NextSiblingElement("Add"))
 				{
@@ -1218,6 +1276,32 @@ bool NFinput::initReactionRules(
 						return false;
 					} else {
 						id = pAdd->Attribute("id");
+
+						// Some preprocessing of the ID to make sure we are getting the right thing
+						//First, check if we are pointing to a molecule - if we are, we have to stop
+						//this nonsense! (current BNGL returns add transforms for each molecule, not
+						//per the entire pattern...)
+						int M_position = id.find("M");
+						if(M_position>=0) {
+						//	cout<<endl<<id<<endl;
+							id = id.substr(0,M_position-1);
+						//	cout<<endl<<id<<endl;
+						//	exit(1);
+						}
+						//Now make sure we haven't seen this pattern before...
+						bool foundAddedPattern=false;
+						for(unsigned int appIndex=0; appIndex<addedProductPatterns.size(); appIndex++) {
+							if(addedProductPatterns.at(appIndex).compare(id)==0) {
+								foundAddedPattern=true;
+								break;
+							}
+						}
+						if(!foundAddedPattern) {
+							addedProductPatterns.push_back(id);
+						} else {
+							continue;
+						}
+
 						if(verbose) cout<<"\t\t\t***Identified addition of product pattern: "+id+"."<<endl;
 
 						SpeciesCreator *sc = NULL;
@@ -1912,6 +1996,12 @@ TemplateMolecule *NFinput::readPattern(
 			TemplateMolecule *tempmol = new TemplateMolecule(moltype);
 			if(verbose) cout<<"\t\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
 
+			//Create a comp element that matches onto this molecule so we can retrieve
+			//any pointers to this molecule (for instance, to allow deletion of this molecule)
+			component c(tempmol,"");
+			comps.insert(pair <string, component> (molUid,c));
+
+
 			//Loop through the components of the molecule in order to set state values
 			TiXmlElement *pListOfComp = pMol->FirstChildElement("ListOfComponents");
 			if(pListOfComp)
@@ -2349,7 +2439,7 @@ bool NFinput::readProductPattern(
 		vector < vector <int> > &bindingSiteInformation,
 		bool verbose)
 {
-	cout<<"reading the product pattern!"<<endl;
+	//cout<<"reading the product pattern!"<<endl;
 	try {
 
 		//Variables to remember the index of things
