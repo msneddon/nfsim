@@ -28,9 +28,6 @@ enum {cmd_free=0, cmd_job, cmd_pre_data_ack, cmd_data_ack, rpt_ready, rpt_pre_da
 struct job {
 	string filename;
 	int processors;
-	double start;
-	double stop;
-	double timestep;
 	vector<string> argument;
 	vector<string> argval;
 	vector<string> parameters;
@@ -48,9 +45,8 @@ struct model {
 	string filename;
 	int processors;
 	int replicates;
-	double start;
-	double stop;
-	double timestep;
+	vector<string> argument;
+	vector<string> argval;
 };
 
 typedef struct msgtype {
@@ -91,5 +87,32 @@ void recv_from_slave();
 void recv_from_master();
 
 void perr(const char*);
+
+void printParallelJobOutput(vector<job*> jobQueue); 
+
+void FinalizeMPI();
+
+void InitializeMPI(int* argc, char*** argv,int& Size,int& Rank);
+
+//Loads a file into a buffer
+string load_to_buffer(string filename);
+
+void DynamicParallel(map<string, string> argMap,int rank,int size);
+
+void EmbarrassingParallel(map<string, string> argMap,int rank,int size);
+
+string BroadcastString(int Rank,int From,string InBuffer);
+
+string ConvergeAllData(int Rank,int Size,string Buffer);
+
+void ConvertStringToBufferMap(map<string, map<int, string> >& FileMap,string ReportBuffer);
+
+string ConvertBufferMapToString(map<string, map<int,string> >& FileBuffers);
+
+char* ConvertStringToCString(string Buffer);
+
+void PrintFileBuffer(map<string, map<int, string> > FileMap,vector<job*> JobQueue);
+
+string getPath(string Filename);
 
 #endif /* SCHEDULER_H_ */
