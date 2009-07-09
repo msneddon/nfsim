@@ -1084,7 +1084,8 @@ bool NFinput::initReactionRules(
 						site1 = pDeleteBond->Attribute("site1");
 						site2 = pDeleteBond->Attribute("site2");
 						//Skip this if we are messing with a bond in the product pattern....
-						if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
+						// @TODO:  FIX THIS!  should reject adds in molecule species that are newly added!
+						//if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 					}
 
 
@@ -1108,7 +1109,7 @@ bool NFinput::initReactionRules(
 				TiXmlElement *pAddBond;
 				for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond"))
 				{
-
+					//cout<<"adding binding transform!"<<endl;
 					//Make sure all the information about the binding operation is here
 					string site1, site2;
 					if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
@@ -1120,7 +1121,8 @@ bool NFinput::initReactionRules(
 						site2 = pAddBond->Attribute("site2");
 
 						//Skip this if we are messing with a bond in the product pattern....
-						if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
+						// @TODO:  FIX THIS!  should reject adds in molecule species that are newly added!
+						//if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 					}
 
 					component *c1;
@@ -1149,7 +1151,7 @@ bool NFinput::initReactionRules(
 						} else {
 							if(!ts->addBindingSeparateComplexTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
 						}
-							if(verbose) {
+						if(verbose) {
 							cout<<"\t\t\t***Identified binding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
 							cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
 						}
