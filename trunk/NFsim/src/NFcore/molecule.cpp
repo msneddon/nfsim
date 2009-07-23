@@ -163,7 +163,7 @@ void Molecule::updateDORRxnValues()
 				//reaction in the system after we notify of the rate factor change!
 				double oldA = rxn->get_a();
 				rxn->notifyRateFactorChange(this,rxnPos,this->getRxnListMappingId(rxnIndex));
-				this->parentMoleculeType->getSystem()->update_A_tot(oldA,rxn->update_a());
+				this->parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
 			}
 		}
 	}

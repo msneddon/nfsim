@@ -228,6 +228,9 @@ void ReactionClass::printDetails() const {
 void ReactionClass::fire(double random_A_number)
 {
 	fireCounter++; //Remember that we fired
+
+	//this->system->printAllObservableCounts(0);
+	//this->system->printAllReactions();
 	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
@@ -341,12 +344,15 @@ void ReactionClass::fire(double random_A_number)
 	}
 	//Molecule::printMoleculeList(products);
 
-
-
+	//this->printFullDetails();
+	//this->system->printAllObservableCounts(0);
+	//this->system->printAllReactions();
+	//exit(1);
 
 	//cout<<",  everything done"<<endl;
 	//Tidy up
 	products.clear();
+
 }
 
 

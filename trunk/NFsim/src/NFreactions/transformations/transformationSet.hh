@@ -214,6 +214,8 @@ namespace NFcore
 
 
 			vector <Transformation *> addMoleculeTransformations;
+
+			static list <Molecule *> deleteList;
 			bool hasSymUnbinding;
 			bool hasSymBinding;
 	};

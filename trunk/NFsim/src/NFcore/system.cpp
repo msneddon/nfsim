@@ -28,6 +28,7 @@ System::System(string name)
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
+	selector = 0;
 }
 
 
@@ -46,6 +47,7 @@ System::System(string name, bool useComplex)
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
+	selector = 0;
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -63,6 +65,7 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
+	selector = 0;
 }
 
 
@@ -70,6 +73,8 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 System::~System()
 {
 	if(ds!=0) delete ds;
+
+	if(selector!=0) delete selector;
 
 	//Delete the rxnIndexMap array
 	if(rxnIndexMap!=NULL) {
@@ -485,6 +490,10 @@ void System::prepareForSimulation()
 
 	//cout<<"here 9..."<<endl;
 
+
+
+
+
   	//if(BASIC_MESSAGE) cout<<"preparing the system...\n";
   	//printIndexAndNames();
 
@@ -496,20 +505,42 @@ void System::prepareForSimulation()
 // 	}
 
 
+
+	//finally, create the next reaction selector
+	this->selector = new DirectSelector(allReactions);
+	//this->selector = new LogClassSelector(allReactions);
+
   	recompute_A_tot();
+
+
+}
+
+
+void System::update_A_tot(ReactionClass *r, double old_a, double new_a)
+{
+	a_tot = selector->update(r,old_a,new_a);
+
+	//BUILT IN DIRECT SEARCH
+	//a_tot-=old_a;
+	//a_tot+=new_a;
 }
 
 
 double System::recompute_A_tot()
 {
-	//Loop through the reactions and add up the rates
-	a_tot = 0;
-	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
-	{
-		a_tot += (*rxnIter)->update_a();
-		if(DEBUG) (*rxnIter)->printDetails();
-	}
+	a_tot = selector->refactorPropensities();
 	return a_tot;
+
+
+//  BUILT IN DIRECT SEARCH
+//	//Loop through the reactions and add up the rates
+//	a_tot = 0;
+//	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+//	{
+//		a_tot += (*rxnIter)->update_a();
+//		if(DEBUG) (*rxnIter)->printDetails();
+//	}
+//	return a_tot;
 }
 
 
@@ -520,28 +551,33 @@ double System::recompute_A_tot()
 /* select the next reaction, given a_tot has been calculated */
 double System::getNextRxn()
 {
-	double randNum = NFutil::RANDOM(a_tot);
-
-	double a_sum=0, last_a_sum=0;
 	nextReaction = 0;
+	return selector->getNextReactionClass(nextReaction);
 
-	//WARNING - DO NOT USE THE DEFAULT C++ RANDOM NUMBER GENERATOR FOR THIS STEP
-	// - IT INTRODUCES SMALL NUMERICAL ERRORS CAUSING THE ORDER OF RXNS TO
-	//   AFFECT SIMULATION RESULTS
-	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++)
-	{
-		a_sum += (*rxnIter)->get_a();
-		if (randNum <= a_sum && nextReaction==0)
-		{
-			nextReaction = (* rxnIter);
-			//cout<<"rNum: "<<randNum<<" last_a: "<<last_a_sum<<" a_sum "<<a_sum<<endl;
-			return (randNum-last_a_sum);
-		}
-		last_a_sum = a_sum;
-	}
-	cerr<<"Error: randNum exceeds a_sum!!!"<<endl;
-	cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<" running a_tot:"<<a_tot<<endl;
-	return -1;
+
+//  BUILT IN DIRECT SEARCH
+//	double randNum = NFutil::RANDOM(a_tot);
+//
+//	double a_sum=0, last_a_sum=0;
+//	nextReaction = 0;
+//
+//	//WARNING - DO NOT USE THE DEFAULT C++ RANDOM NUMBER GENERATOR FOR THIS STEP
+//	// - IT INTRODUCES SMALL NUMERICAL ERRORS CAUSING THE ORDER OF RXNS TO
+//	//   AFFECT SIMULATION RESULTS
+//	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++)
+//	{
+//		a_sum += (*rxnIter)->get_a();
+//		if (randNum <= a_sum && nextReaction==0)
+//		{
+//			nextReaction = (* rxnIter);
+//			//cout<<"rNum: "<<randNum<<" last_a: "<<last_a_sum<<" a_sum "<<a_sum<<endl;
+//			return (randNum-last_a_sum);
+//		}
+//		last_a_sum = a_sum;
+//	}
+//	cerr<<"Error: randNum exceeds a_sum!!!"<<endl;
+//	cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<" running a_tot:"<<a_tot<<endl;
+//	return -1;
 }
 
 

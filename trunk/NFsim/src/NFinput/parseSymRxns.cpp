@@ -115,7 +115,8 @@ bool NFinput::FindReactionRuleSymmetry(
 				site2 = pAddBond->Attribute("site2");
 
 				//Skip this if we are adding a bond in the product pattern....
-				if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
+				// @TODO:  FIX THIS!  should reject adds in molecule species that are newly added!
+				//if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 
 			}
 
@@ -156,7 +157,8 @@ bool NFinput::FindReactionRuleSymmetry(
 				site2 = pDeleteBond->Attribute("site2");
 
 				//Skip this if we are messing with a bond in the product pattern....
-				if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
+				// @TODO:  FIX THIS!  should reject adds in molecule species that are newly added!
+				//if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 
 			}
 

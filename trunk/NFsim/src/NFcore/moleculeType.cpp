@@ -468,7 +468,7 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 		//cout<<"\n\n\n\n*****************"<<endl;
 		//cout<<"looking at rxn: "<<rxn->getName()<<endl;
 		rxn->tryToAdd(m, reactionPositions.at(r));
-		this->system->update_A_tot(oldA,rxn->update_a());
+		this->system->update_A_tot(rxn,oldA,rxn->update_a());
   	}
 }
 
@@ -510,7 +510,7 @@ void MoleculeType::removeFromRxns(Molecule * m)
 	{
 		double oldA = (*rxnIter)->get_a();
 		(*rxnIter)->remove(m, reactionPositions.at(r));
-		this->system->update_A_tot(oldA,(*rxnIter)->update_a());
+		this->system->update_A_tot((*rxnIter),oldA,(*rxnIter)->update_a());
   	}
 }
 
