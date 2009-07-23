@@ -40,7 +40,7 @@ void Observable::add()
 	for(int r=0; r<n_dependentRxns; r++) {
 		double old_a = dependentRxns[r]->get_a();
 		double new_a = dependentRxns[r]->update_a();
-		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(old_a,new_a);
+		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(dependentRxns[r],old_a,new_a);
 	}
 }
 
@@ -69,7 +69,7 @@ void Observable::subtract()
 	for(int r=0; r<n_dependentRxns; r++) {
 		double old_a = dependentRxns[r]->get_a();
 		double new_a = dependentRxns[r]->update_a();
-		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(old_a,new_a);
+		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(dependentRxns[r],old_a,new_a);
 	}
 }
 

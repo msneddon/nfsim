@@ -404,6 +404,8 @@ void DORRxnClass::pickMappingSets(double randNumber) const
 			rateFactorMultiplier*=reactantLists[i]->size();
 		}
 	}
+
+	if(randNumber<0) randNumber = NFutil::RANDOM(this->a);
 	reactantTree->pickReactantFromValue(mappingSet[DORreactantIndex],randNumber,rateFactorMultiplier);
 
 	//cout<<"tree size:        "<<reactantTree->size()<<endl;

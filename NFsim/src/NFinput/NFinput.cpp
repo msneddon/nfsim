@@ -926,6 +926,7 @@ bool NFinput::initReactionRules(
 			vector < map <string,component> > permutations;
 			generateRxnPermutations(permutations, symComps, symRxnCenter,verbose);
 
+
 			for( unsigned int p=0; p<permutations.size(); p++)
 			{
 				map <string,component> symMap = permutations.at(p);

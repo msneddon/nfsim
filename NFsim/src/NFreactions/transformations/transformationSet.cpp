@@ -6,6 +6,7 @@ using namespace NFcore;
 
 
 
+list <Molecule *> TransformationSet::deleteList;
 
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
 {
@@ -352,7 +353,8 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
-	list <Molecule *> deleteList;
+	//cout<<"transforming!"<<endl;
+	//list <Molecule *> deleteList;
 
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		MappingSet *ms = mappingSets[r];
@@ -368,6 +370,8 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 
 
 			} else {
+				//cout<<"applying!"<<endl;
+				//cout<<transformations[r].at(t)->getType()<<endl;
 				transformations[r].at(t)->apply(ms->get(t),mappingSets);
 			}
 		}

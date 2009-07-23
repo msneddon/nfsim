@@ -22,6 +22,8 @@
 #include "moleculeLists/moleculeList.hh"
 #include "../NFfunction/NFfunction.hh"
 #include "../NFoutput/NFoutput.hh"
+#include "reactionSelector/reactionSelector.hh"
+
 
 #include "templateMolecule.hh"
 #include "observable.hh"
@@ -91,6 +93,7 @@ namespace NFcore
 	class ReactantList;
 
 
+	class ReactionSelector;
 
 
 
@@ -217,10 +220,7 @@ namespace NFcore
 			double outputMeanCount(MoleculeType *m);
 			double calculateMeanCount(MoleculeType *m);
 
-			void update_A_tot(double old_a, double new_a) {
-				a_tot-=old_a;
-				a_tot+=new_a;
-			}
+			void update_A_tot(ReactionClass *r, double old_a, double new_a);
 
 
 
@@ -348,6 +348,12 @@ namespace NFcore
 
 
 			map <string,double> paramMap;
+
+
+
+			//Data structure that performs the selection of the next reaction class
+			ReactionSelector * selector;
+
 
 		private:
 			list <Molecule *> molList;
