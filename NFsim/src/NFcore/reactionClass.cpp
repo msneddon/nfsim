@@ -239,6 +239,13 @@ void ReactionClass::fire(double random_A_number)
 	//Generate the set of possible products that we need to update
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
+
+	//if(getName()=="Rule3") {
+	//	cout<<"---"<<endl;cout<<"found: "<<products.size()<<" products."<<endl;
+	//	cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
+	//}
+
+
 	//cout<<"found: "<<products.size()<<" products."<<endl;
 	//Loop through the products and remove them from thier observables
 	//cout<<"------------------------------------------"<<endl;
@@ -267,7 +274,6 @@ void ReactionClass::fire(double random_A_number)
 						found = true;
 						break;
 					}
-					cout<<"in here"<<endl;
 				}
 				if(found) continue;
 				updatedComplexes.push_back(complexId);
@@ -291,6 +297,7 @@ void ReactionClass::fire(double random_A_number)
 	//Through the MappingSet, transform all the molecules as neccessary
 	this->transformationSet->transform(this->mappingSet);
 
+
 //	cout<<",  transformed updated";
 
 	//Tell each molecule in the list of products to add itself back into
@@ -299,7 +306,7 @@ void ReactionClass::fire(double random_A_number)
 	{
 		for( molIter = products.begin(); molIter != products.end(); molIter++ )
 		{
-			//	if((*molIter)->isMolDead()) continue;
+			//if(!(*molIter)->isAlive()) continue;
 			(*molIter)->addToObservables();
 		}
 
@@ -336,7 +343,7 @@ void ReactionClass::fire(double random_A_number)
 //	cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-	//	if((*molIter)->isMolDead()) { continue; } // skip over molecules that we just removed...  don't actually need this check
+		//if(!(*molIter)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
