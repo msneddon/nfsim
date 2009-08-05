@@ -494,12 +494,18 @@ int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 
 void MoleculeType::removeFromObservables(Molecule *m)
 {
+	//cout<<"removing from observables:"<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<endl;
+	//m->printDetails();
+
 	//Check each observable and see if this molecule was counted, and if so, remove
+	int ind=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
   	{
   		//Only subtract if m happened to be an observable... this saves us a compare call
-  		int matches = (*molObsIter)->isObservable(m);
+  		//int matches = (*molObsIter)->isObservable(m);
+  		int matches = m->isObs(ind);
   		for(int k=0; k<matches; k++) { (*molObsIter)->subtract(); }
+  		ind++;
 	}
 }
 

@@ -619,6 +619,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 	while(current_time<end_time)
 	{
+		//this->printAllObservableCounts(current_time);
 		//2: Recompute a_tot for this time
 		//cout<<" a_tot was : " << a_tot<<endl;
 		//recompute_A_tot();
@@ -660,7 +661,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
 //		cout<<endl<<endl<<endl<<"-----------------------------------------------"<<endl;
-//		cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
+
+		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		//Output selected reaction for debugging
 		//cout<<"\nFiring: "<< endl;
 		//nextReaction->printDetails();
@@ -679,6 +681,13 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		tryToDump();
 		//	outputAllPropensities(current_time, nextReaction->getRxnId());
+
+		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
+//		if(nextReaction->getName()=="Rule7") {
+//			cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
+//			printAllReactions();
+//			exit(1);
+//		}
 	}
 
 	finish = clock();
@@ -690,7 +699,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
     cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
     cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
 
-
+    this->printAllReactions();
 	cout.unsetf(ios::scientific);
 	return current_time;
 }
