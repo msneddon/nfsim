@@ -402,6 +402,8 @@ void System::purgeAndPrintAvailableComplexList()
 //observables.
 void System::prepareForSimulation()
 {
+	this->selector = new DirectSelector(allReactions);
+
 	cout<<"preparing simulation..."<<endl;
 	//Note!!  : the order of preparing the system matters!  You have to prepare
 	//some things before others, because certain things require other
@@ -486,7 +488,7 @@ void System::prepareForSimulation()
   	//cout<<"here 8..."<<endl;
 
 
-	this->evaluateAllLocalFunctions();
+
 
 	//cout<<"here 9..."<<endl;
 
@@ -507,8 +509,10 @@ void System::prepareForSimulation()
 
 
 	//finally, create the next reaction selector
-	this->selector = new DirectSelector(allReactions);
+
 	//this->selector = new LogClassSelector(allReactions);
+
+	this->evaluateAllLocalFunctions();
 
   	recompute_A_tot();
 
