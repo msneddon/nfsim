@@ -1,0 +1,89 @@
+
+#  t3.bngl
+#  This model tests for basic local functions.  Like t2.bngl, it models
+#  the methylation and demethylation of receptor dimers.  It also now
+#  includes a bound CheA to each receptor that phosphorylates with
+#  a rate that depends on the methylation state of its bound receptor.  Note,
+#  that this function, pOn, is not the correct biological function, but is just
+#  here for testing.  And we want to test local functions here, not counters, so 
+#  Receptor methylation and demethylation is handled in the old BNGL standard.
+#  For simplicity, we assume that receptors are monomers and can only be 
+#  methylated four times.
+#
+
+
+begin parameters
+
+   kr 7   #per second rate of methylation
+   kb 20  #per second rate of demethylation
+   
+   kcat 10 #per second, base rate of CheA autophosphorylation
+   kDephos 10 #per second, rate of CheA dephosphorylation
+   
+   #initial number of receptors
+   ReceptorComplexCount 4000
+   
+end parameters
+
+
+begin seed species
+
+   #Start with Receptors bound to CheA
+   Receptor(m~3,a!1).CheA(rec!1,p~unphos) ReceptorComplexCount
+   
+end seed species
+
+
+begin observables
+  Molecules R0 Receptor(m~0)
+  Molecules R1 Receptor(m~1)
+  Molecules R2 Receptor(m~2)
+  Molecules R3 Receptor(m~3)
+  Molecules R4 Receptor(m~4)
+  
+  Molecules RA Receptor(a!1).CheA(rec!1,p~unphos)
+  
+  Molecules CheA  CheA(p~unphos)
+  Molecules CheAp CheA(p~PHOS)
+  
+end observables
+
+
+begin function
+
+   #Here we have just one local function, which just multiplies
+   #the auto phosphorylation rate times the number of receptor sites
+   #that are methylated.  Note that observables are calculated on
+   #the local context of parameter $1
+   pOn($1) = kCat*(R1($1)+2*R2($1)+3*R3($1)+4*R4($1))
+   
+end function
+
+
+
+
+
+begin reaction rules
+
+   #Methylation and Demethylation reactions without using integer
+   #valued component states
+   Receptor(m~0) <-> Receptor(m~1) kr,kb
+   Receptor(m~1) <-> Receptor(m~2) kr,kb
+   Receptor(m~2) <-> Receptor(m~3) kr,kb
+   Receptor(m~3) <-> Receptor(m~4) kr,kb
+
+  #here is the actual local function based reaction.  The local function pointer
+  #points to the entire species (even though there is only one molecule in the species)
+  $1::Receptor(a!1).CheA(rec!1,p~unphos) ->  $1::Receptor(a!1).CheA(rec!1,p~PHOS) pOn($1)
+  
+  #the dephos reaction of CheA is independent of the pOn function
+  CheA(p~PHOS) -> CheA(p~unphos) kDephos
+  
+end reaction rules
+
+
+
+
+
+
+writeXML();

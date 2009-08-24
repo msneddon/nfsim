@@ -1,0 +1,72 @@
+#  t1.bngl
+#  Test for global functions by simulating the flagellar motor
+#  and CheYp levels.  The rate of switching rotational states
+#  of the flagellar motor depends functionally on the concentration
+#  of CheYp in the total system.  Therefore, we need to define
+#  global functions to correctly evaluate the rates
+#
+
+begin parameters
+   _Na 6.02e23
+
+   #Made up rates (per second) of CheY <-> CheYp
+   #to keep CheYp in motor range
+   kpy 7
+   kmy 20
+   
+   #Motor switching parameters
+   Kd 3.06
+   g1 35
+   w 1.02
+   
+   #For converting num of CheYp to [CheYp] in functions
+   cellVolume 1.41e-15
+   
+   #initial number of motors and molecules
+   motorCount 10
+   CheYCount 8200
+   
+end parameters
+
+begin molecule type
+  CheY(p~unphos~PHOS)
+  Motor(state~CW~CCW)
+
+end molecule type
+
+
+begin seed species
+   CheY(p~unphos) CheYCount
+   Motor(state~CW) motorCount
+end seed species
+
+begin observables
+  Molecules CheYp CheY(p~PHOS)
+  Molecules MotCW Motor(state~CW)
+  Molecules MotCCW Motor(state~CCW)
+end observables
+
+begin functions
+   #Here are the functional definitions of the switching rate as a function of the observable
+   #CheYp.  Note that the functional expression gives the rate of a SINGLE motor switching.
+   #For maximum generality, functions as evaluated in NFsim add no other terms to the propensity,
+   #so in this case, the function must also consider the number of motors in one state or the
+   #other.  So to make the propensity proportional to the number of Motors in one state or the 
+   #other, we have to add the multiplication factor of the observables MotCW and MotCCW to the 
+   #beginning of the functional expressions
+   kPlus()=MotCW*w*exp( (g1/2.0)*((1.0/2.0)-( (CheYp/(cellVolume*_Na*10^-6))/(Kd+(CheYp/(cellVolume*_Na*10^-6)))) ))
+   kMinus()=MotCCW*w*exp( -(g1/2.0)*((1.0/2.0)-( (CheYp/(cellVolume*_Na*10^-6))/(Kd+(CheYp/(cellVolume*_Na*10^-6)))) ))
+end functions
+
+begin reaction rules
+
+  #Standard unimolecular state change reactions of CheY
+  CheY(p~unphos) <-> CheY(p~PHOS) kpy,kmy
+  
+  #Functionally defined rate laws
+  Motor(state~CW) -> Motor(state~CCW) kPlus()
+  Motor(state~CCW) -> Motor(state~CW) kMinus()
+  
+end reaction rules
+
+writeXML();
