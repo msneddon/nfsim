@@ -295,8 +295,7 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 
 					//If the observable is of type MOLECULES
 					if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
-						varLocalObservables[i]->clear();  //clear it first
-						matches = varLocalObservables[i]->isObservable(m);
+						matches = varLocalObservables[i]->isObservable((*molIter));
 						for(int k=0; k<matches; k++) {
 							varLocalObservables[i]->straightAdd();
 						}
