@@ -1,0 +1,81 @@
+
+#  t5.bngl
+#  This model is designed to test local functions that have more than one
+#  argument and where a reaction calls the function with arguments that
+#  have a different scope.  To test this, we will explicity create the
+#  receptor dimers from two monomers.  Then, the rates of methylation &
+#  demethylation will depend not only on the available sites (out of 4
+#  possible for each monomer) but also on some made up activity function
+#  of the entire dimer.
+#
+
+
+begin parameters
+
+   kr 7   #per second base rate of methylation
+   kb 20  #per second base rate of demethylation
+   
+   #initial number of receptors
+   ReceptorDimerCount 4000
+   
+end parameters
+
+
+begin seed species
+
+   #Start with Receptor Dimers
+   Receptor(m~2,rec!1).Receptor(m~2,rec!1) ReceptorDimerCount
+   
+end seed species
+
+
+begin observables
+  Molecules R0 Receptor(m~0)
+  Molecules R1 Receptor(m~1)
+  Molecules R2 Receptor(m~2)
+  Molecules R3 Receptor(m~3)
+  Molecules R4 Receptor(m~4)
+  
+  Molecules MethSum Receptor(sum(m))
+  Molecules Rtot Receptor()
+  
+end observables
+
+
+begin function
+   
+   ###  here is the methRate function and it is a little more complex this time
+   ## kr is the base rate of methylation
+   ## $1 is pointer to the entire species and so the term (1-(MethSum($1)/Rtot($1))) = (1-pOn) = pOff
+   ##       of the entire dimer
+   ## $2 is pointer to a specific molecule that can be methylated in one of 4 locations and relates
+   ##       to the (4-MethSum($2)) = num of available methylation sites on a single receptor
+   methRate($1,$2) = kr*(4-MethSum($2))*(1-(MethSum($1)/Rtot($1)))
+   
+   ## demeth rate is defined in a similar manner, except that we use the number of
+   ## sites that can be demethylated and the pOn function instead of (1-Pon)
+   demethRate($1,$2) = kr*(MethSum($2))*((MethSum($1)/Rtot($1))
+   
+end function
+
+
+
+
+
+begin reaction rules
+
+   #Methylation and demethylation reactions based on two arguments, one for the entire dimer
+   #and one for a specific receptor
+   $1::Receptor(rec!1).Receptor$2(m~^[4],rec!1) -> $1::Receptor(rec!1).Receptor$2(m~++,rec!1) methRate($1,$2)
+   $1::Receptor(rec!1).Receptor$2(m~^[0],rec!1) -> $1::Receptor(rec!1).Receptor$2(m~--,rec!1) demethRate($1,$2)
+
+  
+end reaction rules
+
+
+
+
+
+
+
+writeXML();
