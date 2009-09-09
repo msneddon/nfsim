@@ -1,0 +1,57 @@
+#  Example of a Run NF scripting file
+#
+#
+
+#First, we can provide NFsim with any command line arguments that
+#tell us how to run the simulation.  Any commandline arguments that
+#NFsim normally accepts can be placed here
+
+-utl 30  # comments can go here too
+#-v
+-xml simple_system.xml
+
+
+
+#Key words include start, eq, sim, set, add, step, output, dump all, query, echo
+
+#The 'begin' tag tells us to begin simulation and that
+#all command line arguments have been declared
+begin
+
+  #The 'echo' command allows us to print things to the screen
+  #during simulation
+  echo hello world
+
+  eq 50 5
+  sim 10 10
+  sim 5
+
+
+ 
+  #add [moleculePattern] [count]
+
+  
+
+
+  print params
+
+  set kcat 2.12412
+  
+  print params
+
+  update
+
+  #step [time]
+  #output observables
+  #dump all
+
+  ### Possible commands
+  #echo [outputString]
+  #set [paramName] [Value]
+ #print rxns observables parameters
+
+#The 'end' tag tells NFsim to stop and exit
+end
+
+
+

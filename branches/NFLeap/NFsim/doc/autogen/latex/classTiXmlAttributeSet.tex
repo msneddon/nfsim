@@ -1,0 +1,98 @@
+\section{TiXmlAttributeSet Class Reference}
+\label{classTiXmlAttributeSet}\index{TiXmlAttributeSet@{TiXmlAttributeSet}}
+{\tt \#include $<$tinyxml.h$>$}
+
+
+
+\subsection{Detailed Description}
+A class used to manage a group of attributes. It is only used internally, both by the ELEMENT and the DECLARATION.
+
+The set can be changed transparent to the Element and Declaration classes that use it, but NOT transparent to the Attribute which has to implement a next() and previous() method. Which makes it a bit problematic and prevents the use of STL.
+
+This version is implemented with circular lists because:\begin{itemize}
+\item I like circular lists\item it demonstrates some independence from the (typical) doubly linked list. \end{itemize}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf TiXmlAttributeSet} ()
+\item 
+{\bf $\sim$TiXmlAttributeSet} ()
+\item 
+void {\bf Add} ({\bf TiXmlAttribute} $\ast$attribute)
+\item 
+void {\bf Remove} ({\bf TiXmlAttribute} $\ast$attribute)
+\item 
+const {\bf TiXmlAttribute} $\ast$ {\bf First} () const 
+\item 
+{\bf TiXmlAttribute} $\ast$ {\bf First} ()
+\item 
+const {\bf TiXmlAttribute} $\ast$ {\bf Last} () const 
+\item 
+{\bf TiXmlAttribute} $\ast$ {\bf Last} ()
+\item 
+const {\bf TiXmlAttribute} $\ast$ {\bf Find} (const char $\ast$\_\-name) const 
+\item 
+{\bf TiXmlAttribute} $\ast$ {\bf Find} (const char $\ast$\_\-name)
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TiXmlAttributeSet::TiXmlAttributeSet ()}\label{classTiXmlAttributeSet_253c33b657cc85a07f7f060b02146c35}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!$\sim$TiXmlAttributeSet@{$\sim$TiXmlAttributeSet}}
+\index{$\sim$TiXmlAttributeSet@{$\sim$TiXmlAttributeSet}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TiXmlAttributeSet::$\sim$TiXmlAttributeSet ()}\label{classTiXmlAttributeSet_dd463905dff96142a29fe16a01ecf28f}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Add@{Add}}
+\index{Add@{Add}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlAttributeSet::Add ({\bf TiXmlAttribute} $\ast$ {\em attribute})}\label{classTiXmlAttributeSet_745e50ddaae3bee93e4589321e0b9c1a}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Remove@{Remove}}
+\index{Remove@{Remove}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TiXmlAttributeSet::Remove ({\bf TiXmlAttribute} $\ast$ {\em attribute})}\label{classTiXmlAttributeSet_924a73d071f2573f9060f0be57879c57}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!First@{First}}
+\index{First@{First}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlAttribute}$\ast$ TiXmlAttributeSet::First () const\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlAttributeSet_e0636e88cedd4b09d61c451860f68598}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!First@{First}}
+\index{First@{First}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlAttribute}$\ast$ TiXmlAttributeSet::First ()\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlAttributeSet_99703bb08ca2aece2d7ef835de339ba0}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Last@{Last}}
+\index{Last@{Last}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlAttribute}$\ast$ TiXmlAttributeSet::Last () const\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlAttributeSet_7b3f3ccf39a97bc25539d3fcc540296a}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Last@{Last}}
+\index{Last@{Last}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlAttribute}$\ast$ TiXmlAttributeSet::Last ()\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlAttributeSet_b4c4edfb2d74f6ea31aae096743bd6e0}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Find@{Find}}
+\index{Find@{Find}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlAttribute} $\ast$ TiXmlAttributeSet::Find (const char $\ast$ {\em \_\-name}) const}\label{classTiXmlAttributeSet_acbbc5e1a1c987e72815430e89fcb58b}
+
+
+\index{TiXmlAttributeSet@{TiXmlAttributeSet}!Find@{Find}}
+\index{Find@{Find}!TiXmlAttributeSet@{TiXmlAttributeSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlAttribute}$\ast$ TiXmlAttributeSet::Find (const char $\ast$ {\em \_\-name})\hspace{0.3cm}{\tt  [inline]}}\label{classTiXmlAttributeSet_2f210bed54c832adf1683c44c35727b9}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/TinyXML/{\bf tinyxml.h}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/TinyXML/{\bf tinyxml.cpp}\end{CompactItemize}
