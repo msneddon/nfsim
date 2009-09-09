@@ -91,8 +91,8 @@ void Observable::addReferenceToMyself(string referenceName, mu::Parser *p)
 }
 void Observable::addDependentRxn(ReactionClass *r)
 {
-	cout<<"Observable: "<<this->obsName<<" adding dependent rxn: "<<r->getName()<<endl;
-	cout<<"n dependent rxns: "<<n_dependentRxns<<endl;
+	//cout<<"Observable: "<<this->obsName<<" adding dependent rxn: "<<r->getName()<<endl;
+	//cout<<"n dependent rxns: "<<n_dependentRxns<<endl;
 	ReactionClass ** newDepRxns = new ReactionClass * [n_dependentRxns+1];
 	for(int i=0; i<n_dependentRxns; i++) {
 		newDepRxns[i] = dependentRxns[i];
