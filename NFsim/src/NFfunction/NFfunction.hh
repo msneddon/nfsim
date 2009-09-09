@@ -282,48 +282,6 @@ namespace NFcore {
 			static const int SPECIES = 0;
 			static const int MOLECULE = 1;
 
-
-		/*	LocalFunction(System *s,
-					string name,
-					string funcString,
-					vector <Observable *> &observables,
-					vector <StateCounter *> &stateCounters,
-					vector <string> &paramConstNames,
-					vector <double> &paramConstValues);
-			~LocalFunction();
-
-
-			void setEvaluationLevel(int eLevel);
-			int getEvaluationLevel() const { return evaluationLevel; };
-
-			void addTypeIMoleculeDependency(MoleculeType *mt);
-
-
-			// NEED a FUNCTION HERE THAT TELLS US THE INDEX TO GET
-			// OUT THE STORED VALUE OF THIS FUNCTION FROM A GIVEN MOLECULE
-			int getIndexOfTypeIFunctionValue(Molecule *m);
-
-		//	void prepareForSimulation(System *s);
-
-			string getNiceName() const {return name+"()";};
-
-			string getName() const {return name;};
-
-			void printDetails();
-
-		//	void attatchRxn(ReactionClass *r);
-
-			double evaluateOn(Molecule *m);
-
-
-//			int getNumberOfArgs() const { return (int) n_args; };
-//			string getArgName(int argIndex) const {
-//				if(argIndex<n_args && argIndex>=0) return argNames[argIndex];
-//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-//			string getArgType(int argIndex) const {
-//				if(argIndex<n_args && argIndex>=0) return argTypes[argIndex];
-//				cerr<<"invalid argIndex given in GlobalFunction."<<endl; exit(1); };
-*/
 			mu::Parser *p;
 		protected:
 
@@ -349,23 +307,6 @@ namespace NFcore {
 
 			static list <Molecule *> molList;
 			static list <Molecule *>::iterator molIter;
-//			//List of observables that this local function depends on
-//			Observable ** obs;
-//			unsigned int n_obs;
-//			int * obsVal;
-//
-//			StateCounter ** sc;
-//			unsigned int n_sc;
-//
-//			string name;
-//			string funcString;
-//
-//			unsigned int n_paramConst;
-//			string *paramNames;
-//			double *paramValues;
-//
-//
-//			int evaluationLevel;
 
 			//Here we store back pointers into both type I and type II molecules
 			//Remember that type I molecules must store the value of this function

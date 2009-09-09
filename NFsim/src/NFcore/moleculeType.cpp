@@ -578,6 +578,7 @@ void MoleculeType::addAllToObservables()
 
 
 
+
 void MoleculeType::addToObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule should be counted

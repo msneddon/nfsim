@@ -309,12 +309,15 @@ Molecule * Molecule::getBondedMolecule(int cIndex) const
 void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 {
 	if(m1->bond[cIndex1]!=NOBOND || m2->bond[cIndex2]!=NOBOND) {
+		cerr<<endl<<endl<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+		cerr<<"Your universal traversal limit was probably set too low, so some updates were not correct!\n\n";
+
 		cerr<<"Trying to bond "<< m1->getMoleculeTypeName() << "_"<<m1->getUniqueID()<<"(";
 		cerr<<m1->getMoleculeType()->getComponentName(cIndex1)<<") & ";
 		cerr<< m2->getMoleculeTypeName()<<"_"<<m2->getUniqueID()<<"(";
 		cerr<<m2->getMoleculeType()->getComponentName(cIndex2)<<")\n";
 		cerr<<" to sites that are already occupied!  Check rxn rules!!\n";
-
+		cerr<<"\n";
 		m1->printDetails(cerr);
 		m2->printDetails(cerr);
 		exit(1);
@@ -362,9 +365,9 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 
 	int cIndex2 = m1->indexOfBond[cIndex];
 
-	//break the bond
-	m1->bond[cIndex] = NOBOND;
-	m2->bond[cIndex2] = NOBOND;
+	//break the bond (older compilers don't let you assign NOBOND to type molecule)
+	m1->bond[cIndex] = 0; //NOBOND;
+	m2->bond[cIndex2] = 0; //NOBOND;
 
 	m1->indexOfBond[cIndex] = NOINDEX;
 	m2->indexOfBond[cIndex2] = NOINDEX;

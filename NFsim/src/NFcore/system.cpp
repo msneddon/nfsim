@@ -703,7 +703,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
     cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
     cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
 
-    this->printAllReactions();
 	cout.unsetf(ios::scientific);
 	return current_time;
 }
