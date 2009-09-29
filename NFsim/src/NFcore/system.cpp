@@ -423,12 +423,12 @@ void System::prepareForSimulation()
   	for( int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
 
-  	cout<<"here 2..."<<endl;
+  	//cout<<"here 2..."<<endl;
 
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
-  	cout<<"here 3..."<<endl;
+  	//cout<<"here 3..."<<endl;
     //this->printAllFunctions();
 
   	// now we prepare all reactions
