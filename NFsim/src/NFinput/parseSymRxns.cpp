@@ -67,6 +67,71 @@ bool NFinput::FindReactionRuleSymmetry(
 			return true;
 		}
 
+
+//		//First extract out the state changes
+//						TiXmlElement *pStateChange;
+//						for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange"))
+//						{
+//							//Make sure all the information about the state change is here
+//							string site, finalState;
+//							if(!pStateChange->Attribute("site") || !pStateChange->Attribute("finalState")) {
+//								cerr<<"A specified state change operation in ReactionClass: '"+rxnName+"' does not "<<endl;
+//								cerr<<"have a valid site or finalState attribute.  Quitting."<<endl;
+//								return false;
+//							} else {
+//								site = pStateChange->Attribute("site");
+//								finalState = pStateChange->Attribute("finalState");
+//							}
+//
+//							//First grab the component that is going to change...
+//							component *c;
+//							int finalStateInt = 0;
+//							if(!lookup(c, site, comps, symMap)) return false;
+//
+//							//handle both increment and decrement states first...
+//							if(finalState=="PLUS") {
+//								if(!ts->addIncrementStateTransform(c->t,c->symPermutationName)) return false;
+//
+//								if(verbose) {
+//									cout<<"\t\t\t***Identified increment state of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+//									cout<<") to new state value: oldStateValue+1"<<endl;
+//								}
+//							}
+//							else if(finalState=="MINUS") {
+//								if(!ts->addDecrementStateTransform(c->t,c->symPermutationName)) return false;
+//
+//
+//								if(verbose) {
+//									cout<<"\t\t\t***Identified decrement state of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+//									cout<<") to new state value: oldStateValue-1"<<endl;
+//								}
+//
+//							}
+//							else {
+//
+//								//Here, we handle your typical state change operation
+//								try {
+//									if(allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)==allowedStates.end()) {
+//										cout<<"Error! in NFinput, when looking up state: "<<c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState<<endl;
+//										cout<<"Could not find this in the list of allowed states!  exiting!"<<endl;
+//										exit(1);
+//									}
+//									finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)->second;
+//									//cout<<"found:"<<finalStateInt<<endl;
+//								} catch (exception& e) {
+//									cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
+//									cerr<<"It seems that the final state is not valid."<<endl;
+//									return false;
+//								}
+//								if(!ts->addStateChangeTransform(c->t,c->symPermutationName,finalStateInt)) return false;
+//								if(verbose) {
+//									cout<<"\t\t\t***Identified state change of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
+//									cout<<") to new state value: " + finalState<<endl;
+//								}
+//							}
+//						}
+
+
 		//First extract out the state changes
 		TiXmlElement *pStateChange;
 		for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange"))
@@ -80,7 +145,7 @@ bool NFinput::FindReactionRuleSymmetry(
 			} else {
 				site = pStateChange->Attribute("site");
 				finalState = pStateChange->Attribute("finalState");
-				if(site.find("RP")>=0) continue;
+				//if(site.find("RP")>=0) continue;
 			}
 
 			if(comps.find(site)!=comps.end()) {

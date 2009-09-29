@@ -287,27 +287,8 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 	mol->prepareForSimulation();
 	mol->setAlive(true);
 
-	//Check each observable and see if this molecule should be counted
-	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ ) {
-		int matches = (*molObsIter)->isObservable(mol);
-		for(int k=0; k<matches; k++) { (*molObsIter)->add(); }
-
-		//////////////////////////////////////////////////////////////////
-		//!! @TODO FIX ME!!!
-//		if(mol->getComplex()!=0) {
-//			Complex *c = mol->getComplex();
-//			this->system->addNewComplexToSpeciesObservables(c);
-//		}
-	}
-
+	mol->addToObservables();
 	this->updateRxnMembership(mol);
-
-//	//Check each reaction and add this molecule as a reactant if we have to
-//	int r=0;
-//	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ ) {
-//		(*rxnIter)->tryToAdd(mol, reactionPositions.at(r));
-//	}
-
 }
 
 
@@ -584,8 +565,8 @@ void MoleculeType::addToObservables(Molecule *m)
 	//Check each observable and see if this molecule should be counted
 	int o=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++){
-		//cout<<"Comparing(in add: "<<endl;
-		//m->printDetails();
+		//cout<<"Comparing(in add: ";
+		//cout<<m->getUniqueID()<<")"<<endl;
 
 		int matches = (*molObsIter)->isObservable(m);
 		m->setIsObs(o,matches);

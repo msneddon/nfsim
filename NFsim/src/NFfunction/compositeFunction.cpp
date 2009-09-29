@@ -115,6 +115,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 		gfs[i] = gf_tempVector.at(i);
 	}
 
+
 	//now the local functions...
 	vector <LocalFunction *> lf_tempVector;
 	for(unsigned int i=0; i<n_allFuncs; i++) {
@@ -287,7 +288,8 @@ void CompositeFunction::finalizeInitialization(System *s)
 		reactantCount[r]=0;
 	}
 
-	//cout<<"done"<<endl;
+	//cout<<"prepared: "<<this->name<<endl;
+	//cout<<"expression= "<<this->parsedExpression<<endl;
 }
 
 int CompositeFunction::getNumOfArgs() const {

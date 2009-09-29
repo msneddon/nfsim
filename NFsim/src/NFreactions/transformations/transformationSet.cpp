@@ -11,7 +11,7 @@ list <Molecule *> TransformationSet::deleteList;
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
 {
 	this->hasSymUnbinding=false;
-	this->hasSymBinding = true;
+	this->hasSymBinding = false;
 
 	//cout<<"creating transformationSet..."<<endl;
 	//Remember our reactants
@@ -177,6 +177,16 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	unsigned int cIndex1 = t1->getMoleculeType()->getCompIndexFromName(bSiteName1);
 	unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
 
+
+	//Check for symmetric binding (should do a better check here!)
+	if(t1->getMoleculeType()==t2->getMoleculeType())  {
+		if(bSiteName1==bSiteName2) {
+			hasSymBinding=true;
+			//cout<<"**************************setting sym binding reaction!"<<endl;
+		}
+	}
+
+
 	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
 	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
 	//equal to the size.
@@ -258,7 +268,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 		if(t->getMoleculeType()==t2->getMoleculeType())  {
 			if(bSiteName==bSiteName2) {
 				hasSymUnbinding=true;
-				cout<<"setting sym unbinding reaction!"<<endl;
+				//cout<<"setting sym unbinding reaction!"<<endl;
 			}
 		}
 	}

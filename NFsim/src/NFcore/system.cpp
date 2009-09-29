@@ -6,7 +6,7 @@
 #include "../NFscheduler/NFstream.h"
 #include "../NFscheduler/Scheduler.h"
 
-#define ATOT_TOLERANCE 1e-11
+#define ATOT_TOLERANCE 1e-9
 
 using namespace std;
 using namespace NFcore;
@@ -423,13 +423,13 @@ void System::prepareForSimulation()
   	for( int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
 
-  	//cout<<"here 2..."<<endl;
+  	cout<<"here 2..."<<endl;
 
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
-  	//cout<<"here 3..."<<endl;
-
+  	cout<<"here 3..."<<endl;
+    //this->printAllFunctions();
 
   	// now we prepare all reactions
 	rxnIndexMap = new int * [allReactions.size()];
@@ -673,8 +673,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//cout<<endl<<endl;
 
 //		this->printAllReactions();
-//		this->printAllObservableCounts(this->current_time);
-
+		//this->printAllObservableCounts(this->current_time);
+		//cout<<"\n";
 		//Increment time
 		iteration++;
 		stepIteration++;
@@ -682,6 +682,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);
+		//this->printAllObservableCounts(this->current_time);
+		//cout<<"\n---"<<endl;
 
 		tryToDump();
 		//	outputAllPropensities(current_time, nextReaction->getRxnId());

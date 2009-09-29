@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 	// Check if scheduler should handle the work
 	if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.03";
+	string versionNumber = "1.04";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;

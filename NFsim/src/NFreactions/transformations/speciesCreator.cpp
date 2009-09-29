@@ -241,5 +241,8 @@ void SpeciesCreator::create()
 	for(unsigned int m=0; m<n_molecules; m++)
 	{
 		moleculeTypes[m]->addMoleculeToRunningSystem(newMoleculeCreations[m]);
+		//cout<<"Created:"<<endl;
+		//newMoleculeCreations[m]->printDetails();
+		//cout<<endl;
 	}
 }

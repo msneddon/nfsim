@@ -181,6 +181,13 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 		{
 			cout<<endl;
 			cout<<"Warning! You have a binding rxn (" << name << ") that allows a moleculeType to bind another of the same type."<<endl;
+			cout<<"Make sure that is correct, because this can potentially make long polymers or large aggregates."<<endl;
+			cout<<endl;
+		}
+		//If the binding is symmetric
+		if(transformationSet->hasSymBindingTransform()) {
+			cout<<endl;
+			cout<<"Warning! You have an binding rxn (" << name << ") that is symmetric."<<endl;
 			cout<<"Make sure that is correct."<<endl;
 			cout<<endl;
 			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
@@ -229,9 +236,10 @@ void ReactionClass::fire(double random_A_number)
 {
 	fireCounter++; //Remember that we fired
 
+    //cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
 	//this->system->printAllObservableCounts(0);
 	//this->system->printAllReactions();
-	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
+
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);
@@ -247,7 +255,7 @@ void ReactionClass::fire(double random_A_number)
 
 
 	//cout<<"found: "<<products.size()<<" products."<<endl;
-	//Loop through the products and remove them from thier observables
+	//Loop through the products and remove them from their observables
 	//cout<<"------------------------------------------"<<endl;
 	if(this->onTheFlyObservables) {
 
@@ -340,14 +348,14 @@ void ReactionClass::fire(double random_A_number)
 	}
 //	cout<<",  obs updated";
 
-//	cout<<"after:"<<endl;
+	//cout<<"after:"<<endl;
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
 		//if(!(*molIter)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
-	 // 	(*molIter)->printDetails();
+	  	//(*molIter)->printDetails();
 	}
 	//Molecule::printMoleculeList(products);
 
