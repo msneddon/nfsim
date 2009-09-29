@@ -554,6 +554,12 @@ bool NFinput::initMoleculeTypes(
 			firstSymSiteToAppend.clear();
 		}
 
+		// prints out allowed state map
+		//for ( std::map< string, int, std::less< int > >::const_iterator iter = allowedStates.begin();
+		//      iter != allowedStates.end(); ++iter )
+		//      cout << iter->first << '\t' << iter->second << '\n';
+
+
 		//Getting here means we read everything we could successfully
 		return true;
 	} catch (...) {
@@ -677,10 +683,6 @@ bool NFinput::initStartSpecies(
 				// Identify the moleculeType if we can (note that this call could potentially kill our code if we can't find the type);
 				MoleculeType *mt = s->getMoleculeTypeByName(molName);
 				if(verbose) cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
-
-
-
-
 
 
 				vector <string> usedComponentNames;
@@ -997,6 +999,7 @@ bool NFinput::initReactionRules(
 				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
 				TransformationSet *ts = new TransformationSet(templates);
 
+
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//Read in the list of operations we need to perform in this rule
 				TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
@@ -1048,12 +1051,20 @@ bool NFinput::initReactionRules(
 
 						//Here, we handle your typical state change operation
 						try {
-							if(allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)==allowedStates.end()) {
-								cout<<"Error! in NFinput, when looking up state: "<<c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState<<endl;
-								cout<<"Could not find this in the list of allowed states!  exiting!"<<endl;
-								exit(1);
+
+							string lookupname = c->symPermutationName;
+							if(allowedStates.find(c->t->getMoleculeTypeName()+"_"+lookupname+"_"+finalState)==allowedStates.end()) {
+
+								//if(c->t->getMoleculeType()->isEquivalentComponent(c->name)) {
+								//	lookupname = c->name;
+								//}
+								//if(allowedStates.find(c->t->getMoleculeTypeName()+"_"+lookupname+"_"+finalState)==allowedStates.end()) {
+									cout<<"Error! in NFinput, when looking up state: "<<c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState<<endl;
+									cout<<"Could not find this in the list of allowed states!  exiting!"<<endl;
+									exit(1);
+								//}
 							}
-							finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+c->symPermutationName+"_"+finalState)->second;
+							finalStateInt = allowedStates.find(c->t->getMoleculeTypeName()+"_"+lookupname+"_"+finalState)->second;
 							//cout<<"found:"<<finalStateInt<<endl;
 						} catch (exception& e) {
 							cerr<<"Error in adding a state change operation in ReactionClass: '"+rxnName+"'."<<endl;
