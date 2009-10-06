@@ -1,0 +1,81 @@
+
+#  t4.bngl
+#  This model tests for several new features.  First, it tests for
+#  integer valued component states (as t2.bngl).  it also tests for local
+#  functions (similar to t3.bngl), but this time with pointer that point
+#  to a specific molecule, not the entire species.  Finally it also tests for
+#  Observable counters that keep track of the number of sites methylated.  Because
+#  counters make it easy, we are back to receptor dimers with 8 methylation states.
+#
+
+
+begin parameters
+
+   kr 7   #per second rate of methylation
+   kb 20  #per second rate of demethylation
+   
+   #initial number of receptors
+   ReceptorDimerCount 4000
+   
+end parameters
+
+
+
+begin seed species
+
+   #Start with Receptor Dimers
+   ReceptorDimer(m~3) ReceptorDimerCount
+   
+end seed species
+
+
+begin observables
+  Molecules R0 ReceptorDimer(m~0)
+  Molecules R1 ReceptorDimer(m~1)
+  Molecules R2 ReceptorDimer(m~2)
+  Molecules R3 ReceptorDimer(m~3)
+  Molecules R4 ReceptorDimer(m~4)
+  Molecules R5 ReceptorDimer(m~5)
+  Molecules R6 ReceptorDimer(m~6)
+  Molecules R7 ReceptorDimer(m~7)
+  Molecules R8 ReceptorDimer(m~8)
+  
+  Molecules MethSum Receptor(sum(m))
+  
+end observables
+
+
+begin function
+
+   #Here we have just two local functions, which just keeps
+   #track of the number of available methylation sites that we can
+   #either methylate or demethylate.
+   openSites($1) = kr*(8-MethSum($1))
+   closedSites($1) = kb*MethSum($1)
+   
+end function
+
+
+
+
+begin reaction rules
+
+   #Methylation and Demethylation reactions as increment and decrement
+   #states that depend on the number of available sites for methylation
+   #and demethylation.  This means that a dimer methylated only
+   #once will get methylated seven times faster than a dimer methylated
+   #seven times already.  The opposite is true for demethylation
+   
+   ReceptorDimer$1(m~^[8]) -> ReceptorDimer$1(m~++) openSites($1)
+   ReceptorDimer$1(m~^[0]) -> ReceptorDimer$1(m~--) closedSites($1)
+
+  
+end reaction rules
+
+
+
+
+
+
+
+writeXML();

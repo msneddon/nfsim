@@ -1,0 +1,128 @@
+\section{NFcore::MappingSet Class Reference}
+\label{classNFcore_1_1MappingSet}\index{NFcore::MappingSet@{NFcore::MappingSet}}
+{\tt \#include $<$mappingSet.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Keeps a list of mappings needed by a particular list of reactants. 
+
+\doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects manage a list of simple Mappings onto Molecules all within a single \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf MappingSet} (unsigned int {\bf id}, vector$<$ {\bf Transformation} $\ast$ $>$ \&transformations)
+\item 
+{\bf $\sim$MappingSet} ()
+\item 
+bool {\bf set} (unsigned int mappingIndex, {\bf Molecule} $\ast$m)
+\item 
+{\bf Mapping} $\ast$ {\bf get} (unsigned int mappingIndex)
+\item 
+void {\bf clear} ()
+\item 
+bool {\bf hasDeletionTransform} () const 
+\item 
+unsigned int {\bf getId} () const 
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+unsigned int {\bf id}
+\item 
+bool {\bf isSet}
+\item 
+unsigned int {\bf n\_\-mappings}
+\item 
+{\bf Mapping} $\ast$$\ast$ {\bf mappings}
+\item 
+bool {\bf isDeletion}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!MappingSet@{MappingSet}}
+\index{MappingSet@{MappingSet}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MappingSet::MappingSet (unsigned int {\em id}, vector$<$ {\bf Transformation} $\ast$ $>$ \& {\em transformations})}\label{classNFcore_1_1MappingSet_1adf9b98dd478f70fa488958faf3a266}
+
+
+Creates a new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}. This \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} constructor will take care of populating itself with \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects based on the list of transformations that are specified in the given vector. \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} objects know how to make \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects which are immediately made when a \doxyref{ReactantList}{p.}{classNFcore_1_1ReactantList} (or \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree}) initializes or expands its capacity. They are never destroyed until the simulation is complete. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!$\sim$MappingSet@{$\sim$MappingSet}}
+\index{$\sim$MappingSet@{$\sim$MappingSet}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MappingSet::$\sim$MappingSet ()}\label{classNFcore_1_1MappingSet_daacc264f98cffb80c3d34ef8dd38f8f}
+
+
+Destroys this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} and any \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} contained by this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!set@{set}}
+\index{set@{set}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool MappingSet::set (unsigned int {\em mappingIndex}, {\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1MappingSet_75318a839a2525ea119e33dbde8dbfa1}
+
+
+Assigns a particular \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} in this set at the specified index to a given \doxyref{Molecule}{p.}{classNFcore_1_1Molecule}. \doxyref{MapGenerator}{p.}{classNFcore_1_1MapGenerator} objects use this function to Map molecules. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!get@{get}}
+\index{get@{get}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Mapping}$\ast$ NFcore::MappingSet::get (unsigned int {\em mappingIndex})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_3efcfba2d5f10ae2843fd4045435c091}
+
+
+Retrieves a particular \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} at the specified index. This is used when we need to actually transform a given \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} involved with a rule that fired. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!clear@{clear}}
+\index{clear@{clear}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::MappingSet::clear ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_2b5a8cab07ad3b8e9399fb4a2fd6e4a9}
+
+
+This clears the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects belonging to this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}. It is generally good practice to do this once this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} is no longer being used, but this function is not required for any real functionality. Note that currently this function does nothing (for effeciency). To make it do something, look at the file \doxyref{mappingSet.cpp}{p.}{mappingSet_8cpp} and use the (slightly slower) yet less error prone version of these functions. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!hasDeletionTransform@{hasDeletionTransform}}
+\index{hasDeletionTransform@{hasDeletionTransform}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::MappingSet::hasDeletionTransform () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_9f2aea4b22819f3db1bd641e0ecd5d92}
+
+
+\index{NFcore::MappingSet@{NFcore::MappingSet}!getId@{getId}}
+\index{getId@{getId}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::MappingSet::getId () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_b772e7b28b5791d32edea1cf72e9207b}
+
+
+Returns the Id of this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}. The Id of the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} is used to track the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} as it exists in a \doxyref{ReactantList}{p.}{classNFcore_1_1ReactantList} or \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree}. This Id should be unique within the list or tree, but is not unique within the system. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!id@{id}}
+\index{id@{id}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::MappingSet::id}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_f528d6348d9dd4aa33d54d1b87fbb0a6}
+
+
+The Id of this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} assigned by the \doxyref{ReactantList}{p.}{classNFcore_1_1ReactantList} or \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree} in which this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} lives. \index{NFcore::MappingSet@{NFcore::MappingSet}!isSet@{isSet}}
+\index{isSet@{isSet}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::MappingSet::isSet}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_b61d14499fcb53f833f18d8dd1dc7a73}
+
+
+Keeps track of whether or not this MapppingSet is being used. This is merely for error checking and serves no other useful purpose. \index{NFcore::MappingSet@{NFcore::MappingSet}!n\_\-mappings@{n\_\-mappings}}
+\index{n\_\-mappings@{n\_\-mappings}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::MappingSet::n\_\-mappings}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_be7007731643a6191fff99b8644bbd9c}
+
+
+Keeps track of the number of \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects contained in this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}. \index{NFcore::MappingSet@{NFcore::MappingSet}!mappings@{mappings}}
+\index{mappings@{mappings}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Mapping}$\ast$$\ast$ {\bf NFcore::MappingSet::mappings}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_4ef96ade03850810832af011585303fe}
+
+
+An array of pointers to \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects. This is where the actual Mappings are stored. \index{NFcore::MappingSet@{NFcore::MappingSet}!isDeletion@{isDeletion}}
+\index{isDeletion@{isDeletion}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::MappingSet::isDeletion}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_6961fa835fa9e641ffe2a9f1d3b44b6f}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mappingSet.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mappingSet.cpp}\end{CompactItemize}

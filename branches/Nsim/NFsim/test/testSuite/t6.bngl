@@ -1,0 +1,73 @@
+#  t6.bngl
+#  Test for composite functions by simulating the flagellar motor
+#  and CheYp levels.  Notice that the functions defined for the
+#  motor switching reactions are a composite of two global functions
+#  and are themselves functions.
+#
+
+begin parameters
+   _Na 6.02e23
+
+   #Made up rates (per second) of CheY <-> CheYp
+   #to keep CheYp in motor range
+   kpy 7
+   kmy 20
+   
+   #Motor switching parameters
+   Kd 3.06
+   g1 35
+   w 1.02
+   
+   #For converting num of CheYp to [CheYp] in functions
+   cellVolume 1.41e-15
+   
+   #initial number of motors and molecules
+   motorCount 10
+   CheYCount 8200
+   
+end parameters
+
+begin molecule type
+  CheY(p~unphos~PHOS)
+  Motor(state~CW~CCW)
+
+end molecule type
+
+
+begin seed species
+   CheY(p~unphos) CheYCount
+   Motor(state~CW) motorCount
+end seed species
+
+begin observables
+  Molecules CheYp CheY(p~PHOS)
+  Molecules MotCW Motor(state~CW)
+  Molecules MotCCW Motor(state~CCW)
+end observables
+
+begin functions
+   #Here are the functional definitions of the switching rate as a function of the observable
+   #CheYp.  Note that the functional expression gives the rate of a SINGLE motor switching.
+   #For maximum generality, functions as evaluated in NFsim add no other terms to the propensity,
+   #so in this case, the function must also consider the number of motors in one state or the
+   #other.  So to make the propensity proportional to the number of Motors in one state or the 
+   #other, we have to add the multiplication factor of the observables MotCW and MotCCW to the 
+   #beginning of the functional expressions
+   
+   motCWFunc() = MotCW
+   baseFunc() = (g1/2.0)*((1.0/2.0)-( (CheYp/(cellVolume*_Na*10^-6))/(Kd+(CheYp/(cellVolume*_Na*10^-6)))) )
+   
+end functions
+
+begin reaction rules
+
+  #Standard unimolecular state change reactions of CheY
+  CheY(p~unphos) <-> CheY(p~PHOS) kpy,kmy
+  
+  #Functionally defined rate laws
+  Motor(state~CW) -> Motor(state~CCW)   motCWFunc()*w*exp(baseFunc())
+  Motor(state~CCW) -> Motor(state~CW) (motorCount-motCWFunc())*w*exp(-baseFunc())
+  
+end reaction rules
+
+writeXML();

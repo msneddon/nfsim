@@ -1,0 +1,62 @@
+
+#  t2.bngl
+#  Test for integer valued component states that allow rules for incrementing
+#  and decrementing state values.  The example we choose is of receptor
+#  dimers in the chemotaxis system that can be methylated or demethylated
+#  at 8 independent locations. Instead of keeping track of 9 states, however,
+#  we include a counter state that can be valued between 0 and 8, then
+#  define increment and decrement rules.  Because those rules have to specify
+#  not states, this model will also test the ability to include the new
+#  not state notation in BNGL.
+#
+
+
+begin parameters
+
+   kr 5   #per second rate of methylation
+   kb 20  #per second rate of demethylation
+   
+   #initial number of receptors
+   ReceptorDimerCount 4000
+   
+end parameters
+
+
+begin seed species
+   ReceptorDimer(m~3) ReceptorDimerCount
+end seed species
+
+
+begin observables
+  Molecules R0 ReceptorDimer(m~0)
+  Molecules R1 ReceptorDimer(m~1)
+  Molecules R2 ReceptorDimer(m~2)
+  Molecules R3 ReceptorDimer(m~3)
+  Molecules R4 ReceptorDimer(m~4)
+  Molecules R5 ReceptorDimer(m~5)
+  Molecules R6 ReceptorDimer(m~6)
+  Molecules R7 ReceptorDimer(m~7)
+  Molecules R8 ReceptorDimer(m~8)
+end observables
+
+
+begin function
+   #No functions in this model
+end function
+
+
+
+begin reaction rules
+
+  ReceptorDimer(m~^[8]) -> ReceptorDimer(m~++) kr
+  ReceptorDimer(m~^[0]) -> ReceptorDimer(m~--) kb
+  
+end reaction rules
+
+
+
+
+
+
+
+writeXML();

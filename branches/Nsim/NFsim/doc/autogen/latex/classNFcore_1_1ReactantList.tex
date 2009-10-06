@@ -1,0 +1,130 @@
+\section{NFcore::ReactantList Class Reference}
+\label{classNFcore_1_1ReactantList}\index{NFcore::ReactantList@{NFcore::ReactantList}}
+{\tt \#include $<$reactantList.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Maintains a list of MappingSets needed by \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass}. 
+
+This is essentially a specialized vector implementation that allows a \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass} to easily keep track of all the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects that can be involved in the reaction. All \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects stored in this class are created once and reused throughout the course of the simulation. This prevents new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects to be created and destroyed. This class has the ability to automatically expand its capacity when extra mappings are needed, so there is no need for the user to manage these details. This class allows for constant time removal, insertion, and random selection of MappingSets, while std::vector requires linear time removal. We gain this speedup because the ordering of the list is unimportant. To use this class, call the pushNextAvailableMappingSet to get a pointer to the available \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}. Pass this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to a \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} to actually map it onto molecules. If you don't end up using this \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet}, call popLastMappingSet immediately. To remove MappingSets, call removeMappingSet with the ID of the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} you want to remove. You can get this Id from the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} object and \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects also keep a vector of the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects that point to it. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf ReactantList} (unsigned int {\bf reactantIndex}, {\bf TransformationSet} $\ast${\bf ts}, unsigned int init\_\-capacity)
+\item 
+{\bf $\sim$ReactantList} ()
+\item 
+int {\bf size} () const 
+\item 
+{\bf MappingSet} $\ast$ {\bf pushNextAvailableMappingSet} ()
+\item 
+void {\bf popLastMappingSet} ()
+\item 
+void {\bf removeMappingSet} (unsigned int mappingSetId)
+\item 
+void {\bf pickRandom} ({\bf MappingSet} $\ast$\&ms)
+\item 
+void {\bf printDetails} ()
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+int {\bf n\_\-mappingSets}
+\item 
+int {\bf capacity}
+\item 
+{\bf TransformationSet} $\ast$ {\bf ts}
+\item 
+unsigned int {\bf reactantIndex}
+\item 
+unsigned int $\ast$ {\bf msPositionMap}
+\item 
+{\bf MappingSet} $\ast$$\ast$ {\bf mappingSets}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::ReactantList@{NFcore::ReactantList}!ReactantList@{ReactantList}}
+\index{ReactantList@{ReactantList}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantList::ReactantList (unsigned int {\em reactantIndex}, {\bf TransformationSet} $\ast$ {\em ts}, unsigned int {\em init\_\-capacity} = {\tt 50})}\label{classNFcore_1_1ReactantList_6954011db54afca7613feac19f56e88a}
+
+
+Creates a new empty \doxyref{ReactantList}{p.}{classNFcore_1_1ReactantList} with the given initial capacity (default is 50). This capacity should roughly be set to the number of mappings you expect this list to have. A reactantList must also be told what its reactionIndex is in the reaction and the \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} of the reaction so that it can populate itself with MappingSets. \index{NFcore::ReactantList@{NFcore::ReactantList}!$\sim$ReactantList@{$\sim$ReactantList}}
+\index{$\sim$ReactantList@{$\sim$ReactantList}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantList::$\sim$ReactantList ()}\label{classNFcore_1_1ReactantList_69a80ae14aeb910930010c6e31e5943d}
+
+
+Deconstructor that deletes all mappingSets associated with this list. 
+
+\subsection{Member Function Documentation}
+\index{NFcore::ReactantList@{NFcore::ReactantList}!size@{size}}
+\index{size@{size}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::ReactantList::size () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantList_fa1e865cfd0a6129b7e155b1f9e9dc90}
+
+
+Returns the number of mappingSets that have been added to this list \index{NFcore::ReactantList@{NFcore::ReactantList}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
+\index{pushNextAvailableMappingSet@{pushNextAvailableMappingSet}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantList::pushNextAvailableMappingSet ()}\label{classNFcore_1_1ReactantList_cbd9b70dc5bec6a90afdff65e708bdbb}
+
+
+Adds a new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to this list and returns a pointer to the new mapping set for you to map (usually by comparing to some template molecule). Warning: even if you don't use this mapping set, it will be counted until you pop it! (see \doxyref{popLastMappingSet()}{p.}{classNFcore_1_1ReactantList_733d6d8d54398b5a5615f1f8f597b70f}). \index{NFcore::ReactantList@{NFcore::ReactantList}!popLastMappingSet@{popLastMappingSet}}
+\index{popLastMappingSet@{popLastMappingSet}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::popLastMappingSet ()}\label{classNFcore_1_1ReactantList_733d6d8d54398b5a5615f1f8f597b70f}
+
+
+Removes the very last mappingSet that was added to the list. \index{NFcore::ReactantList@{NFcore::ReactantList}!removeMappingSet@{removeMappingSet}}
+\index{removeMappingSet@{removeMappingSet}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::removeMappingSet (unsigned int {\em mappingSetId})}\label{classNFcore_1_1ReactantList_eff0073ca4bcda7cdd601fb78719caac}
+
+
+Removes the mapping set with the specified mappingSetId. Be careful here: make sure the mapping set is actually on the list before trying to remove or else this will give you an error! \index{NFcore::ReactantList@{NFcore::ReactantList}!pickRandom@{pickRandom}}
+\index{pickRandom@{pickRandom}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::pickRandom ({\bf MappingSet} $\ast$\& {\em ms})}\label{classNFcore_1_1ReactantList_fe1c91c30e5096eaebf6d3bd12ee824e}
+
+
+Randomly selects a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} from the list of available MappingSets. \index{NFcore::ReactantList@{NFcore::ReactantList}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::printDetails ()}\label{classNFcore_1_1ReactantList_4e33b88a52205c32868ba23433f19a38}
+
+
+Outputs basic details about this list - used only for debugging. 
+
+\subsection{Member Data Documentation}
+\index{NFcore::ReactantList@{NFcore::ReactantList}!n\_\-mappingSets@{n\_\-mappingSets}}
+\index{n\_\-mappingSets@{n\_\-mappingSets}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantList::n\_\-mappingSets}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_7425bc756e19906c0b021ac68ea476b5}
+
+
+Maintains the number of mappingSets on this list \index{NFcore::ReactantList@{NFcore::ReactantList}!capacity@{capacity}}
+\index{capacity@{capacity}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactantList::capacity}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_f4c404494ed0c305aebf943d477ac72e}
+
+
+The total capacity that this list can hold \index{NFcore::ReactantList@{NFcore::ReactantList}!ts@{ts}}
+\index{ts@{ts}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TransformationSet}$\ast$ {\bf NFcore::ReactantList::ts}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_96f0caa1c27c9349289c192f9e76605e}
+
+
+The transformation set of the \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass} that owns this list \index{NFcore::ReactantList@{NFcore::ReactantList}!reactantIndex@{reactantIndex}}
+\index{reactantIndex@{reactantIndex}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactantList::reactantIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_d6f6d7280780766b9ba16d3fdf94b67c}
+
+
+The index of the reactant that this list maintains \index{NFcore::ReactantList@{NFcore::ReactantList}!msPositionMap@{msPositionMap}}
+\index{msPositionMap@{msPositionMap}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int$\ast$ {\bf NFcore::ReactantList::msPositionMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_da06d21c393f0ca1c6e4f2af76fc7369}
+
+
+The array that maps \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} Ids onto the location in the list that the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} is sitting in. \index{NFcore::ReactantList@{NFcore::ReactantList}!mappingSets@{mappingSets}}
+\index{mappingSets@{mappingSets}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet}$\ast$$\ast$ {\bf NFcore::ReactantList::mappingSets}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantList_f4efe6cf3989e9a14320c78fc6331139}
+
+
+The actual array that stores a list of pointers to \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantList.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantList.cpp}\end{CompactItemize}
