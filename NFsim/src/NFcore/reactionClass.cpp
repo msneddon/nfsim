@@ -189,6 +189,11 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 			cout<<endl;
 			cout<<"Warning! You have an binding rxn (" << name << ") that is symmetric."<<endl;
 			cout<<"Make sure that is correct."<<endl;
+
+
+
+
+			cout<<"and that reaction is symmetric."<<endl;
 			cout<<endl;
 			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
 			isDimerStyle=true;

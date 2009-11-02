@@ -556,6 +556,11 @@ double System::recompute_A_tot()
 double System::getNextRxn()
 {
 	nextReaction = 0;
+	double x = selector->getNextReactionClass(nextReaction);
+	if((int)x==-1) {
+		this->printAllReactions();
+		exit(1);
+	}
 	return selector->getNextReactionClass(nextReaction);
 
 
@@ -658,6 +663,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			stepIteration=0;
 		}
 
+		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;
 		//Make sure we can react...
 		if(delta_t==0) break;
 
