@@ -1,0 +1,194 @@
+begin parameters
+ V 1.41e-15 #litres
+ Na 6.02e23
+ kpTR 2.857143e6/(Na*V)
+ kmTR 1.25
+ kcTR 0.75
+ kpTB 1.982140e6/(Na*V)
+ kmTB 1.25
+ kcTB 0.6
+ kpauto 23.5
+ kpYp  100e6/(Na*V)
+ kmYp  30
+ kpBp  10e6/(Na*V)
+ kmBp  1
+ p0    0.02
+ p1    0.125
+ p2    0.5
+ p3    0.875
+ p4    0.997
+ Kd    1.7e-6   #!! in Molar
+ Kda    12e-6   #!! in Molar
+ L     0 #1e-6        #ligand concentration in Molar
+ aTar0    1/(1+(L+Kd)/(L+Kda)*Kda/Kd*(1-p0)/p0)
+ aTar1    1/(1+(L+Kd)/(L+Kda)*Kda/Kd*(1-p1)/p1)
+ aTar2    1/(1+(L+Kd)/(L+Kda)*Kda/Kd*(1-p2)/p2)
+ aTar3    1/(1+(L+Kd)/(L+Kda)*Kda/Kd*(1-p3)/p3)
+ aTar4    1/(1+(L+Kd)/(L+Kda)*Kda/Kd*(1-p4)/p4)
+ aTsr0    p0
+ aTsr1    p1
+ aTsr2    p2
+ aTsr3    p3
+ aTsr4    p4
+end parameters
+
+begin species
+ Tsr(me~2,B,R,p~0) 2250
+ Tar(me~2,B,R,p~0) 2250
+ B(T,p~0)        238
+ R(T)              136
+ Y(p~0)        8236
+end species
+
+begin reaction rules
+
+###
+# Reactions for Tar receptors
+###
+
+
+# Transfer of phosphate from CheA to CheY
+ Tar(p~1) + Y(p~0) -> Tar(p~0) + Y(p~1) kpYp
+# Yp dephosphorylation by CheZ
+ Y(p~1) -> Y(p~0) kmYp
+
+
+# Transfer of phosphate from CheA to CheB
+# the CheB that is phosphorylated must NOT be bound to Tar
+ Tar(p~1) + B(T,p~0) -> Tar(p~0) + B(T,p~1) kpBp
+# Bp auto-dephosphorylation  (CheB must NOT be bound to Tar)
+ B(T,p~1) -> B(T,p~0) kmBp
+
+
+
+# Binding of R to inactive Tar
+# R and Bp bind same site
+# Tar must be inactive for R to bind
+# unbinding independent of Tar activity and methylation level
+# R cannot bind if me~4 but it can unbind
+ Tar(R,B,me~0) + R(T) -> Tar(R!1,B,me~0).R(T!1) kpTR*(1-aTar0)
+ Tar(R,B,me~1) + R(T) -> Tar(R!1,B,me~1).R(T!1) kpTR*(1-aTar1)
+ Tar(R,B,me~2) + R(T) -> Tar(R!1,B,me~2).R(T!1) kpTR*(1-aTar2)
+ Tar(R,B,me~3) + R(T) -> Tar(R!1,B,me~3).R(T!1) kpTR*(1-aTar3)
+ Tar(R!1,B).R(T!1) -> Tar(R,B) + R(T) kmTR
+
+# Methylation of Tar by bound R is independent of Tar activity
+ Tar(me~0,R!1).R(T!1) -> Tar(me~1,R) + R(T) kcTR
+ Tar(me~1,R!1).R(T!1) -> Tar(me~2,R) + R(T) kcTR
+ Tar(me~2,R!1).R(T!1) -> Tar(me~3,R) + R(T) kcTR
+ Tar(me~3,R!1).R(T!1) -> Tar(me~4,R) + R(T) kcTR
+
+# Binding of Bp to active Tar
+# R and Bp bind same site
+# Tar must be active for Bp to bind
+# unbinding independent of Tar activity and of methylation level
+# Bp cannot bind if me~0, but it can unbind
+ Tar(R,B,me~1) + B(T,p~1) -> Tar(R,B!1,me~1).B(T!1,p~1) kpTB*aTar1
+ Tar(R,B,me~2) + B(T,p~1) -> Tar(R,B!1,me~2).B(T!1,p~1) kpTB*aTar2
+ Tar(R,B,me~3) + B(T,p~1) -> Tar(R,B!1,me~3).B(T!1,p~1) kpTB*aTar3
+ Tar(R,B,me~4) + B(T,p~1) -> Tar(R,B!1,me~4).B(T!1,p~1) kpTB*aTar4
+ Tar(R,B!1).B(T!1,p~1) -> Tar(R,B) + B(T,p~1) kmTB
+
+# Demethylation of Tar by bound Bp is independent of Tar activity
+ Tar(me~1,B!1).B(T!1,p~1) -> Tar(me~0,B) + B(T,p~1) kcTB
+ Tar(me~2,B!1).B(T!1,p~1) -> Tar(me~1,B) + B(T,p~1) kcTB
+ Tar(me~3,B!1).B(T!1,p~1) -> Tar(me~2,B) + B(T,p~1) kcTB
+ Tar(me~4,B!1).B(T!1,p~1) -> Tar(me~3,B) + B(T,p~1) kcTB
+
+# Auto-phosphorylation of CheA
+ Tar(p~0,me~0) -> Tar(p~1,me~0) kpauto*aTar0
+ Tar(p~0,me~1) -> Tar(p~1,me~1) kpauto*aTar1
+ Tar(p~0,me~2) -> Tar(p~1,me~2) kpauto*aTar2
+ Tar(p~0,me~3) -> Tar(p~1,me~3) kpauto*aTar3
+ Tar(p~0,me~4) -> Tar(p~1,me~4) kpauto*aTar4
+
+
+
+
+
+###
+# Reactions for Tsr receptors
+###
+
+# Binding of R to inactive Tsr
+# R and Bp bind same site
+# Tsr must be inactive for R to bind
+# unbinding independent of Tsr activity and methylation level
+# R cannot bind if me~4 but it can unbind
+ Tsr(R,B,me~0) + R(T) -> Tsr(R!1,B,me~0).R(T!1) kpTR*(1-aTsr0)
+ Tsr(R,B,me~1) + R(T) -> Tsr(R!1,B,me~1).R(T!1) kpTR*(1-aTsr1)
+ Tsr(R,B,me~2) + R(T) -> Tsr(R!1,B,me~2).R(T!1) kpTR*(1-aTsr2)
+ Tsr(R,B,me~3) + R(T) -> Tsr(R!1,B,me~3).R(T!1) kpTR*(1-aTsr3)
+ Tsr(R!1,B).R(T!1) -> Tsr(R,B) + R(T) kmTR
+
+# Methylation of Tsr by bound R is independent of Tsr activity
+ Tsr(me~0,R!1).R(T!1) -> Tsr(me~1,R) + R(T) kcTR
+ Tsr(me~1,R!1).R(T!1) -> Tsr(me~2,R) + R(T) kcTR
+ Tsr(me~2,R!1).R(T!1) -> Tsr(me~3,R) + R(T) kcTR
+ Tsr(me~3,R!1).R(T!1) -> Tsr(me~4,R) + R(T) kcTR
+
+# Binding of Bp to active Tsr
+# R and Bp bind same site
+# Tsr must be active for Bp to bind
+# unbinding independent of Tsr activity and of methylation level
+# Bp cannot bind if me~0, but it can unbind
+ Tsr(R,B,me~1) + B(T,p~1) -> Tsr(R,B!1,me~1).B(T!1,p~1) kpTB*aTsr1
+ Tsr(R,B,me~2) + B(T,p~1) -> Tsr(R,B!1,me~2).B(T!1,p~1) kpTB*aTsr2
+ Tsr(R,B,me~3) + B(T,p~1) -> Tsr(R,B!1,me~3).B(T!1,p~1) kpTB*aTsr3
+ Tsr(R,B,me~4) + B(T,p~1) -> Tsr(R,B!1,me~4).B(T!1,p~1) kpTB*aTsr4
+ Tsr(R,B!1).B(T!1,p~1) -> Tsr(R,B) + B(T,p~1) kmTB
+
+# Demethylation of Tsr by bound Bp is independent of Tsr activity
+ Tsr(me~1,B!1).B(T!1,p~1) -> Tsr(me~0,B) + B(T,p~1) kcTB
+ Tsr(me~2,B!1).B(T!1,p~1) -> Tsr(me~1,B) + B(T,p~1) kcTB
+ Tsr(me~3,B!1).B(T!1,p~1) -> Tsr(me~2,B) + B(T,p~1) kcTB
+ Tsr(me~4,B!1).B(T!1,p~1) -> Tsr(me~3,B) + B(T,p~1) kcTB
+
+# Auto-phosphorylation of CheA
+ Tsr(p~0,me~0) -> Tsr(p~1,me~0) kpauto*aTsr0
+ Tsr(p~0,me~1) -> Tsr(p~1,me~1) kpauto*aTsr1
+ Tsr(p~0,me~2) -> Tsr(p~1,me~2) kpauto*aTsr2
+ Tsr(p~0,me~3) -> Tsr(p~1,me~3) kpauto*aTsr3
+ Tsr(p~0,me~4) -> Tsr(p~1,me~4) kpauto*aTsr4
+
+# Transfer of phosphate from CheA to CheY
+ Tsr(p~1) + Y(p~0) -> Tsr(p~0) + Y(p~1) kpYp
+
+# Transfer of phosphate from CheA to CheB
+# the CheB that is phosphorylated must NOT be bound to Tsr
+ Tsr(p~1) + B(T,p~0) -> Tsr(p~0) + B(T,p~1) kpBp
+
+
+end reaction rules
+
+
+begin observables
+ Molecules Yp Y(p~1)
+ Molecules Bp B(T,p~1)
+ Molecules Tar0 Tar(me~0)
+ Molecules Tar1 Tar(me~1)
+ Molecules Tar2 Tar(me~2)
+ Molecules Tar3 Tar(me~3)
+ Molecules Tar4 Tar(me~4)
+ Molecules Tsr0 Tsr(me~0)
+ Molecules Tsr1 Tsr(me~1)
+ Molecules Tsr2 Tsr(me~2)
+ Molecules Tsr3 Tsr(me~3)
+ Molecules Tsr4 Tsr(me~4)
+ Molecules TarBp Tar(B!1).B(T!1,p~1)
+ Molecules TsrBp Tsr(B!1).B(T!1,p~1)
+ Molecules Tarp Tar(p~1)
+ Molecules Tsrp Tsr(p~1)
+end observables
+
+generate_network({overwrite=>1});
+#generate_network({max_iter=>1,overwrite=>1});
+
+# equilibration
+#simulate_ode({suffix=>equil,t_end=>10000,n_steps=>10,steady_state=>1});
+
+# stochastic simulation
+#simulate_ode({t_end=>200,n_steps=>1000});
+simulate_ssa({suffix=>ssa,t_end=>1000,n_steps=>1000});
+
+writeXML();

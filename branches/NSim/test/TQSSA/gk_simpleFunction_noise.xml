@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by BioNetGen 2.0.46+  -->
+<sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
+  <model id="gk_simpleFunction_C">
+    <ListOfParameters>
+      <Parameter id="D_tot" value="50"/>
+      <Parameter id="E_tot" value="50"/>
+      <Parameter id="S_tot" value="0"/>
+      <Parameter id="Sp_tot" value="900"/>
+      <Parameter id="k1d" value="0.05"/>
+      <Parameter id="km1d" value="0.8"/>
+      <Parameter id="k2d" value="0.1"/>
+      <Parameter id="KmD" value="18"/>
+      <Parameter id="k1e" value="0.05"/>
+      <Parameter id="km1e" value="0.8"/>
+      <Parameter id="k2e" value="0.1"/>
+      <Parameter id="KmE" value="18"/>
+    </ListOfParameters>
+    <ListOfMoleculeTypes>
+      <MoleculeType id="S">
+        <ListOfComponentTypes>
+          <ComponentType id="p">
+            <ListOfAllowedStates>
+              <AllowedState id="U"/>
+              <AllowedState id="P"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+    </ListOfMoleculeTypes>
+    <ListOfCompartments>
+    </ListOfCompartments>
+    
+	<ListOfFunctions>
+    	<Function id="ES_TQSSA">
+    		<ListOfArgs>
+    			<Arg id="arg1" name="Sp" type="MoleculeObservable" />
+    		</ListOfArgs>
+    		<ListOfParameterConstants>
+    			<ParameterConstant id="E_tot" />
+    			<ParameterConstant id="KmE" />
+    			<ParameterConstant id="S_tot" />
+    			<ParameterConstant id="Sp_tot" />
+			<ParameterConstant id="k2e" />
+    		</ListOfParameterConstants>
+    		<Definition>
+    			(k2e*0.5)*(E_tot + KmE - Sp + (S_tot+Sp_tot) - sqrt((-E_tot-KmE+Sp-(S_tot+Sp_tot))^2-4*E_tot*(-Sp+(S_tot+Sp_tot))))
+    		</Definition>
+    	</Function>
+    	
+    	<Function id="DSp_TQSSA">
+    		<ListOfArgs>
+    			<Arg id="arg1" name="Sp" type="MoleculeObservable" />
+    		</ListOfArgs>
+    		<ListOfParameterConstants>
+    			<ParameterConstant id="E_tot" />
+    			<ParameterConstant id="KmD" />
+    			<ParameterConstant id="D_tot" />
+			<ParameterConstant id="k2d" />
+    		</ListOfParameterConstants>
+    		<Definition>
+			(k2d*0.5)*(D_tot + KmD + Sp - sqrt((-D_tot-KmD-Sp)^2-4*D_tot*Sp))
+		</Definition>
+    	</Function>
+    </ListOfFunctions>
+    
+    <ListOfSpecies>
+      <Species id="S1"  concentration="S_tot" name="S(p~U)">
+        <ListOfMolecules>
+          <Molecule id="S1_M1" name="S">
+            <ListOfComponents>
+              <Component id="S1_M1_C1" name="p" state="U" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S2"  concentration="Sp_tot" name="S(p~P)">
+        <ListOfMolecules>
+          <Molecule id="S2_M1" name="S">
+            <ListOfComponents>
+              <Component id="S2_M1_C1" name="p" state="P" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+    </ListOfSpecies>
+    <ListOfReactionRules>
+      <ReactionRule id="RR1" name="Rule1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR1_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_RP1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="RR1_RP1_M1_C1" name="p" state="U" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR1_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_PP1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="RR1_PP1_M1_C1" name="p" state="P" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        
+        <RateLaw id="RR1_RateLaw" type="Functional">
+          <Function name="ES_TQSSA" />
+        </RateLaw>
+        
+        <Map>
+          <MapItem sourceID="RR1_RP1_M1" targetID="RR1_PP1_M1"/>
+          <MapItem sourceID="RR1_RP1_M1_C1" targetID="RR1_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR1_RP1_M1_C1" finalState="P"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR2" name="Rule1r">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR2_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="RR2_RP1_M1_C1" name="p" state="P" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR2_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_PP1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="RR2_PP1_M1_C1" name="p" state="U" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        
+        <RateLaw id="RR2_RateLaw" type="Functional">
+          <Function name="DSp_TQSSA" />
+        </RateLaw>
+        
+        <Map>
+          <MapItem sourceID="RR2_RP1_M1" targetID="RR2_PP1_M1"/>
+          <MapItem sourceID="RR2_RP1_M1_C1" targetID="RR2_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR2_RP1_M1_C1" finalState="U"/>
+        </ListOfOperations>
+      </ReactionRule>
+    </ListOfReactionRules>
+    <ListOfObservables>
+      <Observable id="O1" name="S" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O1_P1">
+            <ListOfMolecules>
+              <Molecule id="O1_P1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="O1_P1_M1_C1" name="p" state="U" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O2" name="Sp" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O2_P1">
+            <ListOfMolecules>
+              <Molecule id="O2_P1_M1" name="S">
+                <ListOfComponents>
+                  <Component id="O2_P1_M1_C1" name="p" state="P" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+    </ListOfObservables>
+  </model>
+</sbml>

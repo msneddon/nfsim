@@ -1,0 +1,151 @@
+\section{NFcore::Observable Class Reference}
+\label{classNFcore_1_1Observable}\index{NFcore::Observable@{NFcore::Observable}}
+{\tt \#include $<$NFcore.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Tracks the counts of predefined observables in the simulation. 
+
+Observables keep track of the counts of specific \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} configurations in the system. Observables use TemplateMolecules to determine if a \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} configuration should be counted as an \doxyref{Observable}{p.}{classNFcore_1_1Observable}. Users have the choice of computing Observables on the fly so that they are incrementally updated after each event or recomputing all Observables before each output step. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Observable} (string {\bf aliasName}, {\bf TemplateMolecule} $\ast${\bf templateMolecule})
+\item 
+{\bf $\sim$Observable} ()
+\item 
+bool {\bf isObservable} ({\bf Molecule} $\ast$m) const 
+\item 
+void {\bf add} ()
+\item 
+void {\bf subtract} ()
+\item 
+void {\bf clear} ()
+\item 
+void {\bf straightAdd} ()
+\item 
+unsigned long int {\bf getCount} () const 
+\item 
+string {\bf getAliasName} () const 
+\item 
+void {\bf addReferenceToMyself} (mu::Parser $\ast$p)
+\item 
+void {\bf addDependentRxn} ({\bf ReactionClass} $\ast$r)
+\item 
+{\bf TemplateMolecule} $\ast$ {\bf getTemplateMolecule} () const 
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+string {\bf aliasName}
+\item 
+{\bf TemplateMolecule} $\ast$ {\bf templateMolecule}
+\item 
+double {\bf count}
+\item 
+vector$<$ {\bf ReactionClass} $\ast$ $>$ {\bf dependentRxns}
+\item 
+vector$<$ {\bf ReactionClass} $\ast$ $>$::iterator {\bf rxnIter}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!Observable@{Observable}}
+\index{Observable@{Observable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Observable::Observable (string {\em aliasName}, {\bf TemplateMolecule} $\ast$ {\em templateMolecule})}\label{classNFcore_1_1Observable_df141ff9a226f066afa6f0b6ec3307ee}
+
+
+Constructor that creates a basic \doxyref{Observable}{p.}{classNFcore_1_1Observable} which monitors the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} and can be referenced via the alias name \index{NFcore::Observable@{NFcore::Observable}!$\sim$Observable@{$\sim$Observable}}
+\index{$\sim$Observable@{$\sim$Observable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Observable::$\sim$Observable ()}\label{classNFcore_1_1Observable_89d963584ab7007ee9412ebdc859f5f2}
+
+
+Deconstructor that doesn't do too much. It doesn't free the memory associated with the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} because the \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType} class handles that. 
+
+\subsection{Member Function Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Observable::isObservable ({\bf Molecule} $\ast$ {\em m}) const}\label{classNFcore_1_1Observable_cf5f192d663b138ce780f86fa5ddc557}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!add@{add}}
+\index{add@{add}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::add ()}\label{classNFcore_1_1Observable_955408d15da68cb8c420d0c62765edc0}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!subtract@{subtract}}
+\index{subtract@{subtract}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::subtract ()}\label{classNFcore_1_1Observable_89bb17beddaec3e99b5fc11898d12a2a}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!clear@{clear}}
+\index{clear@{clear}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Observable::clear ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_2413c48e53ed66c2a5c79999cc3825ed}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!straightAdd@{straightAdd}}
+\index{straightAdd@{straightAdd}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Observable::straightAdd ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_f35f24cc8d818349c2ebe3c326c54048}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getCount@{getCount}}
+\index{getCount@{getCount}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned long int NFcore::Observable::getCount () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_4e4524075d723eaf9dcfd7c150734996}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getAliasName@{getAliasName}}
+\index{getAliasName@{getAliasName}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::Observable::getAliasName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_34e399e7cbb6c511cf849e921e21d352}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!addReferenceToMyself@{addReferenceToMyself}}
+\index{addReferenceToMyself@{addReferenceToMyself}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::addReferenceToMyself (mu::Parser $\ast$ {\em p})}\label{classNFcore_1_1Observable_3210dd6179e6cfb124d012fa22f1e5c4}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!addDependentRxn@{addDependentRxn}}
+\index{addDependentRxn@{addDependentRxn}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::addDependentRxn ({\bf ReactionClass} $\ast$ {\em r})}\label{classNFcore_1_1Observable_7f982704d5ae35afc68513e331bdb88c}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getTemplateMolecule@{getTemplateMolecule}}
+\index{getTemplateMolecule@{getTemplateMolecule}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ NFcore::Observable::getTemplateMolecule () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_9e8ce13e756d2501bc3ae799cf012821}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!aliasName@{aliasName}}
+\index{aliasName@{aliasName}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::Observable::aliasName}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_5696b7a468ef66abb74459dac4efc9f1}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!templateMolecule@{templateMolecule}}
+\index{templateMolecule@{templateMolecule}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ {\bf NFcore::Observable::templateMolecule}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_f5a8f61d8c752499ec9630aa4ed625ca}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!count@{count}}
+\index{count@{count}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf NFcore::Observable::count}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_a71c7a1b37fe6a58dd93647e4e2600b0}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!dependentRxns@{dependentRxns}}
+\index{dependentRxns@{dependentRxns}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf ReactionClass} $\ast$$>$ {\bf NFcore::Observable::dependentRxns}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_31559398cafc369fa565bb1e9d2c059a}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!rxnIter@{rxnIter}}
+\index{rxnIter@{rxnIter}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf ReactionClass} $\ast$$>$::iterator {\bf NFcore::Observable::rxnIter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_0dc6cd3858aab9b1dc4852c30571b269}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf observable.cpp}\end{CompactItemize}
