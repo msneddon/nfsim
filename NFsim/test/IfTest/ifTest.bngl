@@ -1,0 +1,54 @@
+
+
+begin parameters
+
+end parameters
+
+
+
+begin molecule types
+  Timer(t~OFF~ON)
+  DelayedStartMolecule(p~U~P)
+end molecule types
+
+
+
+begin seed species
+  Timer(t~OFF) 10000
+  DelayedStartMolecule(p~U) 10000
+end seed species
+
+
+begin observables
+
+  Molecules Toff Timer(t~OFF)
+  Molecules Ton Timer(t~ON)
+  Molecules Du DelayedStartMolecule(p~U)
+  Molecules Dp DelayedStartMolecule(p~P)
+
+end observables
+
+
+begin functions
+
+   kDelay()=if(Ton>5000&&Ton<7000,2,0)
+   kDeplete()=if(Ton>7000,2,0)
+   reactant_1()
+
+end functions
+
+begin reaction rules
+
+
+  Timer(t~OFF) -> Timer(t~ON) 0.5
+
+  DelayedStartMolecule(p~U) -> DelayedStartMolecule(p~P) reactant_1()*kDelay()
+  DelayedStartMolecule(p~P) -> DelayedStartMolecule(p~U) reactant_1()*kDeplete()
+
+  
+end reaction rules
+
+
+writeXML();
+
+
