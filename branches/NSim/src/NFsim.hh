@@ -42,6 +42,7 @@
 //#include "NFtest/compare/compare.hh"
 //#include  "NFtest/transformations/transformations.hh"
 #include  "NFtest/simple_system/simple_system.hh"
+#include  "NFtest/netgen_test/netgen_test.hh"
 #include  "NFtest/transcription/transcription.hh"
 #include  "NFtest/tlbr/tlbr.hh"
 #include  "NFtest/agentcell/agentcell.hh"

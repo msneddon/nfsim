@@ -232,6 +232,10 @@ int main(int argc, char *argv[])
 					NFtest_ss::run();
 					foundATest=true;
 				}
+				if(test=="netgen_test") {
+					netgen_test::run();
+					foundATest=true;
+				}
 				if(test=="transcription") {
 					NFtest_transcription::run();
 					foundATest=true;
