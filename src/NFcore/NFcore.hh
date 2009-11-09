@@ -69,6 +69,10 @@ namespace NFcore
 	class MoleculesObservable;
 	class SpeciesObservable;
 
+	// add Netgen here so we can make Netgen a friend of System
+	// otherwise, NFcore need not know about Netgen facility.
+	class Netgen;
+
 	/*****************************************
 	 * Class declarations
 	 *    Here is the list of classes that are defined in this
@@ -112,6 +116,10 @@ namespace NFcore
 	 */
 	class System
 	{
+		// Netgen is a system wrapper for network generation and
+		// needs access to protected elements of System.
+		friend class Netgen;
+
 		public:
 
 			/*!
