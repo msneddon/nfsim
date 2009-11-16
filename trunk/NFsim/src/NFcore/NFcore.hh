@@ -205,6 +205,7 @@ namespace NFcore
 			void outputAllObservableNames();
 			void outputAllObservableCounts();
 			void outputAllObservableCounts(double cSampleTime);
+			void outputAllObservableCounts(double cSampleTime,int eventCounter);
 			int getNumOfSpeciesObs() const;
 			Observable * getSpeciesObs(int index) const;
 
@@ -213,7 +214,11 @@ namespace NFcore
 			void printAllReactions();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
+
+			void printAllObservableCounts();
 			void printAllObservableCounts(double cSampleTime);
+			void printAllObservableCounts(double cSampleTime,int eventCounter);
+
 			void purgeAndPrintAvailableComplexList(); /*< ONLY USE FOR DEBUG PURPOSES, AS THIS DELETES ALL COMPLEX BOOKKEEPING */
 			void outputComplexSizes(double cSampleTime);
 			void outputMoleculeTypeCountPerComplex(MoleculeType *m);
@@ -265,7 +270,7 @@ namespace NFcore
 			int getRxnIndex(int rxnId, int rxnPos) const { return rxnIndexMap[rxnId][rxnPos]; };
 
 			void turnOff_OnTheFlyObs();
-
+			void turnOnOutputEventCounter() { outputEventCounter=true; };
 
 			void addParameter(string name,double value);
 			double getParameter(string name);
@@ -292,6 +297,9 @@ namespace NFcore
 			bool onTheFlyObservables;    /*!< sets whether or not observables are calculated on the fly */
 		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */
 		    int globalMoleculeLimit; /*< total number of any particular molecule that can be created, default=100,000 */
+		    bool outputEventCounter; /*< set to true to output the cumulative number of events at each output step */
+
+		    int globalEventCounter;
 
 		    ///////////////////////////////////////////////////////////////////////////
 			// The container objects that maintain the core system configuration

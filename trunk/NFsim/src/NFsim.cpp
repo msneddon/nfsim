@@ -363,10 +363,17 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->setUniversalTraversalLimit(utl);
 				}
 
+				// turn on the event counter, if need be
+				if (argMap.find("oec")!=argMap.end()) {
+					s->turnOnOutputEventCounter();
+					cout<<"here!"<<endl;
+				}
+
 				// set the output to binary
 				if (argMap.find("b")!=argMap.end()) {
 					s->setOutputToBinary();
 				}
+
 
 				//Register the output file location, if given
 				if (argMap.find("o")!=argMap.end()) {
