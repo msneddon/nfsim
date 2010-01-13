@@ -668,6 +668,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 				//cout<<"\tAtot:"<<a_tot<<endl;
 			}
 			stepIteration=0;
+			recompute_A_tot();
 		}
 
 		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;

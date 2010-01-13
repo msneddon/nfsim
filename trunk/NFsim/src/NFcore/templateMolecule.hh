@@ -97,8 +97,9 @@ namespace NFcore
 
 		/* functions that are needed to match to a molecule instance */
 		bool compare(Molecule *m);
-		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms);
+		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false);
 		void clear();
+		void clearTemplateOnly();
 		bool tryToMap(Molecule *toMap, string toMapComponent,
 				Molecule *mappedFrom, string mappedFromComponent);
 		bool isSymMapValid();
