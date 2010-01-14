@@ -657,12 +657,12 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			while((current_time+delta_t)>=(curSampleTime))
 			{
 				if(curSampleTime>end_time) break;
-				outputAllObservableCounts();
+				outputAllObservableCounts(curSampleTime,globalEventCounter);
 //				outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
 			if(verbose) {
-				cout<<"Sim time: "<<current_time<<"\tCPU time: ";
+				cout<<"Sim time: "<<curSampleTime-dSampleTime<<"\tCPU time: ";
 				cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
 				cout<<"\t events: "<<stepIteration<<endl;
 				//cout<<"\tAtot:"<<a_tot<<endl;
@@ -710,6 +710,10 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //			exit(1);
 //		}
 	}
+	if(curSampleTime-dSampleTime<end_time) {
+		outputAllObservableCounts(curSampleTime,globalEventCounter);
+	}
+
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
