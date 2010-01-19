@@ -657,6 +657,7 @@ namespace NFcore
 			///////////// local function methods...
 			void setLocalFunctionValue(double newValue,int localFunctionIndex);
 			double getLocalFunctionValue(int localFunctionIndex);
+			LocalFunction * getLocalFunction(int localFunctionIndex);
 			void setUpLocalFunctionList();
 
 

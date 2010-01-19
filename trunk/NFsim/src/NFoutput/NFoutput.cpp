@@ -203,7 +203,10 @@ void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 
 			for(int k=0; k<mt->getNumOfTypeIFunctions(); k++) {
 				double val = m->getLocalFunctionValue(k);
+				LocalFunction *lf = m->getLocalFunction(k);
+				double localValue = lf->evaluateOn(m,LocalFunction::MOLECULE);
 				ofs.write((char *)&val,sizeof(double));
+				ofs.write((char *)&localValue,sizeof(double));
 			//		ofs<<"\t"<<i<<"\t"<<k<<"\t"<<mt->getTypeIILocalFunction(k)->getName()<<"\n";
 			}
 
