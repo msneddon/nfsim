@@ -92,7 +92,7 @@ DORRxnClass::DORRxnClass(
 				LocalFunctionReference *lfr = static_cast<LocalFunctionReference*>(transform);
 				if(lfr->getPointerName()==lfArgumentPointerNameList.at(i)) {
 //					cout<<"Found a match here!"<<endl;
-//					cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
+					cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
 					//If we got here, we found a match, so remember the index of the transformation
 					//so we can quickly get the value of the function for any mapping object we try
 					//to push on the reactant Tree.

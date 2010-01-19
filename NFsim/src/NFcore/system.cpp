@@ -710,7 +710,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //			exit(1);
 //		}
 	}
-	if(curSampleTime-dSampleTime<end_time) {
+	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
 
