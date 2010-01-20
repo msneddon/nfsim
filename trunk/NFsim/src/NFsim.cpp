@@ -323,8 +323,11 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			// then a molecule is blocked from binding another if
 			// it is in the same complex
 			bool blockSameComplexBinding = false;
-			if (argMap.find("bscb")!=argMap.end())
+			if (argMap.find("bscb")!=argMap.end()) {
+				if(verbose) cout<<"  Blocking same complex binding...\n";
+
 				blockSameComplexBinding = true;
+			}
 
 			bool turnOnComplexBookkeeping = false;
 			if (argMap.find("cb")!=argMap.end())
