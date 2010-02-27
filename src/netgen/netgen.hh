@@ -10,6 +10,8 @@
 
 
 #include "../NFcore/NFcore.hh"
+#include "../NFreactions/reactantLists/reactantList.hh"
+#include "../NFreactions/reactions/reaction.hh"
 
 
 using namespace std;
@@ -18,11 +20,11 @@ namespace NFcore
 {
 	// forward declarations for cyclic dependencies
 	//class ComplexList;
-	//class MappingSetsIterator;
+	//class MatchSetIter;
 	//class Netgen;
 	//class Reaction;
 	//class ReactionList;
-    //class ReactionClassIterator;
+    //class ReactionClassIter;
 
 
 	/* This class implements a unidirectional reaction object.
@@ -106,47 +108,63 @@ namespace NFcore
 
 
 	/* During network generation, each ReactionClass object has an
-	 *  associated MappingSetsIterator that efficiently iterates over
-	 *  all possible combinations of reactants.  Call method
-	 *  'getNextMappingSets' to load a vector with new MappingSets.
+	 *  associated MatchSetIter that efficiently iterates over
+	 *  all possible combinations of reactant matches.  Call method
+	 *  'nextMatchSet' to load a vector with new MappingSets.
 	 *  Returns true if a new mappingSets were loaded and false otherwise.
 	 */
-	class MappingSetsIterator
+	class MatchSetIter
 	{
 		public:
-			MappingSetsIterator  ( ReactionClass * rc_ );
-			~MappingSetsIterator ( );
+			MatchSetIter  ( ReactionClass * _rc );
+			~MatchSetIter ( );
 
-			bool getNextMappingSets ( vector <MappingSet*> * next_set );
+			void reset ( );
+			void update ( );
+			bool nextMatchSet ( vector <MappingSet*> & match_set );
+
+			BasicRxnClass            * rc;
+			unsigned int             n_reactants;
 
 		protected:
-			ReactionClass * rc;
+
+			vector <unsigned int>    curr_set;
+			vector <ReactantList *>  reactantLists;
+			bool                     more_sets;
+
+			// advance iterator
+			void advance ();
+
 
 		private:
-
+			 vector <unsigned int>::iterator     curr_set_iter;
+			 vector <ReactantList *>::iterator   reactantList_iter;
+			 vector <MappingSet *>::iterator     mappingSet_iter;
 	};
 
 
 	/* Implements an iterator object for ReactionClasses.
-	 *  Call 'getNextReactionClass' to load the next reactionClass
-	 *  pointer.  Returns true if a ReactionClass is returned,
-	 *  false otherwise.
+	 *  Call 'nextReactionClass' to load the MatchSetIter
+	 *  corresponding to the next reactionClass. Returns true if a
+	 *  a new MatchSetIter is returned, false otherwise.
 	 */
-	class ReactionClassIterator
+	class ReactionClassIter
 	{
 		public:
-			ReactionClassIterator  ( );
-			~ReactionClassIterator ( );
+			ReactionClassIter  ( );
+			~ReactionClassIter ( );
 
-			void setReactionClassList ( vector <ReactionClass *> * rc_list );
-			bool getNextReactionClass ( ReactionClass* rc );
+			void setSystem ( vector <ReactionClass *> * _reactionClasses );
+			void reset ( );
+			MatchSetIter * nextReactionClass ( );
 
 		protected:
-			vector <ReactionClass *> * reactionClassList;
+			vector <ReactionClass*>            * reactionClasses;
+			vector <MatchSetIter*>               matchSetIters;
+			vector <MatchSetIter*>::iterator     matchSetIters_iter;
 
 		private:
-
-
+		    vector<ReactionClass*>::iterator     rc_iter;
 	};
 
 
@@ -164,11 +182,19 @@ namespace NFcore
 
 			void generate_network( );
 
-		protected:
 			System                * sys;
-			ReactionClassIterator rc_iter;
+
 			ComplexList           complex_list;
 			ReactionList		  reaction_list;
+
+			ReactionClassIter     rc_iter;
+			MatchSetIter          * match_set_iter;
+
+			vector <MappingSet *>            match_set;
+			vector <MappingSet *>::iterator  match_iter;
+
+		protected:
+			vector <Molecule *>              molecule_vec;
 
 		private:
 

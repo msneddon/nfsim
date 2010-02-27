@@ -1,5 +1,5 @@
 #include "NFutil.hh"
-
+#include <stdlib.h>
 
 
 using namespace NFutil;

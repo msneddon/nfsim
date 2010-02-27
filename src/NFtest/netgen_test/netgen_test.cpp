@@ -42,8 +42,8 @@ void netgen_test::run()
 	 */
 
 	//First we define some parameters for rates and counts
-	int numOfMoleculeY = 3011;
-	int numOfMoleculeX = 6022;
+	int numOfMoleculeY = 4;
+	int numOfMoleculeX = 3;
 	double dephosRate = 0.2;
 	double kOn = 0.0003;
 	double kOff = 0.2;
@@ -134,6 +134,7 @@ void netgen_test::run()
 	//Be nice and clean up when we are done.  Deleting the system (should) delete everything else
 	//associated with the system, so we don't ever have to remember to delete individual reactions, molecules
 	//moleculeTypes, etc...
+    delete ng;
 	delete s;
 }
 
@@ -302,7 +303,7 @@ ReactionClass * netgen_test::createReactionXYunbind(MoleculeType *molX, Molecule
 	//its binding site at site "y".  The templates take care of the fact that Molecule Y is on the other
 	//end and also has to be updated when this is called.
 	TransformationSet *ts = new TransformationSet(templates);
-	ts->addUnbindingTransform(xTemp,"y",yTemp,"y");
+	ts->addUnbindingTransform(xTemp,"y",yTemp,"x");
 	ts->finalize();
 
 	//Create the reaction in the usual way.
