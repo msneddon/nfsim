@@ -387,6 +387,136 @@ void ReactionClass::fire(double random_A_number)
 
 
 
+// _NETGEN_
+void ReactionClass::set_match( vector <MappingSet *> & match_set )
+// load MappingSets into the mappingSet array
+{
+	vector <MappingSet *>::iterator ms_iter;
+
+	size_t ii = 0;
+    for ( ms_iter = match_set.begin(); ms_iter < match_set.end(); ms_iter++ )
+    {
+    	mappingSet[ii] = (*ms_iter);
+    	++ii;
+    }
+}
+
+// _NETGEN_
+void ReactionClass::apply( vector <Molecule *> & product_molecules )
+// apply rule to the current mappingSet
+{
+	//Generate the set of possible products that we need to update
+	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
+
+	/*
+	//Loop through the products and remove them from their observables
+	//cout<<"------------------------------------------"<<endl;
+	if(this->onTheFlyObservables) {
+
+		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+		{
+			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getUniqueID()<<endl;
+			//(*molIter)->printDetails();
+			(*molIter)->removeFromObservables();
+		}
+
+		//If we have Species observables in the product complexes, remove them from the count
+		if(system->getNumOfSpeciesObs()>0) {
+			bool found = false;
+			// we can assume that complex bookkeeping is on, and that each reactant
+			// is in a separate (and single) complex
+			int matches = 0;
+			for(int k=0; k<transformationSet->getNumOfReactants(); k++) {
+
+				//First make sure we don't check the same complex twice
+				int complexId = mappingSet[k]->get(0)->getMolecule()->getComplexID();
+				found = false;
+				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
+					if(updatedComplexes.at(k2)==complexId) {
+						found = true;
+						break;
+					}
+				}
+				if(found) continue;
+				updatedComplexes.push_back(complexId);
+
+				Complex *c = mappingSet[k]->get(0)->getMolecule()->getComplex();
+				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+					matches = system->getSpeciesObs(i)->isObservable(c);
+					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightSubtract();
+				}
+			}
+			updatedComplexes.clear();
+		}
+
+	}
+    */
+
+	//Through the MappingSet, transform all the molecules as neccessary
+	this->transformationSet->transform(this->mappingSet);
+
+	/*
+	//Tell each molecule in the list of products to add itself back into
+	//the counts of observables and update its class lists, and update any DOR Groups
+	if(onTheFlyObservables)
+	{
+		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+		{
+			//if(!(*molIter)->isAlive()) continue;
+			(*molIter)->addToObservables();
+		}
+
+		//If we have Species observables in the product complexes, add them back to the count
+		if(system->getNumOfSpeciesObs()>0) {
+			// we can assume that complex bookkeeping is on, and that each reactant
+			bool found = false;
+			for( molIter = products.begin(); molIter != products.end(); molIter++ )
+			{
+				int complexId = (*molIter)->getComplexID();
+				found = false;
+				for(unsigned int k=0; k<updatedComplexes.size(); k++) {
+					if(updatedComplexes.at(k)==complexId) {
+						found = true;
+						break;
+					}
+				}
+				if(found) continue;
+				updatedComplexes.push_back(complexId);
+
+				Complex *c = (*molIter)->getComplex();
+				int matches = 0;
+				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+					matches = system->getSpeciesObs(i)->isObservable(c);
+					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightAdd();
+				}
+			}
+
+			updatedComplexes.clear();
+		}
+	}
+    */
+
+	/*
+	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	{
+		//if(!(*molIter)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
+	  	(*molIter)->updateRxnMembership();
+	  	(*molIter)->updateTypeIIFunctions();
+	  	(*molIter)->updateDORRxnValues();
+	  	//(*molIter)->printDetails();
+	}
+    */
+
+	// save products molecules for return
+	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	{
+		product_molecules.push_back( *molIter );
+	}
+
+	//Tidy up
+	products.clear();
+
+}
 
 
 

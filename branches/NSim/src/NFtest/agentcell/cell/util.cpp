@@ -1,4 +1,5 @@
 #include "util.hh"
+#include <stdlib.h>
 #include <iostream>
 
 using namespace ChemotaxisUtil;

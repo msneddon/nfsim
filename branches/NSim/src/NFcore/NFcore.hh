@@ -9,6 +9,9 @@
 #include <fstream>
 #include <string>
 
+// resolve issue with "exit"  --justin
+#include <stdlib.h>
+
 //Include stl containers
 #include <vector>
 #include <list>
@@ -844,6 +847,7 @@ namespace NFcore
 	*/
 	class ReactionClass
 	{
+		friend class MatchSetIter;
 		public:
 			static const int NO_LIMIT = -3;
 
@@ -902,6 +906,10 @@ namespace NFcore
 
 
 			void turnOff_OnTheFlyObs() { onTheFlyObservables=false; };
+
+			// _NETGEN_
+			void apply( vector <Molecule *> & product_molecules );
+			void set_match( vector <MappingSet *> & match_set );
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;
