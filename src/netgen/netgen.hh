@@ -140,6 +140,7 @@ namespace NFcore
 			 vector <unsigned int>::iterator     curr_set_iter;
 			 vector <ReactantList *>::iterator   reactantList_iter;
 			 vector <MappingSet *>::iterator     mappingSet_iter;
+
 	};
 
 
@@ -194,10 +195,16 @@ namespace NFcore
 			vector <MappingSet *>::iterator  match_iter;
 
 		protected:
-			vector <Molecule *>              molecule_vec;
+			vector <Molecule *>              product_molecules;
 
 		private:
+			 // containers for copying species targets
+		     list <Molecule *>                   mol_list;
+			 map <Molecule *, Molecule *>        mol_map;
 
+			 // handy iterators for copying species
+			 map <Molecule *, Molecule *>::iterator  mol_map_iter;
+			 list <Molecule *>::iterator             mol_iter;
 	};
 
 }

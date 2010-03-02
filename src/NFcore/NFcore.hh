@@ -847,7 +847,9 @@ namespace NFcore
 	*/
 	class ReactionClass
 	{
+		// _NETGEN_
 		friend class MatchSetIter;
+		friend class Netgen;
 		public:
 			static const int NO_LIMIT = -3;
 
@@ -1003,6 +1005,14 @@ namespace NFcore
 			list <Molecule *>::iterator molIter;
 
 
+			// _NETGEN_
+			string complex_label;   // new member to hold canonical label
+
+			// TODO: implement methods
+
+			string getCanonicalLabel();
+			Complex & copyComplex();
+			Complex & copyComplex( MappingSet & map_orig, MappingSet & map_copy );
 
 		protected:
 			System * system;
@@ -1013,6 +1023,35 @@ namespace NFcore
 
 	};
 
+
+	// _NETGEN_
+	//!  A class to keep track of all complexes.
+	/*!
+	    @author Justin Hogg
+	*/
+	/*  // note: may be useful to make a child class with the special netgen features?
+	class ComplexList
+	{
+		public:
+			ComplexList(System * s);
+			~ComplexList();
+
+			size_t    addComplex( Complex * complex );
+			size_t    deleteComplex( Complex * complex );
+			size_t    deleteComplexByLabel( string & clabel );
+			Complex * getComplexByLabel( string & clabel );
+
+			list <Complex *>            members;
+			map <string, Complex *>     labelMap;
+
+            list <Complex *>::iterator  complex_iter;
+
+		protected:
+
+		private:
+
+	};
+	*/
 }
 
 #endif /*NFCORE_HH_*/

@@ -36,6 +36,9 @@ namespace NFcore
 	 */
 	class TransformationSet
 	{
+		// _NETGEN_
+		friend class Netgen;
+
 		public:
 
 			/*!
