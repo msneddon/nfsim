@@ -406,6 +406,7 @@ void ReactionClass::apply( vector <Molecule *> & product_molecules )
 // apply rule to the current mappingSet
 {
 	//Generate the set of possible products that we need to update
+	// TODO: figure out where created molecules are
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 	/*

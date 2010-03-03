@@ -158,6 +158,7 @@ void Netgen::generate_network ( )
 					}
 
 					// point new MappingSet to the copy
+					// TODO: handle cloned mappingSets
 					for ( size_t iMap = 0; iMap < mapset->n_mappings; iMap++ )
 					{
 
