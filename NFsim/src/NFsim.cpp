@@ -301,7 +301,7 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 		//Step 3: provided the system is set up correctly, run the RNF script
 		bool output = NFinput::runRNFcommands(s,argMap,commands,verbose);
 
-		//s->printAllComplexes();
+		//(s->allComplexes).printAllComplexes();
 		delete s;
 		return output;
 	}

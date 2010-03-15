@@ -90,10 +90,62 @@ namespace NFcore
 	class Complex;  /* collection of molecules that are bonded to each
 						other and whose membership dynamically can change*/
 
+	class ComplexList;  /* a container class to organize complexes */
+
 	class ReactantList;
 
-
 	class ReactionSelector;
+
+
+	//!  Container to organize all system complexes.
+	/*!
+	    @author Justin Hogg
+	*/
+	class ComplexList
+	{
+		public:
+		    // constructor, destructor..
+			ComplexList();
+			~ComplexList();
+
+			// initialize, queries, etc
+			bool isUsingComplex ( ) const { return useComplex; }
+            void setUseComplex ( bool _useComplex ) { useComplex = _useComplex; }
+            void setSystem ( System * _sys ) { sys = _sys; }
+
+            // core methods of this class
+			int createComplex(Molecule * m);
+			Complex * getComplex(int ID_complex) const { return allComplexes.at(ID_complex); };
+			Complex * getNextAvailableComplex();
+			void notifyThatComplexIsAvailable(int ID_complex);
+
+			// output and printing
+			void printAllComplexes();
+			void purgeAndPrintAvailableComplexList(); /*< ONLY USE FOR DEBUG PURPOSES, AS THIS DELETES ALL COMPLEX BOOKKEEPING */
+			void outputComplexSizes(double cSampleTime);
+			void outputMoleculeTypeCountPerComplex(MoleculeType *m);
+			double outputMeanCount(MoleculeType *m);
+			double calculateMeanCount(MoleculeType *m);
+
+            // a public iterator:
+			// sets an iternal iterator to the beginning of the vector
+			void resetComplexIter() {  complexIter_public = allComplexes.begin();  };
+
+			// returns the next complex ptr on the vector and increments iterator.  Returns 0 if at the end of the vector.
+			Complex * nextComplex() {  return (complexIter_public < allComplexes.end() ? *complexIter_public++ : 0);  };
+
+
+		protected:
+			vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
+			queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
+
+			System * sys;                             /* pointer to the system which this ComplexList belongs to */
+			bool useComplex;                          /* true if the system is tracking complexes */
+
+		private:
+			vector <Complex *>::iterator  complexIter;         /* to iterate over allComplexes */
+			vector <Complex *>::iterator  complexIter_public;  /* to iterator over allComplexes, associated with public iterator */
+	};
 
 
 
@@ -139,7 +191,7 @@ namespace NFcore
 
 			// Basic functions to get the properties and objects of the system
 			string getName() const { return name; };
-			bool isUsingComplex() { return useComplex; };
+			bool isUsingComplex() { return useComplex; };   // NETGEN -- is this needed?
 			bool isOutputtingBinary() { return useBinaryOutput; };
 			double getCurrentTime() const { return current_time; };
 			int getGlobalMoleculeLimit() const { return globalMoleculeLimit; };
@@ -163,7 +215,8 @@ namespace NFcore
 			int addMoleculeType(MoleculeType *moleculeType);
 			void addReaction(ReactionClass *reaction);
 			void addNecessaryUpdateReaction(ReactionClass *reaction);
-			int createComplex(Molecule * m);
+			// NETGEN
+			//int createComplex(Molecule * m);
 
 			bool addGlobalFunction(GlobalFunction *gf);
 			GlobalFunction * getGlobalFunctionByName(string fName);
@@ -210,7 +263,8 @@ namespace NFcore
 			Observable * getSpeciesObs(int index) const;
 
 			/* functions that print out other information to the console */
-			void printAllComplexes();
+			// NETGEN
+			//void printAllComplexes();
 			void printAllReactions();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
@@ -219,11 +273,12 @@ namespace NFcore
 			void printAllObservableCounts(double cSampleTime);
 			void printAllObservableCounts(double cSampleTime,int eventCounter);
 
-			void purgeAndPrintAvailableComplexList(); /*< ONLY USE FOR DEBUG PURPOSES, AS THIS DELETES ALL COMPLEX BOOKKEEPING */
-			void outputComplexSizes(double cSampleTime);
-			void outputMoleculeTypeCountPerComplex(MoleculeType *m);
-			double outputMeanCount(MoleculeType *m);
-			double calculateMeanCount(MoleculeType *m);
+			// NETGEN
+			//void purgeAndPrintAvailableComplexList(); /*< ONLY USE FOR DEBUG PURPOSES, AS THIS DELETES ALL COMPLEX BOOKKEEPING */
+			//void outputComplexSizes(double cSampleTime);
+			//void outputMoleculeTypeCountPerComplex(MoleculeType *m);
+			//double outputMeanCount(MoleculeType *m);
+			//double calculateMeanCount(MoleculeType *m);
 
 			void update_A_tot(ReactionClass *r, double old_a, double new_a);
 
@@ -240,9 +295,10 @@ namespace NFcore
 
 
 			/* functions needed while running the simulation */
-			Complex * getComplex(int ID_complex) const { return allComplexes.at(ID_complex); };
-			Complex * getNextAvailableComplex();
-			void notifyThatComplexIsAvailable(int ID_complex);
+			// NETGEN
+			//Complex * getComplex(int ID_complex) const { return allComplexes.at(ID_complex); };
+			//Complex * getNextAvailableComplex();
+			//void notifyThatComplexIsAvailable(int ID_complex);
 
 			double sim(double time, long int sampleTimes);
 
@@ -280,6 +336,9 @@ namespace NFcore
 
 	        NFstream& getOutputFileStream();
 
+	        // NETGEN -- method to access allComplexes
+	        ComplexList & getAllComplexes( )  {  return allComplexes;  };
+
 			/*! keeps track of null events (ie binding events that have
 			    been rejected because molecules are on the same complex)
 			 */
@@ -291,6 +350,7 @@ namespace NFcore
 			// The invariant system properties, created when the system is created and before
 			// the system is prepared
 			string name;         /*!< arbitrary name of the system  */
+			// NETGEN -- is this needed?
 			bool useComplex;     /*!< sets whether or not to dynamically track complexes */
 			bool useBinaryOutput; /*!< set to true to turn on binary output of data */
 			int universalTraversalLimit; /*!< sets depth to traverse molecules when updating reactant lists */
@@ -305,9 +365,12 @@ namespace NFcore
 			// The container objects that maintain the core system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /*!< container of all MoleculeTypes in the simulation */
 			vector <ReactionClass *> allReactions;    /*!< container of all Reactions in the simulation */
-			vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
-			queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
-			vector <Outputter *> allOutputters;    /*! < manages the outputters of the system */
+            // NETGEN
+			//vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
+			//queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
+			vector <Outputter *> allOutputters;    /*!< manages the outputters of the system */
+
+			ComplexList  allComplexes;                /*!< a container to track all complexes in the system */
 
 			vector <Observable *> obsToOutput; /*!< keeps ordered list of pointers to observables for output */
 			vector <Observable *> speciesObservables;
@@ -373,7 +436,8 @@ namespace NFcore
 			vector<Observable *>::iterator obsIter;
 			vector<MoleculeType *>::iterator molTypeIter;  /* to iterate over allMoleculeType */
 			vector <ReactionClass *>::iterator rxnIter;    /* to iterate over allReactions */
-			vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
+			// NETGEN -- moved to ComplexList class
+			//vector <Complex *>::iterator complexIter;      /* to iterate over allComplexes */
 			vector <GlobalFunction *>::iterator functionIter; /* to iterate over Global Functions */
 	};
 
@@ -492,7 +556,8 @@ namespace NFcore
 			//Adds the basic components that this MoleculeType needs to reference
 			void addReactionClass(ReactionClass * r, int rPosition);
 			void addMolObs(MoleculesObservable * mo) { molObs.push_back(mo); }; //could add check here to make sure observable is of this type
-			int createComplex(Molecule *m) { return system->createComplex(m); };
+			// TODO: Question by Justin... why doesn't the Molecule construct create the complex directly?
+			int createComplex(Molecule *m) { return (system->getAllComplexes()).createComplex(m); };
 			void addTemplateMolecule(TemplateMolecule *t);
 
 			/* handle DOR reactions */
@@ -643,7 +708,7 @@ namespace NFcore
 			void setComplexID(int currentComplex) { this->ID_complex=currentComplex; }
 
 			int getComplexID() const { return ID_complex; };
-			Complex * getComplex() const { return parentMoleculeType->getSystem()->getComplex(ID_complex); };
+			Complex * getComplex() const { return (parentMoleculeType->getSystem()->getAllComplexes()).getComplex(ID_complex); };
 			int getDegree();
 
 
