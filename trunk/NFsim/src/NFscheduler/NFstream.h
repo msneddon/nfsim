@@ -11,6 +11,16 @@ using namespace std;
 
 class NFstream
 {
+
+private:
+    ofstream file_;
+    stringstream str_;
+
+    bool useFile_;
+    string strname_;
+
+    void check_mpi();
+
 public:
     NFstream();
     NFstream(const char* filename, ios_base::openmode mode = ios_base::out);
@@ -42,20 +52,13 @@ public:
 
     template<class T>
     friend NFstream& operator<< (NFstream& nfstream, const T& value);
-    
-private:
-    ofstream file_;
-    stringstream str_;
-
-    bool useFile_;
-    string strname_;
-
-    void check_mpi();
 };
+
 
 template<class T>
 NFstream& operator<< (NFstream& nfstream, const T& value);
 
 NFstream& endl (NFstream& nfstream);
+
 
 #endif /* _NFSTREAM_H_ */

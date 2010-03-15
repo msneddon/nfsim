@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 #include <stdio.h>
+// JUSTIN -- added to resolve problem finding INT_MAX
+#include <limits.h>
 #include <exception>
 
 

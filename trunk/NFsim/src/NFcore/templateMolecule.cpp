@@ -752,11 +752,19 @@ void TemplateMolecule::clearTemplateOnly() {
 	}
 }
 
+/* TODO: compare returns a boolean value, therefore if there are multiple
+ * matches to a "connectedTo" templateMolecule, we still only get 1 match.
+ */
 
 bool TemplateMolecule::compare(Molecule *m)
 {
+	// TODO: I think we need a 4th argument?  To be safe. --Justin
 	return compare(m,0,0);
+	// like this:
+	//return compare(m,0,0,false);
 }
+
+
 
 
 bool TemplateMolecule::tryToMap(Molecule *toMap, string toMapComponent,
@@ -1021,6 +1029,9 @@ bool TemplateMolecule::isSymMapValid()
 	}
   return foundValid;
 }
+
+
+
 
 bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd)
 {
@@ -1392,6 +1403,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	return true;
 }
+
 
 
 

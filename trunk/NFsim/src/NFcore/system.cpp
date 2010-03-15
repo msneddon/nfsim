@@ -20,7 +20,11 @@ System::System(string name)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = false;
+	this->useComplex = false;     // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( false );
+
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 	rxnIndexMap=0;
@@ -40,7 +44,12 @@ System::System(string name, bool useComplex)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = useComplex;
+
+	this->useComplex = useComplex;    // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( useComplex );
+
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 
@@ -60,7 +69,11 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = useComplex;
+	this->useComplex = useComplex;  // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( useComplex );
+
 	this->globalMoleculeLimit=globalMoleculeLimit;
 	this->outputGlobalFunctionValues=false;
 
@@ -117,6 +130,8 @@ System::~System()
 		delete s;
 	}
 
+	// NETGEN -- not needed, complexList managed in its own class
+	/*
 	//Delete all the complexes
 	Complex *c;
 	while(allComplexes.size()>0)
@@ -125,6 +140,7 @@ System::~System()
 		allComplexes.pop_back();
 		delete c;
 	}
+    */
 
 	GlobalFunction *gf;
 	while(this->globalFunctions.size()>0)
@@ -312,7 +328,8 @@ void System::tryToDump() {
 }
 
 
-
+// NETGEN  moved to ComplexList
+/*
 int System::createComplex(Molecule * m)
 {
 	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
@@ -321,6 +338,7 @@ int System::createComplex(Molecule * m)
 	allComplexes.push_back(c);
 	return c_id;
 }
+*/
 
 bool System::addGlobalFunction(GlobalFunction *gf)
 {
@@ -379,6 +397,9 @@ int System::getMolObsCount(int moleculeTypeIndex, int observableIndex) const
 	return allMoleculeTypes.at(moleculeTypeIndex)->getMolObsCount(observableIndex);
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 Complex * System::getNextAvailableComplex()
 {
 	Complex * c = allComplexes.at(nextAvailableComplex.front());
@@ -401,6 +422,7 @@ void System::purgeAndPrintAvailableComplexList()
 	}
 	cout<<endl;
 }
+*/
 
 
 //When you are ready to run the simulation (meaning that all moleculeTypes
@@ -482,7 +504,23 @@ void System::prepareForSimulation()
   	int match = 0;
   	for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
   	  	(*obsIter)->clear();
-  	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
+
+  	// NETGEN -- this bit replaces the commented block below
+  	Complex * complex;
+  	allComplexes.resetComplexIter();
+  	while(  (complex = allComplexes.nextComplex()) )
+  	{
+  		if( complex->isAlive() )
+  		{
+  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
+  			{
+  				match = (*obsIter)->isObservable( complex );
+  				for (int k=0; k<match; k++) (*obsIter)->straightAdd();
+  			}
+  		}
+  	}
+  	/*
+  	for(complexIter = allComplexes.allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
   		if((*complexIter)->isAlive()) {
   			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
   				match = (*obsIter)->isObservable((*complexIter));
@@ -490,6 +528,7 @@ void System::prepareForSimulation()
   			}
   		}
   	}
+  	*/
 
 
   	//cout<<"here 8..."<<endl;
@@ -895,14 +934,31 @@ void System::outputAllObservableCounts(double time)
 
 void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 {
-	if(!onTheFlyObservables) {
+	if(!onTheFlyObservables)
+	{
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
-			(*obsIter)->clear();
-		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-			(*molTypeIter)->addAllToObservables();
-		}
+		{	(*obsIter)->clear();   }
+
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		{	(*molTypeIter)->addAllToObservables(); 	}
 
 		int match = 0;
+
+	  	// NETGEN -- this bit replaces the commented block below
+	  	Complex * complex;
+	  	allComplexes.resetComplexIter();
+	  	while(  (complex = allComplexes.nextComplex()) )
+	  	{
+	  		if( complex->isAlive() )
+	  		{
+	  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
+	  			{
+	  				match = (*obsIter)->isObservable( complex );
+	  				for (int k=0; k<match; k++) (*obsIter)->straightAdd();
+	  			}
+	  		}
+	  	}
+		/*
 		for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
 			if((*complexIter)->isAlive()) {
 				for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
@@ -911,6 +967,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 				}
 			}
 		}
+		*/
 	}
 
 
@@ -990,6 +1047,9 @@ void System::printAllObservableCounts(double cSampleTime,int eventCounter)
 	cout<<endl;
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 void System::printAllComplexes()
 {
 	cout<<"All System Complexes:"<<endl;
@@ -997,6 +1057,8 @@ void System::printAllComplexes()
 		(*complexIter)->printDetails();
 	cout<<endl;
 }
+*/
+
 
 void System::printAllReactions()
 {
@@ -1020,6 +1082,9 @@ void System::printAllMoleculeTypes()
 	cout<<endl;
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 void System::outputComplexSizes(double cSampleTime)
 {
 	int size = 0;
@@ -1093,6 +1158,7 @@ void System::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 	outputFileStream<<endl;
 
 }
+*/
 
 void System::printIndexAndNames()
 {
@@ -1367,6 +1433,7 @@ NFstream& System::getOutputFileStream()
     return outputFileStream;
 }
 
+
 // friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value)
@@ -1378,3 +1445,4 @@ NFstream& operator<<(NFstream& nfstream, const T& value)
 
     return nfstream;
 }
+
