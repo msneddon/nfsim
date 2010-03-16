@@ -18,14 +18,6 @@ using namespace std;
 
 namespace NFcore
 {
-	// forward declarations for cyclic dependencies
-	//class ComplexList;
-	//class MatchSetIter;
-	//class Netgen;
-	//class Reaction;
-	//class ReactionList;
-    //class ReactionClassIter;
-
 
 	/* This class implements a unidirectional reaction object.
 	 *  (e.g. A + B -> C)  The key members are lists of reactants,
@@ -66,45 +58,6 @@ namespace NFcore
 
 	};
 
-
-	/* A container class for Complex objects.
-	 *  Key features:
-	 *  > Maintains a map from complex labels to complex pointers.
-	 *  > Implements a canonical labeling method for complex objects.
-	 */
-	class ComplexList
-	{
-		public:
-			ComplexList  ( );
-			~ComplexList ( );
-
-		protected:
-			// Add a complex to the list.
-			// returns true if Complex is not already in list, false otherwise.
-			bool addComplexToList ( Complex* c );
-
-			// Get pointer to complex by label.
-			Complex * getComplexByLabel ( string& label );
-
-			// Get canonical label for a complex.
-			string getComplexLabel ( Complex* c );
-
-			// Compare complexes by label.
-			// e.g. return label(c1) <=> label(c2)
-			// valid return values are among {-1,0,1}
-			int compare( Complex* c1, Complex* c2 );
-
-			// Maps complex labels to complex pointers:
-			map <string, Complex *>  label_map;
-			// A list of complex pointers:
-			vector <Complex *>       complex_list;
-
-		private:
-			// some iterators that are frequently used.
-			map <string, Complex *>::iterator labelMapIter;
-			vector <Complex *>::iterator      complexIter;
-			vector <Molecule *>::iterator     molIter;
-	};
 
 
 	/* During network generation, each ReactionClass object has an
