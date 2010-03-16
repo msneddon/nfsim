@@ -164,6 +164,12 @@ namespace NFcore
 	 */
 	class System
 	{
+	
+		// _NETGEN_
+	    // Netgen is a system wrapper for network generation and
+		// needs access to protected elements of System.
+		friend class Netgen;
+
 		public:
 
 			/*!
@@ -910,6 +916,10 @@ namespace NFcore
 	*/
 	class ReactionClass
 	{
+		// _NETGEN_
+		friend class MatchSetIter;
+		friend class Netgen;
+
 		public:
 			static const int NO_LIMIT = -3;
 
@@ -968,6 +978,11 @@ namespace NFcore
 
 
 			void turnOff_OnTheFlyObs() { onTheFlyObservables=false; };
+
+			// _NETGEN_
+			void set_match( vector <MappingSet *> & match_set );
+			void apply( vector <Molecule *> & product_molecules );
+
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

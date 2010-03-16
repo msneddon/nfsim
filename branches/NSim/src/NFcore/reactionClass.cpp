@@ -229,6 +229,7 @@ void ReactionClass::printDetails() const {
 	{
 		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
 		cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+		//cout<<"head: "<<endl; this->reactantTemplates[r]->printDetails(cout);
 		//reactantTemplates[r]->printDetails();
 	}
 	if(n_reactants==0)

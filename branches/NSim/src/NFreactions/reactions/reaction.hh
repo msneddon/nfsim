@@ -13,7 +13,10 @@ namespace NFcore
 {
 
 	class BasicRxnClass : public ReactionClass {
+		
+		// _NETGEN_
 		friend class MatchSetIter;
+		
 		public:
 			BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet, System *s);
 			virtual ~BasicRxnClass();

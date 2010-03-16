@@ -305,7 +305,7 @@ bool runRNFscript(map<string,string> argMap, bool verbose)
 		//Step 3: provided the system is set up correctly, run the RNF script
 		bool output = NFinput::runRNFcommands(s,argMap,commands,verbose);
 
-		//s->printAllComplexes();
+		//(s->allComplexes).printAllComplexes();
 		delete s;
 		return output;
 	}
@@ -327,8 +327,11 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			// then a molecule is blocked from binding another if
 			// it is in the same complex
 			bool blockSameComplexBinding = false;
-			if (argMap.find("bscb")!=argMap.end())
+			if (argMap.find("bscb")!=argMap.end()) {
+				if(verbose) cout<<"  Blocking same complex binding...\n";
+
 				blockSameComplexBinding = true;
+			}
 
 			bool turnOnComplexBookkeeping = false;
 			if (argMap.find("cb")!=argMap.end())
@@ -365,6 +368,12 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					int utl = -1;
 					utl = NFinput::parseAsInt(argMap,"utl",utl);
 					s->setUniversalTraversalLimit(utl);
+				}
+
+				// turn on the event counter, if need be
+				if (argMap.find("oec")!=argMap.end()) {
+					s->turnOnOutputEventCounter();
+					cout<<"here!"<<endl;
 				}
 
 				// set the output to binary
