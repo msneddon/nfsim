@@ -222,7 +222,8 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	cin>>x;
 
 	s->printAllReactions();
-	cout<<"Finished...  avg complex size: "<<s->calculateMeanCount(R)<<" receptors"<<endl;
+	// NETGEN -- redirected call to the ComplexList object at s->allComplexes
+	cout << "Finished...  avg complex size: " << (s->getAllComplexes()).calculateMeanCount(R) << " receptors" << endl;
 
 	delete s;
 	return;
@@ -234,14 +235,15 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 	double currentTime = 0;
 	double nextStoppingTime = dt;
 	double avg=-1;
-	if(outputAvg) avg = s->outputMeanCount(R);
+	// NETGEN -- redirected call to the ComplexList object at s->allComplexes
+	if(outputAvg) avg = (s->getAllComplexes()).outputMeanCount(R);
 
 	if(outputObservables) s->outputAllObservableCounts();
 	int step=0;
 	while(currentTime<simTime)
 	{
 		currentTime = s->stepTo(nextStoppingTime);
-		if(outputAvg) avg = s->outputMeanCount(R);
+		if(outputAvg) avg = (s->getAllComplexes()).outputMeanCount(R);
 		if(step%((int)(100/dt))==0)cout<<"at time: "<<currentTime<<"  avg: "<<avg<<endl;
 
 		if(outputObservables) s->outputAllObservableCounts();
@@ -251,14 +253,16 @@ void NFtest_tlbr::runSystem(int n_L, int n_R, double cTot, double beta, double k
 
 	s->printAllReactions();
 
-	avg = s->calculateMeanCount(R);
+	// NETGEN -- redirected call to the ComplexList object at s->allComplexes
+	avg = (s->getAllComplexes()).calculateMeanCount(R);
 	cout<<"Finished...  avg complex size: "<<avg<<" receptors"<<endl;
-	//s->printAllComplexes();
+	//(s->allComplexes).printAllComplexes();
 
 	//If we aren't outputting the trajectory, make sure that we output the
 	//final aggregate size distribution
-	if(outputFinalDist) s->outputMoleculeTypeCountPerComplex(R);
-	if(outputFinalDist) s->outputMoleculeTypeCountPerComplex(R);
+	// NETGEN -- redirected call to the ComplexList object at s->allComplexes
+	if(outputFinalDist) (s->getAllComplexes()).outputMoleculeTypeCountPerComplex(R);
+	if(outputFinalDist) (s->getAllComplexes()).outputMoleculeTypeCountPerComplex(R);
 
 	delete s;
 }

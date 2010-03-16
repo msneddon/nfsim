@@ -99,7 +99,7 @@ void Complex::mergeWithList(Complex * c)
 {
 	c->refactorToNewComplex(this->ID_complex);
 	this->complexMembers.splice(complexMembers.end(),c->complexMembers);
-	system->notifyThatComplexIsAvailable(c->getComplexID());
+	(system->getAllComplexes()).notifyThatComplexIsAvailable(c->getComplexID());
 }
 
 
@@ -150,7 +150,8 @@ void Complex::updateComplexMembership(Molecule * m)
 	}
 
 	//Get the next available complex
-	Complex *newComplex = system->getNextAvailableComplex();
+	// NETGEN -- redirected call to ComplexList object at system->allComplexes
+	Complex *newComplex = (system->getAllComplexes()).getNextAvailableComplex();
 	//cout<<" forming new complex:  next available: " <<newComplex->getComplexID()<<endl;
 
 	//renumber our complex elements

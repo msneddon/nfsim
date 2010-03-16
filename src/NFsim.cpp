@@ -381,6 +381,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->setOutputToBinary();
 				}
 
+
 				//Register the output file location, if given
 				if (argMap.find("o")!=argMap.end()) {
 					string outputFileName = argMap.find("o")->second;

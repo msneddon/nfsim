@@ -242,7 +242,8 @@ void ReactionClass::fire(double random_A_number)
 {
 	fireCounter++; //Remember that we fired
 
-//	if(getName()=="Rule21") {
+//	if(getName()=="Rule2") {
+//		this->printFullDetails();
 //		this->system->printAllObservableCounts(0);
 //		this->system->printAllReactions();
 //
@@ -262,10 +263,13 @@ void ReactionClass::fire(double random_A_number)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 
-	//if(getName()=="Rule21") {
-	//	cout<<"---"<<endl;cout<<"found: "<<products.size()<<" products."<<endl;
+//	if(getName()=="Rule2") {
+//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
+//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+//			(*molIter)->printDetails();
+
 	//	cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-	//}
+//	}
 
 
 	//cout<<"found: "<<products.size()<<" products."<<endl;

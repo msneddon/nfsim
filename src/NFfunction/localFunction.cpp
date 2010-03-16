@@ -243,7 +243,7 @@ double LocalFunction::getValue(Molecule *m, int scope)
 
 		//Recalculate the function
 		double newValue = FuncFactory::Eval(p);
-
+		//cout<<"*"<<this->name<<" "<<newValue<<"\n";
 		return newValue;
 
 
@@ -327,7 +327,7 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 			}
 		}
 
-
+		//cout<<"*"<<this->name<<" "<<newValue<<"\n";
 		return newValue;
 
 	} else if(scope==LocalFunction::MOLECULE) {
@@ -352,7 +352,9 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 		}
 
 		//Recalculate the function
+
 		double newValue = FuncFactory::Eval(p);
+		//cout<<this->name<<" "<<newValue<<"\n";
 
 		//Update the function values
 		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
@@ -362,6 +364,7 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 			}
 		}
 
+		//cout<<name<<" "<<newValue<<"\n";
 	//	this->printDetails(m->getMoleculeType()->getSystem());
 		return newValue;
 

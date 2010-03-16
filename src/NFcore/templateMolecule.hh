@@ -61,6 +61,10 @@ namespace NFcore
 		void addComponentExclusion(string cName, string stateName);
 		void addComponentExclusion(string cName, int stateValue);
 		void addBond(string thisBsiteName,TemplateMolecule *t2, string bSiteName2);
+
+		/* Methods for adding a disjoint component to a template pattern
+		 *  e.g.  X.Y
+		 */
 		void addConnectedTo(TemplateMolecule *t2, int otherConToIndex);
 		void addConnectedTo(TemplateMolecule *t2, int otherConToIndex,bool otherHasRxnCenter);
 		void clearConnectedTo();
@@ -97,8 +101,9 @@ namespace NFcore
 
 		/* functions that are needed to match to a molecule instance */
 		bool compare(Molecule *m);
-		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms);
+		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false);
 		void clear();
+		void clearTemplateOnly();
 		bool tryToMap(Molecule *toMap, string toMapComponent,
 				Molecule *mappedFrom, string mappedFromComponent);
 		bool isSymMapValid();
@@ -172,7 +177,7 @@ namespace NFcore
 
 
 		//This stores disjoint sets, in other words, this Template is
-		//connected to some other Template via
+		//connected to some other Template via .. the dot operator "."
 		int n_connectedTo;
 		TemplateMolecule ** connectedTo;
 		bool *hasTraversedDownConnectedTo;

@@ -20,11 +20,17 @@ System::System(string name)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = false;
+	this->useComplex = false;     // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( false );
+
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 	rxnIndexMap=0;
 	useBinaryOutput=false;
+	outputEventCounter=false;
+	globalEventCounter=0;
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
@@ -38,13 +44,20 @@ System::System(string name, bool useComplex)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = useComplex;
+
+	this->useComplex = useComplex;    // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( useComplex );
+
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 
 	rxnIndexMap=0;
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
+	outputEventCounter=false;
+	globalEventCounter=0;
 	universalTraversalLimit=-1;
 	ds=0;
 	selector = 0;
@@ -56,12 +69,18 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = useComplex;
+	this->useComplex = useComplex;  // NETGEN -- is this needed?
+	// NETGEN
+	allComplexes.setSystem( this );
+	allComplexes.setUseComplex( useComplex );
+
 	this->globalMoleculeLimit=globalMoleculeLimit;
 	this->outputGlobalFunctionValues=false;
 
 	rxnIndexMap=0;
 	useBinaryOutput=false;
+	outputEventCounter=false;
+	globalEventCounter=0;
 	onTheFlyObservables=true;
 	universalTraversalLimit=-1;
 	ds=0;
@@ -111,6 +130,8 @@ System::~System()
 		delete s;
 	}
 
+	// NETGEN -- not needed, complexList managed in its own class
+	/*
 	//Delete all the complexes
 	Complex *c;
 	while(allComplexes.size()>0)
@@ -119,6 +140,7 @@ System::~System()
 		allComplexes.pop_back();
 		delete c;
 	}
+    */
 
 	GlobalFunction *gf;
 	while(this->globalFunctions.size()>0)
@@ -227,6 +249,7 @@ void System::registerOutputFileLocation(string filename)
 				headerFile<<"\t"<<(*functionIter)->getNiceName();
 				tabCount++;
 			}
+		if(outputEventCounter)  headerFile<<"\tEventCounter";
 		headerFile<<endl;
 		for(int t=0; t<tabCount; t++) headerFile<<"\t";
 		headerFile.close();
@@ -305,7 +328,8 @@ void System::tryToDump() {
 }
 
 
-
+// NETGEN  moved to ComplexList
+/*
 int System::createComplex(Molecule * m)
 {
 	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
@@ -314,6 +338,7 @@ int System::createComplex(Molecule * m)
 	allComplexes.push_back(c);
 	return c_id;
 }
+*/
 
 bool System::addGlobalFunction(GlobalFunction *gf)
 {
@@ -372,6 +397,9 @@ int System::getMolObsCount(int moleculeTypeIndex, int observableIndex) const
 	return allMoleculeTypes.at(moleculeTypeIndex)->getMolObsCount(observableIndex);
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 Complex * System::getNextAvailableComplex()
 {
 	Complex * c = allComplexes.at(nextAvailableComplex.front());
@@ -394,6 +422,7 @@ void System::purgeAndPrintAvailableComplexList()
 	}
 	cout<<endl;
 }
+*/
 
 
 //When you are ready to run the simulation (meaning that all moleculeTypes
@@ -475,7 +504,23 @@ void System::prepareForSimulation()
   	int match = 0;
   	for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
   	  	(*obsIter)->clear();
-  	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
+
+  	// NETGEN -- this bit replaces the commented block below
+  	Complex * complex;
+  	allComplexes.resetComplexIter();
+  	while(  (complex = allComplexes.nextComplex()) )
+  	{
+  		if( complex->isAlive() )
+  		{
+  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
+  			{
+  				match = (*obsIter)->isObservable( complex );
+  				for (int k=0; k<match; k++) (*obsIter)->straightAdd();
+  			}
+  		}
+  	}
+  	/*
+  	for(complexIter = allComplexes.allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
   		if((*complexIter)->isAlive()) {
   			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
   				match = (*obsIter)->isObservable((*complexIter));
@@ -483,6 +528,7 @@ void System::prepareForSimulation()
   			}
   		}
   	}
+  	*/
 
 
   	//cout<<"here 8..."<<endl;
@@ -650,17 +696,18 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			while((current_time+delta_t)>=(curSampleTime))
 			{
 				if(curSampleTime>end_time) break;
-				outputAllObservableCounts(curSampleTime);
+				outputAllObservableCounts(curSampleTime,globalEventCounter);
 //				outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
 			if(verbose) {
-				cout<<"Sim time: "<<current_time<<"\tCPU time: ";
+				cout<<"Sim time: "<<curSampleTime-dSampleTime<<"\tCPU time: ";
 				cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
 				cout<<"\t events: "<<stepIteration<<endl;
 				//cout<<"\tAtot:"<<a_tot<<endl;
 			}
 			stepIteration=0;
+			recompute_A_tot();
 		}
 
 		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;
@@ -684,6 +731,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//Increment time
 		iteration++;
 		stepIteration++;
+		globalEventCounter++;
 		current_time+=delta_t;
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
@@ -701,6 +749,10 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //			exit(1);
 //		}
 	}
+	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
+		outputAllObservableCounts(curSampleTime,globalEventCounter);
+	}
+
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -754,6 +806,8 @@ double System::stepTo(double stoppingTime)
 		//Increment time
 		current_time+=delta_t;
 
+		globalEventCounter++;
+
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
@@ -790,6 +844,8 @@ void System::singleStep()
 	//5: Fire Reaction! (takes care of updates to lists and observables)
 	nextReaction->fire(randElement);
 	cout<<"  -System time is now"<<current_time<<endl;
+
+	globalEventCounter++;
 }
 
 void System::equilibrate(double duration)
@@ -847,29 +903,62 @@ void System::outputAllObservableNames()
 				}
 				outputFileStream<<nm;;
 			}
+		if(outputEventCounter) {
+			string nm = "EventCount";
+			int spaces = totalSpaces-nm.length();
+			if(spaces<1) { spaces = 1; }
+			for(int k=0; k<spaces; k++) {
+				outputFileStream<<" ";
+			}
+			outputFileStream<<nm;;
+		}
+
 		outputFileStream<<endl;
 	} else {
 		cout<<"Warning: You cannot output observable names when outputting in Binary Mode."<<endl;
 	}
 }
 
+
 void System::outputAllObservableCounts()
 {
-	outputAllObservableCounts(this->current_time);
+	outputAllObservableCounts(this->current_time,globalEventCounter);
+}
+
+void System::outputAllObservableCounts(double time)
+{
+	outputAllObservableCounts(time,globalEventCounter);
 }
 
 
 
-void System::outputAllObservableCounts(double cSampleTime)
+void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 {
-	if(!onTheFlyObservables) {
+	if(!onTheFlyObservables)
+	{
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
-			(*obsIter)->clear();
-		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-			(*molTypeIter)->addAllToObservables();
-		}
+		{	(*obsIter)->clear();   }
+
+		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+		{	(*molTypeIter)->addAllToObservables(); 	}
 
 		int match = 0;
+
+	  	// NETGEN -- this bit replaces the commented block below
+	  	Complex * complex;
+	  	allComplexes.resetComplexIter();
+	  	while(  (complex = allComplexes.nextComplex()) )
+	  	{
+	  		if( complex->isAlive() )
+	  		{
+	  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
+	  			{
+	  				match = (*obsIter)->isObservable( complex );
+	  				for (int k=0; k<match; k++) (*obsIter)->straightAdd();
+	  			}
+	  		}
+	  	}
+		/*
 		for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
 			if((*complexIter)->isAlive()) {
 				for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
@@ -878,6 +967,7 @@ void System::outputAllObservableCounts(double cSampleTime)
 				}
 			}
 		}
+		*/
 	}
 
 
@@ -894,6 +984,11 @@ void System::outputAllObservableCounts(double cSampleTime)
 				count=FuncFactory::Eval((*functionIter)->p);
 				outputFileStream.write((char *) &count, sizeof(double));
 			}
+
+		if(outputEventCounter) {
+			count=eventCounter;
+			outputFileStream.write((char *) &count, sizeof(double));
+		}
 	}
 	else {
 
@@ -905,6 +1000,10 @@ void System::outputAllObservableCounts(double cSampleTime)
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 				outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+		if(outputEventCounter) {
+			outputFileStream<<"  "<<eventCounter;
+		}
+
 		outputFileStream<<endl;
 	}
 
@@ -912,7 +1011,17 @@ void System::outputAllObservableCounts(double cSampleTime)
 
 }
 
+void System::printAllObservableCounts()
+{
+	printAllObservableCounts(current_time,globalEventCounter);
+}
+
 void System::printAllObservableCounts(double cSampleTime)
+{
+	printAllObservableCounts(cSampleTime,globalEventCounter);
+}
+
+void System::printAllObservableCounts(double cSampleTime,int eventCounter)
 {
 	cout<<"Time";
 	for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
@@ -920,6 +1029,10 @@ void System::printAllObservableCounts(double cSampleTime)
 	if(outputGlobalFunctionValues)
 		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 			cout<<"\t"<<(*functionIter)->getNiceName();
+	if(outputEventCounter) {
+		cout<<"\tEventCount";
+	}
+
 	cout<<endl;
 
   	cout<<cSampleTime;
@@ -928,9 +1041,15 @@ void System::printAllObservableCounts(double cSampleTime)
 	if(outputGlobalFunctionValues)
 		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 			cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+	if(outputEventCounter) {
+		cout<<"\t"<<eventCounter;
+	}
 	cout<<endl;
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 void System::printAllComplexes()
 {
 	cout<<"All System Complexes:"<<endl;
@@ -938,6 +1057,8 @@ void System::printAllComplexes()
 		(*complexIter)->printDetails();
 	cout<<endl;
 }
+*/
+
 
 void System::printAllReactions()
 {
@@ -961,6 +1082,9 @@ void System::printAllMoleculeTypes()
 	cout<<endl;
 }
 
+
+// NETGEN  moved to ComplexList
+/*
 void System::outputComplexSizes(double cSampleTime)
 {
 	int size = 0;
@@ -1034,6 +1158,7 @@ void System::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 	outputFileStream<<endl;
 
 }
+*/
 
 void System::printIndexAndNames()
 {
@@ -1308,6 +1433,7 @@ NFstream& System::getOutputFileStream()
     return outputFileStream;
 }
 
+
 // friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value)
@@ -1319,3 +1445,4 @@ NFstream& operator<<(NFstream& nfstream, const T& value)
 
     return nfstream;
 }
+
