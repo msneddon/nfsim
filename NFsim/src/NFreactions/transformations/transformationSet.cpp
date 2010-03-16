@@ -7,6 +7,8 @@ using namespace NFcore;
 
 
 list <Molecule *> TransformationSet::deleteList;
+list <Molecule *> TransformationSet::updateAfterDeleteList;
+list <Molecule *>::iterator TransformationSet::it;
 
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
 {
@@ -364,7 +366,6 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
 	//cout<<"transforming!"<<endl;
-	//list <Molecule *> deleteList;
 
 	for(unsigned int r=0; r<n_reactants; r++)  {
 		MappingSet *ms = mappingSets[r];
@@ -376,6 +377,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 					m1->getMolecule()->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
 				} else if (transformations[r].at(t)->getRemovalType()==TransformationFactory::DELETE_MOLECULES) {
 					deleteList.push_back(m1->getMolecule());
+					m1->getMolecule()->traverseBondedNeighborhood(updateAfterDeleteList,ReactionClass::NO_LIMIT);
 				}
 
 
@@ -387,15 +389,25 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 		}
 	}
 
-	if(deleteList.size()>0) {
-		list <Molecule *>::iterator it;
 
-		//Each molecule that is on the list must be dealt with
-		for(it = deleteList.begin(); it!=deleteList.end(); it++) {
-			(*it)->getMoleculeType()->removeMoleculeFromRunningSystem((*it));
-		}
-		deleteList.clear();
+
+	//Each molecule that is on the delete list must be dealt with
+	for(it = deleteList.begin(); it!=deleteList.end(); it++) {
+		(*it)->getMoleculeType()->removeMoleculeFromRunningSystem((*it));
 	}
+	deleteList.clear();
+
+
+	//Update anything we have to update because we deleted some of its connected friends
+	// (needed when we delete some, but not all molecules, in a species)
+	for( it = updateAfterDeleteList.begin(); it != updateAfterDeleteList.end(); it++ )
+	{
+		if(!(*it)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
+	  	(*it)->updateRxnMembership();
+	  	(*it)->updateTypeIIFunctions();
+	  	(*it)->updateDORRxnValues();
+	}
+	updateAfterDeleteList.clear();
 
 
 	int size = addMoleculeTransformations.size();
