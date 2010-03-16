@@ -1146,11 +1146,17 @@ bool NFinput::initReactionRules(
 					//Make sure we only block binding on the same complex if they were on separate reactants
 					//if this is an internal binding, then we have to allow it, even if we have the flag
 					//that blocks same complex binding...
-					//cout<<site1<<endl;
+					//cout<<"\n"<<site1<<endl;
 					//cout<<site2<<endl;
 
-					string reactantNum1=site1.substr(0,site1.find_first_of("_"));
-					string reactantNum2=site2.substr(0,site2.find_first_of("_"));
+					int underScore1 = site1.find_first_of("_");
+					int underScore2 = site2.find_first_of("_");
+
+					string reactantNum1=site1.substr(0,site1.find_first_of("_",underScore1+1));
+					string reactantNum2=site2.substr(0,site2.find_first_of("_",underScore2+1));
+					//cout<<reactantNum1<<endl;
+					//cout<<reactantNum2<<endl;
+
 					if(reactantNum1.compare(reactantNum2)==0) {
 						//this means that they were on the same reactant, so we should always add
 						//this as a normal binding reaction...

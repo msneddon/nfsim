@@ -1,6 +1,5 @@
 #include "NFinput.hh"
-//#include <stdlib.h>
-#include <limits.h>
+
 #include <iostream>
 
 
@@ -218,7 +217,8 @@ void getPrintout(System *s)
 			break;
 		case 3:
 			cout<<endl<<endl;
-			s->printAllComplexes();
+			// NETGEN -- redirect this call to the ComplexList object at s->allComplexes
+			(s->getAllComplexes()).printAllComplexes();
 			break;
 		case 4:
 			cout<<endl<<endl;

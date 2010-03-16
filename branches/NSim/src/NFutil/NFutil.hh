@@ -11,6 +11,8 @@
 #ifndef NFUTIL_H_
 #define NFUTIL_H_
 
+// JUSTIN -- added stdlib.h to resolve problem finding "exit"
+#include <stdlib.h>
 #include <string>
 #include <exception>
 #include <iostream>

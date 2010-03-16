@@ -541,7 +541,7 @@ void MoleculeType::addAllToObservables()
 	/////  first, because this function will not clear observables.
 
 	//Check each observable and see if this molecule should be counted
-	Molecule *mol; int o=0; int matches=0;
+	Molecule *mol;  int o=0;  int matches=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
   	{
   		for( int m=0; m<mList->size(); m++ )
@@ -564,16 +564,16 @@ void MoleculeType::addToObservables(Molecule *m)
 {
 	//Check each observable and see if this molecule should be counted
 	int o=0;
-  	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++){
+  	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
+  	{
 		//cout<<"Comparing(in add: ";
 		//cout<<m->getUniqueID()<<")"<<endl;
 
 		int matches = (*molObsIter)->isObservable(m);
 		m->setIsObs(o,matches);
 
-		for(int k=0; k<matches; k++) {
-			(*molObsIter)->add();
-		}
+		for(int k=0; k<matches; k++)
+		{	(*molObsIter)->add();	}
 		o++;
 	}
 
