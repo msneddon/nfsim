@@ -24,8 +24,10 @@ namespace NFcore
 	 */
 	class Mapping
 	{
+	
 		// _NETGEN_
 		friend class Netgen;
+
 		public:
 
 			/*!
