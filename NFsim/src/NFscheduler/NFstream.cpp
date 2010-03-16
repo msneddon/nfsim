@@ -144,7 +144,6 @@ NFstream& NFstream::operator<<(NFstream& (*func)(NFstream &))
     return ((*func))(*this);
 }
 
-
 // friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value) 
