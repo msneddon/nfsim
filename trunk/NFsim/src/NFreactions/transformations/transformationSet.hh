@@ -216,6 +216,8 @@ namespace NFcore
 			vector <Transformation *> addMoleculeTransformations;
 
 			static list <Molecule *> deleteList;
+			static list <Molecule *> updateAfterDeleteList;
+			static list <Molecule *>::iterator it;
 			bool hasSymUnbinding;
 			bool hasSymBinding;
 	};
