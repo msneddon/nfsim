@@ -34,6 +34,9 @@ This namespace contains all the basic components needed for a typical simulation
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html">MoleculeList</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Keeps a set of molecules neatly for a <a class="el" href="classNFcore_1_1MoleculeType.html" title="Keeps track of the types of molecules that can exist.">MoleculeType</a>.  <a href="classNFcore_1_1MoleculeList.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Container to organize all system complexes.  <a href="classNFcore_1_1ComplexList.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html">System</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The main class that begins and runs simulations.  <a href="classNFcore_1_1System.html#_details">More...</a><br></td></tr>
@@ -46,31 +49,44 @@ This namespace contains all the basic components needed for a typical simulation
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract Base Class that defines the interface for all reaction rules.  <a href="classNFcore_1_1ReactionClass.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Used for matching <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> objects to the given pattern.  <a href="classNFcore_1_1TemplateMolecule.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Observable.html">Observable</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tracks the counts of predefined observables in the simulation.  <a href="classNFcore_1_1Observable.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html">Complex</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Container to dynamically keep track of all system complexes.  <a href="classNFcore_1_1Complex.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Observable.html">Observable</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tracks the counts of predefined observables in the simulation.  <a href="classNFcore_1_1Observable.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1SpeciesObservable.html">SpeciesObservable</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionSelector.html">ReactionSelector</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1DirectSelector.html">DirectSelector</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LogClassSelector.html">LogClassSelector</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Used for matching <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> objects to the given pattern.  <a href="classNFcore_1_1TemplateMolecule.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FuncFactory.html">FuncFactory</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses mathmatical functions that can be easily used anywhere.  <a href="classNFcore_1_1FuncFactory.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Defines functions to be used globally in a simulation.  <a href="classNFcore_1_1GlobalFunction.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionReference.html">FunctionReference</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1StateCounter.html">StateCounter</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Outputter.html">Outputter</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1DumpMoleculeType.html">DumpMoleculeType</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1DumpSystem.html">DumpSystem</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1DumpAllComplexes.html">DumpAllComplexes</a></td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class for outputting the state of the system.  <a href="classNFcore_1_1DumpSystem.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Keeps a pointer to a molecule and remembers a single component to act on.  <a href="classNFcore_1_1Mapping.html#_details">More...</a><br></td></tr>
@@ -80,6 +96,9 @@ This namespace contains all the basic components needed for a typical simulation
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Keeps a list of mappings needed by a particular list of reactants.  <a href="classNFcore_1_1MappingSet.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantContainer.html">ReactantContainer</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Interface for all containers of Reactants (MappingSets) needed by ReactionClasses.  <a href="classNFcore_1_1ReactantContainer.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html">ReactantList</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains a list of MappingSets needed by <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a>.  <a href="classNFcore_1_1ReactantList.html#_details">More...</a><br></td></tr>
@@ -191,7 +210,7 @@ Some very simple initial testing and debugging of ReactantLists and the rest of 
 
 </div>
 </div><p>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

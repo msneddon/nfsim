@@ -16,6 +16,8 @@ Container to dynamically keep track of all system complexes.
 \item 
 {\bf $\sim$Complex} ()
 \item 
+bool {\bf isAlive} ()
+\item 
 int {\bf getComplexID} () const 
 \item 
 int {\bf getComplexSize} () const 
@@ -46,6 +48,13 @@ double {\bf getYpos} ()
 \item 
 double {\bf getZpos} ()
 \end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+list$<$ {\bf Molecule} $\ast$ $>$ {\bf complexMembers}
+\item 
+list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf molIter}
+\end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
 \item 
@@ -57,8 +66,6 @@ static const int {\bf DIFFUSE\_\-3D} = 2
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
-\item 
-list$<$ {\bf Molecule} $\ast$ $>$ {\bf complexMembers}
 \item 
 {\bf System} $\ast$ {\bf system}
 \item 
@@ -80,6 +87,11 @@ int {\bf ID\_\-complex}
 
 
 \subsection{Member Function Documentation}
+\index{NFcore::Complex@{NFcore::Complex}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Complex::isAlive ()}\label{classNFcore_1_1Complex_2b4bfa37f0d9767e387a18ba9764d181}
+
+
 \index{NFcore::Complex@{NFcore::Complex}!getComplexID@{getComplexID}}
 \index{getComplexID@{getComplexID}!NFcore::Complex@{NFcore::Complex}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Complex::getComplexID () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_72339ce32267d5aab1dfaa573a281d5c}
@@ -175,7 +187,12 @@ int {\bf ID\_\-complex}
 
 \index{NFcore::Complex@{NFcore::Complex}!complexMembers@{complexMembers}}
 \index{complexMembers@{complexMembers}!NFcore::Complex@{NFcore::Complex}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$ {\bf NFcore::Complex::complexMembers}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Complex_eb6d1fcb66f1c7ae39edb701f1443024}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$ {\bf NFcore::Complex::complexMembers}}\label{classNFcore_1_1Complex_eb6d1fcb66f1c7ae39edb701f1443024}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!molIter@{molIter}}
+\index{molIter@{molIter}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$::iterator {\bf NFcore::Complex::molIter}}\label{classNFcore_1_1Complex_2551a54dfa379df3bc200b729e3e35bf}
 
 
 \index{NFcore::Complex@{NFcore::Complex}!system@{system}}
@@ -192,5 +209,5 @@ int {\bf ID\_\-complex}
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf complex.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf complex.cpp}\end{CompactItemize}

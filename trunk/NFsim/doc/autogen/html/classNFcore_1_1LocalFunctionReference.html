@@ -39,7 +39,7 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 <a href="classNFcore_1_1LocalFunctionReference-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#b35bdef3b85fd86de7d3336e804a3d68">LocalFunctionReference</a> (string <a class="el" href="classNFcore_1_1LocalFunctionReference.html#bce12cc1cb508bd514a6d080ca586532">PointerName</a>, int <a class="el" href="classNFcore_1_1LocalFunctionReference.html#b7ae9258d8b21232fb220adb9d2288a0">type</a>, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *<a class="el" href="classNFcore_1_1LocalFunctionReference.html#8472d7bb34ad1fbef670aa528000746e">tm</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#1731ea3deb7948a39637d63eef5945f1">LocalFunctionReference</a> (string <a class="el" href="classNFcore_1_1LocalFunctionReference.html#bce12cc1cb508bd514a6d080ca586532">PointerName</a>, int <a class="el" href="classNFcore_1_1LocalFunctionReference.html#5fcaa44549aff151b12b23f5aaa4871b">scope</a>, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *<a class="el" href="classNFcore_1_1LocalFunctionReference.html#8472d7bb34ad1fbef670aa528000746e">tm</a>)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#11e483457f93eeddfc988ec6b6f99f09">~LocalFunctionReference</a> ()</td></tr>
 
@@ -47,11 +47,11 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#fad70297f131516af5b68ef5f508dfc9">getComponentIndex</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#cdb60a9e57ec70196c75415121f9dbdb">getFunctionType</a> () const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#2cae2fb1d9e93fffdf19cad90d5179de">getTemplateObject</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#678751a7f9100b013311ee46f1f71219">getPointerName</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#d043390c7a517b67f8ba93e25549c991">getFunctionScope</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#893b69db1604da6aa694acd9adf824d2">SPECIES_FUNCTION</a> = 0</td></tr>
@@ -61,13 +61,13 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#bce12cc1cb508bd514a6d080ca586532">PointerName</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#b7ae9258d8b21232fb220adb9d2288a0">type</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#5fcaa44549aff151b12b23f5aaa4871b">scope</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1LocalFunctionReference.html#8472d7bb34ad1fbef670aa528000746e">tm</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="b35bdef3b85fd86de7d3336e804a3d68"></a><!-- doxytag: member="NFcore::LocalFunctionReference::LocalFunctionReference" ref="b35bdef3b85fd86de7d3336e804a3d68" args="(string PointerName, int type, TemplateMolecule *tm)" -->
+<a class="anchor" name="1731ea3deb7948a39637d63eef5945f1"></a><!-- doxytag: member="NFcore::LocalFunctionReference::LocalFunctionReference" ref="1731ea3deb7948a39637d63eef5945f1" args="(string PointerName, int scope, TemplateMolecule *tm)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -81,7 +81,7 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>type</em>, </td>
+          <td class="paramname"> <em>scope</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -174,25 +174,6 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 
 </div>
 </div><p>
-<a class="anchor" name="cdb60a9e57ec70196c75415121f9dbdb"></a><!-- doxytag: member="NFcore::LocalFunctionReference::getFunctionType" ref="cdb60a9e57ec70196c75415121f9dbdb" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int NFcore::LocalFunctionReference::getFunctionType           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="2cae2fb1d9e93fffdf19cad90d5179de"></a><!-- doxytag: member="NFcore::LocalFunctionReference::getTemplateObject" ref="2cae2fb1d9e93fffdf19cad90d5179de" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -218,6 +199,25 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
       <table class="memname">
         <tr>
           <td class="memname">string NFcore::LocalFunctionReference::getPointerName           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="d043390c7a517b67f8ba93e25549c991"></a><!-- doxytag: member="NFcore::LocalFunctionReference::getFunctionScope" ref="d043390c7a517b67f8ba93e25549c991" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int NFcore::LocalFunctionReference::getFunctionScope           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -277,20 +277,18 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 
 </div>
 </div><p>
-<a class="anchor" name="b7ae9258d8b21232fb220adb9d2288a0"></a><!-- doxytag: member="NFcore::LocalFunctionReference::type" ref="b7ae9258d8b21232fb220adb9d2288a0" args="" -->
+<a class="anchor" name="5fcaa44549aff151b12b23f5aaa4871b"></a><!-- doxytag: member="NFcore::LocalFunctionReference::scope" ref="5fcaa44549aff151b12b23f5aaa4871b" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classNFcore_1_1LocalFunctionReference.html#b7ae9258d8b21232fb220adb9d2288a0">NFcore::LocalFunctionReference::type</a><code> [protected]</code>          </td>
+          <td class="memname">int <a class="el" href="classNFcore_1_1LocalFunctionReference.html#5fcaa44549aff151b12b23f5aaa4871b">NFcore::LocalFunctionReference::scope</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-
-<p>Reimplemented from <a class="el" href="classNFcore_1_1Transformation.html#4ce8adc1b4dde8c4dcfd4c3b4ce1b64a">NFcore::Transformation</a>.</p>
 
 </div>
 </div><p>
@@ -310,8 +308,8 @@ Inheritance diagram for NFcore::LocalFunctionReference:</div>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

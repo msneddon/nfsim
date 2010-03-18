@@ -11,7 +11,7 @@ Inheritance diagram for NFcore::BasicRxnClass::\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf BasicRxnClass} (string {\bf name}, double {\bf baseRate}, {\bf TransformationSet} $\ast${\bf transformationSet})
+{\bf BasicRxnClass} (string {\bf name}, double {\bf baseRate}, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
 \item 
 virtual {\bf $\sim$BasicRxnClass} ()
 \item 
@@ -50,7 +50,7 @@ virtual void {\bf pickMappingSets} (double randNumber) const
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::BasicRxnClass@{NFcore::BasicRxnClass}!BasicRxnClass@{BasicRxnClass}}
 \index{BasicRxnClass@{BasicRxnClass}!NFcore::BasicRxnClass@{NFcore::BasicRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}BasicRxnClass::BasicRxnClass (string {\em name}, double {\em baseRate}, {\bf TransformationSet} $\ast$ {\em transformationSet})}\label{classNFcore_1_1BasicRxnClass_2cc9f594c9a2d4a06cac2db66426658d}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}BasicRxnClass::BasicRxnClass (string {\em name}, double {\em baseRate}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1BasicRxnClass_85473cfad46f9fffcc519948cc6ee518}
 
 
 \index{NFcore::BasicRxnClass@{NFcore::BasicRxnClass}!$\sim$BasicRxnClass@{$\sim$BasicRxnClass}}
@@ -77,7 +77,7 @@ Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionCla
 
 Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionClass_f6466927590b894478fbe765f4da8aad}.\index{NFcore::BasicRxnClass@{NFcore::BasicRxnClass}!tryToAdd@{tryToAdd}}
 \index{tryToAdd@{tryToAdd}!NFcore::BasicRxnClass@{NFcore::BasicRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::BasicRxnClass::tryToAdd ({\bf Molecule} $\ast$ {\em m}, unsigned int {\em reactantPos})\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1BasicRxnClass_58531b5d6e5065facb35f6c371daf65e}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool BasicRxnClass::tryToAdd ({\bf Molecule} $\ast$ {\em m}, unsigned int {\em reactantPos})\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1BasicRxnClass_56e941f00e4f503afb9519a6f23d30fd}
 
 
 
@@ -148,5 +148,5 @@ Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionCla
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf reaction.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf reaction.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf reaction.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf reaction.cpp}\end{CompactItemize}

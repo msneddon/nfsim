@@ -11,7 +11,7 @@ Inheritance diagram for NFcore::LocalFunctionReference::\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf LocalFunctionReference} (string {\bf PointerName}, int {\bf type}, {\bf TemplateMolecule} $\ast${\bf tm})
+{\bf LocalFunctionReference} (string {\bf PointerName}, int {\bf scope}, {\bf TemplateMolecule} $\ast${\bf tm})
 \item 
 virtual {\bf $\sim$LocalFunctionReference} ()
 \item 
@@ -19,11 +19,11 @@ virtual void {\bf apply} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms
 \item 
 virtual int {\bf getComponentIndex} () const 
 \item 
-int {\bf getFunctionType} () const 
-\item 
 {\bf TemplateMolecule} $\ast$ {\bf getTemplateObject} () const 
 \item 
 string {\bf getPointerName} () const 
+\item 
+int {\bf getFunctionScope} () const 
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
@@ -37,7 +37,7 @@ static const unsigned int {\bf SINGLE\_\-MOLECULE\_\-FUNCTION} = 1
 \item 
 string {\bf PointerName}
 \item 
-int {\bf type}
+int {\bf scope}
 \item 
 {\bf TemplateMolecule} $\ast$ {\bf tm}
 \end{CompactItemize}
@@ -46,7 +46,7 @@ int {\bf type}
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!LocalFunctionReference@{LocalFunctionReference}}
 \index{LocalFunctionReference@{LocalFunctionReference}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}LocalFunctionReference::LocalFunctionReference (string {\em PointerName}, int {\em type}, {\bf TemplateMolecule} $\ast$ {\em tm})}\label{classNFcore_1_1LocalFunctionReference_b35bdef3b85fd86de7d3336e804a3d68}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}LocalFunctionReference::LocalFunctionReference (string {\em PointerName}, int {\em scope}, {\bf TemplateMolecule} $\ast$ {\em tm})}\label{classNFcore_1_1LocalFunctionReference_1731ea3deb7948a39637d63eef5945f1}
 
 
 \index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!$\sim$LocalFunctionReference@{$\sim$LocalFunctionReference}}
@@ -71,12 +71,7 @@ Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transforma
 
 
 
-Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!getFunctionType@{getFunctionType}}
-\index{getFunctionType@{getFunctionType}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::LocalFunctionReference::getFunctionType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1LocalFunctionReference_cdb60a9e57ec70196c75415121f9dbdb}
-
-
-\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!getTemplateObject@{getTemplateObject}}
+Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!getTemplateObject@{getTemplateObject}}
 \index{getTemplateObject@{getTemplateObject}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ NFcore::LocalFunctionReference::getTemplateObject () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1LocalFunctionReference_2cae2fb1d9e93fffdf19cad90d5179de}
 
@@ -84,6 +79,11 @@ Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transforma
 \index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!getPointerName@{getPointerName}}
 \index{getPointerName@{getPointerName}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::LocalFunctionReference::getPointerName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1LocalFunctionReference_678751a7f9100b013311ee46f1f71219}
+
+
+\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!getFunctionScope@{getFunctionScope}}
+\index{getFunctionScope@{getFunctionScope}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::LocalFunctionReference::getFunctionScope () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1LocalFunctionReference_d043390c7a517b67f8ba93e25549c991}
 
 
 
@@ -104,14 +104,12 @@ Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transforma
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::LocalFunctionReference::PointerName}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunctionReference_bce12cc1cb508bd514a6d080ca586532}
 
 
-\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!type@{type}}
-\index{type@{type}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::LocalFunctionReference::type}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunctionReference_b7ae9258d8b21232fb220adb9d2288a0}
+\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!scope@{scope}}
+\index{scope@{scope}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::LocalFunctionReference::scope}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunctionReference_5fcaa44549aff151b12b23f5aaa4871b}
 
 
-
-
-Reimplemented from {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_4ce8adc1b4dde8c4dcfd4c3b4ce1b64a}.\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!tm@{tm}}
+\index{NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}!tm@{tm}}
 \index{tm@{tm}!NFcore::LocalFunctionReference@{NFcore::LocalFunctionReference}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ {\bf NFcore::LocalFunctionReference::tm}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunctionReference_8472d7bb34ad1fbef670aa528000746e}
 
@@ -120,5 +118,5 @@ Reimplemented from {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Tr
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/transformations/{\bf transformation.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}

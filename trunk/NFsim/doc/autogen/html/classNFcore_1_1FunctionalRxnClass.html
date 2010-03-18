@@ -42,6 +42,8 @@ Inheritance diagram for NFcore::FunctionalRxnClass:</div>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#d217200f15b7012404c2faedf6223d3c">FunctionalRxnClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, <a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> *<a class="el" href="classNFcore_1_1FunctionalRxnClass.html#c795f335300c3e6023ae361767504978">gf</a>, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#5f169e961bea836542530f0a15676b14">FunctionalRxnClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, <a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *<a class="el" href="classNFcore_1_1FunctionalRxnClass.html#2758e3891a4631000e3c49d5ded920c9">cf</a>, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#a4d16f41264250be2ee9dd4749d90937">~FunctionalRxnClass</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#23dd5630ec0157ce7ab6d240720a57cb">update_a</a> ()</td></tr>
@@ -50,6 +52,8 @@ Inheritance diagram for NFcore::FunctionalRxnClass:</div>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#c795f335300c3e6023ae361767504978">gf</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1FunctionalRxnClass.html#2758e3891a4631000e3c49d5ded920c9">cf</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -68,6 +72,47 @@ Inheritance diagram for NFcore::FunctionalRxnClass:</div>
           <td></td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> *&nbsp;</td>
           <td class="paramname"> <em>gf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *&nbsp;</td>
+          <td class="paramname"> <em>transformationSet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="5f169e961bea836542530f0a15676b14"></a><!-- doxytag: member="NFcore::FunctionalRxnClass::FunctionalRxnClass" ref="5f169e961bea836542530f0a15676b14" args="(string name, CompositeFunction *cf, TransformationSet *transformationSet, System *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FunctionalRxnClass::FunctionalRxnClass           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *&nbsp;</td>
+          <td class="paramname"> <em>cf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -172,9 +217,24 @@ Inheritance diagram for NFcore::FunctionalRxnClass:</div>
 
 </div>
 </div><p>
+<a class="anchor" name="2758e3891a4631000e3c49d5ded920c9"></a><!-- doxytag: member="NFcore::FunctionalRxnClass::cf" ref="2758e3891a4631000e3c49d5ded920c9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a>* <a class="el" href="classNFcore_1_1FunctionalRxnClass.html#2758e3891a4631000e3c49d5ded920c9">NFcore::FunctionalRxnClass::cf</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/reactions/<a class="el" href="reaction_8hh-source.html">reaction.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/reactions/<a class="el" href="reaction_8cpp.html">reaction.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactions/<a class="el" href="reaction_8hh-source.html">reaction.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactions/<a class="el" href="reaction_8cpp.html">reaction.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

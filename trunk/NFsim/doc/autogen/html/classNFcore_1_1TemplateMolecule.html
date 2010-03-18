@@ -23,7 +23,7 @@
 </div>
 <div class="nav">
 <a class="el" href="namespaceNFcore.html">NFcore</a>::<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a></div>
-<h1>NFcore::TemplateMolecule Class Reference</h1><!-- doxytag: class="NFcore::TemplateMolecule" --><code>#include &lt;<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a>&gt;</code>
+<h1>NFcore::TemplateMolecule Class Reference</h1><!-- doxytag: class="NFcore::TemplateMolecule" --><code>#include &lt;<a class="el" href="templateMolecule_8hh-source.html">templateMolecule.hh</a>&gt;</code>
 <p>
 
 <p>
@@ -34,122 +34,196 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#18809f40358f7cb077d2c44fc8821023">TemplateMolecule</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *<a class="el" href="classNFcore_1_1TemplateMolecule.html#4fadfb2edf9140478010fcf85769d5c9">parentMoleculeType</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#266459679b58be35f8fa35e96adfb99f">TemplateMolecule</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *<a class="el" href="classNFcore_1_1TemplateMolecule.html#085df5f89811361e7668ae037888f128">moleculeType</a>)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ff8689a86d59928c281bfb4913662ebe">~TemplateMolecule</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#25cfe4ae1c6676b6f17aa60bab6bf38e">getMoleculeType</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#bf4e930b51cbca90cef03a7f2f6e1f91">getMoleculeTypeName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#23ceffa4feddb7148cebd7cbf1005d46">getMoleculeTypeName</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9864f00588af66b6ab121126b7e5940d">getNumCompareStates</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#e03338eb619d40f78573be7b2118a9b6">getN_symComps</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c22068c0366d045f27743ddc6cfb5b30">getStateIndex</a> (int state) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9669eb51a1a5cf42ef216a8858cf6f27">getN_symCompBonds</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#e259dab2133cc3d0ca5d3a45e0c0779d">getStateValue</a> (int state) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#087a80c9d4272314634c8210aca8648d">getN_mapGenerators</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c8b1df0680b7fca83941dcebc3c04a3b">getNumBindingSites</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#6001496df219bedf6ef1b49cdee33a00">getN_connectedTo</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#518188bf875df66a5eafab4bc76750a5">isBindingSiteOpen</a> (int bIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#439c6cfbd54f26123c50da40d4e0aef4">addEmptyComponent</a> (string cName)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9f483af861fed0bcc027a1e600921e3c">isBindingSiteBonded</a> (int bIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#042bc653652dffd9cae21a37f98eec04">addBoundComponent</a> (string cName)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#56b52a159630f4e30dbf0c59ecd1d6e4">getBondedTemplateMolecule</a> (int bIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c3d66211851d98bc54d8503449a51cb2">addComponentConstraint</a> (string cName, string stateName)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#3d7ae94bce205d064b343ff7ed33dcf4">getTemplateBsiteIndexFromMoleculeBsiteIndex</a> (int molBsiteIndex)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0e8b4454e1c4fd849324f25062a5b95d">addComponentConstraint</a> (string cName, int stateValue)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#acb5ce36c5451d29bd1b281bb771c073">getBindingSiteIndex</a> (int bIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#62c89ab33029112fb436f27478d9de14">addComponentExclusion</a> (string cName, string stateName)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#2cde07a7fd747c899a5784dfe69af915">getBindingSiteIndexOfBondedTemplate</a> (int bIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#02e54d0aabd9570f41c7fa6b59985347">addComponentExclusion</a> (string cName, int stateValue)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c4370f845b15f0b9a5b9b4afdc96b830">setHasVisited</a> (int bSite)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#077f184318aa55f766a0692ab6766493">addBond</a> (string thisBsiteName, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#041757d1cdca06b4b0cf493bf6568db0">addEmptyBindingSite</a> (int <a class="el" href="classNFcore_1_1TemplateMolecule.html#9b6509eda1be2762f417be4dd5016838">bSiteIndex</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#67fe737b774c1741eba786ea06307365">addConnectedTo</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, int otherConToIndex)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0563d7400a863a07f58e17e14a3f45aa">addEmptyBindingSite</a> (const char *bSiteName)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4f8e11518aa8118a77d5ae8e1de72ddd">addConnectedTo</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, int otherConToIndex, bool otherHasRxnCenter)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#dc640a59b89392319bc1d15169305747">addOccupiedBindingSite</a> (const char *bSiteName)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#dd72281a374398b98ca7e3034843d67e">clearConnectedTo</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f111359f8390c6d142685f2035f83c48">addStateValue</a> (int cIndex, int <a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">stateValue</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#3767302bfa270376f9c3b6dbea32842a">addSymCompConstraint</a> (string cName, string uniqueId, int bondState, int stateConstraint)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#a4fea34f93eff125fd196c6d53765187">addStateValue</a> (string cName, int <a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">stateValue</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f8667dbdb492cee06a252e709ed08f5a">addStateValue</a> (string cName, string <a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">stateValue</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#951ebb12f9de9400ea35709adfca9f02">addNotStateValue</a> (char *stateName, int <a class="el" href="classNFcore_1_1TemplateMolecule.html#f56e04515cd626cf95c22a2d19ea026d">notStateValue</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ea124ed6cd05482016af5916fdd65e07">clear</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#dac92538749b45a82777db76c28804d8">compare</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ecf4ee2f997f24491b881c6aae3a66b4">isStateValue</a> (const char *stateName, int <a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">stateValue</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#505f69aceeb8a6ace7e69a90b85d9143">isBonded</a> (const char *bSiteName)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#b64b34c8bea880c43deb2fd3af41bcfd">printDetails</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0297cb181127ee756e361074db3572f3">addSymBond</a> (string thisBsiteName, string thisCompId, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#cc9478c7921761487431ed9d8e463bde">addMapGenerator</a> (<a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> *mg)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#e84c1aff5b94d861b8dce24c0a315e90">compare</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *ms)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#a27d048a53de5c3b70861f344fb691ee">contains</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tempMol)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#dac92538749b45a82777db76c28804d8">compare</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#44e4f83ec3c2aae473be8cb6f2981546">compare</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m, <a class="el" href="classNFcore_1_1ReactantContainer.html">ReactantContainer</a> *rc, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *ms, bool holdMolClearToEnd=false)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#5aaa9c4c421395891d9c09185b286bc1">clear</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#41cd90bc0d5630563bbc7d8a9bb9a51d">clearTemplateOnly</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#264a8fef571e5a1935969a246fca8f0b">tryToMap</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *toMap, string toMapComponent, <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *mappedFrom, string mappedFromComponent)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4046244aa026a880e6db80a821219bc8">isSymMapValid</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c416df128b593c35c616aedaf6383a80">printErrorAndExit</a> (string message)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ead60d640cf28e2b4d3e29c2e2c87d64">printDetails</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c0a1cbdb3bb75b14d0ea928614cf602e">printDetails</a> (ostream &amp;o)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#437ad7d84c1b0b5e9eb2c2a87f1c1a99">getPatternString</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#8826b7107251b5058811d9d254a4ccf3">printPattern</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#240b6d1393c5507b550a4a5f9e829085">printPattern</a> (ostream &amp;o)</td></tr>
+
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ef73b19d8d76b383a93e96eb6481c0da">bind</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, int bSiteIndex1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, int bSiteIndex2)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#a186e6f2fe307a808486086217df1d95">bind</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, string bSiteName1, string compId1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2, string compId2)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#e10f35c1de7516b227e46ceee6a9119b">bind</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, const char *bSiteName1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, const char *bSiteName2)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#692ddff021bbf6d1c48118dde8b3712d">traverse</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tempMol, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tmList, bool skipConnectedTo)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#b779d281df7600ad4ed6b745ce43123d">compareBreadthFirst</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm, <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#611e12b44a00f1a0bc96418d7dba1ac4">getNumDisjointSets</a> (vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tMolecules, vector&lt; vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &gt; &amp;sets, vector&lt; int &gt; &amp;uniqueSetId)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#68e76bfbbbc8d15895be6d14a6a1a077">traverse</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tempMol, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tmList)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0f877b63e4e940f15eda357980c48774">checkSymmetry</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm2, string bSite1, string bSite2)</td></tr>
 
-<tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#aefbbaee8416bf5e6a246c71cf50dcbe">matchMolecule</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ab25ef22bd8757d6785eb5b61ced9249">checkSymmetryAroundBond</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm2, string bSite1, string bSite2)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; bool &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#553ca5fa9999084ebfa05a6a16b8dc46">hasVisitedBond</a></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9d02c01bcb656e595cd00ba44f4fa115">EMPTY</a> = 0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#efe31cefc1b73324281955c26f47f2c8">hasVisited</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#583443567edd7ccdda86e05cd7425065">OCCUPIED</a> = 1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#fd3cf17861f4fad733af314643322ed8">NO_CONSTRAINT</a> = -1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#818143048f2fe750cdd68b14ceb42208">FIND_ALL</a> = false</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#587fff5936f8802aa91745dc41995af4">SKIP_CONNECTED_TO</a> = true</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4fadfb2edf9140478010fcf85769d5c9">parentMoleculeType</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#085df5f89811361e7668ae037888f128">moleculeType</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f387aee763a12680ee21ed5b4fbcf9ba">stateIndex</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#5074e0ec9b4812a178c5cbf9f0161f26">uniqueTemplateID</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">stateValue</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#402e751206eea90efd7ad7f139c600c9">n_mapGenerators</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4e18e3d743fa87708ea510350c4a39e5">notStateIndex</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#e5cbdd768cefc9f1a235cc4c607a9e97">mapGenerators</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f56e04515cd626cf95c22a2d19ea026d">notStateValue</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#500ac2c965061964b5427e8ec5f3147c">n_emptyComps</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9b6509eda1be2762f417be4dd5016838">bSiteIndex</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0f01bb83236019a613250241643885a5">emptyComps</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#8dfc9f2d43a13c62bf3db0157a1a5066">bonds</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#3738511a51484206a9a9b5ca9f334695">n_occupiedComps</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#8bcfbc787b4b4b2f8c89d236647b0cb3">bSiteIndexOfBond</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ab75e8ea5a83efd625de2c16a78e5293">occupiedComps</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#b87aad2f18228a757035842d6b2461ae">sitesThatMustBeOccupied</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7de6b735cb11d93a6320d3e5d8e559a0">n_compStateConstraint</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#d0bdbc66000c196e69ef5c4ec05e5ea3">mapGenerators</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#ee5873b36b7f195d1c712c34cdcdf9d1">compStateConstraint_Comp</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> * &gt;::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#bab3c83610a214c86f617e16a786b8c0">mgIter</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7d71c2021dbefc56dc27761c263a75d2">compStateConstraint_Constraint</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f4384f9df07c8a5fc8ff2f1c784814ae">intVecIter</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#460e732dfd38d032a69debd5874075bc">n_compStateExclusion</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#33fea0d7c2c7a91a56f90a181011b459">compStateExclusion_Comp</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#714d5e3d5632b8b7cd8c8c92bb2d7797">compStateExclusion_Exclusion</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#d13e27de208f4a4323adf02232464744">n_bonds</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4c7a04cee0b188921d14154a4f48ed5c">bondComp</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#eced5937bb62ae6c24f4a055d9ef0fc9">bondCompName</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#2234b6e920a999b3848b970a41a66a38">bondPartner</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4f2b73ca526901de92818683cc00ddb0">bondPartnerCompName</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9fa7b1199aec919e9b2f62f9a23bc163">bondPartnerCompIndex</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c837d8cc15a2bbede34b988add3598ae">hasVisitedBond</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#c030d475e753e2082b492aaba69e80f2">n_connectedTo</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#14541e63a205fe7a28f02969ce179f02">connectedTo</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7158730c728e4de48ed7dfd6979c361d">hasTraversedDownConnectedTo</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#52321e6cc25615f2d41d6bb27da003ea">otherTemplateConnectedToIndex</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4b0884ec7e3d5c5d4f8b91998b89ee97">connectedToHasRxnCenter</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9a5916ec8065a0f0c214adcb676252fb">n_symComps</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#93fd042c989758fc1de4ec05fd85c2ff">symCompName</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#df43a7a4d55f0e28ee1f4236034efd0b">symCompUniqueId</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4281ead00378fa8493996bff441335e4">symCompStateConstraint</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#9438b359ab2e4349257fd21fc861bf19">symCompBoundState</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4fcc5399a59f8d083e490dc0c25587fd">symBondPartner</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#8b0dbbdc6d2376ec58d5c385413eadb5">symBondPartnerCompName</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#75368302370393bb2dea58a5939ca023">symBondPartnerCompIndex</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; vector&lt; int &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7674d47dfc5bdfe75e00f1939e5b0db3">canBeMappedTo</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#3702a4d4f4f3ba1e470e5ebd616273de">hasTraversedDownSym</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#f04ae5ba5891321d61029e49cbf38457">n_totalComps</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7043b5774196db9777c7fef51105e76c">isSymCompMapped</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#0c652e5ec3ee4ff958c56e2b8d618390">compIsAlwaysMapped</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#aefbbaee8416bf5e6a246c71cf50dcbe">matchMolecule</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#156729d5c72accce615fd870810e11de">hasVisitedThis</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Static Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static queue&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#2f19e60fa9fa6b593c8ed5f983febc45">tmq</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#4121c526d5910c12e3ef607a30fdfb8f">TotalTemplateMoleculeCount</a> = 0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static queue&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#2bb80e3be418d2d42bfc3574ffce0a0a">mq</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static list&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#45ddadcd93b737ab0d03d43127476f30">tml</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static queue&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#cee23e08072799ff47c6221051a8a739">q</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static queue&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#7130714e23c16f0e05a5718da7ca2d17">d</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static vector<br>
+&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;<br>
+::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#df3b7f7218f2591b3f579c3f9ebcc81b">tmVecIter</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static list&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;<br>
 ::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TemplateMolecule.html#207ae59afecdf8af7cf2c6a564d43e08">tmIter</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="18809f40358f7cb077d2c44fc8821023"></a><!-- doxytag: member="NFcore::TemplateMolecule::TemplateMolecule" ref="18809f40358f7cb077d2c44fc8821023" args="(MoleculeType *parentMoleculeType)" -->
+<a class="anchor" name="266459679b58be35f8fa35e96adfb99f"></a><!-- doxytag: member="NFcore::TemplateMolecule::TemplateMolecule" ref="266459679b58be35f8fa35e96adfb99f" args="(MoleculeType *moleculeType)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -157,7 +231,7 @@ TemplateMolecules are regular expression like objects needed to identify specifi
           <td class="memname">TemplateMolecule::TemplateMolecule           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td>
-          <td class="paramname"> <em>parentMoleculeType</em>          </td>
+          <td class="paramname"> <em>moleculeType</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -166,7 +240,7 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 <div class="memdoc">
 
 <p>
-
+Only constructor for TemplateMolecules 
 </div>
 </div><p>
 <a class="anchor" name="ff8689a86d59928c281bfb4913662ebe"></a><!-- doxytag: member="NFcore::TemplateMolecule::~TemplateMolecule" ref="ff8689a86d59928c281bfb4913662ebe" args="()" -->
@@ -208,12 +282,31 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="bf4e930b51cbca90cef03a7f2f6e1f91"></a><!-- doxytag: member="NFcore::TemplateMolecule::getMoleculeTypeName" ref="bf4e930b51cbca90cef03a7f2f6e1f91" args="() const " -->
+<a class="anchor" name="23ceffa4feddb7148cebd7cbf1005d46"></a><!-- doxytag: member="NFcore::TemplateMolecule::getMoleculeTypeName" ref="23ceffa4feddb7148cebd7cbf1005d46" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string NFcore::TemplateMolecule::getMoleculeTypeName           </td>
+          <td class="memname">string TemplateMolecule::getMoleculeTypeName           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="e03338eb619d40f78573be7b2118a9b6"></a><!-- doxytag: member="NFcore::TemplateMolecule::getN_symComps" ref="e03338eb619d40f78573be7b2118a9b6" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int NFcore::TemplateMolecule::getN_symComps           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -227,12 +320,12 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="9864f00588af66b6ab121126b7e5940d"></a><!-- doxytag: member="NFcore::TemplateMolecule::getNumCompareStates" ref="9864f00588af66b6ab121126b7e5940d" args="() const " -->
+<a class="anchor" name="9669eb51a1a5cf42ef216a8858cf6f27"></a><!-- doxytag: member="NFcore::TemplateMolecule::getN_symCompBonds" ref="9669eb51a1a5cf42ef216a8858cf6f27" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int NFcore::TemplateMolecule::getNumCompareStates           </td>
+          <td class="memname">int NFcore::TemplateMolecule::getN_symCompBonds           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -246,52 +339,12 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="c22068c0366d045f27743ddc6cfb5b30"></a><!-- doxytag: member="NFcore::TemplateMolecule::getStateIndex" ref="c22068c0366d045f27743ddc6cfb5b30" args="(int state) const " -->
+<a class="anchor" name="087a80c9d4272314634c8210aca8648d"></a><!-- doxytag: member="NFcore::TemplateMolecule::getN_mapGenerators" ref="087a80c9d4272314634c8210aca8648d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int NFcore::TemplateMolecule::getStateIndex           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>state</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="e259dab2133cc3d0ca5d3a45e0c0779d"></a><!-- doxytag: member="NFcore::TemplateMolecule::getStateValue" ref="e259dab2133cc3d0ca5d3a45e0c0779d" args="(int state) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int NFcore::TemplateMolecule::getStateValue           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>state</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="c8b1df0680b7fca83941dcebc3c04a3b"></a><!-- doxytag: member="NFcore::TemplateMolecule::getNumBindingSites" ref="c8b1df0680b7fca83941dcebc3c04a3b" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int NFcore::TemplateMolecule::getNumBindingSites           </td>
+          <td class="memname">int NFcore::TemplateMolecule::getN_mapGenerators           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -305,17 +358,16 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="518188bf875df66a5eafab4bc76750a5"></a><!-- doxytag: member="NFcore::TemplateMolecule::isBindingSiteOpen" ref="518188bf875df66a5eafab4bc76750a5" args="(int bIndex) const " -->
+<a class="anchor" name="6001496df219bedf6ef1b49cdee33a00"></a><!-- doxytag: member="NFcore::TemplateMolecule::getN_connectedTo" ref="6001496df219bedf6ef1b49cdee33a00" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TemplateMolecule::isBindingSiteOpen           </td>
+          <td class="memname">int NFcore::TemplateMolecule::getN_connectedTo           </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bIndex</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -325,55 +377,15 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="9f483af861fed0bcc027a1e600921e3c"></a><!-- doxytag: member="NFcore::TemplateMolecule::isBindingSiteBonded" ref="9f483af861fed0bcc027a1e600921e3c" args="(int bIndex) const " -->
+<a class="anchor" name="439c6cfbd54f26123c50da40d4e0aef4"></a><!-- doxytag: member="NFcore::TemplateMolecule::addEmptyComponent" ref="439c6cfbd54f26123c50da40d4e0aef4" args="(string cName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TemplateMolecule::isBindingSiteBonded           </td>
+          <td class="memname">void TemplateMolecule::addEmptyComponent           </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bIndex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="56b52a159630f4e30dbf0c59ecd1d6e4"></a><!-- doxytag: member="NFcore::TemplateMolecule::getBondedTemplateMolecule" ref="56b52a159630f4e30dbf0c59ecd1d6e4" args="(int bIndex) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * TemplateMolecule::getBondedTemplateMolecule           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bIndex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="3d7ae94bce205d064b343ff7ed33dcf4"></a><!-- doxytag: member="NFcore::TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex" ref="3d7ae94bce205d064b343ff7ed33dcf4" args="(int molBsiteIndex)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int TemplateMolecule::getTemplateBsiteIndexFromMoleculeBsiteIndex           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>molBsiteIndex</em>          </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -385,55 +397,15 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="acb5ce36c5451d29bd1b281bb771c073"></a><!-- doxytag: member="NFcore::TemplateMolecule::getBindingSiteIndex" ref="acb5ce36c5451d29bd1b281bb771c073" args="(int bIndex) const " -->
+<a class="anchor" name="042bc653652dffd9cae21a37f98eec04"></a><!-- doxytag: member="NFcore::TemplateMolecule::addBoundComponent" ref="042bc653652dffd9cae21a37f98eec04" args="(string cName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int TemplateMolecule::getBindingSiteIndex           </td>
+          <td class="memname">void TemplateMolecule::addBoundComponent           </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bIndex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="2cde07a7fd747c899a5784dfe69af915"></a><!-- doxytag: member="NFcore::TemplateMolecule::getBindingSiteIndexOfBondedTemplate" ref="2cde07a7fd747c899a5784dfe69af915" args="(int bIndex) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int TemplateMolecule::getBindingSiteIndexOfBondedTemplate           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bIndex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="c4370f845b15f0b9a5b9b4afdc96b830"></a><!-- doxytag: member="NFcore::TemplateMolecule::setHasVisited" ref="c4370f845b15f0b9a5b9b4afdc96b830" args="(int bSite)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TemplateMolecule::setHasVisited           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bSite</em>          </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -445,98 +417,26 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="041757d1cdca06b4b0cf493bf6568db0"></a><!-- doxytag: member="NFcore::TemplateMolecule::addEmptyBindingSite" ref="041757d1cdca06b4b0cf493bf6568db0" args="(int bSiteIndex)" -->
+<a class="anchor" name="c3d66211851d98bc54d8503449a51cb2"></a><!-- doxytag: member="NFcore::TemplateMolecule::addComponentConstraint" ref="c3d66211851d98bc54d8503449a51cb2" args="(string cName, string stateName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int TemplateMolecule::addEmptyBindingSite           </td>
+          <td class="memname">void TemplateMolecule::addComponentConstraint           </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bSiteIndex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="0563d7400a863a07f58e17e14a3f45aa"></a><!-- doxytag: member="NFcore::TemplateMolecule::addEmptyBindingSite" ref="0563d7400a863a07f58e17e14a3f45aa" args="(const char *bSiteName)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int TemplateMolecule::addEmptyBindingSite           </td>
-          <td>(</td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>bSiteName</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="dc640a59b89392319bc1d15169305747"></a><!-- doxytag: member="NFcore::TemplateMolecule::addOccupiedBindingSite" ref="dc640a59b89392319bc1d15169305747" args="(const char *bSiteName)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TemplateMolecule::addOccupiedBindingSite           </td>
-          <td>(</td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>bSiteName</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="ef73b19d8d76b383a93e96eb6481c0da"></a><!-- doxytag: member="NFcore::TemplateMolecule::bind" ref="ef73b19d8d76b383a93e96eb6481c0da" args="(TemplateMolecule *t1, int bSiteIndex1, TemplateMolecule *t2, int bSiteIndex2)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TemplateMolecule::bind           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>t1</em>, </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bSiteIndex1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>t2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>bSiteIndex2</em></td><td>&nbsp;</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>stateName</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -546,21 +446,102 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="e10f35c1de7516b227e46ceee6a9119b"></a><!-- doxytag: member="NFcore::TemplateMolecule::bind" ref="e10f35c1de7516b227e46ceee6a9119b" args="(TemplateMolecule *t1, const char *bSiteName1, TemplateMolecule *t2, const char *bSiteName2)" -->
+<a class="anchor" name="0e8b4454e1c4fd849324f25062a5b95d"></a><!-- doxytag: member="NFcore::TemplateMolecule::addComponentConstraint" ref="0e8b4454e1c4fd849324f25062a5b95d" args="(string cName, int stateValue)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TemplateMolecule::bind           </td>
+          <td class="memname">void TemplateMolecule::addComponentConstraint           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>t1</em>, </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>bSiteName1</em>, </td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="62c89ab33029112fb436f27478d9de14"></a><!-- doxytag: member="NFcore::TemplateMolecule::addComponentExclusion" ref="62c89ab33029112fb436f27478d9de14" args="(string cName, string stateName)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::addComponentExclusion           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>stateName</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="02e54d0aabd9570f41c7fa6b59985347"></a><!-- doxytag: member="NFcore::TemplateMolecule::addComponentExclusion" ref="02e54d0aabd9570f41c7fa6b59985347" args="(string cName, int stateValue)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::addComponentExclusion           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="077f184318aa55f766a0692ab6766493"></a><!-- doxytag: member="NFcore::TemplateMolecule::addBond" ref="077f184318aa55f766a0692ab6766493" args="(string thisBsiteName, TemplateMolecule *t2, string bSiteName2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::addBond           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>thisBsiteName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -571,13 +552,13 @@ TemplateMolecules are regular expression like objects needed to identify specifi
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramtype">string&nbsp;</td>
           <td class="paramname"> <em>bSiteName2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -587,21 +568,21 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="f111359f8390c6d142685f2035f83c48"></a><!-- doxytag: member="NFcore::TemplateMolecule::addStateValue" ref="f111359f8390c6d142685f2035f83c48" args="(int cIndex, int stateValue)" -->
+<a class="anchor" name="67fe737b774c1741eba786ea06307365"></a><!-- doxytag: member="NFcore::TemplateMolecule::addConnectedTo" ref="67fe737b774c1741eba786ea06307365" args="(TemplateMolecule *t2, int otherConToIndex)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TemplateMolecule::addStateValue           </td>
+          <td class="memname">void TemplateMolecule::addConnectedTo           </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>cIndex</em>, </td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>otherConToIndex</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -616,50 +597,27 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="a4fea34f93eff125fd196c6d53765187"></a><!-- doxytag: member="NFcore::TemplateMolecule::addStateValue" ref="a4fea34f93eff125fd196c6d53765187" args="(string cName, int stateValue)" -->
+<a class="anchor" name="4f8e11518aa8118a77d5ae8e1de72ddd"></a><!-- doxytag: member="NFcore::TemplateMolecule::addConnectedTo" ref="4f8e11518aa8118a77d5ae8e1de72ddd" args="(TemplateMolecule *t2, int otherConToIndex, bool otherHasRxnCenter)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TemplateMolecule::addStateValue           </td>
+          <td class="memname">void TemplateMolecule::addConnectedTo           </td>
           <td>(</td>
-          <td class="paramtype">string&nbsp;</td>
-          <td class="paramname"> <em>cName</em>, </td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f8667dbdb492cee06a252e709ed08f5a"></a><!-- doxytag: member="NFcore::TemplateMolecule::addStateValue" ref="f8667dbdb492cee06a252e709ed08f5a" args="(string cName, string stateValue)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TemplateMolecule::addStateValue           </td>
-          <td>(</td>
-          <td class="paramtype">string&nbsp;</td>
-          <td class="paramname"> <em>cName</em>, </td>
+          <td class="paramname"> <em>otherConToIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string&nbsp;</td>
-          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>otherHasRxnCenter</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -674,63 +632,14 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="951ebb12f9de9400ea35709adfca9f02"></a><!-- doxytag: member="NFcore::TemplateMolecule::addNotStateValue" ref="951ebb12f9de9400ea35709adfca9f02" args="(char *stateName, int notStateValue)" -->
+<a class="anchor" name="dd72281a374398b98ca7e3034843d67e"></a><!-- doxytag: member="NFcore::TemplateMolecule::clearConnectedTo" ref="dd72281a374398b98ca7e3034843d67e" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TemplateMolecule::addNotStateValue           </td>
-          <td>(</td>
-          <td class="paramtype">char *&nbsp;</td>
-          <td class="paramname"> <em>stateName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>notStateValue</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="ea124ed6cd05482016af5916fdd65e07"></a><!-- doxytag: member="NFcore::TemplateMolecule::clear" ref="ea124ed6cd05482016af5916fdd65e07" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NFcore::TemplateMolecule::clear           </td>
+          <td class="memname">void TemplateMolecule::clearConnectedTo           </td>
           <td>(</td>
           <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="dac92538749b45a82777db76c28804d8"></a><!-- doxytag: member="NFcore::TemplateMolecule::compare" ref="dac92538749b45a82777db76c28804d8" args="(Molecule *m)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool TemplateMolecule::compare           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -742,79 +651,33 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="b779d281df7600ad4ed6b745ce43123d"></a><!-- doxytag: member="NFcore::TemplateMolecule::compareBreadthFirst" ref="b779d281df7600ad4ed6b745ce43123d" args="(TemplateMolecule *tm, Molecule *m)" -->
+<a class="anchor" name="3767302bfa270376f9c3b6dbea32842a"></a><!-- doxytag: member="NFcore::TemplateMolecule::addSymCompConstraint" ref="3767302bfa270376f9c3b6dbea32842a" args="(string cName, string uniqueId, int bondState, int stateConstraint)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TemplateMolecule::compareBreadthFirst           </td>
+          <td class="memname">void TemplateMolecule::addSymCompConstraint           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>tm</em>, </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="68e76bfbbbc8d15895be6d14a6a1a077"></a><!-- doxytag: member="NFcore::TemplateMolecule::traverse" ref="68e76bfbbbc8d15895be6d14a6a1a077" args="(TemplateMolecule *tempMol, vector&lt; TemplateMolecule * &gt; &amp;tmList)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TemplateMolecule::traverse           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>tempMol</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>tmList</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="ecf4ee2f997f24491b881c6aae3a66b4"></a><!-- doxytag: member="NFcore::TemplateMolecule::isStateValue" ref="ecf4ee2f997f24491b881c6aae3a66b4" args="(const char *stateName, int stateValue)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool TemplateMolecule::isStateValue           </td>
-          <td>(</td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>stateName</em>, </td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>uniqueId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>stateValue</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>bondState</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>stateConstraint</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -829,17 +692,38 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="505f69aceeb8a6ace7e69a90b85d9143"></a><!-- doxytag: member="NFcore::TemplateMolecule::isBonded" ref="505f69aceeb8a6ace7e69a90b85d9143" args="(const char *bSiteName)" -->
+<a class="anchor" name="0297cb181127ee756e361074db3572f3"></a><!-- doxytag: member="NFcore::TemplateMolecule::addSymBond" ref="0297cb181127ee756e361074db3572f3" args="(string thisBsiteName, string thisCompId, TemplateMolecule *t2, string bSiteName2)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TemplateMolecule::isBonded           </td>
+          <td class="memname">void TemplateMolecule::addSymBond           </td>
           <td>(</td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>bSiteName</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>thisBsiteName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>thisCompId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSiteName2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -849,16 +733,50 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="b64b34c8bea880c43deb2fd3af41bcfd"></a><!-- doxytag: member="NFcore::TemplateMolecule::printDetails" ref="b64b34c8bea880c43deb2fd3af41bcfd" args="() const " -->
+<a class="anchor" name="a186e6f2fe307a808486086217df1d95"></a><!-- doxytag: member="NFcore::TemplateMolecule::bind" ref="a186e6f2fe307a808486086217df1d95" args="(TemplateMolecule *t1, string bSiteName1, string compId1, TemplateMolecule *t2, string bSiteName2, string compId2)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TemplateMolecule::printDetails           </td>
+          <td class="memname">void TemplateMolecule::bind           </td>
           <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSiteName1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>compId1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSiteName2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>compId2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -888,35 +806,6 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="e84c1aff5b94d861b8dce24c0a315e90"></a><!-- doxytag: member="NFcore::TemplateMolecule::compare" ref="e84c1aff5b94d861b8dce24c0a315e90" args="(Molecule *m, MappingSet *ms)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool TemplateMolecule::compare           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td>
-          <td class="paramname"> <em>ms</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="a27d048a53de5c3b70861f344fb691ee"></a><!-- doxytag: member="NFcore::TemplateMolecule::contains" ref="a27d048a53de5c3b70861f344fb691ee" args="(TemplateMolecule *tempMol)" -->
 <div class="memitem">
 <div class="memproto">
@@ -937,13 +826,1118 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
+<a class="anchor" name="692ddff021bbf6d1c48118dde8b3712d"></a><!-- doxytag: member="NFcore::TemplateMolecule::traverse" ref="692ddff021bbf6d1c48118dde8b3712d" args="(TemplateMolecule *tempMol, vector&lt; TemplateMolecule * &gt; &amp;tmList, bool skipConnectedTo)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::traverse           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>tempMol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>tmList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>skipConnectedTo</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="611e12b44a00f1a0bc96418d7dba1ac4"></a><!-- doxytag: member="NFcore::TemplateMolecule::getNumDisjointSets" ref="611e12b44a00f1a0bc96418d7dba1ac4" args="(vector&lt; TemplateMolecule * &gt; &amp;tMolecules, vector&lt; vector&lt; TemplateMolecule * &gt; &gt; &amp;sets, vector&lt; int &gt; &amp;uniqueSetId)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TemplateMolecule::getNumDisjointSets           </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>tMolecules</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>sets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>uniqueSetId</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="dac92538749b45a82777db76c28804d8"></a><!-- doxytag: member="NFcore::TemplateMolecule::compare" ref="dac92538749b45a82777db76c28804d8" args="(Molecule *m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::compare           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>m</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="44e4f83ec3c2aae473be8cb6f2981546"></a><!-- doxytag: member="NFcore::TemplateMolecule::compare" ref="44e4f83ec3c2aae473be8cb6f2981546" args="(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::compare           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1ReactantContainer.html">ReactantContainer</a> *&nbsp;</td>
+          <td class="paramname"> <em>rc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td>
+          <td class="paramname"> <em>ms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>holdMolClearToEnd</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>
+End handle connected-to 
+</div>
+</div><p>
+<a class="anchor" name="5aaa9c4c421395891d9c09185b286bc1"></a><!-- doxytag: member="NFcore::TemplateMolecule::clear" ref="5aaa9c4c421395891d9c09185b286bc1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::clear           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="41cd90bc0d5630563bbc7d8a9bb9a51d"></a><!-- doxytag: member="NFcore::TemplateMolecule::clearTemplateOnly" ref="41cd90bc0d5630563bbc7d8a9bb9a51d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::clearTemplateOnly           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="264a8fef571e5a1935969a246fca8f0b"></a><!-- doxytag: member="NFcore::TemplateMolecule::tryToMap" ref="264a8fef571e5a1935969a246fca8f0b" args="(Molecule *toMap, string toMapComponent, Molecule *mappedFrom, string mappedFromComponent)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::tryToMap           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>toMap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>toMapComponent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>mappedFrom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>mappedFromComponent</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4046244aa026a880e6db80a821219bc8"></a><!-- doxytag: member="NFcore::TemplateMolecule::isSymMapValid" ref="4046244aa026a880e6db80a821219bc8" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::isSymMapValid           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="0f877b63e4e940f15eda357980c48774"></a><!-- doxytag: member="NFcore::TemplateMolecule::checkSymmetry" ref="0f877b63e4e940f15eda357980c48774" args="(TemplateMolecule *tm1, TemplateMolecule *tm2, string bSite1, string bSite2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::checkSymmetry           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>tm1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>tm2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSite1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSite2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ab25ef22bd8757d6785eb5b61ced9249"></a><!-- doxytag: member="NFcore::TemplateMolecule::checkSymmetryAroundBond" ref="ab25ef22bd8757d6785eb5b61ced9249" args="(TemplateMolecule *tm1, TemplateMolecule *tm2, string bSite1, string bSite2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TemplateMolecule::checkSymmetryAroundBond           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>tm1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>tm2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSite1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSite2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c416df128b593c35c616aedaf6383a80"></a><!-- doxytag: member="NFcore::TemplateMolecule::printErrorAndExit" ref="c416df128b593c35c616aedaf6383a80" args="(string message)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::printErrorAndExit           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>message</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ead60d640cf28e2b4d3e29c2e2c87d64"></a><!-- doxytag: member="NFcore::TemplateMolecule::printDetails" ref="ead60d640cf28e2b4d3e29c2e2c87d64" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::printDetails           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c0a1cbdb3bb75b14d0ea928614cf602e"></a><!-- doxytag: member="NFcore::TemplateMolecule::printDetails" ref="c0a1cbdb3bb75b14d0ea928614cf602e" args="(ostream &amp;o)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::printDetails           </td>
+          <td>(</td>
+          <td class="paramtype">ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="437ad7d84c1b0b5e9eb2c2a87f1c1a99"></a><!-- doxytag: member="NFcore::TemplateMolecule::getPatternString" ref="437ad7d84c1b0b5e9eb2c2a87f1c1a99" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string TemplateMolecule::getPatternString           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="8826b7107251b5058811d9d254a4ccf3"></a><!-- doxytag: member="NFcore::TemplateMolecule::printPattern" ref="8826b7107251b5058811d9d254a4ccf3" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::printPattern           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="240b6d1393c5507b550a4a5f9e829085"></a><!-- doxytag: member="NFcore::TemplateMolecule::printPattern" ref="240b6d1393c5507b550a4a5f9e829085" args="(ostream &amp;o)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TemplateMolecule::printPattern           </td>
+          <td>(</td>
+          <td class="paramtype">ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="9d02c01bcb656e595cd00ba44f4fa115"></a><!-- doxytag: member="NFcore::TemplateMolecule::EMPTY" ref="9d02c01bcb656e595cd00ba44f4fa115" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TemplateMolecule.html#9d02c01bcb656e595cd00ba44f4fa115">NFcore::TemplateMolecule::EMPTY</a> = 0<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="583443567edd7ccdda86e05cd7425065"></a><!-- doxytag: member="NFcore::TemplateMolecule::OCCUPIED" ref="583443567edd7ccdda86e05cd7425065" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TemplateMolecule.html#583443567edd7ccdda86e05cd7425065">NFcore::TemplateMolecule::OCCUPIED</a> = 1<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="fd3cf17861f4fad733af314643322ed8"></a><!-- doxytag: member="NFcore::TemplateMolecule::NO_CONSTRAINT" ref="fd3cf17861f4fad733af314643322ed8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TemplateMolecule.html#fd3cf17861f4fad733af314643322ed8">NFcore::TemplateMolecule::NO_CONSTRAINT</a> = -1<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="818143048f2fe750cdd68b14ceb42208"></a><!-- doxytag: member="NFcore::TemplateMolecule::FIND_ALL" ref="818143048f2fe750cdd68b14ceb42208" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="classNFcore_1_1TemplateMolecule.html#818143048f2fe750cdd68b14ceb42208">NFcore::TemplateMolecule::FIND_ALL</a> = false<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="587fff5936f8802aa91745dc41995af4"></a><!-- doxytag: member="NFcore::TemplateMolecule::SKIP_CONNECTED_TO" ref="587fff5936f8802aa91745dc41995af4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="classNFcore_1_1TemplateMolecule.html#587fff5936f8802aa91745dc41995af4">NFcore::TemplateMolecule::SKIP_CONNECTED_TO</a> = true<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4121c526d5910c12e3ef607a30fdfb8f"></a><!-- doxytag: member="NFcore::TemplateMolecule::TotalTemplateMoleculeCount" ref="4121c526d5910c12e3ef607a30fdfb8f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#4121c526d5910c12e3ef607a30fdfb8f">TemplateMolecule::TotalTemplateMoleculeCount</a> = 0<code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="085df5f89811361e7668ae037888f128"></a><!-- doxytag: member="NFcore::TemplateMolecule::moleculeType" ref="085df5f89811361e7668ae037888f128" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a>* <a class="el" href="classNFcore_1_1TemplateMolecule.html#085df5f89811361e7668ae037888f128">NFcore::TemplateMolecule::moleculeType</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="5074e0ec9b4812a178c5cbf9f0161f26"></a><!-- doxytag: member="NFcore::TemplateMolecule::uniqueTemplateID" ref="5074e0ec9b4812a178c5cbf9f0161f26" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#5074e0ec9b4812a178c5cbf9f0161f26">NFcore::TemplateMolecule::uniqueTemplateID</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="402e751206eea90efd7ad7f139c600c9"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_mapGenerators" ref="402e751206eea90efd7ad7f139c600c9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#402e751206eea90efd7ad7f139c600c9">NFcore::TemplateMolecule::n_mapGenerators</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="e5cbdd768cefc9f1a235cc4c607a9e97"></a><!-- doxytag: member="NFcore::TemplateMolecule::mapGenerators" ref="e5cbdd768cefc9f1a235cc4c607a9e97" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a>** <a class="el" href="classNFcore_1_1TemplateMolecule.html#e5cbdd768cefc9f1a235cc4c607a9e97">NFcore::TemplateMolecule::mapGenerators</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="500ac2c965061964b5427e8ec5f3147c"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_emptyComps" ref="500ac2c965061964b5427e8ec5f3147c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#500ac2c965061964b5427e8ec5f3147c">NFcore::TemplateMolecule::n_emptyComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="0f01bb83236019a613250241643885a5"></a><!-- doxytag: member="NFcore::TemplateMolecule::emptyComps" ref="0f01bb83236019a613250241643885a5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#0f01bb83236019a613250241643885a5">NFcore::TemplateMolecule::emptyComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="3738511a51484206a9a9b5ca9f334695"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_occupiedComps" ref="3738511a51484206a9a9b5ca9f334695" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#3738511a51484206a9a9b5ca9f334695">NFcore::TemplateMolecule::n_occupiedComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ab75e8ea5a83efd625de2c16a78e5293"></a><!-- doxytag: member="NFcore::TemplateMolecule::occupiedComps" ref="ab75e8ea5a83efd625de2c16a78e5293" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#ab75e8ea5a83efd625de2c16a78e5293">NFcore::TemplateMolecule::occupiedComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7de6b735cb11d93a6320d3e5d8e559a0"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_compStateConstraint" ref="7de6b735cb11d93a6320d3e5d8e559a0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#7de6b735cb11d93a6320d3e5d8e559a0">NFcore::TemplateMolecule::n_compStateConstraint</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ee5873b36b7f195d1c712c34cdcdf9d1"></a><!-- doxytag: member="NFcore::TemplateMolecule::compStateConstraint_Comp" ref="ee5873b36b7f195d1c712c34cdcdf9d1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#ee5873b36b7f195d1c712c34cdcdf9d1">NFcore::TemplateMolecule::compStateConstraint_Comp</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7d71c2021dbefc56dc27761c263a75d2"></a><!-- doxytag: member="NFcore::TemplateMolecule::compStateConstraint_Constraint" ref="7d71c2021dbefc56dc27761c263a75d2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#7d71c2021dbefc56dc27761c263a75d2">NFcore::TemplateMolecule::compStateConstraint_Constraint</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="460e732dfd38d032a69debd5874075bc"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_compStateExclusion" ref="460e732dfd38d032a69debd5874075bc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#460e732dfd38d032a69debd5874075bc">NFcore::TemplateMolecule::n_compStateExclusion</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="33fea0d7c2c7a91a56f90a181011b459"></a><!-- doxytag: member="NFcore::TemplateMolecule::compStateExclusion_Comp" ref="33fea0d7c2c7a91a56f90a181011b459" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#33fea0d7c2c7a91a56f90a181011b459">NFcore::TemplateMolecule::compStateExclusion_Comp</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="714d5e3d5632b8b7cd8c8c92bb2d7797"></a><!-- doxytag: member="NFcore::TemplateMolecule::compStateExclusion_Exclusion" ref="714d5e3d5632b8b7cd8c8c92bb2d7797" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#714d5e3d5632b8b7cd8c8c92bb2d7797">NFcore::TemplateMolecule::compStateExclusion_Exclusion</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="d13e27de208f4a4323adf02232464744"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_bonds" ref="d13e27de208f4a4323adf02232464744" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#d13e27de208f4a4323adf02232464744">NFcore::TemplateMolecule::n_bonds</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4c7a04cee0b188921d14154a4f48ed5c"></a><!-- doxytag: member="NFcore::TemplateMolecule::bondComp" ref="4c7a04cee0b188921d14154a4f48ed5c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#4c7a04cee0b188921d14154a4f48ed5c">NFcore::TemplateMolecule::bondComp</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="eced5937bb62ae6c24f4a055d9ef0fc9"></a><!-- doxytag: member="NFcore::TemplateMolecule::bondCompName" ref="eced5937bb62ae6c24f4a055d9ef0fc9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1TemplateMolecule.html#eced5937bb62ae6c24f4a055d9ef0fc9">NFcore::TemplateMolecule::bondCompName</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="2234b6e920a999b3848b970a41a66a38"></a><!-- doxytag: member="NFcore::TemplateMolecule::bondPartner" ref="2234b6e920a999b3848b970a41a66a38" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>** <a class="el" href="classNFcore_1_1TemplateMolecule.html#2234b6e920a999b3848b970a41a66a38">NFcore::TemplateMolecule::bondPartner</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4f2b73ca526901de92818683cc00ddb0"></a><!-- doxytag: member="NFcore::TemplateMolecule::bondPartnerCompName" ref="4f2b73ca526901de92818683cc00ddb0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1TemplateMolecule.html#4f2b73ca526901de92818683cc00ddb0">NFcore::TemplateMolecule::bondPartnerCompName</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9fa7b1199aec919e9b2f62f9a23bc163"></a><!-- doxytag: member="NFcore::TemplateMolecule::bondPartnerCompIndex" ref="9fa7b1199aec919e9b2f62f9a23bc163" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#9fa7b1199aec919e9b2f62f9a23bc163">NFcore::TemplateMolecule::bondPartnerCompIndex</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c837d8cc15a2bbede34b988add3598ae"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasVisitedBond" ref="c837d8cc15a2bbede34b988add3598ae" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#c837d8cc15a2bbede34b988add3598ae">NFcore::TemplateMolecule::hasVisitedBond</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c030d475e753e2082b492aaba69e80f2"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_connectedTo" ref="c030d475e753e2082b492aaba69e80f2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#c030d475e753e2082b492aaba69e80f2">NFcore::TemplateMolecule::n_connectedTo</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="14541e63a205fe7a28f02969ce179f02"></a><!-- doxytag: member="NFcore::TemplateMolecule::connectedTo" ref="14541e63a205fe7a28f02969ce179f02" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>** <a class="el" href="classNFcore_1_1TemplateMolecule.html#14541e63a205fe7a28f02969ce179f02">NFcore::TemplateMolecule::connectedTo</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7158730c728e4de48ed7dfd6979c361d"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasTraversedDownConnectedTo" ref="7158730c728e4de48ed7dfd6979c361d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#7158730c728e4de48ed7dfd6979c361d">NFcore::TemplateMolecule::hasTraversedDownConnectedTo</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="52321e6cc25615f2d41d6bb27da003ea"></a><!-- doxytag: member="NFcore::TemplateMolecule::otherTemplateConnectedToIndex" ref="52321e6cc25615f2d41d6bb27da003ea" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#52321e6cc25615f2d41d6bb27da003ea">NFcore::TemplateMolecule::otherTemplateConnectedToIndex</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4b0884ec7e3d5c5d4f8b91998b89ee97"></a><!-- doxytag: member="NFcore::TemplateMolecule::connectedToHasRxnCenter" ref="4b0884ec7e3d5c5d4f8b91998b89ee97" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#4b0884ec7e3d5c5d4f8b91998b89ee97">NFcore::TemplateMolecule::connectedToHasRxnCenter</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9a5916ec8065a0f0c214adcb676252fb"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_symComps" ref="9a5916ec8065a0f0c214adcb676252fb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#9a5916ec8065a0f0c214adcb676252fb">NFcore::TemplateMolecule::n_symComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="93fd042c989758fc1de4ec05fd85c2ff"></a><!-- doxytag: member="NFcore::TemplateMolecule::symCompName" ref="93fd042c989758fc1de4ec05fd85c2ff" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1TemplateMolecule.html#93fd042c989758fc1de4ec05fd85c2ff">NFcore::TemplateMolecule::symCompName</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="df43a7a4d55f0e28ee1f4236034efd0b"></a><!-- doxytag: member="NFcore::TemplateMolecule::symCompUniqueId" ref="df43a7a4d55f0e28ee1f4236034efd0b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1TemplateMolecule.html#df43a7a4d55f0e28ee1f4236034efd0b">NFcore::TemplateMolecule::symCompUniqueId</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4281ead00378fa8493996bff441335e4"></a><!-- doxytag: member="NFcore::TemplateMolecule::symCompStateConstraint" ref="4281ead00378fa8493996bff441335e4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#4281ead00378fa8493996bff441335e4">NFcore::TemplateMolecule::symCompStateConstraint</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9438b359ab2e4349257fd21fc861bf19"></a><!-- doxytag: member="NFcore::TemplateMolecule::symCompBoundState" ref="9438b359ab2e4349257fd21fc861bf19" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#9438b359ab2e4349257fd21fc861bf19">NFcore::TemplateMolecule::symCompBoundState</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4fcc5399a59f8d083e490dc0c25587fd"></a><!-- doxytag: member="NFcore::TemplateMolecule::symBondPartner" ref="4fcc5399a59f8d083e490dc0c25587fd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>** <a class="el" href="classNFcore_1_1TemplateMolecule.html#4fcc5399a59f8d083e490dc0c25587fd">NFcore::TemplateMolecule::symBondPartner</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="8b0dbbdc6d2376ec58d5c385413eadb5"></a><!-- doxytag: member="NFcore::TemplateMolecule::symBondPartnerCompName" ref="8b0dbbdc6d2376ec58d5c385413eadb5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1TemplateMolecule.html#8b0dbbdc6d2376ec58d5c385413eadb5">NFcore::TemplateMolecule::symBondPartnerCompName</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="75368302370393bb2dea58a5939ca023"></a><!-- doxytag: member="NFcore::TemplateMolecule::symBondPartnerCompIndex" ref="75368302370393bb2dea58a5939ca023" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1TemplateMolecule.html#75368302370393bb2dea58a5939ca023">NFcore::TemplateMolecule::symBondPartnerCompIndex</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7674d47dfc5bdfe75e00f1939e5b0db3"></a><!-- doxytag: member="NFcore::TemplateMolecule::canBeMappedTo" ref="7674d47dfc5bdfe75e00f1939e5b0db3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; vector &lt;int&gt; &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#7674d47dfc5bdfe75e00f1939e5b0db3">NFcore::TemplateMolecule::canBeMappedTo</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="3702a4d4f4f3ba1e470e5ebd616273de"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasTraversedDownSym" ref="3702a4d4f4f3ba1e470e5ebd616273de" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#3702a4d4f4f3ba1e470e5ebd616273de">NFcore::TemplateMolecule::hasTraversedDownSym</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="f04ae5ba5891321d61029e49cbf38457"></a><!-- doxytag: member="NFcore::TemplateMolecule::n_totalComps" ref="f04ae5ba5891321d61029e49cbf38457" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1TemplateMolecule.html#f04ae5ba5891321d61029e49cbf38457">NFcore::TemplateMolecule::n_totalComps</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7043b5774196db9777c7fef51105e76c"></a><!-- doxytag: member="NFcore::TemplateMolecule::isSymCompMapped" ref="7043b5774196db9777c7fef51105e76c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#7043b5774196db9777c7fef51105e76c">NFcore::TemplateMolecule::isSymCompMapped</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="0c652e5ec3ee4ff958c56e2b8d618390"></a><!-- doxytag: member="NFcore::TemplateMolecule::compIsAlwaysMapped" ref="0c652e5ec3ee4ff958c56e2b8d618390" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1TemplateMolecule.html#0c652e5ec3ee4ff958c56e2b8d618390">NFcore::TemplateMolecule::compIsAlwaysMapped</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="aefbbaee8416bf5e6a246c71cf50dcbe"></a><!-- doxytag: member="NFcore::TemplateMolecule::matchMolecule" ref="aefbbaee8416bf5e6a246c71cf50dcbe" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a>* <a class="el" href="classNFcore_1_1TemplateMolecule.html#aefbbaee8416bf5e6a246c71cf50dcbe">NFcore::TemplateMolecule::matchMolecule</a>          </td>
+          <td class="memname"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a>* <a class="el" href="classNFcore_1_1TemplateMolecule.html#aefbbaee8416bf5e6a246c71cf50dcbe">NFcore::TemplateMolecule::matchMolecule</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -953,12 +1947,12 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="553ca5fa9999084ebfa05a6a16b8dc46"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasVisitedBond" ref="553ca5fa9999084ebfa05a6a16b8dc46" args="" -->
+<a class="anchor" name="156729d5c72accce615fd870810e11de"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasVisitedThis" ref="156729d5c72accce615fd870810e11de" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vector&lt;bool&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#553ca5fa9999084ebfa05a6a16b8dc46">NFcore::TemplateMolecule::hasVisitedBond</a>          </td>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1TemplateMolecule.html#156729d5c72accce615fd870810e11de">NFcore::TemplateMolecule::hasVisitedThis</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -968,237 +1962,12 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 
 </div>
 </div><p>
-<a class="anchor" name="efe31cefc1b73324281955c26f47f2c8"></a><!-- doxytag: member="NFcore::TemplateMolecule::hasVisited" ref="efe31cefc1b73324281955c26f47f2c8" args="" -->
+<a class="anchor" name="cee23e08072799ff47c6221051a8a739"></a><!-- doxytag: member="NFcore::TemplateMolecule::q" ref="cee23e08072799ff47c6221051a8a739" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classNFcore_1_1TemplateMolecule.html#efe31cefc1b73324281955c26f47f2c8">NFcore::TemplateMolecule::hasVisited</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="4fadfb2edf9140478010fcf85769d5c9"></a><!-- doxytag: member="NFcore::TemplateMolecule::parentMoleculeType" ref="4fadfb2edf9140478010fcf85769d5c9" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a>* <a class="el" href="classNFcore_1_1TemplateMolecule.html#4fadfb2edf9140478010fcf85769d5c9">NFcore::TemplateMolecule::parentMoleculeType</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f387aee763a12680ee21ed5b4fbcf9ba"></a><!-- doxytag: member="NFcore::TemplateMolecule::stateIndex" ref="f387aee763a12680ee21ed5b4fbcf9ba" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#f387aee763a12680ee21ed5b4fbcf9ba">NFcore::TemplateMolecule::stateIndex</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="263b06067b4b75eb9e2b813b7091a34b"></a><!-- doxytag: member="NFcore::TemplateMolecule::stateValue" ref="263b06067b4b75eb9e2b813b7091a34b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#263b06067b4b75eb9e2b813b7091a34b">NFcore::TemplateMolecule::stateValue</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="4e18e3d743fa87708ea510350c4a39e5"></a><!-- doxytag: member="NFcore::TemplateMolecule::notStateIndex" ref="4e18e3d743fa87708ea510350c4a39e5" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#4e18e3d743fa87708ea510350c4a39e5">NFcore::TemplateMolecule::notStateIndex</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f56e04515cd626cf95c22a2d19ea026d"></a><!-- doxytag: member="NFcore::TemplateMolecule::notStateValue" ref="f56e04515cd626cf95c22a2d19ea026d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#f56e04515cd626cf95c22a2d19ea026d">NFcore::TemplateMolecule::notStateValue</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="9b6509eda1be2762f417be4dd5016838"></a><!-- doxytag: member="NFcore::TemplateMolecule::bSiteIndex" ref="9b6509eda1be2762f417be4dd5016838" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#9b6509eda1be2762f417be4dd5016838">NFcore::TemplateMolecule::bSiteIndex</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="8dfc9f2d43a13c62bf3db0157a1a5066"></a><!-- doxytag: member="NFcore::TemplateMolecule::bonds" ref="8dfc9f2d43a13c62bf3db0157a1a5066" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#8dfc9f2d43a13c62bf3db0157a1a5066">NFcore::TemplateMolecule::bonds</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="8bcfbc787b4b4b2f8c89d236647b0cb3"></a><!-- doxytag: member="NFcore::TemplateMolecule::bSiteIndexOfBond" ref="8bcfbc787b4b4b2f8c89d236647b0cb3" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#8bcfbc787b4b4b2f8c89d236647b0cb3">NFcore::TemplateMolecule::bSiteIndexOfBond</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="b87aad2f18228a757035842d6b2461ae"></a><!-- doxytag: member="NFcore::TemplateMolecule::sitesThatMustBeOccupied" ref="b87aad2f18228a757035842d6b2461ae" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#b87aad2f18228a757035842d6b2461ae">NFcore::TemplateMolecule::sitesThatMustBeOccupied</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="d0bdbc66000c196e69ef5c4ec05e5ea3"></a><!-- doxytag: member="NFcore::TemplateMolecule::mapGenerators" ref="d0bdbc66000c196e69ef5c4ec05e5ea3" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> *&gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#d0bdbc66000c196e69ef5c4ec05e5ea3">NFcore::TemplateMolecule::mapGenerators</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="bab3c83610a214c86f617e16a786b8c0"></a><!-- doxytag: member="NFcore::TemplateMolecule::mgIter" ref="bab3c83610a214c86f617e16a786b8c0" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1MapGenerator.html">MapGenerator</a> *&gt;::iterator <a class="el" href="classNFcore_1_1TemplateMolecule.html#bab3c83610a214c86f617e16a786b8c0">NFcore::TemplateMolecule::mgIter</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f4384f9df07c8a5fc8ff2f1c784814ae"></a><!-- doxytag: member="NFcore::TemplateMolecule::intVecIter" ref="f4384f9df07c8a5fc8ff2f1c784814ae" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;int&gt;::iterator <a class="el" href="classNFcore_1_1TemplateMolecule.html#f4384f9df07c8a5fc8ff2f1c784814ae">NFcore::TemplateMolecule::intVecIter</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="2f19e60fa9fa6b593c8ed5f983febc45"></a><!-- doxytag: member="NFcore::TemplateMolecule::tmq" ref="2f19e60fa9fa6b593c8ed5f983febc45" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">queue&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#2f19e60fa9fa6b593c8ed5f983febc45">TemplateMolecule::tmq</a><code> [static, protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="2bb80e3be418d2d42bfc3574ffce0a0a"></a><!-- doxytag: member="NFcore::TemplateMolecule::mq" ref="2bb80e3be418d2d42bfc3574ffce0a0a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">queue&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#2bb80e3be418d2d42bfc3574ffce0a0a">TemplateMolecule::mq</a><code> [static, protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="45ddadcd93b737ab0d03d43127476f30"></a><!-- doxytag: member="NFcore::TemplateMolecule::tml" ref="45ddadcd93b737ab0d03d43127476f30" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">list&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#45ddadcd93b737ab0d03d43127476f30">TemplateMolecule::tml</a><code> [static, protected]</code>          </td>
+          <td class="memname">queue&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#cee23e08072799ff47c6221051a8a739">TemplateMolecule::q</a><code> [static, protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1214,6 +1983,21 @@ TemplateMolecules are regular expression like objects needed to identify specifi
       <table class="memname">
         <tr>
           <td class="memname">queue&lt; int &gt; <a class="el" href="classNFcore_1_1TemplateMolecule.html#7130714e23c16f0e05a5718da7ca2d17">TemplateMolecule::d</a><code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="df3b7f7218f2591b3f579c3f9ebcc81b"></a><!-- doxytag: member="NFcore::TemplateMolecule::tmVecIter" ref="df3b7f7218f2591b3f579c3f9ebcc81b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;::iterator <a class="el" href="classNFcore_1_1TemplateMolecule.html#df3b7f7218f2591b3f579c3f9ebcc81b">TemplateMolecule::tmVecIter</a><code> [static, protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1239,8 +2023,8 @@ TemplateMolecules are regular expression like objects needed to identify specifi
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="templateMolecule_8cpp.html">templateMolecule.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="templateMolecule_8hh-source.html">templateMolecule.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="templateMolecule_8cpp.html">templateMolecule.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

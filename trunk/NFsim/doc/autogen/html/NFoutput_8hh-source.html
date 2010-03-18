@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>NFsim: /home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFoutput/NFoutput.hh Source File</title>
+<title>NFsim: /home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFoutput/NFoutput.hh Source File</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -14,72 +14,79 @@
     <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
   </ul>
 </div>
-<h1>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFoutput/NFoutput.hh</h1><a href="NFoutput_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
-<a name="l00002"></a>00002 <span class="comment"> * NFoutput.hh</span>
-<a name="l00003"></a>00003 <span class="comment"> *</span>
-<a name="l00004"></a>00004 <span class="comment"> *  Created on: Sep 28, 2008</span>
-<a name="l00005"></a>00005 <span class="comment"> *      Author: msneddon</span>
-<a name="l00006"></a>00006 <span class="comment"> */</span>
-<a name="l00007"></a>00007 <span class="preprocessor">#ifndef NFOUTPUT_HH_</span>
-<a name="l00008"></a>00008 <span class="preprocessor"></span><span class="preprocessor">#define NFOUTPUT_HH_</span>
-<a name="l00009"></a>00009 <span class="preprocessor"></span>
-<a name="l00010"></a>00010 
-<a name="l00011"></a>00011 
-<a name="l00012"></a>00012 <span class="preprocessor">#include "../NFcore/NFcore.hh"</span>
-<a name="l00013"></a>00013 
-<a name="l00014"></a>00014 <span class="keyword">namespace </span>NFcore
-<a name="l00015"></a>00015 {
-<a name="l00016"></a>00016         <span class="keyword">class </span>MoleculeType;
-<a name="l00017"></a>00017         <span class="keyword">class </span>System;
-<a name="l00018"></a>00018 
-<a name="l00019"></a><a class="code" href="classNFcore_1_1Outputter.html">00019</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1Outputter.html">Outputter</a> {
-<a name="l00020"></a>00020                 <span class="keyword">public</span>:
-<a name="l00021"></a>00021                         <a class="code" href="classNFcore_1_1Outputter.html#92551e7d729d3fba3f52600c2d23a7f8">Outputter</a>(<span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">filename</a>, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *<a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">s</a>);
-<a name="l00022"></a>00022                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Outputter.html#d2fa668dffa24b574f6edc69062cf06e">~Outputter</a>();
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#fa0b98db6598c1d00b143b61f0c5c575">output</a>()=0;
-<a name="l00025"></a>00025                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#14be13a01fc8c5c515bf4ddb8b721e3c">outputHeader</a>()=0;
-<a name="l00026"></a>00026                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#f6476687694630364712b462afea04e6">tryToDump</a>(<span class="keywordtype">double</span> simTime)=0;
-<a name="l00027"></a>00027                 <span class="keyword">protected</span>:
-<a name="l00028"></a><a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">00028</a>                         <span class="keywordtype">string</span> filename;
-<a name="l00029"></a><a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">00029</a>                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s;
-<a name="l00030"></a><a class="code" href="classNFcore_1_1Outputter.html#01b52e6b6164df23aac52809fb4d6ae6">00030</a>                         ofstream <a class="code" href="classNFcore_1_1Outputter.html#01b52e6b6164df23aac52809fb4d6ae6">outputFileStream</a>;
-<a name="l00031"></a>00031         };
+<h1>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFoutput/NFoutput.hh</h1><a href="NFoutput_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
+<a name="l00002"></a>00002 <span class="preprocessor">#ifndef NFOUTPUT_HH_</span>
+<a name="l00003"></a>00003 <span class="preprocessor"></span><span class="preprocessor">#define NFOUTPUT_HH_</span>
+<a name="l00004"></a>00004 <span class="preprocessor"></span>
+<a name="l00005"></a>00005 
+<a name="l00006"></a>00006 
+<a name="l00007"></a>00007 <span class="preprocessor">#include "../NFcore/NFcore.hh"</span>
+<a name="l00008"></a>00008 <span class="preprocessor">#include "../NFutil/NFutil.hh"</span>
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010 <span class="keyword">namespace </span>NFcore
+<a name="l00011"></a>00011 {
+<a name="l00012"></a>00012         <span class="keyword">class </span>MoleculeType;
+<a name="l00013"></a>00013         <span class="keyword">class </span>System;
+<a name="l00014"></a>00014 
+<a name="l00015"></a><a class="code" href="classNFcore_1_1Outputter.html">00015</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1Outputter.html">Outputter</a> {
+<a name="l00016"></a>00016                 <span class="keyword">public</span>:
+<a name="l00017"></a>00017                         <a class="code" href="classNFcore_1_1Outputter.html#92551e7d729d3fba3f52600c2d23a7f8">Outputter</a>(<span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">filename</a>, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *<a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">s</a>);
+<a name="l00018"></a>00018                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Outputter.html#d2fa668dffa24b574f6edc69062cf06e">~Outputter</a>();
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#fa0b98db6598c1d00b143b61f0c5c575">output</a>()=0;
+<a name="l00021"></a>00021                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#14be13a01fc8c5c515bf4ddb8b721e3c">outputHeader</a>()=0;
+<a name="l00022"></a>00022                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Outputter.html#f6476687694630364712b462afea04e6">tryToDump</a>(<span class="keywordtype">double</span> simTime)=0;
+<a name="l00023"></a>00023                 <span class="keyword">protected</span>:
+<a name="l00024"></a><a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">00024</a>                         <span class="keywordtype">string</span> filename;
+<a name="l00025"></a><a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">00025</a>                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s;
+<a name="l00026"></a><a class="code" href="classNFcore_1_1Outputter.html#01b52e6b6164df23aac52809fb4d6ae6">00026</a>                         ofstream <a class="code" href="classNFcore_1_1Outputter.html#01b52e6b6164df23aac52809fb4d6ae6">outputFileStream</a>;
+<a name="l00027"></a>00027         };
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 
 <a name="l00032"></a>00032 
-<a name="l00033"></a><a class="code" href="classNFcore_1_1DumpMoleculeType.html">00033</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1DumpMoleculeType.html">DumpMoleculeType</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Outputter.html">Outputter</a> {
-<a name="l00034"></a>00034                 <span class="keyword">public</span>:
-<a name="l00035"></a>00035                         <a class="code" href="classNFcore_1_1DumpMoleculeType.html#9a98e25a2798cf852528babe4ace5ed6">DumpMoleculeType</a>(<span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">filename</a>, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *<a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">s</a>, <a class="code" href="classNFcore_1_1MoleculeType.html" title="Keeps track of the types of molecules that can exist.">MoleculeType</a> *<a class="code" href="classNFcore_1_1DumpMoleculeType.html#e624fa39a020b70a56c257cef5256120">mt</a>);
-<a name="l00036"></a>00036                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1DumpMoleculeType.html#ddc87564aad207ea6418c70b9eafd832">~DumpMoleculeType</a>();
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpMoleculeType.html#22126e4f9c628dc8952f17ef48980d7e">output</a>();
-<a name="l00039"></a>00039                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpMoleculeType.html#89a0e8fdbfca05907019a42b2ebd13f4">outputHeader</a>();
-<a name="l00040"></a>00040                 <span class="keyword">protected</span>:
-<a name="l00041"></a><a class="code" href="classNFcore_1_1DumpMoleculeType.html#e624fa39a020b70a56c257cef5256120">00041</a>                         <a class="code" href="classNFcore_1_1MoleculeType.html" title="Keeps track of the types of molecules that can exist.">MoleculeType</a> *mt;
-<a name="l00042"></a>00042         };
-<a name="l00043"></a>00043 
-<a name="l00044"></a><a class="code" href="classNFcore_1_1DumpAllComplexes.html">00044</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1DumpAllComplexes.html">DumpAllComplexes</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Outputter.html">Outputter</a> {
-<a name="l00045"></a>00045                 <span class="keyword">public</span>:
-<a name="l00046"></a>00046                         <a class="code" href="classNFcore_1_1DumpAllComplexes.html#1a066d6f29e3980d37290b94c635f3f8">DumpAllComplexes</a>(<span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Outputter.html#150c6ee5c2eb1f61eaef24139c05e4ed">filename</a>, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *<a class="code" href="classNFcore_1_1Outputter.html#c63f98e10701598bf2dc79b0c76d2447">s</a>);
-<a name="l00047"></a>00047                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1DumpAllComplexes.html#fe36ab7a691bfe15900034e0fdcd90ff">~DumpAllComplexes</a>();
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpAllComplexes.html#954c5b398a98f2a238b0318c28b5569b">output</a>();
-<a name="l00050"></a>00050                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpAllComplexes.html#32dfb2527b4702cade795b224773caaa">outputHeader</a>();
-<a name="l00051"></a>00051                         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpAllComplexes.html#2e6c3d41d2d294a786e5f4f6ce236b39">tryToDump</a>(<span class="keywordtype">double</span> simTime);
-<a name="l00052"></a>00052                 <span class="keyword">protected</span>:
-<a name="l00053"></a><a class="code" href="classNFcore_1_1DumpAllComplexes.html#511824e0bed32ec4abdfdf5933446df8">00053</a>                         <a class="code" href="classNFcore_1_1MoleculeType.html" title="Keeps track of the types of molecules that can exist.">MoleculeType</a> *<a class="code" href="classNFcore_1_1DumpAllComplexes.html#511824e0bed32ec4abdfdf5933446df8">mt</a>;
-<a name="l00054"></a>00054         };
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 }
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
+<a name="l00062"></a><a class="code" href="classNFcore_1_1DumpSystem.html">00062</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1DumpSystem.html" title="Class for outputting the state of the system.">DumpSystem</a> {
 <a name="l00063"></a>00063 
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="preprocessor">#endif </span><span class="comment">/* NFOUTPUT_HH_ */</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<a name="l00064"></a>00064                 <span class="keyword">public</span>:
+<a name="l00066"></a>00066 
+<a name="l00072"></a>00072                         <a class="code" href="classNFcore_1_1DumpSystem.html#831ce163c6d5f74ebeb80d9bd0392f86" title="The only constructor of DumpSystem objects.">DumpSystem</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *<a class="code" href="classNFcore_1_1DumpSystem.html#734d210169dcdf2dd371e04d57f97b91">s</a>, vector &lt;double&gt; <a class="code" href="classNFcore_1_1DumpSystem.html#5fc1179c4292cea8a82ef4c72f2c304d">dumpTimes</a>, <span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1DumpSystem.html#2e4a8af5ec4de0894ebd638e7f9b33d8">pathToFolder</a>, <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1DumpSystem.html#b85e33761d8ff0cf9aecc0f70c399f85">verbose</a>);
+<a name="l00073"></a>00073 
+<a name="l00075"></a>00075 
+<a name="l00077"></a>00077                         <a class="code" href="classNFcore_1_1DumpSystem.html#9bf765bb7d36e18730b37be0d2088e09" title="Deconstructor that does nothing - DumpSystems don&amp;#39;t tie up any heap memory.">~DumpSystem</a>();
+<a name="l00078"></a>00078 
+<a name="l00080"></a>00080 
+<a name="l00084"></a>00084                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpSystem.html#2b8cdc8be253da3e60a34b50433af6e9" title="Key function of the DumpSystem class that is called at each simulation step.">tryToDump</a>(<span class="keywordtype">double</span> simTime);
+<a name="l00085"></a>00085 
+<a name="l00086"></a>00086                 <span class="keyword">protected</span>:
+<a name="l00087"></a>00087 
+<a name="l00089"></a>00089 
+<a name="l00091"></a>00091                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpSystem.html#bfb45262bb01dca1fdd5632b09364857" title="Protected function for dumping the header file at the given time step.">dumpHeaderFile</a>(<span class="keywordtype">double</span> dumpTime);
+<a name="l00092"></a>00092 
+<a name="l00094"></a>00094 
+<a name="l00096"></a>00096                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1DumpSystem.html#bec645c7c6d2a72437cfb68caaddae70" title="Protected function for dumping the MoleculeType files at the given time step.">dumpMoleculeTypeFiles</a>(<span class="keywordtype">double</span> dumpTime);
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098 
+<a name="l00099"></a><a class="code" href="classNFcore_1_1DumpSystem.html#734d210169dcdf2dd371e04d57f97b91">00099</a>                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s; 
+<a name="l00100"></a><a class="code" href="classNFcore_1_1DumpSystem.html#d7956b5d446aa4d208e1f3e30aa59d0c">00100</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1DumpSystem.html#d7956b5d446aa4d208e1f3e30aa59d0c">currentDumpTimeIndex</a>; 
+<a name="l00101"></a><a class="code" href="classNFcore_1_1DumpSystem.html#5fc1179c4292cea8a82ef4c72f2c304d">00101</a>                         vector &lt;double&gt; dumpTimes; 
+<a name="l00102"></a><a class="code" href="classNFcore_1_1DumpSystem.html#2e4a8af5ec4de0894ebd638e7f9b33d8">00102</a>                         <span class="keywordtype">string</span> pathToFolder; 
+<a name="l00103"></a><a class="code" href="classNFcore_1_1DumpSystem.html#b85e33761d8ff0cf9aecc0f70c399f85">00103</a>                         <span class="keywordtype">bool</span> verbose; 
+<a name="l00105"></a>00105         };
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 }
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 <span class="preprocessor">#endif </span><span class="comment">/* NFOUTPUT_HH_ */</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

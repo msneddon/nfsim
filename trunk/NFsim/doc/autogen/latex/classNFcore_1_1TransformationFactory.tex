@@ -2,6 +2,11 @@
 \label{classNFcore_1_1TransformationFactory}\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 {\tt \#include $<$transformation.hh$>$}
 
+
+
+\subsection{Detailed Description}
+Static object that generates transformations with the given sites. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \subsection*{Static Public Member Functions}
 \begin{CompactItemize}
 \item 
@@ -17,7 +22,7 @@ static {\bf Transformation} $\ast$ {\bf genUnbindingTransform} (unsigned int bSi
 \item 
 static {\bf Transformation} $\ast$ {\bf genAddMoleculeTransform} ({\bf SpeciesCreator} $\ast$sc)
 \item 
-static {\bf Transformation} $\ast$ {\bf genRemoveMoleculeTransform} ()
+static {\bf Transformation} $\ast$ {\bf genRemoveMoleculeTransform} (int removalType)
 \item 
 static {\bf Transformation} $\ast$ {\bf genEmptyTransform} ()
 \item 
@@ -29,6 +34,12 @@ static {\bf Transformation} $\ast$ {\bf genLocalFunctionReference} (string Point
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
+\item 
+static const int {\bf COMPLETE\_\-SPECIES\_\-REMOVAL} = 0
+\item 
+static const int {\bf DELETE\_\-MOLECULES} = 1
+\item 
+static const int {\bf DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD} = 2
 \item 
 static const unsigned int {\bf STATE\_\-CHANGE} = 0
 \item 
@@ -89,14 +100,14 @@ Generates an unbinding transformation for a particular binding site. Only one of
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genAddMoleculeTransform ({\bf SpeciesCreator} $\ast$ {\em sc})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_f11322a3ba45cabe38b2eadf032a1ff6}
 
 
-Generates an Add \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} transformation. Currently, this is not yet implemented. \begin{Desc}
+Generates an Add \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} transformation. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genRemoveMoleculeTransform@{genRemoveMoleculeTransform}}
 \index{genRemoveMoleculeTransform@{genRemoveMoleculeTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genRemoveMoleculeTransform ()\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_5d848169fa346fc9642cc34ecf706ea3}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genRemoveMoleculeTransform (int {\em removalType})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_81d0b2c7cd8efe29ff45333ac16dc657}
 
 
-Generates a removal of a molecule from the system. Currently this is not yet implemented. \begin{Desc}
+Generates a removal of a molecule from the system. The removalType specifies how the molecule should be removed (either everything that is connected, or just the molecules, or just the molecules conditional on how it is connected) \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genEmptyTransform@{genEmptyTransform}}
 \index{genEmptyTransform@{genEmptyTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
@@ -124,10 +135,25 @@ Generates an DecrementState transformation. \begin{Desc}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Transformation} $\ast$ TransformationFactory::genLocalFunctionReference (string {\em PointerName}, int {\em type}, {\bf TemplateMolecule} $\ast$ {\em tm})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_206a59330bba84e1b0131b8b0ba919f4}
 
 
-
+Return a pointer to the transformation that is needed by a local function 
 
 \subsection{Member Data Documentation}
-\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!STATE\_\-CHANGE@{STATE\_\-CHANGE}}
+\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!COMPLETE\_\-SPECIES\_\-REMOVAL@{COMPLETE\_\-SPECIES\_\-REMOVAL}}
+\index{COMPLETE\_\-SPECIES\_\-REMOVAL@{COMPLETE\_\-SPECIES\_\-REMOVAL}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::TransformationFactory::COMPLETE\_\-SPECIES\_\-REMOVAL} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_b78d2938d6417407231887e04cc2de05}
+
+
+Indicates that a delete transform deletes the entire connected species \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!DELETE\_\-MOLECULES@{DELETE\_\-MOLECULES}}
+\index{DELETE\_\-MOLECULES@{DELETE\_\-MOLECULES}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::TransformationFactory::DELETE\_\-MOLECULES} = 1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_9cbb8a75b7e8cea2746b8644006f4c12}
+
+
+Indicates that a delete transform deletes only the pointed-to molecule \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD@{DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD}}
+\index{DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD@{DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::TransformationFactory::DELETE\_\-MOLECULES\_\-NO\_\-KEYWORD} = 2\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_55540d69a47fd1afe03fbf7ff9da2da8}
+
+
+Delete only pointed-to molecules, only if deleting it creates only one remaining species \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!STATE\_\-CHANGE@{STATE\_\-CHANGE}}
 \index{STATE\_\-CHANGE@{STATE\_\-CHANGE}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::STATE\_\-CHANGE} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_5b83f8ccba33c9c11d57ccb01eb65b8b}
 
@@ -162,12 +188,12 @@ Indicates no transformation is needed (or is the second partner in a binding tra
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::INCREMENT\_\-STATE} = 6\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_bb9132a59d041a40b6503fffc37e51c5}
 
 
-\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!DECREMENT\_\-STATE@{DECREMENT\_\-STATE}}
+Indicates an increment transformation \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!DECREMENT\_\-STATE@{DECREMENT\_\-STATE}}
 \index{DECREMENT\_\-STATE@{DECREMENT\_\-STATE}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::DECREMENT\_\-STATE} = 7\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_ef1bf254664f1baaa23127355a427fde}
 
 
-\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!LOCAL\_\-FUNCTION\_\-REFERENCE@{LOCAL\_\-FUNCTION\_\-REFERENCE}}
+Indicates a decrement transformation \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!LOCAL\_\-FUNCTION\_\-REFERENCE@{LOCAL\_\-FUNCTION\_\-REFERENCE}}
 \index{LOCAL\_\-FUNCTION\_\-REFERENCE@{LOCAL\_\-FUNCTION\_\-REFERENCE}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::LOCAL\_\-FUNCTION\_\-REFERENCE} = 8\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_2082f8fc11ff7315d0454c2bf61bf0e4}
 
@@ -176,5 +202,5 @@ Indicates no transformation is needed (or is the second partner in a binding tra
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/transformations/{\bf transformation.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}

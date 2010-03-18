@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>NFsim: /home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/mappingSet.hh Source File</title>
+<title>NFsim: /home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/mappingSet.hh Source File</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -14,7 +14,7 @@
     <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
   </ul>
 </div>
-<h1>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/mappingSet.hh</h1><a href="mappingSet_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef MAPPINGSET_HH_</span>
+<h1>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/mappingSet.hh</h1><a href="mappingSet_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef MAPPINGSET_HH_</span>
 <a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define MAPPINGSET_HH_</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
 <a name="l00004"></a>00004 
@@ -36,45 +36,69 @@
 <a name="l00025"></a><a class="code" href="classNFcore_1_1MappingSet.html">00025</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a>
 <a name="l00026"></a>00026         {
 <a name="l00027"></a>00027                 <span class="keyword">public</span>:
-<a name="l00028"></a>00028                         
+<a name="l00028"></a>00028 
 <a name="l00038"></a>00038                         <a class="code" href="classNFcore_1_1MappingSet.html#1adf9b98dd478f70fa488958faf3a266">MappingSet</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keywordtype">id</span>, vector &lt;Transformation *&gt; &amp;transformations);
-<a name="l00039"></a>00039                         
+<a name="l00039"></a>00039 
 <a name="l00044"></a>00044                         <a class="code" href="classNFcore_1_1MappingSet.html#daacc264f98cffb80c3d34ef8dd38f8f">~MappingSet</a>();
-<a name="l00045"></a>00045                         
-<a name="l00046"></a>00046                         
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 
 <a name="l00052"></a>00052                         <span class="keywordtype">bool</span> <span class="keyword">set</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> mappingIndex, <a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m);
-<a name="l00053"></a>00053                         
-<a name="l00054"></a>00054                         
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 
 <a name="l00061"></a><a class="code" href="classNFcore_1_1MappingSet.html#3efcfba2d5f10ae2843fd4045435c091">00061</a>                         <a class="code" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> *<span class="keyword">get</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> mappingIndex) { <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">mappings</a>[mappingIndex]; }
-<a name="l00062"></a>00062                         
-<a name="l00072"></a><a class="code" href="classNFcore_1_1MappingSet.html#2b5a8cab07ad3b8e9399fb4a2fd6e4a9">00072</a>                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#2b5a8cab07ad3b8e9399fb4a2fd6e4a9">clear</a>() { };
-<a name="l00073"></a>00073                         
-<a name="l00074"></a>00074                         
-<a name="l00075"></a><a class="code" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">00075</a>                         <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">hasDeletionTransform</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a>; };
-<a name="l00076"></a>00076                         
-<a name="l00083"></a><a class="code" href="classNFcore_1_1MappingSet.html#f528d6348d9dd4aa33d54d1b87fbb0a6">00083</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#b772e7b28b5791d32edea1cf72e9207b">getId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> id; };
-<a name="l00084"></a>00084                         
-<a name="l00085"></a>00085                 <span class="keyword">protected</span>:
-<a name="l00086"></a>00086                         
-<a name="l00091"></a>00091                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> id;
-<a name="l00092"></a>00092                         
-<a name="l00097"></a><a class="code" href="classNFcore_1_1MappingSet.html#b61d14499fcb53f833f18d8dd1dc7a73">00097</a>                         <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1MappingSet.html#b61d14499fcb53f833f18d8dd1dc7a73">isSet</a>;
-<a name="l00098"></a>00098                         
-<a name="l00102"></a><a class="code" href="classNFcore_1_1MappingSet.html#be7007731643a6191fff99b8644bbd9c">00102</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#be7007731643a6191fff99b8644bbd9c">n_mappings</a>;
-<a name="l00103"></a>00103                         
-<a name="l00107"></a><a class="code" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">00107</a>                         <a class="code" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> ** <a class="code" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">mappings</a>;
-<a name="l00108"></a>00108                         
-<a name="l00109"></a>00109                         
-<a name="l00110"></a><a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">00110</a>                         <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a>;
-<a name="l00111"></a>00111         };
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113 }
+<a name="l00062"></a>00062 
+<a name="l00072"></a>00072                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#1e98a841d04a500e47208be5549b160d">clear</a>(); <span class="comment">/*{</span>
+<a name="l00073"></a>00073 <span class="comment">                                this-&gt;clonedMappingSet=NO_CLONE;</span>
+<a name="l00074"></a>00074 <span class="comment">                                for(unsigned int t=0; t&lt;n_mappings; t++) {</span>
+<a name="l00075"></a>00075 <span class="comment">                                        mappings[t]-&gt;clear();</span>
+<a name="l00076"></a>00076 <span class="comment">                                }</span>
+<a name="l00077"></a>00077 <span class="comment"></span>
+<a name="l00078"></a>00078 <span class="comment">                        };*/</span>
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 
+<a name="l00082"></a><a class="code" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">00082</a>                         <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">hasDeletionTransform</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a>; };
+<a name="l00083"></a>00083 
+<a name="l00090"></a><a class="code" href="classNFcore_1_1MappingSet.html#b772e7b28b5791d32edea1cf72e9207b">00090</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#b772e7b28b5791d32edea1cf72e9207b">getId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> id; };
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 
+<a name="l00093"></a><a class="code" href="classNFcore_1_1MappingSet.html#5c11ab74c5179a99fdf34f48092cfaff">00093</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#5c11ab74c5179a99fdf34f48092cfaff">getClonedMapping</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">clonedMappingSet</a>; };
+<a name="l00094"></a><a class="code" href="classNFcore_1_1MappingSet.html#e6e12edbeb2623993013e41917688344">00094</a>                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#e6e12edbeb2623993013e41917688344">clearClonedMapping</a>() { this-&gt;<a class="code" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">clonedMappingSet</a>=<a class="code" href="classNFcore_1_1MappingSet.html#f56614dc374c6b108a482ecca9f4ee60">NO_CLONE</a>; };
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 
+<a name="l00097"></a><a class="code" href="classNFcore_1_1MappingSet.html#f56614dc374c6b108a482ecca9f4ee60">00097</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#f56614dc374c6b108a482ecca9f4ee60">NO_CLONE</a> = -1;
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099                         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#117393dbd1a9fb6c36375c6de47a5ca5">clone</a>(<a class="code" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> *original, <a class="code" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> *newClone);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#afeafd7b58ae9f1fbb10e1584e0a5ab1">printDetails</a>() <span class="keyword">const</span>;
+<a name="l00102"></a>00102                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1MappingSet.html#afeafd7b58ae9f1fbb10e1584e0a5ab1">printDetails</a>(ostream &amp;o) <span class="keyword">const</span>;
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106                 <span class="keyword">protected</span>:
+<a name="l00107"></a>00107 
+<a name="l00112"></a><a class="code" href="classNFcore_1_1MappingSet.html#f528d6348d9dd4aa33d54d1b87fbb0a6">00112</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> id;
+<a name="l00113"></a>00113 
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118 <span class="preprocessor">#endif </span><span class="comment">/*MAPPINGSET_HH_*/</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<a name="l00118"></a><a class="code" href="classNFcore_1_1MappingSet.html#be7007731643a6191fff99b8644bbd9c">00118</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#be7007731643a6191fff99b8644bbd9c">n_mappings</a>;
+<a name="l00119"></a>00119 
+<a name="l00123"></a><a class="code" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">00123</a>                         <a class="code" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> ** <a class="code" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">mappings</a>;
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125 
+<a name="l00126"></a><a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">00126</a>                         <span class="keywordtype">bool</span> <a class="code" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a>;
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 
+<a name="l00133"></a><a class="code" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">00133</a>                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">clonedMappingSet</a>;
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135         };
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 }
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142 <span class="preprocessor">#endif </span><span class="comment">/*MAPPINGSET_HH_*/</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

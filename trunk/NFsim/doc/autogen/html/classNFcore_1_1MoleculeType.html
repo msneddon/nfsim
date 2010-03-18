@@ -52,7 +52,7 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#7cd2541ca9d48411853ac73171c1347a">getNumOfComponents</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#b5236658389173953b32e112c28ecdda">getComponentName</a> (int cIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#7bd0b74b1c4fde1a967aee72d28dfc8c">getComponentName</a> (int cIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#5e947d23ed072416203ee392b1d0fc2b">getPossibleComponentStates</a> (int cIndex, list&lt; string &gt; &amp;nameList)</td></tr>
 
@@ -64,6 +64,10 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#b52837d02a22679accd1b602af9b981d">getStateValueFromName</a> (int cIndex, string stateName) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#28da2896a2a53449c995873cb06b2de6">getNumOfEquivalencyClasses</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#c89b4a3a7f9d184c24144cbcb158cca7">getEquivalencyClassCompNames</a> () const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#4c8759d8ed3d1612b7c559e00bf2b1e6">addEquivalentComponents</a> (vector&lt; vector&lt; string &gt; &gt; &amp;identicalComponents)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#b1900a288f464c00319b0fcb052c22f6">isEquivalentComponent</a> (string cName) const </td></tr>
@@ -72,29 +76,31 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#93779fa9dfd88b98a8e79d9403e4d211">getEquivalencyClass</a> (int *&amp;components, int &amp;n_components, string cName) const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#94244f5be674a28a33985b1f10448268">getEquivalencyClassNumber</a> (string cName) const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#4c803a676be6c8be2082e0a3198cf70e">isIntegerComponent</a> (string cName) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#e6dfa899ea42850f917475206c2e383d">isIntegerComponent</a> (int cIndex) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#00c37cd9c0562226b70a2217e53dfd68">getNumOfObservables</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#8008f8a94ff6a75c46e8474d65b244d0">getNumOfMolObs</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#ff8cde331f842dda71f306ec6aab48c0">getObservableAlias</a> (int obsIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#6429d74e14a6e88b21b5da4faa9ba32e">getMolObsName</a> (int obsIndex) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#86f81e4cc4bae0585c0eb219a85d5d7e">getObservable</a> (int obsIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#584877dae5b98aef29ef1fc0a1d25a7f">getMolObs</a> (int obsIndex) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned long int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#9cb6f54bad38d5ba9f26bebde9dee21a">getObservableCount</a> (int obsIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#3a94c4da065de349986a294d00459325">getMolObsCount</a> (int obsIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#6947770c4136117c631a19948f8aaeb8">removeFromObservables</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#e8a5eafc352727bc444b0dbc4242ffc6">addToObservables</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#0278d59ba5f14110ae2d0dfda7a10fde">outputObservableNames</a> (ofstream &amp;fout)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#cff0d8db4681d8d3ca7efa221bf92db6">outputMolObsNames</a> (<a class="el" href="classNFstream.html">NFstream</a> &amp;fout)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#ba6296008727ad866ccba57718ca91e9">outputObservableCounts</a> (ofstream &amp;fout)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#22d5d820c65906d57219bddd8270bcca">outputMolObsCounts</a> (<a class="el" href="classNFstream.html">NFstream</a> &amp;fout)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#f41ef601c11b3fbb75cc8e941a954cef">printObservableNames</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#60c84fed30b2eaca56561a63b121ae51">printMolObsNames</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#cab53a65bfcf8ce2e3be14172c86f587">printObservableCounts</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#0570ddef1ff3ce0fd30da27539b62f8d">printMolObsCounts</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#891ea4ed43c58040ea54d45ab530d1cb">addAllToObservables</a> ()</td></tr>
 
@@ -116,7 +122,7 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#239d3aa961ccf29b94417d293691022f">addReactionClass</a> (<a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *r, int rPosition)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#232a214489a087d235158fc6aeb56dce">addObservable</a> (<a class="el" href="classNFcore_1_1Observable.html">Observable</a> *o)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#48bd935167e40080170f51cef091ebe8">addMolObs</a> (<a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> *mo)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#6089b5443e40fe8c5b403b18806abd6c">createComplex</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
 
@@ -181,6 +187,8 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#10a36b6c678bb4b0f296363eaee9b5e3">n_eqComp</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#c1fe705d90cc6b4d13270784b2296fc5">eqCompOriginalName</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#0820cfb2426df059542f171b8a0d635e">eqCompSizes</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#0cfc37aa1e1981cacbe70ad02af41eca">eqCompName</a></td></tr>
@@ -195,7 +203,7 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#92fb6558dc9c671e75a8f31cd8a745cd">indexOfDORrxns</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Observable.html">Observable</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#2a21c87890c39f0ecf5d173524f236bf">observables</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#ed418a1a44d69e8835c015bb5e20f8ee">molObs</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#587bbdde117598ffe9e696ff90d82a74">allTemplates</a></td></tr>
 
@@ -475,17 +483,17 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="b5236658389173953b32e112c28ecdda"></a><!-- doxytag: member="NFcore::MoleculeType::getComponentName" ref="b5236658389173953b32e112c28ecdda" args="(int cIndex) const " -->
+<a class="anchor" name="7bd0b74b1c4fde1a967aee72d28dfc8c"></a><!-- doxytag: member="NFcore::MoleculeType::getComponentName" ref="7bd0b74b1c4fde1a967aee72d28dfc8c" args="(int cIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string NFcore::MoleculeType::getComponentName           </td>
+          <td class="memname">string MoleculeType::getComponentName           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>cIndex</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -622,6 +630,44 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="28da2896a2a53449c995873cb06b2de6"></a><!-- doxytag: member="NFcore::MoleculeType::getNumOfEquivalencyClasses" ref="28da2896a2a53449c995873cb06b2de6" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int NFcore::MoleculeType::getNumOfEquivalencyClasses           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c89b4a3a7f9d184c24144cbcb158cca7"></a><!-- doxytag: member="NFcore::MoleculeType::getEquivalencyClassCompNames" ref="c89b4a3a7f9d184c24144cbcb158cca7" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* NFcore::MoleculeType::getEquivalencyClassCompNames           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="4c8759d8ed3d1612b7c559e00bf2b1e6"></a><!-- doxytag: member="NFcore::MoleculeType::addEquivalentComponents" ref="4c8759d8ed3d1612b7c559e00bf2b1e6" args="(vector&lt; vector&lt; string &gt; &gt; &amp;identicalComponents)" -->
 <div class="memitem">
 <div class="memproto">
@@ -717,6 +763,26 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="94244f5be674a28a33985b1f10448268"></a><!-- doxytag: member="NFcore::MoleculeType::getEquivalencyClassNumber" ref="94244f5be674a28a33985b1f10448268" args="(string cName) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int MoleculeType::getEquivalencyClassNumber           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>cName</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="4c803a676be6c8be2082e0a3198cf70e"></a><!-- doxytag: member="NFcore::MoleculeType::isIntegerComponent" ref="4c803a676be6c8be2082e0a3198cf70e" args="(string cName) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -757,12 +823,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="00c37cd9c0562226b70a2217e53dfd68"></a><!-- doxytag: member="NFcore::MoleculeType::getNumOfObservables" ref="00c37cd9c0562226b70a2217e53dfd68" args="() const " -->
+<a class="anchor" name="8008f8a94ff6a75c46e8474d65b244d0"></a><!-- doxytag: member="NFcore::MoleculeType::getNumOfMolObs" ref="8008f8a94ff6a75c46e8474d65b244d0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int NFcore::MoleculeType::getNumOfObservables           </td>
+          <td class="memname">int NFcore::MoleculeType::getNumOfMolObs           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -776,12 +842,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="ff8cde331f842dda71f306ec6aab48c0"></a><!-- doxytag: member="NFcore::MoleculeType::getObservableAlias" ref="ff8cde331f842dda71f306ec6aab48c0" args="(int obsIndex) const " -->
+<a class="anchor" name="6429d74e14a6e88b21b5da4faa9ba32e"></a><!-- doxytag: member="NFcore::MoleculeType::getMolObsName" ref="6429d74e14a6e88b21b5da4faa9ba32e" args="(int obsIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string MoleculeType::getObservableAlias           </td>
+          <td class="memname">string MoleculeType::getMolObsName           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>obsIndex</em>          </td>
@@ -796,12 +862,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="86f81e4cc4bae0585c0eb219a85d5d7e"></a><!-- doxytag: member="NFcore::MoleculeType::getObservable" ref="86f81e4cc4bae0585c0eb219a85d5d7e" args="(int obsIndex) const " -->
+<a class="anchor" name="584877dae5b98aef29ef1fc0a1d25a7f"></a><!-- doxytag: member="NFcore::MoleculeType::getMolObs" ref="584877dae5b98aef29ef1fc0a1d25a7f" args="(int obsIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Observable.html">Observable</a>* NFcore::MoleculeType::getObservable           </td>
+          <td class="memname"><a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a>* NFcore::MoleculeType::getMolObs           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>obsIndex</em>          </td>
@@ -816,12 +882,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="9cb6f54bad38d5ba9f26bebde9dee21a"></a><!-- doxytag: member="NFcore::MoleculeType::getObservableCount" ref="9cb6f54bad38d5ba9f26bebde9dee21a" args="(int obsIndex) const " -->
+<a class="anchor" name="3a94c4da065de349986a294d00459325"></a><!-- doxytag: member="NFcore::MoleculeType::getMolObsCount" ref="3a94c4da065de349986a294d00459325" args="(int obsIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned long int MoleculeType::getObservableCount           </td>
+          <td class="memname">int MoleculeType::getMolObsCount           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>obsIndex</em>          </td>
@@ -876,14 +942,14 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="0278d59ba5f14110ae2d0dfda7a10fde"></a><!-- doxytag: member="NFcore::MoleculeType::outputObservableNames" ref="0278d59ba5f14110ae2d0dfda7a10fde" args="(ofstream &amp;fout)" -->
+<a class="anchor" name="cff0d8db4681d8d3ca7efa221bf92db6"></a><!-- doxytag: member="NFcore::MoleculeType::outputMolObsNames" ref="cff0d8db4681d8d3ca7efa221bf92db6" args="(NFstream &amp;fout)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MoleculeType::outputObservableNames           </td>
+          <td class="memname">void MoleculeType::outputMolObsNames           </td>
           <td>(</td>
-          <td class="paramtype">ofstream &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classNFstream.html">NFstream</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>fout</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -896,14 +962,14 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="ba6296008727ad866ccba57718ca91e9"></a><!-- doxytag: member="NFcore::MoleculeType::outputObservableCounts" ref="ba6296008727ad866ccba57718ca91e9" args="(ofstream &amp;fout)" -->
+<a class="anchor" name="22d5d820c65906d57219bddd8270bcca"></a><!-- doxytag: member="NFcore::MoleculeType::outputMolObsCounts" ref="22d5d820c65906d57219bddd8270bcca" args="(NFstream &amp;fout)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MoleculeType::outputObservableCounts           </td>
+          <td class="memname">void MoleculeType::outputMolObsCounts           </td>
           <td>(</td>
-          <td class="paramtype">ofstream &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classNFstream.html">NFstream</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>fout</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -916,12 +982,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="f41ef601c11b3fbb75cc8e941a954cef"></a><!-- doxytag: member="NFcore::MoleculeType::printObservableNames" ref="f41ef601c11b3fbb75cc8e941a954cef" args="()" -->
+<a class="anchor" name="60c84fed30b2eaca56561a63b121ae51"></a><!-- doxytag: member="NFcore::MoleculeType::printMolObsNames" ref="60c84fed30b2eaca56561a63b121ae51" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MoleculeType::printObservableNames           </td>
+          <td class="memname">void MoleculeType::printMolObsNames           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -935,12 +1001,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="cab53a65bfcf8ce2e3be14172c86f587"></a><!-- doxytag: member="NFcore::MoleculeType::printObservableCounts" ref="cab53a65bfcf8ce2e3be14172c86f587" args="()" -->
+<a class="anchor" name="0570ddef1ff3ce0fd30da27539b62f8d"></a><!-- doxytag: member="NFcore::MoleculeType::printMolObsCounts" ref="0570ddef1ff3ce0fd30da27539b62f8d" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MoleculeType::printObservableCounts           </td>
+          <td class="memname">void MoleculeType::printMolObsCounts           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -1168,15 +1234,15 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="232a214489a087d235158fc6aeb56dce"></a><!-- doxytag: member="NFcore::MoleculeType::addObservable" ref="232a214489a087d235158fc6aeb56dce" args="(Observable *o)" -->
+<a class="anchor" name="48bd935167e40080170f51cef091ebe8"></a><!-- doxytag: member="NFcore::MoleculeType::addMolObs" ref="48bd935167e40080170f51cef091ebe8" args="(MoleculesObservable *mo)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void NFcore::MoleculeType::addObservable           </td>
+          <td class="memname">void NFcore::MoleculeType::addMolObs           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&nbsp;</td>
-          <td class="paramname"> <em>o</em>          </td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> *&nbsp;</td>
+          <td class="paramname"> <em>mo</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -1760,6 +1826,21 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="c1fe705d90cc6b4d13270784b2296fc5"></a><!-- doxytag: member="NFcore::MoleculeType::eqCompOriginalName" ref="c1fe705d90cc6b4d13270784b2296fc5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1MoleculeType.html#c1fe705d90cc6b4d13270784b2296fc5">NFcore::MoleculeType::eqCompOriginalName</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="0820cfb2426df059542f171b8a0d635e"></a><!-- doxytag: member="NFcore::MoleculeType::eqCompSizes" ref="0820cfb2426df059542f171b8a0d635e" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1865,12 +1946,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
-<a class="anchor" name="2a21c87890c39f0ecf5d173524f236bf"></a><!-- doxytag: member="NFcore::MoleculeType::observables" ref="2a21c87890c39f0ecf5d173524f236bf" args="" -->
+<a class="anchor" name="ed418a1a44d69e8835c015bb5e20f8ee"></a><!-- doxytag: member="NFcore::MoleculeType::molObs" ref="ed418a1a44d69e8835c015bb5e20f8ee" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&gt; <a class="el" href="classNFcore_1_1MoleculeType.html#2a21c87890c39f0ecf5d173524f236bf">NFcore::MoleculeType::observables</a><code> [protected]</code>          </td>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> *&gt; <a class="el" href="classNFcore_1_1MoleculeType.html#ed418a1a44d69e8835c015bb5e20f8ee">NFcore::MoleculeType::molObs</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1911,8 +1992,8 @@ This class maintains information about a "type" of molecule in the <a class="el"
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="moleculeType_8cpp.html">moleculeType.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="moleculeType_8cpp.html">moleculeType.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

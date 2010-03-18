@@ -1,0 +1,335 @@
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFscheduler/Scheduler.cpp File Reference}
+\label{Scheduler_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFscheduler/Scheduler.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFscheduler/Scheduler.cpp}}
+
+
+{\tt \#include \char`\"{}Scheduler.h\char`\"{}}\par
+{\tt \#include \char`\"{}../NFsim.hh\char`\"{}}\par
+{\tt \#include $<$iostream$>$}\par
+{\tt \#include $<$map$>$}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+vector$<$ {\bf job} $\ast$ $>$ {\bf getTestJobs} ()
+\item 
+vector$<$ {\bf job} $\ast$ $>$ {\bf parseJobsFile} (string buffer)
+\item 
+void {\bf convertModelScanToJobs} ({\bf model} $\ast$\&currentModel, {\bf scan} $\ast$currentScan, vector$<$ {\bf job} $\ast$ $>$ \&joblist)
+\item 
+string {\bf getFileLine} (ifstream \&input)
+\item 
+vector$<$ string $>$ $\ast$ {\bf getStringsFileline} (ifstream \&input, const char $\ast$delim, bool treatConsecutiveDelimAsOne)
+\item 
+vector$<$ string $>$ $\ast$ {\bf stringToStrings} (string fullString, const char $\ast$delim, bool treatConsecutiveDelimAsOne)
+\item 
+void {\bf findandreplace} (string \&source, string find, string replace)
+\item 
+const char $\ast$ {\bf itoa} (int inNum)
+\item 
+const char $\ast$ {\bf dtoa} (double inNum)
+\item 
+void {\bf send\_\-to\_\-slave} (int slave, int tag, int datalen, char $\ast$data)
+\item 
+void {\bf send\_\-to\_\-master} (int myid, int tag, int datalen, char $\ast$data)
+\item 
+void {\bf recv\_\-from\_\-slave} ()
+\item 
+void {\bf recv\_\-from\_\-master} ()
+\item 
+void {\bf job2str} ({\bf job} \&j, char $\ast$p)
+\item 
+void {\bf str2job} (char $\ast$str, {\bf job} \&jnow)
+\item 
+void {\bf push\_\-stream} (int rank, {\bf NFstream} \&strm)
+\item 
+void {\bf perr} (const char $\ast$message)
+\item 
+void {\bf clear\_\-slave\_\-data} ()
+\item 
+void {\bf slave\_\-work} (int rank, {\bf job} \&jnow)
+\item 
+void {\bf master\_\-init} (int size)
+\item 
+int {\bf schedulerInterpreter} (int $\ast$argc, char $\ast$$\ast$$\ast$argv)
+\item 
+void {\bf printParallelJobOutput} (vector$<$ {\bf job} $\ast$ $>$ jobQueue)
+\item 
+void {\bf FinalizeMPI} ()
+\item 
+void {\bf InitializeMPI} (int $\ast$argc, char $\ast$$\ast$$\ast$argv, int \&Size, int \&Rank)
+\item 
+string {\bf load\_\-to\_\-buffer} (string filename)
+\item 
+void {\bf DynamicParallel} (map$<$ string, string $>$ argMap, int rank, int size)
+\item 
+void {\bf EmbarrassingParallel} (map$<$ string, string $>$ argMap, int rank, int size)
+\item 
+string {\bf BroadcastString} (int Rank, int From, string InBuffer)
+\item 
+string {\bf ConvertBufferMapToString} (map$<$ string, map$<$ int, string $>$ $>$ \&FileMap)
+\item 
+string {\bf ConvergeAllData} (int Rank, int Size, string Buffer)
+\item 
+void {\bf ConvertStringToBufferMap} (map$<$ string, map$<$ int, string $>$ $>$ \&FileMap, string ReportBuffer)
+\item 
+char $\ast$ {\bf ConvertStringToCString} (string Buffer)
+\item 
+void {\bf PrintFileBuffer} (map$<$ string, map$<$ int, string $>$ $>$ FileMap, vector$<$ {\bf job} $\ast$ $>$ JobQueue)
+\item 
+string {\bf getPath} (string InFilename)
+\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+{\bf msgtype} {\bf msg}
+\item 
+{\bf job} {\bf job1}
+\item 
+{\bf job} {\bf job2}
+\item 
+{\bf job} {\bf jobs} [10]
+\item 
+vector$<$ string $>$ {\bf slave\_\-filenames}
+\item 
+vector$<$ string $>$ {\bf slave\_\-buffers}
+\item 
+vector$<$ char $\ast$ $>$ {\bf raw\_\-buffers}
+\item 
+vector$<$ int $>$ {\bf incoming\_\-sizes}
+\item 
+vector$<$ {\bf job} $\ast$ $>$ {\bf slave\_\-assignment}
+\item 
+map$<$ {\bf job} $\ast$, string $>$ {\bf filenames}
+\item 
+map$<$ {\bf job} $\ast$, string $>$ {\bf buffers}
+\end{CompactItemize}
+
+
+\subsection{Function Documentation}
+\index{Scheduler.cpp@{Scheduler.cpp}!BroadcastString@{BroadcastString}}
+\index{BroadcastString@{BroadcastString}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string BroadcastString (int {\em Rank}, int {\em From}, string {\em InBuffer})}\label{Scheduler_8cpp_f8ef6979cfea72e0f41c2e18b5f5a540}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!clear\_\-slave\_\-data@{clear\_\-slave\_\-data}}
+\index{clear\_\-slave\_\-data@{clear\_\-slave\_\-data}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void clear\_\-slave\_\-data ()}\label{Scheduler_8cpp_8d8d133f51316e7da076ffc35168349d}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!ConvergeAllData@{ConvergeAllData}}
+\index{ConvergeAllData@{ConvergeAllData}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string ConvergeAllData (int {\em Rank}, int {\em Size}, string {\em Buffer})}\label{Scheduler_8cpp_38d7fdff0a2a15375c81318a12dd5042}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!ConvertBufferMapToString@{ConvertBufferMapToString}}
+\index{ConvertBufferMapToString@{ConvertBufferMapToString}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string ConvertBufferMapToString (map$<$ string, map$<$ int, string $>$ $>$ \& {\em FileMap})}\label{Scheduler_8cpp_ea5c6058bd323c29bf5e67bb82763d81}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!convertModelScanToJobs@{convertModelScanToJobs}}
+\index{convertModelScanToJobs@{convertModelScanToJobs}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void convertModelScanToJobs ({\bf model} $\ast$\& {\em currentModel}, {\bf scan} $\ast$ {\em currentScan}, vector$<$ {\bf job} $\ast$ $>$ \& {\em joblist})}\label{Scheduler_8cpp_ff9790a0402775daf50d8fdb38ed0eb0}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!ConvertStringToBufferMap@{ConvertStringToBufferMap}}
+\index{ConvertStringToBufferMap@{ConvertStringToBufferMap}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ConvertStringToBufferMap (map$<$ string, map$<$ int, string $>$ $>$ \& {\em FileMap}, string {\em ReportBuffer})}\label{Scheduler_8cpp_90c6f823e08c7900e58f2bd9eaa429fa}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!ConvertStringToCString@{ConvertStringToCString}}
+\index{ConvertStringToCString@{ConvertStringToCString}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ ConvertStringToCString (string {\em Buffer})}\label{Scheduler_8cpp_cc55f45d718374b589515fd91db19960}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!dtoa@{dtoa}}
+\index{dtoa@{dtoa}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ dtoa (double {\em inNum})}\label{Scheduler_8cpp_c075c76095b2af6fbe6b614ac8023c78}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!DynamicParallel@{DynamicParallel}}
+\index{DynamicParallel@{DynamicParallel}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void DynamicParallel (map$<$ string, string $>$ {\em argMap}, int {\em rank}, int {\em size})}\label{Scheduler_8cpp_6674159690dcb33cd5bb677f8900190a}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!EmbarrassingParallel@{EmbarrassingParallel}}
+\index{EmbarrassingParallel@{EmbarrassingParallel}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void EmbarrassingParallel (map$<$ string, string $>$ {\em argMap}, int {\em rank}, int {\em size})}\label{Scheduler_8cpp_1ae725de82489aa2796c9c606107529c}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!FinalizeMPI@{FinalizeMPI}}
+\index{FinalizeMPI@{FinalizeMPI}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void FinalizeMPI ()}\label{Scheduler_8cpp_b01492e7612823a34a325619f46862e5}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!findandreplace@{findandreplace}}
+\index{findandreplace@{findandreplace}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void findandreplace (string \& {\em source}, string {\em find}, string {\em replace})}\label{Scheduler_8cpp_f35bdd351ea96f77bd306c2dad2e8a16}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!getFileLine@{getFileLine}}
+\index{getFileLine@{getFileLine}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string getFileLine (ifstream \& {\em input})}\label{Scheduler_8cpp_6ef576c7fbc8f10f7937e5cd8d747e96}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!getPath@{getPath}}
+\index{getPath@{getPath}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string getPath (string {\em InFilename})}\label{Scheduler_8cpp_2682fd26a63731810ad70199aa8c5ba8}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!getStringsFileline@{getStringsFileline}}
+\index{getStringsFileline@{getStringsFileline}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$$\ast$ getStringsFileline (ifstream \& {\em input}, const char $\ast$ {\em delim}, bool {\em treatConsecutiveDelimAsOne})}\label{Scheduler_8cpp_1d40d62ed9b660097daf92c4e941414f}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!getTestJobs@{getTestJobs}}
+\index{getTestJobs@{getTestJobs}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf job}$\ast$$>$ getTestJobs ()}\label{Scheduler_8cpp_897295fefea4755b0f189ad88c5b48dd}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!InitializeMPI@{InitializeMPI}}
+\index{InitializeMPI@{InitializeMPI}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void InitializeMPI (int $\ast$ {\em argc}, char $\ast$$\ast$$\ast$ {\em argv}, int \& {\em Size}, int \& {\em Rank})}\label{Scheduler_8cpp_0218beda002d263b8b792964cb874a82}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!itoa@{itoa}}
+\index{itoa@{itoa}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ itoa (int {\em inNum})}\label{Scheduler_8cpp_028b52918e9d45f95ac237fce8d27116}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!job2str@{job2str}}
+\index{job2str@{job2str}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void job2str ({\bf job} \& {\em j}, char $\ast$ {\em p})}\label{Scheduler_8cpp_edba9c36ab7d579bd52c1f134b1ce691}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!load\_\-to\_\-buffer@{load\_\-to\_\-buffer}}
+\index{load\_\-to\_\-buffer@{load\_\-to\_\-buffer}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string load\_\-to\_\-buffer (string {\em filename})}\label{Scheduler_8cpp_b329505738f7fbb53d9392340d9c82a0}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!master\_\-init@{master\_\-init}}
+\index{master\_\-init@{master\_\-init}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void master\_\-init (int {\em size})}\label{Scheduler_8cpp_2918f9852f5321f31e6f16e1a5694a77}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!parseJobsFile@{parseJobsFile}}
+\index{parseJobsFile@{parseJobsFile}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf job}$\ast$$>$ parseJobsFile (string {\em buffer})}\label{Scheduler_8cpp_ba1d64451044f38ae21339cf9396f48c}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!perr@{perr}}
+\index{perr@{perr}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void perr (const char $\ast$ {\em message})}\label{Scheduler_8cpp_d32c395de8367fcb4776a8fc79c0a0e0}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!PrintFileBuffer@{PrintFileBuffer}}
+\index{PrintFileBuffer@{PrintFileBuffer}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void PrintFileBuffer (map$<$ string, map$<$ int, string $>$ $>$ {\em FileMap}, vector$<$ {\bf job} $\ast$ $>$ {\em JobQueue})}\label{Scheduler_8cpp_1c4e280769ab5a8dd84f8ba2dc780be1}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!printParallelJobOutput@{printParallelJobOutput}}
+\index{printParallelJobOutput@{printParallelJobOutput}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void printParallelJobOutput (vector$<$ {\bf job} $\ast$ $>$ {\em jobQueue})}\label{Scheduler_8cpp_0c9b631b501573a58426ff9c996af158}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!push\_\-stream@{push\_\-stream}}
+\index{push\_\-stream@{push\_\-stream}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void push\_\-stream (int {\em rank}, {\bf NFstream} \& {\em strm})}\label{Scheduler_8cpp_94b4369c216a53c645f807658ec33cf1}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!recv\_\-from\_\-master@{recv\_\-from\_\-master}}
+\index{recv\_\-from\_\-master@{recv\_\-from\_\-master}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void recv\_\-from\_\-master ()}\label{Scheduler_8cpp_76eff27c2d5f5b3424f2605627a02b59}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!recv\_\-from\_\-slave@{recv\_\-from\_\-slave}}
+\index{recv\_\-from\_\-slave@{recv\_\-from\_\-slave}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void recv\_\-from\_\-slave ()}\label{Scheduler_8cpp_971862c84bcdcb4e794eaae8dd11b36e}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!schedulerInterpreter@{schedulerInterpreter}}
+\index{schedulerInterpreter@{schedulerInterpreter}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int schedulerInterpreter (int $\ast$ {\em argc}, char $\ast$$\ast$$\ast$ {\em argv})}\label{Scheduler_8cpp_b4746bfbb12c3d7e4faedbddaae7cfab}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!send\_\-to\_\-master@{send\_\-to\_\-master}}
+\index{send\_\-to\_\-master@{send\_\-to\_\-master}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void send\_\-to\_\-master (int {\em myid}, int {\em tag}, int {\em datalen}, char $\ast$ {\em data})}\label{Scheduler_8cpp_4b626becaf7739de57ffa8462e81991a}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!send\_\-to\_\-slave@{send\_\-to\_\-slave}}
+\index{send\_\-to\_\-slave@{send\_\-to\_\-slave}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void send\_\-to\_\-slave (int {\em slave}, int {\em tag}, int {\em datalen}, char $\ast$ {\em data})}\label{Scheduler_8cpp_d66eee2c0be0214ff5cb6269c0b3fb0c}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!slave\_\-work@{slave\_\-work}}
+\index{slave\_\-work@{slave\_\-work}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void slave\_\-work (int {\em rank}, {\bf job} \& {\em jnow})}\label{Scheduler_8cpp_d60f0536aa44837bd693fa7701c8f421}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!str2job@{str2job}}
+\index{str2job@{str2job}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void str2job (char $\ast$ {\em str}, {\bf job} \& {\em jnow})}\label{Scheduler_8cpp_f1bde3d96bc6ae52eea7d07188385c75}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!stringToStrings@{stringToStrings}}
+\index{stringToStrings@{stringToStrings}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$$\ast$ stringToStrings (string {\em fullString}, const char $\ast$ {\em delim}, bool {\em treatConsecutiveDelimAsOne})}\label{Scheduler_8cpp_78a8457333bb4a7679fb3f56c563587b}
+
+
+
+
+\subsection{Variable Documentation}
+\index{Scheduler.cpp@{Scheduler.cpp}!buffers@{buffers}}
+\index{buffers@{buffers}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}map$<${\bf job}$\ast$, string$>$ {\bf buffers}}\label{Scheduler_8cpp_7de896c0164004f007eba85db86779fc}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!filenames@{filenames}}
+\index{filenames@{filenames}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}map$<${\bf job}$\ast$, string$>$ {\bf filenames}}\label{Scheduler_8cpp_b903afee677c15d3459f14cd24c0e59b}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!incoming\_\-sizes@{incoming\_\-sizes}}
+\index{incoming\_\-sizes@{incoming\_\-sizes}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf incoming\_\-sizes}}\label{Scheduler_8cpp_13cf31d7314ae21f1d171eeefccb55d0}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!job1@{job1}}
+\index{job1@{job1}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf job} {\bf job1}}\label{Scheduler_8cpp_d43fb2da9dc09380a5e04063c8abc155}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!job2@{job2}}
+\index{job2@{job2}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf job} {\bf job2}}\label{Scheduler_8cpp_6c25c30d3c08c8321e072f8448e154bc}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!jobs@{jobs}}
+\index{jobs@{jobs}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf job} {\bf jobs}[10]}\label{Scheduler_8cpp_630ada64dea6a2b205c76b29d981af41}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!msg@{msg}}
+\index{msg@{msg}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf msgtype} {\bf msg}}\label{Scheduler_8cpp_50cb116ca9f2c099b0e71832ea956f10}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!raw\_\-buffers@{raw\_\-buffers}}
+\index{raw\_\-buffers@{raw\_\-buffers}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$char$\ast$$>$ {\bf raw\_\-buffers}}\label{Scheduler_8cpp_a4a6408e2bac82973d1563c0c27671ab}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!slave\_\-assignment@{slave\_\-assignment}}
+\index{slave\_\-assignment@{slave\_\-assignment}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf job}$\ast$$>$ {\bf slave\_\-assignment}}\label{Scheduler_8cpp_438bd46804783e2e96f49a9333a1dbd5}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!slave\_\-buffers@{slave\_\-buffers}}
+\index{slave\_\-buffers@{slave\_\-buffers}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$ {\bf slave\_\-buffers}}\label{Scheduler_8cpp_02fa53b428c387e05ded6b937d06bacf}
+
+
+\index{Scheduler.cpp@{Scheduler.cpp}!slave\_\-filenames@{slave\_\-filenames}}
+\index{slave\_\-filenames@{slave\_\-filenames}!Scheduler.cpp@{Scheduler.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$ {\bf slave\_\-filenames}}\label{Scheduler_8cpp_ed542b5c71e80b20b72a030256ba08c5}
+
+

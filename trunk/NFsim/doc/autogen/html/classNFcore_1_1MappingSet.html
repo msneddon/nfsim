@@ -42,22 +42,36 @@ Keeps a list of mappings needed by a particular list of reactants.
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#3efcfba2d5f10ae2843fd4045435c091">get</a> (unsigned int mappingIndex)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#2b5a8cab07ad3b8e9399fb4a2fd6e4a9">clear</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#1e98a841d04a500e47208be5549b160d">clear</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">hasDeletionTransform</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#b772e7b28b5791d32edea1cf72e9207b">getId</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#5c11ab74c5179a99fdf34f48092cfaff">getClonedMapping</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#e6e12edbeb2623993013e41917688344">clearClonedMapping</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#afeafd7b58ae9f1fbb10e1584e0a5ab1">printDetails</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#b594f55704ff1596421747c88fd842b7">printDetails</a> (ostream &amp;o) const </td></tr>
+
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#117393dbd1a9fb6c36375c6de47a5ca5">clone</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *original, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *newClone)</td></tr>
+
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#f56614dc374c6b108a482ecca9f4ee60">NO_CLONE</a> = -1</td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#f528d6348d9dd4aa33d54d1b87fbb0a6">id</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#b61d14499fcb53f833f18d8dd1dc7a73">isSet</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#be7007731643a6191fff99b8644bbd9c">n_mappings</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">mappings</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">clonedMappingSet</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -163,23 +177,23 @@ Retrieves a particular <a class="el" href="classNFcore_1_1Mapping.html" title="K
 
 </div>
 </div><p>
-<a class="anchor" name="2b5a8cab07ad3b8e9399fb4a2fd6e4a9"></a><!-- doxytag: member="NFcore::MappingSet::clear" ref="2b5a8cab07ad3b8e9399fb4a2fd6e4a9" args="()" -->
+<a class="anchor" name="1e98a841d04a500e47208be5549b160d"></a><!-- doxytag: member="NFcore::MappingSet::clear" ref="1e98a841d04a500e47208be5549b160d" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void NFcore::MappingSet::clear           </td>
+          <td class="memname">void MappingSet::clear           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-This clears the <a class="el" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> objects belonging to this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a>. It is generally good practice to do this once this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> is no longer being used, but this function is not required for any real functionality. Note that currently this function does nothing (for effeciency). To make it do something, look at the file <a class="el" href="mappingSet_8cpp.html">mappingSet.cpp</a> and use the (slightly slower) yet less error prone version of these functions. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+This clears the <a class="el" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> objects belonging to this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a>. It is generally good practice to do this once this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> is no longer being used, but this function is not required for any real functionality. Note that currently this function does nothing (for efficiency). To make it do something, look at the file <a class="el" href="mappingSet_8cpp.html">mappingSet.cpp</a> and use the (slightly slower) yet less error prone version of these functions. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -222,7 +236,128 @@ Returns the Id of this <a class="el" href="classNFcore_1_1MappingSet.html" title
 
 </div>
 </div><p>
+<a class="anchor" name="5c11ab74c5179a99fdf34f48092cfaff"></a><!-- doxytag: member="NFcore::MappingSet::getClonedMapping" ref="5c11ab74c5179a99fdf34f48092cfaff" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int NFcore::MappingSet::getClonedMapping           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="e6e12edbeb2623993013e41917688344"></a><!-- doxytag: member="NFcore::MappingSet::clearClonedMapping" ref="e6e12edbeb2623993013e41917688344" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::MappingSet::clearClonedMapping           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="117393dbd1a9fb6c36375c6de47a5ca5"></a><!-- doxytag: member="NFcore::MappingSet::clone" ref="117393dbd1a9fb6c36375c6de47a5ca5" args="(MappingSet *original, MappingSet *newClone)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MappingSet::clone           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td>
+          <td class="paramname"> <em>original</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td>
+          <td class="paramname"> <em>newClone</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="afeafd7b58ae9f1fbb10e1584e0a5ab1"></a><!-- doxytag: member="NFcore::MappingSet::printDetails" ref="afeafd7b58ae9f1fbb10e1584e0a5ab1" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MappingSet::printDetails           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="b594f55704ff1596421747c88fd842b7"></a><!-- doxytag: member="NFcore::MappingSet::printDetails" ref="b594f55704ff1596421747c88fd842b7" args="(ostream &amp;o) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MappingSet::printDetails           </td>
+          <td>(</td>
+          <td class="paramtype">ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="f56614dc374c6b108a482ecca9f4ee60"></a><!-- doxytag: member="NFcore::MappingSet::NO_CLONE" ref="f56614dc374c6b108a482ecca9f4ee60" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int <a class="el" href="classNFcore_1_1MappingSet.html#f56614dc374c6b108a482ecca9f4ee60">NFcore::MappingSet::NO_CLONE</a> = -1<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="f528d6348d9dd4aa33d54d1b87fbb0a6"></a><!-- doxytag: member="NFcore::MappingSet::id" ref="f528d6348d9dd4aa33d54d1b87fbb0a6" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -236,21 +371,6 @@ Returns the Id of this <a class="el" href="classNFcore_1_1MappingSet.html" title
 
 <p>
 The Id of this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> assigned by the <a class="el" href="classNFcore_1_1ReactantList.html" title="Maintains a list of MappingSets needed by ReactionClass.">ReactantList</a> or <a class="el" href="classNFcore_1_1ReactantTree.html" title="Maintains a tree of MappingSets needed by Distribution of Rates Reactions.">ReactantTree</a> in which this <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> lives. 
-</div>
-</div><p>
-<a class="anchor" name="b61d14499fcb53f833f18d8dd1dc7a73"></a><!-- doxytag: member="NFcore::MappingSet::isSet" ref="b61d14499fcb53f833f18d8dd1dc7a73" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classNFcore_1_1MappingSet.html#b61d14499fcb53f833f18d8dd1dc7a73">NFcore::MappingSet::isSet</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Keeps track of whether or not this MapppingSet is being used. This is merely for error checking and serves no other useful purpose. 
 </div>
 </div><p>
 <a class="anchor" name="be7007731643a6191fff99b8644bbd9c"></a><!-- doxytag: member="NFcore::MappingSet::n_mappings" ref="be7007731643a6191fff99b8644bbd9c" args="" -->
@@ -298,9 +418,24 @@ An array of pointers to <a class="el" href="classNFcore_1_1Mapping.html" title="
 
 </div>
 </div><p>
+<a class="anchor" name="1cdb52d2e7f6b17ee95ef489cb587047"></a><!-- doxytag: member="NFcore::MappingSet::clonedMappingSet" ref="1cdb52d2e7f6b17ee95ef489cb587047" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">NFcore::MappingSet::clonedMappingSet</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/<a class="el" href="mappingSet_8hh-source.html">mappingSet.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/<a class="el" href="mappingSet_8cpp.html">mappingSet.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mappingSet_8hh-source.html">mappingSet.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mappingSet_8cpp.html">mappingSet.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

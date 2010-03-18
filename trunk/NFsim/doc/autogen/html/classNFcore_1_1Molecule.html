@@ -46,6 +46,10 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#bdc033d5a74f5453712ac9ec36b0564f">getUniqueID</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#026c2150941021241376f31ab5cdfa8b">isAlive</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#70a78e2f3cc4020ab0224e03f722f568">setAlive</a> (bool isAlive)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#69465045c57bb005157fc2aea3efb39d">setComplexID</a> (int currentComplex)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#16f3f77ac1f62468a6f77be13f224b2b">getComplexID</a> () const </td></tr>
@@ -66,6 +70,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#10dc17ce9638bbfe58693a428c95e3a8">getLocalFunctionValue</a> (int localFunctionIndex)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#b85c118563895e50c619fb584c2ace5b">getLocalFunction</a> (int localFunctionIndex)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#74b2a51b8799923556e413a4955a3926">setUpLocalFunctionList</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#80db66e3d3582f040a363fc625130a88">isBindingSiteOpen</a> (int bIndex) const </td></tr>
@@ -73,6 +79,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#4e50fb96e3a9cbd47d8ae7156f2a10bc">isBindingSiteBonded</a> (int bIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#7833785f509d95b6a97b299526d1d6e4">getBondedMolecule</a> (int bSiteIndex) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#bcc94973b4d615d2d8ade51b782b0e35">getBondedMoleculeBindingSiteIndex</a> (int cIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#a352c3ff40bb38555c772124de0f0ac8">getRxnListMappingId</a> (int rxnIndex) const </td></tr>
 
@@ -83,6 +91,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#691daed6bab7b13dd5bfe6da41a8ab48">moveToNewComplex</a> (int newComplexID)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#410a708dc5a802794c49a1b547e220cb">traverseBondedNeighborhood</a> (list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;members, int traversalLimit)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#20fc55c24b214a07d4dd10b966c1dcb7">depthFirstSearch</a> (list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;members)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#e7791ea7d5c718e769355885264ed27c">prepareForSimulation</a> ()</td></tr>
 
@@ -96,11 +106,13 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#2ed78fda19237bbfdc179530cce22e27">updateDORRxnValues</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#ac8b6c3431849b5b10af61ebb37f0535">printDetails</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#5abd4eb1ec78c0877a0e1ae4b085866e">printDetails</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#c860910b0fd0df5730577c236fc1b890">isObs</a> (int oIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#492aea103ce2471d82cf2571a1263f04">printDetails</a> (ostream &amp;o)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#1799a19c9b9c93d31266757ad37373b5">setIsObs</a> (int oIndex, bool isObs)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#7f72bdf2e57d118402cf66037ecdd7a7">isObs</a> (int oIndex) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#07ebe50f8f57c9d2ee2c313b1c21d25e">setIsObs</a> (int oIndex, int isObs)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#776a89ff6affb64d02f180403207d0ac">bind</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m1, int cIndex1, <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m2, int cIndex2)</td></tr>
@@ -120,6 +132,10 @@ The base unit of the NFsim program, this class maintains instances of individual
 <tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#e828ebe80d90495cb772bde29177166e">hasVisitedMolecule</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#f06428c674091090c7cc647e72bbe031">hasVisitedBond</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#080156e6c2368bb8c2ea5c5eac80a7ed">isMatchedTo</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#ea3516e9686a0b8f2ee867956cc31c3c">hasEvaluatedMolecule</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
@@ -133,6 +149,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#74d0c636185f07f1d8dc8fe75f67bc5f">isPrepared</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#426236fe8eb31ab69e4729e83c360689">isAliveInSim</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#4f60e43c6a3dd9fe030dbb46e4cecec3">ID_complex</a></td></tr>
 
@@ -156,7 +174,7 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#672b2d6623ef78af5ae2fabd55bebdfc">localFunctionValues</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#93d13a4e29d5e6b86a9d9302dde699d5">isObservable</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#af300e34672d085f16ba6202be017ceb">isObservable</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#3dbaf63fe81ddc0bf6f183570d4a2a1c">rxnListMappingId</a></td></tr>
 
@@ -283,6 +301,45 @@ The base unit of the NFsim program, this class maintains instances of individual
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="026c2150941021241376f31ab5cdfa8b"></a><!-- doxytag: member="NFcore::Molecule::isAlive" ref="026c2150941021241376f31ab5cdfa8b" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::Molecule::isAlive           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="70a78e2f3cc4020ab0224e03f722f568"></a><!-- doxytag: member="NFcore::Molecule::setAlive" ref="70a78e2f3cc4020ab0224e03f722f568" args="(bool isAlive)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::Molecule::setAlive           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>isAlive</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -516,6 +573,26 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
+<a class="anchor" name="b85c118563895e50c619fb584c2ace5b"></a><!-- doxytag: member="NFcore::Molecule::getLocalFunction" ref="b85c118563895e50c619fb584c2ace5b" args="(int localFunctionIndex)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a> * Molecule::getLocalFunction           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>localFunctionIndex</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="74b2a51b8799923556e413a4955a3926"></a><!-- doxytag: member="NFcore::Molecule::setUpLocalFunctionList" ref="74b2a51b8799923556e413a4955a3926" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -584,6 +661,26 @@ The base unit of the NFsim program, this class maintains instances of individual
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>bSiteIndex</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="bcc94973b4d615d2d8ade51b782b0e35"></a><!-- doxytag: member="NFcore::Molecule::getBondedMoleculeBindingSiteIndex" ref="bcc94973b4d615d2d8ade51b782b0e35" args="(int cIndex) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Molecule::getBondedMoleculeBindingSiteIndex           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>cIndex</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
         </tr>
@@ -897,6 +994,26 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
+<a class="anchor" name="20fc55c24b214a07d4dd10b966c1dcb7"></a><!-- doxytag: member="NFcore::Molecule::depthFirstSearch" ref="20fc55c24b214a07d4dd10b966c1dcb7" args="(list&lt; Molecule * &gt; &amp;members)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Molecule::depthFirstSearch           </td>
+          <td>(</td>
+          <td class="paramtype">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>members</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="e7791ea7d5c718e769355885264ed27c"></a><!-- doxytag: member="NFcore::Molecule::prepareForSimulation" ref="e7791ea7d5c718e769355885264ed27c" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -1011,7 +1128,7 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
-<a class="anchor" name="ac8b6c3431849b5b10af61ebb37f0535"></a><!-- doxytag: member="NFcore::Molecule::printDetails" ref="ac8b6c3431849b5b10af61ebb37f0535" args="() const " -->
+<a class="anchor" name="5abd4eb1ec78c0877a0e1ae4b085866e"></a><!-- doxytag: member="NFcore::Molecule::printDetails" ref="5abd4eb1ec78c0877a0e1ae4b085866e" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1020,7 +1137,27 @@ The base unit of the NFsim program, this class maintains instances of individual
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="492aea103ce2471d82cf2571a1263f04"></a><!-- doxytag: member="NFcore::Molecule::printDetails" ref="492aea103ce2471d82cf2571a1263f04" args="(ostream &amp;o)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Molecule::printDetails           </td>
+          <td>(</td>
+          <td class="paramtype">ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -1069,12 +1206,12 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
-<a class="anchor" name="c860910b0fd0df5730577c236fc1b890"></a><!-- doxytag: member="NFcore::Molecule::isObs" ref="c860910b0fd0df5730577c236fc1b890" args="(int oIndex) const " -->
+<a class="anchor" name="7f72bdf2e57d118402cf66037ecdd7a7"></a><!-- doxytag: member="NFcore::Molecule::isObs" ref="7f72bdf2e57d118402cf66037ecdd7a7" args="(int oIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool NFcore::Molecule::isObs           </td>
+          <td class="memname">int NFcore::Molecule::isObs           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>oIndex</em>          </td>
@@ -1089,7 +1226,7 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
-<a class="anchor" name="1799a19c9b9c93d31266757ad37373b5"></a><!-- doxytag: member="NFcore::Molecule::setIsObs" ref="1799a19c9b9c93d31266757ad37373b5" args="(int oIndex, bool isObs)" -->
+<a class="anchor" name="07ebe50f8f57c9d2ee2c313b1c21d25e"></a><!-- doxytag: member="NFcore::Molecule::setIsObs" ref="07ebe50f8f57c9d2ee2c313b1c21d25e" args="(int oIndex, int isObs)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1102,7 +1239,7 @@ The base unit of the NFsim program, this class maintains instances of individual
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>isObs</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1140,6 +1277,36 @@ The base unit of the NFsim program, this class maintains instances of individual
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classNFcore_1_1Molecule.html#e828ebe80d90495cb772bde29177166e">NFcore::Molecule::hasVisitedMolecule</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="f06428c674091090c7cc647e72bbe031"></a><!-- doxytag: member="NFcore::Molecule::hasVisitedBond" ref="f06428c674091090c7cc647e72bbe031" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool* <a class="el" href="classNFcore_1_1Molecule.html#f06428c674091090c7cc647e72bbe031">NFcore::Molecule::hasVisitedBond</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="080156e6c2368bb8c2ea5c5eac80a7ed"></a><!-- doxytag: member="NFcore::Molecule::isMatchedTo" ref="080156e6c2368bb8c2ea5c5eac80a7ed" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>* <a class="el" href="classNFcore_1_1Molecule.html#080156e6c2368bb8c2ea5c5eac80a7ed">NFcore::Molecule::isMatchedTo</a>          </td>
         </tr>
       </table>
 </div>
@@ -1215,6 +1382,21 @@ The base unit of the NFsim program, this class maintains instances of individual
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classNFcore_1_1Molecule.html#74d0c636185f07f1d8dc8fe75f67bc5f">NFcore::Molecule::isPrepared</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="426236fe8eb31ab69e4729e83c360689"></a><!-- doxytag: member="NFcore::Molecule::isAliveInSim" ref="426236fe8eb31ab69e4729e83c360689" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1Molecule.html#426236fe8eb31ab69e4729e83c360689">NFcore::Molecule::isAliveInSim</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1404,12 +1586,12 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
-<a class="anchor" name="93d13a4e29d5e6b86a9d9302dde699d5"></a><!-- doxytag: member="NFcore::Molecule::isObservable" ref="93d13a4e29d5e6b86a9d9302dde699d5" args="" -->
+<a class="anchor" name="af300e34672d085f16ba6202be017ceb"></a><!-- doxytag: member="NFcore::Molecule::isObservable" ref="af300e34672d085f16ba6202be017ceb" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool* <a class="el" href="classNFcore_1_1Molecule.html#93d13a4e29d5e6b86a9d9302dde699d5">NFcore::Molecule::isObservable</a><code> [protected]</code>          </td>
+          <td class="memname">int* <a class="el" href="classNFcore_1_1Molecule.html#af300e34672d085f16ba6202be017ceb">NFcore::Molecule::isObservable</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1450,8 +1632,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="molecule_8cpp.html">molecule.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="molecule_8cpp.html">molecule.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

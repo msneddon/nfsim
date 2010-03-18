@@ -2,43 +2,54 @@
 \label{classNFcore_1_1ReactantTree}\index{NFcore::ReactantTree@{NFcore::ReactantTree}}
 {\tt \#include $<$reactantTree.hh$>$}
 
+Inheritance diagram for NFcore::ReactantTree::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classNFcore_1_1ReactantTree}
+\end{center}
+\end{figure}
 
 
 \subsection{Detailed Description}
 Maintains a tree of MappingSets needed by Distribution of Rates Reactions. 
 
-This is one of the more complex classes in NFsim. It is written in order to handle distribution of rates reactions. These types of reactions have many reactants, but each reactant can participate with a different rate. The rate is determined by the module that the reactant is in. Therefore, we need a tree (or we could have also used logarithmic classes) to efficiently select the next reactant weighted by each of its propensities.
+This is one of the more complex classes in NFsim. It is written in order to handle distribution of rates reactions. These types of reactions have many reactants, but each reactant can participate with a different rate. The rate is determined by the set of molecules that the reactant is connected to. Therefore, we need a tree (or we could have also used logarithmic classes) to efficiently select the next reactant weighted by each of its propensities.
 
 A key example of this is in the chemotaxis system. Clusters of receptors influence the rate of CheA autophosphorylation. \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
 {\bf ReactantTree} (unsigned int {\bf reactantIndex}, {\bf TransformationSet} $\ast${\bf ts}, unsigned int init\_\-capacity)
 \item 
-{\bf $\sim$ReactantTree} ()
+virtual {\bf $\sim$ReactantTree} ()
 \item 
-int {\bf size} () const 
+virtual int {\bf size} () const 
 \item 
-{\bf MappingSet} $\ast$ {\bf pushNextAvailableMappingSet} ()
+virtual {\bf MappingSet} $\ast$ {\bf pushNextAvailableMappingSet} ()
 \item 
 void {\bf confirmPush} (int mappingSetId, double rateFactor)
 \item 
-void {\bf popLastMappingSet} ()
+virtual void {\bf popLastMappingSet} ()
 \item 
-void {\bf removeMappingSet} (unsigned int mappingSetId)
+virtual void {\bf removeMappingSet} (unsigned int mappingSetId)
 \item 
 void {\bf pickReactantFromValue} ({\bf MappingSet} $\ast$\&ms, double value, double baseRate)
 \item 
 void {\bf updateValue} (unsigned int mappingSetId, double newRateFactor)
 \item 
-{\bf MappingSet} $\ast$ {\bf getMappingSet} (unsigned int mappingSetId)
+virtual {\bf MappingSet} $\ast$ {\bf getMappingSet} (unsigned int mappingSetId) const 
 \item 
-void {\bf printDetails} ()
-\item 
-void {\bf expandTree} (int newCapacity)
+virtual void {\bf printDetails} () const 
 \item 
 double {\bf getRateFactorSum} () const 
 \item 
 int {\bf getDepthOfTree} () const 
+\end{CompactItemize}
+\subsection*{Protected Member Functions}
+\begin{CompactItemize}
+\item 
+void {\bf removeFromTreeOnly} (int msTreeArrayPosition, unsigned int mappingSetId)
+\item 
+void {\bf expandTree} (int newCapacity)
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -79,40 +90,48 @@ unsigned int {\bf firstMappingTreeIndex}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantTree::ReactantTree (unsigned int {\em reactantIndex}, {\bf TransformationSet} $\ast$ {\em ts}, unsigned int {\em init\_\-capacity})}\label{classNFcore_1_1ReactantTree_12da0834fff7d487a8f42292e7f325ae}
 
 
-\index{NFcore::ReactantTree@{NFcore::ReactantTree}!$\sim$ReactantTree@{$\sim$ReactantTree}}
+Create a reactant tree, based on the given transformation set (so we can create mappings at the given reactant index. The tree will be initialized such that it can immediately hold the number of objects specified by the init\_\-capacity. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!$\sim$ReactantTree@{$\sim$ReactantTree}}
 \index{$\sim$ReactantTree@{$\sim$ReactantTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantTree::$\sim$ReactantTree ()}\label{classNFcore_1_1ReactantTree_aa3f46617dea88f5c2c8c9289bccd991}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactantTree::$\sim$ReactantTree ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_aa3f46617dea88f5c2c8c9289bccd991}
 
 
-
+Standard deconstructor for the tree 
 
 \subsection{Member Function Documentation}
 \index{NFcore::ReactantTree@{NFcore::ReactantTree}!size@{size}}
 \index{size@{size}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::ReactantTree::size () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_54cf9825d714fdc8b35b22c11ba88f60}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::ReactantTree::size () const\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1ReactantTree_ef1e9f23adf8a29de2d011655c1ed13d}
 
 
-Returns the number of mappingSets that have been added to this tree \index{NFcore::ReactantTree@{NFcore::ReactantTree}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
+Returns the number of mappingSets that have been added to this tree 
+
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_5c8282ceba6fcdf04ea4708a9ec5056a}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
 \index{pushNextAvailableMappingSet@{pushNextAvailableMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::pushNextAvailableMappingSet ()}\label{classNFcore_1_1ReactantTree_e4d30fa34fd659adacef3e11a6042a2a}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::pushNextAvailableMappingSet ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_e4d30fa34fd659adacef3e11a6042a2a}
 
 
-Adds a new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to this tree and returns a pointer to the new mapping set for you to map (usually by comparing to some template molecule). Warning: even if you don't use this mapping set, it will be counted until you pop it! (see \doxyref{popLastMappingSet()}{p.}{classNFcore_1_1ReactantTree_6fab52e4e443fa84cd9c8235f6d21219}). This has a special behavior in the \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree}. This method merely gets you a pointer to the next available mappingset: if you decide to keep the mapping, you have to confirm it. Confirming the mapping actually places it in the tree. If you don't do this, it won't ever be selected by the tree. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!confirmPush@{confirmPush}}
+Adds a new \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to this tree and returns a pointer to the new mapping set for you to map (usually by comparing to some template molecule). Warning: even if you don't use this mapping set, it will be counted until you pop it or remove it! (see \doxyref{removeMappingSet()}{p.}{classNFcore_1_1ReactantTree_4428df5b215ef01bd3371191381719b4}). This has a special behavior in the \doxyref{ReactantTree}{p.}{classNFcore_1_1ReactantTree}. This method merely gets you a pointer to the next available mappingset: if you decide to keep the mapping, you have to confirm it. Confirming the mapping actually places it in the tree. If you don't do this, it won't ever be selected by the tree. 
+
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_e49f41bfe7c16fa1961da77e3924f7a6}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!confirmPush@{confirmPush}}
 \index{confirmPush@{confirmPush}!NFcore::ReactantTree@{NFcore::ReactantTree}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::confirmPush (int {\em mappingSetId}, double {\em rateFactor})}\label{classNFcore_1_1ReactantTree_746fcc68505724658fc30fb282fcc2d7}
 
 
-\index{NFcore::ReactantTree@{NFcore::ReactantTree}!popLastMappingSet@{popLastMappingSet}}
+Once you have pushed on the next available mappingSet, you have to confirm that push. In the event that mappingsets are cloned, this will confirm all mappingsets that have been cloned off of the given mapping set. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!popLastMappingSet@{popLastMappingSet}}
 \index{popLastMappingSet@{popLastMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::popLastMappingSet ()}\label{classNFcore_1_1ReactantTree_6fab52e4e443fa84cd9c8235f6d21219}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::popLastMappingSet ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_6fab52e4e443fa84cd9c8235f6d21219}
 
 
-Removes the very last mappingSet that was added to the list. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!removeMappingSet@{removeMappingSet}}
+Removes the very last mappingSet that was added to the list. You should actually now use the removeMappingSet function instead, just to be careful. 
+
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_ea26d24f00e2632bd8c68210c0405293}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!removeMappingSet@{removeMappingSet}}
 \index{removeMappingSet@{removeMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::removeMappingSet (unsigned int {\em mappingSetId})}\label{classNFcore_1_1ReactantTree_4428df5b215ef01bd3371191381719b4}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::removeMappingSet (unsigned int {\em mappingSetId})\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_4428df5b215ef01bd3371191381719b4}
 
 
-Removes the mapping set with the specified mappingSetId. Be careful here: make sure the mapping set is actually on the list before trying to remove or else this will give you an error! \index{NFcore::ReactantTree@{NFcore::ReactantTree}!pickReactantFromValue@{pickReactantFromValue}}
+Removes the mapping set with the specified mappingSetId. Be careful here: make sure the mapping set is actually on the list before trying to remove or else this will give you an error! 
+
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_109cc95b0cba4b0f6b122953009d7be9}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!pickReactantFromValue@{pickReactantFromValue}}
 \index{pickReactantFromValue@{pickReactantFromValue}!NFcore::ReactantTree@{NFcore::ReactantTree}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::pickReactantFromValue ({\bf MappingSet} $\ast$\& {\em ms}, double {\em value}, double {\em baseRate})}\label{classNFcore_1_1ReactantTree_0ee274538b6a1e751ac8beea773ed79d}
 
@@ -122,34 +141,43 @@ This is the key utility of a reactant tree: given a random value, we can select 
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::updateValue (unsigned int {\em mappingSetId}, double {\em newRateFactor})}\label{classNFcore_1_1ReactantTree_0af2332db552c7fc4a80616ef0e5636d}
 
 
-\index{NFcore::ReactantTree@{NFcore::ReactantTree}!getMappingSet@{getMappingSet}}
+When a local function value changes, it must update the value in the reactant tree. This method allows you to update values without changing the mappingSet membership of this tree. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!getMappingSet@{getMappingSet}}
 \index{getMappingSet@{getMappingSet}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::getMappingSet (unsigned int {\em mappingSetId})}\label{classNFcore_1_1ReactantTree_dd7bc0c8b40ff70fc7bb164e43d9868d}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantTree::getMappingSet (unsigned int {\em mappingSetId}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_210de2e1db684b548aee6e3f8519ec67}
 
 
-Returns a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} so that a DOR can evaluate a local function on it. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!printDetails@{printDetails}}
+Returns a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} so that a DOR can evaluate a local function on it. 
+
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_ed1f09a5f7224d2084ad1a487e36f189}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!printDetails@{printDetails}}
 \index{printDetails@{printDetails}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::printDetails ()}\label{classNFcore_1_1ReactantTree_4eca010018f3bbc6ff27ce59b64bcb81}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::printDetails () const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantTree_1824b471b5e766908f8a63f8e6ab347d}
 
 
-Outputs basic details about this list - used only for debugging. \index{NFcore::ReactantTree@{NFcore::ReactantTree}!expandTree@{expandTree}}
-\index{expandTree@{expandTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::expandTree (int {\em newCapacity})}\label{classNFcore_1_1ReactantTree_32d694cd16becbce5f75b38bc08c773c}
+Outputs basic details about this tree - used only for debugging, because it really does print out everything 
 
-
-
-
-Take special precaution here!! we don't want to actually reallocate the mappingSets! because then we would have to recompare each molecule to this template again! Instead, we will initialze only the end of this array, and fill in the rest of the array with the original elements, putting them in the proper position based on their id \index{NFcore::ReactantTree@{NFcore::ReactantTree}!getRateFactorSum@{getRateFactorSum}}
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_305122520e4c2b2fed2201b0bd307b76}.\index{NFcore::ReactantTree@{NFcore::ReactantTree}!getRateFactorSum@{getRateFactorSum}}
 \index{getRateFactorSum@{getRateFactorSum}!NFcore::ReactantTree@{NFcore::ReactantTree}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::ReactantTree::getRateFactorSum () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_bb9dee084a3bd0a6c9b6957c68c0865e}
 
 
-\index{NFcore::ReactantTree@{NFcore::ReactantTree}!getDepthOfTree@{getDepthOfTree}}
+Returns the combined rate factor sum of this tree, which is needed by the DOR reactionclass in order to properly update its propensity \index{NFcore::ReactantTree@{NFcore::ReactantTree}!getDepthOfTree@{getDepthOfTree}}
 \index{getDepthOfTree@{getDepthOfTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::ReactantTree::getDepthOfTree () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactantTree_98c28c19e8cd616555afc6fabe975107}
 
 
+Returns the depth of the tree (which you shouldn't ever really need...) \index{NFcore::ReactantTree@{NFcore::ReactantTree}!removeFromTreeOnly@{removeFromTreeOnly}}
+\index{removeFromTreeOnly@{removeFromTreeOnly}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::removeFromTreeOnly (int {\em msTreeArrayPosition}, unsigned int {\em mappingSetId})\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_b9a70aa9798b413ccd8a44d756aeb88d}
 
+
+Removes a mapping set from the tree only. This method should only be used by the tree! \index{NFcore::ReactantTree@{NFcore::ReactantTree}!expandTree@{expandTree}}
+\index{expandTree@{expandTree}!NFcore::ReactantTree@{NFcore::ReactantTree}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantTree::expandTree (int {\em newCapacity})\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactantTree_32d694cd16becbce5f75b38bc08c773c}
+
+
+If we try to add more than this tree can handle, we have to expand it. Because the tree is a complete binary tree, this will necessarily double its capacity, or enlarge it more depending on the given new capacity. 
+
+Take special precaution here!! we don't want to actually reallocate the mappingSets! because then we would have to recompare each molecule to this template again! Instead, we will initialze only the end of this array, and fill in the rest of the array with the original elements, putting them in the proper position based on their id 
 
 \subsection{Member Data Documentation}
 \index{NFcore::ReactantTree@{NFcore::ReactantTree}!ts@{ts}}
@@ -226,5 +254,5 @@ Take special precaution here!! we don't want to actually reallocate the mappingS
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantTree.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactantLists/{\bf reactantTree.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactantLists/{\bf reactantTree.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactantLists/{\bf reactantTree.cpp}\end{CompactItemize}

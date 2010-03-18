@@ -42,6 +42,10 @@ string {\bf getComponentStateName} (int cIndex, int cValue)
 \item 
 int {\bf getStateValueFromName} (int cIndex, string stateName) const 
 \item 
+int {\bf getNumOfEquivalencyClasses} () const 
+\item 
+string $\ast$ {\bf getEquivalencyClassCompNames} () const 
+\item 
 void {\bf addEquivalentComponents} (vector$<$ vector$<$ string $>$ $>$ \&identicalComponents)
 \item 
 bool {\bf isEquivalentComponent} (string cName) const 
@@ -50,29 +54,31 @@ bool {\bf isEquivalentComponent} (int cIndex) const
 \item 
 void {\bf getEquivalencyClass} (int $\ast$\&components, int \&n\_\-components, string cName) const 
 \item 
+int {\bf getEquivalencyClassNumber} (string cName) const 
+\item 
 bool {\bf isIntegerComponent} (string cName) const 
 \item 
 bool {\bf isIntegerComponent} (int cIndex) const 
 \item 
-int {\bf getNumOfObservables} () const 
+int {\bf getNumOfMolObs} () const 
 \item 
-string {\bf getObservableAlias} (int obsIndex) const 
+string {\bf getMolObsName} (int obsIndex) const 
 \item 
-{\bf Observable} $\ast$ {\bf getObservable} (int obsIndex) const 
+{\bf MoleculesObservable} $\ast$ {\bf getMolObs} (int obsIndex) const 
 \item 
-unsigned long int {\bf getObservableCount} (int obsIndex) const 
+int {\bf getMolObsCount} (int obsIndex) const 
 \item 
 void {\bf removeFromObservables} ({\bf Molecule} $\ast$m)
 \item 
 void {\bf addToObservables} ({\bf Molecule} $\ast$m)
 \item 
-void {\bf outputObservableNames} (ofstream \&fout)
+void {\bf outputMolObsNames} ({\bf NFstream} \&fout)
 \item 
-void {\bf outputObservableCounts} (ofstream \&fout)
+void {\bf outputMolObsCounts} ({\bf NFstream} \&fout)
 \item 
-void {\bf printObservableNames} ()
+void {\bf printMolObsNames} ()
 \item 
-void {\bf printObservableCounts} ()
+void {\bf printMolObsCounts} ()
 \item 
 void {\bf addAllToObservables} ()
 \item 
@@ -94,7 +100,7 @@ void {\bf removeFromRxns} ({\bf Molecule} $\ast$m)
 \item 
 void {\bf addReactionClass} ({\bf ReactionClass} $\ast$r, int rPosition)
 \item 
-void {\bf addObservable} ({\bf Observable} $\ast$o)
+void {\bf addMolObs} ({\bf MoleculesObservable} $\ast$mo)
 \item 
 int {\bf createComplex} ({\bf Molecule} $\ast$m)
 \item 
@@ -165,6 +171,8 @@ bool $\ast$ {\bf isIntegerCompState}
 \item 
 int {\bf n\_\-eqComp}
 \item 
+string $\ast$ {\bf eqCompOriginalName}
+\item 
 int $\ast$ {\bf eqCompSizes}
 \item 
 string $\ast$$\ast$ {\bf eqCompName}
@@ -179,7 +187,7 @@ vector$<$ int $>$ {\bf reactionPositions}
 \item 
 vector$<$ int $>$ {\bf indexOfDORrxns}
 \item 
-vector$<$ {\bf Observable} $\ast$ $>$ {\bf observables}
+vector$<$ {\bf MoleculesObservable} $\ast$ $>$ {\bf molObs}
 \item 
 vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \item 
@@ -238,7 +246,7 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!getComponentName@{getComponentName}}
 \index{getComponentName@{getComponentName}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::MoleculeType::getComponentName (int {\em cIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_b5236658389173953b32e112c28ecdda}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string MoleculeType::getComponentName (int {\em cIndex}) const}\label{classNFcore_1_1MoleculeType_7bd0b74b1c4fde1a967aee72d28dfc8c}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!getPossibleComponentStates@{getPossibleComponentStates}}
@@ -266,6 +274,16 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int MoleculeType::getStateValueFromName (int {\em cIndex}, string {\em stateName}) const}\label{classNFcore_1_1MoleculeType_b52837d02a22679accd1b602af9b981d}
 
 
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getNumOfEquivalencyClasses@{getNumOfEquivalencyClasses}}
+\index{getNumOfEquivalencyClasses@{getNumOfEquivalencyClasses}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::MoleculeType::getNumOfEquivalencyClasses () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_28da2896a2a53449c995873cb06b2de6}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getEquivalencyClassCompNames@{getEquivalencyClassCompNames}}
+\index{getEquivalencyClassCompNames@{getEquivalencyClassCompNames}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ NFcore::MoleculeType::getEquivalencyClassCompNames () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_c89b4a3a7f9d184c24144cbcb158cca7}
+
+
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!addEquivalentComponents@{addEquivalentComponents}}
 \index{addEquivalentComponents@{addEquivalentComponents}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::addEquivalentComponents (vector$<$ vector$<$ string $>$ $>$ \& {\em identicalComponents})}\label{classNFcore_1_1MoleculeType_4c8759d8ed3d1612b7c559e00bf2b1e6}
@@ -286,6 +304,11 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::getEquivalencyClass (int $\ast$\& {\em components}, int \& {\em n\_\-components}, string {\em cName}) const}\label{classNFcore_1_1MoleculeType_93779fa9dfd88b98a8e79d9403e4d211}
 
 
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getEquivalencyClassNumber@{getEquivalencyClassNumber}}
+\index{getEquivalencyClassNumber@{getEquivalencyClassNumber}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int MoleculeType::getEquivalencyClassNumber (string {\em cName}) const}\label{classNFcore_1_1MoleculeType_94244f5be674a28a33985b1f10448268}
+
+
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!isIntegerComponent@{isIntegerComponent}}
 \index{isIntegerComponent@{isIntegerComponent}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool MoleculeType::isIntegerComponent (string {\em cName}) const}\label{classNFcore_1_1MoleculeType_4c803a676be6c8be2082e0a3198cf70e}
@@ -296,24 +319,24 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool MoleculeType::isIntegerComponent (int {\em cIndex}) const}\label{classNFcore_1_1MoleculeType_e6dfa899ea42850f917475206c2e383d}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getNumOfObservables@{getNumOfObservables}}
-\index{getNumOfObservables@{getNumOfObservables}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::MoleculeType::getNumOfObservables () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_00c37cd9c0562226b70a2217e53dfd68}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getNumOfMolObs@{getNumOfMolObs}}
+\index{getNumOfMolObs@{getNumOfMolObs}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::MoleculeType::getNumOfMolObs () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_8008f8a94ff6a75c46e8474d65b244d0}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getObservableAlias@{getObservableAlias}}
-\index{getObservableAlias@{getObservableAlias}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string MoleculeType::getObservableAlias (int {\em obsIndex}) const}\label{classNFcore_1_1MoleculeType_ff8cde331f842dda71f306ec6aab48c0}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getMolObsName@{getMolObsName}}
+\index{getMolObsName@{getMolObsName}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string MoleculeType::getMolObsName (int {\em obsIndex}) const}\label{classNFcore_1_1MoleculeType_6429d74e14a6e88b21b5da4faa9ba32e}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getObservable@{getObservable}}
-\index{getObservable@{getObservable}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Observable}$\ast$ NFcore::MoleculeType::getObservable (int {\em obsIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_86f81e4cc4bae0585c0eb219a85d5d7e}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getMolObs@{getMolObs}}
+\index{getMolObs@{getMolObs}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculesObservable}$\ast$ NFcore::MoleculeType::getMolObs (int {\em obsIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_584877dae5b98aef29ef1fc0a1d25a7f}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getObservableCount@{getObservableCount}}
-\index{getObservableCount@{getObservableCount}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned long int MoleculeType::getObservableCount (int {\em obsIndex}) const}\label{classNFcore_1_1MoleculeType_9cb6f54bad38d5ba9f26bebde9dee21a}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getMolObsCount@{getMolObsCount}}
+\index{getMolObsCount@{getMolObsCount}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int MoleculeType::getMolObsCount (int {\em obsIndex}) const}\label{classNFcore_1_1MoleculeType_3a94c4da065de349986a294d00459325}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!removeFromObservables@{removeFromObservables}}
@@ -326,24 +349,24 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::addToObservables ({\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1MoleculeType_e8a5eafc352727bc444b0dbc4242ffc6}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!outputObservableNames@{outputObservableNames}}
-\index{outputObservableNames@{outputObservableNames}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::outputObservableNames (ofstream \& {\em fout})}\label{classNFcore_1_1MoleculeType_0278d59ba5f14110ae2d0dfda7a10fde}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!outputMolObsNames@{outputMolObsNames}}
+\index{outputMolObsNames@{outputMolObsNames}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::outputMolObsNames ({\bf NFstream} \& {\em fout})}\label{classNFcore_1_1MoleculeType_cff0d8db4681d8d3ca7efa221bf92db6}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!outputObservableCounts@{outputObservableCounts}}
-\index{outputObservableCounts@{outputObservableCounts}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::outputObservableCounts (ofstream \& {\em fout})}\label{classNFcore_1_1MoleculeType_ba6296008727ad866ccba57718ca91e9}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!outputMolObsCounts@{outputMolObsCounts}}
+\index{outputMolObsCounts@{outputMolObsCounts}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::outputMolObsCounts ({\bf NFstream} \& {\em fout})}\label{classNFcore_1_1MoleculeType_22d5d820c65906d57219bddd8270bcca}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!printObservableNames@{printObservableNames}}
-\index{printObservableNames@{printObservableNames}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::printObservableNames ()}\label{classNFcore_1_1MoleculeType_f41ef601c11b3fbb75cc8e941a954cef}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!printMolObsNames@{printMolObsNames}}
+\index{printMolObsNames@{printMolObsNames}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::printMolObsNames ()}\label{classNFcore_1_1MoleculeType_60c84fed30b2eaca56561a63b121ae51}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!printObservableCounts@{printObservableCounts}}
-\index{printObservableCounts@{printObservableCounts}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::printObservableCounts ()}\label{classNFcore_1_1MoleculeType_cab53a65bfcf8ce2e3be14172c86f587}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!printMolObsCounts@{printMolObsCounts}}
+\index{printMolObsCounts@{printMolObsCounts}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::printMolObsCounts ()}\label{classNFcore_1_1MoleculeType_0570ddef1ff3ce0fd30da27539b62f8d}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!addAllToObservables@{addAllToObservables}}
@@ -396,9 +419,9 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::addReactionClass ({\bf ReactionClass} $\ast$ {\em r}, int {\em rPosition})}\label{classNFcore_1_1MoleculeType_239d3aa961ccf29b94417d293691022f}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!addObservable@{addObservable}}
-\index{addObservable@{addObservable}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::MoleculeType::addObservable ({\bf Observable} $\ast$ {\em o})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_232a214489a087d235158fc6aeb56dce}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!addMolObs@{addMolObs}}
+\index{addMolObs@{addMolObs}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::MoleculeType::addMolObs ({\bf MoleculesObservable} $\ast$ {\em mo})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_48bd935167e40080170f51cef091ebe8}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!createComplex@{createComplex}}
@@ -554,6 +577,11 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::MoleculeType::n\_\-eqComp}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_10a36b6c678bb4b0f296363eaee9b5e3}
 
 
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!eqCompOriginalName@{eqCompOriginalName}}
+\index{eqCompOriginalName@{eqCompOriginalName}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::MoleculeType::eqCompOriginalName}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_c1fe705d90cc6b4d13270784b2296fc5}
+
+
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!eqCompSizes@{eqCompSizes}}
 \index{eqCompSizes@{eqCompSizes}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::MoleculeType::eqCompSizes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_0820cfb2426df059542f171b8a0d635e}
@@ -589,9 +617,9 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::MoleculeType::indexOfDORrxns}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_92fb6558dc9c671e75a8f31cd8a745cd}
 
 
-\index{NFcore::MoleculeType@{NFcore::MoleculeType}!observables@{observables}}
-\index{observables@{observables}!NFcore::MoleculeType@{NFcore::MoleculeType}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Observable} $\ast$$>$ {\bf NFcore::MoleculeType::observables}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_2a21c87890c39f0ecf5d173524f236bf}
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!molObs@{molObs}}
+\index{molObs@{molObs}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf MoleculesObservable} $\ast$$>$ {\bf NFcore::MoleculeType::molObs}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_ed418a1a44d69e8835c015bb5e20f8ee}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!allTemplates@{allTemplates}}
@@ -608,5 +636,5 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf moleculeType.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf moleculeType.cpp}\end{CompactItemize}

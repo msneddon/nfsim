@@ -1,63 +1,26 @@
-\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/NFinput.cpp File Reference}
-\label{NFinput_8cpp}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/NFinput.cpp@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/NFinput.cpp}}
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/NFinput.cpp File Reference}
+\label{NFinput_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/NFinput.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/NFinput.cpp}}
 
 
 {\tt \#include \char`\"{}NFinput.hh\char`\"{}}\par
 \subsection*{Functions}
 \begin{CompactItemize}
 \item 
-{\bf System} $\ast$ {\bf NFinput::initializeFromXML} (string filename, bool verbose)
+{\bf System} $\ast$ {\bf NFinput::initializeFromXML} (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)
 \begin{CompactList}\small\item\em Maintains information about a \doxyref{component}{p.}{classNFinput_1_1component} of a TemplateMolecule. \item\end{CompactList}\item 
-bool {\bf NFinput::initParameters} ({\bf TiXmlElement} $\ast$pListOfParameters, map$<$ string, double $>$ \&parameter, bool verbose)
+bool {\bf NFinput::initParameters} ({\bf TiXmlElement} $\ast$pListOfParameters, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, bool verbose)
 \begin{CompactList}\small\item\em Reads the parameter XML block and puts them in the parameter map. \item\end{CompactList}\item 
-bool {\bf NFinput::initGlobalFunctions} ({\bf TiXmlElement} $\ast$pListOfFunctions, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, bool verbose)
-\begin{CompactList}\small\item\em Reads the Function XML block and adds the Functions to the system. \item\end{CompactList}\item 
 bool {\bf NFinput::initMoleculeTypes} ({\bf TiXmlElement} $\ast$pListOfMoleculeTypes, {\bf System} $\ast$system, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads the MoleculeType XML block and adds the MoleculeTypes to the system. \item\end{CompactList}\item 
 bool {\bf NFinput::initStartSpecies} ({\bf TiXmlElement} $\ast$pListOfSpecies, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads a Species XML block, creates the molecules and adds them to the system. \item\end{CompactList}\item 
-bool {\bf NFinput::FindReactionRuleSymmetry} ({\bf TiXmlElement} $\ast$pRxnRule, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter, bool verbose)
-\item 
-bool {\bf isValid} (vector$<$ vector$<$ {\bf component} $>$ $>$ \&symRxnCenterComp, vector$<$ int $>$ \&currentPos)
-\item 
-void {\bf dumpState} (vector$<$ vector$<$ {\bf component} $>$ $>$ \&symRxnCenterComp, vector$<$ int $>$ \&currentPos)
-\item 
-void {\bf createSymMap} (map$<$ string, {\bf component} $>$ \&symMap, vector$<$ string $>$ \&uniqueId, vector$<$ vector$<$ {\bf component} $>$ $>$ \&symRxnCenterComp, vector$<$ int $>$ \&currentPos)
-\item 
-bool {\bf NFinput::generateRxnPermutations} (vector$<$ map$<$ string, {\bf component} $>$ $>$ \&permutations, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter)
-\item 
-bool {\bf lookup} ({\bf component} $\ast$\&c, string id, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap)
-\item 
-bool {\bf NFinput::initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
+bool {\bf NFinput::initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool blockSameComplexBinding, bool verbose)
 \begin{CompactList}\small\item\em Reads a reactionRule XML block and adds the rules to the system. \item\end{CompactList}\item 
+bool {\bf NFinput::readObservableForTemplateMolecules} ({\bf TiXmlElement} $\ast$pObs, string observableName, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList, vector$<$ string $>$ \&stochRelation, vector$<$ int $>$ \&stochQuantity, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, int obsType, bool verbose)
+\item 
 bool {\bf NFinput::initObservables} ({\bf TiXmlElement} $\ast$pListOfObservables, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads an observable XML block and adds the new observables to the system. \item\end{CompactList}\item 
-bool {\bf NFinput::readPatternForSymmetry} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, string patternName, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symComps, bool verbose)
-\item 
 {\bf TemplateMolecule} $\ast$ {\bf NFinput::readPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \&templates, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
 bool {\bf NFinput::readProductPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, vector$<$ {\bf MoleculeType} $\ast$ $>$ \&productMoleculeTypes, vector$<$ vector$<$ int $>$ $>$ \&stateInformation, vector$<$ vector$<$ int $>$ $>$ \&bindingSiteInformation, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\end{CompactItemize}
-
-
-\subsection{Function Documentation}
-\index{NFinput.cpp@{NFinput.cpp}!createSymMap@{createSymMap}}
-\index{createSymMap@{createSymMap}!NFinput.cpp@{NFinput.cpp}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void createSymMap (map$<$ string, {\bf component} $>$ \& {\em symMap}, vector$<$ string $>$ \& {\em uniqueId}, vector$<$ vector$<$ {\bf component} $>$ $>$ \& {\em symRxnCenterComp}, vector$<$ int $>$ \& {\em currentPos})}\label{NFinput_8cpp_22e835574ac21f0a4407bda9a967a58d}
-
-
-\index{NFinput.cpp@{NFinput.cpp}!dumpState@{dumpState}}
-\index{dumpState@{dumpState}!NFinput.cpp@{NFinput.cpp}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void dumpState (vector$<$ vector$<$ {\bf component} $>$ $>$ \& {\em symRxnCenterComp}, vector$<$ int $>$ \& {\em currentPos})}\label{NFinput_8cpp_25384a5639d2bbce69f84854fad26b6c}
-
-
-\index{NFinput.cpp@{NFinput.cpp}!isValid@{isValid}}
-\index{isValid@{isValid}!NFinput.cpp@{NFinput.cpp}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool isValid (vector$<$ vector$<$ {\bf component} $>$ $>$ \& {\em symRxnCenterComp}, vector$<$ int $>$ \& {\em currentPos})}\label{NFinput_8cpp_4d9b461dae6d29fbadaab3da990d8192}
-
-
-\index{NFinput.cpp@{NFinput.cpp}!lookup@{lookup}}
-\index{lookup@{lookup}!NFinput.cpp@{NFinput.cpp}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool lookup ({\bf component} $\ast$\& {\em c}, string {\em id}, map$<$ string, {\bf component} $>$ \& {\em comps}, map$<$ string, {\bf component} $>$ \& {\em symMap})}\label{NFinput_8cpp_d591e81d1a30791e04da63f54956052e}
-
-

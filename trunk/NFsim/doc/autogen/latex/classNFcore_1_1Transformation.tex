@@ -8,6 +8,11 @@ Inheritance diagram for NFcore::Transformation::\begin{figure}[H]
 \includegraphics[height=10cm]{classNFcore_1_1Transformation}
 \end{center}
 \end{figure}
+
+
+\subsection{Detailed Description}
+Abstract transformation object that other types of transformations inherit from. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
@@ -20,6 +25,8 @@ int {\bf getType} () const
 virtual void {\bf apply} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms)=0
 \item 
 virtual int {\bf getComponentIndex} () const =0
+\item 
+virtual int {\bf getRemovalType} ()
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -61,7 +68,14 @@ Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1
 
 
 
-Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_fad70297f131516af5b68ef5f508dfc9}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_7263f704ef8b0fe2388da3379880df4d}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_5ae788f00d608b4d4417408d2559a0fb}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_9dad3bcc59c0c0dfd316fc494b7689be}, {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_5ea6920bf3d0a5fb624cff52cf0c97ce}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_d0f5ce90812bad1d25a8b3de001f04d7}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_8a352eb7aa54568e417701461d507b9e}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_02344a04ae5aa77f01786cb88cbe1185}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_c43495e0e7ad7ef79ad7bd8dfb940825}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_8609049e75d2a31fb64c32f1608565bf}.
+Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_fad70297f131516af5b68ef5f508dfc9}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_7263f704ef8b0fe2388da3379880df4d}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_5ae788f00d608b4d4417408d2559a0fb}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_9dad3bcc59c0c0dfd316fc494b7689be}, {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_5ea6920bf3d0a5fb624cff52cf0c97ce}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_d0f5ce90812bad1d25a8b3de001f04d7}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_8a352eb7aa54568e417701461d507b9e}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_02344a04ae5aa77f01786cb88cbe1185}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_c43495e0e7ad7ef79ad7bd8dfb940825}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_8609049e75d2a31fb64c32f1608565bf}.\index{NFcore::Transformation@{NFcore::Transformation}!getRemovalType@{getRemovalType}}
+\index{getRemovalType@{getRemovalType}!NFcore::Transformation@{NFcore::Transformation}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::Transformation::getRemovalType ()\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1Transformation_d664f83913869feb14f2bd80b6851311}
+
+
+
+
+Reimplemented in {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_5dccf8d515fd99ab849dd13e7c4ccef1}.
 
 \subsection{Member Data Documentation}
 \index{NFcore::Transformation@{NFcore::Transformation}!type@{type}}
@@ -71,8 +85,6 @@ Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1
 
 
 
-Reimplemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_b7ae9258d8b21232fb220adb9d2288a0}.
-
 The documentation for this class was generated from the following file:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/transformations/{\bf transformation.hh}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\end{CompactItemize}

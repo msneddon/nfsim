@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>NFsim: /home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFinput/NFinput.hh File Reference</title>
+<title>NFsim: /home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFinput/NFinput.hh File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -14,11 +14,13 @@
     <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
   </ul>
 </div>
-<h1>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFinput/NFinput.hh File Reference</h1>
+<h1>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFinput/NFinput.hh File Reference</h1>
 <p>
 <code>#include &lt;iostream&gt;</code><br>
 <code>#include &lt;map&gt;</code><br>
+<code>#include &lt;vector&gt;</code><br>
 <code>#include &lt;stdio.h&gt;</code><br>
+<code>#include &lt;limits.h&gt;</code><br>
 <code>#include &lt;exception&gt;</code><br>
 <code>#include &quot;<a class="el" href="NFcore_8hh-source.html">../NFcore/NFcore.hh</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="NFoutput_8hh-source.html">../NFoutput/NFoutput.hh</a>&quot;</code><br>
@@ -37,15 +39,15 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains information about a <a class="el" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> of a TemplateMolecule.  <a href="classNFinput_1_1component.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#9cee8c8942317dfa2c6e62e3e67efa8a">NFinput::initializeFromXML</a> (string filename, bool verbose)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f8a520e07f56df029a7784ab451f2be1">NFinput::initializeFromXML</a> (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains information about a <a class="el" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> of a TemplateMolecule.  <a href="#9cee8c8942317dfa2c6e62e3e67efa8a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#6b056992d00b7d48dd31afe341ce641b">NFinput::initParameters</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfParameters, map&lt; string, double &gt; &amp;parameter, bool verbose)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains information about a <a class="el" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> of a TemplateMolecule.  <a href="#f8a520e07f56df029a7784ab451f2be1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#22ad4850b4679dbdff6597d602b8022d">NFinput::initParameters</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfParameters, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, bool verbose)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the parameter XML block and puts them in the parameter map.  <a href="#6b056992d00b7d48dd31afe341ce641b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f7ccb02ac2a0cd93d898a466ff41a0ab">NFinput::initGlobalFunctions</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfFunctions, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, bool verbose)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the parameter XML block and puts them in the parameter map.  <a href="#22ad4850b4679dbdff6597d602b8022d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#bc6239da9790d1c8d2698fedd5d5b2ab">NFinput::initFunctions</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfFunctions, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, <a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfObservables, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the Function XML block and adds the Functions to the system.  <a href="#f7ccb02ac2a0cd93d898a466ff41a0ab"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the Function XML block and adds the Functions to the system.  <a href="#bc6239da9790d1c8d2698fedd5d5b2ab"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#808357527ea979c16a3581918af4f134">NFinput::initMoleculeTypes</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMoleculeTypes, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the MoleculeType XML block and adds the MoleculeTypes to the system.  <a href="#808357527ea979c16a3581918af4f134"></a><br></td></tr>
@@ -53,14 +55,16 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#60d74a003353edf262b5be31e05e68dc">NFinput::readPatternForSymmetry</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, string patternName, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;comps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symComps, bool verbose)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#3fc375590c646f8cc383a6099823d266">NFinput::generateRxnPermutations</a> (vector&lt; map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &gt; &amp;permutations, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symComps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symRxnCenter)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#78421cba53283fd0013e43e6d35f8b47">NFinput::generateRxnPermutations</a> (vector&lt; map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &gt; &amp;permutations, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symComps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symRxnCenter, bool verbose)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#ce4a726c34a7ebf5ee387fd9c53fbd87">NFinput::readObservableForTemplateMolecules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pObs, string observableName, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tmList, vector&lt; string &gt; &amp;stochRelation, vector&lt; int &gt; &amp;stochQuantity, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, int obsType, bool verbose)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#367fa4c87ef87ba1e44294a8d6188b68">NFinput::initStartSpecies</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfSpecies, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a Species XML block, creates the molecules and adds them to the system.  <a href="#367fa4c87ef87ba1e44294a8d6188b68"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#aa3f9416593fcd16645b3e40fdbccea4">NFinput::initReactionRules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfReactionRules, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#08903395f329bbcd8003d11bfb5baf5a">NFinput::initReactionRules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfReactionRules, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool blockSameComplexBinding, bool verbose)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a reactionRule XML block and adds the rules to the system.  <a href="#aa3f9416593fcd16645b3e40fdbccea4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a reactionRule XML block and adds the rules to the system.  <a href="#08903395f329bbcd8003d11bfb5baf5a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f70bed5f9ae20a317e3afe838e399dd3">NFinput::initObservables</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfObservables, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads an observable XML block and adds the new observables to the system.  <a href="#f70bed5f9ae20a317e3afe838e399dd3"></a><br></td></tr>
@@ -70,21 +74,32 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#7e8ab2b49a2798dc1993710ca200d331">NFinput::readProductPattern</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; <a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> * &gt; &amp;productMoleculeTypes, vector&lt; vector&lt; int &gt; &gt; &amp;stateInformation, vector&lt; vector&lt; int &gt; &gt; &amp;bindingSiteInformation, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a pattern XML block and returns the set of new TemplateMolecule objects.  <a href="#7e8ab2b49a2798dc1993710ca200d331"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#616c16727e7f86e02affdc873c2beecd">NFinput::lookup</a> (<a class="el" href="classNFinput_1_1component.html">component</a> *&amp;c, string id, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;comps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symMap)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#7dfd0ae7309545a61e7824cea5146696">NFinput::parseArguments</a> (int argc, const char *argv[], map&lt; string, string &gt; &amp;argMap)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses command line arguments from the console nicely.  <a href="#7dfd0ae7309545a61e7824cea5146696"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5">NFinput::parseAsInt</a> (map&lt; string, string &gt; &amp;argMap, string argName, int defaultValue)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Looks up the argument in the argMap and tries to parse the value as an integer.  <a href="#6acf7052e7c42fd29e422ce627b42fe5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4">NFinput::parseAsDouble</a> (map&lt; string, string &gt; &amp;argMap, string argName, double defaultValue)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#477d9adae270e96dc6e039d19f322b15">NFinput::parseComplexDump</a> (vector&lt; <a class="el" href="classNFcore_1_1Outputter.html">Outputter</a> &gt; &amp;outputter, string arg)</td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Looks up the argument in the argMap and tries to parse the value as a double.  <a href="#e94e951f3de1d453e79d055c19dce1f4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#62bbaf5f78a0e78b0b4a69a4a18df096">NFinput::walk</a> (<a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#dd19f9f589d434a7b385d11cf688a72a">NFinput::createComplexOutputDumper</a> (string paramStr, <a class="el" href="classNFcore_1_1System.html">System</a> *s, bool verbose)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allows the user to walk through the system with an interactive text-based program.  <a href="#62bbaf5f78a0e78b0b4a69a4a18df096"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd">NFinput::createSystemDumper</a> (string paramStr, <a class="el" href="classNFcore_1_1System.html">System</a> *s, bool verbose)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses the cmd line arg that specifies system dumps, and schedules them.  <a href="#19ed804a2b6e64acebc7ad49f95498fd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#6659a912afe36c187f82add93577693c">NFinput::parseSequence</a> (string numString, vector&lt; double &gt; &amp;outputTimes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses a matlab style sequence (ie startValue:step:endValue) into the vector.  <a href="#6659a912afe36c187f82add93577693c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#96c43bfa845bbf9c559cc899c17567f0">NFinput::readRNFfile</a> (map&lt; string, string &gt; &amp;argMap, vector&lt; string &gt; &amp;commands, bool verbose)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#614dca6b7ccb8c6d75d462d24c18a58b">NFinput::runRNFcommands</a> (<a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, string &gt; &amp;argMap, vector&lt; string &gt; &amp;commands, bool verbose)</td></tr>
 
 </table>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

@@ -34,7 +34,7 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#4e72ed7e8b48f44f3e3eb637ca33614b">MoleculeList</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *<a class="el" href="classNFcore_1_1MoleculeList.html#6282e64bc34323d642cb574eb6888d21">mt</a>, int init_capacity)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#f0854ae0109ae8276233624324340d78">MoleculeList</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *<a class="el" href="classNFcore_1_1MoleculeList.html#6282e64bc34323d642cb574eb6888d21">mt</a>, int init_capacity, int <a class="el" href="classNFcore_1_1MoleculeList.html#f261ca8a47aa3c169fe5d7820a60f691">finalCapacity</a>)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#5ef1a55e9cee39809917d2a7df0ed5d1">~MoleculeList</a> ()</td></tr>
 
@@ -44,11 +44,14 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#31dc0373dd877475ba6b71a83b167d8c">create</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;m)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#ef203bfe7f616c270d3575a60c219810">remove</a> (int listId)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#bc02786df13704cc4ee525629c97d501">remove</a> (int listId, <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#98e6f54ea2b3c64aa6393ad8d199ca6c">removeLast</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#31375d41d6771af1195b2c8d9d805192">printDetails</a> ()</td></tr>
+
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#3932d54c7de3b24d0593806a85d7ab9a">NO_LIMIT</a> = -1</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#61273d0422f974177f427bd3b887b1ae">n_molecules</a></td></tr>
@@ -56,6 +59,8 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#f4e149db701d0e303c645bfe82d0b23a">lastAllocated</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#5a5c123c608650edb3f75f170b9d3215">capacity</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#f261ca8a47aa3c169fe5d7820a60f691">finalCapacity</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeList.html#6282e64bc34323d642cb574eb6888d21">mt</a></td></tr>
 
@@ -65,7 +70,7 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="4e72ed7e8b48f44f3e3eb637ca33614b"></a><!-- doxytag: member="NFcore::MoleculeList::MoleculeList" ref="4e72ed7e8b48f44f3e3eb637ca33614b" args="(MoleculeType *mt, int init_capacity)" -->
+<a class="anchor" name="f0854ae0109ae8276233624324340d78"></a><!-- doxytag: member="NFcore::MoleculeList::MoleculeList" ref="f0854ae0109ae8276233624324340d78" args="(MoleculeType *mt, int init_capacity, int finalCapacity)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -79,7 +84,13 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>init_capacity</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>init_capacity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>finalCapacity</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -91,7 +102,7 @@ MoleculeTypes have to store a link to all <a class="el" href="classNFcore_1_1Mol
 <div class="memdoc">
 
 <p>
-Create a new <a class="el" href="classNFcore_1_1MoleculeList.html" title="Keeps a set of molecules neatly for a MoleculeType.">MoleculeList</a> that stores the given type of molecule with an initial capacity (that is dynamically expanded if you add more than the given capacity of molecules) 
+Create a new <a class="el" href="classNFcore_1_1MoleculeList.html" title="Keeps a set of molecules neatly for a MoleculeType.">MoleculeList</a> that stores the given type of molecule with an initial capacity (that is dynamically expanded if you add more than the given capacity of molecules). 
 </div>
 </div><p>
 <a class="anchor" name="5ef1a55e9cee39809917d2a7df0ed5d1"></a><!-- doxytag: member="NFcore::MoleculeList::~MoleculeList" ref="5ef1a55e9cee39809917d2a7df0ed5d1" args="()" -->
@@ -173,7 +184,7 @@ Returns a pointer to the <a class="el" href="classNFcore_1_1Molecule.html" title
 Allocates a spot for a new <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> in the system. The given pointer is assigned to the new <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> (so it should be passed in as a null pointer) and the method returns the index this <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> was assigned. 
 </div>
 </div><p>
-<a class="anchor" name="ef203bfe7f616c270d3575a60c219810"></a><!-- doxytag: member="NFcore::MoleculeList::remove" ref="ef203bfe7f616c270d3575a60c219810" args="(int listId)" -->
+<a class="anchor" name="bc02786df13704cc4ee525629c97d501"></a><!-- doxytag: member="NFcore::MoleculeList::remove" ref="bc02786df13704cc4ee525629c97d501" args="(int listId, Molecule *m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -181,9 +192,18 @@ Allocates a spot for a new <a class="el" href="classNFcore_1_1Molecule.html" tit
           <td class="memname">void MoleculeList::remove           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>listId</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>listId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -232,6 +252,21 @@ Print out some (maybe too much) diagnostic debug information about the list.
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="3932d54c7de3b24d0593806a85d7ab9a"></a><!-- doxytag: member="NFcore::MoleculeList::NO_LIMIT" ref="3932d54c7de3b24d0593806a85d7ab9a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1MoleculeList.html#3932d54c7de3b24d0593806a85d7ab9a">NFcore::MoleculeList::NO_LIMIT</a> = -1<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="61273d0422f974177f427bd3b887b1ae"></a><!-- doxytag: member="NFcore::MoleculeList::n_molecules" ref="61273d0422f974177f427bd3b887b1ae" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -275,6 +310,21 @@ The number of <a class="el" href="classNFcore_1_1Molecule.html" title="Each mole
 
 <p>
 The maximum number of Molecules that can be added before the list resizes itself 
+</div>
+</div><p>
+<a class="anchor" name="f261ca8a47aa3c169fe5d7820a60f691"></a><!-- doxytag: member="NFcore::MoleculeList::finalCapacity" ref="f261ca8a47aa3c169fe5d7820a60f691" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1MoleculeList.html#f261ca8a47aa3c169fe5d7820a60f691">NFcore::MoleculeList::finalCapacity</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+The maximum number of Molecules that can be added, period. 
 </div>
 </div><p>
 <a class="anchor" name="6282e64bc34323d642cb574eb6888d21"></a><!-- doxytag: member="NFcore::MoleculeList::mt" ref="6282e64bc34323d642cb574eb6888d21" args="" -->
@@ -323,8 +373,8 @@ Allows the list to map index values of Molecules to the index values in the list
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/moleculeLists/<a class="el" href="moleculeList_8hh-source.html">moleculeList.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/moleculeLists/<a class="el" href="moleculeList_8cpp.html">moleculeList.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/moleculeLists/<a class="el" href="moleculeList_8hh-source.html">moleculeList.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/moleculeLists/<a class="el" href="moleculeList_8cpp.html">moleculeList.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

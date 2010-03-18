@@ -1,0 +1,86 @@
+\section{NFcore::SpeciesObservable Class Reference}
+\label{classNFcore_1_1SpeciesObservable}\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+{\tt \#include $<$observable.hh$>$}
+
+Inheritance diagram for NFcore::SpeciesObservable::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classNFcore_1_1SpeciesObservable}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf SpeciesObservable} (string name, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList, vector$<$ string $>$ \&stochRelation, vector$<$ int $>$ \&stochQuantity)
+\item 
+virtual {\bf $\sim$SpeciesObservable} ()
+\item 
+virtual {\bf Observable} $\ast$ {\bf clone} ()
+\item 
+virtual int {\bf isObservable} ({\bf Molecule} $\ast$m) const 
+\item 
+virtual int {\bf isObservable} ({\bf Complex} $\ast$c) const 
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+int $\ast$ {\bf relation}
+\item 
+int $\ast$ {\bf quantity}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!SpeciesObservable@{SpeciesObservable}}
+\index{SpeciesObservable@{SpeciesObservable}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}SpeciesObservable::SpeciesObservable (string {\em name}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \& {\em tmList}, vector$<$ string $>$ \& {\em stochRelation}, vector$<$ int $>$ \& {\em stochQuantity})}\label{classNFcore_1_1SpeciesObservable_b70c3cca3c04043def794b6076ed807e}
+
+
+\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!$\sim$SpeciesObservable@{$\sim$SpeciesObservable}}
+\index{$\sim$SpeciesObservable@{$\sim$SpeciesObservable}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}SpeciesObservable::$\sim$SpeciesObservable ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1SpeciesObservable_437d92dd54e82d262a5ffc7331d127e7}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!clone@{clone}}
+\index{clone@{clone}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Observable} $\ast$ SpeciesObservable::clone ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1SpeciesObservable_652806ac6c30f1b79c6ae89a1c8869d2}
+
+
+
+
+Implements {\bf NFcore::Observable} \doxyref{}{p.}{classNFcore_1_1Observable_f88f2bd78b0a8c0e52ee5999286535c7}.\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int SpeciesObservable::isObservable ({\bf Molecule} $\ast$ {\em m}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1SpeciesObservable_4336db4bd41d6846454a001e8d86cb22}
+
+
+
+
+Implements {\bf NFcore::Observable} \doxyref{}{p.}{classNFcore_1_1Observable_5bb3a7e96509e474052d34af09a2a9b4}.\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int SpeciesObservable::isObservable ({\bf Complex} $\ast$ {\em c}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1SpeciesObservable_57dfa6b24272b437eb3da0aa4570030b}
+
+
+
+
+Implements {\bf NFcore::Observable} \doxyref{}{p.}{classNFcore_1_1Observable_c853d88512ad41e94ec663aa8d40b169}.
+
+\subsection{Member Data Documentation}
+\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!relation@{relation}}
+\index{relation@{relation}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::SpeciesObservable::relation}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1SpeciesObservable_0aacc53bff8b1e435cbcc52ad2ba10b7}
+
+
+\index{NFcore::SpeciesObservable@{NFcore::SpeciesObservable}!quantity@{quantity}}
+\index{quantity@{quantity}!NFcore::SpeciesObservable@{NFcore::SpeciesObservable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::SpeciesObservable::quantity}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1SpeciesObservable_22fdb44a42fe63079eb76dc23aadad72}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf observable.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf observable.cpp}\end{CompactItemize}

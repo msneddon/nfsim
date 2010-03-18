@@ -13,6 +13,8 @@ Inheritance diagram for NFcore::FunctionalRxnClass::\begin{figure}[H]
 \item 
 {\bf FunctionalRxnClass} (string {\bf name}, {\bf GlobalFunction} $\ast${\bf gf}, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
 \item 
+{\bf FunctionalRxnClass} (string {\bf name}, {\bf CompositeFunction} $\ast${\bf cf}, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
+\item 
 virtual {\bf $\sim$FunctionalRxnClass} ()
 \item 
 virtual double {\bf update\_\-a} ()
@@ -23,6 +25,8 @@ virtual void {\bf printDetails} () const
 \begin{CompactItemize}
 \item 
 {\bf GlobalFunction} $\ast$ {\bf gf}
+\item 
+{\bf CompositeFunction} $\ast$ {\bf cf}
 \end{CompactItemize}
 
 
@@ -30,6 +34,11 @@ virtual void {\bf printDetails} () const
 \index{NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}!FunctionalRxnClass@{FunctionalRxnClass}}
 \index{FunctionalRxnClass@{FunctionalRxnClass}!NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}FunctionalRxnClass::FunctionalRxnClass (string {\em name}, {\bf GlobalFunction} $\ast$ {\em gf}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1FunctionalRxnClass_d217200f15b7012404c2faedf6223d3c}
+
+
+\index{NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}!FunctionalRxnClass@{FunctionalRxnClass}}
+\index{FunctionalRxnClass@{FunctionalRxnClass}!NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}FunctionalRxnClass::FunctionalRxnClass (string {\em name}, {\bf CompositeFunction} $\ast$ {\em cf}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1FunctionalRxnClass_5f169e961bea836542530f0a15676b14}
 
 
 \index{NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}!$\sim$FunctionalRxnClass@{$\sim$FunctionalRxnClass}}
@@ -62,9 +71,14 @@ Reimplemented from {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1Rea
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf GlobalFunction}$\ast$ {\bf NFcore::FunctionalRxnClass::gf}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1FunctionalRxnClass_c795f335300c3e6023ae361767504978}
 
 
+\index{NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}!cf@{cf}}
+\index{cf@{cf}!NFcore::FunctionalRxnClass@{NFcore::FunctionalRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf CompositeFunction}$\ast$ {\bf NFcore::FunctionalRxnClass::cf}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1FunctionalRxnClass_2758e3891a4631000e3c49d5ded920c9}
+
+
 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf reaction.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf reaction.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf reaction.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf reaction.cpp}\end{CompactItemize}

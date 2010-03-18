@@ -16,6 +16,8 @@ This namespace contains all the basic components needed for a typical simulation
 \item 
 class {\bf MoleculeList}
 \begin{CompactList}\small\item\em Keeps a set of molecules neatly for a \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType}. \item\end{CompactList}\item 
+class {\bf ComplexList}
+\begin{CompactList}\small\item\em Container to organize all system complexes. \item\end{CompactList}\item 
 class {\bf System}
 \begin{CompactList}\small\item\em The main class that begins and runs simulations. \item\end{CompactList}\item 
 class {\bf MoleculeType}
@@ -24,32 +26,46 @@ class {\bf Molecule}
 \begin{CompactList}\small\item\em Each molecule in the system is represented by an instance of this. \item\end{CompactList}\item 
 class {\bf ReactionClass}
 \begin{CompactList}\small\item\em Abstract Base Class that defines the interface for all reaction rules. \item\end{CompactList}\item 
-class {\bf TemplateMolecule}
-\begin{CompactList}\small\item\em Used for matching \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects to the given pattern. \item\end{CompactList}\item 
-class {\bf Observable}
-\begin{CompactList}\small\item\em Tracks the counts of predefined observables in the simulation. \item\end{CompactList}\item 
 class {\bf Complex}
 \begin{CompactList}\small\item\em Container to dynamically keep track of all system complexes. \item\end{CompactList}\item 
+class {\bf Observable}
+\begin{CompactList}\small\item\em Tracks the counts of predefined observables in the simulation. \item\end{CompactList}\item 
+class {\bf MoleculesObservable}
+\item 
+class {\bf SpeciesObservable}
+\item 
+class {\bf ReactionSelector}
+\item 
+class {\bf DirectSelector}
+\item 
+class {\bf LogClassSelector}
+\item 
+class {\bf TemplateMolecule}
+\begin{CompactList}\small\item\em Used for matching \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects to the given pattern. \item\end{CompactList}\item 
 class {\bf FuncFactory}
 \begin{CompactList}\small\item\em Parses mathmatical functions that can be easily used anywhere. \item\end{CompactList}\item 
 class {\bf GlobalFunction}
 \begin{CompactList}\small\item\em Defines functions to be used globally in a simulation. \item\end{CompactList}\item 
+class {\bf FunctionReference}
+\item 
 class {\bf StateCounter}
 \item 
 class {\bf LocalFunction}
 \item 
+class {\bf CompositeFunction}
+\item 
 class {\bf Outputter}
 \item 
-class {\bf DumpMoleculeType}
-\item 
-class {\bf DumpAllComplexes}
-\item 
+class {\bf DumpSystem}
+\begin{CompactList}\small\item\em Class for outputting the state of the system. \item\end{CompactList}\item 
 class {\bf Mapping}
 \begin{CompactList}\small\item\em Keeps a pointer to a molecule and remembers a single component to act on. \item\end{CompactList}\item 
 class {\bf MapGenerator}
 \begin{CompactList}\small\item\em Knows how to assign mappings in a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to a particular \doxyref{Molecule}{p.}{classNFcore_1_1Molecule}. \item\end{CompactList}\item 
 class {\bf MappingSet}
 \begin{CompactList}\small\item\em Keeps a list of mappings needed by a particular list of reactants. \item\end{CompactList}\item 
+class {\bf ReactantContainer}
+\begin{CompactList}\small\item\em Interface for all containers of Reactants (MappingSets) needed by ReactionClasses. \item\end{CompactList}\item 
 class {\bf ReactantList}
 \begin{CompactList}\small\item\em Maintains a list of MappingSets needed by \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass}. \item\end{CompactList}\item 
 class {\bf ReactantTree}

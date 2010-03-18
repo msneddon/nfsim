@@ -24,6 +24,10 @@ string {\bf getMoleculeTypeName} () const
 \item 
 int {\bf getUniqueID} () const 
 \item 
+bool {\bf isAlive} () const 
+\item 
+void {\bf setAlive} (bool isAlive)
+\item 
 void {\bf setComplexID} (int currentComplex)
 \item 
 int {\bf getComplexID} () const 
@@ -44,6 +48,8 @@ void {\bf setLocalFunctionValue} (double newValue, int localFunctionIndex)
 \item 
 double {\bf getLocalFunctionValue} (int localFunctionIndex)
 \item 
+{\bf LocalFunction} $\ast$ {\bf getLocalFunction} (int localFunctionIndex)
+\item 
 void {\bf setUpLocalFunctionList} ()
 \item 
 bool {\bf isBindingSiteOpen} (int bIndex) const 
@@ -51,6 +57,8 @@ bool {\bf isBindingSiteOpen} (int bIndex) const
 bool {\bf isBindingSiteBonded} (int bIndex) const 
 \item 
 {\bf Molecule} $\ast$ {\bf getBondedMolecule} (int bSiteIndex) const 
+\item 
+int {\bf getBondedMoleculeBindingSiteIndex} (int cIndex) const 
 \item 
 int {\bf getRxnListMappingId} (int rxnIndex) const 
 \item 
@@ -61,6 +69,8 @@ void {\bf setBondTo} ({\bf Molecule} $\ast$m2, int bindingSiteIndex)
 void {\bf moveToNewComplex} (int newComplexID)
 \item 
 void {\bf traverseBondedNeighborhood} (list$<$ {\bf Molecule} $\ast$ $>$ \&members, int traversalLimit)
+\item 
+void {\bf depthFirstSearch} (list$<$ {\bf Molecule} $\ast$ $>$ \&members)
 \item 
 void {\bf prepareForSimulation} ()
 \item 
@@ -74,11 +84,13 @@ void {\bf updateTypeIIFunctions} ()
 \item 
 void {\bf updateDORRxnValues} ()
 \item 
-void {\bf printDetails} () const 
+void {\bf printDetails} ()
 \item 
-bool {\bf isObs} (int oIndex) const 
+void {\bf printDetails} (ostream \&o)
 \item 
-void {\bf setIsObs} (int oIndex, bool isObs)
+int {\bf isObs} (int oIndex) const 
+\item 
+void {\bf setIsObs} (int oIndex, int isObs)
 \end{CompactItemize}
 \subsection*{Static Public Member Functions}
 \begin{CompactItemize}
@@ -102,6 +114,10 @@ static int {\bf getUniqueIdCount} ()
 \item 
 bool {\bf hasVisitedMolecule}
 \item 
+bool $\ast$ {\bf hasVisitedBond}
+\item 
+{\bf TemplateMolecule} $\ast$ {\bf isMatchedTo}
+\item 
 bool {\bf hasEvaluatedMolecule}
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
@@ -119,6 +135,8 @@ static const int {\bf NOINDEX} = -1
 \begin{CompactItemize}
 \item 
 bool {\bf isPrepared}
+\item 
+bool {\bf isAliveInSim}
 \item 
 int {\bf ID\_\-complex}
 \item 
@@ -142,7 +160,7 @@ int $\ast$ {\bf indexOfBond}
 \item 
 double $\ast$ {\bf localFunctionValues}
 \item 
-bool $\ast$ {\bf isObservable}
+int $\ast$ {\bf isObservable}
 \item 
 int $\ast$ {\bf rxnListMappingId}
 \item 
@@ -187,6 +205,16 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!getUniqueID@{getUniqueID}}
 \index{getUniqueID@{getUniqueID}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getUniqueID () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_bdc033d5a74f5453712ac9ec36b0564f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Molecule::isAlive () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_026c2150941021241376f31ab5cdfa8b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setAlive@{setAlive}}
+\index{setAlive@{setAlive}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setAlive (bool {\em isAlive})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_70a78e2f3cc4020ab0224e03f722f568}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!setComplexID@{setComplexID}}
@@ -239,6 +267,11 @@ static int {\bf uniqueIdCount} = 0
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double Molecule::getLocalFunctionValue (int {\em localFunctionIndex})}\label{classNFcore_1_1Molecule_10dc17ce9638bbfe58693a428c95e3a8}
 
 
+\index{NFcore::Molecule@{NFcore::Molecule}!getLocalFunction@{getLocalFunction}}
+\index{getLocalFunction@{getLocalFunction}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf LocalFunction} $\ast$ Molecule::getLocalFunction (int {\em localFunctionIndex})}\label{classNFcore_1_1Molecule_b85c118563895e50c619fb584c2ace5b}
+
+
 \index{NFcore::Molecule@{NFcore::Molecule}!setUpLocalFunctionList@{setUpLocalFunctionList}}
 \index{setUpLocalFunctionList@{setUpLocalFunctionList}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::setUpLocalFunctionList ()}\label{classNFcore_1_1Molecule_74b2a51b8799923556e413a4955a3926}
@@ -257,6 +290,11 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!getBondedMolecule@{getBondedMolecule}}
 \index{getBondedMolecule@{getBondedMolecule}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule} $\ast$ Molecule::getBondedMolecule (int {\em bSiteIndex}) const}\label{classNFcore_1_1Molecule_7833785f509d95b6a97b299526d1d6e4}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getBondedMoleculeBindingSiteIndex@{getBondedMoleculeBindingSiteIndex}}
+\index{getBondedMoleculeBindingSiteIndex@{getBondedMoleculeBindingSiteIndex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getBondedMoleculeBindingSiteIndex (int {\em cIndex}) const}\label{classNFcore_1_1Molecule_bcc94973b4d615d2d8ade51b782b0e35}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!getRxnListMappingId@{getRxnListMappingId}}
@@ -309,6 +347,11 @@ static int {\bf uniqueIdCount} = 0
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::breadthFirstSearch (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members}, {\bf Molecule} $\ast$ {\em m}, int {\em depth})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_6242f0f2226f92690f67d2d60e39209e}
 
 
+\index{NFcore::Molecule@{NFcore::Molecule}!depthFirstSearch@{depthFirstSearch}}
+\index{depthFirstSearch@{depthFirstSearch}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::depthFirstSearch (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members})}\label{classNFcore_1_1Molecule_20fc55c24b214a07d4dd10b966c1dcb7}
+
+
 \index{NFcore::Molecule@{NFcore::Molecule}!prepareForSimulation@{prepareForSimulation}}
 \index{prepareForSimulation@{prepareForSimulation}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::prepareForSimulation ()}\label{classNFcore_1_1Molecule_e7791ea7d5c718e769355885264ed27c}
@@ -341,7 +384,12 @@ static int {\bf uniqueIdCount} = 0
 
 \index{NFcore::Molecule@{NFcore::Molecule}!printDetails@{printDetails}}
 \index{printDetails@{printDetails}!NFcore::Molecule@{NFcore::Molecule}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printDetails () const}\label{classNFcore_1_1Molecule_ac8b6c3431849b5b10af61ebb37f0535}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printDetails ()}\label{classNFcore_1_1Molecule_5abd4eb1ec78c0877a0e1ae4b085866e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printDetails (ostream \& {\em o})}\label{classNFcore_1_1Molecule_492aea103ce2471d82cf2571a1263f04}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!printMoleculeList@{printMoleculeList}}
@@ -356,12 +404,12 @@ static int {\bf uniqueIdCount} = 0
 
 \index{NFcore::Molecule@{NFcore::Molecule}!isObs@{isObs}}
 \index{isObs@{isObs}!NFcore::Molecule@{NFcore::Molecule}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Molecule::isObs (int {\em oIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_c860910b0fd0df5730577c236fc1b890}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::isObs (int {\em oIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_7f72bdf2e57d118402cf66037ecdd7a7}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!setIsObs@{setIsObs}}
 \index{setIsObs@{setIsObs}!NFcore::Molecule@{NFcore::Molecule}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setIsObs (int {\em oIndex}, bool {\em isObs})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_1799a19c9b9c93d31266757ad37373b5}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setIsObs (int {\em oIndex}, int {\em isObs})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_07ebe50f8f57c9d2ee2c313b1c21d25e}
 
 
 
@@ -375,6 +423,16 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!hasVisitedMolecule@{hasVisitedMolecule}}
 \index{hasVisitedMolecule@{hasVisitedMolecule}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::hasVisitedMolecule}}\label{classNFcore_1_1Molecule_e828ebe80d90495cb772bde29177166e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!hasVisitedBond@{hasVisitedBond}}
+\index{hasVisitedBond@{hasVisitedBond}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool$\ast$ {\bf NFcore::Molecule::hasVisitedBond}}\label{classNFcore_1_1Molecule_f06428c674091090c7cc647e72bbe031}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isMatchedTo@{isMatchedTo}}
+\index{isMatchedTo@{isMatchedTo}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ {\bf NFcore::Molecule::isMatchedTo}}\label{classNFcore_1_1Molecule_080156e6c2368bb8c2ea5c5eac80a7ed}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!hasEvaluatedMolecule@{hasEvaluatedMolecule}}
@@ -400,6 +458,11 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!isPrepared@{isPrepared}}
 \index{isPrepared@{isPrepared}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::isPrepared}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_74d0c636185f07f1d8dc8fe75f67bc5f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isAliveInSim@{isAliveInSim}}
+\index{isAliveInSim@{isAliveInSim}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::isAliveInSim}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_426236fe8eb31ab69e4729e83c360689}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!ID\_\-complex@{ID\_\-complex}}
@@ -464,7 +527,7 @@ static int {\bf uniqueIdCount} = 0
 
 \index{NFcore::Molecule@{NFcore::Molecule}!isObservable@{isObservable}}
 \index{isObservable@{isObservable}!NFcore::Molecule@{NFcore::Molecule}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool$\ast$ {\bf NFcore::Molecule::isObservable}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_93d13a4e29d5e6b86a9d9302dde699d5}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::Molecule::isObservable}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_af300e34672d085f16ba6202be017ceb}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!rxnListMappingId@{rxnListMappingId}}
@@ -481,5 +544,5 @@ static int {\bf uniqueIdCount} = 0
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf molecule.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf molecule.cpp}\end{CompactItemize}
