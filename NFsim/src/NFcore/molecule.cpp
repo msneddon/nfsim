@@ -273,7 +273,11 @@ void Molecule::printDetails(ostream &o)
 		o<<parentMoleculeType->getComponentStateName(c,component[c]);
 		o<<"\tbond=";
 		if(bond[c]==NOBOND) o<<"empty";
-		else o<<bond[c]->getUniqueID();
+		else {
+			o<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+			o<<"("<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c])<<")";
+		}
+
 		o<<endl;
 	}
 
@@ -312,6 +316,21 @@ bool Molecule::isBindingSiteBonded(int cIndex) const
 Molecule * Molecule::getBondedMolecule(int cIndex) const
 {
 	return bond[cIndex];
+}
+
+// given the component index, look up what we are bonded to.  Then
+// in the molecule we are bonded to, look at what site we are bonded to
+//
+//  for instance
+//
+//    this(a!1).other(b!),   and we call this->getBondedMoleculeBindingSiteIndex(0)
+//
+//    where index 0 = this site a, then this function would return the
+//    component index of b in molecule other.
+//
+int Molecule::getBondedMoleculeBindingSiteIndex(int cIndex) const
+{
+	return indexOfBond[cIndex];
 }
 
 

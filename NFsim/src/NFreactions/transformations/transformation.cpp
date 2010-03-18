@@ -62,6 +62,10 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
 {
+	//cout<<" cIndex: "<<cIndex;
+	//cout<<" otherReactantIndex: "<<otherReactantIndex;
+	//cout<<" otherMappingIndex: "<<otherMappingIndex;
+
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
 	//Currently, this is set to block all binding events that happen internally to a single
 	//molecule.  I think this is reasonable to do...

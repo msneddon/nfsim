@@ -110,10 +110,10 @@ namespace NFcore
 
 
 		//////////////////////////////////////////////////////////////////////////////////////////////
-		static bool checkSymmetryAroundBond(TemplateMolecule *tm, int cIndex) { return false; };
-		static bool checkSymmetryAroundBond(TemplateMolecule *tm, string cName) { return false; };
+		//returns false if they are not symmetric, or true if they are
+		static bool checkSymmetry(TemplateMolecule *tm1, TemplateMolecule *tm2, string bSite1, string bSite2);
+		static bool checkSymmetryAroundBond(TemplateMolecule *tm1, TemplateMolecule *tm2, string bSite1, string bSite2);
 
-		static bool isEquivalent(TemplateMolecule *tm1, TemplateMolecule *tm2);
 
 
         /* functions that handle output for debugging and error messages */

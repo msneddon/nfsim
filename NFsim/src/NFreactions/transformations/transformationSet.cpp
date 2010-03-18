@@ -180,13 +180,10 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
 
 
-	//Check for symmetric binding (should do a better check here!)
-	if(t1->getMoleculeType()==t2->getMoleculeType())  {
-		if(bSiteName1==bSiteName2) {
-			hasSymBinding=true;
-			//cout<<"**************************setting sym binding reaction!"<<endl;
-		}
-	}
+	//Check for symmetric binding
+	bool isSymmetric = TemplateMolecule::checkSymmetry(t1,t2,bSiteName1,bSiteName2);
+	if( isSymmetric )
+		hasSymBinding = true;
 
 
 	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
@@ -210,6 +207,10 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 
 	return true;
 }
+
+
+
+
 bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
@@ -227,6 +228,14 @@ bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1,
 	//Find the index of the respective binding sites
 	unsigned int cIndex1 = t1->getMoleculeType()->getCompIndexFromName(bSiteName1);
 	unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
+
+
+	//Check for symmetric binding
+	bool isSymmetric = TemplateMolecule::checkSymmetry(t1,t2,bSiteName1,bSiteName2);
+	if( isSymmetric )
+		hasSymBinding = true;
+
+
 
 	//Add transformation 1: Note that if both molecules involved with this bond are in the same reactant list, then
 	//the mappingIndex will be size()+1.  But if they are on different reactant lists, then the mappingIndex will be exactly
@@ -249,6 +258,9 @@ bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1,
 
 	return true;
 }
+
+
+
 bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteName, TemplateMolecule *t2, string bSiteName2)
 {
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
@@ -266,13 +278,11 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 		// they are both real, so randomly pick t1
 		tToTransform=t;
 
-		//Check for symmetric unbinding (should do a better check here!
-		if(t->getMoleculeType()==t2->getMoleculeType())  {
-			if(bSiteName==bSiteName2) {
-				hasSymUnbinding=true;
-				//cout<<"setting sym unbinding reaction!"<<endl;
-			}
-		}
+		//Check for symmetric unbinding
+		bool isSymmetric = TemplateMolecule::checkSymmetryAroundBond(t,t2,bSiteName,bSiteName2);
+		if( isSymmetric )
+			hasSymUnbinding = true;
+
 	}
 
 	// 1) Check that the template molecule is contained in one of the reactant templates we have
@@ -281,7 +291,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 		cerr<<"Couldn't find the template you gave me!  In transformation set!"<<endl;
 		cerr<<"This might be caused if you declare that two molecules are connected, but you\n";
 		cerr<<"don't provide how they are connected.  For instance: if you have declared \n";
-		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
+		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you might get this error."<<endl;
 		return false;
 	}
 
@@ -384,6 +394,10 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 			} else {
 				//cout<<"applying!"<<endl;
 				//cout<<transformations[r].at(t)->getType()<<endl;
+				//ms->printDetails();
+				//cout<<"here"<<endl;
+
+
 				transformations[r].at(t)->apply(ms->get(t),mappingSets);
 			}
 		}
