@@ -1,0 +1,2 @@
+simple ring closure
+-sim 100 -oSteps 100 

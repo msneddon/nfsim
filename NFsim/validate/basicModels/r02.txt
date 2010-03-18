@@ -1,0 +1,2 @@
+multiple identical phosphorylation sites
+-sim 100 -oSteps 100
