@@ -150,7 +150,8 @@ Observable * MoleculesObservable::clone() {
 int MoleculesObservable::isObservable(Molecule *m) const
 {
 	// DEBUG code
-	//cout << "MoleculesObservable::isObservable( " << m << " )" << endl;
+	//cout << "MoleculesObservable::isObservable( " << m->getUniqueID() << " )" << endl;
+	//m->printDetails();
 	//cout << "observable name: " << obsName << endl;
 	//cout << "number of templates: " << n_templates << endl;
 
@@ -158,9 +159,13 @@ int MoleculesObservable::isObservable(Molecule *m) const
 	for(int t=0; t<n_templates; t++) {
 		//cout << "moleculeType: " << (templateMolecules[t]->getMoleculeTypeName()) << endl;
 		//cout << "connected to: " << (templateMolecules[t]->getN_connectedTo()) << endl;
-
+		//templateMolecules[t]->printDetails();
 		// try to get match counts, rather than just a boolean
+		//cout<<endl<<endl<<endl;
+		//cout<<"starting!"<<endl;
+
 		if ( templateMolecules[t]->compare(m) )  ++matches;
+		//else { cout<<"nothing."<<endl; }
 	}
 	//cout << "total_matches: " << matches << endl;
 	return matches;
@@ -231,7 +236,8 @@ SpeciesObservable::SpeciesObservable(string name, vector <TemplateMolecule *> &t
 
 SpeciesObservable::~SpeciesObservable()
 {
-
+	delete [] relation;
+	delete [] quantity;
 }
 
 

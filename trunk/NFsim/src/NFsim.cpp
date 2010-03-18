@@ -4,7 +4,8 @@
 //    A software platform for efficient simulation of biochemical reaction
 //    systems with a large or infinite state space.
 //
-//    Copyright (C) 2009  Michael W. Sneddon, James R. Faeder, Thierry Emonet
+//    Copyright (C) 2009,2010
+//    Michael W. Sneddon, James R. Faeder, Thierry Emonet
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+
 /*! \mainpage NFsim: The Network Free Stochastic Simulator
  *
  * \section intro_sec Overview
@@ -38,7 +40,7 @@
  *
  * For more details on setting up, running, and getting output from an NFsim simulation
  * see the User Manual.  The User Manual also has additional information for new
- * developers.  The Manual is available online along with examples here:
+ * developers.  The manual is available online along with examples here:
  * http://emonet.biology.yale.edu/nfsim
  *
  *
@@ -69,6 +71,8 @@
  *
  *  -notf = disables On the Fly Observables, see manual
  *
+ *  -cb = turn on complex bookkeeping, see manual
+ *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
  *
@@ -85,7 +89,7 @@
  * directory and the NFreactions directory.  The NFcore directory contains the basic structure
  * of the simulation engine while the NFreactions directory contains the classes associated with
  * actually executing rules and transforming molecules.  NFinput contains what's needed for
- * the xml parser (built using the TinyXML package) and the command line parser.  NFutil primarily
+ * the xml parser (built using the TinyXML package) and the command line parser.  NFutil also
  * contains a nice implementation of the Mersenne Twister random number generator which should
  * be used for all random number generation in NFsim.  NFoutput is more sparse as it deals only
  * with handling the more complicated output required of groups and complexes.  (Basic outputting
@@ -101,9 +105,20 @@
  * Thierry Emonet.  James Faeder wrote the extended BioNetGen code that can output XML encodings
  * of the BNGL.
  *
- * Special thanks to other members of the Emonet lab, particularly William Pontius, Garrit Jentsch,
- * and Oleksii Sliusarenko for helpful feedback.  For questions or assistance with the code, please
- * contact michael.sneddon@yale.edu.
+ * A number of other people have helped in getting NFsim to where it is today, either by
+ * aiding in the concepts of the design, testing the implementation, adding some features
+ * to the code, or by suggesting improvements.
+ *
+ * A partial list of these people include:
+ *
+ * Garrit Jentsch,
+ * William Pontius,
+ * Oleksii Sliusarenko,
+ * Justin Hogg,
+ * Christopher Henry,
+ * Fangfang Xia,
+ * Ryan Gutenkunst,
+ *
  *
  *
  */
@@ -156,7 +171,7 @@ int main(int argc, char *argv[])
 	// Check if scheduler should handle the work
 	if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.04";
+	string versionNumber = "1.05";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;

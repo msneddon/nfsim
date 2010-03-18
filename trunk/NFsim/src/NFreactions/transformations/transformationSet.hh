@@ -72,8 +72,16 @@ namespace NFcore
 			*/
 			bool addStateChangeTransform(TemplateMolecule *t, string cName, string finalStateValue);
 
-
+			/*!
+				Adds an increment state change to the given templateMolecule
+				@author Michael Sneddon
+			*/
 			bool addIncrementStateTransform(TemplateMolecule *t, string cName);
+
+			/*!
+				Adds an decrement state change to the given templateMolecule
+				@author Michael Sneddon
+			*/
 			bool addDecrementStateTransform(TemplateMolecule *t, string cName);
 
 
@@ -179,11 +187,33 @@ namespace NFcore
 			*/
 			bool getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit);
 
+			/*!
+				Called by reaction class to determine if the rate of a rule must be adjusted to
+				account for a symmetric unbinding event.  Symmetry of the rule is checked when
+				you add an unbinding transform.
+				@author Michael Sneddon
+			*/
 			bool hasSymUnbindingTransform() const { return hasSymUnbinding; };
+
+			/*!
+				Called by reaction class to determine if the rate of a rule must be adjusted to
+				account for a symmetric binding event.  Symmetry of the rule is checked when
+				you add a binding transform.
+				@author Michael Sneddon
+			*/
 			bool hasSymBindingTransform() const { return hasSymBinding; };
 
-
+			/*!
+				Returns the number of transformations that the template at reactantIndex given has.
+				@author Michael Sneddon
+			*/
 			int getNumOfTransformations(int reactantIndex) const { return transformations[reactantIndex].size();};
+
+
+			/*!
+				Returns the transformation object at the given index for the given reactant position
+				@author Michael Sneddon
+			*/
 			Transformation *getTransformation(int reactantIndex, int index) const { return transformations[reactantIndex].at(index); };
 
 
@@ -212,13 +242,25 @@ namespace NFcore
 			/*!	A vector that holds the actual Transformation objects	*/
 			vector <Transformation *> *transformations;
 
-
+			/*!	A vector that holds the addMolecule Transformations, because they are handled separately	*/
 			vector <Transformation *> addMoleculeTransformations;
 
+			/*!	List to keep track of the molecules that we are going to delete when a transformation is applied	*/
 			static list <Molecule *> deleteList;
+
+
+			/*!	List to keep track of the molecules that we have to update as a result of a deletion	*/
 			static list <Molecule *> updateAfterDeleteList;
+
+
+			/*!	iterator for the deleteList and updateAfterDeleteList	*/
 			static list <Molecule *>::iterator it;
+
+
+			/*!	keeps track if this set has a symmetric unbinding reaction	*/
 			bool hasSymUnbinding;
+
+			/*!	keeps track if this set has a symmetric binding reaction	*/
 			bool hasSymBinding;
 	};
 

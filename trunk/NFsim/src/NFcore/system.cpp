@@ -653,6 +653,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 	//First, output the header for the output of this simulation
 	//outputAllObservableNames();
+	//this->printAllReactions();
+
 
 	//////////////////////////////
 	clock_t start,finish;
@@ -722,7 +724,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		//Output selected reaction for debugging
 		//cout<<"\nFiring: "<< endl;
-		//nextReaction->printDetails();
+		//nextReaction->printFullDetails();
 		//cout<<endl<<endl;
 
 //		this->printAllReactions();

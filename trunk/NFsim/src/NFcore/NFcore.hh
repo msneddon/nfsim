@@ -564,6 +564,7 @@ namespace NFcore
 			void addReactionClass(ReactionClass * r, int rPosition);
 			void addMolObs(MoleculesObservable * mo) { molObs.push_back(mo); }; //could add check here to make sure observable is of this type
 			// TODO: Question by Justin... why doesn't the Molecule construct create the complex directly?
+			// I believe it is because the System must know about all complexes that are created. -michael
 			int createComplex(Molecule *m) { return (system->getAllComplexes()).createComplex(m); };
 			void addTemplateMolecule(TemplateMolecule *t);
 
@@ -739,6 +740,7 @@ namespace NFcore
 			bool isBindingSiteOpen(int bIndex) const;
 			bool isBindingSiteBonded(int bIndex) const;
 			Molecule * getBondedMolecule(int bSiteIndex) const;
+			int getBondedMoleculeBindingSiteIndex(int cIndex) const;
 
 			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
 			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) {

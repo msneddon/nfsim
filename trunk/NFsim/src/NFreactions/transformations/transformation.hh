@@ -11,6 +11,11 @@ namespace NFcore
 	class Mapping;
 	class Transformation;
 
+
+	/*!
+	 	Static object that generates transformations with the given sites.
+	    @author Michael Sneddon
+	 */
 	class TransformationFactory {
 		public:
 			/*!
@@ -111,15 +116,17 @@ namespace NFcore
 			    in a binding transform and so should be skipped when applying transforms	*/
 			static const unsigned int EMPTY = 5;
 
-			/*!	*/
+			/*!	Indicates an increment transformation */
 			static const unsigned int INCREMENT_STATE = 6;
 
-			/*!		*/
+
+			/*!	Indicates a decrement transformation */
 			static const unsigned int DECREMENT_STATE = 7;
 
 
 
 			////////////////////////////////
+			/*!	Return a pointer to the transformation that is needed by a local function */
 			static Transformation * genLocalFunctionReference(string PointerName, int type, TemplateMolecule *tm);
 			static const unsigned int LOCAL_FUNCTION_REFERENCE = 8;
 			////////////////////////////////
@@ -127,6 +134,11 @@ namespace NFcore
 	};
 
 
+
+	/*!
+	 	Abstract transformation object that other types of transformations inherit from.
+	    @author Michael Sneddon
+	 */
 	class Transformation {
 		public:
 			Transformation(int type) {this->type=type;};
