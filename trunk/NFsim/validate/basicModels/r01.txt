@@ -1,0 +1,2 @@
+simple binding, unbinding, and phosphorylation system
+-sim 100 -oSteps 100

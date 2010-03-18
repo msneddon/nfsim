@@ -1,0 +1,2 @@
+basic connected to syntax
+-sim 50 -oSteps 100
