@@ -25,6 +25,15 @@ int {\bf getIndex} () const
 void {\bf clear} ()
 \item 
 bool {\bf setMolecule} ({\bf Molecule} $\ast${\bf m})
+\item 
+void {\bf printDetails} () const 
+\item 
+void {\bf printDetails} (ostream \&o) const 
+\end{CompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static void {\bf clone} ({\bf Mapping} $\ast$original, {\bf Mapping} $\ast$newClone)
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -90,6 +99,21 @@ This clears the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} by forgetting the 
 
 This sets the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} to actually point to a particular \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} in the system. This \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} is remembered until a new \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} is set or the \doxyref{clear()}{p.}{classNFcore_1_1Mapping_3c0a7e0568a76135688fa1179f922039} function is called. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::Mapping@{NFcore::Mapping}!clone@{clone}}
+\index{clone@{clone}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Mapping::clone ({\bf Mapping} $\ast$ {\em original}, {\bf Mapping} $\ast$ {\em newClone})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Mapping_43c47ea18d42fa1fd5e914c9de3d3353}
+
+
+\index{NFcore::Mapping@{NFcore::Mapping}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Mapping::printDetails () const}\label{classNFcore_1_1Mapping_aa6094d0fd984267b40de3345c6c9af3}
+
+
+\index{NFcore::Mapping@{NFcore::Mapping}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Mapping@{NFcore::Mapping}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Mapping::printDetails (ostream \& {\em o}) const}\label{classNFcore_1_1Mapping_6444545ea7e51c476909a83bc19a6ad0}
+
+
 
 
 \subsection{Member Data Documentation}
@@ -112,5 +136,5 @@ A pointer to the \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} that this \doxy
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mapping.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/mappings/{\bf mapping.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/mappings/{\bf mapping.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/mappings/{\bf mapping.cpp}\end{CompactItemize}

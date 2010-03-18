@@ -38,6 +38,8 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#bc0808b944f5f70b9b86bc4988501953">~TransformationSet</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#93de73c96860c2516f93bb20be68a46d">getNumOfReactants</a> () const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#974b4e100ff564e28a7e874a62897233">addStateChangeTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string cName, int finalStateValue)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#054e6688b955e07ee2f9d85760de7760">addStateChangeTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string cName, string finalStateValue)</td></tr>
@@ -52,11 +54,11 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#0887a640ecfcd9a9289aacab866ebc60">addUnbindingTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string bSiteName, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#b1baa9b6d3cc8f8a597043641e6061ca">addDeleteMolecule</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#7f49ec4565e1c301698bf440058c6b60">addDeleteMolecule</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, int deletionType)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#beaf8483f8d9406bf20989c8e45f8156">addAddMolecule</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#cb7a9a76bdaadfcb3a92a8d846257e34">addLocalFunctionReference</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string PointerName, int type)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#8d86d829f69bffad00d4b6fbddc17764">addLocalFunctionReference</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string PointerName, int scope)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#d9d5054e85a71e7a55eebfdba9c66745">transform</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **mappingSets)</td></tr>
 
@@ -73,6 +75,8 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#4d37f5e6911f45e2d67d666abd37755a">getListOfProducts</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **mappingSets, list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;products, int traversalLimit)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#a2a03c0b5740f97f73bd77463cc8dde9">hasSymUnbindingTransform</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#1c59f961877ca545ec261955d0549625">hasSymBindingTransform</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#d51f38941611f9950bb5d4b292975a1c">getNumOfTransformations</a> (int reactantIndex) const </td></tr>
 
@@ -93,6 +97,15 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#3f20cd7f940097ff08c243ac719df4ae">addMoleculeTransformations</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#bf0319375114725fa721750c056177bd">hasSymUnbinding</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#73c548209e851ca3fbc7b35fbef84578">hasSymBinding</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Static Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#5a56156f8cc62c1dd06bf324d161c70b">deleteList</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#de2c098f275276fe71438f6b8e5db426">updateAfterDeleteList</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#eb358fa8a1d48fa559b1d209cab6d336">it</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -138,6 +151,25 @@ Destroys the <a class="el" href="classNFcore_1_1TransformationSet.html" title="M
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="93de73c96860c2516f93bb20be68a46d"></a><!-- doxytag: member="NFcore::TransformationSet::getNumOfReactants" ref="93de73c96860c2516f93bb20be68a46d" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int NFcore::TransformationSet::getNumOfReactants           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="974b4e100ff564e28a7e874a62897233"></a><!-- doxytag: member="NFcore::TransformationSet::addStateChangeTransform" ref="974b4e100ff564e28a7e874a62897233" args="(TemplateMolecule *t, string cName, int finalStateValue)" -->
 <div class="memitem">
 <div class="memproto">
@@ -236,6 +268,7 @@ Adds a state change transformation on the given <a class="el" href="classNFcore_
 <div class="memdoc">
 
 <p>
+Adds an increment state change to the given templateMolecule <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -265,6 +298,7 @@ Adds a state change transformation on the given <a class="el" href="classNFcore_
 <div class="memdoc">
 
 <p>
+Adds an decrement state change to the given templateMolecule <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -394,7 +428,7 @@ Adds an unbinding reaction at the given site of the given <a class="el" href="cl
 
 </div>
 </div><p>
-<a class="anchor" name="b1baa9b6d3cc8f8a597043641e6061ca"></a><!-- doxytag: member="NFcore::TransformationSet::addDeleteMolecule" ref="b1baa9b6d3cc8f8a597043641e6061ca" args="(TemplateMolecule *t)" -->
+<a class="anchor" name="7f49ec4565e1c301698bf440058c6b60"></a><!-- doxytag: member="NFcore::TransformationSet::addDeleteMolecule" ref="7f49ec4565e1c301698bf440058c6b60" args="(TemplateMolecule *t, int deletionType)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -402,9 +436,18 @@ Adds an unbinding reaction at the given site of the given <a class="el" href="cl
           <td class="memname">bool TransformationSet::addDeleteMolecule           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>t</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>deletionType</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -437,7 +480,7 @@ Adds a create molecule rule, but has not been implemented yet. <dl class="author
 
 </div>
 </div><p>
-<a class="anchor" name="cb7a9a76bdaadfcb3a92a8d846257e34"></a><!-- doxytag: member="NFcore::TransformationSet::addLocalFunctionReference" ref="cb7a9a76bdaadfcb3a92a8d846257e34" args="(TemplateMolecule *t, string PointerName, int type)" -->
+<a class="anchor" name="8d86d829f69bffad00d4b6fbddc17764"></a><!-- doxytag: member="NFcore::TransformationSet::addLocalFunctionReference" ref="8d86d829f69bffad00d4b6fbddc17764" args="(TemplateMolecule *t, string PointerName, int scope)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -457,7 +500,7 @@ Adds a create molecule rule, but has not been implemented yet. <dl class="author
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>type</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>scope</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -657,6 +700,27 @@ From an array of <a class="el" href="classNFcore_1_1MappingSet.html" title="Keep
 <div class="memdoc">
 
 <p>
+Called by reaction class to determine if the rate of a rule must be adjusted to account for a symmetric unbinding event. Symmetry of the rule is checked when you add an unbinding transform. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="1c59f961877ca545ec261955d0549625"></a><!-- doxytag: member="NFcore::TransformationSet::hasSymBindingTransform" ref="1c59f961877ca545ec261955d0549625" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::TransformationSet::hasSymBindingTransform           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Called by reaction class to determine if the rate of a rule must be adjusted to account for a symmetric binding event. Symmetry of the rule is checked when you add a binding transform. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -677,6 +741,7 @@ From an array of <a class="el" href="classNFcore_1_1MappingSet.html" title="Keep
 <div class="memdoc">
 
 <p>
+Returns the number of transformations that the template at reactantIndex given has. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -706,6 +771,7 @@ From an array of <a class="el" href="classNFcore_1_1MappingSet.html" title="Keep
 <div class="memdoc">
 
 <p>
+Returns the transformation object at the given index for the given reactant position <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -803,7 +869,52 @@ A vector that holds the actual <a class="el" href="classNFcore_1_1Transformation
 <div class="memdoc">
 
 <p>
+A vector that holds the addMolecule Transformations, because they are handled separately 
+</div>
+</div><p>
+<a class="anchor" name="5a56156f8cc62c1dd06bf324d161c70b"></a><!-- doxytag: member="NFcore::TransformationSet::deleteList" ref="5a56156f8cc62c1dd06bf324d161c70b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; <a class="el" href="classNFcore_1_1TransformationSet.html#5a56156f8cc62c1dd06bf324d161c70b">TransformationSet::deleteList</a><code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
+<p>
+List to keep track of the molecules that we are going to delete when a transformation is applied 
+</div>
+</div><p>
+<a class="anchor" name="de2c098f275276fe71438f6b8e5db426"></a><!-- doxytag: member="NFcore::TransformationSet::updateAfterDeleteList" ref="de2c098f275276fe71438f6b8e5db426" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; <a class="el" href="classNFcore_1_1TransformationSet.html#de2c098f275276fe71438f6b8e5db426">TransformationSet::updateAfterDeleteList</a><code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+List to keep track of the molecules that we have to update as a result of a deletion 
+</div>
+</div><p>
+<a class="anchor" name="eb358fa8a1d48fa559b1d209cab6d336"></a><!-- doxytag: member="NFcore::TransformationSet::it" ref="eb358fa8a1d48fa559b1d209cab6d336" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;::iterator <a class="el" href="classNFcore_1_1TransformationSet.html#eb358fa8a1d48fa559b1d209cab6d336">TransformationSet::it</a><code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+iterator for the deleteList and updateAfterDeleteList 
 </div>
 </div><p>
 <a class="anchor" name="bf0319375114725fa721750c056177bd"></a><!-- doxytag: member="NFcore::TransformationSet::hasSymUnbinding" ref="bf0319375114725fa721750c056177bd" args="" -->
@@ -818,12 +929,27 @@ A vector that holds the actual <a class="el" href="classNFcore_1_1Transformation
 <div class="memdoc">
 
 <p>
+keeps track if this set has a symmetric unbinding reaction 
+</div>
+</div><p>
+<a class="anchor" name="73c548209e851ca3fbc7b35fbef84578"></a><!-- doxytag: member="NFcore::TransformationSet::hasSymBinding" ref="73c548209e851ca3fbc7b35fbef84578" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1TransformationSet.html#73c548209e851ca3fbc7b35fbef84578">NFcore::TransformationSet::hasSymBinding</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
+<p>
+keeps track if this set has a symmetric binding reaction 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformationSet_8hh-source.html">transformationSet.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformationSet_8cpp.html">transformationSet.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8hh-source.html">transformationSet.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8cpp.html">transformationSet.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

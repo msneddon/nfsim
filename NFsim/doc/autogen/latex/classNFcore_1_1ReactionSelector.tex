@@ -1,0 +1,74 @@
+\section{NFcore::ReactionSelector Class Reference}
+\label{classNFcore_1_1ReactionSelector}\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+{\tt \#include $<$reactionSelector.hh$>$}
+
+Inheritance diagram for NFcore::ReactionSelector::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classNFcore_1_1ReactionSelector}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf ReactionSelector} ()
+\item 
+virtual {\bf $\sim$ReactionSelector} ()
+\item 
+virtual double {\bf refactorPropensities} ()=0
+\item 
+virtual double {\bf update} ({\bf ReactionClass} $\ast$r, double oldA, double newA)=0
+\item 
+virtual double {\bf getNextReactionClass} ({\bf ReactionClass} $\ast$\&rc)=0
+\item 
+virtual double {\bf getAtot} ()=0
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!ReactionSelector@{ReactionSelector}}
+\index{ReactionSelector@{ReactionSelector}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFcore::ReactionSelector::ReactionSelector ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionSelector_3a42468456c627c0052a26de1b1ac697}
+
+
+\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!$\sim$ReactionSelector@{$\sim$ReactionSelector}}
+\index{$\sim$ReactionSelector@{$\sim$ReactionSelector}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual NFcore::ReactionSelector::$\sim$ReactionSelector ()\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1ReactionSelector_b07f007a5fb984e3f5178ec8fd3ed8a7}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!refactorPropensities@{refactorPropensities}}
+\index{refactorPropensities@{refactorPropensities}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual double NFcore::ReactionSelector::refactorPropensities ()\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionSelector_ae6d112efbfe7b6784c0469c52c16729}
+
+
+
+
+Implemented in {\bf NFcore::DirectSelector} \doxyref{}{p.}{classNFcore_1_1DirectSelector_009696cfa6a6349560057aaf81ad4e8c}, and {\bf NFcore::LogClassSelector} \doxyref{}{p.}{classNFcore_1_1LogClassSelector_902502c9203476513b542b55e402fbf8}.\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!update@{update}}
+\index{update@{update}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual double NFcore::ReactionSelector::update ({\bf ReactionClass} $\ast$ {\em r}, double {\em oldA}, double {\em newA})\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionSelector_1a7969c93df14b6e261bd4e62dcde4e5}
+
+
+
+
+Implemented in {\bf NFcore::DirectSelector} \doxyref{}{p.}{classNFcore_1_1DirectSelector_155bb6a605bb40809d3a3b41496b278f}, and {\bf NFcore::LogClassSelector} \doxyref{}{p.}{classNFcore_1_1LogClassSelector_c9bbff05f3dd5b8cf2b14e144ec79aa2}.\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!getNextReactionClass@{getNextReactionClass}}
+\index{getNextReactionClass@{getNextReactionClass}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual double NFcore::ReactionSelector::getNextReactionClass ({\bf ReactionClass} $\ast$\& {\em rc})\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionSelector_2ad50ddefd083636eaff2fa30d20dfa2}
+
+
+
+
+Implemented in {\bf NFcore::DirectSelector} \doxyref{}{p.}{classNFcore_1_1DirectSelector_c0103558882f7e398d5c164db57bf01f}, and {\bf NFcore::LogClassSelector} \doxyref{}{p.}{classNFcore_1_1LogClassSelector_cb4d64c2f808e86ae97b21847929cae3}.\index{NFcore::ReactionSelector@{NFcore::ReactionSelector}!getAtot@{getAtot}}
+\index{getAtot@{getAtot}!NFcore::ReactionSelector@{NFcore::ReactionSelector}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual double NFcore::ReactionSelector::getAtot ()\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionSelector_fa64a6ed345c2545add584fcd28edaa8}
+
+
+
+
+Implemented in {\bf NFcore::DirectSelector} \doxyref{}{p.}{classNFcore_1_1DirectSelector_c1120d64cc3e6ca5307c6b327690b0c6}, and {\bf NFcore::LogClassSelector} \doxyref{}{p.}{classNFcore_1_1LogClassSelector_9878e3c770928fb90f6246ae09bc06d1}.
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/reactionSelector/{\bf reactionSelector.hh}\end{CompactItemize}

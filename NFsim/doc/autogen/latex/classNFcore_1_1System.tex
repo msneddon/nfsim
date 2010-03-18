@@ -16,6 +16,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 \item 
 {\bf System} (string {\bf name}, bool {\bf useComplex})
 \item 
+{\bf System} (string {\bf name}, bool {\bf useComplex}, int {\bf globalMoleculeLimit})
+\item 
 {\bf $\sim$System} ()
 \item 
 string {\bf getName} () const 
@@ -26,7 +28,9 @@ bool {\bf isOutputtingBinary} ()
 \item 
 double {\bf getCurrentTime} () const 
 \item 
-int {\bf getObservableCount} (int moleculeTypeIndex, int observableIndex) const 
+int {\bf getGlobalMoleculeLimit} () const 
+\item 
+int {\bf getMolObsCount} (int moleculeTypeIndex, int observableIndex) const 
 \item 
 {\bf Observable} $\ast$ {\bf getObservableByName} (string obsName)
 \item 
@@ -50,23 +54,31 @@ void {\bf addReaction} ({\bf ReactionClass} $\ast$reaction)
 \item 
 void {\bf addNecessaryUpdateReaction} ({\bf ReactionClass} $\ast$reaction)
 \item 
-int {\bf createComplex} ({\bf Molecule} $\ast$m)
-\item 
 bool {\bf addGlobalFunction} ({\bf GlobalFunction} $\ast$gf)
 \item 
 {\bf GlobalFunction} $\ast$ {\bf getGlobalFunctionByName} (string fName)
+\item 
+bool {\bf addCompositeFunction} ({\bf CompositeFunction} $\ast$cf)
+\item 
+{\bf CompositeFunction} $\ast$ {\bf getCompositeFunctionByName} (string fName)
+\item 
+void {\bf finalizeCompositeFunctions} ()
+\item 
+void {\bf printAllFunctions} ()
+\item 
+{\bf LocalFunction} $\ast$ {\bf getLocalFunctionByName} (string fName)
 \item 
 void {\bf prepareForSimulation} ()
 \item 
 void {\bf setUniversalTraversalLimit} (int utl)
 \item 
-void {\bf updateGroupProperty} (char $\ast$groupName, double $\ast$value, int n\_\-values)
-\item 
-void {\bf updateAllGroupProperty} (double $\ast$value, int n\_\-values)
-\item 
 void {\bf setOutputToBinary} ()
 \item 
 void {\bf registerOutputFileLocation} (string filename)
+\item 
+void {\bf setDumpOutputter} ({\bf DumpSystem} $\ast${\bf ds})
+\item 
+void {\bf tryToDump} ()
 \item 
 void {\bf turnOnGlobalFuncOut} ()
 \item 
@@ -82,57 +94,67 @@ void {\bf outputAllObservableCounts} ()
 \item 
 void {\bf outputAllObservableCounts} (double cSampleTime)
 \item 
-void {\bf printAllComplexes} ()
+void {\bf outputAllObservableCounts} (double cSampleTime, int eventCounter)
+\item 
+int {\bf getNumOfSpeciesObs} () const 
+\item 
+{\bf Observable} $\ast$ {\bf getSpeciesObs} (int index) const 
 \item 
 void {\bf printAllReactions} ()
-\item 
-void {\bf printAllGroups} ()
 \item 
 void {\bf printIndexAndNames} ()
 \item 
 void {\bf printAllMoleculeTypes} ()
 \item 
+void {\bf printAllObservableCounts} ()
+\item 
 void {\bf printAllObservableCounts} (double cSampleTime)
 \item 
-void {\bf purgeAndPrintAvailableComplexList} ()
+void {\bf printAllObservableCounts} (double cSampleTime, int eventCounter)
 \item 
-void {\bf outputComplexSizes} (double cSampleTime)
-\item 
-void {\bf outputMoleculeTypeCountPerComplex} ({\bf MoleculeType} $\ast$m)
-\item 
-double {\bf outputMeanCount} ({\bf MoleculeType} $\ast$m)
-\item 
-double {\bf calculateMeanCount} ({\bf MoleculeType} $\ast$m)
-\item 
-void {\bf update\_\-A\_\-tot} (double old\_\-a, double new\_\-a)
+void {\bf update\_\-A\_\-tot} ({\bf ReactionClass} $\ast$r, double old\_\-a, double new\_\-a)
 \item 
 void {\bf evaluateAllLocalFunctions} ()
+\item 
+void {\bf addObservableForOutput} ({\bf Observable} $\ast$o)
 \item 
 void {\bf addOutputter} ({\bf Outputter} $\ast$op)
 \item 
 void {\bf dumpOutputters} ()
 \item 
-{\bf Complex} $\ast$ {\bf getComplex} (int ID\_\-complex) const 
-\item 
-{\bf Complex} $\ast$ {\bf getNextAvailableComplex} ()
-\item 
-void {\bf notifyThatComplexIsAvailable} (int ID\_\-complex)
-\item 
 double {\bf sim} (double time, long int sampleTimes)
+\item 
+double {\bf sim} (double time, long int sampleTimes, bool verbose)
 \item 
 double {\bf stepTo} (double stoppingTime)
 \item 
 void {\bf singleStep} ()
 \item 
-void {\bf equilibriate} (double duration)
+void {\bf equilibrate} (double duration)
 \item 
-void {\bf equilibriate} (double duration, int statusReports)
+void {\bf equilibrate} (double duration, int statusReports)
 \item 
 void {\bf registerRxnIndex} (int rxnId, int rxnPos, int rxnIndex)
 \item 
 int {\bf getRxnIndex} (int rxnId, int rxnPos) const 
 \item 
 void {\bf turnOff\_\-OnTheFlyObs} ()
+\item 
+void {\bf turnOnOutputEventCounter} ()
+\item 
+void {\bf addParameter} (string {\bf name}, double value)
+\item 
+double {\bf getParameter} (string {\bf name})
+\item 
+void {\bf setParameter} (string {\bf name}, double value)
+\item 
+void {\bf updateSystemWithNewParameters} ()
+\item 
+void {\bf printAllParameters} ()
+\item 
+{\bf NFstream} \& {\bf getOutputFileStream} ()
+\item 
+{\bf ComplexList} \& {\bf getAllComplexes} ()
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
@@ -149,6 +171,8 @@ double {\bf recompute\_\-A\_\-tot} ()
 double {\bf getNextRxn} ()
 \item 
 void {\bf outputGroupDataHeader} ()
+\item 
+void {\bf outputAllPropensities} (double time, int rxnFired)
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -165,15 +189,25 @@ bool {\bf onTheFlyObservables}
 \item 
 bool {\bf outputGlobalFunctionValues}
 \item 
+int {\bf globalMoleculeLimit}
+\item 
+bool {\bf outputEventCounter}
+\item 
+int {\bf globalEventCounter}
+\item 
 vector$<$ {\bf MoleculeType} $\ast$ $>$ {\bf allMoleculeTypes}
 \item 
 vector$<$ {\bf ReactionClass} $\ast$ $>$ {\bf allReactions}
 \item 
-vector$<$ {\bf Complex} $\ast$ $>$ {\bf allComplexes}
-\item 
-queue$<$ int $>$ {\bf nextAvailableComplex}
-\item 
 vector$<$ {\bf Outputter} $\ast$ $>$ {\bf allOutputters}
+\item 
+{\bf ComplexList} {\bf allComplexes}
+\item 
+vector$<$ {\bf Observable} $\ast$ $>$ {\bf obsToOutput}
+\item 
+vector$<$ {\bf Observable} $\ast$ $>$ {\bf speciesObservables}
+\item 
+{\bf DumpSystem} $\ast$ {\bf ds}
 \item 
 vector$<$ {\bf GlobalFunction} $\ast$ $>$ {\bf globalFunctions}
 \item 
@@ -181,15 +215,28 @@ vector$<$ {\bf LocalFunction} $\ast$ $>$ {\bf localFunctions}
 \item 
 vector$<$ {\bf ReactionClass} $\ast$ $>$ {\bf necessaryUpdateRxns}
 \item 
+vector$<$ {\bf CompositeFunction} $\ast$ $>$ {\bf compositeFunctions}
+\item 
 double {\bf a\_\-tot}
 \item 
 double {\bf current\_\-time}
 \item 
 {\bf ReactionClass} $\ast$ {\bf nextReaction}
 \item 
-ofstream {\bf outputFileStream}
+{\bf NFstream} {\bf outputFileStream}
+\item 
+ofstream {\bf propensityDumpStream}
 \item 
 int $\ast$$\ast$ {\bf rxnIndexMap}
+\item 
+map$<$ string, double $>$ {\bf paramMap}
+\item 
+{\bf ReactionSelector} $\ast$ {\bf selector}
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+class {\bf Netgen}
 \end{CompactItemize}
 
 
@@ -202,6 +249,11 @@ int $\ast$$\ast$ {\bf rxnIndexMap}
 creates a system with the given name that does not keep track dynamically of complex formation \index{NFcore::System@{NFcore::System}!System@{System}}
 \index{System@{System}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}System::System (string {\em name}, bool {\em useComplex})}\label{classNFcore_1_1System_7ea6dc6d40f2c519f1a3eb55c5e4775c}
+
+
+creates a system that keeps track of complex formation if the setComplex parameter is set to true \index{NFcore::System@{NFcore::System}!System@{System}}
+\index{System@{System}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}System::System (string {\em name}, bool {\em useComplex}, int {\em globalMoleculeLimit})}\label{classNFcore_1_1System_09f875df922ae99a09c2bebdb74ba593}
 
 
 creates a system that keeps track of complex formation if the setComplex parameter is set to true \index{NFcore::System@{NFcore::System}!$\sim$System@{$\sim$System}}
@@ -232,9 +284,14 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::System::getCurrentTime () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_e7be0ad9a68a8ae51db3699b7b1f836c}
 
 
-\index{NFcore::System@{NFcore::System}!getObservableCount@{getObservableCount}}
-\index{getObservableCount@{getObservableCount}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int System::getObservableCount (int {\em moleculeTypeIndex}, int {\em observableIndex}) const}\label{classNFcore_1_1System_192796fa155821951bba72a4460588b7}
+\index{NFcore::System@{NFcore::System}!getGlobalMoleculeLimit@{getGlobalMoleculeLimit}}
+\index{getGlobalMoleculeLimit@{getGlobalMoleculeLimit}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::System::getGlobalMoleculeLimit () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_766f466988f7ca17709358c86c44a9f7}
+
+
+\index{NFcore::System@{NFcore::System}!getMolObsCount@{getMolObsCount}}
+\index{getMolObsCount@{getMolObsCount}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int System::getMolObsCount (int {\em moleculeTypeIndex}, int {\em observableIndex}) const}\label{classNFcore_1_1System_853762fa4faf183a36f0e4334ff1fa36}
 
 
 \index{NFcore::System@{NFcore::System}!getObservableByName@{getObservableByName}}
@@ -292,11 +349,6 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::addNecessaryUpdateReaction ({\bf ReactionClass} $\ast$ {\em reaction})}\label{classNFcore_1_1System_d0fce3d90743e85331daab4b6f991b52}
 
 
-\index{NFcore::System@{NFcore::System}!createComplex@{createComplex}}
-\index{createComplex@{createComplex}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int System::createComplex ({\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1System_2bb699deafba3e03b661e89efe2882e9}
-
-
 \index{NFcore::System@{NFcore::System}!addGlobalFunction@{addGlobalFunction}}
 \index{addGlobalFunction@{addGlobalFunction}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool System::addGlobalFunction ({\bf GlobalFunction} $\ast$ {\em gf})}\label{classNFcore_1_1System_ab32ea2078ce4858926d6a24e03db168}
@@ -305,6 +357,31 @@ destroys the system and cleans up all memory associated with it
 \index{NFcore::System@{NFcore::System}!getGlobalFunctionByName@{getGlobalFunctionByName}}
 \index{getGlobalFunctionByName@{getGlobalFunctionByName}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf GlobalFunction} $\ast$ System::getGlobalFunctionByName (string {\em fName})}\label{classNFcore_1_1System_8e9719886db278111bf02d7c0df8f052}
+
+
+\index{NFcore::System@{NFcore::System}!addCompositeFunction@{addCompositeFunction}}
+\index{addCompositeFunction@{addCompositeFunction}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool System::addCompositeFunction ({\bf CompositeFunction} $\ast$ {\em cf})}\label{classNFcore_1_1System_3c13f6f6e3022df4099be60a147e5089}
+
+
+\index{NFcore::System@{NFcore::System}!getCompositeFunctionByName@{getCompositeFunctionByName}}
+\index{getCompositeFunctionByName@{getCompositeFunctionByName}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf CompositeFunction} $\ast$ System::getCompositeFunctionByName (string {\em fName})}\label{classNFcore_1_1System_cb82e1cec7631ebd1bac0252ec09862c}
+
+
+\index{NFcore::System@{NFcore::System}!finalizeCompositeFunctions@{finalizeCompositeFunctions}}
+\index{finalizeCompositeFunctions@{finalizeCompositeFunctions}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::finalizeCompositeFunctions ()}\label{classNFcore_1_1System_27d3f4d55f1931f8af72ebc89897c3c4}
+
+
+\index{NFcore::System@{NFcore::System}!printAllFunctions@{printAllFunctions}}
+\index{printAllFunctions@{printAllFunctions}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllFunctions ()}\label{classNFcore_1_1System_3a1e1447ae4977ab801754c03c10a174}
+
+
+\index{NFcore::System@{NFcore::System}!getLocalFunctionByName@{getLocalFunctionByName}}
+\index{getLocalFunctionByName@{getLocalFunctionByName}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf LocalFunction} $\ast$ System::getLocalFunctionByName (string {\em fName})}\label{classNFcore_1_1System_6a3a81e2a40fe0b69dd806ab5b09d220}
 
 
 \index{NFcore::System@{NFcore::System}!prepareForSimulation@{prepareForSimulation}}
@@ -317,16 +394,6 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::setUniversalTraversalLimit (int {\em utl})}\label{classNFcore_1_1System_d9b0bec150e1c3c2f030e1b24c4d925d}
 
 
-\index{NFcore::System@{NFcore::System}!updateGroupProperty@{updateGroupProperty}}
-\index{updateGroupProperty@{updateGroupProperty}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::updateGroupProperty (char $\ast$ {\em groupName}, double $\ast$ {\em value}, int {\em n\_\-values})}\label{classNFcore_1_1System_e05dbc6f6667582650e70b81c668d32d}
-
-
-\index{NFcore::System@{NFcore::System}!updateAllGroupProperty@{updateAllGroupProperty}}
-\index{updateAllGroupProperty@{updateAllGroupProperty}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::updateAllGroupProperty (double $\ast$ {\em value}, int {\em n\_\-values})}\label{classNFcore_1_1System_dd36ee7eadaa782d601dee03745ff43a}
-
-
 \index{NFcore::System@{NFcore::System}!setOutputToBinary@{setOutputToBinary}}
 \index{setOutputToBinary@{setOutputToBinary}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::setOutputToBinary ()}\label{classNFcore_1_1System_1d2144d992cf2de63b3b60ee553a44d5}
@@ -335,6 +402,16 @@ destroys the system and cleans up all memory associated with it
 \index{NFcore::System@{NFcore::System}!registerOutputFileLocation@{registerOutputFileLocation}}
 \index{registerOutputFileLocation@{registerOutputFileLocation}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::registerOutputFileLocation (string {\em filename})}\label{classNFcore_1_1System_602993cfca2e87ad032ec16f7cd6b010}
+
+
+\index{NFcore::System@{NFcore::System}!setDumpOutputter@{setDumpOutputter}}
+\index{setDumpOutputter@{setDumpOutputter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::setDumpOutputter ({\bf DumpSystem} $\ast$ {\em ds})}\label{classNFcore_1_1System_49ef66090e6957412f509564e8ffbabc}
+
+
+\index{NFcore::System@{NFcore::System}!tryToDump@{tryToDump}}
+\index{tryToDump@{tryToDump}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::tryToDump ()}\label{classNFcore_1_1System_9bb79d4dd5695b3c995301ef2465d4f4}
 
 
 \index{NFcore::System@{NFcore::System}!turnOnGlobalFuncOut@{turnOnGlobalFuncOut}}
@@ -372,19 +449,24 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::outputAllObservableCounts (double {\em cSampleTime})}\label{classNFcore_1_1System_e8d39a76125abafa855b661122a9e6f2}
 
 
-\index{NFcore::System@{NFcore::System}!printAllComplexes@{printAllComplexes}}
-\index{printAllComplexes@{printAllComplexes}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllComplexes ()}\label{classNFcore_1_1System_ba7affa74853733525456b3c8569403c}
+\index{NFcore::System@{NFcore::System}!outputAllObservableCounts@{outputAllObservableCounts}}
+\index{outputAllObservableCounts@{outputAllObservableCounts}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::outputAllObservableCounts (double {\em cSampleTime}, int {\em eventCounter})}\label{classNFcore_1_1System_2d68b02bc780d170d0530fbca4a551fa}
+
+
+\index{NFcore::System@{NFcore::System}!getNumOfSpeciesObs@{getNumOfSpeciesObs}}
+\index{getNumOfSpeciesObs@{getNumOfSpeciesObs}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int System::getNumOfSpeciesObs () const}\label{classNFcore_1_1System_26c913da9c3a4dfe46a9a0ed4229e218}
+
+
+\index{NFcore::System@{NFcore::System}!getSpeciesObs@{getSpeciesObs}}
+\index{getSpeciesObs@{getSpeciesObs}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Observable} $\ast$ System::getSpeciesObs (int {\em index}) const}\label{classNFcore_1_1System_ef0753cfdc3f37ffc19f346877cc745b}
 
 
 \index{NFcore::System@{NFcore::System}!printAllReactions@{printAllReactions}}
 \index{printAllReactions@{printAllReactions}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllReactions ()}\label{classNFcore_1_1System_0fe4962e857418a321a1d7004c79f9ab}
-
-
-\index{NFcore::System@{NFcore::System}!printAllGroups@{printAllGroups}}
-\index{printAllGroups@{printAllGroups}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllGroups ()}\label{classNFcore_1_1System_3e3dc899941ee95755ca33af4a20d9b9}
 
 
 \index{NFcore::System@{NFcore::System}!printIndexAndNames@{printIndexAndNames}}
@@ -399,42 +481,32 @@ destroys the system and cleans up all memory associated with it
 
 \index{NFcore::System@{NFcore::System}!printAllObservableCounts@{printAllObservableCounts}}
 \index{printAllObservableCounts@{printAllObservableCounts}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllObservableCounts ()}\label{classNFcore_1_1System_21902dd1fba779fe4e153465166d5d21}
+
+
+\index{NFcore::System@{NFcore::System}!printAllObservableCounts@{printAllObservableCounts}}
+\index{printAllObservableCounts@{printAllObservableCounts}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllObservableCounts (double {\em cSampleTime})}\label{classNFcore_1_1System_e366a6a27962b327adb352fe8302d5ab}
 
 
-\index{NFcore::System@{NFcore::System}!purgeAndPrintAvailableComplexList@{purgeAndPrintAvailableComplexList}}
-\index{purgeAndPrintAvailableComplexList@{purgeAndPrintAvailableComplexList}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::purgeAndPrintAvailableComplexList ()}\label{classNFcore_1_1System_4f9c605be2d1f137523bedda31d4a313}
-
-
-\index{NFcore::System@{NFcore::System}!outputComplexSizes@{outputComplexSizes}}
-\index{outputComplexSizes@{outputComplexSizes}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::outputComplexSizes (double {\em cSampleTime})}\label{classNFcore_1_1System_fd5fafc7050be6c61311904a28ebd061}
-
-
-\index{NFcore::System@{NFcore::System}!outputMoleculeTypeCountPerComplex@{outputMoleculeTypeCountPerComplex}}
-\index{outputMoleculeTypeCountPerComplex@{outputMoleculeTypeCountPerComplex}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::outputMoleculeTypeCountPerComplex ({\bf MoleculeType} $\ast$ {\em m})}\label{classNFcore_1_1System_5325459fe6651693dc610204e06ed9dc}
-
-
-\index{NFcore::System@{NFcore::System}!outputMeanCount@{outputMeanCount}}
-\index{outputMeanCount@{outputMeanCount}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::outputMeanCount ({\bf MoleculeType} $\ast$ {\em m})}\label{classNFcore_1_1System_e6248940bb4a0df0740790b25d1f49fd}
-
-
-\index{NFcore::System@{NFcore::System}!calculateMeanCount@{calculateMeanCount}}
-\index{calculateMeanCount@{calculateMeanCount}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::calculateMeanCount ({\bf MoleculeType} $\ast$ {\em m})}\label{classNFcore_1_1System_b1cf553da7808c5ece73e9c84d85a6dc}
+\index{NFcore::System@{NFcore::System}!printAllObservableCounts@{printAllObservableCounts}}
+\index{printAllObservableCounts@{printAllObservableCounts}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllObservableCounts (double {\em cSampleTime}, int {\em eventCounter})}\label{classNFcore_1_1System_4a2b5e6fb682f6194199e87106a8d628}
 
 
 \index{NFcore::System@{NFcore::System}!update\_\-A\_\-tot@{update\_\-A\_\-tot}}
 \index{update\_\-A\_\-tot@{update\_\-A\_\-tot}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::update\_\-A\_\-tot (double {\em old\_\-a}, double {\em new\_\-a})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_e47453169e8f5cc6453121f6f2e7e640}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::update\_\-A\_\-tot ({\bf ReactionClass} $\ast$ {\em r}, double {\em old\_\-a}, double {\em new\_\-a})}\label{classNFcore_1_1System_31b8e0e4e55fb5ea36ad0788595fce99}
 
 
 \index{NFcore::System@{NFcore::System}!evaluateAllLocalFunctions@{evaluateAllLocalFunctions}}
 \index{evaluateAllLocalFunctions@{evaluateAllLocalFunctions}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::evaluateAllLocalFunctions ()}\label{classNFcore_1_1System_831f3467d1f92eeaec77752b58873355}
+
+
+\index{NFcore::System@{NFcore::System}!addObservableForOutput@{addObservableForOutput}}
+\index{addObservableForOutput@{addObservableForOutput}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::addObservableForOutput ({\bf Observable} $\ast$ {\em o})}\label{classNFcore_1_1System_d084251ae02e32197925b89d4fe322e5}
 
 
 \index{NFcore::System@{NFcore::System}!addOutputter@{addOutputter}}
@@ -447,24 +519,14 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::dumpOutputters ()}\label{classNFcore_1_1System_cba7cfca798bb9dfa1145ca6284cd385}
 
 
-\index{NFcore::System@{NFcore::System}!getComplex@{getComplex}}
-\index{getComplex@{getComplex}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Complex}$\ast$ NFcore::System::getComplex (int {\em ID\_\-complex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_8b912d2636522a6faea0885eb9f1deb7}
-
-
-\index{NFcore::System@{NFcore::System}!getNextAvailableComplex@{getNextAvailableComplex}}
-\index{getNextAvailableComplex@{getNextAvailableComplex}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Complex} $\ast$ System::getNextAvailableComplex ()}\label{classNFcore_1_1System_776c479cce31fc25b23005f655a4bc21}
-
-
-\index{NFcore::System@{NFcore::System}!notifyThatComplexIsAvailable@{notifyThatComplexIsAvailable}}
-\index{notifyThatComplexIsAvailable@{notifyThatComplexIsAvailable}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::notifyThatComplexIsAvailable (int {\em ID\_\-complex})}\label{classNFcore_1_1System_5b5dd3891bd2378660c0a8091438bb14}
+\index{NFcore::System@{NFcore::System}!sim@{sim}}
+\index{sim@{sim}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::sim (double {\em time}, long int {\em sampleTimes})}\label{classNFcore_1_1System_a29010e3ec6bbfed4b90ac17dfb6d2ee}
 
 
 \index{NFcore::System@{NFcore::System}!sim@{sim}}
 \index{sim@{sim}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::sim (double {\em time}, long int {\em sampleTimes})}\label{classNFcore_1_1System_a29010e3ec6bbfed4b90ac17dfb6d2ee}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::sim (double {\em time}, long int {\em sampleTimes}, bool {\em verbose})}\label{classNFcore_1_1System_a409966522606863d205f7c1d6de6fb7}
 
 
 \index{NFcore::System@{NFcore::System}!stepTo@{stepTo}}
@@ -477,14 +539,14 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::singleStep ()}\label{classNFcore_1_1System_372aa8d3885b618f39e760bb7e08293e}
 
 
-\index{NFcore::System@{NFcore::System}!equilibriate@{equilibriate}}
-\index{equilibriate@{equilibriate}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::equilibriate (double {\em duration})}\label{classNFcore_1_1System_d0aa8c396f8766d079180d4e272d1e7a}
+\index{NFcore::System@{NFcore::System}!equilibrate@{equilibrate}}
+\index{equilibrate@{equilibrate}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::equilibrate (double {\em duration})}\label{classNFcore_1_1System_fcede9ecb1368f58f6a321180ab4fa18}
 
 
-\index{NFcore::System@{NFcore::System}!equilibriate@{equilibriate}}
-\index{equilibriate@{equilibriate}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::equilibriate (double {\em duration}, int {\em statusReports})}\label{classNFcore_1_1System_1d1e5e3faf9073fe82a7670bab4aa9fe}
+\index{NFcore::System@{NFcore::System}!equilibrate@{equilibrate}}
+\index{equilibrate@{equilibrate}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::equilibrate (double {\em duration}, int {\em statusReports})}\label{classNFcore_1_1System_a7758c213343eec6a648dd6a82f52c84}
 
 
 \index{NFcore::System@{NFcore::System}!registerRxnIndex@{registerRxnIndex}}
@@ -500,6 +562,46 @@ destroys the system and cleans up all memory associated with it
 \index{NFcore::System@{NFcore::System}!turnOff\_\-OnTheFlyObs@{turnOff\_\-OnTheFlyObs}}
 \index{turnOff\_\-OnTheFlyObs@{turnOff\_\-OnTheFlyObs}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::turnOff\_\-OnTheFlyObs ()}\label{classNFcore_1_1System_1e43a194c97cf8111c309c1326d01a67}
+
+
+\index{NFcore::System@{NFcore::System}!turnOnOutputEventCounter@{turnOnOutputEventCounter}}
+\index{turnOnOutputEventCounter@{turnOnOutputEventCounter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::turnOnOutputEventCounter ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_d5b6756ccbb7068a7f80f1987f1d1ab4}
+
+
+\index{NFcore::System@{NFcore::System}!addParameter@{addParameter}}
+\index{addParameter@{addParameter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::addParameter (string {\em name}, double {\em value})}\label{classNFcore_1_1System_6ef2c1c32bb0b248f78e9f3917ed43d8}
+
+
+\index{NFcore::System@{NFcore::System}!getParameter@{getParameter}}
+\index{getParameter@{getParameter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double System::getParameter (string {\em name})}\label{classNFcore_1_1System_b0e50a779a2087c8a3d6501c4ff1cb32}
+
+
+\index{NFcore::System@{NFcore::System}!setParameter@{setParameter}}
+\index{setParameter@{setParameter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::setParameter (string {\em name}, double {\em value})}\label{classNFcore_1_1System_0783a249a127d83105f5b5d7bc03f3e8}
+
+
+\index{NFcore::System@{NFcore::System}!updateSystemWithNewParameters@{updateSystemWithNewParameters}}
+\index{updateSystemWithNewParameters@{updateSystemWithNewParameters}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::updateSystemWithNewParameters ()}\label{classNFcore_1_1System_28b082ee45ed1a22a49f42835094be05}
+
+
+\index{NFcore::System@{NFcore::System}!printAllParameters@{printAllParameters}}
+\index{printAllParameters@{printAllParameters}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::printAllParameters ()}\label{classNFcore_1_1System_e5bd9fc1b196187b9473888113a8eb55}
+
+
+\index{NFcore::System@{NFcore::System}!getOutputFileStream@{getOutputFileStream}}
+\index{getOutputFileStream@{getOutputFileStream}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFstream} \& System::getOutputFileStream ()}\label{classNFcore_1_1System_d3d4a419484e8c80eb74e0b469dceac9}
+
+
+\index{NFcore::System@{NFcore::System}!getAllComplexes@{getAllComplexes}}
+\index{getAllComplexes@{getAllComplexes}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf ComplexList}\& NFcore::System::getAllComplexes ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_9a2da8640c9e8f60f1756b3dcf9de8b8}
 
 
 \index{NFcore::System@{NFcore::System}!get\_\-A\_\-tot@{get\_\-A\_\-tot}}
@@ -520,6 +622,19 @@ destroys the system and cleans up all memory associated with it
 \index{NFcore::System@{NFcore::System}!outputGroupDataHeader@{outputGroupDataHeader}}
 \index{outputGroupDataHeader@{outputGroupDataHeader}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::outputGroupDataHeader ()\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_663e0e86bb513a99bb2e4189e1f67485}
+
+
+\index{NFcore::System@{NFcore::System}!outputAllPropensities@{outputAllPropensities}}
+\index{outputAllPropensities@{outputAllPropensities}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::outputAllPropensities (double {\em time}, int {\em rxnFired})\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_a6f4eeb3c3ece53a74641b0a81abd509}
+
+
+
+
+\subsection{Friends And Related Function Documentation}
+\index{NFcore::System@{NFcore::System}!Netgen@{Netgen}}
+\index{Netgen@{Netgen}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}friend class Netgen\hspace{0.3cm}{\tt  [friend]}}\label{classNFcore_1_1System_ba6e336204af7fb6e650375559c23f96}
 
 
 
@@ -560,6 +675,21 @@ sets whether or not observables are calculated on the fly \index{NFcore::System@
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::System::outputGlobalFunctionValues}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_8b358dca2468d9cccd640cb056b1c88c}
 
 
+\index{NFcore::System@{NFcore::System}!globalMoleculeLimit@{globalMoleculeLimit}}
+\index{globalMoleculeLimit@{globalMoleculeLimit}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::System::globalMoleculeLimit}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_41366a15920143f19a65e97bddaf4f43}
+
+
+\index{NFcore::System@{NFcore::System}!outputEventCounter@{outputEventCounter}}
+\index{outputEventCounter@{outputEventCounter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::System::outputEventCounter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_ceead3b635180740c623f0e5e6158b81}
+
+
+\index{NFcore::System@{NFcore::System}!globalEventCounter@{globalEventCounter}}
+\index{globalEventCounter@{globalEventCounter}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::System::globalEventCounter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_9d09e41a3f520eb8b56d97f87b5ec2fe}
+
+
 \index{NFcore::System@{NFcore::System}!allMoleculeTypes@{allMoleculeTypes}}
 \index{allMoleculeTypes@{allMoleculeTypes}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf MoleculeType} $\ast$$>$ {\bf NFcore::System::allMoleculeTypes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_8ecd565025d7a251c816444f85fc3523}
@@ -570,19 +700,29 @@ container of all MoleculeTypes in the simulation \index{NFcore::System@{NFcore::
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf ReactionClass} $\ast$$>$ {\bf NFcore::System::allReactions}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_81af635890b6645582503977ac993dde}
 
 
-container of all Reactions in the simulation \index{NFcore::System@{NFcore::System}!allComplexes@{allComplexes}}
-\index{allComplexes@{allComplexes}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Complex} $\ast$ $>$ {\bf NFcore::System::allComplexes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_96be4fb079574e8e8d7e1b140a16b781}
-
-
-container of all complexes in the simulation \index{NFcore::System@{NFcore::System}!nextAvailableComplex@{nextAvailableComplex}}
-\index{nextAvailableComplex@{nextAvailableComplex}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}queue$<$int$>$ {\bf NFcore::System::nextAvailableComplex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_3739740fbc3114d5147694b257e1424e}
-
-
-queue tells us which complexes can be used next \index{NFcore::System@{NFcore::System}!allOutputters@{allOutputters}}
+container of all Reactions in the simulation \index{NFcore::System@{NFcore::System}!allOutputters@{allOutputters}}
 \index{allOutputters@{allOutputters}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Outputter} $\ast$$>$ {\bf NFcore::System::allOutputters}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_e808a92895ecfacaa262ad3c3ece29b0}
+
+
+manages the outputters of the system \index{NFcore::System@{NFcore::System}!allComplexes@{allComplexes}}
+\index{allComplexes@{allComplexes}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf ComplexList} {\bf NFcore::System::allComplexes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_6412567a1bfc2dc11b4982bbfee449b0}
+
+
+a container to track all complexes in the system \index{NFcore::System@{NFcore::System}!obsToOutput@{obsToOutput}}
+\index{obsToOutput@{obsToOutput}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Observable} $\ast$$>$ {\bf NFcore::System::obsToOutput}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_a5807adef87a4f8f16113150ae208137}
+
+
+keeps ordered list of pointers to observables for output \index{NFcore::System@{NFcore::System}!speciesObservables@{speciesObservables}}
+\index{speciesObservables@{speciesObservables}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Observable} $\ast$$>$ {\bf NFcore::System::speciesObservables}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_7c1ff76f6b57f02c9720e15e3c31dce9}
+
+
+\index{NFcore::System@{NFcore::System}!ds@{ds}}
+\index{ds@{ds}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf DumpSystem}$\ast$ {\bf NFcore::System::ds}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_9d450a1ada93dd1ec6d698b3419a652b}
 
 
 \index{NFcore::System@{NFcore::System}!globalFunctions@{globalFunctions}}
@@ -590,7 +730,7 @@ queue tells us which complexes can be used next \index{NFcore::System@{NFcore::S
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf GlobalFunction} $\ast$$>$ {\bf NFcore::System::globalFunctions}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_60c88f34361dadaed590d85e38ec52f2}
 
 
-$<$ manages the outputters of the system container of all global functions available to the system \index{NFcore::System@{NFcore::System}!localFunctions@{localFunctions}}
+container of all global functions available to the system \index{NFcore::System@{NFcore::System}!localFunctions@{localFunctions}}
 \index{localFunctions@{localFunctions}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf LocalFunction} $\ast$$>$ {\bf NFcore::System::localFunctions}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_ef80b4b621ee413dea5bbade453f0b2b}
 
@@ -600,7 +740,12 @@ container of all local functions available to the system \index{NFcore::System@{
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf ReactionClass} $\ast$$>$ {\bf NFcore::System::necessaryUpdateRxns}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_43cb1df4bda30d1c117a0d36e6403e8f}
 
 
-list of all reactions that need to update propensity after each step \index{NFcore::System@{NFcore::System}!a\_\-tot@{a\_\-tot}}
+list of all reactions that need to update propensity after each step \index{NFcore::System@{NFcore::System}!compositeFunctions@{compositeFunctions}}
+\index{compositeFunctions@{compositeFunctions}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf CompositeFunction} $\ast$$>$ {\bf NFcore::System::compositeFunctions}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_560c402cfc824c464de2bc6225e97692}
+
+
+\index{NFcore::System@{NFcore::System}!a\_\-tot@{a\_\-tot}}
 \index{a\_\-tot@{a\_\-tot}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf NFcore::System::a\_\-tot}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_1ee9809bac49851e43089fb1b311e3fc}
 
@@ -617,7 +762,12 @@ list of all reactions that need to update propensity after each step \index{NFco
 
 \index{NFcore::System@{NFcore::System}!outputFileStream@{outputFileStream}}
 \index{outputFileStream@{outputFileStream}!NFcore::System@{NFcore::System}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ofstream {\bf NFcore::System::outputFileStream}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_795112f6711e31bed5625c360f91ab81}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFstream} {\bf NFcore::System::outputFileStream}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_ec661fd89f69921bd5cd3b8f8a03561b}
+
+
+\index{NFcore::System@{NFcore::System}!propensityDumpStream@{propensityDumpStream}}
+\index{propensityDumpStream@{propensityDumpStream}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ofstream {\bf NFcore::System::propensityDumpStream}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_c29abbf779c04a197a9a8add606f4563}
 
 
 \index{NFcore::System@{NFcore::System}!rxnIndexMap@{rxnIndexMap}}
@@ -625,9 +775,19 @@ list of all reactions that need to update propensity after each step \index{NFco
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$$\ast$ {\bf NFcore::System::rxnIndexMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_8166822fb8ca819d8f3c1b2d3dcebdf9}
 
 
-maps reaction index values to a reaction, used for MoleculeTypes to quickly lookup a reaction 
+maps reaction index values to a reaction, used for MoleculeTypes to quickly lookup a reaction \index{NFcore::System@{NFcore::System}!paramMap@{paramMap}}
+\index{paramMap@{paramMap}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}map$<$string,double$>$ {\bf NFcore::System::paramMap}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_11d170c4aeff5b2c5f93e725aeb7bb26}
+
+
+\index{NFcore::System@{NFcore::System}!selector@{selector}}
+\index{selector@{selector}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf ReactionSelector}$\ast$ {\bf NFcore::System::selector}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_1302faec8c9f86ba688a604b91f60d13}
+
+
+
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf system.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf system.cpp}\end{CompactItemize}

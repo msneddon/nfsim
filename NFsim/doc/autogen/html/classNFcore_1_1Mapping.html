@@ -48,6 +48,13 @@ This is the low level unit that is used by reactions to identify the particular 
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html#d91ef3090e8d9a7f978b0117f5213507">setMolecule</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *<a class="el" href="classNFcore_1_1Mapping.html#afbd82d3e5f96a212b779e4f0788c971">m</a>)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html#aa6094d0fd984267b40de3345c6c9af3">printDetails</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html#6444545ea7e51c476909a83bc19a6ad0">printDetails</a> (ostream &amp;o) const </td></tr>
+
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html#43c47ea18d42fa1fd5e914c9de3d3353">clone</a> (<a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *original, <a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *newClone)</td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Mapping.html#70ed6e8f5aee2bfa645c8480282d521e">type</a></td></tr>
 
@@ -209,6 +216,74 @@ This sets the <a class="el" href="classNFcore_1_1Mapping.html" title="Keeps a po
 
 </div>
 </div><p>
+<a class="anchor" name="43c47ea18d42fa1fd5e914c9de3d3353"></a><!-- doxytag: member="NFcore::Mapping::clone" ref="43c47ea18d42fa1fd5e914c9de3d3353" args="(Mapping *original, Mapping *newClone)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::Mapping::clone           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *&nbsp;</td>
+          <td class="paramname"> <em>original</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *&nbsp;</td>
+          <td class="paramname"> <em>newClone</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="aa6094d0fd984267b40de3345c6c9af3"></a><!-- doxytag: member="NFcore::Mapping::printDetails" ref="aa6094d0fd984267b40de3345c6c9af3" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::Mapping::printDetails           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6444545ea7e51c476909a83bc19a6ad0"></a><!-- doxytag: member="NFcore::Mapping::printDetails" ref="6444545ea7e51c476909a83bc19a6ad0" args="(ostream &amp;o) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::Mapping::printDetails           </td>
+          <td>(</td>
+          <td class="paramtype">ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Member Data Documentation</h2>
 <a class="anchor" name="70ed6e8f5aee2bfa645c8480282d521e"></a><!-- doxytag: member="NFcore::Mapping::type" ref="70ed6e8f5aee2bfa645c8480282d521e" args="" -->
 <div class="memitem">
@@ -256,8 +331,8 @@ A pointer to the <a class="el" href="classNFcore_1_1Molecule.html" title="Each m
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/<a class="el" href="mapping_8hh-source.html">mapping.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/mappings/<a class="el" href="mapping_8cpp.html">mapping.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mapping_8hh-source.html">mapping.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mapping_8cpp.html">mapping.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

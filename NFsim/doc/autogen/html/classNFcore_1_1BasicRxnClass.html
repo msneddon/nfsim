@@ -41,7 +41,7 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
 <a href="classNFcore_1_1BasicRxnClass-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#2cc9f594c9a2d4a06cac2db66426658d">BasicRxnClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double <a class="el" href="classNFcore_1_1ReactionClass.html#2cf98fbd283cf3a59f05b9a0012904ef">baseRate</a>, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#85473cfad46f9fffcc519948cc6ee518">BasicRxnClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double <a class="el" href="classNFcore_1_1ReactionClass.html#2cf98fbd283cf3a59f05b9a0012904ef">baseRate</a>, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#67ba4f132c6376f31f3cddd1ff53abec">~BasicRxnClass</a> ()</td></tr>
 
@@ -49,7 +49,7 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#b96fd7ecb28984d28f0250bb4fc09631">prepareForSimulation</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#58531b5d6e5065facb35f6c371daf65e">tryToAdd</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m, unsigned int reactantPos)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#56e941f00e4f503afb9519a6f23d30fd">tryToAdd</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m, unsigned int reactantPos)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BasicRxnClass.html#4c3f8b5ff51c05a930aeeef6367ced23">remove</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m, unsigned int reactantPos)</td></tr>
 
@@ -73,7 +73,7 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="2cc9f594c9a2d4a06cac2db66426658d"></a><!-- doxytag: member="NFcore::BasicRxnClass::BasicRxnClass" ref="2cc9f594c9a2d4a06cac2db66426658d" args="(string name, double baseRate, TransformationSet *transformationSet)" -->
+<a class="anchor" name="85473cfad46f9fffcc519948cc6ee518"></a><!-- doxytag: member="NFcore::BasicRxnClass::BasicRxnClass" ref="85473cfad46f9fffcc519948cc6ee518" args="(string name, double baseRate, TransformationSet *transformationSet, System *s)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -93,7 +93,13 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *&nbsp;</td>
-          <td class="paramname"> <em>transformationSet</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>transformationSet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -170,12 +176,12 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
 
 </div>
 </div><p>
-<a class="anchor" name="58531b5d6e5065facb35f6c371daf65e"></a><!-- doxytag: member="NFcore::BasicRxnClass::tryToAdd" ref="58531b5d6e5065facb35f6c371daf65e" args="(Molecule *m, unsigned int reactantPos)" -->
+<a class="anchor" name="56e941f00e4f503afb9519a6f23d30fd"></a><!-- doxytag: member="NFcore::BasicRxnClass::tryToAdd" ref="56e941f00e4f503afb9519a6f23d30fd" args="(Molecule *m, unsigned int reactantPos)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool NFcore::BasicRxnClass::tryToAdd           </td>
+          <td class="memname">bool BasicRxnClass::tryToAdd           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
           <td class="paramname"> <em>m</em>, </td>
@@ -189,7 +195,7 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -404,8 +410,8 @@ Inheritance diagram for NFcore::BasicRxnClass:</div>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/reactions/<a class="el" href="reaction_8hh-source.html">reaction.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/reactions/<a class="el" href="reaction_8cpp.html">reaction.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactions/<a class="el" href="reaction_8hh-source.html">reaction.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactions/<a class="el" href="reaction_8cpp.html">reaction.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

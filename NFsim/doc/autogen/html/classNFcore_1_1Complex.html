@@ -38,6 +38,8 @@ Container to dynamically keep track of all system complexes.
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#70e14b17c92e3da779686b98f9f3bb2d">~Complex</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#2b4bfa37f0d9767e387a18ba9764d181">isAlive</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#72339ce32267d5aab1dfaa573a281d5c">getComplexID</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#8ee0c095d1fddd3e0e758ff0cdb29b27">getComplexSize</a> () const </td></tr>
@@ -68,6 +70,11 @@ Container to dynamically keep track of all system complexes.
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#e1a2b42aaefbcccf6cbc72f1269f7321">getZpos</a> ()</td></tr>
 
+<tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#eb6d1fcb66f1c7ae39edb701f1443024">complexMembers</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#2551a54dfa379df3bc200b729e3e35bf">molIter</a></td></tr>
+
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#15091c1106920e003a2e9b060f158f39">UNIFORM</a> = 0</td></tr>
 
@@ -76,8 +83,6 @@ Container to dynamically keep track of all system complexes.
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#f647fd600ba3d9d6fd5025ca68c17a50">DIFFUSE_3D</a> = 2</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#eb6d1fcb66f1c7ae39edb701f1443024">complexMembers</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#507911a7d8e341fe531173a178011cc3">system</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Complex.html#fa83ffe4d89fe79396145cf245960d9d">ID_complex</a></td></tr>
@@ -139,6 +144,25 @@ Container to dynamically keep track of all system complexes.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="2b4bfa37f0d9767e387a18ba9764d181"></a><!-- doxytag: member="NFcore::Complex::isAlive" ref="2b4bfa37f0d9767e387a18ba9764d181" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Complex::isAlive           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="72339ce32267d5aab1dfaa573a281d5c"></a><!-- doxytag: member="NFcore::Complex::getComplexID" ref="72339ce32267d5aab1dfaa573a281d5c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -481,7 +505,22 @@ Container to dynamically keep track of all system complexes.
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list&lt;<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&gt; <a class="el" href="classNFcore_1_1Complex.html#eb6d1fcb66f1c7ae39edb701f1443024">NFcore::Complex::complexMembers</a><code> [protected]</code>          </td>
+          <td class="memname">list&lt;<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&gt; <a class="el" href="classNFcore_1_1Complex.html#eb6d1fcb66f1c7ae39edb701f1443024">NFcore::Complex::complexMembers</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="2551a54dfa379df3bc200b729e3e35bf"></a><!-- doxytag: member="NFcore::Complex::molIter" ref="2551a54dfa379df3bc200b729e3e35bf" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list&lt;<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&gt;::iterator <a class="el" href="classNFcore_1_1Complex.html#2551a54dfa379df3bc200b729e3e35bf">NFcore::Complex::molIter</a>          </td>
         </tr>
       </table>
 </div>
@@ -522,8 +561,8 @@ Container to dynamically keep track of all system complexes.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="complex_8cpp.html">complex.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="complex_8cpp.html">complex.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

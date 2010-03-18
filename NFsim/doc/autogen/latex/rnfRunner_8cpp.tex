@@ -1,20 +1,50 @@
-\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/rnfRunner.cpp File Reference}
-\label{rnfRunner_8cpp}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/rnfRunner.cpp@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/rnfRunner.cpp}}
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/rnfRunner.cpp File Reference}
+\label{rnfRunner_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/rnfRunner.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/rnfRunner.cpp}}
 
 
 {\tt \#include \char`\"{}NFinput.hh\char`\"{}}\par
 \subsection*{Functions}
 \begin{CompactItemize}
 \item 
-void {\bf trim} (string \&str)
+bool {\bf NFinput::readRNFfile} (map$<$ string, string $>$ \&argMap, vector$<$ string $>$ \&commands, bool verbose)
 \item 
-bool {\bf NFinput::readRNFargs} (map$<$ string, string $>$ argMap, bool verbose)
+void {\bf echo} (string command, {\bf System} $\ast$s)
+\item 
+void {\bf print} (string com, {\bf System} $\ast$s)
+\item 
+void {\bf simulate} (string command, {\bf System} $\ast$s, bool verbose)
+\item 
+void {\bf equilibrate} (string command, {\bf System} $\ast$s)
+\item 
+void {\bf setParameter} (string command, {\bf System} $\ast$s)
+\item 
+bool {\bf NFinput::runRNFcommands} ({\bf System} $\ast$s, map$<$ string, string $>$ \&argMap, vector$<$ string $>$ \&commands, bool verbose)
 \end{CompactItemize}
 
 
 \subsection{Function Documentation}
-\index{rnfRunner.cpp@{rnfRunner.cpp}!trim@{trim}}
-\index{trim@{trim}!rnfRunner.cpp@{rnfRunner.cpp}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void trim (string \& {\em str})}\label{rnfRunner_8cpp_aaf0da6a7f3fe16c549dcd9aa611797a}
+\index{rnfRunner.cpp@{rnfRunner.cpp}!echo@{echo}}
+\index{echo@{echo}!rnfRunner.cpp@{rnfRunner.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void echo (string {\em command}, {\bf System} $\ast$ {\em s})}\label{rnfRunner_8cpp_b9195e4e490de9bb49a6087159f657f7}
+
+
+\index{rnfRunner.cpp@{rnfRunner.cpp}!equilibrate@{equilibrate}}
+\index{equilibrate@{equilibrate}!rnfRunner.cpp@{rnfRunner.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void equilibrate (string {\em command}, {\bf System} $\ast$ {\em s})}\label{rnfRunner_8cpp_52cf49501cd90f6136f6a53ecd7ad05e}
+
+
+\index{rnfRunner.cpp@{rnfRunner.cpp}!print@{print}}
+\index{print@{print}!rnfRunner.cpp@{rnfRunner.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void print (string {\em com}, {\bf System} $\ast$ {\em s})}\label{rnfRunner_8cpp_c4f5a995e9990312d5ce1dec6cf53a13}
+
+
+\index{rnfRunner.cpp@{rnfRunner.cpp}!setParameter@{setParameter}}
+\index{setParameter@{setParameter}!rnfRunner.cpp@{rnfRunner.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void setParameter (string {\em command}, {\bf System} $\ast$ {\em s})}\label{rnfRunner_8cpp_aa3c7ad2f06d02ee262ee60836b76b7b}
+
+
+\index{rnfRunner.cpp@{rnfRunner.cpp}!simulate@{simulate}}
+\index{simulate@{simulate}!rnfRunner.cpp@{rnfRunner.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void simulate (string {\em command}, {\bf System} $\ast$ {\em s}, bool {\em verbose})}\label{rnfRunner_8cpp_7c86f94e9346b716427c1dfd178f6fbf}
 
 

@@ -1,0 +1,175 @@
+\section{NFstream Class Reference}
+\label{classNFstream}\index{NFstream@{NFstream}}
+{\tt \#include $<$NFstream.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf NFstream} ()
+\item 
+{\bf NFstream} (const char $\ast$filename, ios\_\-base::openmode mode=ios\_\-base::out)
+\item 
+{\bf NFstream} (bool useFile)
+\item 
+{\bf NFstream} (string filename)
+\item 
+{\bf $\sim$NFstream} ()
+\item 
+void {\bf setUseFile} (bool useFile)
+\item 
+string {\bf getStrName} ()
+\item 
+void {\bf open} (const char $\ast$filename, ios\_\-base::openmode mode=ios\_\-base::out)
+\item 
+void {\bf close} ()
+\item 
+ostream \& {\bf write} (const char $\ast$s, streamsize n)
+\item 
+ostream \& {\bf flush} ()
+\item 
+bool {\bf is\_\-open} ()
+\item 
+string {\bf str} () const 
+\item 
+ios\_\-base::fmtflags {\bf setf} (ios\_\-base::fmtflags fmtfl)
+\item 
+ios\_\-base::fmtflags {\bf setf} (ios\_\-base::fmtflags fmtfl, ios\_\-base::fmtflags mask)
+\item 
+streamsize {\bf precision} () const 
+\item 
+streamsize {\bf precision} (streamsize prec)
+\item 
+{\bf NFstream} \& {\bf operator$<$$<$} ({\bf NFstream} \&($\ast$func)({\bf NFstream} \&))
+\end{CompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static void {\bf test} ()
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+{\bf NFstream} \& {\bf endl} ({\bf NFstream} \&nfstream)
+\item 
+{\footnotesize template$<$class T$>$ }\\{\bf NFstream} \& {\bf operator$<$$<$} ({\bf NFstream} \&nfstream, const T \&value)
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFstream::NFstream ()}\label{classNFstream_1b5a7c78a012438667ce9b4fc1d9fa84}
+
+
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFstream::NFstream (const char $\ast$ {\em filename}, ios\_\-base::openmode {\em mode} = {\tt ios\_\-base::out})}\label{classNFstream_ddf778a9a709d0dc010292d1b1c6d3d1}
+
+
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFstream::NFstream (bool {\em useFile})}\label{classNFstream_adfbd255c9c1cdf5e13d2228995fdc1b}
+
+
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\index{NFstream@{NFstream}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFstream::NFstream (string {\em filename})}\label{classNFstream_f9d9bc2da094f4a70aa49d5007d44447}
+
+
+\index{NFstream@{NFstream}!$\sim$NFstream@{$\sim$NFstream}}
+\index{$\sim$NFstream@{$\sim$NFstream}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFstream::$\sim$NFstream ()}\label{classNFstream_22f1f040c1d6cf8ed854ddd17a7c6b51}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFstream@{NFstream}!setUseFile@{setUseFile}}
+\index{setUseFile@{setUseFile}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFstream::setUseFile (bool {\em useFile})}\label{classNFstream_29e598e0fa90502294ac63d767f4bc86}
+
+
+\index{NFstream@{NFstream}!getStrName@{getStrName}}
+\index{getStrName@{getStrName}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFstream::getStrName ()}\label{classNFstream_13d211178aa168daf01c058d2fe85c15}
+
+
+\index{NFstream@{NFstream}!open@{open}}
+\index{open@{open}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFstream::open (const char $\ast$ {\em filename}, ios\_\-base::openmode {\em mode} = {\tt ios\_\-base::out})}\label{classNFstream_2e8126bddf568a46eb14a0e100dfcd50}
+
+
+\index{NFstream@{NFstream}!close@{close}}
+\index{close@{close}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFstream::close ()}\label{classNFstream_3f953a4db13a9c1888d81870c411c0b8}
+
+
+\index{NFstream@{NFstream}!write@{write}}
+\index{write@{write}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ostream \& NFstream::write (const char $\ast$ {\em s}, streamsize {\em n})}\label{classNFstream_67df869f900fc3458ca7e0e4ea4f72d0}
+
+
+\index{NFstream@{NFstream}!flush@{flush}}
+\index{flush@{flush}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ostream \& NFstream::flush ()}\label{classNFstream_206d7748099ca36ff0cc6d28d91f0ab3}
+
+
+\index{NFstream@{NFstream}!is\_\-open@{is\_\-open}}
+\index{is\_\-open@{is\_\-open}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFstream::is\_\-open ()}\label{classNFstream_133725f3744355e8ee25203b3badd35d}
+
+
+\index{NFstream@{NFstream}!str@{str}}
+\index{str@{str}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFstream::str () const}\label{classNFstream_93c1d951036a96dd1373f042c4af28e7}
+
+
+\index{NFstream@{NFstream}!setf@{setf}}
+\index{setf@{setf}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ios\_\-base::fmtflags NFstream::setf (ios\_\-base::fmtflags {\em fmtfl})}\label{classNFstream_ef89eac7cde90bb0730d27e2a419c60d}
+
+
+\index{NFstream@{NFstream}!setf@{setf}}
+\index{setf@{setf}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ios\_\-base::fmtflags NFstream::setf (ios\_\-base::fmtflags {\em fmtfl}, ios\_\-base::fmtflags {\em mask})}\label{classNFstream_fb58e08974008c64eaef670426924a74}
+
+
+\index{NFstream@{NFstream}!precision@{precision}}
+\index{precision@{precision}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}streamsize NFstream::precision () const}\label{classNFstream_fd65e74a7548bec6a7c00280e00ca62d}
+
+
+\index{NFstream@{NFstream}!precision@{precision}}
+\index{precision@{precision}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}streamsize NFstream::precision (streamsize {\em prec})}\label{classNFstream_8c07a5899ca4b3656cc268f0ffa3bdf6}
+
+
+\index{NFstream@{NFstream}!test@{test}}
+\index{test@{test}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFstream::test ()\hspace{0.3cm}{\tt  [static]}}\label{classNFstream_3a9fc88ef4736bce0594cf5c42e9a327}
+
+
+\index{NFstream@{NFstream}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFstream} \& NFstream::operator$<$$<$ ({\bf NFstream} \&($\ast$)({\bf NFstream} \&) {\em func})}\label{classNFstream_32887795b0724c718638a2cb316fa36f}
+
+
+
+
+\subsection{Friends And Related Function Documentation}
+\index{NFstream@{NFstream}!endl@{endl}}
+\index{endl@{endl}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFstream}\& endl ({\bf NFstream} \& {\em nfstream})\hspace{0.3cm}{\tt  [friend]}}\label{classNFstream_70d95b404a0185199948bf778584bdc3}
+
+
+\index{NFstream@{NFstream}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!NFstream@{NFstream}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ {\bf NFstream}\& operator$<$$<$ ({\bf NFstream} \& {\em nfstream}, const T \& {\em value})\hspace{0.3cm}{\tt  [friend]}}\label{classNFstream_ef588953052314e1b69285568a59947f}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFscheduler/{\bf NFstream.h}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFscheduler/{\bf NFstream.cpp}\end{CompactItemize}

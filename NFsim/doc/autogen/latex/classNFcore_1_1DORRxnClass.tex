@@ -11,7 +11,7 @@ Inheritance diagram for NFcore::DORRxnClass::\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf DORRxnClass} (string {\bf name}, double {\bf baseRate}, {\bf TransformationSet} $\ast${\bf transformationSet}, vector$<$ {\bf LocalFunction} $\ast$ $>$ \&{\bf lfList}, vector$<$ string $>$ \&lfArgumentPointerNameList)
+{\bf DORRxnClass} (string {\bf name}, double {\bf baseRate}, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf CompositeFunction} $\ast$function, vector$<$ string $>$ \&lfArgumentPointerNameList, {\bf System} $\ast$s)
 \item 
 virtual {\bf $\sim$DORRxnClass} ()
 \item 
@@ -60,20 +60,24 @@ virtual void {\bf pickMappingSets} (double randNumber) const
 \item 
 {\bf MappingSet} $\ast$ {\bf ms}
 \item 
+{\bf CompositeFunction} $\ast$ {\bf cf}
+\item 
 int {\bf DORreactantIndex}
 \item 
-vector$<$ {\bf LocalFunction} $\ast$ $>$ {\bf lfList}
+int {\bf n\_\-argMolecules}
 \item 
-vector$<$ int $>$ {\bf indexIntoMappingSet}
+int $\ast$ {\bf argIndexIntoMappingSet}
 \item 
-vector$<$ double $>$ {\bf localFunctionValue}
+{\bf Molecule} $\ast$$\ast$ {\bf argMappedMolecule}
+\item 
+int $\ast$ {\bf argScope}
 \end{CompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!DORRxnClass@{DORRxnClass}}
 \index{DORRxnClass@{DORRxnClass}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}DORRxnClass::DORRxnClass (string {\em name}, double {\em baseRate}, {\bf TransformationSet} $\ast$ {\em transformationSet}, vector$<$ {\bf LocalFunction} $\ast$ $>$ \& {\em lfList}, vector$<$ string $>$ \& {\em lfArgumentPointerNameList})}\label{classNFcore_1_1DORRxnClass_a3517167125e2042cca91e4342c7053e}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}DORRxnClass::DORRxnClass (string {\em name}, double {\em baseRate}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf CompositeFunction} $\ast$ {\em function}, vector$<$ string $>$ \& {\em lfArgumentPointerNameList}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1DORRxnClass_b75bd1a970da879e60811fec0d4db137}
 
 
 
@@ -109,7 +113,7 @@ Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionCla
 
 Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionClass_7ef57431ab858d1039e9efedd011f1f0}.\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!remove@{remove}}
 \index{remove@{remove}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual void NFcore::DORRxnClass::remove ({\bf Molecule} $\ast$ {\em m}, unsigned int {\em reactantPos})\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1DORRxnClass_91f26bc79e9d4b754139b9f58abcc484}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void DORRxnClass::remove ({\bf Molecule} $\ast$ {\em m}, unsigned int {\em reactantPos})\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1DORRxnClass_724546efe978d79d53744567691bfd99}
 
 
 
@@ -168,7 +172,7 @@ Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionCla
 
 \index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!test1@{test1}}
 \index{test1@{test1}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void DORRxnClass::test1 ({\bf System} $\ast$ {\em s})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1DORRxnClass_93f985d32abf0195ab250f8b6a33c997}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}static void NFcore::DORRxnClass::test1 ({\bf System} $\ast$ {\em s})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1DORRxnClass_717fc90c30d02d0968886af251927170}
 
 
 \index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!evaluateLocalFunctions@{evaluateLocalFunctions}}
@@ -201,29 +205,39 @@ Implements {\bf NFcore::ReactionClass} \doxyref{}{p.}{classNFcore_1_1ReactionCla
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet}$\ast$ {\bf NFcore::DORRxnClass::ms}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_aa697478dd241353c26cb95cab98465d}
 
 
+\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!cf@{cf}}
+\index{cf@{cf}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf CompositeFunction}$\ast$ {\bf NFcore::DORRxnClass::cf}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_2e39204468b229554071b066e895eba6}
+
+
 \index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!DORreactantIndex@{DORreactantIndex}}
 \index{DORreactantIndex@{DORreactantIndex}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::DORRxnClass::DORreactantIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_093d9bdb7894f01306b18e7106c5401e}
 
 
-\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!lfList@{lfList}}
-\index{lfList@{lfList}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf LocalFunction} $\ast$$>$ {\bf NFcore::DORRxnClass::lfList}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_6e9f3fa8bea0187001b8453644968a6b}
+\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!n\_\-argMolecules@{n\_\-argMolecules}}
+\index{n\_\-argMolecules@{n\_\-argMolecules}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::DORRxnClass::n\_\-argMolecules}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_fc6737775a1fc8abf8cceef9ae5446d5}
 
 
-\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!indexIntoMappingSet@{indexIntoMappingSet}}
-\index{indexIntoMappingSet@{indexIntoMappingSet}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::DORRxnClass::indexIntoMappingSet}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_bc0c15a43a0d34452de57bfa506b6c66}
+\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!argIndexIntoMappingSet@{argIndexIntoMappingSet}}
+\index{argIndexIntoMappingSet@{argIndexIntoMappingSet}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::DORRxnClass::argIndexIntoMappingSet}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_a9ca0a270fd943c2b8a1036f585fd9c3}
 
 
-\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!localFunctionValue@{localFunctionValue}}
-\index{localFunctionValue@{localFunctionValue}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$double$>$ {\bf NFcore::DORRxnClass::localFunctionValue}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_9da1ed7afc05d59b0c24f859b30c54d3}
+\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!argMappedMolecule@{argMappedMolecule}}
+\index{argMappedMolecule@{argMappedMolecule}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule}$\ast$$\ast$ {\bf NFcore::DORRxnClass::argMappedMolecule}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_2d317bf00f8b9a01236ffe2a602c9b98}
+
+
+\index{NFcore::DORRxnClass@{NFcore::DORRxnClass}!argScope@{argScope}}
+\index{argScope@{argScope}!NFcore::DORRxnClass@{NFcore::DORRxnClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::DORRxnClass::argScope}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1DORRxnClass_002aa17c5b8c6a85ed045a09f32994fa}
 
 
 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf reaction.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFreactions/reactions/{\bf DORreaction.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf reaction.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/reactions/{\bf DORreaction.cpp}\end{CompactItemize}

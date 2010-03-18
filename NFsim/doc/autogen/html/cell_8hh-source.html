@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>NFsim: /home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFtest/agentcell/cell/cell.hh Source File</title>
+<title>NFsim: /home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFtest/agentcell/cell/cell.hh Source File</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -14,7 +14,7 @@
     <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
   </ul>
 </div>
-<h1>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFtest/agentcell/cell/cell.hh</h1><a href="cell_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef NG_CELL_HH_</span>
+<h1>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFtest/agentcell/cell/cell.hh</h1><a href="cell_8hh.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef NG_CELL_HH_</span>
 <a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define NG_CELL_HH_</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
 <a name="l00004"></a>00004 <span class="preprocessor">#include &lt;math.h&gt;</span>
@@ -140,47 +140,48 @@
 <a name="l00132"></a><a class="code" href="classAgentCell.html#77ed613ae34ba13ea82962f8aef2b337">00132</a>                 <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#77ed613ae34ba13ea82962f8aef2b337">currentLigConc</a>;
 <a name="l00133"></a>00133 
 <a name="l00134"></a>00134 
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136                 <span class="comment">// With shape = 4 scale = 18.32045567939674 location = -4.606176605609249 it</span>
-<a name="l00137"></a><a class="code" href="classAgentCell.html#1c1ade291fa779bcff254f1a2741b2c9">00137</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#1c1ade291fa779bcff254f1a2741b2c9">DefaultGammaAlpha</a> = 4.;
-<a name="l00138"></a><a class="code" href="classAgentCell.html#c85eb92566ee68889487986bae10ab35">00138</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#c85eb92566ee68889487986bae10ab35">DefaultGammaBeta</a> = 1./18.32045567939674;
-<a name="l00139"></a><a class="code" href="classAgentCell.html#e7b298d6d5947fe8cd6b3ade0c1f198c">00139</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#e7b298d6d5947fe8cd6b3ade0c1f198c">DefaultGammaOffset</a> = -4.606176605609249;
-<a name="l00140"></a>00140 
-<a name="l00141"></a><a class="code" href="classAgentCell.html#6e35a8e2530f1deb3e968f35cd129610">00141</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#6e35a8e2530f1deb3e968f35cd129610">DefaultSpeed</a> = 20; <span class="comment">//uM per second</span>
-<a name="l00142"></a><a class="code" href="classAgentCell.html#c6e0c2d3f1733c83a869649b14ffc885">00142</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#c6e0c2d3f1733c83a869649b14ffc885">DefaultRotDifConst</a> = 0.06205; <span class="comment">// rad^2/s</span>
-<a name="l00143"></a>00143 
+<a name="l00135"></a>00135                 <span class="comment">//Distribution of new swim direction angles, matched to experimental observations</span>
+<a name="l00136"></a>00136                 <span class="comment">// With shape = 4, scale = 18.32045567939674, location = -4.606176605609249</span>
+<a name="l00137"></a>00137                 <span class="comment">// These variables are now initialized in cell.cpp</span>
+<a name="l00138"></a><a class="code" href="classAgentCell.html#1c1ade291fa779bcff254f1a2741b2c9">00138</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#1c1ade291fa779bcff254f1a2741b2c9">DefaultGammaAlpha</a>;<span class="comment">// = 4.;</span>
+<a name="l00139"></a><a class="code" href="classAgentCell.html#c85eb92566ee68889487986bae10ab35">00139</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#c85eb92566ee68889487986bae10ab35">DefaultGammaBeta</a>;<span class="comment">// = 1./18.32045567939674;</span>
+<a name="l00140"></a><a class="code" href="classAgentCell.html#e7b298d6d5947fe8cd6b3ade0c1f198c">00140</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#e7b298d6d5947fe8cd6b3ade0c1f198c">DefaultGammaOffset</a>;<span class="comment">// = -4.606176605609249;</span>
+<a name="l00141"></a>00141 
+<a name="l00142"></a><a class="code" href="classAgentCell.html#6e35a8e2530f1deb3e968f35cd129610">00142</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#6e35a8e2530f1deb3e968f35cd129610">DefaultSpeed</a>;<span class="comment">// = 20; //uM per second</span>
+<a name="l00143"></a><a class="code" href="classAgentCell.html#c6e0c2d3f1733c83a869649b14ffc885">00143</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#c6e0c2d3f1733c83a869649b14ffc885">DefaultRotDifConst</a>;<span class="comment">// = 0.06205; // rad^2/s</span>
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145 
-<a name="l00146"></a>00146                 <span class="comment">//Keep a copy of the chemotaxis system and environment</span>
-<a name="l00147"></a><a class="code" href="classAgentCell.html#98b7f712443ca529bacdfdb19ebc0bcf">00147</a>                 <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * <a class="code" href="classAgentCell.html#98b7f712443ca529bacdfdb19ebc0bcf">system</a>;
-<a name="l00148"></a><a class="code" href="classAgentCell.html#521250b067a0bb788ea714a75184b036">00148</a>                 <a class="code" href="classEnvironment.html">Environment</a> *<a class="code" href="classAgentCell.html#521250b067a0bb788ea714a75184b036">env</a>;
-<a name="l00149"></a>00149 
-<a name="l00150"></a>00150                 <span class="comment">//Also keep track of the output stream for the cell properties</span>
-<a name="l00151"></a><a class="code" href="classAgentCell.html#d8791aa6ceeff2f0756e8f791365f69e">00151</a>                 ofstream <a class="code" href="classAgentCell.html#d8791aa6ceeff2f0756e8f791365f69e">motorFileStream</a>;
-<a name="l00152"></a><a class="code" href="classAgentCell.html#6e2848160d0b6dbe90f49546b5b0723a">00152</a>                 ofstream <a class="code" href="classAgentCell.html#6e2848160d0b6dbe90f49546b5b0723a">outputFileStream</a>;
-<a name="l00153"></a>00153                 <span class="keywordtype">void</span> <a class="code" href="classAgentCell.html#744615f6cce3fa896ce6c76d67dd67d8">outputCellHeader</a>();
-<a name="l00154"></a>00154 
-<a name="l00155"></a><a class="code" href="classAgentCell.html#9725a2452ae210e5a955f462424f6647">00155</a>                 <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#9725a2452ae210e5a955f462424f6647">runTimeSpent</a>;
-<a name="l00156"></a>00156 
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147                 <span class="comment">//Keep a copy of the chemotaxis system and environment</span>
+<a name="l00148"></a><a class="code" href="classAgentCell.html#98b7f712443ca529bacdfdb19ebc0bcf">00148</a>                 <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * <a class="code" href="classAgentCell.html#98b7f712443ca529bacdfdb19ebc0bcf">system</a>;
+<a name="l00149"></a><a class="code" href="classAgentCell.html#521250b067a0bb788ea714a75184b036">00149</a>                 <a class="code" href="classEnvironment.html">Environment</a> *<a class="code" href="classAgentCell.html#521250b067a0bb788ea714a75184b036">env</a>;
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151                 <span class="comment">//Also keep track of the output stream for the cell properties</span>
+<a name="l00152"></a><a class="code" href="classAgentCell.html#d8791aa6ceeff2f0756e8f791365f69e">00152</a>                 ofstream <a class="code" href="classAgentCell.html#d8791aa6ceeff2f0756e8f791365f69e">motorFileStream</a>;
+<a name="l00153"></a><a class="code" href="classAgentCell.html#6e2848160d0b6dbe90f49546b5b0723a">00153</a>                 ofstream <a class="code" href="classAgentCell.html#6e2848160d0b6dbe90f49546b5b0723a">outputFileStream</a>;
+<a name="l00154"></a>00154                 <span class="keywordtype">void</span> <a class="code" href="classAgentCell.html#744615f6cce3fa896ce6c76d67dd67d8">outputCellHeader</a>();
+<a name="l00155"></a>00155 
+<a name="l00156"></a><a class="code" href="classAgentCell.html#9725a2452ae210e5a955f462424f6647">00156</a>                 <span class="keywordtype">double</span> <a class="code" href="classAgentCell.html#9725a2452ae210e5a955f462424f6647">runTimeSpent</a>;
 <a name="l00157"></a>00157 
-<a name="l00158"></a><a class="code" href="classAgentCell.html#4d90f8d3ef6d92bdcc80c08d4a5d76bd">00158</a>                 <span class="keywordtype">string</span> <a class="code" href="classAgentCell.html#4d90f8d3ef6d92bdcc80c08d4a5d76bd">fileName</a>;
-<a name="l00159"></a><a class="code" href="classAgentCell.html#d85403763b8e5872fd2cc4b31dcca62a">00159</a>                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#d85403763b8e5872fd2cc4b31dcca62a">binaryFileOutputCounter</a>;
-<a name="l00160"></a>00160 
-<a name="l00161"></a><a class="code" href="classAgentCell.html#8b0f52b3e8361e09cabc5300f74a2719">00161</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#8b0f52b3e8361e09cabc5300f74a2719">CW</a> = 1;
-<a name="l00162"></a><a class="code" href="classAgentCell.html#1e87b6cbd25109779f464c82a7f92958">00162</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#1e87b6cbd25109779f464c82a7f92958">CCW</a> = 0;
-<a name="l00163"></a>00163 
+<a name="l00158"></a>00158 
+<a name="l00159"></a><a class="code" href="classAgentCell.html#4d90f8d3ef6d92bdcc80c08d4a5d76bd">00159</a>                 <span class="keywordtype">string</span> <a class="code" href="classAgentCell.html#4d90f8d3ef6d92bdcc80c08d4a5d76bd">fileName</a>;
+<a name="l00160"></a><a class="code" href="classAgentCell.html#d85403763b8e5872fd2cc4b31dcca62a">00160</a>                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#d85403763b8e5872fd2cc4b31dcca62a">binaryFileOutputCounter</a>;
+<a name="l00161"></a>00161 
+<a name="l00162"></a><a class="code" href="classAgentCell.html#8b0f52b3e8361e09cabc5300f74a2719">00162</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#8b0f52b3e8361e09cabc5300f74a2719">CW</a> = 1;
+<a name="l00163"></a><a class="code" href="classAgentCell.html#1e87b6cbd25109779f464c82a7f92958">00163</a>                 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classAgentCell.html#1e87b6cbd25109779f464c82a7f92958">CCW</a> = 0;
 <a name="l00164"></a>00164 
 <a name="l00165"></a>00165 
-<a name="l00166"></a>00166         <span class="keyword">private</span>:
-<a name="l00167"></a>00167                 <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cellIdCounter;
-<a name="l00168"></a>00168                 <a class="code" href="classChemotaxisUtil_1_1GammaSampler.html">ChemotaxisUtil::GammaSampler</a> *gs;
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170 };
-<a name="l00171"></a>00171 
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167         <span class="keyword">private</span>:
+<a name="l00168"></a>00168                 <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cellIdCounter;
+<a name="l00169"></a>00169                 <a class="code" href="classChemotaxisUtil_1_1GammaSampler.html">ChemotaxisUtil::GammaSampler</a> *gs;
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171 };
 <a name="l00172"></a>00172 
-<a name="l00173"></a>00173 <span class="preprocessor">#endif </span><span class="comment">/*NG_CELL_HH_*/</span>
-<a name="l00174"></a>00174 
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Fri Mar 13 15:30:43 2009 for NFsim by&nbsp;
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 <span class="preprocessor">#endif </span><span class="comment">/*NG_CELL_HH_*/</span>
+<a name="l00175"></a>00175 
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

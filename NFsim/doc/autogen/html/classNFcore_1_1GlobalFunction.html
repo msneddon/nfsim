@@ -33,11 +33,13 @@ Defines functions to be used globally in a simulation.
 This small class is a small wrapper for the <a class="el" href="namespacemu.html">mu</a> parser that allows the <a class="el" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> to keep track of functions that will be used throughout the course of the simulation. These functions are only evaluated as needed to either output the value or when recomputing the rate of some reaction. <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#f7d05121200159e0c08195d5ee70c522">GlobalFunction</a> (string <a class="el" href="classNFcore_1_1GlobalFunction.html#f6c9cd92eb143d8ce24b275a26a4ff52">name</a>, string <a class="el" href="classNFcore_1_1GlobalFunction.html#e480f9fa5b5f4513e9a825e83dc940c9">funcString</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1GlobalFunction.html#0fd26dfad0ef4770839d4cc3641862bc">argNames</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1GlobalFunction.html#cfa2b51eb0b00ec320e07ff23bd5cddd">argTypes</a>, vector&lt; string &gt; &amp;paramConstNames, vector&lt; double &gt; &amp;paramConstValues)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#aaab0b95f7aa0a1ac4d9fcc071136cdb">GlobalFunction</a> (string <a class="el" href="classNFcore_1_1GlobalFunction.html#f6c9cd92eb143d8ce24b275a26a4ff52">name</a>, string <a class="el" href="classNFcore_1_1GlobalFunction.html#b7df2d72675e2d12f4f3ea3b91909f3f">funcExpression</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1GlobalFunction.html#e606a0e792d11d015d57114bf1de4222">varRefNames</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1GlobalFunction.html#417641f7c7d360d87730adad7c5961d3">varRefTypes</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1GlobalFunction.html#2f3c212d8164a5212ad3a9cdc67e0cce">paramNames</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#156e1b570424dde89dbe32c0217ed449">~GlobalFunction</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#31e9557210e6fdc3e5c87edc00a40be4">prepareForSimulation</a> (<a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#191b3bd5b9cdc95cb799371f94d714a7">updateParameters</a> (<a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#1f8462a4c988a039aa5db1bea0eab698">getNiceName</a> () const </td></tr>
 
@@ -45,13 +47,15 @@ This small class is a small wrapper for the <a class="el" href="namespacemu.html
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#5a352818f7bceb358f34f5c6c9b5b793">printDetails</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#79d146aa41d590ae1413b1d50fd394a6">printDetails</a> (<a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#434556d0375f13a99ab532dbc206ab29">attatchRxn</a> (<a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *r)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#190a13c5cd78559e44b2a75f313a8a5e">getNumberOfArgs</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#4280527acd4f3d4e7e0312b2b2441039">getNumOfVarRefs</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#d826578e762375b707dd7fff191f6eb5">getArgName</a> (int argIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#d7503dc9b5c99fe7011f7abb89ae5d63">getVarRefName</a> (int varRefIndex) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#694d33168a8958adc0dea20ea714ed37">getArgType</a> (int argIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#3584cb6ae93b3c09d41e743b13e13158">getVarRefType</a> (int varRefIndex) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">mu::Parser *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#e7d1724b1ba1c604e2f35e9a2970f9a1">p</a></td></tr>
@@ -59,23 +63,21 @@ This small class is a small wrapper for the <a class="el" href="namespacemu.html
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#f6c9cd92eb143d8ce24b275a26a4ff52">name</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#e480f9fa5b5f4513e9a825e83dc940c9">funcString</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#b7df2d72675e2d12f4f3ea3b91909f3f">funcExpression</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#9ddea1b9a9e957c3470f7961c20e69c4">n_args</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#f3098d98bf9e7963b2b835809456ffd6">n_varRefs</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#0fd26dfad0ef4770839d4cc3641862bc">argNames</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#e606a0e792d11d015d57114bf1de4222">varRefNames</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#cfa2b51eb0b00ec320e07ff23bd5cddd">argTypes</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#417641f7c7d360d87730adad7c5961d3">varRefTypes</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#d374210626c90d565237d86dd61872b3">n_paramConst</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#95cdfab1d860b34463f8135392711c4f">n_params</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#2f3c212d8164a5212ad3a9cdc67e0cce">paramNames</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1GlobalFunction.html#d3b6691ddd6e8e4982a9ee05a0f2d4cd">paramValues</a></td></tr>
-
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="f7d05121200159e0c08195d5ee70c522"></a><!-- doxytag: member="NFcore::GlobalFunction::GlobalFunction" ref="f7d05121200159e0c08195d5ee70c522" args="(string name, string funcString, vector&lt; string &gt; &amp;argNames, vector&lt; string &gt; &amp;argTypes, vector&lt; string &gt; &amp;paramConstNames, vector&lt; double &gt; &amp;paramConstValues)" -->
+<a class="anchor" name="aaab0b95f7aa0a1ac4d9fcc071136cdb"></a><!-- doxytag: member="NFcore::GlobalFunction::GlobalFunction" ref="aaab0b95f7aa0a1ac4d9fcc071136cdb" args="(string name, string funcExpression, vector&lt; string &gt; &amp;varRefNames, vector&lt; string &gt; &amp;varRefTypes, vector&lt; string &gt; &amp;paramNames, System *s)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -89,31 +91,31 @@ This small class is a small wrapper for the <a class="el" href="namespacemu.html
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">string&nbsp;</td>
-          <td class="paramname"> <em>funcString</em>, </td>
+          <td class="paramname"> <em>funcExpression</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">vector&lt; string &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>argNames</em>, </td>
+          <td class="paramname"> <em>varRefNames</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">vector&lt; string &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>argTypes</em>, </td>
+          <td class="paramname"> <em>varRefTypes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">vector&lt; string &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>paramConstNames</em>, </td>
+          <td class="paramname"> <em>paramNames</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">vector&lt; double &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>paramConstValues</em></td><td>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -166,6 +168,26 @@ Deletes the <a class="el" href="classNFcore_1_1GlobalFunction.html" title="Defin
 
 <p>
 This actually initializes the Function Parser so that it can be used. 
+</div>
+</div><p>
+<a class="anchor" name="191b3bd5b9cdc95cb799371f94d714a7"></a><!-- doxytag: member="NFcore::GlobalFunction::updateParameters" ref="191b3bd5b9cdc95cb799371f94d714a7" args="(System *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GlobalFunction::updateParameters           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="1f8462a4c988a039aa5db1bea0eab698"></a><!-- doxytag: member="NFcore::GlobalFunction::getNiceName" ref="1f8462a4c988a039aa5db1bea0eab698" args="() const " -->
@@ -225,6 +247,26 @@ Simply gives the name of the function only (without the open and close parenthes
 For Debugging, prints out the details of the function including the defined variables and constant parameters as well as what the function currently evaluates to. 
 </div>
 </div><p>
+<a class="anchor" name="79d146aa41d590ae1413b1d50fd394a6"></a><!-- doxytag: member="NFcore::GlobalFunction::printDetails" ref="79d146aa41d590ae1413b1d50fd394a6" args="(System *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GlobalFunction::printDetails           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="434556d0375f13a99ab532dbc206ab29"></a><!-- doxytag: member="NFcore::GlobalFunction::attatchRxn" ref="434556d0375f13a99ab532dbc206ab29" args="(ReactionClass *r)" -->
 <div class="memitem">
 <div class="memproto">
@@ -245,12 +287,12 @@ For Debugging, prints out the details of the function including the defined vari
 When a reaction uses this function, we have to keep track of it here so that we can notify it to update is propensity when this function changes... 
 </div>
 </div><p>
-<a class="anchor" name="190a13c5cd78559e44b2a75f313a8a5e"></a><!-- doxytag: member="NFcore::GlobalFunction::getNumberOfArgs" ref="190a13c5cd78559e44b2a75f313a8a5e" args="() const " -->
+<a class="anchor" name="4280527acd4f3d4e7e0312b2b2441039"></a><!-- doxytag: member="NFcore::GlobalFunction::getNumOfVarRefs" ref="4280527acd4f3d4e7e0312b2b2441039" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int NFcore::GlobalFunction::getNumberOfArgs           </td>
+          <td class="memname">int NFcore::GlobalFunction::getNumOfVarRefs           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -264,15 +306,15 @@ When a reaction uses this function, we have to keep track of it here so that we 
 
 </div>
 </div><p>
-<a class="anchor" name="d826578e762375b707dd7fff191f6eb5"></a><!-- doxytag: member="NFcore::GlobalFunction::getArgName" ref="d826578e762375b707dd7fff191f6eb5" args="(int argIndex) const " -->
+<a class="anchor" name="d7503dc9b5c99fe7011f7abb89ae5d63"></a><!-- doxytag: member="NFcore::GlobalFunction::getVarRefName" ref="d7503dc9b5c99fe7011f7abb89ae5d63" args="(int varRefIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string NFcore::GlobalFunction::getArgName           </td>
+          <td class="memname">string NFcore::GlobalFunction::getVarRefName           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>argIndex</em>          </td>
+          <td class="paramname"> <em>varRefIndex</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
         </tr>
@@ -284,15 +326,15 @@ When a reaction uses this function, we have to keep track of it here so that we 
 
 </div>
 </div><p>
-<a class="anchor" name="694d33168a8958adc0dea20ea714ed37"></a><!-- doxytag: member="NFcore::GlobalFunction::getArgType" ref="694d33168a8958adc0dea20ea714ed37" args="(int argIndex) const " -->
+<a class="anchor" name="3584cb6ae93b3c09d41e743b13e13158"></a><!-- doxytag: member="NFcore::GlobalFunction::getVarRefType" ref="3584cb6ae93b3c09d41e743b13e13158" args="(int varRefIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string NFcore::GlobalFunction::getArgType           </td>
+          <td class="memname">string NFcore::GlobalFunction::getVarRefType           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>argIndex</em>          </td>
+          <td class="paramname"> <em>varRefIndex</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [inline]</code></td>
         </tr>
@@ -335,12 +377,12 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="e480f9fa5b5f4513e9a825e83dc940c9"></a><!-- doxytag: member="NFcore::GlobalFunction::funcString" ref="e480f9fa5b5f4513e9a825e83dc940c9" args="" -->
+<a class="anchor" name="b7df2d72675e2d12f4f3ea3b91909f3f"></a><!-- doxytag: member="NFcore::GlobalFunction::funcExpression" ref="b7df2d72675e2d12f4f3ea3b91909f3f" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string <a class="el" href="classNFcore_1_1GlobalFunction.html#e480f9fa5b5f4513e9a825e83dc940c9">NFcore::GlobalFunction::funcString</a><code> [protected]</code>          </td>
+          <td class="memname">string <a class="el" href="classNFcore_1_1GlobalFunction.html#b7df2d72675e2d12f4f3ea3b91909f3f">NFcore::GlobalFunction::funcExpression</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -350,12 +392,12 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="9ddea1b9a9e957c3470f7961c20e69c4"></a><!-- doxytag: member="NFcore::GlobalFunction::n_args" ref="9ddea1b9a9e957c3470f7961c20e69c4" args="" -->
+<a class="anchor" name="f3098d98bf9e7963b2b835809456ffd6"></a><!-- doxytag: member="NFcore::GlobalFunction::n_varRefs" ref="f3098d98bf9e7963b2b835809456ffd6" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1GlobalFunction.html#9ddea1b9a9e957c3470f7961c20e69c4">NFcore::GlobalFunction::n_args</a><code> [protected]</code>          </td>
+          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1GlobalFunction.html#f3098d98bf9e7963b2b835809456ffd6">NFcore::GlobalFunction::n_varRefs</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -365,12 +407,12 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="0fd26dfad0ef4770839d4cc3641862bc"></a><!-- doxytag: member="NFcore::GlobalFunction::argNames" ref="0fd26dfad0ef4770839d4cc3641862bc" args="" -->
+<a class="anchor" name="e606a0e792d11d015d57114bf1de4222"></a><!-- doxytag: member="NFcore::GlobalFunction::varRefNames" ref="e606a0e792d11d015d57114bf1de4222" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string* <a class="el" href="classNFcore_1_1GlobalFunction.html#0fd26dfad0ef4770839d4cc3641862bc">NFcore::GlobalFunction::argNames</a><code> [protected]</code>          </td>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1GlobalFunction.html#e606a0e792d11d015d57114bf1de4222">NFcore::GlobalFunction::varRefNames</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -380,12 +422,12 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="cfa2b51eb0b00ec320e07ff23bd5cddd"></a><!-- doxytag: member="NFcore::GlobalFunction::argTypes" ref="cfa2b51eb0b00ec320e07ff23bd5cddd" args="" -->
+<a class="anchor" name="417641f7c7d360d87730adad7c5961d3"></a><!-- doxytag: member="NFcore::GlobalFunction::varRefTypes" ref="417641f7c7d360d87730adad7c5961d3" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string* <a class="el" href="classNFcore_1_1GlobalFunction.html#cfa2b51eb0b00ec320e07ff23bd5cddd">NFcore::GlobalFunction::argTypes</a><code> [protected]</code>          </td>
+          <td class="memname">string* <a class="el" href="classNFcore_1_1GlobalFunction.html#417641f7c7d360d87730adad7c5961d3">NFcore::GlobalFunction::varRefTypes</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -395,12 +437,12 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="d374210626c90d565237d86dd61872b3"></a><!-- doxytag: member="NFcore::GlobalFunction::n_paramConst" ref="d374210626c90d565237d86dd61872b3" args="" -->
+<a class="anchor" name="95cdfab1d860b34463f8135392711c4f"></a><!-- doxytag: member="NFcore::GlobalFunction::n_params" ref="95cdfab1d860b34463f8135392711c4f" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1GlobalFunction.html#d374210626c90d565237d86dd61872b3">NFcore::GlobalFunction::n_paramConst</a><code> [protected]</code>          </td>
+          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1GlobalFunction.html#95cdfab1d860b34463f8135392711c4f">NFcore::GlobalFunction::n_params</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -425,24 +467,9 @@ This is the actual Parser object that keeps track of the function and has refere
 
 </div>
 </div><p>
-<a class="anchor" name="d3b6691ddd6e8e4982a9ee05a0f2d4cd"></a><!-- doxytag: member="NFcore::GlobalFunction::paramValues" ref="d3b6691ddd6e8e4982a9ee05a0f2d4cd" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double* <a class="el" href="classNFcore_1_1GlobalFunction.html#d3b6691ddd6e8e4982a9ee05a0f2d4cd">NFcore::GlobalFunction::paramValues</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFfunction/<a class="el" href="NFfunction_8hh-source.html">NFfunction.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFfunction/<a class="el" href="function_8cpp.html">function.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFfunction/<a class="el" href="NFfunction_8hh-source.html">NFfunction.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFfunction/<a class="el" href="function_8cpp.html">function.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

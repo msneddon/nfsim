@@ -12,7 +12,7 @@ MoleculeTypes have to store a link to all \doxyref{Molecule}{p.}{classNFcore_1_1
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf MoleculeList} ({\bf MoleculeType} $\ast${\bf mt}, int init\_\-capacity)
+{\bf MoleculeList} ({\bf MoleculeType} $\ast${\bf mt}, int init\_\-capacity, int {\bf finalCapacity})
 \item 
 {\bf $\sim$MoleculeList} ()
 \item 
@@ -22,11 +22,16 @@ int {\bf size} () const
 \item 
 int {\bf create} ({\bf Molecule} $\ast$\&m)
 \item 
-void {\bf remove} (int listId)
+void {\bf remove} (int listId, {\bf Molecule} $\ast$m)
 \item 
 void {\bf removeLast} ()
 \item 
 void {\bf printDetails} ()
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const int {\bf NO\_\-LIMIT} = -1
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -36,6 +41,8 @@ int {\bf n\_\-molecules}
 int {\bf lastAllocated}
 \item 
 int {\bf capacity}
+\item 
+int {\bf finalCapacity}
 \item 
 {\bf MoleculeType} $\ast$ {\bf mt}
 \item 
@@ -48,10 +55,10 @@ int $\ast$ {\bf molPos}
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::MoleculeList@{NFcore::MoleculeList}!MoleculeList@{MoleculeList}}
 \index{MoleculeList@{MoleculeList}!NFcore::MoleculeList@{NFcore::MoleculeList}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MoleculeList::MoleculeList ({\bf MoleculeType} $\ast$ {\em mt}, int {\em init\_\-capacity})}\label{classNFcore_1_1MoleculeList_4e72ed7e8b48f44f3e3eb637ca33614b}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MoleculeList::MoleculeList ({\bf MoleculeType} $\ast$ {\em mt}, int {\em init\_\-capacity}, int {\em finalCapacity})}\label{classNFcore_1_1MoleculeList_f0854ae0109ae8276233624324340d78}
 
 
-Create a new \doxyref{MoleculeList}{p.}{classNFcore_1_1MoleculeList} that stores the given type of molecule with an initial capacity (that is dynamically expanded if you add more than the given capacity of molecules) \index{NFcore::MoleculeList@{NFcore::MoleculeList}!$\sim$MoleculeList@{$\sim$MoleculeList}}
+Create a new \doxyref{MoleculeList}{p.}{classNFcore_1_1MoleculeList} that stores the given type of molecule with an initial capacity (that is dynamically expanded if you add more than the given capacity of molecules). \index{NFcore::MoleculeList@{NFcore::MoleculeList}!$\sim$MoleculeList@{$\sim$MoleculeList}}
 \index{$\sim$MoleculeList@{$\sim$MoleculeList}!NFcore::MoleculeList@{NFcore::MoleculeList}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}MoleculeList::$\sim$MoleculeList ()}\label{classNFcore_1_1MoleculeList_5ef1a55e9cee39809917d2a7df0ed5d1}
 
@@ -76,7 +83,7 @@ Returns a pointer to the \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} with th
 
 Allocates a spot for a new \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} in the system. The given pointer is assigned to the new \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} (so it should be passed in as a null pointer) and the method returns the index this \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} was assigned. \index{NFcore::MoleculeList@{NFcore::MoleculeList}!remove@{remove}}
 \index{remove@{remove}!NFcore::MoleculeList@{NFcore::MoleculeList}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeList::remove (int {\em listId})}\label{classNFcore_1_1MoleculeList_ef203bfe7f616c270d3575a60c219810}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeList::remove (int {\em listId}, {\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1MoleculeList_bc02786df13704cc4ee525629c97d501}
 
 
 Removes a \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} from this list with the given ID. \index{NFcore::MoleculeList@{NFcore::MoleculeList}!removeLast@{removeLast}}
@@ -92,6 +99,11 @@ Removes the very last \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} on the lis
 Print out some (maybe too much) diagnostic debug information about the list. 
 
 \subsection{Member Data Documentation}
+\index{NFcore::MoleculeList@{NFcore::MoleculeList}!NO\_\-LIMIT@{NO\_\-LIMIT}}
+\index{NO\_\-LIMIT@{NO\_\-LIMIT}!NFcore::MoleculeList@{NFcore::MoleculeList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::MoleculeList::NO\_\-LIMIT} = -1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1MoleculeList_3932d54c7de3b24d0593806a85d7ab9a}
+
+
 \index{NFcore::MoleculeList@{NFcore::MoleculeList}!n\_\-molecules@{n\_\-molecules}}
 \index{n\_\-molecules@{n\_\-molecules}!NFcore::MoleculeList@{NFcore::MoleculeList}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::MoleculeList::n\_\-molecules}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeList_61273d0422f974177f427bd3b887b1ae}
@@ -107,7 +119,12 @@ The number of \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects currently 
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::MoleculeList::capacity}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeList_5a5c123c608650edb3f75f170b9d3215}
 
 
-The maximum number of Molecules that can be added before the list resizes itself \index{NFcore::MoleculeList@{NFcore::MoleculeList}!mt@{mt}}
+The maximum number of Molecules that can be added before the list resizes itself \index{NFcore::MoleculeList@{NFcore::MoleculeList}!finalCapacity@{finalCapacity}}
+\index{finalCapacity@{finalCapacity}!NFcore::MoleculeList@{NFcore::MoleculeList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::MoleculeList::finalCapacity}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeList_f261ca8a47aa3c169fe5d7820a60f691}
+
+
+The maximum number of Molecules that can be added, period. \index{NFcore::MoleculeList@{NFcore::MoleculeList}!mt@{mt}}
 \index{mt@{mt}!NFcore::MoleculeList@{NFcore::MoleculeList}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$ {\bf NFcore::MoleculeList::mt}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeList_6282e64bc34323d642cb574eb6888d21}
 
@@ -126,5 +143,5 @@ Allows the list to map index values of Molecules to the index values in the list
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/moleculeLists/{\bf moleculeList.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/moleculeLists/{\bf moleculeList.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/moleculeLists/{\bf moleculeList.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/moleculeLists/{\bf moleculeList.cpp}\end{CompactItemize}

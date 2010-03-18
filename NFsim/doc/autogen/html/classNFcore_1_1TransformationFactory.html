@@ -27,7 +27,9 @@
 <p>
 
 <p>
-<a href="classNFcore_1_1TransformationFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
+<a href="classNFcore_1_1TransformationFactory-members.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Static object that generates transformations with the given sites. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+<table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#c8a9523b24c856ab84f106a8740d2baf">genStateChangeTransform</a> (unsigned int cIndex, int newValue)</td></tr>
@@ -42,7 +44,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#f11322a3ba45cabe38b2eadf032a1ff6">genAddMoleculeTransform</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#5d848169fa346fc9642cc34ecf706ea3">genRemoveMoleculeTransform</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#81d0b2c7cd8efe29ff45333ac16dc657">genRemoveMoleculeTransform</a> (int removalType)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#4bcd9f929fb6c17f6935dea191e9e9aa">genEmptyTransform</a> ()</td></tr>
 
@@ -53,6 +55,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#206a59330bba84e1b0131b8b0ba919f4">genLocalFunctionReference</a> (string PointerName, int type, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#b78d2938d6417407231887e04cc2de05">COMPLETE_SPECIES_REMOVAL</a> = 0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#9cbb8a75b7e8cea2746b8644006f4c12">DELETE_MOLECULES</a> = 1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#55540d69a47fd1afe03fbf7ff9da2da8">DELETE_MOLECULES_NO_KEYWORD</a> = 2</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#5b83f8ccba33c9c11d57ccb01eb65b8b">STATE_CHANGE</a> = 0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#9d39c00ef66f1a76c2d0d466753382e6">BINDING</a> = 1</td></tr>
@@ -233,18 +241,19 @@ Generates an unbinding transformation for a particular binding site. Only one of
 <div class="memdoc">
 
 <p>
-Generates an Add <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> transformation. Currently, this is not yet implemented. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+Generates an Add <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="5d848169fa346fc9642cc34ecf706ea3"></a><!-- doxytag: member="NFcore::TransformationFactory::genRemoveMoleculeTransform" ref="5d848169fa346fc9642cc34ecf706ea3" args="()" -->
+<a class="anchor" name="81d0b2c7cd8efe29ff45333ac16dc657"></a><!-- doxytag: member="NFcore::TransformationFactory::genRemoveMoleculeTransform" ref="81d0b2c7cd8efe29ff45333ac16dc657" args="(int removalType)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classNFcore_1_1Transformation.html">NFcore::Transformation</a> * TransformationFactory::genRemoveMoleculeTransform           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>removalType</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [static]</code></td>
         </tr>
@@ -253,7 +262,7 @@ Generates an Add <a class="el" href="classNFcore_1_1Molecule.html" title="Each m
 <div class="memdoc">
 
 <p>
-Generates a removal of a molecule from the system. Currently this is not yet implemented. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+Generates a removal of a molecule from the system. The removalType specifies how the molecule should be removed (either everything that is connected, or just the molecules, or just the molecules conditional on how it is connected) <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -351,10 +360,55 @@ Generates an DecrementState transformation. <dl class="author" compact><dt><b>Au
 <div class="memdoc">
 
 <p>
-
+Return a pointer to the transformation that is needed by a local function 
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="b78d2938d6417407231887e04cc2de05"></a><!-- doxytag: member="NFcore::TransformationFactory::COMPLETE_SPECIES_REMOVAL" ref="b78d2938d6417407231887e04cc2de05" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TransformationFactory.html#b78d2938d6417407231887e04cc2de05">NFcore::TransformationFactory::COMPLETE_SPECIES_REMOVAL</a> = 0<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Indicates that a delete transform deletes the entire connected species 
+</div>
+</div><p>
+<a class="anchor" name="9cbb8a75b7e8cea2746b8644006f4c12"></a><!-- doxytag: member="NFcore::TransformationFactory::DELETE_MOLECULES" ref="9cbb8a75b7e8cea2746b8644006f4c12" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TransformationFactory.html#9cbb8a75b7e8cea2746b8644006f4c12">NFcore::TransformationFactory::DELETE_MOLECULES</a> = 1<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Indicates that a delete transform deletes only the pointed-to molecule 
+</div>
+</div><p>
+<a class="anchor" name="55540d69a47fd1afe03fbf7ff9da2da8"></a><!-- doxytag: member="NFcore::TransformationFactory::DELETE_MOLECULES_NO_KEYWORD" ref="55540d69a47fd1afe03fbf7ff9da2da8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classNFcore_1_1TransformationFactory.html#55540d69a47fd1afe03fbf7ff9da2da8">NFcore::TransformationFactory::DELETE_MOLECULES_NO_KEYWORD</a> = 2<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Delete only pointed-to molecules, only if deleting it creates only one remaining species 
+</div>
+</div><p>
 <a class="anchor" name="5b83f8ccba33c9c11d57ccb01eb65b8b"></a><!-- doxytag: member="NFcore::TransformationFactory::STATE_CHANGE" ref="5b83f8ccba33c9c11d57ccb01eb65b8b" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -457,7 +511,7 @@ Indicates no transformation is needed (or is the second partner in a binding tra
 <div class="memdoc">
 
 <p>
-
+Indicates an increment transformation 
 </div>
 </div><p>
 <a class="anchor" name="ef1bf254664f1baaa23127355a427fde"></a><!-- doxytag: member="NFcore::TransformationFactory::DECREMENT_STATE" ref="ef1bf254664f1baaa23127355a427fde" args="" -->
@@ -472,7 +526,7 @@ Indicates no transformation is needed (or is the second partner in a binding tra
 <div class="memdoc">
 
 <p>
-
+Indicates a decrement transformation 
 </div>
 </div><p>
 <a class="anchor" name="2082f8fc11ff7315d0454c2bf61bf0e4"></a><!-- doxytag: member="NFcore::TransformationFactory::LOCAL_FUNCTION_REFERENCE" ref="2082f8fc11ff7315d0454c2bf61bf0e4" args="" -->
@@ -491,8 +545,8 @@ Indicates no transformation is needed (or is the second partner in a binding tra
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

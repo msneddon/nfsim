@@ -38,6 +38,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#7ea6dc6d40f2c519f1a3eb55c5e4775c">System</a> (string <a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a>, bool <a class="el" href="classNFcore_1_1System.html#47a9e12db95ee961d561b729a5f7cb8b">useComplex</a>)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#09f875df922ae99a09c2bebdb74ba593">System</a> (string <a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a>, bool <a class="el" href="classNFcore_1_1System.html#47a9e12db95ee961d561b729a5f7cb8b">useComplex</a>, int <a class="el" href="classNFcore_1_1System.html#41366a15920143f19a65e97bddaf4f43">globalMoleculeLimit</a>)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3be70bb338e3f062f821173fd15680d0">~System</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#11395716c7875a899b5b05549e95ffa7">getName</a> () const </td></tr>
@@ -48,7 +50,9 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e7be0ad9a68a8ae51db3699b7b1f836c">getCurrentTime</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#192796fa155821951bba72a4460588b7">getObservableCount</a> (int moleculeTypeIndex, int observableIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#766f466988f7ca17709358c86c44a9f7">getGlobalMoleculeLimit</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#853762fa4faf183a36f0e4334ff1fa36">getMolObsCount</a> (int moleculeTypeIndex, int observableIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#2eaf0459715b8d709b8af495f02b65d6">getObservableByName</a> (string obsName)</td></tr>
 
@@ -72,23 +76,31 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d0fce3d90743e85331daab4b6f991b52">addNecessaryUpdateReaction</a> (<a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *reaction)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#2bb699deafba3e03b661e89efe2882e9">createComplex</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ab32ea2078ce4858926d6a24e03db168">addGlobalFunction</a> (<a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> *gf)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8e9719886db278111bf02d7c0df8f052">getGlobalFunctionByName</a> (string fName)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3c13f6f6e3022df4099be60a147e5089">addCompositeFunction</a> (<a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *cf)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#cb82e1cec7631ebd1bac0252ec09862c">getCompositeFunctionByName</a> (string fName)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#27d3f4d55f1931f8af72ebc89897c3c4">finalizeCompositeFunctions</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3a1e1447ae4977ab801754c03c10a174">printAllFunctions</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#6a3a81e2a40fe0b69dd806ab5b09d220">getLocalFunctionByName</a> (string fName)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#6caa03d1c59dc7044d81d4666b306fe7">prepareForSimulation</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d9b0bec150e1c3c2f030e1b24c4d925d">setUniversalTraversalLimit</a> (int utl)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e05dbc6f6667582650e70b81c668d32d">updateGroupProperty</a> (char *groupName, double *value, int n_values)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#dd36ee7eadaa782d601dee03745ff43a">updateAllGroupProperty</a> (double *value, int n_values)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#1d2144d992cf2de63b3b60ee553a44d5">setOutputToBinary</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#602993cfca2e87ad032ec16f7cd6b010">registerOutputFileLocation</a> (string filename)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#49ef66090e6957412f509564e8ffbabc">setDumpOutputter</a> (<a class="el" href="classNFcore_1_1DumpSystem.html">DumpSystem</a> *<a class="el" href="classNFcore_1_1System.html#9d450a1ada93dd1ec6d698b3419a652b">ds</a>)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#9bb79d4dd5695b3c995301ef2465d4f4">tryToDump</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#cb8be3a11cb6c4a51cac80bbf8d1361a">turnOnGlobalFuncOut</a> ()</td></tr>
 
@@ -104,57 +116,67 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e8d39a76125abafa855b661122a9e6f2">outputAllObservableCounts</a> (double cSampleTime)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ba7affa74853733525456b3c8569403c">printAllComplexes</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#2d68b02bc780d170d0530fbca4a551fa">outputAllObservableCounts</a> (double cSampleTime, int eventCounter)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#26c913da9c3a4dfe46a9a0ed4229e218">getNumOfSpeciesObs</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ef0753cfdc3f37ffc19f346877cc745b">getSpeciesObs</a> (int index) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#0fe4962e857418a321a1d7004c79f9ab">printAllReactions</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3e3dc899941ee95755ca33af4a20d9b9">printAllGroups</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d00baa99ef01fedebd4b01ae7cc7f0f0">printIndexAndNames</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a9ae72dc4ebebfd28c549ebe68112182">printAllMoleculeTypes</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#21902dd1fba779fe4e153465166d5d21">printAllObservableCounts</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e366a6a27962b327adb352fe8302d5ab">printAllObservableCounts</a> (double cSampleTime)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#4f9c605be2d1f137523bedda31d4a313">purgeAndPrintAvailableComplexList</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#4a2b5e6fb682f6194199e87106a8d628">printAllObservableCounts</a> (double cSampleTime, int eventCounter)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#fd5fafc7050be6c61311904a28ebd061">outputComplexSizes</a> (double cSampleTime)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#5325459fe6651693dc610204e06ed9dc">outputMoleculeTypeCountPerComplex</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *m)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e6248940bb4a0df0740790b25d1f49fd">outputMeanCount</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *m)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#b1cf553da7808c5ece73e9c84d85a6dc">calculateMeanCount</a> (<a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *m)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e47453169e8f5cc6453121f6f2e7e640">update_A_tot</a> (double old_a, double new_a)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#31b8e0e4e55fb5ea36ad0788595fce99">update_A_tot</a> (<a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *r, double old_a, double new_a)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#831f3467d1f92eeaec77752b58873355">evaluateAllLocalFunctions</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d084251ae02e32197925b89d4fe322e5">addObservableForOutput</a> (<a class="el" href="classNFcore_1_1Observable.html">Observable</a> *o)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#f839dc5d0219ba24b0818344d61915f8">addOutputter</a> (<a class="el" href="classNFcore_1_1Outputter.html">Outputter</a> *op)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#cba7cfca798bb9dfa1145ca6284cd385">dumpOutputters</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Complex.html">Complex</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8b912d2636522a6faea0885eb9f1deb7">getComplex</a> (int ID_complex) const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Complex.html">Complex</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#776c479cce31fc25b23005f655a4bc21">getNextAvailableComplex</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#5b5dd3891bd2378660c0a8091438bb14">notifyThatComplexIsAvailable</a> (int ID_complex)</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a29010e3ec6bbfed4b90ac17dfb6d2ee">sim</a> (double time, long int sampleTimes)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a409966522606863d205f7c1d6de6fb7">sim</a> (double time, long int sampleTimes, bool verbose)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#01e0f14013c19ca7d34546a2d4c649eb">stepTo</a> (double stoppingTime)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#372aa8d3885b618f39e760bb7e08293e">singleStep</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d0aa8c396f8766d079180d4e272d1e7a">equilibriate</a> (double duration)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#fcede9ecb1368f58f6a321180ab4fa18">equilibrate</a> (double duration)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#1d1e5e3faf9073fe82a7670bab4aa9fe">equilibriate</a> (double duration, int statusReports)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a7758c213343eec6a648dd6a82f52c84">equilibrate</a> (double duration, int statusReports)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#26a7e6a228b01e0617f754098acfc1f8">registerRxnIndex</a> (int rxnId, int rxnPos, int rxnIndex)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#2ef2c3b370a452ec7ec8c227f8436c03">getRxnIndex</a> (int rxnId, int rxnPos) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#1e43a194c97cf8111c309c1326d01a67">turnOff_OnTheFlyObs</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d5b6756ccbb7068a7f80f1987f1d1ab4">turnOnOutputEventCounter</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#6ef2c1c32bb0b248f78e9f3917ed43d8">addParameter</a> (string <a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a>, double value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#b0e50a779a2087c8a3d6501c4ff1cb32">getParameter</a> (string <a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a>)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#0783a249a127d83105f5b5d7bc03f3e8">setParameter</a> (string <a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a>, double value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#28b082ee45ed1a22a49f42835094be05">updateSystemWithNewParameters</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e5bd9fc1b196187b9473888113a8eb55">printAllParameters</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFstream.html">NFstream</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#d3d4a419484e8c80eb74e0b469dceac9">getOutputFileStream</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#9a2da8640c9e8f60f1756b3dcf9de8b8">getAllComplexes</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#22dbd34534da90b02cdc880d966657ad">NULL_EVENT_COUNTER</a> = 0</td></tr>
@@ -167,6 +189,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e3341dc56abdab48a13b0a9ee4785783">getNextRxn</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#663e0e86bb513a99bb2e4189e1f67485">outputGroupDataHeader</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a6f4eeb3c3ece53a74641b0a81abd509">outputAllPropensities</a> (double time, int rxnFired)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#83bb19575621efcd5ce25cf45a61d289">name</a></td></tr>
@@ -181,15 +205,25 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8b358dca2468d9cccd640cb056b1c88c">outputGlobalFunctionValues</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#41366a15920143f19a65e97bddaf4f43">globalMoleculeLimit</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ceead3b635180740c623f0e5e6158b81">outputEventCounter</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#9d09e41a3f520eb8b56d97f87b5ec2fe">globalEventCounter</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8ecd565025d7a251c816444f85fc3523">allMoleculeTypes</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#81af635890b6645582503977ac993dde">allReactions</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Complex.html">Complex</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#96be4fb079574e8e8d7e1b140a16b781">allComplexes</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">queue&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3739740fbc3114d5147694b257e1424e">nextAvailableComplex</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Outputter.html">Outputter</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#e808a92895ecfacaa262ad3c3ece29b0">allOutputters</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#6412567a1bfc2dc11b4982bbfee449b0">allComplexes</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Observable.html">Observable</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#a5807adef87a4f8f16113150ae208137">obsToOutput</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Observable.html">Observable</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#7c1ff76f6b57f02c9720e15e3c31dce9">speciesObservables</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1DumpSystem.html">DumpSystem</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#9d450a1ada93dd1ec6d698b3419a652b">ds</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#60c88f34361dadaed590d85e38ec52f2">globalFunctions</a></td></tr>
 
@@ -197,15 +231,26 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#43cb1df4bda30d1c117a0d36e6403e8f">necessaryUpdateRxns</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#560c402cfc824c464de2bc6225e97692">compositeFunctions</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#1ee9809bac49851e43089fb1b311e3fc">a_tot</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#f9e37b7e3106fbc2902b93027bfe4a4b">current_time</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#7811d594a66f8aceea0ff9e8c745d01c">nextReaction</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">ofstream&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#795112f6711e31bed5625c360f91ab81">outputFileStream</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFstream.html">NFstream</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ec661fd89f69921bd5cd3b8f8a03561b">outputFileStream</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">ofstream&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#c29abbf779c04a197a9a8add606f4563">propensityDumpStream</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8166822fb8ca819d8f3c1b2d3dcebdf9">rxnIndexMap</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">map&lt; string, double &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#11d170c4aeff5b2c5f93e725aeb7bb26">paramMap</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1ReactionSelector.html">ReactionSelector</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#1302faec8c9f86ba688a604b91f60d13">selector</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ba6e336204af7fb6e650375559c23f96">Netgen</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -244,6 +289,41 @@ creates a system with the given name that does not keep track dynamically of com
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>useComplex</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+creates a system that keeps track of complex formation if the setComplex parameter is set to true 
+</div>
+</div><p>
+<a class="anchor" name="09f875df922ae99a09c2bebdb74ba593"></a><!-- doxytag: member="NFcore::System::System" ref="09f875df922ae99a09c2bebdb74ba593" args="(string name, bool useComplex, int globalMoleculeLimit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">System::System           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>useComplex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>globalMoleculeLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -354,12 +434,31 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="192796fa155821951bba72a4460588b7"></a><!-- doxytag: member="NFcore::System::getObservableCount" ref="192796fa155821951bba72a4460588b7" args="(int moleculeTypeIndex, int observableIndex) const " -->
+<a class="anchor" name="766f466988f7ca17709358c86c44a9f7"></a><!-- doxytag: member="NFcore::System::getGlobalMoleculeLimit" ref="766f466988f7ca17709358c86c44a9f7" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int System::getObservableCount           </td>
+          <td class="memname">int NFcore::System::getGlobalMoleculeLimit           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="853762fa4faf183a36f0e4334ff1fa36"></a><!-- doxytag: member="NFcore::System::getMolObsCount" ref="853762fa4faf183a36f0e4334ff1fa36" args="(int moleculeTypeIndex, int observableIndex) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int System::getMolObsCount           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>moleculeTypeIndex</em>, </td>
@@ -610,26 +709,6 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="2bb699deafba3e03b661e89efe2882e9"></a><!-- doxytag: member="NFcore::System::createComplex" ref="2bb699deafba3e03b661e89efe2882e9" args="(Molecule *m)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int System::createComplex           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="ab32ea2078ce4858926d6a24e03db168"></a><!-- doxytag: member="NFcore::System::addGlobalFunction" ref="ab32ea2078ce4858926d6a24e03db168" args="(GlobalFunction *gf)" -->
 <div class="memitem">
 <div class="memproto">
@@ -656,6 +735,104 @@ destroys the system and cleans up all memory associated with it
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classNFcore_1_1GlobalFunction.html">GlobalFunction</a> * System::getGlobalFunctionByName           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>fName</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="3c13f6f6e3022df4099be60a147e5089"></a><!-- doxytag: member="NFcore::System::addCompositeFunction" ref="3c13f6f6e3022df4099be60a147e5089" args="(CompositeFunction *cf)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool System::addCompositeFunction           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *&nbsp;</td>
+          <td class="paramname"> <em>cf</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="cb82e1cec7631ebd1bac0252ec09862c"></a><!-- doxytag: member="NFcore::System::getCompositeFunctionByName" ref="cb82e1cec7631ebd1bac0252ec09862c" args="(string fName)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> * System::getCompositeFunctionByName           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>fName</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="27d3f4d55f1931f8af72ebc89897c3c4"></a><!-- doxytag: member="NFcore::System::finalizeCompositeFunctions" ref="27d3f4d55f1931f8af72ebc89897c3c4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::finalizeCompositeFunctions           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="3a1e1447ae4977ab801754c03c10a174"></a><!-- doxytag: member="NFcore::System::printAllFunctions" ref="3a1e1447ae4977ab801754c03c10a174" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::printAllFunctions           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6a3a81e2a40fe0b69dd806ab5b09d220"></a><!-- doxytag: member="NFcore::System::getLocalFunctionByName" ref="6a3a81e2a40fe0b69dd806ab5b09d220" args="(string fName)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a> * System::getLocalFunctionByName           </td>
           <td>(</td>
           <td class="paramtype">string&nbsp;</td>
           <td class="paramname"> <em>fName</em>          </td>
@@ -709,70 +886,6 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="e05dbc6f6667582650e70b81c668d32d"></a><!-- doxytag: member="NFcore::System::updateGroupProperty" ref="e05dbc6f6667582650e70b81c668d32d" args="(char *groupName, double *value, int n_values)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NFcore::System::updateGroupProperty           </td>
-          <td>(</td>
-          <td class="paramtype">char *&nbsp;</td>
-          <td class="paramname"> <em>groupName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>n_values</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="dd36ee7eadaa782d601dee03745ff43a"></a><!-- doxytag: member="NFcore::System::updateAllGroupProperty" ref="dd36ee7eadaa782d601dee03745ff43a" args="(double *value, int n_values)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NFcore::System::updateAllGroupProperty           </td>
-          <td>(</td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>n_values</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="1d2144d992cf2de63b3b60ee553a44d5"></a><!-- doxytag: member="NFcore::System::setOutputToBinary" ref="1d2144d992cf2de63b3b60ee553a44d5" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -801,6 +914,45 @@ destroys the system and cleans up all memory associated with it
           <td>(</td>
           <td class="paramtype">string&nbsp;</td>
           <td class="paramname"> <em>filename</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="49ef66090e6957412f509564e8ffbabc"></a><!-- doxytag: member="NFcore::System::setDumpOutputter" ref="49ef66090e6957412f509564e8ffbabc" args="(DumpSystem *ds)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::setDumpOutputter           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1DumpSystem.html">DumpSystem</a> *&nbsp;</td>
+          <td class="paramname"> <em>ds</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9bb79d4dd5695b3c995301ef2465d4f4"></a><!-- doxytag: member="NFcore::System::tryToDump" ref="9bb79d4dd5695b3c995301ef2465d4f4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::tryToDump           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -948,16 +1100,65 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="ba7affa74853733525456b3c8569403c"></a><!-- doxytag: member="NFcore::System::printAllComplexes" ref="ba7affa74853733525456b3c8569403c" args="()" -->
+<a class="anchor" name="2d68b02bc780d170d0530fbca4a551fa"></a><!-- doxytag: member="NFcore::System::outputAllObservableCounts" ref="2d68b02bc780d170d0530fbca4a551fa" args="(double cSampleTime, int eventCounter)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void System::printAllComplexes           </td>
+          <td class="memname">void System::outputAllObservableCounts           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>cSampleTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>eventCounter</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="26c913da9c3a4dfe46a9a0ed4229e218"></a><!-- doxytag: member="NFcore::System::getNumOfSpeciesObs" ref="26c913da9c3a4dfe46a9a0ed4229e218" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int System::getNumOfSpeciesObs           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ef0753cfdc3f37ffc19f346877cc745b"></a><!-- doxytag: member="NFcore::System::getSpeciesObs" ref="ef0753cfdc3f37ffc19f346877cc745b" args="(int index) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> * System::getSpeciesObs           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>index</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -973,25 +1174,6 @@ destroys the system and cleans up all memory associated with it
       <table class="memname">
         <tr>
           <td class="memname">void System::printAllReactions           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="3e3dc899941ee95755ca33af4a20d9b9"></a><!-- doxytag: member="NFcore::System::printAllGroups" ref="3e3dc899941ee95755ca33af4a20d9b9" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void System::printAllGroups           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -1043,6 +1225,25 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
+<a class="anchor" name="21902dd1fba779fe4e153465166d5d21"></a><!-- doxytag: member="NFcore::System::printAllObservableCounts" ref="21902dd1fba779fe4e153465166d5d21" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::printAllObservableCounts           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="e366a6a27962b327adb352fe8302d5ab"></a><!-- doxytag: member="NFcore::System::printAllObservableCounts" ref="e366a6a27962b327adb352fe8302d5ab" args="(double cSampleTime)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1063,36 +1264,26 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="4f9c605be2d1f137523bedda31d4a313"></a><!-- doxytag: member="NFcore::System::purgeAndPrintAvailableComplexList" ref="4f9c605be2d1f137523bedda31d4a313" args="()" -->
+<a class="anchor" name="4a2b5e6fb682f6194199e87106a8d628"></a><!-- doxytag: member="NFcore::System::printAllObservableCounts" ref="4a2b5e6fb682f6194199e87106a8d628" args="(double cSampleTime, int eventCounter)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void System::purgeAndPrintAvailableComplexList           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="fd5fafc7050be6c61311904a28ebd061"></a><!-- doxytag: member="NFcore::System::outputComplexSizes" ref="fd5fafc7050be6c61311904a28ebd061" args="(double cSampleTime)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void System::outputComplexSizes           </td>
+          <td class="memname">void System::printAllObservableCounts           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>cSampleTime</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>cSampleTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>eventCounter</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -1102,73 +1293,19 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="5325459fe6651693dc610204e06ed9dc"></a><!-- doxytag: member="NFcore::System::outputMoleculeTypeCountPerComplex" ref="5325459fe6651693dc610204e06ed9dc" args="(MoleculeType *m)" -->
+<a class="anchor" name="31b8e0e4e55fb5ea36ad0788595fce99"></a><!-- doxytag: member="NFcore::System::update_A_tot" ref="31b8e0e4e55fb5ea36ad0788595fce99" args="(ReactionClass *r, double old_a, double new_a)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void System::outputMoleculeTypeCountPerComplex           </td>
+          <td class="memname">void System::update_A_tot           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1ReactionClass.html">ReactionClass</a> *&nbsp;</td>
+          <td class="paramname"> <em>r</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="e6248940bb4a0df0740790b25d1f49fd"></a><!-- doxytag: member="NFcore::System::outputMeanCount" ref="e6248940bb4a0df0740790b25d1f49fd" args="(MoleculeType *m)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">double System::outputMeanCount           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="b1cf553da7808c5ece73e9c84d85a6dc"></a><!-- doxytag: member="NFcore::System::calculateMeanCount" ref="b1cf553da7808c5ece73e9c84d85a6dc" args="(MoleculeType *m)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double System::calculateMeanCount           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td>
-          <td class="paramname"> <em>m</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="e47453169e8f5cc6453121f6f2e7e640"></a><!-- doxytag: member="NFcore::System::update_A_tot" ref="e47453169e8f5cc6453121f6f2e7e640" args="(double old_a, double new_a)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NFcore::System::update_A_tot           </td>
-          <td>(</td>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>old_a</em>, </td>
         </tr>
@@ -1181,7 +1318,7 @@ destroys the system and cleans up all memory associated with it
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -1199,6 +1336,26 @@ destroys the system and cleans up all memory associated with it
           <td class="memname">void System::evaluateAllLocalFunctions           </td>
           <td>(</td>
           <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="d084251ae02e32197925b89d4fe322e5"></a><!-- doxytag: member="NFcore::System::addObservableForOutput" ref="d084251ae02e32197925b89d4fe322e5" args="(Observable *o)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::addObservableForOutput           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&nbsp;</td>
+          <td class="paramname"> <em>o</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -1249,65 +1406,6 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="8b912d2636522a6faea0885eb9f1deb7"></a><!-- doxytag: member="NFcore::System::getComplex" ref="8b912d2636522a6faea0885eb9f1deb7" args="(int ID_complex) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Complex.html">Complex</a>* NFcore::System::getComplex           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>ID_complex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="776c479cce31fc25b23005f655a4bc21"></a><!-- doxytag: member="NFcore::System::getNextAvailableComplex" ref="776c479cce31fc25b23005f655a4bc21" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Complex.html">Complex</a> * System::getNextAvailableComplex           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="5b5dd3891bd2378660c0a8091438bb14"></a><!-- doxytag: member="NFcore::System::notifyThatComplexIsAvailable" ref="5b5dd3891bd2378660c0a8091438bb14" args="(int ID_complex)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void System::notifyThatComplexIsAvailable           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>ID_complex</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="a29010e3ec6bbfed4b90ac17dfb6d2ee"></a><!-- doxytag: member="NFcore::System::sim" ref="a29010e3ec6bbfed4b90ac17dfb6d2ee" args="(double time, long int sampleTimes)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1323,6 +1421,41 @@ destroys the system and cleans up all memory associated with it
           <td></td>
           <td class="paramtype">long int&nbsp;</td>
           <td class="paramname"> <em>sampleTimes</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="a409966522606863d205f7c1d6de6fb7"></a><!-- doxytag: member="NFcore::System::sim" ref="a409966522606863d205f7c1d6de6fb7" args="(double time, long int sampleTimes, bool verbose)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double System::sim           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long int&nbsp;</td>
+          <td class="paramname"> <em>sampleTimes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1376,12 +1509,12 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="d0aa8c396f8766d079180d4e272d1e7a"></a><!-- doxytag: member="NFcore::System::equilibriate" ref="d0aa8c396f8766d079180d4e272d1e7a" args="(double duration)" -->
+<a class="anchor" name="fcede9ecb1368f58f6a321180ab4fa18"></a><!-- doxytag: member="NFcore::System::equilibrate" ref="fcede9ecb1368f58f6a321180ab4fa18" args="(double duration)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void System::equilibriate           </td>
+          <td class="memname">void System::equilibrate           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>duration</em>          </td>
@@ -1396,12 +1529,12 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
-<a class="anchor" name="1d1e5e3faf9073fe82a7670bab4aa9fe"></a><!-- doxytag: member="NFcore::System::equilibriate" ref="1d1e5e3faf9073fe82a7670bab4aa9fe" args="(double duration, int statusReports)" -->
+<a class="anchor" name="a7758c213343eec6a648dd6a82f52c84"></a><!-- doxytag: member="NFcore::System::equilibrate" ref="a7758c213343eec6a648dd6a82f52c84" args="(double duration, int statusReports)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void System::equilibriate           </td>
+          <td class="memname">void System::equilibrate           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>duration</em>, </td>
@@ -1508,6 +1641,179 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
+<a class="anchor" name="d5b6756ccbb7068a7f80f1987f1d1ab4"></a><!-- doxytag: member="NFcore::System::turnOnOutputEventCounter" ref="d5b6756ccbb7068a7f80f1987f1d1ab4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::System::turnOnOutputEventCounter           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6ef2c1c32bb0b248f78e9f3917ed43d8"></a><!-- doxytag: member="NFcore::System::addParameter" ref="6ef2c1c32bb0b248f78e9f3917ed43d8" args="(string name, double value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::addParameter           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>value</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="b0e50a779a2087c8a3d6501c4ff1cb32"></a><!-- doxytag: member="NFcore::System::getParameter" ref="b0e50a779a2087c8a3d6501c4ff1cb32" args="(string name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double System::getParameter           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="0783a249a127d83105f5b5d7bc03f3e8"></a><!-- doxytag: member="NFcore::System::setParameter" ref="0783a249a127d83105f5b5d7bc03f3e8" args="(string name, double value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::setParameter           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>value</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="28b082ee45ed1a22a49f42835094be05"></a><!-- doxytag: member="NFcore::System::updateSystemWithNewParameters" ref="28b082ee45ed1a22a49f42835094be05" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::updateSystemWithNewParameters           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="e5bd9fc1b196187b9473888113a8eb55"></a><!-- doxytag: member="NFcore::System::printAllParameters" ref="e5bd9fc1b196187b9473888113a8eb55" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::printAllParameters           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="d3d4a419484e8c80eb74e0b469dceac9"></a><!-- doxytag: member="NFcore::System::getOutputFileStream" ref="d3d4a419484e8c80eb74e0b469dceac9" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFstream.html">NFstream</a> &amp; System::getOutputFileStream           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9a2da8640c9e8f60f1756b3dcf9de8b8"></a><!-- doxytag: member="NFcore::System::getAllComplexes" ref="9a2da8640c9e8f60f1756b3dcf9de8b8" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a>&amp; NFcore::System::getAllComplexes           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="493b5b1dfdf6028801370e60ca339aec"></a><!-- doxytag: member="NFcore::System::get_A_tot" ref="493b5b1dfdf6028801370e60ca339aec" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -1575,6 +1881,51 @@ destroys the system and cleans up all memory associated with it
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="a6f4eeb3c3ece53a74641b0a81abd509"></a><!-- doxytag: member="NFcore::System::outputAllPropensities" ref="a6f4eeb3c3ece53a74641b0a81abd509" args="(double time, int rxnFired)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::outputAllPropensities           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>rxnFired</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="ba6e336204af7fb6e650375559c23f96"></a><!-- doxytag: member="NFcore::System::Netgen" ref="ba6e336204af7fb6e650375559c23f96" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class Netgen<code> [friend]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1690,6 +2041,51 @@ sets whether or not observables are calculated on the fly
 
 </div>
 </div><p>
+<a class="anchor" name="41366a15920143f19a65e97bddaf4f43"></a><!-- doxytag: member="NFcore::System::globalMoleculeLimit" ref="41366a15920143f19a65e97bddaf4f43" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1System.html#41366a15920143f19a65e97bddaf4f43">NFcore::System::globalMoleculeLimit</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ceead3b635180740c623f0e5e6158b81"></a><!-- doxytag: member="NFcore::System::outputEventCounter" ref="ceead3b635180740c623f0e5e6158b81" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1System.html#ceead3b635180740c623f0e5e6158b81">NFcore::System::outputEventCounter</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9d09e41a3f520eb8b56d97f87b5ec2fe"></a><!-- doxytag: member="NFcore::System::globalEventCounter" ref="9d09e41a3f520eb8b56d97f87b5ec2fe" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1System.html#9d09e41a3f520eb8b56d97f87b5ec2fe">NFcore::System::globalEventCounter</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="8ecd565025d7a251c816444f85fc3523"></a><!-- doxytag: member="NFcore::System::allMoleculeTypes" ref="8ecd565025d7a251c816444f85fc3523" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1720,42 +2116,72 @@ container of all MoleculeTypes in the simulation
 container of all Reactions in the simulation 
 </div>
 </div><p>
-<a class="anchor" name="96be4fb079574e8e8d7e1b140a16b781"></a><!-- doxytag: member="NFcore::System::allComplexes" ref="96be4fb079574e8e8d7e1b140a16b781" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Complex.html">Complex</a> * &gt; <a class="el" href="classNFcore_1_1System.html#96be4fb079574e8e8d7e1b140a16b781">NFcore::System::allComplexes</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-container of all complexes in the simulation 
-</div>
-</div><p>
-<a class="anchor" name="3739740fbc3114d5147694b257e1424e"></a><!-- doxytag: member="NFcore::System::nextAvailableComplex" ref="3739740fbc3114d5147694b257e1424e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">queue&lt;int&gt; <a class="el" href="classNFcore_1_1System.html#3739740fbc3114d5147694b257e1424e">NFcore::System::nextAvailableComplex</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-queue tells us which complexes can be used next 
-</div>
-</div><p>
 <a class="anchor" name="e808a92895ecfacaa262ad3c3ece29b0"></a><!-- doxytag: member="NFcore::System::allOutputters" ref="e808a92895ecfacaa262ad3c3ece29b0" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Outputter.html">Outputter</a> *&gt; <a class="el" href="classNFcore_1_1System.html#e808a92895ecfacaa262ad3c3ece29b0">NFcore::System::allOutputters</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+manages the outputters of the system 
+</div>
+</div><p>
+<a class="anchor" name="6412567a1bfc2dc11b4982bbfee449b0"></a><!-- doxytag: member="NFcore::System::allComplexes" ref="6412567a1bfc2dc11b4982bbfee449b0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a> <a class="el" href="classNFcore_1_1System.html#6412567a1bfc2dc11b4982bbfee449b0">NFcore::System::allComplexes</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+a container to track all complexes in the system 
+</div>
+</div><p>
+<a class="anchor" name="a5807adef87a4f8f16113150ae208137"></a><!-- doxytag: member="NFcore::System::obsToOutput" ref="a5807adef87a4f8f16113150ae208137" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&gt; <a class="el" href="classNFcore_1_1System.html#a5807adef87a4f8f16113150ae208137">NFcore::System::obsToOutput</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+keeps ordered list of pointers to observables for output 
+</div>
+</div><p>
+<a class="anchor" name="7c1ff76f6b57f02c9720e15e3c31dce9"></a><!-- doxytag: member="NFcore::System::speciesObservables" ref="7c1ff76f6b57f02c9720e15e3c31dce9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Observable.html">Observable</a> *&gt; <a class="el" href="classNFcore_1_1System.html#7c1ff76f6b57f02c9720e15e3c31dce9">NFcore::System::speciesObservables</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9d450a1ada93dd1ec6d698b3419a652b"></a><!-- doxytag: member="NFcore::System::ds" ref="9d450a1ada93dd1ec6d698b3419a652b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1DumpSystem.html">DumpSystem</a>* <a class="el" href="classNFcore_1_1System.html#9d450a1ada93dd1ec6d698b3419a652b">NFcore::System::ds</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1777,7 +2203,7 @@ queue tells us which complexes can be used next
 <div class="memdoc">
 
 <p>
-&lt; manages the outputters of the system container of all global functions available to the system 
+container of all global functions available to the system 
 </div>
 </div><p>
 <a class="anchor" name="ef80b4b621ee413dea5bbade453f0b2b"></a><!-- doxytag: member="NFcore::System::localFunctions" ref="ef80b4b621ee413dea5bbade453f0b2b" args="" -->
@@ -1808,6 +2234,21 @@ container of all local functions available to the system
 
 <p>
 list of all reactions that need to update propensity after each step 
+</div>
+</div><p>
+<a class="anchor" name="560c402cfc824c464de2bc6225e97692"></a><!-- doxytag: member="NFcore::System::compositeFunctions" ref="560c402cfc824c464de2bc6225e97692" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1CompositeFunction.html">CompositeFunction</a> *&gt; <a class="el" href="classNFcore_1_1System.html#560c402cfc824c464de2bc6225e97692">NFcore::System::compositeFunctions</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="1ee9809bac49851e43089fb1b311e3fc"></a><!-- doxytag: member="NFcore::System::a_tot" ref="1ee9809bac49851e43089fb1b311e3fc" args="" -->
@@ -1855,12 +2296,27 @@ list of all reactions that need to update propensity after each step
 
 </div>
 </div><p>
-<a class="anchor" name="795112f6711e31bed5625c360f91ab81"></a><!-- doxytag: member="NFcore::System::outputFileStream" ref="795112f6711e31bed5625c360f91ab81" args="" -->
+<a class="anchor" name="ec661fd89f69921bd5cd3b8f8a03561b"></a><!-- doxytag: member="NFcore::System::outputFileStream" ref="ec661fd89f69921bd5cd3b8f8a03561b" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ofstream <a class="el" href="classNFcore_1_1System.html#795112f6711e31bed5625c360f91ab81">NFcore::System::outputFileStream</a><code> [protected]</code>          </td>
+          <td class="memname"><a class="el" href="classNFstream.html">NFstream</a> <a class="el" href="classNFcore_1_1System.html#ec661fd89f69921bd5cd3b8f8a03561b">NFcore::System::outputFileStream</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="c29abbf779c04a197a9a8add606f4563"></a><!-- doxytag: member="NFcore::System::propensityDumpStream" ref="c29abbf779c04a197a9a8add606f4563" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ofstream <a class="el" href="classNFcore_1_1System.html#c29abbf779c04a197a9a8add606f4563">NFcore::System::propensityDumpStream</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1885,9 +2341,39 @@ list of all reactions that need to update propensity after each step
 maps reaction index values to a reaction, used for MoleculeTypes to quickly lookup a reaction 
 </div>
 </div><p>
+<a class="anchor" name="11d170c4aeff5b2c5f93e725aeb7bb26"></a><!-- doxytag: member="NFcore::System::paramMap" ref="11d170c4aeff5b2c5f93e725aeb7bb26" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">map&lt;string,double&gt; <a class="el" href="classNFcore_1_1System.html#11d170c4aeff5b2c5f93e725aeb7bb26">NFcore::System::paramMap</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="1302faec8c9f86ba688a604b91f60d13"></a><!-- doxytag: member="NFcore::System::selector" ref="1302faec8c9f86ba688a604b91f60d13" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1ReactionSelector.html">ReactionSelector</a>* <a class="el" href="classNFcore_1_1System.html#1302faec8c9f86ba688a604b91f60d13">NFcore::System::selector</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="system_8cpp.html">system.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="system_8cpp.html">system.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

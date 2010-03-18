@@ -22,47 +22,59 @@ class {\bf component}
 bool {\bf parseArguments} (int argc, const char $\ast$argv[$\,$], map$<$ string, string $>$ \&argMap)
 \begin{CompactList}\small\item\em Parses command line arguments from the console nicely. \item\end{CompactList}\item 
 int {\bf parseAsInt} (map$<$ string, string $>$ \&argMap, string argName, int defaultValue)
-\item 
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as an integer. \item\end{CompactList}\item 
 double {\bf parseAsDouble} (map$<$ string, string $>$ \&argMap, string argName, double defaultValue)
-\item 
-bool {\bf createComplexOutputDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
-\item 
-{\bf System} $\ast$ {\bf initializeFromXML} (string filename, bool verbose)
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a double. \item\end{CompactList}\item 
+bool {\bf parseSequence} (string numString, vector$<$ double $>$ \&outputTimes)
+\begin{CompactList}\small\item\em Parses a matlab style sequence (ie startValue:step:endValue) into the vector. \item\end{CompactList}\item 
+bool {\bf createSystemDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
+\begin{CompactList}\small\item\em Parses the cmd line arg that specifies system dumps, and schedules them. \item\end{CompactList}\item 
+{\bf System} $\ast$ {\bf initializeFromXML} (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)
 \begin{CompactList}\small\item\em Maintains information about a \doxyref{component}{p.}{classNFinput_1_1component} of a TemplateMolecule. \item\end{CompactList}\item 
-bool {\bf initParameters} ({\bf TiXmlElement} $\ast$pListOfParameters, map$<$ string, double $>$ \&parameter, bool verbose)
+bool {\bf initParameters} ({\bf TiXmlElement} $\ast$pListOfParameters, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, bool verbose)
 \begin{CompactList}\small\item\em Reads the parameter XML block and puts them in the parameter map. \item\end{CompactList}\item 
-bool {\bf initGlobalFunctions} ({\bf TiXmlElement} $\ast$pListOfFunctions, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, bool verbose)
-\begin{CompactList}\small\item\em Reads the Function XML block and adds the Functions to the system. \item\end{CompactList}\item 
 bool {\bf initMoleculeTypes} ({\bf TiXmlElement} $\ast$pListOfMoleculeTypes, {\bf System} $\ast$system, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads the MoleculeType XML block and adds the MoleculeTypes to the system. \item\end{CompactList}\item 
 bool {\bf initStartSpecies} ({\bf TiXmlElement} $\ast$pListOfSpecies, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads a Species XML block, creates the molecules and adds them to the system. \item\end{CompactList}\item 
-bool {\bf FindReactionRuleSymmetry} ({\bf TiXmlElement} $\ast$pRxnRule, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter, bool verbose)
-\item 
-bool {\bf generateRxnPermutations} (vector$<$ map$<$ string, {\bf component} $>$ $>$ \&permutations, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter)
-\item 
-bool {\bf initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
+bool {\bf initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool blockSameComplexBinding, bool verbose)
 \begin{CompactList}\small\item\em Reads a reactionRule XML block and adds the rules to the system. \item\end{CompactList}\item 
+bool {\bf readObservableForTemplateMolecules} ({\bf TiXmlElement} $\ast$pObs, string observableName, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList, vector$<$ string $>$ \&stochRelation, vector$<$ int $>$ \&stochQuantity, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, int obsType, bool verbose)
+\item 
 bool {\bf initObservables} ({\bf TiXmlElement} $\ast$pListOfObservables, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads an observable XML block and adds the new observables to the system. \item\end{CompactList}\item 
-bool {\bf readPatternForSymmetry} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, string patternName, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symComps, bool verbose)
-\item 
 {\bf TemplateMolecule} $\ast$ {\bf readPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \&templates, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
 bool {\bf readProductPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, vector$<$ {\bf MoleculeType} $\ast$ $>$ \&productMoleculeTypes, vector$<$ vector$<$ int $>$ $>$ \&stateInformation, vector$<$ vector$<$ int $>$ $>$ \&bindingSiteInformation, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
-void {\bf parseComplexDump} (vector$<$ {\bf Outputter} $>$ \&outputter, string arg)
+bool {\bf initFunctions} ({\bf TiXmlElement} $\ast$pListOfFunctions, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, {\bf TiXmlElement} $\ast$pListOfObservables, map$<$ string, int $>$ \&allowedStates, bool verbose)
+\begin{CompactList}\small\item\em Reads the Function XML block and adds the Functions to the system. \item\end{CompactList}\item 
+bool {\bf FindReactionRuleSymmetry} ({\bf TiXmlElement} $\ast$pRxnRule, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter, bool verbose)
+\item 
+bool {\bf readPatternForSymmetry} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, string patternName, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symComps, bool verbose)
+\item 
+bool {\bf generateRxnPermutations} (vector$<$ map$<$ string, {\bf component} $>$ $>$ \&permutations, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter, bool verbose)
+\item 
+bool {\bf lookup} ({\bf component} $\ast$\&c, string id, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap)
 \item 
 void {\bf walk} ({\bf System} $\ast$s)
+\begin{CompactList}\small\item\em Allows the user to walk through the system with an interactive text-based program. \item\end{CompactList}\item 
+bool {\bf readRNFfile} (map$<$ string, string $>$ \&argMap, vector$<$ string $>$ \&commands, bool verbose)
+\item 
+bool {\bf runRNFcommands} ({\bf System} $\ast$s, map$<$ string, string $>$ \&argMap, vector$<$ string $>$ \&commands, bool verbose)
 \end{CompactItemize}
 
 
 \subsection{Function Documentation}
-\index{NFinput@{NFinput}!createComplexOutputDumper@{createComplexOutputDumper}}
-\index{createComplexOutputDumper@{createComplexOutputDumper}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::createComplexOutputDumper (string {\em paramStr}, {\bf System} $\ast$ {\em s}, bool {\em verbose})}\label{namespaceNFinput_dd19f9f589d434a7b385d11cf688a72a}
+\index{NFinput@{NFinput}!createSystemDumper@{createSystemDumper}}
+\index{createSystemDumper@{createSystemDumper}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::createSystemDumper (string {\em paramStr}, {\bf System} $\ast$ {\em s}, bool {\em verbose})}\label{namespaceNFinput_19ed804a2b6e64acebc7ad49f95498fd}
 
 
+Parses the cmd line arg that specifies system dumps, and schedules them. 
+
+This method works by parsing the argument, initializing the class DumpSystem defined in the file \doxyref{NFoutput.hh}{p.}{NFoutput_8hh}, and adding the DumpSystem to the System. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!FindReactionRuleSymmetry@{FindReactionRuleSymmetry}}
 \index{FindReactionRuleSymmetry@{FindReactionRuleSymmetry}!NFinput@{NFinput}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::FindReactionRuleSymmetry ({\bf TiXmlElement} $\ast$ {\em pRxnRule}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, map$<$ string, {\bf component} $>$ \& {\em symComps}, map$<$ string, {\bf component} $>$ \& {\em symRxnCenter}, bool {\em verbose})}\label{namespaceNFinput_7ee59a37c3436e333bf2e03c65b5a03e}
@@ -70,12 +82,16 @@ void {\bf walk} ({\bf System} $\ast$s)
 
 \index{NFinput@{NFinput}!generateRxnPermutations@{generateRxnPermutations}}
 \index{generateRxnPermutations@{generateRxnPermutations}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::generateRxnPermutations (vector$<$ map$<$ string, {\bf component} $>$ $>$ \& {\em permutations}, map$<$ string, {\bf component} $>$ \& {\em symComps}, map$<$ string, {\bf component} $>$ \& {\em symRxnCenter})}\label{namespaceNFinput_3fc375590c646f8cc383a6099823d266}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::generateRxnPermutations (vector$<$ map$<$ string, {\bf component} $>$ $>$ \& {\em permutations}, map$<$ string, {\bf component} $>$ \& {\em symComps}, map$<$ string, {\bf component} $>$ \& {\em symRxnCenter}, bool {\em verbose})}\label{namespaceNFinput_78421cba53283fd0013e43e6d35f8b47}
 
 
-\index{NFinput@{NFinput}!initGlobalFunctions@{initGlobalFunctions}}
-\index{initGlobalFunctions@{initGlobalFunctions}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initGlobalFunctions ({\bf TiXmlElement} $\ast$ {\em pListOfFunctions}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, bool {\em verbose})}\label{namespaceNFinput_f7ccb02ac2a0cd93d898a466ff41a0ab}
+
+
+Output for debugging
+
+Output for debugging \index{NFinput@{NFinput}!initFunctions@{initFunctions}}
+\index{initFunctions@{initFunctions}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initFunctions ({\bf TiXmlElement} $\ast$ {\em pListOfFunctions}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, {\bf TiXmlElement} $\ast$ {\em pListOfObservables}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em verbose})}\label{namespaceNFinput_bc6239da9790d1c8d2698fedd5d5b2ab}
 
 
 Reads the Function XML block and adds the Functions to the system. 
@@ -84,7 +100,7 @@ Reads the Function XML block and adds the Functions to the system.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initializeFromXML@{initializeFromXML}}
 \index{initializeFromXML@{initializeFromXML}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System} $\ast$ NFinput::initializeFromXML (string {\em filename}, bool {\em verbose})}\label{namespaceNFinput_9cee8c8942317dfa2c6e62e3e67efa8a}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System} $\ast$ NFinput::initializeFromXML (string {\em filename}, bool {\em blockSameComplexBinding}, int {\em globalMoleculeLimit}, bool {\em verbose})}\label{namespaceNFinput_f8a520e07f56df029a7784ab451f2be1}
 
 
 Maintains information about a \doxyref{component}{p.}{classNFinput_1_1component} of a TemplateMolecule. 
@@ -113,7 +129,7 @@ Reads an observable XML block and adds the new observables to the system.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initParameters@{initParameters}}
 \index{initParameters@{initParameters}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initParameters ({\bf TiXmlElement} $\ast$ {\em pListOfParameters}, map$<$ string, double $>$ \& {\em parameter}, bool {\em verbose})}\label{namespaceNFinput_6b056992d00b7d48dd31afe341ce641b}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initParameters ({\bf TiXmlElement} $\ast$ {\em pListOfParameters}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, bool {\em verbose})}\label{namespaceNFinput_22ad4850b4679dbdff6597d602b8022d}
 
 
 Reads the parameter XML block and puts them in the parameter map. 
@@ -122,7 +138,7 @@ Reads the parameter XML block and puts them in the parameter map.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initReactionRules@{initReactionRules}}
 \index{initReactionRules@{initReactionRules}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initReactionRules ({\bf TiXmlElement} $\ast$ {\em pListOfReactionRules}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em verbose})}\label{namespaceNFinput_aa3f9416593fcd16645b3e40fdbccea4}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initReactionRules ({\bf TiXmlElement} $\ast$ {\em pListOfReactionRules}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em blockSameComplexBinding}, bool {\em verbose})}\label{namespaceNFinput_08903395f329bbcd8003d11bfb5baf5a}
 
 
 Reads a reactionRule XML block and adds the rules to the system. 
@@ -138,6 +154,11 @@ Reads a Species XML block, creates the molecules and adds them to the system.
 
 \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFinput@{NFinput}!lookup@{lookup}}
+\index{lookup@{lookup}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::lookup ({\bf component} $\ast$\& {\em c}, string {\em id}, map$<$ string, {\bf component} $>$ \& {\em comps}, map$<$ string, {\bf component} $>$ \& {\em symMap})}\label{namespaceNFinput_616c16727e7f86e02affdc873c2beecd}
+
+
 \index{NFinput@{NFinput}!parseArguments@{parseArguments}}
 \index{parseArguments@{parseArguments}!NFinput@{NFinput}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::parseArguments (int {\em argc}, const char $\ast$ {\em argv}[$\,$], map$<$ string, string $>$ \& {\em argMap})}\label{namespaceNFinput_7dfd0ae7309545a61e7824cea5146696}
@@ -152,14 +173,31 @@ Parses command line arguments from the console nicely.
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFinput::parseAsDouble (map$<$ string, string $>$ \& {\em argMap}, string {\em argName}, double {\em defaultValue})}\label{namespaceNFinput_e94e951f3de1d453e79d055c19dce1f4}
 
 
+Looks up the argument in the argMap and tries to parse the value as a double. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!parseAsInt@{parseAsInt}}
 \index{parseAsInt@{parseAsInt}!NFinput@{NFinput}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFinput::parseAsInt (map$<$ string, string $>$ \& {\em argMap}, string {\em argName}, int {\em defaultValue})}\label{namespaceNFinput_6acf7052e7c42fd29e422ce627b42fe5}
 
 
-\index{NFinput@{NFinput}!parseComplexDump@{parseComplexDump}}
-\index{parseComplexDump@{parseComplexDump}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFinput::parseComplexDump (vector$<$ {\bf Outputter} $>$ \& {\em outputter}, string {\em arg})}\label{namespaceNFinput_477d9adae270e96dc6e039d19f322b15}
+Looks up the argument in the argMap and tries to parse the value as an integer. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFinput@{NFinput}!parseSequence@{parseSequence}}
+\index{parseSequence@{parseSequence}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::parseSequence (string {\em numString}, vector$<$ double $>$ \& {\em outputTimes})}\label{namespaceNFinput_6659a912afe36c187f82add93577693c}
+
+
+Parses a matlab style sequence (ie startValue:step:endValue) into the vector. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFinput@{NFinput}!readObservableForTemplateMolecules@{readObservableForTemplateMolecules}}
+\index{readObservableForTemplateMolecules@{readObservableForTemplateMolecules}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readObservableForTemplateMolecules ({\bf TiXmlElement} $\ast$ {\em pObs}, string {\em observableName}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \& {\em tmList}, vector$<$ string $>$ \& {\em stochRelation}, vector$<$ int $>$ \& {\em stochQuantity}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, int {\em obsType}, bool {\em verbose})}\label{namespaceNFinput_ce4a726c34a7ebf5ee387fd9c53fbd87}
 
 
 \index{NFinput@{NFinput}!readPattern@{readPattern}}
@@ -185,8 +223,22 @@ Reads a pattern XML block and returns the set of new TemplateMolecule objects.
 
 \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFinput@{NFinput}!readRNFfile@{readRNFfile}}
+\index{readRNFfile@{readRNFfile}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readRNFfile (map$<$ string, string $>$ \& {\em argMap}, vector$<$ string $>$ \& {\em commands}, bool {\em verbose})}\label{namespaceNFinput_96c43bfa845bbf9c559cc899c17567f0}
+
+
+\index{NFinput@{NFinput}!runRNFcommands@{runRNFcommands}}
+\index{runRNFcommands@{runRNFcommands}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::runRNFcommands ({\bf System} $\ast$ {\em s}, map$<$ string, string $>$ \& {\em argMap}, vector$<$ string $>$ \& {\em commands}, bool {\em verbose})}\label{namespaceNFinput_614dca6b7ccb8c6d75d462d24c18a58b}
+
+
 \index{NFinput@{NFinput}!walk@{walk}}
 \index{walk@{walk}!NFinput@{NFinput}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFinput::walk ({\bf System} $\ast$ {\em s})}\label{namespaceNFinput_62bbaf5f78a0e78b0b4a69a4a18df096}
 
 
+Allows the user to walk through the system with an interactive text-based program. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}

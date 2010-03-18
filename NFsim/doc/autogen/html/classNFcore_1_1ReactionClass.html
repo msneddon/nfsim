@@ -46,7 +46,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#e70c1d4cafd7e3e2b9f31aecdc49dc18">ReactionClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double rate, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#c185177a4880ad470f819c4dda3a9a39">ReactionClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double rate, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#a5054d30051d6f349ef15af016791a71">~ReactionClass</a> ()</td></tr>
 
@@ -92,6 +92,10 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#6cacdb25174997f2bc90a8f959dedf99">turnOff_OnTheFlyObs</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#3f19e59472bec5ae3418697084b07d63">set_match</a> (vector&lt; <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> * &gt; &amp;match_set)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#39b198975902bc86edc320c984a22dcf">apply</a> (vector&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;product_molecules)</td></tr>
+
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#6f410f39e8be240209cad19f1aab7f48">NO_LIMIT</a> = -3</td></tr>
 
@@ -112,6 +116,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#5c4b85024376502137b82a16af46be32">reactionType</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#302fc738473605c9645142943e174f10">n_reactants</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#f1df6e7866c79df25276fa3477d52277">system</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#2cf98fbd283cf3a59f05b9a0012904ef">baseRate</a></td></tr>
 
@@ -135,9 +141,16 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt;::iterator&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#129bb718109e2b51f4414269fdcaa61c">molIter</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0324037aa173736a9216a028a86d8ef6">updatedComplexes</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0c3b7c0fb9a3c68a4bacee6ade128aec">MatchSetIter</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#ba6e336204af7fb6e650375559c23f96">Netgen</a></td></tr>
+
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e70c1d4cafd7e3e2b9f31aecdc49dc18"></a><!-- doxytag: member="NFcore::ReactionClass::ReactionClass" ref="e70c1d4cafd7e3e2b9f31aecdc49dc18" args="(string name, double rate, TransformationSet *transformationSet)" -->
+<a class="anchor" name="c185177a4880ad470f819c4dda3a9a39"></a><!-- doxytag: member="NFcore::ReactionClass::ReactionClass" ref="c185177a4880ad470f819c4dda3a9a39" args="(string name, double rate, TransformationSet *transformationSet, System *s)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -157,7 +170,13 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *&nbsp;</td>
-          <td class="paramname"> <em>transformationSet</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>transformationSet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -495,7 +514,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#58531b5d6e5065facb35f6c371daf65e">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#d766aeb571ab65fc188ef9fea8212384">NFcore::DORRxnClass</a>.</p>
+<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#56e941f00e4f503afb9519a6f23d30fd">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#d766aeb571ab65fc188ef9fea8212384">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -526,7 +545,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#4c3f8b5ff51c05a930aeeef6367ced23">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#91f26bc79e9d4b754139b9f58abcc484">NFcore::DORRxnClass</a>.</p>
+<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#4c3f8b5ff51c05a930aeeef6367ced23">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#724546efe978d79d53744567691bfd99">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -652,6 +671,46 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
+<a class="anchor" name="3f19e59472bec5ae3418697084b07d63"></a><!-- doxytag: member="NFcore::ReactionClass::set_match" ref="3f19e59472bec5ae3418697084b07d63" args="(vector&lt; MappingSet * &gt; &amp;match_set)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::ReactionClass::set_match           </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>match_set</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="39b198975902bc86edc320c984a22dcf"></a><!-- doxytag: member="NFcore::ReactionClass::apply" ref="39b198975902bc86edc320c984a22dcf" args="(vector&lt; Molecule * &gt; &amp;product_molecules)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::ReactionClass::apply           </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>product_molecules</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="ff3336a876f9e81904ee2b7be86bbdc5"></a><!-- doxytag: member="NFcore::ReactionClass::pickMappingSets" ref="ff3336a876f9e81904ee2b7be86bbdc5" args="(double randNumber) const =0" -->
 <div class="memitem">
 <div class="memproto">
@@ -671,6 +730,37 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <p>
 
 <p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#8d194b51f6338bc68bc8440d02249f0e">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#5d5d078d2a84602132b708a9bcfb078f">NFcore::DORRxnClass</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="0c3b7c0fb9a3c68a4bacee6ade128aec"></a><!-- doxytag: member="NFcore::ReactionClass::MatchSetIter" ref="0c3b7c0fb9a3c68a4bacee6ade128aec" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class MatchSetIter<code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ba6e336204af7fb6e650375559c23f96"></a><!-- doxytag: member="NFcore::ReactionClass::Netgen" ref="ba6e336204af7fb6e650375559c23f96" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class Netgen<code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -786,6 +876,21 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
       <table class="memname">
         <tr>
           <td class="memname">unsigned int <a class="el" href="classNFcore_1_1ReactionClass.html#302fc738473605c9645142943e174f10">NFcore::ReactionClass::n_reactants</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="f1df6e7866c79df25276fa3477d52277"></a><!-- doxytag: member="NFcore::ReactionClass::system" ref="f1df6e7866c79df25276fa3477d52277" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1System.html">System</a>* <a class="el" href="classNFcore_1_1ReactionClass.html#f1df6e7866c79df25276fa3477d52277">NFcore::ReactionClass::system</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -960,9 +1065,24 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
+<a class="anchor" name="0324037aa173736a9216a028a86d8ef6"></a><!-- doxytag: member="NFcore::ReactionClass::updatedComplexes" ref="0324037aa173736a9216a028a86d8ef6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;int&gt; <a class="el" href="classNFcore_1_1ReactionClass.html#0324037aa173736a9216a028a86d8ef6">NFcore::ReactionClass::updatedComplexes</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/ganymede_cpp/workspace/NFsim_svn/src/NFcore/<a class="el" href="reactionClass_8cpp.html">reactionClass.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Nov 18 18:05:51 2008 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="reactionClass_8cpp.html">reactionClass.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

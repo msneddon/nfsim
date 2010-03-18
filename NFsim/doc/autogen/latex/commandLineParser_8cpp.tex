@@ -1,5 +1,5 @@
-\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/commandLineParser.cpp File Reference}
-\label{commandLineParser_8cpp}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/commandLineParser.cpp@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFinput/commandLineParser.cpp}}
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp File Reference}
+\label{commandLineParser_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp}}
 
 
 {\tt \#include \char`\"{}NFinput.hh\char`\"{}}\par
@@ -9,8 +9,10 @@
 bool {\bf NFinput::parseArguments} (int argc, const char $\ast$argv[$\,$], map$<$ string, string $>$ \&argMap)
 \begin{CompactList}\small\item\em Parses command line arguments from the console nicely. \item\end{CompactList}\item 
 int {\bf NFinput::parseAsInt} (map$<$ string, string $>$ \&argMap, string argName, int defaultValue)
-\item 
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as an integer. \item\end{CompactList}\item 
 double {\bf NFinput::parseAsDouble} (map$<$ string, string $>$ \&argMap, string argName, double defaultValue)
-\item 
-bool {\bf NFinput::createComplexOutputDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
-\end{CompactItemize}
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a double. \item\end{CompactList}\item 
+bool {\bf NFinput::parseSequence} (string numString, vector$<$ double $>$ \&outputTimes)
+\begin{CompactList}\small\item\em Parses a matlab style sequence (ie startValue:step:endValue) into the vector. \item\end{CompactList}\item 
+bool {\bf NFinput::createSystemDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
+\begin{CompactList}\small\item\em Parses the cmd line arg that specifies system dumps, and schedules them. \item\end{CompactList}\end{CompactItemize}

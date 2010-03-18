@@ -1,5 +1,5 @@
-\section{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/NFcore.hh File Reference}
-\label{NFcore_8hh}\index{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/NFcore.hh@{/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/NFcore.hh}}
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/NFcore.hh File Reference}
+\label{NFcore_8hh}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/NFcore.hh@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/NFcore.hh}}
 
 
 \subsection{Detailed Description}
@@ -14,11 +14,15 @@ Contains declarations of core NFsim classes.
 {\tt \#include $<$list$>$}\par
 {\tt \#include $<$queue$>$}\par
 {\tt \#include $<$map$>$}\par
+{\tt \#include \char`\"{}../NFscheduler/NFstream.h\char`\"{}}\par
 {\tt \#include \char`\"{}../NFutil/NFutil.hh\char`\"{}}\par
 {\tt \#include \char`\"{}../NFreactions/NFreactions.hh\char`\"{}}\par
 {\tt \#include \char`\"{}moleculeLists/moleculeList.hh\char`\"{}}\par
 {\tt \#include \char`\"{}../NFfunction/NFfunction.hh\char`\"{}}\par
 {\tt \#include \char`\"{}../NFoutput/NFoutput.hh\char`\"{}}\par
+{\tt \#include \char`\"{}reactionSelector/reactionSelector.hh\char`\"{}}\par
+{\tt \#include \char`\"{}templateMolecule.hh\char`\"{}}\par
+{\tt \#include \char`\"{}observable.hh\char`\"{}}\par
 \subsection*{Namespaces}
 \begin{CompactItemize}
 \item 
@@ -27,6 +31,8 @@ namespace {\bf NFcore}
 \subsection*{Classes}
 \begin{CompactItemize}
 \item 
+class {\bf NFcore::ComplexList}
+\begin{CompactList}\small\item\em Container to organize all system complexes. \item\end{CompactList}\item 
 class {\bf NFcore::System}
 \begin{CompactList}\small\item\em The main class that begins and runs simulations. \item\end{CompactList}\item 
 class {\bf NFcore::MoleculeType}
@@ -35,10 +41,6 @@ class {\bf NFcore::Molecule}
 \begin{CompactList}\small\item\em Each molecule in the system is represented by an instance of this. \item\end{CompactList}\item 
 class {\bf NFcore::ReactionClass}
 \begin{CompactList}\small\item\em Abstract Base Class that defines the interface for all reaction rules. \item\end{CompactList}\item 
-class {\bf NFcore::TemplateMolecule}
-\begin{CompactList}\small\item\em Used for matching \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects to the given pattern. \item\end{CompactList}\item 
-class {\bf NFcore::Observable}
-\begin{CompactList}\small\item\em Tracks the counts of predefined observables in the simulation. \item\end{CompactList}\item 
 class {\bf NFcore::Complex}
 \begin{CompactList}\small\item\em Container to dynamically keep track of all system complexes. \item\end{CompactList}\end{CompactItemize}
 \subsection*{Defines}

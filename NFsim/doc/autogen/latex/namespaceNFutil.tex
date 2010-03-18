@@ -18,6 +18,10 @@ double {\bf convertToDouble} (const std::string \&s)
 \begin{CompactList}\small\item\em Parses and converts std::string objects to double values. \item\end{CompactList}\item 
 int {\bf convertToInt} (const std::string \&s)
 \begin{CompactList}\small\item\em Parses and converts std::string objects to int values. \item\end{CompactList}\item 
+string {\bf toString} (double x)
+\begin{CompactList}\small\item\em Converts double values to their string representations. \item\end{CompactList}\item 
+string {\bf toString} (int x)
+\begin{CompactList}\small\item\em Converts integer values to their string representations. \item\end{CompactList}\item 
 void {\bf SEED\_\-RANDOM} (unsigned long seed)
 \begin{CompactList}\small\item\em Seeds the random number generator used in all simulations. \item\end{CompactList}\item 
 double {\bf RANDOM} (double max)
@@ -27,7 +31,9 @@ double {\bf RANDOM\_\-CLOSED} ()
 int {\bf RANDOM\_\-INT} (unsigned long min, unsigned long max)
 \begin{CompactList}\small\item\em Uniform random number on the interval [min,max]. \item\end{CompactList}\item 
 double {\bf RANDOM\_\-GAUSSIAN} ()
-\begin{CompactList}\small\item\em Normally distributed random number with mean 0 and variance 1. \item\end{CompactList}\end{CompactItemize}
+\begin{CompactList}\small\item\em Normally distributed random number with mean 0 and variance 1. \item\end{CompactList}\item 
+void {\bf trim} (string \&str)
+\begin{CompactList}\small\item\em Removes leading and trailing whitespace (including tabs) from the string. \item\end{CompactList}\end{CompactItemize}
 \subsection*{Variables}
 \begin{CompactItemize}
 \item 
@@ -101,6 +107,31 @@ Seeds the random number generator used in all simulations.
 
 Seed the random number generator with a positive 32bit integer If you don't call this function, the current time will be used as a seed so each run will be different. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFutil@{NFutil}!toString@{toString}}
+\index{toString@{toString}!NFutil@{NFutil}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFutil::toString (int {\em x})}\label{namespaceNFutil_a62fea40cb1618e5fbccf8ff13c743fc}
+
+
+Converts integer values to their string representations. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFutil@{NFutil}!toString@{toString}}
+\index{toString@{toString}!NFutil@{NFutil}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFutil::toString (double {\em x})}\label{namespaceNFutil_4df757d59122e3d95c9762e0bb57dd13}
+
+
+Converts double values to their string representations. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFutil@{NFutil}!trim@{trim}}
+\index{trim@{trim}!NFutil@{NFutil}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFutil::trim (string \& {\em str})}\label{namespaceNFutil_98cd1a513d84ec743260d1880e1bdef9}
+
+
+Removes leading and trailing whitespace (including tabs) from the string. 
+
 
 
 \subsection{Variable Documentation}

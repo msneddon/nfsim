@@ -18,7 +18,7 @@ A \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass} represents the set o
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf ReactionClass} (string {\bf name}, double rate, {\bf TransformationSet} $\ast${\bf transformationSet})
+{\bf ReactionClass} (string {\bf name}, double rate, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
 \item 
 virtual {\bf $\sim$ReactionClass} ()
 \item 
@@ -63,6 +63,10 @@ void {\bf setRxnId} (int {\bf rxnId})
 int {\bf getRxnId} () const 
 \item 
 void {\bf turnOff\_\-OnTheFlyObs} ()
+\item 
+void {\bf set\_\-match} (vector$<$ {\bf MappingSet} $\ast$ $>$ \&match\_\-set)
+\item 
+void {\bf apply} (vector$<$ {\bf Molecule} $\ast$ $>$ \&product\_\-molecules)
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
@@ -91,6 +95,8 @@ int {\bf reactionType}
 \item 
 unsigned int {\bf n\_\-reactants}
 \item 
+{\bf System} $\ast$ {\bf system}
+\item 
 double {\bf baseRate}
 \item 
 double {\bf a}
@@ -112,13 +118,22 @@ bool {\bf isDimerStyle}
 list$<$ {\bf Molecule} $\ast$ $>$ {\bf products}
 \item 
 list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf molIter}
+\item 
+vector$<$ int $>$ {\bf updatedComplexes}
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+class {\bf MatchSetIter}
+\item 
+class {\bf Netgen}
 \end{CompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!ReactionClass@{ReactionClass}}
 \index{ReactionClass@{ReactionClass}!NFcore::ReactionClass@{NFcore::ReactionClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactionClass::ReactionClass (string {\em name}, double {\em rate}, {\bf TransformationSet} $\ast$ {\em transformationSet})}\label{classNFcore_1_1ReactionClass_e70c1d4cafd7e3e2b9f31aecdc49dc18}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactionClass::ReactionClass (string {\em name}, double {\em rate}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1ReactionClass_c185177a4880ad470f819c4dda3a9a39}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!$\sim$ReactionClass@{$\sim$ReactionClass}}
@@ -211,14 +226,14 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_58531b5d6e5065facb35f6c371daf65e}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_d766aeb571ab65fc188ef9fea8212384}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!remove@{remove}}
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_56e941f00e4f503afb9519a6f23d30fd}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_d766aeb571ab65fc188ef9fea8212384}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!remove@{remove}}
 \index{remove@{remove}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual void NFcore::ReactionClass::remove ({\bf Molecule} $\ast$ {\em m}, unsigned int {\em reactantPos})\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionClass_e9f356905524d6e370059b1e4ef5754a}
 
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_4c3f8b5ff51c05a930aeeef6367ced23}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_91f26bc79e9d4b754139b9f58abcc484}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!update\_\-a@{update\_\-a}}
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_4c3f8b5ff51c05a930aeeef6367ced23}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_724546efe978d79d53744567691bfd99}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!update\_\-a@{update\_\-a}}
 \index{update\_\-a@{update\_\-a}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual double NFcore::ReactionClass::update\_\-a ()\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionClass_f5aed18705e78d14bd1a8f82068add70}
 
@@ -254,6 +269,16 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::turnOff\_\-OnTheFlyObs ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_6cacdb25174997f2bc90a8f959dedf99}
 
 
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!set\_\-match@{set\_\-match}}
+\index{set\_\-match@{set\_\-match}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::set\_\-match (vector$<$ {\bf MappingSet} $\ast$ $>$ \& {\em match\_\-set})}\label{classNFcore_1_1ReactionClass_3f19e59472bec5ae3418697084b07d63}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!apply@{apply}}
+\index{apply@{apply}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::apply (vector$<$ {\bf Molecule} $\ast$ $>$ \& {\em product\_\-molecules})}\label{classNFcore_1_1ReactionClass_39b198975902bc86edc320c984a22dcf}
+
+
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!pickMappingSets@{pickMappingSets}}
 \index{pickMappingSets@{pickMappingSets}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual void NFcore::ReactionClass::pickMappingSets (double {\em randNumber}) const\hspace{0.3cm}{\tt  [protected, pure virtual]}}\label{classNFcore_1_1ReactionClass_ff3336a876f9e81904ee2b7be86bbdc5}
@@ -262,6 +287,19 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_8d194b51f6338bc68bc8440d02249f0e}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_5d5d078d2a84602132b708a9bcfb078f}.
+
+\subsection{Friends And Related Function Documentation}
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!MatchSetIter@{MatchSetIter}}
+\index{MatchSetIter@{MatchSetIter}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}friend class MatchSetIter\hspace{0.3cm}{\tt  [friend]}}\label{classNFcore_1_1ReactionClass_0c3b7c0fb9a3c68a4bacee6ade128aec}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!Netgen@{Netgen}}
+\index{Netgen@{Netgen}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}friend class Netgen\hspace{0.3cm}{\tt  [friend]}}\label{classNFcore_1_1ReactionClass_ba6e336204af7fb6e650375559c23f96}
+
+
+
 
 \subsection{Member Data Documentation}
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!NO\_\-LIMIT@{NO\_\-LIMIT}}
@@ -302,6 +340,11 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!n\_\-reactants@{n\_\-reactants}}
 \index{n\_\-reactants@{n\_\-reactants}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactionClass::n\_\-reactants}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_302fc738473605c9645142943e174f10}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!system@{system}}
+\index{system@{system}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System}$\ast$ {\bf NFcore::ReactionClass::system}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_f1df6e7866c79df25276fa3477d52277}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!baseRate@{baseRate}}
@@ -359,9 +402,14 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$::iterator {\bf NFcore::ReactionClass::molIter}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_129bb718109e2b51f4414269fdcaa61c}
 
 
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!updatedComplexes@{updatedComplexes}}
+\index{updatedComplexes@{updatedComplexes}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::ReactionClass::updatedComplexes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_0324037aa173736a9216a028a86d8ef6}
+
+
 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf NFcore.hh}\item 
-/home/msneddon/eclipse/ganymede\_\-cpp/workspace/NFsim\_\-svn/src/NFcore/{\bf reactionClass.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf reactionClass.cpp}\end{CompactItemize}
