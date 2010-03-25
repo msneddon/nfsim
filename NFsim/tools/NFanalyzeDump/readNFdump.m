@@ -6,14 +6,6 @@ function [results]=readNFdump(baseDirectory,systemName)
 tic;
 fprintf('\nRunning function readNFdump...\n\n');
 
-%baseDirectory='../../test/simple_system/dump/';
-%systemName='simple_system';
-%baseDirectory='../../test/RNA/dump/';
-%systemName='rna_synthesis4';
-%baseDirectory='../../test/complexTest/dump/';
-%baseDirectory='../../test/tlbr/dump/';
-%systemName='tlbr';
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %First, get the list of times that we need to read in

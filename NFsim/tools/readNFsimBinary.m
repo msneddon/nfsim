@@ -26,10 +26,10 @@ f1=dir(dataFileName);
 f2=dir(headerFileName);
 
 if length(f2)~=1
-    fprintf('Error in READNFSIMBINARY: could not find the binary data file.\n');
+    error('nfsim:readNFsimBinary:FileMissingError','   Could not find the binary data file.');
 end
 if length(f2)~=1
-    fprintf('Error in READNFSIMBINARY: could not find the header file specified.\n');
+    error('nfsim:readNFsimBinary:FileMissingError','   Could not find the header file specified.');
 end
 
 %Get the size of the file we want to read (tells us how many rows
@@ -42,8 +42,7 @@ binaryFileSize = f1(1).bytes;
 %the correct way
 [rowCountInfo,variableNames] = tblread(headerFileName,'\t');
 if(size(rowCountInfo)>1)
-   fprintf('Error reading header file: too many rows of information!');
-   return;
+   error('nfsim:readNFsimBinary:RowCountError','   Error when reading header file: too many rows of information!');
 end
 
 %From the header file, extract out the information on column names, along
@@ -58,9 +57,10 @@ rowCount=(binaryFileSize/8)/columnCount; %gives us number of elements in the
 %checking to make sure things worked
 [fid, message] = fopen(dataFileName,'r');
 if(fid==-1)
-   fprintf(['Error when opening the .dat file named:\n\t', dataFileName, '\n\n']);
-   fprintf('Matlab says:\n');
-   fprintf(['  ',message,'\n\n']);
+   error('nfsim:readNFsimBinary:FileCouldNotOpenError', ...
+    ['Error when opening the .dat file named:\n\t', dataFileName, '\n\n', ...
+   	'Matlab says:\n', ...
+    '  ',message,'\n\n']);
    data = [];
    return;
 end
