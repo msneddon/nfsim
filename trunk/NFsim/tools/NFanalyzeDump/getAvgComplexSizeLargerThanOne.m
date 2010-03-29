@@ -1,7 +1,24 @@
 function [avgSize, totalMolecules, totalComplexes, sizeOneCount] = getAvgComplexSizeLargerThanOne(s,molTypeName)
+%  [avgSize, totalMolecules, totalComplexes, sizeOneCount] = getAvgComplexSizeLargerThanOne(s,molTypeName)
+% 
+%  Given the structure S created from reading an NFsim dump file either
+%  using the function getTimeArray or getTimeArrayAtTime, together with
+%  the name of the molecule type to act on, this function calculates
+%  the average size of molecular complexes that includes the moleculeType,
+%  discarding those of size one.  This is useful, for example, for
+%  calculating the average size of receptor aggregates while not counting
+%  free receptors that have not aggregated.  The function also returns
+%  arrays giving the total number of molecules at each time, the total
+%  number of complexes, and the number of those complexes that were of size
+%  one.
 %
 %
+%   Last Updated march, 2010
+%   Michael Sneddon (michael.sneddon@yale.edu)
 %
+
+
+
 
 % first, determine which molecule type we are looking for
 molTypeIndex = 1;

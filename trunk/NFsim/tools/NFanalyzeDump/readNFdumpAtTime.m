@@ -1,70 +1,21 @@
-function [results]=readNFdump(baseDirectory,systemName)
-%  [results]=readNFdump(baseDirectory,systemName)
+function [results]=readNFdumpAtTime(baseDirectory,systemName,dumpTime)
+%  [results]=readNFdumpAtTime(baseDirectory,systemName,dumpTime)
 %
-%  This function reads all the dump output from an NFsim run of a system
-%  named 'systemName' from the dump directory 'baseDirectory'.  The
-%  systemName is the generally set to the name of the bngl file you
-%  simulated, unless you explicilty changed the name.  When called, it
-%  will read all the files in the directory.  Be careful, because
-%  this may exhaust your system memory if you have too many output
-%  files or too large of a system.  If this is the case, use the function
-%  readNFdumpAtTime(...) instead.
-%
-%  When you call this function, it will save the results in a struct
-%  array as:
-%
-%  struct array with fields:
-%    time
-%    molTypes
-%    comps
-%    funcs
-%    data
-%
-%  You can access any of the elements in the array as:
-%   results(index).time
-%
-%  Here, index will range from 1 to the size of the results struct array.
-%  You can then access any of the fields by name.  Time gives the time of
-%  the simulation at that index.  molTypes will give you a list of the
-%  moleculeTypes that were saved.  The moleculeTypes are indexed from 0 to
-%  n where n is the number of moleculeTypes.  That moleculeType index is
-%  referenced in the comps field.  The comps field is a cell array of all
-%  the components in the system.  In each position of the cell array, there
-%  is another cell array of size three.  In this cell array, for each
-%  component, you are given the moleculeType index in position 1, the
-%  component index in position 2, and the component name in position 3.
-%  This allows you to map names of components of moleculeTypes to thier
-%  index which is used later.  The same syntax applies the functions block,
-%  where the moleculeType index, followed by the function index, is joined
-%  with the function name.  In this case, only local functions are
-%  displayed (global functions can be output to gdat files using the -ogf 
-%  flag, and are not generally a local property of individual molecules).
-%  Local functions are associated with the molecule that requires thier
-%  value to be evaluated.  The value of the local function is given for
-%  the case where it is evaluated over the entire complex and over the
-%  single molecule whether or not these values are used in rules.  Finally, 
-%  all of the data is stored in the data field. The data field is a cell array,
-%  containing the data for that time point for each moleculeType, numbered
-%  according to the moleculeType index.  In each of these data matricies
-%  for each molecule type, you are given the unique molecule Id in the
-%  first column, the unique complex id in the second column (whehter or not
-%  you used complex bookkeeping).  Then, for each component there are two
-%  colums.  The first gives the state of the component, as an indexed
-%  number value.  The indexed number value can be mapped to the component
-%  state by looking at the bngl specification file.  The states are ordered
-%  in the same way they were declared.  Next, for each component, you have
-%  the unique id of the molecule that is bound at this site, or -1 if the
-%  site is empty.  Finally, for each function that is local to the
-%  molecule, you are provided with the value of the function evaluated
-%  over the entire complex.
-%
+%  This function reads the dump output from an NFsim run of a system
+%  named 'systemName' from the dump directory 'baseDirectory' at the
+%  specified time.  It that time does not exist, this function gives an
+%  error. The systemName is the generally set to the name of the bngl file 
+%  you simulated, unless you explicilty changed the name. The result is
+%  saved as a single struct.  For a description of the elements of the
+%  struct, see the help for readNFdump(...).
 %
 %   Last Updated march, 2010
 %   Michael Sneddon (michael.sneddon@yale.edu)
 %
 
+
 tic;
-fprintf('\nRunning function readNFdump...\n\n');
+fprintf('\nRunning function readNFdumpAtTime ...\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,24 +30,19 @@ N_FUNCTIONS = 3;
 results = [];
 defResStruct = struct('time', [], 'molTypes', [], 'comps',[],'funcs',[],'data',[]);
 
-ticMarks = length(timeString);
-if ticMarks >40, ticMarks=40; end;
-fprintf('Progress:\n[');
-for i=1:ticMarks, fprintf('-'); end;
-fprintf(']\n[');
-
-currentPos = 1;
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %loop through the sets of output files
-for t=1:length(timeString)
+%for t=1:length(timeString)
 
-    if( t/length(timeString) > currentPos/ticMarks)
-        fprintf('+');
-        currentPos=currentPos+1;
-    end;
-    
+
+timeDouble = str2double(timeString);
+t=find(timeDouble==dumpTime);
+if(prod(size(t))==0) 
+    fprintf('Invalid dump time given.  Cannot find that dump.  Exiting\n');
+    results=0;
+    return;
+end;
+
     %Initialize some arrays to store the MoleculeType info
     moleculeNames = {};
     moleculeTypeData = [];
@@ -107,6 +53,9 @@ for t=1:length(timeString)
     %set up the filenames
     time=timeString{t};
     
+ %   stopBar= progressbar(t./length(timeString),0);
+ %   if (stopBar), break; end
+
     
    % fprintf(['<<<<<<<<<< Output Time: ',num2str(time), ...
    %     's (',num2str(t),' of ',num2str(length(timeString)),') >>>>>>>>>>\n']);
@@ -192,7 +141,7 @@ for t=1:length(timeString)
 
         %Number of columns = 1 for the molecule ID + 1 for the complex ID
         % +2 for each component + 1 for each local function
-        columnCount = 1+1+2*moleculeTypeData(i,N_COMPONENTS)+2*moleculeTypeData(i,N_FUNCTIONS);
+        columnCount = 1+1+2*moleculeTypeData(i,N_COMPONENTS)+moleculeTypeData(i,N_FUNCTIONS);
         rowCount = moleculeTypeData(i,N_MOLECULES);
 
 
@@ -219,10 +168,9 @@ for t=1:length(timeString)
     resStruct.data = allRawData;
     results = [results;resStruct]; %#ok<AGROW>
    % fprintf('\n');
-end;
+   
 
-
-fprintf('+]\n\n');
+%close(stopBar);
 fprintf('done. '); toc;
 
 end %%%% END OF FUNCTION
