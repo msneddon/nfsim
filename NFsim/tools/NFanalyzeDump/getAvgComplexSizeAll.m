@@ -1,7 +1,18 @@
 function [avgSize, totalMolecules, totalComplexes] = getAvgComplexSizeAll(s)
+%   [avgSize, totalMolecules, totalComplexes] = getAvgComplexSizeAll(s)
+%
+%  Given the structure S created from reading an NFsim dump file either
+%  using the function getTimeArray or getTimeArrayAtTime, this function 
+%  calculates the average size of molecular complexes in the entire system.
+%  This function also returns the total number of molecules in the system
+%  and the total number of complexes.
 %
 %
+%   Last Updated march, 2010
+%   Michael Sneddon (michael.sneddon@yale.edu)
 %
+
+
 
 %init the counters
 totalMolecules = zeros(length(s),1);

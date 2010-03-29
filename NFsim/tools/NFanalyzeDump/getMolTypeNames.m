@@ -1,6 +1,11 @@
 function [names] = getMolTypeNames(s,time)
+%  [names] = getMolTypeNames(s,time)
 %
+%  Simple helper function that allows you to access the names of the
+%  MoleculeTypes in the system at the specified time given in an array.
 %
+%   Last Updated march, 2010
+%   Michael Sneddon (michael.sneddon@yale.edu)
 %
 
 %if time wasn't given, assume the first time is choosen

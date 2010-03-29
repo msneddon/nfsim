@@ -1,7 +1,20 @@
 function [avgSize, totalMolecules, totalComplexes] = getAvgComplexSize(s,molTypeName)
+%  [avgSize, totalMolecules, totalComplexes] = getAvgComplexSize(s,molTypeName)
+%
+%  Given the structure S created from reading an NFsim dump file either
+%  using the function getTimeArray or getTimeArrayAtTime, together with
+%  the name of the molecule type to act on, this function calculates
+%  the average size of molecular complexes that includes the moleculeType.
+%  The function also returns arrays giving the total number of molecules 
+%  at each time, the total as well as the total number of complexes.
 %
 %
 %
+%   Last Updated march, 2010
+%   Michael Sneddon (michael.sneddon@yale.edu)
+%
+
+
 
 % first, determine which molecule type we are looking for
 molTypeIndex = 1;
