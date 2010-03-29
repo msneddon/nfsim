@@ -28,3 +28,8 @@ NFanalyzeDump      - This directory contains a set of Matlab tools for reading a
                      necessary, for instance, to extract the value of local functions
                      in NFsim, plot average aggregate sizes, or determine the structure
                      and configuration of polymers.
+                     
+                     
+PhiBPlot           - A Java program originally developed for BioNetGen, but that can
+                     read and plot NFsim GDAT files as well.  See the README in the
+                     PhiBPlot directory for information on running the program.
