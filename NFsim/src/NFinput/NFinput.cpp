@@ -1400,7 +1400,7 @@ bool NFinput::initReactionRules(
 					{
 						//Create the Elementary Reaction...
 						ts->finalize();
-						r = new BasicRxnClass(rxnName,0,ts,s);
+						r = new BasicRxnClass(rxnName,0,"",ts,s);
 
 						//Make sure that the rate constant exists
 						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
@@ -1424,7 +1424,7 @@ bool NFinput::initReactionRules(
 							}
 
 							//Try to parse it into a double value or look it up in the parameter map
-							double rate=0; bool usedParam = false;
+							double rate=0; bool usedParam = false; string rateValueParameterName = "";
 							try {
 								rate = NFutil::convertToDouble(rateValue);
 							} catch (std::runtime_error &e1) {
@@ -1434,6 +1434,7 @@ bool NFinput::initReactionRules(
 								}
 								rate = parameter.find(rateValue)->second;
 								usedParam = true;
+								rateValueParameterName = rateValue;
 							}
 							if(verbose) {
 								cout<<"\t\t\t\t...setting elementary rate to be: "<<rateValue;
@@ -1441,7 +1442,7 @@ bool NFinput::initReactionRules(
 								cout<<endl;
 							}
 
-							r->setBaseRate(rate);
+							r->setBaseRate(rate,rateValueParameterName);
 						}
 
 						pRateConstant = pRateConstant->NextSiblingElement("RateConstant");
@@ -1508,7 +1509,6 @@ bool NFinput::initReactionRules(
 						//	cout<<funcArgs.at(i)<<endl;
 						//}
 
-
 						if(isGlobal)
 						{
 							string functionName = pRateLaw->Attribute("name");
@@ -1528,6 +1528,7 @@ bool NFinput::initReactionRules(
 							}
 						} else {
 
+
 							string functionName = pRateLaw->Attribute("name");
 							LocalFunction *lf = s->getLocalFunctionByName(functionName);
 							if(lf!=NULL) {
@@ -1539,7 +1540,8 @@ bool NFinput::initReactionRules(
 								ts->finalize();
 
 								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
-								r=new DORRxnClass(rxnName,1,ts,cf,funcArgs,s);
+
+								r=new DORRxnClass(rxnName,1,"",ts,cf,funcArgs,s);
 							}
 						}
 					}

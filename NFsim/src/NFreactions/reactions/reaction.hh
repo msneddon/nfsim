@@ -14,7 +14,7 @@ namespace NFcore
 
 	class BasicRxnClass : public ReactionClass {
 		public:
-			BasicRxnClass(string name, double baseRate, TransformationSet *transformationSet, System *s);
+			BasicRxnClass(string name, double baseRate, string baseRateName, TransformationSet *transformationSet, System *s);
 			virtual ~BasicRxnClass();
 
 			virtual void init();
@@ -90,6 +90,7 @@ namespace NFcore
 			DORRxnClass(
 					string name,
 					double baseRate,
+					string baseRateName,
 					TransformationSet *transformationSet,
 					CompositeFunction *function,
 					vector <string> &lfArgumentPointerNameList,

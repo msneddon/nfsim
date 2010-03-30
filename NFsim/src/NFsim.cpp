@@ -429,48 +429,48 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 
 bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 {
-	//If requested, walk through the simulation
+	// default simulation time is 10 seconds outputting
+	// once per second
+	double eqTime = 0;
+	double sTime = 10;
+	int oSteps = 10;
+
+	//Get the simulation time that the user wants
+	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
+	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
+
+	//Prepare the system for simulation!!
+	s->prepareForSimulation();
+
+	//Output some info on the system if we ask for it
+	if(verbose) {
+		cout<<"\n\nparse appears to be successful.  Here, check your system:\n";
+		s->printAllMoleculeTypes();
+		s->printAllReactions();
+		s->printAllObservableCounts(0);
+		cout<<"-------------------------\n";
+	}
+
+
+	//If requested, walk through the simulation instead of running the simulation
 	if (argMap.find("walk")!=argMap.end()) {
 		NFinput::walk(s);
 	}
-	//Otherwise, run as normal
-	else
-	{
-		// default simulation time is 10 seconds outputting
-		// once per second
-		double eqTime = 0;
-		double sTime = 10;
-		int oSteps = 10;
-
-		//Get the simulation time that the user wants
-		eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
-		sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
-		oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
-
-		//Prepare the system for simulation!!
-		s->prepareForSimulation();
-
-		//Output some info on the system if we ask for it
-		if(verbose) {
-			cout<<"\n\nparse appears to be successful.  Here, check your system:\n";
-			s->printAllMoleculeTypes();
-			s->printAllReactions();
-			s->printAllObservableCounts(0);
-			cout<<"-------------------------\n";
-		}
-
+	else {
 		// Do the run
 		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 		s->equilibrate(eqTime);
 		s->sim(sTime,oSteps);
-
-		if(verbose) {
-			cout<<endl<<endl;
-			s->printAllReactions();
-			cout<<endl;
-			s->printAllObservableCounts(s->getCurrentTime());
-		}
 	}
+
+	if(verbose) {
+		cout<<endl<<endl;
+		s->printAllReactions();
+		cout<<endl;
+		s->printAllObservableCounts(s->getCurrentTime());
+	}
+
 	return true;
 }
 

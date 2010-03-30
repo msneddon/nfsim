@@ -821,7 +821,7 @@ double System::stepTo(double stoppingTime)
 
 void System::singleStep()
 {
-	cout<<"  -Starting at time: "<<this->current_time<<endl;
+	cout<<"  -System is at time: "<<this->current_time<<endl;
 	double delta_t = 0;
 
 	recompute_A_tot();
@@ -841,11 +841,12 @@ void System::singleStep()
 	//Increment time
 	current_time+=delta_t;
 
-	cout<<"  -Firing: "<<nextReaction->getName()<<endl;
+	cout<<"  -Firing: "<<endl;
+	nextReaction->printDetails();;
 
 	//5: Fire Reaction! (takes care of updates to lists and observables)
 	nextReaction->fire(randElement);
-	cout<<"  -System time is now"<<current_time<<endl;
+	cout<<"  -System time is now at time: "<<current_time<<endl;
 
 	globalEventCounter++;
 }
@@ -1355,11 +1356,14 @@ void System::updateSystemWithNewParameters() {
 
 
 	//Update all reactions
+	for(unsigned int r=0; r<allReactions.size(); r++) {
+		allReactions.at(r)->resetBaseRateFromSystemParamter();
+	}
+
 
 	//Update Atot (the total propensity of the system)
 	this->recompute_A_tot();
 
-	//cout<<"warning - only functions and rxns that depend on functions are updated!"<<endl;
 }
 void System::printAllParameters() {
 	if(paramMap.size()==0) cout<<"no system parameters to print."<<endl;
