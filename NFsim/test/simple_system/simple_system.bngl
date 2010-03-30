@@ -101,7 +101,7 @@ end reaction rules
 # Note that this step will also automatically create an NFsim readable XML model
 # specification file.
  
-simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
+# simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
 
 
 
@@ -109,7 +109,8 @@ simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
 # that we want.  As an example, we can rerun the model with the verbose (-v) option
 # and the universal traversal limit (-utl) option.  See the manual for a description
 # of Universal Traversal Limits, and other command line arguments.
-# simulate_nf({suffix=>nfVerbose,t_end=>100,n_steps=>50,param=>"-v -"});
+# simulate_nf({suffix=>nfVerbose,t_end=>100,n_steps=>50,param=>"-v -utl 3"});
+
 
 
 
@@ -119,7 +120,7 @@ simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
 # This will write out your model to "simple_system.xml".  In general, the XML file
 # name will match the BNGL file name, with an XML extension instead of .bngl.
 #
-# writeXML();
+ writeXML();
 #
 # If you uncomment and use this command here, then you can run NFsim directly by
 # calling the NFsim_[version] executable from the command-line, where [version] is
@@ -135,7 +136,7 @@ simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
 # option (which you can remove) is set to 1 here so that every time this is run, the
 # reaction network output file will be regenerated.
 #
-#generate_network({overwrite=>1});
+generate_network({overwrite=>1});
 #
 # Then we can call the simulate_ode or simulate_ssa methods to run the model file.  Again,
 # the suffix parameter is used to name the output of the simulations.  Note also that
@@ -145,9 +146,9 @@ simulate_nf({suffix=>nf,t_end=>100,n_steps=>50});
 # mid-simulation by using an RNF script (see example.rnf file in the same directory as this
 # model).
 #
-#simulate_ode({suffix=>ode,t_end=>100,n_steps=>50});
-#resetConcentrations();
-#simulate_ssa({suffix=>ssa,t_end=>100,n_steps=>50});
+simulate_ode({suffix=>ode,t_end=>100,n_steps=>50});
+resetConcentrations();
+simulate_ssa({suffix=>ssa,t_end=>100,n_steps=>50});
 
 
 
