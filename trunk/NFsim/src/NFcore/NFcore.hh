@@ -932,7 +932,7 @@ namespace NFcore
 
 
 
-			ReactionClass(string name, double rate, TransformationSet *transformationSet, System *s);
+			ReactionClass(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
 			int getNumOfReactants() const { return n_reactants; };
@@ -941,13 +941,17 @@ namespace NFcore
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
 
-			void setBaseRate(double newBaseRate) {
+			void setBaseRate(double newBaseRate,string newBaseRateName) {
 				if(isDimerStyle) {
 					this->baseRate=newBaseRate*0.5;
 				}
 				else this->baseRate=newBaseRate;
+				this->baseRateParameterName=newBaseRateName;
 				update_a();
 			};
+
+			void resetBaseRateFromSystemParamter();
+
 			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
 
 			double get_a() const { return a; };
@@ -999,6 +1003,7 @@ namespace NFcore
 			System * system;
 
 			double baseRate;
+			string baseRateParameterName;
 			double a;
 			unsigned int fireCounter;
 

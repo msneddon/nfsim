@@ -250,9 +250,10 @@ ReactionClass * NFtest_ss::createReactionXDephos(MoleculeType *molX, double rate
 	ts->finalize();
 
 
-	//Now we can create our reaction.  This is simple: just give it a name, a rate, and the transformation
-	//set that you just created.  It will take care of the rest!
-	ReactionClass *r = new BasicRxnClass("X_dephos",rate,ts,molX->getSystem());
+	//Now we can create our reaction.  This is simple: just give it a name, a rate, the parameter name
+	//of the rate (which is the empty string here, because we don't have any parameters in the system
+	//declared) and the transformationset that you just created.  It will take care of the rest!
+	ReactionClass *r = new BasicRxnClass("X_dephos",rate,"",ts,molX->getSystem());
 	return r;
 }
 
@@ -291,7 +292,7 @@ ReactionClass * NFtest_ss::createReactionXYbind(MoleculeType *molX,MoleculeType 
 	ts->finalize();
 
 	//Create and return the reaction!
-	ReactionClass *r = new BasicRxnClass("Y_bind_X",rate,ts,molX->getSystem());
+	ReactionClass *r = new BasicRxnClass("Y_bind_X",rate,"",ts,molX->getSystem());
 	return r;
 }
 
@@ -321,7 +322,7 @@ ReactionClass * NFtest_ss::createReactionXYunbind(MoleculeType *molX, MoleculeTy
 	ts->finalize();
 
 	//Create the reaction in the usual way.
-	ReactionClass *r = new BasicRxnClass("Y_unbind_X",rate,ts,molX->getSystem());
+	ReactionClass *r = new BasicRxnClass("Y_unbind_X",rate,"",ts,molX->getSystem());
 	return r;
 }
 
@@ -348,7 +349,7 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 	ts->finalize();
 
 	//Return the Reaction.
-	ReactionClass *r = new BasicRxnClass("Y_phos_X",rate, ts,molX->getSystem());
+	ReactionClass *r = new BasicRxnClass("Y_phos_X",rate, "",ts,molX->getSystem());
 	return r;
 }
 
@@ -364,62 +365,28 @@ ReactionClass * NFtest_ss::createReactionYphosX(MoleculeType *molX, MoleculeType
 
 void NFtest_ss::addObs(System * s, MoleculeType *molX, MoleculeType *molY)
 {
-//	//To create an observable, we must first create a TemplateMolecule that we would
-//	//like to match.  For instance, to create an observable for X, first create a template
-//	//molecule like this:
-//	TemplateMolecule *xNotPhos = new TemplateMolecule(molX);
-//
-//	//Then, we would like to set some constraints.  For this, let us set the constraint
-//	//that X has an open binding site at 'y' and it is not phosphorylated.
-//	xNotPhos->addStateValue("p",0);
-//	xNotPhos->addEmptyBindingSite("y");
-//
-//
-//	//Now, we create an observable from the templateMolecule and give it a name
-//	//that will be used in the output.
-//	Observable * obsxNotPhos = new Observable("X(p~0,y)",xNotPhos);
-//
-//
-//	//Finally, we have to add the observable to the MoleculeType that is being observed.  If you
-//	//don't add to the correct moleculeType, the count will always be zero!  And that's it!  Adding
-//	//to the moleculeType will record the observable with the system, and this observable will
-//	//always output correctly.
-//	molX->addObservable(obsxNotPhos);
-//
-//
-//
-//	//Below I do the same for some other species...
-//
-//	//X phosphorylated and not bound to Y
-//	TemplateMolecule *xPhos = new TemplateMolecule(molX);
-//	xPhos->addStateValue("p",1);
-//	xPhos->addEmptyBindingSite("y");
-//	Observable * obsxPhos = new Observable("X(p~1,y)",xPhos);
-//	molX->addObservable(obsxPhos);
-//
-//
-//	//X bound to Y
-//	TemplateMolecule *xBoundP = new TemplateMolecule(molX);
-//	TemplateMolecule *yBound2 = new TemplateMolecule(molY);
-//	TemplateMolecule::bind(xBoundP,"y",yBound2,"x");
-//	Observable * obsXBoundP = new Observable("X(y!1).Y(x!1)",xBoundP);
-//	molX->addObservable(obsXBoundP);
-//
-//	//Yfree
-//	TemplateMolecule *yFree = new TemplateMolecule(molY);
-//	yFree->addEmptyBindingSite("x");
-//	Observable * obsyFree = new Observable("Y(x)",yFree);
-//	molY->addObservable(obsyFree);
-//
-//	//Total amount of X
-//	/*TemplateMolecule *xTot = new TemplateMolecule(molX);
-//	Observable * obsxTot = new Observable("Xtot",xTot);
-//	molX->addObservable(obsxTot);
-//
-//	//Total amount of Y
-//	TemplateMolecule *yTot = new TemplateMolecule(molY);
-//	Observable * obsyTot = new Observable("Ytot",yTot);
-//	molY->addObservable(obsyTot);*/
+	//To create an observable, we must first create a TemplateMolecule that we would
+	//like to match.  For instance, to create an observable for X, first create a template
+	//molecule like this:
+	TemplateMolecule *xNotPhos = new TemplateMolecule(molX);
+
+	//Then, we would like to set some constraints.  For this, let us set the constraint
+	//that X has an open binding site at 'y' and it is not phosphorylated.
+	xNotPhos->addComponentConstraint("p",0);
+	xNotPhos->addEmptyComponent("y");
+
+
+	//Now, we create an observable from the templateMolecule and give it a name
+	//that will be used in the output.
+	Observable * obsxNotPhos = new MoleculesObservable("X(p~0,y)",xNotPhos);
+
+
+	//Finally, we have to add the observable to the MoleculeType that is being observed.  If you
+	//don't add to the correct moleculeType, the count will always be zero!  And that's it!  Adding
+	//to the moleculeType will record the observable with the system, and this observable will
+	//always output correctly.
+	s->addObservableForOutput(obsxNotPhos);
+
 }
 
 

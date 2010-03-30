@@ -9,7 +9,7 @@ using namespace NFcore;
 
 
 
-ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *transformationSet, System *s)
+ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s)
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
@@ -18,6 +18,7 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 	//Setup the basic properties of this reactionClass
 	this->name = name;
 	this->baseRate = baseRate;
+	this->baseRateParameterName=baseRateParameterName;
 	this->fireCounter = 0;
 	this->a = 0;
 	this->traversalLimit = ReactionClass::NO_LIMIT;
@@ -190,10 +191,6 @@ ReactionClass::ReactionClass(string name, double baseRate, TransformationSet *tr
 			cout<<"Warning! You have an binding rxn (" << name << ") that is symmetric."<<endl;
 			cout<<"Make sure that is correct."<<endl;
 
-
-
-
-			cout<<"and that reaction is symmetric."<<endl;
 			cout<<endl;
 			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
 			isDimerStyle=true;
@@ -218,6 +215,17 @@ ReactionClass::~ReactionClass()
 	delete [] reactantTemplates;
 	delete transformationSet;
 	delete [] mappingSet;
+
+}
+
+
+
+void ReactionClass::resetBaseRateFromSystemParamter() {
+
+	if(!this->baseRateParameterName.empty()) {
+		this->baseRate=system->getParameter(this->baseRateParameterName);
+		this->update_a();
+	}
 
 }
 
