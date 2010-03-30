@@ -40,12 +40,12 @@ if isempty(bngnf_path)
     while isValid~=2
         baseDir = uigetdir('','Identify the NFsim Installation Directory');
         if baseDir==0, return, end;
-        if ispc, isValid=exist([baseDir,'\Perl2\BNG2.pl'],'file');
-        else isValid=exist([baseDir,'/Perl2/BNG2.pl'],'file'); end;
+        if ispc, isValid=exist([baseDir,'\BNG\BNG2.pl'],'file');
+        else isValid=exist([baseDir,'/BNG/BNG2.pl'],'file'); end;
         if isValid==2, break; end;
     
         %if we get here, then we could not find the BNG2.pl executable
-        e=errordlg(['Could not find Perl2/BNG2.pl in this directory! ', ...
+        e=errordlg(['Could not find BNG/BNG2.pl in this directory! ', ...
              'Please try again.'],'Error finding BNG2.pl','modal');
         uiwait(e);
     end;
@@ -67,10 +67,10 @@ fprintf('Running BioNetGen, please wait....');
 
 if(ispc)
     if ~isempty(path), path=[path,'\']; end;
-    [status,consoleOutput]=system(['perl "',bngnf_path,'\Perl2\BNG2.pl" "',path,filename,'"']);
+    [status,consoleOutput]=system(['perl "',bngnf_path,'\BNG\BNG2.pl" "',path,filename,'"']);
 else %if(isunix || ismac)
     if ~isempty(path), path=[path,'/']; end;
-    [status,consoleOutput]=system(['perl "',bngnf_path,'/Perl2/BNG2.pl" "',path,filename,'"']);
+    [status,consoleOutput]=system(['perl "',bngnf_path,'/BNG/BNG2.pl" "',path,filename,'"']);
 end
 
 %Check the status of the run
