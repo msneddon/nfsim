@@ -1336,7 +1336,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 		list <Molecule *> molList;
 		list <Molecule *>::iterator molIter;
-		m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+		bool hasTraversed = false;
 
 		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
 
@@ -1347,6 +1347,13 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 			if(hasTraversedDownConnectedTo[cTo]) continue;
 
+			if(!hasTraversed) {
+				m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+			//	cout<<"traversing...\n"<<endl;
+				hasTraversed = true;
+			}
+
+			//cout<<"in here...\n"<<endl;
 
 
 			bool canMatch=false;
