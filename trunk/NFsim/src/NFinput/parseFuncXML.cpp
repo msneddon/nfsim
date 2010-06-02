@@ -423,6 +423,8 @@ bool NFinput::initFunctions(
 		vector <string> argNames;
 		vector <string> refNames;
 		vector <string> refTypes;
+		vector <string> refNamesSorted;
+		vector <string> refTypesSorted;
 
 		//Loop through the Function tags...
 		TiXmlElement *pFunction;
@@ -510,14 +512,44 @@ bool NFinput::initFunctions(
 			}
 
 
+			// simple sort to order the elements, so that overlapping names do not
+			// get parsed wrong when interpreting the functions.
+			while(refNames.size()>0)
+			{
+				unsigned int maxLength = 0;
+				int maxIndex = 0;
+				string maxName = "";
+				string maxType = "";
+
+				for(unsigned int k=0; k<refNames.size(); k++)
+				{
+					if(refNames.at(k).length()>maxLength) {
+						maxName = refNames.at(k);
+						maxType = refTypes.at(k);
+						maxIndex = k;
+						maxLength = refNames.at(k).length();
+					}
+				}
+
+				// pop off the max value
+				refNames.at(maxIndex) = refNames.at(refNames.size()-1);
+				refTypes.at(maxIndex) = refTypes.at(refTypes.size()-1);
+				refNames.pop_back();
+				refTypes.pop_back();
+
+				// add it to the sorted list
+				refNamesSorted.push_back(maxName);
+				refTypesSorted.push_back(maxType);
+			}
+
 
 
 			//Here we actually generate the function or the function generator
 			if(!createFunction(funcName,
 					funcExpression,
 					argNames,
-					refNames,
-					refTypes,
+					refNamesSorted,
+					refTypesSorted,
 					system,
 					parameter,
 					pListOfObservables,
@@ -530,13 +562,17 @@ bool NFinput::initFunctions(
 			argNames.clear();
 			refNames.clear();
 			refTypes.clear();
+			refNamesSorted.clear();
+			refTypesSorted.clear();
 		}
+
+
 
 		//Once we've read in all the functions, we should take care of finalizing
 		//the composite functions so they properly reference the other functions
 		system->finalizeCompositeFunctions();
 	//	cout<<"done reading functions!"<<endl;
-	//	exit(0);
+
 		//Getting here means we read everything we could successfully
 		return true;
 	} catch (...) {
