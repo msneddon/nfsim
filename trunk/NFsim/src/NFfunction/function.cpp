@@ -80,6 +80,7 @@ void GlobalFunction::prepareForSimulation(System *s)
 			p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 		}
 		p->SetExpr(this->funcExpression);
+
 	}
 	catch (mu::Parser::exception_type &e)
 	{
