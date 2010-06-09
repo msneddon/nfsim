@@ -50,6 +50,8 @@ bool createFunction(string name,
 	vector <string> varRefTypes;
 	vector <string> paramNames;
 	int otherFuncRefCounter=0;
+
+
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Function") {
 			otherFuncRefCounter++;
@@ -67,6 +69,7 @@ bool createFunction(string name,
 	if(otherFuncRefCounter!=0) {
 
 		//Must be a composite function, so parse as such
+		//cout<<"creating composite function\n";
 		createCompositeFunction(name, expression, argNames, refNames, refTypes, paramNames, s, verbose);
 		return true;
 		//	exit(1);
@@ -74,6 +77,7 @@ bool createFunction(string name,
 	else if(argNames.size()==0) //&& otherFuncRefCounter==0)
 	{
 		//must be a global function, as we have no arguments, so just create it
+		//cout<<"creating global function\n";
 		GlobalFunction *gf = new GlobalFunction(name, expression,
 												varRefNames, varRefTypes, paramNames, s);
 		if(!s->addGlobalFunction(gf)) {
@@ -91,6 +95,7 @@ bool createFunction(string name,
 //	}
 	// else if(argNames.size()>0 && otherFuncRefCounter==0)
 	//if we got here, we are creating a local function, so call the create local function function.
+	//cout<<"creating local function"<<endl;
 	return createLocalFunction(name, expression,
 			argNames, refNames, refTypes,
 			s, parameter, pListOfObservables, allowedStates, verbose);
@@ -165,6 +170,8 @@ bool createLocalFunction(string name,
 		if(refTypes.at(rn)=="Function") {
 			otherFuncRefCounter++;
 		} else if(refTypes.at(rn)=="Constant") {
+			paramNames.push_back(refNames.at(rn));
+		} else if(refTypes.at(rn)=="ConstantExpression") {
 			paramNames.push_back(refNames.at(rn));
 		}
 	}
