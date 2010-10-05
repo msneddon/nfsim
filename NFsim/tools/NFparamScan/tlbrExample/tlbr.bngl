@@ -1,0 +1,96 @@
+# Trivalent ligand - bivalent receptor model used to verify and test
+# the performance of NFsim.  When running this model, you can turn on
+# aggregate or complex bookkeeping to block ring formation as in the
+# original problem specification by using the parameter "-bscb" for
+# block same complex binding.  See the manual or the associated RNF file.
+
+# whenever you run this model, you should use the "-utl 3" flag in NFsim
+# so that extra molecules are not traversed during NFsim updates.  Otherwise
+# runs will be slower, especially when large aggregates form.
+
+# this specific instance of the model is designed to run the parameter
+# scanning and estimation scripts disccussed in the NFsim manuscript and
+# the user manual.
+
+begin parameters
+	
+
+    # For Fitting
+
+    Rec_tot 300
+
+    #Ligand Concentration in nM
+    Lig_conc 10                                           #
+    
+    Vol 1e-12 #L
+    Na  6.0221415e23
+
+    # Here we convert from nano molar to number in 1e-12 Liters
+    Lig_tot    (Lig_conc)*(1e-9)*Na*Vol
+    
+    koff  0.01
+
+    # value in nM
+    K1  0.467
+    K2  87.03
+
+    kp1   K1*koff / (1e-9*Na*Vol)
+    kp2   K2*koff / (1e-9*Na*Vol)
+
+	## Ramping Trajectory
+	#Lig_tot  2000
+	#Rec_tot  3000
+	#cTot     0.11
+	#beta     16.8
+	#koff     0.01
+	
+	## Sol-gel Phase
+	#Lig_tot  4200
+	#Rec_tot  300
+	#cTot     0.84
+	#beta     50
+	#koff     0.01
+	
+	
+	## Peaking Trajectory
+	#Lig_tot  50000
+	#Rec_tot  3000
+	#cTot  2.7
+	#beta  16.8
+	#koff  0.01
+	
+	#kp1 (cTot*koff)/(3.0*Lig_tot) #FREE BINDING RATE
+	#kp2 (beta*koff)/Rec_tot #CROSSLINKING RATE
+
+end parameters
+
+begin molecule types
+	L(r,r,r)
+	R(l,l)
+end molecule types
+
+begin species
+	L(r,r,r)	Lig_tot
+	R(l,l)		Rec_tot
+end species
+
+begin reaction rules
+	R(l!1).L(r!1) -> R(l) + L(r) koff
+	L(r,r,r) + R(l) -> L(r!1,r,r).R(l!1) kp1
+	L(r,r,r!+) + R(l) -> L(r!1,r,r!+).R(l!1) kp2
+	L(r,r!+,r!+) + R(l) -> L(r!1,r!+,r!+).R(l!1) kp2
+end reaction rules
+
+begin observables
+    Molecules Lfree L(r,r,r)
+    Molecules Ltot L()
+    Molecules xlinked R(l!1).L(r!1,r!2).R(l!2)
+end observables
+
+
+
+# Run this to test bng performance
+simulate_nf({t_end=>2000,n_steps=>200,param=>'-utl 3 -bscb'});
+
+
+

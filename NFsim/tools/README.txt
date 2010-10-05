@@ -28,8 +28,26 @@ NFanalyzeDump      - This directory contains a set of Matlab tools for reading a
                      necessary, for instance, to extract the value of local functions
                      in NFsim, plot average aggregate sizes, or determine the structure
                      and configuration of polymers.
-                     
+
+
+NFparamScan        - Set of tools designed for running NFsim simulations from a
+                     Matlab environment and performing parameter scanning on those
+                     models.  There is also an included set of scripts that can be
+                     modified to run parameter estimation on your model.  This code
+                     can not be generalized because it depends on the type and format
+                     of your experimental data that you are using, but can be
+                     relatively easily modified.  To run the parameter scanning
+                     methods on your data, see the script "runParameterScan.m". If
+                     you want to use the parameter estimation methods, look at the
+                     script named "runTLBRfit.m", which is code that runs a fit on
+                     the TLBR model.  However, the overall steps for running a fit
+                     will be similar for all models.  You will just have to modify
+                     the code to read your own experimental data, and decide how that
+                     data should be extracted from the model.
+                    
                      
 PhiBPlot           - A Java program originally developed for BioNetGen, but that can
                      read and plot NFsim GDAT files as well.  See the README in the
                      PhiBPlot directory for information on running the program.
+
+
