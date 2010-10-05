@@ -1201,17 +1201,17 @@ bool NFinput::initReactionRules(
 							int M_position = id.find_first_of("M");
 							if(M_position>=0) {
 								if(verbose) {
-									cout<<"\t\t\t***Identified deletion of molecule: "+id<<". ";
+									cout<<"\t\t\t***Identified deletion of a molecule: "+id<<". ";
 									if(delMolKeyword.compare("0")==0) {
-										cout<<"DeleteMolecules keyword is turned off."<<endl;
+										cout<<"\n\t\t\t\tDeleteMolecules keyword is turned off."<<endl;
 									} else {
-										cout<<"DeleteMolecules keyword is turned on."<<endl;
+										cout<<"\n\t\t\t\tDeleteMolecules keyword is turned on, so only this specific molecule will be removed."<<endl;
 									}
 								}
 
 
 								//Pointing to just a single molecule, so retrieve that molecule
-								cout<<"pointing to just a single molecule, so retrieve it."<<endl;
+								//cout<<"pointing to just a single molecule, so retrieve it."<<endl;
 								component c = comps.find(id)->second;
 
 								if(delMolKeyword.compare("0")==0) {
@@ -1220,7 +1220,7 @@ bool NFinput::initReactionRules(
 											"the fact that it cannot create multiple additional species."<<endl;
 
 									//Give a warning, because the behavior of this function is very strange indeed!!!
-									cerr<<"\nERROR 002!  You created a reaction ("+rxnName+") that deletes a molecule, but you did not use"<<endl;
+									cerr<<"\nERROR!  You created a reaction ("+rxnName+") that deletes a molecule, but you did not use"<<endl;
 									cerr<<"the 'DeleteMolecules' keyword.  Thus, conforming with BNGL specification, this rule will not"<<endl;
 									cerr<<"delete the molecule IF the deletion creates two disjoint species that are no longer connected."<<endl;
 									cerr<<"NFsim doesn't believe in this weird behavior, so NFsim enforces the use of the DeleteMolecules "<<endl;
@@ -1239,11 +1239,11 @@ bool NFinput::initReactionRules(
 
 							else if(comps.find(id)!=comps.end()) {
 								if(verbose) {
-									cout<<"\t\t\t***Identified deletion of complete species: "+id<<". ";
+									cout<<"\t\t\t***Identified deletion of the complete pattern: "+id<<". ";
 									if(delMolKeyword.compare("0")==0) {
-										cout<<"DeleteMolecules keyword is turned off."<<endl;
+										cout<<"\n\t\t\t\tDeleteMolecules keyword is turned off, so the full species will be removed."<<endl;
 									} else {
-										cout<<"DeleteMolecules keyword is turned on."<<endl;
+										cout<<"\n\t\t\t\tDeleteMolecules keyword is turned on, so only the molecules in the pattern will be removed."<<endl;
 									}
 								}
 
@@ -1254,9 +1254,17 @@ bool NFinput::initReactionRules(
 									component c = comps.find(id)->second;
 									if(!ts->addDeleteMolecule(c.t,TransformationFactory::COMPLETE_SPECIES_REMOVAL)) return false;
 								} else {
-									//Pointing to the whole complex, DeleteMolecules keyword is turned on.  This throws an
-									//error because if DeleteMolecules is turned on, then we should
-									cout<<"ERROR 000!"<<endl;
+									//Pointing to the whole complex, DeleteMolecules keyword is turned on.  According to
+									//BNGL logic, this will only delete the molecule(s) specified in the pattern, and not
+									//the entire species.  Fortunately, BNG should detect that the keyword is on, and pass
+									//deletion of individual molecules, not of the entire species.  so if we get here, then
+									//there was an error in BNG!!
+
+									cerr<<"\nERROR!  You created a reaction ("+rxnName+") that deletes a molecule, and you did use"<<endl;
+									cerr<<"the 'DeleteMolecules' keyword.  Unfortunately, BNG provided NFsim with information about"<<endl;
+									cerr<<"deleting an entire species.  This error should never happen, but if it does, contact us"<<endl;
+									cerr<<"through the NFsim or BioNetGen websites to report this error.  "<<endl;
+
 									return false;
 								}
 
@@ -1372,6 +1380,8 @@ bool NFinput::initReactionRules(
 						}
 					}
 				}
+
+
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// With the transforations now set, Let's actually create the reaction (remember to finalize the TransformationSet!
 				//We can't finalize the transformation set here anymore! we have to do it just before we create
