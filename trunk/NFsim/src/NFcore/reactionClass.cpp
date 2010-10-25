@@ -13,6 +13,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
+	this-> tagged = false;
 
 	isDimerStyle=false;
 	//Setup the basic properties of this reactionClass
@@ -232,7 +233,7 @@ void ReactionClass::resetBaseRateFromSystemParamter() {
 
 
 void ReactionClass::printDetails() const {
-	cout<< name <<"  ( baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	cout<< name <<"  (id="<<this->rxnId<<", baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
@@ -266,6 +267,20 @@ void ReactionClass::fire(double random_A_number)
 
 	//First randomly pick the reactants to fire by selecting the MappingSets
 	pickMappingSets(random_A_number);
+
+	// output something if the reaction was tagged
+	if(tagged) {
+			cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
+			for(unsigned int k=0; k<n_reactants; k++) {
+				cout<<" [";
+				for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
+					Molecule *mForTag = mappingSet[k]->get(p)->getMolecule();
+					cout<<" "<<mForTag->getMoleculeTypeName()<<mForTag->getUniqueID();
+				}
+				cout<<" ]";
+			}
+			cout<<endl;
+	}
 
 	//Generate the set of possible products that we need to update
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);

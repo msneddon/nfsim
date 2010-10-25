@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 	// Check if scheduler should handle the work
 	if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.052";
+	string versionNumber = "1.06";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
 		}
 
 		//Finally, always give the logo to anyone who calls for it
-		if (argMap.find("logo")!=argMap.end())
+		if (argMap.find("logo")!=argMap.end() || argMap.find("version")!=argMap.end())
 		{
 			cout<<endl<<endl;
 			printLogo(15,versionNumber);
@@ -410,6 +410,20 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();
+				}
+
+				// tag any reactions that were tagged
+				if (argMap.find("rtag")!=argMap.end()) {
+					vector <int> sequence;
+					NFinput::parseAsCommaSeparatedSequence(argMap,"rtag",sequence);
+
+					if(verbose) {
+						cout<<" tagging reactions by id:";
+						for(unsigned int k=0; k<sequence.size(); k++) cout<<" "<<sequence.at(k);
+						cout<<endl;
+					}
+					for(unsigned int k=0; k<sequence.size(); k++) s->tagReaction(sequence.at(k));
+
 				}
 
 				//Finally, return the system if we made it here without problems

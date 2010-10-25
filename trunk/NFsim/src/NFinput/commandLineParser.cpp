@@ -70,6 +70,34 @@ int NFinput::parseAsInt(map<string,string> &argMap,string argName,int defaultVal
 	return defaultValue;
 }
 
+
+void NFinput::parseAsCommaSeparatedSequence(map<string,string> &argMap,string argName,vector<int> &sequence)
+{
+	if(argMap.find(argName)!=argMap.end()) {
+		string argString = argMap.find(argName)->second;
+		try {
+
+			vector <string> numberStrings;
+			numberStrings.push_back("");
+			for(unsigned int i=0; i<argString.length(); i++)
+			{
+				if(argString.at(i)=='\"' || argString.at(i)==' ') { continue; }
+				if(argString.at(i)==',') { numberStrings.push_back(""); continue; }
+				numberStrings.at(numberStrings.size()-1) = numberStrings.at(numberStrings.size()-1) + argString.at(i);
+			}
+
+			for(unsigned int i=0; i<numberStrings.size(); i++) {
+				sequence.push_back(NFutil::convertToInt(numberStrings.at(i)));
+			}
+
+		} catch (std::runtime_error e) {
+			cout<<endl<<"!!  Warning: I couldn't parse your flag '-"+argName+" "+argString+"' as a comma separated "+
+					"integer sequence, so I'm quitting."<<endl;
+			exit(1);
+		}
+	}
+}
+
 double NFinput::parseAsDouble(map<string,string> &argMap,string argName,double defaultValue)
 {
 	if(argMap.find(argName)!=argMap.end()) {

@@ -12,7 +12,7 @@ SpeciesCreator::SpeciesCreator(
 {
 	try {
 		this->n_molecules = productMoleculeTypes.size();
-		//cout<<"New species Creator!! num of molecules in species: "<<n_molecules<<endl;
+		cout<<"New species Creator!! num of molecules in species: "<<n_molecules<<endl;
 
 		//Copy over the molecules
 		n_molecules = productMoleculeTypes.size();
@@ -20,7 +20,7 @@ SpeciesCreator::SpeciesCreator(
 		for(unsigned int m=0; m<n_molecules; m++)
 		{
 			moleculeTypes[m]=productMoleculeTypes.at(m);
-			//cout<<m<<": "<<moleculeTypes[m]->getName()<<endl;
+			cout<<m<<": "<<moleculeTypes[m]->getName()<<endl;
 		}
 
 		newMoleculeCreations = new Molecule *[n_molecules];
@@ -38,7 +38,7 @@ SpeciesCreator::SpeciesCreator(
 			ndStateIndex[s]=stateInformation.at(1).at(s);
 			ndStateValue[s]=stateInformation.at(2).at(s);
 
-		//	cout<<"state"<<s<<" : "<<ndStateMolecule[s]<<" "<< ndStateIndex[s]<<" "<<ndStateValue[s]<<endl;
+			cout<<"state"<<s<<" : "<<ndStateMolecule[s]<<" "<< ndStateIndex[s]<<" "<<ndStateValue[s]<<endl;
 		}
 
 		//Save the bonds that we have to create
@@ -55,7 +55,7 @@ SpeciesCreator::SpeciesCreator(
 			bSite1[b]=bindingSiteInformation.at(1).at(b);
 			bSite2[b]=bindingSiteInformation.at(3).at(b);
 
-			//cout<<"bonds"<<b<<" : "<<bMolecule1[b]<<","<<bSite1[b]<<"  to  "<<bMolecule2[b]<<","<<bSite2[b]<<endl;
+			cout<<"bonds"<<b<<" : "<<bMolecule1[b]<<","<<bSite1[b]<<"  to  "<<bMolecule2[b]<<","<<bSite2[b]<<endl;
 
 
 		}
