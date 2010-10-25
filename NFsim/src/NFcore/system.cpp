@@ -269,6 +269,22 @@ void System::registerOutputFileLocation(string filename)
 
 }
 
+
+
+void System::tagReaction(int rID) {
+
+	if(rID<0 || rID>=this->allReactions.size() ) {
+		cerr<<"!!! Error when trying to tag reaction with reaction ID "<<rID<<endl;
+		cerr<<"!!! Reaction with that ID does not exist."<<endl;
+		cerr<<"!!! quitting now."<<endl;
+		exit(1);
+	}
+	allReactions.at(rID)->tag();
+
+
+}
+
+
 void System::addObservableForOutput(Observable *o) {
 	if(o->getType()==Observable::SPECIES)
 		this->speciesObservables.push_back(o);

@@ -257,6 +257,10 @@ namespace NFcore
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
 
+			void tagReaction(int rID);
+
+
+
 			void addLocalFunction(LocalFunction *lf);
 			void getLocalFunction(string funcName) const { cout<<"getLocalFunction not yet implemented."<<endl;exit(1);};
 
@@ -974,6 +978,8 @@ namespace NFcore
 
 
 
+			/* turn the tag of this guy on */
+			void tag() { tagged = true; };
 
 
 			virtual unsigned int getReactantCount(unsigned int reactantIndex) const = 0;
@@ -995,6 +1001,9 @@ namespace NFcore
 			virtual void pickMappingSets(double randNumber) const=0;
 
 			int rxnId;
+
+			/* if this reaction is tagged, it outputs a message everytime it is fired */
+			bool tagged;
 
 			string name;
 			int reactionType;

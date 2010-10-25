@@ -230,6 +230,13 @@ namespace NFinput {
 	double parseAsDouble(map<string,string> &argMap, string argName, double defaultValue);
 
 
+	//! Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints
+	/*!
+    	@author Michael Sneddon
+	 */
+	void parseAsCommaSeparatedSequence(map<string,string> &argMap,string argName,vector<int> &sequence);
+
+
 
 	//! Allows the user to walk through the system with an interactive text-based program
 	/*!

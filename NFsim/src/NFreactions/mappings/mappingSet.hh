@@ -89,6 +89,8 @@ namespace NFcore
 			 */
 			unsigned int getId() const { return id; };
 
+			unsigned int getNumOfMappings() const { return n_mappings; };
+
 
 			unsigned int getClonedMapping() const { return clonedMappingSet; };
 			void clearClonedMapping() { this->clonedMappingSet=NO_CLONE; };
