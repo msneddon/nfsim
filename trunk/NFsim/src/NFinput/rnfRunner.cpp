@@ -137,9 +137,14 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 				//Properly close the input stream
 				rnfFile.close();
 			}
+			else {
+				cout<<"\n   Error when opening the rnf file named: '"<<filename.c_str()<<"'"<<endl;
+				cout<<"   File not found or is not accessible."<<endl;
+				return false;
+			}
 		}
 	} else {
-		cout<<"\nCouldn't open rnf file.  No -rnf [filename] flag given."<<endl;
+		cout<<"\nCouldn't open the rnf file.  No -rnf [filename] flag given."<<endl;
 		return false;
 	}
 

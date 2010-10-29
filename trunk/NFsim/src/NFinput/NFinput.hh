@@ -63,7 +63,8 @@ namespace NFinput {
 			string filename,
 			bool blockSameComplexBinding,
 			int globalMoleculeLimit,
-			bool verbose);
+			bool verbose,
+			int &suggestedTraversalLimit);
 
 	//! Reads the parameter XML block and puts them in the parameter map.
 	/*!
@@ -135,7 +136,8 @@ namespace NFinput {
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
 			int obsType,
-			bool verbose);
+			bool verbose,
+			int &suggestedTraversalLimit);
 
 
 
@@ -162,7 +164,8 @@ namespace NFinput {
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
 			bool blockSameComplexBinding,
-			bool verbose);
+			bool verbose,
+			int &suggestedTraversalLimit);
 
 	//! Reads an observable XML block and adds the new observables to the system.
 	/*!
@@ -173,7 +176,8 @@ namespace NFinput {
 			System * system,
 			map <string,double> &parameter,
 			map<string,int> &allowedStates,
-			bool verbose);
+			bool verbose,
+			int &suggestedTraversalLimit);
 
 
 	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.
@@ -188,7 +192,8 @@ namespace NFinput {
 			map <string, TemplateMolecule *> &templates,
 			map <string, component> &comps,
 			map <string, component> &symMap,
-			bool verbose);
+			bool verbose,
+			int &suggestedTraversalLimit);
 
 	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.
 	/*!
