@@ -168,8 +168,9 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose);
 int main(int argc, char *argv[])
 {
 
-	// Check if scheduler should handle the work
-	if (!schedulerInterpreter(&argc, &argv)) return 0;
+	// Check if scheduler should handle the work.  This functionality is
+	// turned off for the general release code.
+	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
 	string versionNumber = "1.06";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
@@ -192,7 +193,7 @@ int main(int argc, char *argv[])
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
-			cout<<"seeding random number generator with: "<<seed<<endl;
+			cout<<"Seeding random number generator with: "<<seed<<endl;
 		}
 
 
@@ -204,14 +205,16 @@ int main(int argc, char *argv[])
 		}
 
 		//Handle when the user asks for help!
-		else if (argMap.find("help")!=argMap.end())  {
+		else if (argMap.find("help")!=argMap.end()
+				|| argMap.find("h")!=argMap.end()
+		)  {
 			printHelp(versionNumber);
 			parsed = true;
 		}
 
 		//If we are running from a RNF script file...
 		else if(argMap.find("rnf")!=argMap.end()) {
-			cout<<"handling RNF file"<<endl;
+			cout<<" reading RNF file"<<endl;
 			runRNFscript(argMap,verbose);
 			parsed = true;
 		}
@@ -284,7 +287,7 @@ int main(int argc, char *argv[])
 
     // If we could not successfully parse the parameters, tell the user
 	if(!parsed) {
-		cout<<"Could not identify what you want to do.  Try running the -help flag for advice."<<endl;
+		cout<<"   NFsim could not identify what you wanted to do.\n   Try running NFsim with the -help flag for advice."<<endl;
 	}
 
 
@@ -356,13 +359,18 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
-			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose);
+			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
+			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,suggestedTraveralLimit);
+
 
 			if(s!=NULL)
 			{
+				if(verbose) cout<<endl;
+
 				//If requested, be sure to output the values of global functions
 				if (argMap.find("ogf")!=argMap.end()) {
 					s->turnOnGlobalFuncOut();
+					if(verbose) cout<<"\tGlobal function output (-ogf) flag detected."<<endl<<endl;
 				}
 
 				// Also set the dumper to output at specified time intervals
@@ -379,17 +387,22 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					int utl = -1;
 					utl = NFinput::parseAsInt(argMap,"utl",utl);
 					s->setUniversalTraversalLimit(utl);
+					if(verbose) cout<<"\tUniversal Traversal Limit (UTL) set manually to: "<<utl<<endl<<endl;
+				} else {
+					s->setUniversalTraversalLimit(suggestedTraveralLimit);
+					if(verbose) cout<<"\tUniversal Traversal Limit (UTL) set automatically to: "<<suggestedTraveralLimit<<endl<<endl;
 				}
 
 				// turn on the event counter, if need be
 				if (argMap.find("oec")!=argMap.end()) {
 					s->turnOnOutputEventCounter();
-					cout<<"here!"<<endl;
+					if(verbose) cout<<"\tEvent counter output (-oec) flag detected."<<endl<<endl;
 				}
 
 				// set the output to binary
 				if (argMap.find("b")!=argMap.end()) {
 					s->setOutputToBinary();
+					if(verbose) cout<<"\tStandard output is switched to binary format."<<endl<<endl;
 				}
 
 
@@ -401,15 +414,18 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				} else {
 					if(s->isOutputtingBinary())
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
+					    if(verbose) cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.dat" <<endl<<endl;
 					else {
 						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
 						s->outputAllObservableNames();
+						if(verbose) cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.gdat" <<endl<<endl;
 					}
 				}
 
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();
+					if(verbose) cout<<"\tOn-the-fly observables is turned on (detected -notf flag)."<<endl<<endl;
 				}
 
 				// tag any reactions that were tagged
@@ -418,7 +434,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					NFinput::parseAsCommaSeparatedSequence(argMap,"rtag",sequence);
 
 					if(verbose) {
-						cout<<" tagging reactions by id:";
+						cout<<"\tTagging reactions by id (from the -rtag flag):";
 						for(unsigned int k=0; k<sequence.size(); k++) cout<<" "<<sequence.at(k);
 						cout<<endl;
 					}

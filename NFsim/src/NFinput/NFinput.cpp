@@ -46,10 +46,11 @@ System * NFinput::initializeFromXML(
 		string filename,
 		bool blockSameComplexBinding,
 		int globalMoleculeLimit,
-		bool verbose)
+		bool verbose,
+		int &suggestedTraversalLimit)
 {
-	if(!verbose) cout<<"reading xml file ("+filename+")  [";
-	if(verbose) cout<<"\tTrying to read xml model specification file: '"<<filename<<"'"<<endl;
+	if(!verbose) cout<<"reading xml file ("+filename+")  \n\t[";
+	if(verbose) cout<<"\tTrying to read xml model specification file: \t\n'"<<filename<<"'"<<endl;
 
 
 	TiXmlDocument doc(filename.c_str());
@@ -132,7 +133,7 @@ System * NFinput::initializeFromXML(
 
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Observables..."<<endl;
-		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose))
+		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose, suggestedTraversalLimit))
 		{
 			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
@@ -159,7 +160,7 @@ System * NFinput::initializeFromXML(
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
 
-		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, blockSameComplexBinding, verbose))
+		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, blockSameComplexBinding, verbose, suggestedTraversalLimit))
 		{
 			cout<<"\n\nI failed at parsing your reaction rules.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
@@ -897,7 +898,8 @@ bool NFinput::initReactionRules(
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
 		bool blockSameComplexBinding,
-		bool verbose)
+		bool verbose,
+		int &suggestedTraversalLimit)
 {
 
 
@@ -978,7 +980,7 @@ bool NFinput::initReactionRules(
 
 					TiXmlElement *pListOfMols = pReactant->FirstChildElement("ListOfMolecules");
 					if(pListOfMols) {
-						TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, symMap, verbose);
+						TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, reactantName, reactants, comps, symMap, verbose, suggestedTraversalLimit);
 						if(tm==NULL) return false;
 						templates.push_back(tm);
 					}
@@ -1687,7 +1689,8 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
 		int obsType,
-		bool verbose) {
+		bool verbose,
+		int &suggestedTraversalLimit) {
 
 
 	TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
@@ -1753,7 +1756,7 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 				{
 					map <string,component> symMap = permutations.at(p);
 					map <string,TemplateMolecule *> allTemplatesMap;
-					TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
+					TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose, suggestedTraversalLimit);
 					if(tm==NULL) return false;
 					tmList.push_back(tm);
 
@@ -1773,7 +1776,7 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 				map <string, component> comps;
 				map <string, component> symMap;
 
-				TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose);
+				TemplateMolecule *tm = readPattern(pListOfMols, s, parameter, allowedStates, patternName, allTemplatesMap, comps, symMap, verbose, suggestedTraversalLimit);
 				if(tm==NULL) return false;
 				tmList.push_back(tm);
 				stochRelation.push_back(relation);
@@ -1794,60 +1797,6 @@ bool NFinput::readObservableForTemplateMolecules(TiXmlElement *pObs,
 	}
 
 
-	//for(int i=0; i<tmList.size(); i++) {
-	//	tmList.at(i)->printDetails();
-	//}
-	//cout<<"done reading them in."<<endl;
-
-
-	//Now enter into the specific pattern making sure that it exists
-	//	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
-	//	if(!pPattern) {
-	//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-	//		tm = 0; return true;
-	//	}
-
-
-
-//
-//
-//	//Now enter into the list of patterns
-//	TiXmlElement *pListOfPatterns = pObs->FirstChildElement("ListOfPatterns");
-//	if(!pListOfPatterns) {
-//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-//		tm = 0; return true;
-//	}
-//
-//	//Now enter into the specific pattern making sure that it exists
-//	TiXmlElement *pPattern = pListOfPatterns->FirstChildElement("Pattern");
-//	if(!pPattern) {
-//		cout<<"\n\n!! Warning:: Observable "<<observableName<<" contains no patterns!"<<endl;
-//		tm = 0; return true;
-//	}
-//
-//	//Make sure (for the time being) there is only one pattern
-//	if(pPattern->NextSiblingElement("Pattern")!=0) {
-//		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains multiple patterns!"<<endl;
-//		cout<<"                This is not yet supported, so only the first pattern will be read."<<endl;
-//	}
-//
-//	//Go into the list of molecules that make up this pattern
-//	TiXmlElement *pListOfMol = pPattern->FirstChildElement("ListOfMolecules");
-//	if(!pListOfMol) {
-//		cout<<"\n\n!!Warning:: Observable "<<observableName<<" contains no molecules in its pattern!"<<endl;
-//		tm = 0; return true;
-//	}
-//
-//	//Let the other function (readPattern) gather and create our template
-//	map <string, TemplateMolecule *> templates;
-//	map <string, component> comps;
-//	map <string, component> symMap;
-//	tm = readPattern(pListOfMol, s, parameter, allowedStates, observableName, templates, comps, symMap, verbose);
-//	if(tm==NULL) {
-//		cerr<<"Somehow, I couldn't parse out your pattern for observable "<<observableName<<" so I'll stop here."<<endl;
-//		return false;
-//	}
-//
 	return true;
 }
 
@@ -1857,7 +1806,8 @@ bool NFinput::initObservables(
 		System * s,
 		map <string,double> &parameter,
 		map<string,int> &allowedStates,
-		bool verbose)
+		bool verbose,
+		int &suggestedTraversalLimit)
 {
 	try {
 		//We will parse this in a similar manner to parsing species, except to say that we don't create
@@ -1896,7 +1846,7 @@ bool NFinput::initObservables(
 				vector <TemplateMolecule *> tmList;
 				vector <string> stochRelation;
 				vector <int> stochQuantity;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::MOLECULES,verbose)) {return false;}
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::MOLECULES,verbose,suggestedTraversalLimit)) {return false;}
 
 				//Create the observable, which in this case, is a MoleculesObservable
 				MoleculesObservable *mo = new MoleculesObservable(observableName,tmList);
@@ -1940,7 +1890,7 @@ bool NFinput::initObservables(
 				vector <TemplateMolecule *> tmList;
 				vector <string> stochRelation;
 				vector <int> stochQuantity;
-				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::SPECIES,verbose)) {return false;}
+				if(!readObservableForTemplateMolecules(pObs,observableName,tmList,stochRelation,stochQuantity,s,parameter,allowedStates,Observable::SPECIES,verbose, suggestedTraversalLimit)) {return false;}
 
 				SpeciesObservable *so = new SpeciesObservable(observableName,tmList,stochRelation,stochQuantity);
 				s->addObservableForOutput(so);
@@ -1982,7 +1932,8 @@ TemplateMolecule *NFinput::readPattern(
 		map <string , TemplateMolecule *> &templates,
 		map <string, component> &comps,
 		map <string, component> &symMap,
-		bool verbose)
+		bool verbose,
+		int &suggestedTraversalLimit)
 {
 	try {
 
@@ -2060,9 +2011,7 @@ TemplateMolecule *NFinput::readPattern(
 					//////////////////////////////////////////////////////
 					//////////////////////////////////////////////////////
 
-
-
-					// does this component actually exist?
+					// For debugging: does this component actually exist?
 
 //					cout<<"Here is the sym Map: "<<endl;
 //					map <string,component>::iterator mapIter;
@@ -2071,7 +2020,6 @@ TemplateMolecule *NFinput::readPattern(
 //					}
 //					component *symC;
 //					cout<<compId<<endl;
-
 
 
 					//////////////////////////////////////////////////////
@@ -2432,6 +2380,14 @@ TemplateMolecule *NFinput::readPattern(
 			//}
 
 
+		}
+
+
+		//The number of templateMolecules in this pattern will give us the depth of the traversal that we could
+		//ever really encounter in the system, so we should suggest that this be the traversal limit if it
+		//is higher than what has already been suggested.
+		if((int)tMolecules.size()>suggestedTraversalLimit) {
+			suggestedTraversalLimit = (int)tMolecules.size();
 		}
 
 		//Grab the first template molecule from the list, and arbitrarily set this as the root

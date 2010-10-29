@@ -25,7 +25,9 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 			if(!filename.empty())
 			{
 				cout<<"Reading file:"+ filename<<endl;
-				s=NFinput::initializeFromXML(filename,false,verbose,100000);
+				int suggestedTraversalLimit = ReactionClass::NO_LIMIT;
+				s=NFinput::initializeFromXML(filename,false,100000,verbose,suggestedTraversalLimit);
+				s->setUniversalTraversalLimit(suggestedTraversalLimit);
 				if (argMap.find("b")!=argMap.end()) s->setOutputToBinary();
 			}
 			if(s!=0) { cout<<" success."<<endl; }
@@ -145,10 +147,12 @@ void runAgentCell(map<string,string> argMap, bool verbose)
 
 				if(i<(nCells-1)) {
 					cout<<endl<<endl<<"Reinitializing system..."<<endl;
-					s=NFinput::initializeFromXML(filename,false,false,100000);
+					int suggestedTraversalLimit = ReactionClass::NO_LIMIT;
+					s=NFinput::initializeFromXML(filename,false,100000,false,suggestedTraversalLimit);
 					if (argMap.find("b")!=argMap.end()) {
 						s->setOutputToBinary();
 					}
+					s->setUniversalTraversalLimit(suggestedTraversalLimit);
 				}
 			}
 

@@ -26,9 +26,18 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 		{
 			string sFlag = s.substr(1,s.size()-1);
 			if(sFlag.empty()) {
-				cout<<"Warning: possible error in arguments.  You gave a '-' with a space"<<endl;
-				cout<<"directly following. This is not a valid argument."<<endl<<endl;
-				continue;
+				cout<<"   Error in the command line arguments.  You gave a '-' with a space"<<endl;
+				cout<<"   directly following. This is not a valid argument."<<endl<<endl;
+				return false;
+			}
+
+			if(sFlag.compare(0,1,"-")==0){
+				sFlag = s.substr(1,sFlag.size()-1);
+			}
+			if(sFlag.empty()) {
+				cout<<"   Error in the command line arguments.  You gave a '--' with a space"<<endl;
+				cout<<"   directly following. This is not a valid argument."<<endl<<endl;
+				return false;
 			}
 
 
