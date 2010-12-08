@@ -44,6 +44,19 @@ Enjoy your new network-free world!
 
 Release Notes
 
+v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
+        specify whether or not to use the microscopic (default) interpretation
+        or macroscopic (TotalRate) interpretation of rate laws.  Now, NFsim
+        convention matches BNG.  Previously, NFsim interpreted all rates as
+        microscopic except for global functions, which were interpreted as
+        macroscopic.  This is now also explained in the user manual.  
+        
+        Although this was the main update, there were a few smaller items that
+        are updated as well.  First, users now have the option of outputting
+        gdat files in a comma delimited format (csv), which makes parsing the
+        output file easier in some circumstances, using the flag "-csv".
+
+
 
 v1.07   Nov, 2010 - A series of updates to the code were made in this
         release.  (1) RNF files that are not found produce an error message.
