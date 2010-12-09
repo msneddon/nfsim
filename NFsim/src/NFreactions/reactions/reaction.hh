@@ -22,13 +22,21 @@ namespace NFcore
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
 			virtual void remove(Molecule *m, unsigned int reactantPos);
 			virtual double update_a() {
-					a = 1;
 
+				// Use the total rate law convention (macroscopic rate)
+				if(this->totalRateFlag) {
+					a=baseRate;
+					for(unsigned int i=0; i<n_reactants; i++)
+						if(reactantLists[i]->size()==0) a=0;
+
+				// Use the standard microscopic rate
+				} else {
+					a = 1;
 					for(unsigned int i=0; i<n_reactants; i++)
 						a*=reactantLists[i]->size();
-
 					a*=baseRate;
-					return a;
+				}
+				return a;
 			}
 
 
