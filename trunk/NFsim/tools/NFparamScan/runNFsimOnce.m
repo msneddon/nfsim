@@ -51,6 +51,7 @@ if ~isempty(paramNames)
     % read in the BNGL file and do the basic things
     baseModel = textread([pathToBNGLFile,bnglFileName],'%s','whitespace','','bufsize',8191*2);
     baseModel = baseModel{:};
+    baseModel = strrep(baseModel,'%','%%');
     newOutput = baseModel;
     endlineChar = double(char(java.lang.System.getProperty('line.separator')));
     

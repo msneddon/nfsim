@@ -29,7 +29,7 @@ fprintf([' params: [K1=',num2str(parameters(1),10),',K2=',num2str(parameters(2),
 % NFsim.  This is standard for calling the runNFsimOnce routine.
 pathToModel = 'tlbrExample/';
 bnglFileName = 'tlbr.bngl';
-pathToNFsim = '../../../NFsim_v1.06';
+pathToNFsim = '../../';
 pathToOutput = 'tlbrExample/output/';
 
 
