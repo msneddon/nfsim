@@ -61,174 +61,183 @@
 <a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
 <a name="l00059"></a>00059 
-<a name="l00062"></a>00062         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * <a class="code" href="namespaceNFinput.html#f8a520e07f56df029a7784ab451f2be1" title="Maintains information about a component of a TemplateMolecule.">initializeFromXML</a>(
+<a name="l00062"></a>00062         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * <a class="code" href="namespaceNFinput.html#fe0d8bf429922d0a4b5cb4a0f40dd644" title="Maintains information about a component of a TemplateMolecule.">initializeFromXML</a>(
 <a name="l00063"></a>00063                         <span class="keywordtype">string</span> filename,
 <a name="l00064"></a>00064                         <span class="keywordtype">bool</span> blockSameComplexBinding,
 <a name="l00065"></a>00065                         <span class="keywordtype">int</span> globalMoleculeLimit,
-<a name="l00066"></a>00066                         <span class="keywordtype">bool</span> verbose);
-<a name="l00067"></a>00067 
-<a name="l00069"></a>00069 
-<a name="l00072"></a>00072         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#22ad4850b4679dbdff6597d602b8022d" title="Reads the parameter XML block and puts them in the parameter map.">initParameters</a>(
-<a name="l00073"></a>00073                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> *pListOfParameters,
-<a name="l00074"></a>00074                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s,
-<a name="l00075"></a>00075                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00076"></a>00076                         <span class="keywordtype">bool</span> verbose);
-<a name="l00077"></a>00077 
+<a name="l00066"></a>00066                         <span class="keywordtype">bool</span> verbose,
+<a name="l00067"></a>00067                         <span class="keywordtype">int</span> &amp;suggestedTraversalLimit);
+<a name="l00068"></a>00068 
+<a name="l00070"></a>00070 
+<a name="l00073"></a>00073         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#22ad4850b4679dbdff6597d602b8022d" title="Reads the parameter XML block and puts them in the parameter map.">initParameters</a>(
+<a name="l00074"></a>00074                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> *pListOfParameters,
+<a name="l00075"></a>00075                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s,
+<a name="l00076"></a>00076                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00077"></a>00077                         <span class="keywordtype">bool</span> verbose);
 <a name="l00078"></a>00078 
-<a name="l00080"></a>00080 
-<a name="l00083"></a>00083         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#bc6239da9790d1c8d2698fedd5d5b2ab" title="Reads the Function XML block and adds the Functions to the system.">initFunctions</a>(
-<a name="l00084"></a>00084                 <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfFunctions,
-<a name="l00085"></a>00085                 <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
-<a name="l00086"></a>00086                 map &lt;string,double&gt; &amp;parameter,
-<a name="l00087"></a>00087                 <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfObservables,
-<a name="l00088"></a>00088                 map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00089"></a>00089                 <span class="keywordtype">bool</span> verbose);
-<a name="l00090"></a>00090 
-<a name="l00092"></a>00092 
-<a name="l00095"></a>00095         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#808357527ea979c16a3581918af4f134" title="Reads the MoleculeType XML block and adds the MoleculeTypes to the system.">initMoleculeTypes</a>(
-<a name="l00096"></a>00096                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMoleculeTypes,
-<a name="l00097"></a>00097                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
-<a name="l00098"></a>00098                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00099"></a>00099                         <span class="keywordtype">bool</span> verbose);
-<a name="l00100"></a>00100 
+<a name="l00079"></a>00079 
+<a name="l00081"></a>00081 
+<a name="l00084"></a>00084         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#bc6239da9790d1c8d2698fedd5d5b2ab" title="Reads the Function XML block and adds the Functions to the system.">initFunctions</a>(
+<a name="l00085"></a>00085                 <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfFunctions,
+<a name="l00086"></a>00086                 <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
+<a name="l00087"></a>00087                 map &lt;string,double&gt; &amp;parameter,
+<a name="l00088"></a>00088                 <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfObservables,
+<a name="l00089"></a>00089                 map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00090"></a>00090                 <span class="keywordtype">bool</span> verbose);
+<a name="l00091"></a>00091 
+<a name="l00093"></a>00093 
+<a name="l00096"></a>00096         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#808357527ea979c16a3581918af4f134" title="Reads the MoleculeType XML block and adds the MoleculeTypes to the system.">initMoleculeTypes</a>(
+<a name="l00097"></a>00097                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMoleculeTypes,
+<a name="l00098"></a>00098                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
+<a name="l00099"></a>00099                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00100"></a>00100                         <span class="keywordtype">bool</span> verbose);
 <a name="l00101"></a>00101 
 <a name="l00102"></a>00102 
 <a name="l00103"></a>00103 
 <a name="l00104"></a>00104 
-<a name="l00105"></a>00105         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7ee59a37c3436e333bf2e03c65b5a03e">FindReactionRuleSymmetry</a>(
-<a name="l00106"></a>00106                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pRxnRule,
-<a name="l00107"></a>00107                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s,
-<a name="l00108"></a>00108                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00109"></a>00109                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00110"></a>00110                         map &lt;string, component&gt; &amp;symComps,
-<a name="l00111"></a>00111                         map &lt;string, component&gt; &amp;symRxnCenter,
-<a name="l00112"></a>00112                         <span class="keywordtype">bool</span> verbose);
-<a name="l00113"></a>00113 
-<a name="l00114"></a>00114         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#60d74a003353edf262b5be31e05e68dc">readPatternForSymmetry</a>(
-<a name="l00115"></a>00115                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
-<a name="l00116"></a>00116                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s,
-<a name="l00117"></a>00117                         <span class="keywordtype">string</span> patternName,
-<a name="l00118"></a>00118                         map &lt;string, component&gt; &amp;comps,
-<a name="l00119"></a>00119                         map &lt;string, component&gt; &amp;symComps,
-<a name="l00120"></a>00120                         <span class="keywordtype">bool</span> verbose);
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#78421cba53283fd0013e43e6d35f8b47">generateRxnPermutations</a>(vector&lt;map&lt;string,component&gt; &gt; &amp;permutations,
-<a name="l00123"></a>00123                         map&lt;string,component&gt; &amp;symComps,
-<a name="l00124"></a>00124                         map&lt;string,component&gt; &amp;symRxnCenter,
-<a name="l00125"></a>00125                         <span class="keywordtype">bool</span> verbose);
-<a name="l00126"></a>00126 
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7ee59a37c3436e333bf2e03c65b5a03e">FindReactionRuleSymmetry</a>(
+<a name="l00107"></a>00107                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pRxnRule,
+<a name="l00108"></a>00108                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s,
+<a name="l00109"></a>00109                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00110"></a>00110                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00111"></a>00111                         map &lt;string, component&gt; &amp;symComps,
+<a name="l00112"></a>00112                         map &lt;string, component&gt; &amp;symRxnCenter,
+<a name="l00113"></a>00113                         <span class="keywordtype">bool</span> verbose);
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#60d74a003353edf262b5be31e05e68dc">readPatternForSymmetry</a>(
+<a name="l00116"></a>00116                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
+<a name="l00117"></a>00117                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s,
+<a name="l00118"></a>00118                         <span class="keywordtype">string</span> patternName,
+<a name="l00119"></a>00119                         map &lt;string, component&gt; &amp;comps,
+<a name="l00120"></a>00120                         map &lt;string, component&gt; &amp;symComps,
+<a name="l00121"></a>00121                         <span class="keywordtype">bool</span> verbose);
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#78421cba53283fd0013e43e6d35f8b47">generateRxnPermutations</a>(vector&lt;map&lt;string,component&gt; &gt; &amp;permutations,
+<a name="l00124"></a>00124                         map&lt;string,component&gt; &amp;symComps,
+<a name="l00125"></a>00125                         map&lt;string,component&gt; &amp;symRxnCenter,
+<a name="l00126"></a>00126                         <span class="keywordtype">bool</span> verbose);
 <a name="l00127"></a>00127 
-<a name="l00128"></a>00128         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#ce4a726c34a7ebf5ee387fd9c53fbd87">readObservableForTemplateMolecules</a>(
-<a name="l00129"></a>00129                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> *pObs,
-<a name="l00130"></a>00130                         <span class="keywordtype">string</span> observableName,
-<a name="l00131"></a>00131                         vector &lt;TemplateMolecule *&gt; &amp;tmList,
-<a name="l00132"></a>00132                         vector &lt;string&gt; &amp;stochRelation,
-<a name="l00133"></a>00133                         vector &lt;int&gt; &amp;stochQuantity,
-<a name="l00134"></a>00134                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s,
-<a name="l00135"></a>00135                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00136"></a>00136                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00137"></a>00137                         <span class="keywordtype">int</span> obsType,
-<a name="l00138"></a>00138                         <span class="keywordtype">bool</span> verbose);
-<a name="l00139"></a>00139 
-<a name="l00140"></a>00140 
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#445dbc5a529a4527d31900546033a937">readObservableForTemplateMolecules</a>(
+<a name="l00130"></a>00130                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> *pObs,
+<a name="l00131"></a>00131                         <span class="keywordtype">string</span> observableName,
+<a name="l00132"></a>00132                         vector &lt;TemplateMolecule *&gt; &amp;tmList,
+<a name="l00133"></a>00133                         vector &lt;string&gt; &amp;stochRelation,
+<a name="l00134"></a>00134                         vector &lt;int&gt; &amp;stochQuantity,
+<a name="l00135"></a>00135                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s,
+<a name="l00136"></a>00136                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00137"></a>00137                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00138"></a>00138                         <span class="keywordtype">int</span> obsType,
+<a name="l00139"></a>00139                         <span class="keywordtype">bool</span> verbose,
+<a name="l00140"></a>00140                         <span class="keywordtype">int</span> &amp;suggestedTraversalLimit);
 <a name="l00141"></a>00141 
 <a name="l00142"></a>00142 
 <a name="l00143"></a>00143 
+<a name="l00144"></a>00144 
 <a name="l00145"></a>00145 
-<a name="l00148"></a>00148         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#367fa4c87ef87ba1e44294a8d6188b68" title="Reads a Species XML block, creates the molecules and adds them to the system.">initStartSpecies</a>(
-<a name="l00149"></a>00149                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfSpecies,
-<a name="l00150"></a>00150                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
-<a name="l00151"></a>00151                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00152"></a>00152                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00153"></a>00153                         <span class="keywordtype">bool</span> verbose);
-<a name="l00154"></a>00154 
+<a name="l00147"></a>00147 
+<a name="l00150"></a>00150         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#367fa4c87ef87ba1e44294a8d6188b68" title="Reads a Species XML block, creates the molecules and adds them to the system.">initStartSpecies</a>(
+<a name="l00151"></a>00151                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfSpecies,
+<a name="l00152"></a>00152                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
+<a name="l00153"></a>00153                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00154"></a>00154                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00155"></a>00155                         <span class="keywordtype">bool</span> verbose);
 <a name="l00156"></a>00156 
-<a name="l00159"></a>00159         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#08903395f329bbcd8003d11bfb5baf5a" title="Reads a reactionRule XML block and adds the rules to the system.">initReactionRules</a>(
-<a name="l00160"></a>00160                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfReactionRules,
-<a name="l00161"></a>00161                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
-<a name="l00162"></a>00162                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00163"></a>00163                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00164"></a>00164                         <span class="keywordtype">bool</span> blockSameComplexBinding,
-<a name="l00165"></a>00165                         <span class="keywordtype">bool</span> verbose);
-<a name="l00166"></a>00166 
-<a name="l00168"></a>00168 
-<a name="l00171"></a>00171         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#f70bed5f9ae20a317e3afe838e399dd3" title="Reads an observable XML block and adds the new observables to the system.">initObservables</a>(
-<a name="l00172"></a>00172                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfObservables,
-<a name="l00173"></a>00173                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
-<a name="l00174"></a>00174                         map &lt;string,double&gt; &amp;parameter,
-<a name="l00175"></a>00175                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00176"></a>00176                         <span class="keywordtype">bool</span> verbose);
-<a name="l00177"></a>00177 
-<a name="l00178"></a>00178 
-<a name="l00180"></a>00180 
-<a name="l00183"></a>00183         <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> *<a class="code" href="namespaceNFinput.html#ad42aeae0f73436a8d83242c0593541c" title="Reads a pattern XML block and returns the set of new TemplateMolecule objects.">readPattern</a>(
-<a name="l00184"></a>00184                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
-<a name="l00185"></a>00185                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s, map &lt;string,double&gt; &amp;parameter,
-<a name="l00186"></a>00186                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00187"></a>00187                         <span class="keywordtype">string</span> patternName,
-<a name="l00188"></a>00188                         map &lt;string, TemplateMolecule *&gt; &amp;templates,
-<a name="l00189"></a>00189                         map &lt;string, component&gt; &amp;comps,
-<a name="l00190"></a>00190                         map &lt;string, component&gt; &amp;symMap,
-<a name="l00191"></a>00191                         <span class="keywordtype">bool</span> verbose);
-<a name="l00192"></a>00192 
-<a name="l00194"></a>00194 
-<a name="l00198"></a>00198                 <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7e8ab2b49a2798dc1993710ca200d331" title="Reads a pattern XML block and returns the set of new TemplateMolecule objects.">readProductPattern</a>(
-<a name="l00199"></a>00199                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
-<a name="l00200"></a>00200                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s, map &lt;string,double&gt; &amp;parameter,
-<a name="l00201"></a>00201                         map&lt;string,int&gt; &amp;allowedStates,
-<a name="l00202"></a>00202                         <span class="keywordtype">string</span> patternName,
-<a name="l00203"></a>00203                         vector &lt;MoleculeType *&gt; &amp;productMoleculeTypes,
-<a name="l00204"></a>00204                         vector &lt; vector &lt;int&gt; &gt; &amp;stateInformation,
-<a name="l00205"></a>00205                         vector &lt; vector &lt;int&gt; &gt; &amp;bindingSiteInformation,
-<a name="l00206"></a>00206                         <span class="keywordtype">bool</span> verbose);
-<a name="l00207"></a>00207 
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#616c16727e7f86e02affdc873c2beecd">lookup</a>(<a class="code" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> *&amp;c, <span class="keywordtype">string</span> <span class="keywordtype">id</span>, map&lt;string,component&gt; &amp;comps, map&lt;string,component&gt; &amp;symMap);
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 
+<a name="l00158"></a>00158 
+<a name="l00161"></a>00161         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#f4312a10183a085f6b9d6b7312e2f6cb" title="Reads a reactionRule XML block and adds the rules to the system.">initReactionRules</a>(
+<a name="l00162"></a>00162                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfReactionRules,
+<a name="l00163"></a>00163                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
+<a name="l00164"></a>00164                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00165"></a>00165                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00166"></a>00166                         <span class="keywordtype">bool</span> blockSameComplexBinding,
+<a name="l00167"></a>00167                         <span class="keywordtype">bool</span> verbose,
+<a name="l00168"></a>00168                         <span class="keywordtype">int</span> &amp;suggestedTraversalLimit);
+<a name="l00169"></a>00169 
+<a name="l00171"></a>00171 
+<a name="l00174"></a>00174         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#6ddd5f6690a9a058cd4feeef8e4bb924" title="Reads an observable XML block and adds the new observables to the system.">initObservables</a>(
+<a name="l00175"></a>00175                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfObservables,
+<a name="l00176"></a>00176                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * system,
+<a name="l00177"></a>00177                         map &lt;string,double&gt; &amp;parameter,
+<a name="l00178"></a>00178                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00179"></a>00179                         <span class="keywordtype">bool</span> verbose,
+<a name="l00180"></a>00180                         <span class="keywordtype">int</span> &amp;suggestedTraversalLimit);
+<a name="l00181"></a>00181 
+<a name="l00182"></a>00182 
+<a name="l00184"></a>00184 
+<a name="l00187"></a>00187         <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> *<a class="code" href="namespaceNFinput.html#4447fd23ef00e1b26c4ffe1cc34908b3" title="Reads a pattern XML block and returns the set of new TemplateMolecule objects.">readPattern</a>(
+<a name="l00188"></a>00188                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
+<a name="l00189"></a>00189                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s, map &lt;string,double&gt; &amp;parameter,
+<a name="l00190"></a>00190                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00191"></a>00191                         <span class="keywordtype">string</span> patternName,
+<a name="l00192"></a>00192                         map &lt;string, TemplateMolecule *&gt; &amp;templates,
+<a name="l00193"></a>00193                         map &lt;string, component&gt; &amp;comps,
+<a name="l00194"></a>00194                         map &lt;string, component&gt; &amp;symMap,
+<a name="l00195"></a>00195                         <span class="keywordtype">bool</span> verbose,
+<a name="l00196"></a>00196                         <span class="keywordtype">int</span> &amp;suggestedTraversalLimit);
+<a name="l00197"></a>00197 
+<a name="l00199"></a>00199 
+<a name="l00203"></a>00203                 <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7e8ab2b49a2798dc1993710ca200d331" title="Reads a pattern XML block and returns the set of new TemplateMolecule objects.">readProductPattern</a>(
+<a name="l00204"></a>00204                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pListOfMol,
+<a name="l00205"></a>00205                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s, map &lt;string,double&gt; &amp;parameter,
+<a name="l00206"></a>00206                         map&lt;string,int&gt; &amp;allowedStates,
+<a name="l00207"></a>00207                         <span class="keywordtype">string</span> patternName,
+<a name="l00208"></a>00208                         vector &lt;MoleculeType *&gt; &amp;productMoleculeTypes,
+<a name="l00209"></a>00209                         vector &lt; vector &lt;int&gt; &gt; &amp;stateInformation,
+<a name="l00210"></a>00210                         vector &lt; vector &lt;int&gt; &gt; &amp;bindingSiteInformation,
+<a name="l00211"></a>00211                         <span class="keywordtype">bool</span> verbose);
 <a name="l00212"></a>00212 
-<a name="l00214"></a>00214 
-<a name="l00217"></a>00217         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7dfd0ae7309545a61e7824cea5146696" title="Parses command line arguments from the console nicely.">parseArguments</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> *argv[], map&lt;string,string&gt; &amp;argMap);
-<a name="l00218"></a>00218 
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#616c16727e7f86e02affdc873c2beecd">lookup</a>(<a class="code" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> *&amp;c, <span class="keywordtype">string</span> <span class="keywordtype">id</span>, map&lt;string,component&gt; &amp;comps, map&lt;string,component&gt; &amp;symMap);
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 
 <a name="l00219"></a>00219 
-<a name="l00221"></a>00221 
-<a name="l00224"></a>00224         <span class="keywordtype">int</span> <a class="code" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5" title="Looks up the argument in the argMap and tries to parse the value as an integer.">parseAsInt</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">int</span> defaultValue);
-<a name="l00225"></a>00225 
-<a name="l00227"></a>00227 
-<a name="l00230"></a>00230         <span class="keywordtype">double</span> <a class="code" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4" title="Looks up the argument in the argMap and tries to parse the value as a double.">parseAsDouble</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">double</span> defaultValue);
-<a name="l00231"></a>00231 
+<a name="l00222"></a>00222         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7dfd0ae7309545a61e7824cea5146696" title="Parses command line arguments from the console nicely.">parseArguments</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> *argv[], map&lt;string,string&gt; &amp;argMap);
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224 
+<a name="l00226"></a>00226 
+<a name="l00229"></a>00229         <span class="keywordtype">int</span> <a class="code" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5" title="Looks up the argument in the argMap and tries to parse the value as an integer.">parseAsInt</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">int</span> defaultValue);
+<a name="l00230"></a>00230 
 <a name="l00232"></a>00232 
-<a name="l00233"></a>00233 
-<a name="l00235"></a>00235 
-<a name="l00238"></a>00238         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#62bbaf5f78a0e78b0b4a69a4a18df096" title="Allows the user to walk through the system with an interactive text-based program...">walk</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s);
+<a name="l00235"></a>00235         <span class="keywordtype">double</span> <a class="code" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4" title="Looks up the argument in the argMap and tries to parse the value as a double.">parseAsDouble</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">double</span> defaultValue);
+<a name="l00236"></a>00236 
+<a name="l00237"></a>00237 
 <a name="l00239"></a>00239 
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241 
+<a name="l00242"></a>00242         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#fe4451457efe21d09b4f487402f01f4b" title="Looks up the argument in the argMap and tries to parse the value as a comma delimited...">parseAsCommaSeparatedSequence</a>(map&lt;string,string&gt; &amp;argMap,<span class="keywordtype">string</span> argName,vector&lt;int&gt; &amp;sequence);
 <a name="l00243"></a>00243 
-<a name="l00248"></a>00248         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd" title="Parses the cmd line arg that specifies system dumps, and schedules them.">createSystemDumper</a>(<span class="keywordtype">string</span> paramStr, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, <span class="keywordtype">bool</span> verbose);
-<a name="l00249"></a>00249 
-<a name="l00250"></a>00250 
+<a name="l00244"></a>00244 
+<a name="l00245"></a>00245 
+<a name="l00247"></a>00247 
+<a name="l00250"></a>00250         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#62bbaf5f78a0e78b0b4a69a4a18df096" title="Allows the user to walk through the system with an interactive text-based program...">walk</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s);
 <a name="l00251"></a>00251 
+<a name="l00252"></a>00252 
 <a name="l00253"></a>00253 
-<a name="l00256"></a>00256         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#6659a912afe36c187f82add93577693c" title="Parses a matlab style sequence (ie startValue:step:endValue) into the vector.">parseSequence</a>(<span class="keywordtype">string</span> numString, vector &lt;double&gt; &amp;outputTimes);
-<a name="l00257"></a>00257 
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259 
-<a name="l00260"></a>00260 
+<a name="l00255"></a>00255 
+<a name="l00260"></a>00260         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd" title="Parses the cmd line arg that specifies system dumps, and schedules them.">createSystemDumper</a>(<span class="keywordtype">string</span> paramStr, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, <span class="keywordtype">bool</span> verbose);
 <a name="l00261"></a>00261 
+<a name="l00262"></a>00262 
 <a name="l00263"></a>00263 
-<a name="l00264"></a>00264         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#96c43bfa845bbf9c559cc899c17567f0">readRNFfile</a>(map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
-<a name="l00265"></a>00265         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#614dca6b7ccb8c6d75d462d24c18a58b">runRNFcommands</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
-<a name="l00266"></a>00266 
-<a name="l00267"></a>00267 
-<a name="l00268"></a>00268         <span class="comment">//bool runRNFscript(map&lt;string,string&gt; argMap) {};</span>
-<a name="l00269"></a>00269    <span class="comment">// bool runRNFscript(System *s, string filename);</span>
-<a name="l00270"></a>00270 }
+<a name="l00265"></a>00265 
+<a name="l00268"></a>00268         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#6659a912afe36c187f82add93577693c" title="Parses a matlab style sequence (ie startValue:step:endValue) into the vector.">parseSequence</a>(<span class="keywordtype">string</span> numString, vector &lt;double&gt; &amp;outputTimes);
+<a name="l00269"></a>00269 
+<a name="l00270"></a>00270 
 <a name="l00271"></a>00271 
 <a name="l00272"></a>00272 
 <a name="l00273"></a>00273 
-<a name="l00274"></a>00274 <span class="preprocessor">#endif </span><span class="comment">/*NFINPUT_HH_*/</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:19 2010 for NFsim by&nbsp;
+<a name="l00275"></a>00275 
+<a name="l00276"></a>00276         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#96c43bfa845bbf9c559cc899c17567f0">readRNFfile</a>(map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
+<a name="l00277"></a>00277         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#614dca6b7ccb8c6d75d462d24c18a58b">runRNFcommands</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
+<a name="l00278"></a>00278 
+<a name="l00279"></a>00279 
+<a name="l00280"></a>00280         <span class="comment">//bool runRNFscript(map&lt;string,string&gt; argMap) {};</span>
+<a name="l00281"></a>00281    <span class="comment">// bool runRNFscript(System *s, string filename);</span>
+<a name="l00282"></a>00282 }
+<a name="l00283"></a>00283 
+<a name="l00284"></a>00284 
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286 <span class="preprocessor">#endif </span><span class="comment">/*NFINPUT_HH_*/</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

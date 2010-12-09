@@ -46,7 +46,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#c185177a4880ad470f819c4dda3a9a39">ReactionClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double rate, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0ff8307d3ca6e3ff5d738b677a8720d2">ReactionClass</a> (string <a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a>, double rate, string <a class="el" href="classNFcore_1_1ReactionClass.html#684d4c271bb4e4cb5f80074ad135bfb1">baseRateParameterName</a>, <a class="el" href="classNFcore_1_1TransformationSet.html">TransformationSet</a> *<a class="el" href="classNFcore_1_1ReactionClass.html#7c33db06b734352e9a8f447128135708">transformationSet</a>, <a class="el" href="classNFcore_1_1System.html">System</a> *s)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#a5054d30051d6f349ef15af016791a71">~ReactionClass</a> ()</td></tr>
 
@@ -58,7 +58,9 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0536c0392d78d79af4b3ec29c1588caa">getRxnType</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#32a1a09b2f294b39714d3bf3d63dc201">setBaseRate</a> (double newBaseRate)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#6c9371f5d1fbfbb196c486fce7a68b84">setBaseRate</a> (double newBaseRate, string newBaseRateName)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#bbec0fe13307f807d1c2ca30eb64433d">resetBaseRateFromSystemParamter</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#2f4840686ba6027398b1bdc9034742f7">setTraversalLimit</a> (int limit)</td></tr>
 
@@ -82,6 +84,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#f5aed18705e78d14bd1a8f82068add70">update_a</a> ()=0</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#77c272fe7042f8121a2fefdf3348245c">tag</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#a39fd321f4d58d79fa72812d65f1c762">getReactantCount</a> (unsigned int reactantIndex) const =0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#521a0b7a474568522bec973cfa6b5242">printFullDetails</a> () const =0</td></tr>
@@ -91,6 +95,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#cba58796ba1be7b569ba4138820942e0">getRxnId</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#6cacdb25174997f2bc90a8f959dedf99">turnOff_OnTheFlyObs</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#06d14b2bec20af725aa125fc7e436e23">setTotalRateFlag</a> (bool totalRate)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#3f19e59472bec5ae3418697084b07d63">set_match</a> (vector&lt; <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> * &gt; &amp;match_set)</td></tr>
 
@@ -111,6 +117,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#8abf3b468abe85671e742cb4360d1d91">rxnId</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#faf3e200765ee0d8e757f4970c810ea4">tagged</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#d485c8ab3d93de6f7170afdb895eb251">name</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#5c4b85024376502137b82a16af46be32">reactionType</a></td></tr>
@@ -120,6 +128,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#f1df6e7866c79df25276fa3477d52277">system</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#2cf98fbd283cf3a59f05b9a0012904ef">baseRate</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#684d4c271bb4e4cb5f80074ad135bfb1">baseRateParameterName</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#da5d8acd819d11a3ec6c95083f0fb569">a</a></td></tr>
 
@@ -143,6 +153,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; int &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0324037aa173736a9216a028a86d8ef6">updatedComplexes</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#f6265961b2ed1f058a51b4e055a9c09a">totalRateFlag</a></td></tr>
+
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#0c3b7c0fb9a3c68a4bacee6ade128aec">MatchSetIter</a></td></tr>
 
@@ -150,7 +162,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="c185177a4880ad470f819c4dda3a9a39"></a><!-- doxytag: member="NFcore::ReactionClass::ReactionClass" ref="c185177a4880ad470f819c4dda3a9a39" args="(string name, double rate, TransformationSet *transformationSet, System *s)" -->
+<a class="anchor" name="0ff8307d3ca6e3ff5d738b677a8720d2"></a><!-- doxytag: member="NFcore::ReactionClass::ReactionClass" ref="0ff8307d3ca6e3ff5d738b677a8720d2" args="(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -165,6 +177,12 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
           <td></td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>rate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>baseRateParameterName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -287,7 +305,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
-<a class="anchor" name="32a1a09b2f294b39714d3bf3d63dc201"></a><!-- doxytag: member="NFcore::ReactionClass::setBaseRate" ref="32a1a09b2f294b39714d3bf3d63dc201" args="(double newBaseRate)" -->
+<a class="anchor" name="6c9371f5d1fbfbb196c486fce7a68b84"></a><!-- doxytag: member="NFcore::ReactionClass::setBaseRate" ref="6c9371f5d1fbfbb196c486fce7a68b84" args="(double newBaseRate, string newBaseRateName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -295,9 +313,37 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
           <td class="memname">void NFcore::ReactionClass::setBaseRate           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>newBaseRate</em>          </td>
+          <td class="paramname"> <em>newBaseRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>newBaseRateName</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="bbec0fe13307f807d1c2ca30eb64433d"></a><!-- doxytag: member="NFcore::ReactionClass::resetBaseRateFromSystemParamter" ref="bbec0fe13307f807d1c2ca30eb64433d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReactionClass::resetBaseRateFromSystemParamter           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -570,6 +616,25 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
+<a class="anchor" name="77c272fe7042f8121a2fefdf3348245c"></a><!-- doxytag: member="NFcore::ReactionClass::tag" ref="77c272fe7042f8121a2fefdf3348245c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::ReactionClass::tag           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="a39fd321f4d58d79fa72812d65f1c762"></a><!-- doxytag: member="NFcore::ReactionClass::getReactantCount" ref="a39fd321f4d58d79fa72812d65f1c762" args="(unsigned int reactantIndex) const =0" -->
 <div class="memitem">
 <div class="memproto">
@@ -660,6 +725,26 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
           <td class="memname">void NFcore::ReactionClass::turnOff_OnTheFlyObs           </td>
           <td>(</td>
           <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="06d14b2bec20af725aa125fc7e436e23"></a><!-- doxytag: member="NFcore::ReactionClass::setTotalRateFlag" ref="06d14b2bec20af725aa125fc7e436e23" args="(bool totalRate)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::ReactionClass::setTotalRateFlag           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>totalRate</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -840,6 +925,21 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
+<a class="anchor" name="faf3e200765ee0d8e757f4970c810ea4"></a><!-- doxytag: member="NFcore::ReactionClass::tagged" ref="faf3e200765ee0d8e757f4970c810ea4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1ReactionClass.html#faf3e200765ee0d8e757f4970c810ea4">NFcore::ReactionClass::tagged</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="d485c8ab3d93de6f7170afdb895eb251"></a><!-- doxytag: member="NFcore::ReactionClass::name" ref="d485c8ab3d93de6f7170afdb895eb251" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -906,6 +1006,21 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
       <table class="memname">
         <tr>
           <td class="memname">double <a class="el" href="classNFcore_1_1ReactionClass.html#2cf98fbd283cf3a59f05b9a0012904ef">NFcore::ReactionClass::baseRate</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="684d4c271bb4e4cb5f80074ad135bfb1"></a><!-- doxytag: member="NFcore::ReactionClass::baseRateParameterName" ref="684d4c271bb4e4cb5f80074ad135bfb1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classNFcore_1_1ReactionClass.html#684d4c271bb4e4cb5f80074ad135bfb1">NFcore::ReactionClass::baseRateParameterName</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1080,9 +1195,24 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 </div>
 </div><p>
+<a class="anchor" name="f6265961b2ed1f058a51b4e055a9c09a"></a><!-- doxytag: member="NFcore::ReactionClass::totalRateFlag" ref="f6265961b2ed1f058a51b4e055a9c09a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1ReactionClass.html#f6265961b2ed1f058a51b4e055a9c09a">NFcore::ReactionClass::totalRateFlag</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+flag to identify if the macroscopic vs. microscopic rate is to be used (TotalRate = macroscopic) 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="reactionClass_8cpp.html">reactionClass.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
