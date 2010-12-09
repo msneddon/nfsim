@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 	// turned off for the general release code.
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.07";
+	string versionNumber = "1.08";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
@@ -440,6 +440,10 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 					for(unsigned int k=0; k<sequence.size(); k++) s->tagReaction(sequence.at(k));
 
+				}
+
+				if(argMap.find("csv")!=argMap.end()) {
+					s->turnOnCSVformat();
 				}
 
 				//Finally, return the system if we made it here without problems

@@ -79,9 +79,18 @@ double FunctionalRxnClass::update_a() {
 		exit(1);
 	}
 
+
+	// check here for the total rate flag - if this is set to true, then
+	// use the rate exactly as given by the function, but if it is false,
+	// then we have to multiply here by the reactant counts
+	if(!this->totalRateFlag) {
+		for(unsigned int i=0; i<n_reactants; i++)
+			a*=reactantLists[i]->size();
+	}
+
 	//Finally, use a check to
 	for(unsigned int i=0; i<n_reactants; i++) {
-		if(reactantLists[i]->size()==0 && a>0.000000001) {
+		if(reactantLists[i]->size()==0) {
 			a=0;
 	//		cout<<"Warning!  Function evaluates to positive rate for a reaction, but"<<endl;
 //			cout<<"one of the reactant lists is empty!"<<endl;
@@ -96,8 +105,11 @@ double FunctionalRxnClass::update_a() {
 
 void FunctionalRxnClass::printDetails() const {
 
+	string trate = "off";
+	if(this->totalRateFlag) trate = "on";
+
 	if(gf!=0)
-		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
 	else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {
@@ -105,7 +117,7 @@ void FunctionalRxnClass::printDetails() const {
 		}
 		double value=cf->evaluateOn(0,0, reactantCounts, n_reactants);
 		delete [] reactantCounts;
-		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<value<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<cf->getName()<<"="<<value<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
 
 	}
 

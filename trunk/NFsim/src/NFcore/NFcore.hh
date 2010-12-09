@@ -355,6 +355,12 @@ namespace NFcore
 			 */
 			static int NULL_EVENT_COUNTER;
 
+			/*!
+				turns on csv format, so that instead of a gdat file, a comma delimited
+				file is generated.
+			*/
+			void turnOnCSVformat() { this->csvFormat = true; };
+
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -421,6 +427,8 @@ namespace NFcore
 
 			void outputAllPropensities(double time, int rxnFired);
 			ofstream propensityDumpStream;
+
+			bool csvFormat;
 
 
 			///////////////////////////////////////////////////////////////////////////
@@ -992,6 +1000,9 @@ namespace NFcore
 
 			void turnOff_OnTheFlyObs() { onTheFlyObservables=false; };
 
+
+			void setTotalRateFlag(bool totalRate) { totalRateFlag = totalRate; };
+
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
@@ -1032,6 +1043,12 @@ namespace NFcore
 			//Used by the reaction class to make sure that it only updates
 			//each complex once (for observables, and matchOnce reactants)
 			vector <int> updatedComplexes;
+
+
+			/** flag to identify if the macroscopic vs. microscopic rate is to
+			 * be used (TotalRate = macroscopic)
+			 */
+			bool totalRateFlag;
 	};
 
 

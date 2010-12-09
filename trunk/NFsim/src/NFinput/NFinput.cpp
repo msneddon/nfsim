@@ -1390,6 +1390,7 @@ bool NFinput::initReactionRules(
 				//the reaction because we still have to add function pointers!!
 				//ts->finalize();
 				ReactionClass *r = 0;
+				bool totalRateFlag=false;
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//  Read in the rate law for this reaction
@@ -1397,6 +1398,21 @@ bool NFinput::initReactionRules(
 				if(!pRateLaw){
 					cerr<<"!!Error:: ReactionRule "<<rxnName<<" contains no rate law specification!"<<endl;
 					return false;
+				}
+
+				if( !pRateLaw->Attribute("totalrate") ) {
+					cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
+					cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
+				} else {
+					try {
+						int rf = NFutil::convertToInt(pRateLaw->Attribute("totalrate"));
+						if(rf>0) totalRateFlag=true;
+						if(verbose) cout<<"\t\t\tTotal rate flag = "<<totalRateFlag<<endl;
+					} catch (std::runtime_error &e1) {
+						//cerr<<e1.what()<<endl;
+						cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+						exit(1);
+					}
 				}
 
 				if(!pRateLaw->Attribute("id") || !pRateLaw->Attribute("type")) {
@@ -1663,6 +1679,7 @@ bool NFinput::initReactionRules(
 				} else {
 					//Finally, add the completed rxn rule to the system
 					s->addReaction(r);
+					r->setTotalRateFlag(totalRateFlag);
 					comps.clear();
 				}
 

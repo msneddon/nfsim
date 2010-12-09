@@ -35,6 +35,7 @@ System::System(string name)
 	universalTraversalLimit=-1;
 	ds=0;
 	selector = 0;
+	csvFormat = false;
 }
 
 
@@ -61,6 +62,7 @@ System::System(string name, bool useComplex)
 	universalTraversalLimit=-1;
 	ds=0;
 	selector = 0;
+	csvFormat = false;
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -85,6 +87,7 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	universalTraversalLimit=-1;
 	ds=0;
 	selector = 0;
+	csvFormat = false;
 }
 
 
@@ -894,27 +897,20 @@ void System::equilibrate(double duration, int statusReports)
 
 void System::outputAllObservableNames()
 {
+
+	////////////////
+	// NOTE!!!  IF YOU CHANGE ANYTHING HERE, BE SURE TO UPDATE BOTH THE GDAT FORMAT AND CSV FORMAT!!!
+
 	if(!useBinaryOutput) {
-		outputFileStream<<"#          time";
-		//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		//	(*molTypeIter)->outputObservableNames(outputFileStream);
+		if(!csvFormat) {
+			outputFileStream<<"#          time";
+			//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+			//	(*molTypeIter)->outputObservableNames(outputFileStream);
 
-		int totalSpaces = 16;
+			int totalSpaces = 16;
 
-		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
-			string nm = (*obsIter)->getName();
-			int spaces = totalSpaces-nm.length();
-			if(spaces<1) { spaces = 1; }
-			for(int k=0; k<spaces; k++) {
-				outputFileStream<<" ";
-			}
-			outputFileStream<<nm;;
-		}
-
-		if(outputGlobalFunctionValues)
-			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-			{
-				string nm = (*functionIter)->getNiceName();
+			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+				string nm = (*obsIter)->getName();
 				int spaces = totalSpaces-nm.length();
 				if(spaces<1) { spaces = 1; }
 				for(int k=0; k<spaces; k++) {
@@ -922,17 +918,52 @@ void System::outputAllObservableNames()
 				}
 				outputFileStream<<nm;;
 			}
-		if(outputEventCounter) {
-			string nm = "EventCount";
-			int spaces = totalSpaces-nm.length();
-			if(spaces<1) { spaces = 1; }
-			for(int k=0; k<spaces; k++) {
-				outputFileStream<<" ";
-			}
-			outputFileStream<<nm;;
-		}
 
-		outputFileStream<<endl;
+			if(outputGlobalFunctionValues)
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+				{
+					string nm = (*functionIter)->getNiceName();
+					int spaces = totalSpaces-nm.length();
+					if(spaces<1) { spaces = 1; }
+					for(int k=0; k<spaces; k++) {
+						outputFileStream<<" ";
+					}
+					outputFileStream<<nm;;
+				}
+			if(outputEventCounter) {
+				string nm = "EventCount";
+				int spaces = totalSpaces-nm.length();
+				if(spaces<1) { spaces = 1; }
+				for(int k=0; k<spaces; k++) {
+					outputFileStream<<" ";
+				}
+				outputFileStream<<nm;;
+			}
+
+			outputFileStream<<endl;
+		} else {
+
+			// CSV FORMATTED OUTPUT
+			outputFileStream<<"time";
+
+			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+				string nm = (*obsIter)->getName();
+				outputFileStream<<", "<<nm;;
+			}
+
+			if(outputGlobalFunctionValues)
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+				{
+					string nm = (*functionIter)->getNiceName();
+					outputFileStream<<", "<<nm;;
+				}
+			if(outputEventCounter) {
+				string nm = "EventCount";
+				outputFileStream<<", "<<nm;;
+			}
+
+			outputFileStream<<endl;
+		}
 	} else {
 		cout<<"Warning: You cannot output observable names when outputting in Binary Mode."<<endl;
 	}
@@ -1010,20 +1041,35 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 		}
 	}
 	else {
+		if(!csvFormat) {
+			outputFileStream<<" "<<cSampleTime;
+			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+				outputFileStream<<"  "<<((double)(*obsIter)->getCount());
+			}
 
-		outputFileStream<<" "<<cSampleTime;
-		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
-			outputFileStream<<"  "<<((double)(*obsIter)->getCount());
+			if(outputGlobalFunctionValues)
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+					outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+			if(outputEventCounter) {
+				outputFileStream<<"  "<<eventCounter;
+			}
+
+			outputFileStream<<endl;
+		} else {
+			outputFileStream<<cSampleTime;
+			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
+				outputFileStream<<", "<<((double)(*obsIter)->getCount());
+			}
+
+			if(outputGlobalFunctionValues)
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+					outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);
+			if(outputEventCounter) {
+				outputFileStream<<", "<<eventCounter;
+			}
+
+			outputFileStream<<endl;
 		}
-
-		if(outputGlobalFunctionValues)
-			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-				outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
-		if(outputEventCounter) {
-			outputFileStream<<"  "<<eventCounter;
-		}
-
-		outputFileStream<<endl;
 	}
 
 

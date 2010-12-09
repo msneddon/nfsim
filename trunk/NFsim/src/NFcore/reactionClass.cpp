@@ -15,6 +15,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->system=s;
 	this-> tagged = false;
 
+	totalRateFlag=false;
 	isDimerStyle=false;
 	//Setup the basic properties of this reactionClass
 	this->name = name;
