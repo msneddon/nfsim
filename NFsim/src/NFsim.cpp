@@ -41,7 +41,7 @@
  * For more details on setting up, running, and getting output from an NFsim simulation
  * see the User Manual.  The User Manual also has additional information for new
  * developers.  The manual is available online along with examples here:
- * http://emonet.biology.yale.edu/nfsim
+ * http://www.nfsim.org
  *
  *
  *
@@ -102,8 +102,8 @@
  *
  *  \section author_sec Authors & Acknowledgments
  * The NFsim code was written and developed by Michael Sneddon with help from James Faeder and
- * Thierry Emonet.  James Faeder wrote the extended BioNetGen code that can output XML encodings
- * of the BNGL.
+ * Thierry Emonet.  James Faeder wrote the original extended BioNetGen code that can output XML
+ * encodings of the BNGL and contains the functional rate law syntax.
  *
  * A number of other people have helped in getting NFsim to where it is today, either by
  * aiding in the concepts of the design, testing the implementation, adding some features
