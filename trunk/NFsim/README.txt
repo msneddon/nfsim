@@ -10,7 +10,7 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.07
+NFsim - the network free stochastic simulator, v1.08
 
 michael w. sneddon
 james r. faeder
@@ -22,6 +22,13 @@ funded by the National Science Foundation
 
 
 ################################################################################
+
+
+please cite NFsim as:
+Sneddon MW, Faeder JR & Emonet T.  Efficient modeling, simulation and 
+coarse-graining of biological complexity with NFsim.  Nature Methods, 
+in press (2011).
+
 
 NFsim is released under the GNU General Public License.  See LICENSE.txt for
 more details about redistribution restrictions.
@@ -49,13 +56,16 @@ v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
         or macroscopic (TotalRate) interpretation of rate laws.  Now, NFsim
         convention matches BNG.  Previously, NFsim interpreted all rates as
         microscopic except for global functions, which were interpreted as
-        macroscopic.  This is now also explained in the user manual.  
+        macroscopic.  This is now also explained in the user manual.  Example
+        models for the flagellar motor and oscillating gene expression have
+        been updated correspondingly so that they still produce the same results
+        as in the NFsim paper.
         
-        Although this was the main update, there were a few smaller items that
-        are updated as well.  First, users now have the option of outputting
-        gdat files in a comma delimited format (csv), which makes parsing the
-        output file easier in some circumstances, using the flag "-csv".
-
+        Users also now have the option of outputting gdat files in a comma 
+        delimited format (csv), which makes parsing the output file easier 
+        in some circumstances, using the flag "-csv".  Additionally, a bug in
+        the parameter scanning script was fixed that caused the script to
+        crash when scanning a model that includes the local function syntax. 
 
 
 v1.07   Nov, 2010 - A series of updates to the code were made in this
