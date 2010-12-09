@@ -19,7 +19,7 @@
 %  directory.
 pathToModel =  'tlbrExample/';
 bnglFileName = 'tlbr.bngl';
-pathToNFsim =  '../../../NFsim_v1.06/';
+pathToNFsim =  '../../';
 pathToOutput = 'tlbrExample/output/';
 
 
