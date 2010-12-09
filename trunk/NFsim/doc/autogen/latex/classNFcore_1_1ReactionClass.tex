@@ -18,7 +18,7 @@ A \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass} represents the set o
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf ReactionClass} (string {\bf name}, double rate, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
+{\bf ReactionClass} (string {\bf name}, double rate, string {\bf baseRateParameterName}, {\bf TransformationSet} $\ast${\bf transformationSet}, {\bf System} $\ast$s)
 \item 
 virtual {\bf $\sim$ReactionClass} ()
 \item 
@@ -30,7 +30,9 @@ double {\bf getBaseRate} () const
 \item 
 int {\bf getRxnType} () const 
 \item 
-void {\bf setBaseRate} (double newBaseRate)
+void {\bf setBaseRate} (double newBaseRate, string newBaseRateName)
+\item 
+void {\bf resetBaseRateFromSystemParamter} ()
 \item 
 void {\bf setTraversalLimit} (int limit)
 \item 
@@ -54,6 +56,8 @@ virtual void {\bf remove} ({\bf Molecule} $\ast$m, unsigned int reactantPos)=0
 \item 
 virtual double {\bf update\_\-a} ()=0
 \item 
+void {\bf tag} ()
+\item 
 virtual unsigned int {\bf getReactantCount} (unsigned int reactantIndex) const =0
 \item 
 virtual void {\bf printFullDetails} () const =0
@@ -63,6 +67,8 @@ void {\bf setRxnId} (int {\bf rxnId})
 int {\bf getRxnId} () const 
 \item 
 void {\bf turnOff\_\-OnTheFlyObs} ()
+\item 
+void {\bf setTotalRateFlag} (bool totalRate)
 \item 
 void {\bf set\_\-match} (vector$<$ {\bf MappingSet} $\ast$ $>$ \&match\_\-set)
 \item 
@@ -89,6 +95,8 @@ virtual void {\bf pickMappingSets} (double randNumber) const =0
 \item 
 int {\bf rxnId}
 \item 
+bool {\bf tagged}
+\item 
 string {\bf name}
 \item 
 int {\bf reactionType}
@@ -98,6 +106,8 @@ unsigned int {\bf n\_\-reactants}
 {\bf System} $\ast$ {\bf system}
 \item 
 double {\bf baseRate}
+\item 
+string {\bf baseRateParameterName}
 \item 
 double {\bf a}
 \item 
@@ -120,6 +130,8 @@ list$<$ {\bf Molecule} $\ast$ $>$ {\bf products}
 list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf molIter}
 \item 
 vector$<$ int $>$ {\bf updatedComplexes}
+\item 
+bool {\bf totalRateFlag}
 \end{CompactItemize}
 \subsection*{Friends}
 \begin{CompactItemize}
@@ -133,7 +145,7 @@ class {\bf Netgen}
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!ReactionClass@{ReactionClass}}
 \index{ReactionClass@{ReactionClass}!NFcore::ReactionClass@{NFcore::ReactionClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactionClass::ReactionClass (string {\em name}, double {\em rate}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1ReactionClass_c185177a4880ad470f819c4dda3a9a39}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}ReactionClass::ReactionClass (string {\em name}, double {\em rate}, string {\em baseRateParameterName}, {\bf TransformationSet} $\ast$ {\em transformationSet}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1ReactionClass_0ff8307d3ca6e3ff5d738b677a8720d2}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!$\sim$ReactionClass@{$\sim$ReactionClass}}
@@ -166,7 +178,12 @@ class {\bf Netgen}
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!setBaseRate@{setBaseRate}}
 \index{setBaseRate@{setBaseRate}!NFcore::ReactionClass@{NFcore::ReactionClass}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::setBaseRate (double {\em newBaseRate})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_32a1a09b2f294b39714d3bf3d63dc201}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::setBaseRate (double {\em newBaseRate}, string {\em newBaseRateName})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_6c9371f5d1fbfbb196c486fce7a68b84}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!resetBaseRateFromSystemParamter@{resetBaseRateFromSystemParamter}}
+\index{resetBaseRateFromSystemParamter@{resetBaseRateFromSystemParamter}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactionClass::resetBaseRateFromSystemParamter ()}\label{classNFcore_1_1ReactionClass_bbec0fe13307f807d1c2ca30eb64433d}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!setTraversalLimit@{setTraversalLimit}}
@@ -240,7 +257,12 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_9a679d57f4cfdd184f3bf312ecd20cc6}, {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_23dd5630ec0157ce7ab6d240720a57cb}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_63709cdada0fc7c63125bd2e562f4b42}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_077d5dc28b205d46a14d22487c08bb7e}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!getReactantCount@{getReactantCount}}
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_9a679d57f4cfdd184f3bf312ecd20cc6}, {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_23dd5630ec0157ce7ab6d240720a57cb}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_63709cdada0fc7c63125bd2e562f4b42}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_077d5dc28b205d46a14d22487c08bb7e}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!tag@{tag}}
+\index{tag@{tag}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::tag ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_77c272fe7042f8121a2fefdf3348245c}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!getReactantCount@{getReactantCount}}
 \index{getReactantCount@{getReactantCount}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual unsigned int NFcore::ReactionClass::getReactantCount (unsigned int {\em reactantIndex}) const\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionClass_a39fd321f4d58d79fa72812d65f1c762}
 
@@ -267,6 +289,11 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!turnOff\_\-OnTheFlyObs@{turnOff\_\-OnTheFlyObs}}
 \index{turnOff\_\-OnTheFlyObs@{turnOff\_\-OnTheFlyObs}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::turnOff\_\-OnTheFlyObs ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_6cacdb25174997f2bc90a8f959dedf99}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!setTotalRateFlag@{setTotalRateFlag}}
+\index{setTotalRateFlag@{setTotalRateFlag}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::setTotalRateFlag (bool {\em totalRate})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_06d14b2bec20af725aa125fc7e436e23}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!set\_\-match@{set\_\-match}}
@@ -327,6 +354,11 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::ReactionClass::rxnId}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_8abf3b468abe85671e742cb4360d1d91}
 
 
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!tagged@{tagged}}
+\index{tagged@{tagged}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::ReactionClass::tagged}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_faf3e200765ee0d8e757f4970c810ea4}
+
+
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!name@{name}}
 \index{name@{name}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::ReactionClass::name}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_d485c8ab3d93de6f7170afdb895eb251}
@@ -350,6 +382,11 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!baseRate@{baseRate}}
 \index{baseRate@{baseRate}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf NFcore::ReactionClass::baseRate}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_2cf98fbd283cf3a59f05b9a0012904ef}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!baseRateParameterName@{baseRateParameterName}}
+\index{baseRateParameterName@{baseRateParameterName}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::ReactionClass::baseRateParameterName}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_684d4c271bb4e4cb5f80074ad135bfb1}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!a@{a}}
@@ -407,7 +444,12 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::ReactionClass::updatedComplexes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_0324037aa173736a9216a028a86d8ef6}
 
 
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!totalRateFlag@{totalRateFlag}}
+\index{totalRateFlag@{totalRateFlag}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::ReactionClass::totalRateFlag}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_f6265961b2ed1f058a51b4e055a9c09a}
 
+
+flag to identify if the macroscopic vs. microscopic rate is to be used (TotalRate = macroscopic) 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 

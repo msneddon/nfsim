@@ -84,6 +84,8 @@ void {\bf turnOnGlobalFuncOut} ()
 \item 
 void {\bf turnOffGlobalFuncOut} ()
 \item 
+void {\bf tagReaction} (int rID)
+\item 
 void {\bf addLocalFunction} ({\bf LocalFunction} $\ast$lf)
 \item 
 void {\bf getLocalFunction} (string funcName) const 
@@ -155,6 +157,8 @@ void {\bf printAllParameters} ()
 {\bf NFstream} \& {\bf getOutputFileStream} ()
 \item 
 {\bf ComplexList} \& {\bf getAllComplexes} ()
+\item 
+void {\bf turnOnCSVformat} ()
 \end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
@@ -226,6 +230,8 @@ double {\bf current\_\-time}
 {\bf NFstream} {\bf outputFileStream}
 \item 
 ofstream {\bf propensityDumpStream}
+\item 
+bool {\bf csvFormat}
 \item 
 int $\ast$$\ast$ {\bf rxnIndexMap}
 \item 
@@ -424,6 +430,11 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::turnOffGlobalFuncOut ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_4fc4a44063194593bc642dd833120f7f}
 
 
+\index{NFcore::System@{NFcore::System}!tagReaction@{tagReaction}}
+\index{tagReaction@{tagReaction}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::tagReaction (int {\em rID})}\label{classNFcore_1_1System_812dc4182abae29caa60680a0b0fbc98}
+
+
 \index{NFcore::System@{NFcore::System}!addLocalFunction@{addLocalFunction}}
 \index{addLocalFunction@{addLocalFunction}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void System::addLocalFunction ({\bf LocalFunction} $\ast$ {\em lf})}\label{classNFcore_1_1System_3bb6f51e60e38c1e9bab6f4f0995fb77}
@@ -604,7 +615,12 @@ destroys the system and cleans up all memory associated with it
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf ComplexList}\& NFcore::System::getAllComplexes ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_9a2da8640c9e8f60f1756b3dcf9de8b8}
 
 
-\index{NFcore::System@{NFcore::System}!get\_\-A\_\-tot@{get\_\-A\_\-tot}}
+\index{NFcore::System@{NFcore::System}!turnOnCSVformat@{turnOnCSVformat}}
+\index{turnOnCSVformat@{turnOnCSVformat}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::System::turnOnCSVformat ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1System_cd5f273bef64e4656a518e7fea886ff1}
+
+
+turns on csv format, so that instead of a gdat file, a comma delimited file is generated. \index{NFcore::System@{NFcore::System}!get\_\-A\_\-tot@{get\_\-A\_\-tot}}
 \index{get\_\-A\_\-tot@{get\_\-A\_\-tot}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::System::get\_\-A\_\-tot () const\hspace{0.3cm}{\tt  [inline, protected]}}\label{classNFcore_1_1System_493b5b1dfdf6028801370e60ca339aec}
 
@@ -768,6 +784,11 @@ list of all reactions that need to update propensity after each step \index{NFco
 \index{NFcore::System@{NFcore::System}!propensityDumpStream@{propensityDumpStream}}
 \index{propensityDumpStream@{propensityDumpStream}!NFcore::System@{NFcore::System}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}ofstream {\bf NFcore::System::propensityDumpStream}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_c29abbf779c04a197a9a8add606f4563}
+
+
+\index{NFcore::System@{NFcore::System}!csvFormat@{csvFormat}}
+\index{csvFormat@{csvFormat}!NFcore::System@{NFcore::System}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::System::csvFormat}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1System_de388f46b1e486b6dfcdf1f1f1352852}
 
 
 \index{NFcore::System@{NFcore::System}!rxnIndexMap@{rxnIndexMap}}

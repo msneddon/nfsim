@@ -41,6 +41,9 @@ This is a very straightforward set of functions and simple classes that together
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5">parseAsInt</a> (map&lt; string, string &gt; &amp;argMap, string argName, int defaultValue)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Looks up the argument in the argMap and tries to parse the value as an integer.  <a href="#6acf7052e7c42fd29e422ce627b42fe5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#fe4451457efe21d09b4f487402f01f4b">parseAsCommaSeparatedSequence</a> (map&lt; string, string &gt; &amp;argMap, string argName, vector&lt; int &gt; &amp;sequence)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints.  <a href="#fe4451457efe21d09b4f487402f01f4b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4">parseAsDouble</a> (map&lt; string, string &gt; &amp;argMap, string argName, double defaultValue)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Looks up the argument in the argMap and tries to parse the value as a double.  <a href="#e94e951f3de1d453e79d055c19dce1f4"></a><br></td></tr>
@@ -50,9 +53,9 @@ This is a very straightforward set of functions and simple classes that together
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd">createSystemDumper</a> (string paramStr, <a class="el" href="classNFcore_1_1System.html">System</a> *s, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses the cmd line arg that specifies system dumps, and schedules them.  <a href="#19ed804a2b6e64acebc7ad49f95498fd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f8a520e07f56df029a7784ab451f2be1">initializeFromXML</a> (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#fe0d8bf429922d0a4b5cb4a0f40dd644">initializeFromXML</a> (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose, int &amp;suggestedTraversalLimit)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains information about a <a class="el" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> of a TemplateMolecule.  <a href="#f8a520e07f56df029a7784ab451f2be1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maintains information about a <a class="el" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> of a TemplateMolecule.  <a href="#fe0d8bf429922d0a4b5cb4a0f40dd644"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#22ad4850b4679dbdff6597d602b8022d">initParameters</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfParameters, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the parameter XML block and puts them in the parameter map.  <a href="#22ad4850b4679dbdff6597d602b8022d"></a><br></td></tr>
@@ -62,17 +65,17 @@ This is a very straightforward set of functions and simple classes that together
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#367fa4c87ef87ba1e44294a8d6188b68">initStartSpecies</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfSpecies, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a Species XML block, creates the molecules and adds them to the system.  <a href="#367fa4c87ef87ba1e44294a8d6188b68"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#08903395f329bbcd8003d11bfb5baf5a">initReactionRules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfReactionRules, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool blockSameComplexBinding, bool verbose)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f4312a10183a085f6b9d6b7312e2f6cb">initReactionRules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfReactionRules, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool blockSameComplexBinding, bool verbose, int &amp;suggestedTraversalLimit)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a reactionRule XML block and adds the rules to the system.  <a href="#08903395f329bbcd8003d11bfb5baf5a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#ce4a726c34a7ebf5ee387fd9c53fbd87">readObservableForTemplateMolecules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pObs, string observableName, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tmList, vector&lt; string &gt; &amp;stochRelation, vector&lt; int &gt; &amp;stochQuantity, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, int obsType, bool verbose)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a reactionRule XML block and adds the rules to the system.  <a href="#f4312a10183a085f6b9d6b7312e2f6cb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#445dbc5a529a4527d31900546033a937">readObservableForTemplateMolecules</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pObs, string observableName, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;tmList, vector&lt; string &gt; &amp;stochRelation, vector&lt; int &gt; &amp;stochQuantity, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, int obsType, bool verbose, int &amp;suggestedTraversalLimit)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#f70bed5f9ae20a317e3afe838e399dd3">initObservables</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfObservables, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#6ddd5f6690a9a058cd4feeef8e4bb924">initObservables</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfObservables, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose, int &amp;suggestedTraversalLimit)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads an observable XML block and adds the new observables to the system.  <a href="#f70bed5f9ae20a317e3afe838e399dd3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#ad42aeae0f73436a8d83242c0593541c">readPattern</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, map&lt; string, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;templates, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;comps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symMap, bool verbose)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads an observable XML block and adds the new observables to the system.  <a href="#6ddd5f6690a9a058cd4feeef8e4bb924"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#4447fd23ef00e1b26c4ffe1cc34908b3">readPattern</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, map&lt; string, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; &amp;templates, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;comps, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;symMap, bool verbose, int &amp;suggestedTraversalLimit)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a pattern XML block and returns the set of new TemplateMolecule objects.  <a href="#ad42aeae0f73436a8d83242c0593541c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a pattern XML block and returns the set of new TemplateMolecule objects.  <a href="#4447fd23ef00e1b26c4ffe1cc34908b3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#7e8ab2b49a2798dc1993710ca200d331">readProductPattern</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; <a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> * &gt; &amp;productMoleculeTypes, vector&lt; vector&lt; int &gt; &gt; &amp;stateInformation, vector&lt; vector&lt; int &gt; &gt; &amp;bindingSiteInformation, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a pattern XML block and returns the set of new TemplateMolecule objects.  <a href="#7e8ab2b49a2798dc1993710ca200d331"></a><br></td></tr>
@@ -293,7 +296,7 @@ Reads the Function XML block and adds the Functions to the system.
 
 </div>
 </div><p>
-<a class="anchor" name="f8a520e07f56df029a7784ab451f2be1"></a><!-- doxytag: member="NFinput::initializeFromXML" ref="f8a520e07f56df029a7784ab451f2be1" args="(string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)" -->
+<a class="anchor" name="fe0d8bf429922d0a4b5cb4a0f40dd644"></a><!-- doxytag: member="NFinput::initializeFromXML" ref="fe0d8bf429922d0a4b5cb4a0f40dd644" args="(string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose, int &amp;suggestedTraversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -319,7 +322,13 @@ Reads the Function XML block and adds the Functions to the system.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&nbsp;</td>
+          <td class="paramname"> <em>suggestedTraversalLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -382,7 +391,7 @@ The strategy is to look at one MoleculeType at a time, make sure that moleculeTy
 
 </div>
 </div><p>
-<a class="anchor" name="f70bed5f9ae20a317e3afe838e399dd3"></a><!-- doxytag: member="NFinput::initObservables" ref="f70bed5f9ae20a317e3afe838e399dd3" args="(TiXmlElement *pListOfObservables, System *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose)" -->
+<a class="anchor" name="6ddd5f6690a9a058cd4feeef8e4bb924"></a><!-- doxytag: member="NFinput::initObservables" ref="6ddd5f6690a9a058cd4feeef8e4bb924" args="(TiXmlElement *pListOfObservables, System *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool verbose, int &amp;suggestedTraversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -414,7 +423,13 @@ The strategy is to look at one MoleculeType at a time, make sure that moleculeTy
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&nbsp;</td>
+          <td class="paramname"> <em>suggestedTraversalLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -476,7 +491,7 @@ Reads the parameter XML block and puts them in the parameter map.
 
 </div>
 </div><p>
-<a class="anchor" name="08903395f329bbcd8003d11bfb5baf5a"></a><!-- doxytag: member="NFinput::initReactionRules" ref="08903395f329bbcd8003d11bfb5baf5a" args="(TiXmlElement *pListOfReactionRules, System *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool blockSameComplexBinding, bool verbose)" -->
+<a class="anchor" name="f4312a10183a085f6b9d6b7312e2f6cb"></a><!-- doxytag: member="NFinput::initReactionRules" ref="f4312a10183a085f6b9d6b7312e2f6cb" args="(TiXmlElement *pListOfReactionRules, System *system, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, bool blockSameComplexBinding, bool verbose, int &amp;suggestedTraversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -514,7 +529,13 @@ Reads the parameter XML block and puts them in the parameter map.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&nbsp;</td>
+          <td class="paramname"> <em>suggestedTraversalLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -661,6 +682,44 @@ Parses command line arguments from the console nicely.
 
 </div>
 </div><p>
+<a class="anchor" name="fe4451457efe21d09b4f487402f01f4b"></a><!-- doxytag: member="NFinput::parseAsCommaSeparatedSequence" ref="fe4451457efe21d09b4f487402f01f4b" args="(map&lt; string, string &gt; &amp;argMap, string argName, vector&lt; int &gt; &amp;sequence)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFinput::parseAsCommaSeparatedSequence           </td>
+          <td>(</td>
+          <td class="paramtype">map&lt; string, string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>argMap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>argName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>sequence</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints. 
+<p>
+<dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="e94e951f3de1d453e79d055c19dce1f4"></a><!-- doxytag: member="NFinput::parseAsDouble" ref="e94e951f3de1d453e79d055c19dce1f4" args="(map&lt; string, string &gt; &amp;argMap, string argName, double defaultValue)" -->
 <div class="memitem">
 <div class="memproto">
@@ -769,7 +828,7 @@ Parses a matlab style sequence (ie startValue:step:endValue) into the vector.
 
 </div>
 </div><p>
-<a class="anchor" name="ce4a726c34a7ebf5ee387fd9c53fbd87"></a><!-- doxytag: member="NFinput::readObservableForTemplateMolecules" ref="ce4a726c34a7ebf5ee387fd9c53fbd87" args="(TiXmlElement *pObs, string observableName, vector&lt; TemplateMolecule * &gt; &amp;tmList, vector&lt; string &gt; &amp;stochRelation, vector&lt; int &gt; &amp;stochQuantity, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, int obsType, bool verbose)" -->
+<a class="anchor" name="445dbc5a529a4527d31900546033a937"></a><!-- doxytag: member="NFinput::readObservableForTemplateMolecules" ref="445dbc5a529a4527d31900546033a937" args="(TiXmlElement *pObs, string observableName, vector&lt; TemplateMolecule * &gt; &amp;tmList, vector&lt; string &gt; &amp;stochRelation, vector&lt; int &gt; &amp;stochQuantity, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, int obsType, bool verbose, int &amp;suggestedTraversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -831,7 +890,13 @@ Parses a matlab style sequence (ie startValue:step:endValue) into the vector.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&nbsp;</td>
+          <td class="paramname"> <em>suggestedTraversalLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -846,7 +911,7 @@ Parses a matlab style sequence (ie startValue:step:endValue) into the vector.
 
 </div>
 </div><p>
-<a class="anchor" name="ad42aeae0f73436a8d83242c0593541c"></a><!-- doxytag: member="NFinput::readPattern" ref="ad42aeae0f73436a8d83242c0593541c" args="(TiXmlElement *pListOfMol, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, map&lt; string, TemplateMolecule * &gt; &amp;templates, map&lt; string, component &gt; &amp;comps, map&lt; string, component &gt; &amp;symMap, bool verbose)" -->
+<a class="anchor" name="4447fd23ef00e1b26c4ffe1cc34908b3"></a><!-- doxytag: member="NFinput::readPattern" ref="4447fd23ef00e1b26c4ffe1cc34908b3" args="(TiXmlElement *pListOfMol, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, map&lt; string, TemplateMolecule * &gt; &amp;templates, map&lt; string, component &gt; &amp;comps, map&lt; string, component &gt; &amp;symMap, bool verbose, int &amp;suggestedTraversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -902,7 +967,13 @@ Parses a matlab style sequence (ie startValue:step:endValue) into the vector.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&nbsp;</td>
+          <td class="paramname"> <em>suggestedTraversalLimit</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1146,7 +1217,7 @@ Allows the user to walk through the system with an interactive text-based progra
 
 </div>
 </div><p>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:49 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

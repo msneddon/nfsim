@@ -106,6 +106,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#4fc4a44063194593bc642dd833120f7f">turnOffGlobalFuncOut</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#812dc4182abae29caa60680a0b0fbc98">tagReaction</a> (int rID)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#3bb6f51e60e38c1e9bab6f4f0995fb77">addLocalFunction</a> (<a class="el" href="classNFcore_1_1LocalFunction.html">LocalFunction</a> *lf)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ed469955abd6de6472a93f81e400cb77">getLocalFunction</a> (string funcName) const </td></tr>
@@ -178,6 +180,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1ComplexList.html">ComplexList</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#9a2da8640c9e8f60f1756b3dcf9de8b8">getAllComplexes</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#cd5f273bef64e4656a518e7fea886ff1">turnOnCSVformat</a> ()</td></tr>
+
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#22dbd34534da90b02cdc880d966657ad">NULL_EVENT_COUNTER</a> = 0</td></tr>
 
@@ -242,6 +246,8 @@ This class is what runs the actual simulation. It keeps lists of all MoleculeTyp
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFstream.html">NFstream</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#ec661fd89f69921bd5cd3b8f8a03561b">outputFileStream</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">ofstream&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#c29abbf779c04a197a9a8add606f4563">propensityDumpStream</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#de388f46b1e486b6dfcdf1f1f1352852">csvFormat</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1System.html#8166822fb8ca819d8f3c1b2d3dcebdf9">rxnIndexMap</a></td></tr>
 
@@ -993,6 +999,26 @@ destroys the system and cleans up all memory associated with it
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="812dc4182abae29caa60680a0b0fbc98"></a><!-- doxytag: member="NFcore::System::tagReaction" ref="812dc4182abae29caa60680a0b0fbc98" args="(int rID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void System::tagReaction           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>rID</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -1814,6 +1840,25 @@ destroys the system and cleans up all memory associated with it
 
 </div>
 </div><p>
+<a class="anchor" name="cd5f273bef64e4656a518e7fea886ff1"></a><!-- doxytag: member="NFcore::System::turnOnCSVformat" ref="cd5f273bef64e4656a518e7fea886ff1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::System::turnOnCSVformat           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+turns on csv format, so that instead of a gdat file, a comma delimited file is generated. 
+</div>
+</div><p>
 <a class="anchor" name="493b5b1dfdf6028801370e60ca339aec"></a><!-- doxytag: member="NFcore::System::get_A_tot" ref="493b5b1dfdf6028801370e60ca339aec" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -2326,6 +2371,21 @@ list of all reactions that need to update propensity after each step
 
 </div>
 </div><p>
+<a class="anchor" name="de388f46b1e486b6dfcdf1f1f1352852"></a><!-- doxytag: member="NFcore::System::csvFormat" ref="de388f46b1e486b6dfcdf1f1f1352852" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1System.html#de388f46b1e486b6dfcdf1f1f1352852">NFcore::System::csvFormat</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="8166822fb8ca819d8f3c1b2d3dcebdf9"></a><!-- doxytag: member="NFcore::System::rxnIndexMap" ref="8166822fb8ca819d8f3c1b2d3dcebdf9" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -2373,7 +2433,7 @@ maps reaction index values to a reaction, used for MoleculeTypes to quickly look
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="system_8cpp.html">system.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Mar 18 15:58:20 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

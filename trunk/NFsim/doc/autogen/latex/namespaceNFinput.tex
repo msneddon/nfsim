@@ -23,13 +23,15 @@ bool {\bf parseArguments} (int argc, const char $\ast$argv[$\,$], map$<$ string,
 \begin{CompactList}\small\item\em Parses command line arguments from the console nicely. \item\end{CompactList}\item 
 int {\bf parseAsInt} (map$<$ string, string $>$ \&argMap, string argName, int defaultValue)
 \begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as an integer. \item\end{CompactList}\item 
+void {\bf parseAsCommaSeparatedSequence} (map$<$ string, string $>$ \&argMap, string argName, vector$<$ int $>$ \&sequence)
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints. \item\end{CompactList}\item 
 double {\bf parseAsDouble} (map$<$ string, string $>$ \&argMap, string argName, double defaultValue)
 \begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a double. \item\end{CompactList}\item 
 bool {\bf parseSequence} (string numString, vector$<$ double $>$ \&outputTimes)
 \begin{CompactList}\small\item\em Parses a matlab style sequence (ie startValue:step:endValue) into the vector. \item\end{CompactList}\item 
 bool {\bf createSystemDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
 \begin{CompactList}\small\item\em Parses the cmd line arg that specifies system dumps, and schedules them. \item\end{CompactList}\item 
-{\bf System} $\ast$ {\bf initializeFromXML} (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose)
+{\bf System} $\ast$ {\bf initializeFromXML} (string filename, bool blockSameComplexBinding, int globalMoleculeLimit, bool verbose, int \&suggestedTraversalLimit)
 \begin{CompactList}\small\item\em Maintains information about a \doxyref{component}{p.}{classNFinput_1_1component} of a TemplateMolecule. \item\end{CompactList}\item 
 bool {\bf initParameters} ({\bf TiXmlElement} $\ast$pListOfParameters, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, bool verbose)
 \begin{CompactList}\small\item\em Reads the parameter XML block and puts them in the parameter map. \item\end{CompactList}\item 
@@ -37,13 +39,13 @@ bool {\bf initMoleculeTypes} ({\bf TiXmlElement} $\ast$pListOfMoleculeTypes, {\b
 \begin{CompactList}\small\item\em Reads the MoleculeType XML block and adds the MoleculeTypes to the system. \item\end{CompactList}\item 
 bool {\bf initStartSpecies} ({\bf TiXmlElement} $\ast$pListOfSpecies, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads a Species XML block, creates the molecules and adds them to the system. \item\end{CompactList}\item 
-bool {\bf initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool blockSameComplexBinding, bool verbose)
+bool {\bf initReactionRules} ({\bf TiXmlElement} $\ast$pListOfReactionRules, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool blockSameComplexBinding, bool verbose, int \&suggestedTraversalLimit)
 \begin{CompactList}\small\item\em Reads a reactionRule XML block and adds the rules to the system. \item\end{CompactList}\item 
-bool {\bf readObservableForTemplateMolecules} ({\bf TiXmlElement} $\ast$pObs, string observableName, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList, vector$<$ string $>$ \&stochRelation, vector$<$ int $>$ \&stochQuantity, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, int obsType, bool verbose)
+bool {\bf readObservableForTemplateMolecules} ({\bf TiXmlElement} $\ast$pObs, string observableName, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \&tmList, vector$<$ string $>$ \&stochRelation, vector$<$ int $>$ \&stochQuantity, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, int obsType, bool verbose, int \&suggestedTraversalLimit)
 \item 
-bool {\bf initObservables} ({\bf TiXmlElement} $\ast$pListOfObservables, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose)
+bool {\bf initObservables} ({\bf TiXmlElement} $\ast$pListOfObservables, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, bool verbose, int \&suggestedTraversalLimit)
 \begin{CompactList}\small\item\em Reads an observable XML block and adds the new observables to the system. \item\end{CompactList}\item 
-{\bf TemplateMolecule} $\ast$ {\bf readPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \&templates, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap, bool verbose)
+{\bf TemplateMolecule} $\ast$ {\bf readPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \&templates, map$<$ string, {\bf component} $>$ \&comps, map$<$ string, {\bf component} $>$ \&symMap, bool verbose, int \&suggestedTraversalLimit)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
 bool {\bf readProductPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, vector$<$ {\bf MoleculeType} $\ast$ $>$ \&productMoleculeTypes, vector$<$ vector$<$ int $>$ $>$ \&stateInformation, vector$<$ vector$<$ int $>$ $>$ \&bindingSiteInformation, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
@@ -100,7 +102,7 @@ Reads the Function XML block and adds the Functions to the system.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initializeFromXML@{initializeFromXML}}
 \index{initializeFromXML@{initializeFromXML}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System} $\ast$ NFinput::initializeFromXML (string {\em filename}, bool {\em blockSameComplexBinding}, int {\em globalMoleculeLimit}, bool {\em verbose})}\label{namespaceNFinput_f8a520e07f56df029a7784ab451f2be1}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System} $\ast$ NFinput::initializeFromXML (string {\em filename}, bool {\em blockSameComplexBinding}, int {\em globalMoleculeLimit}, bool {\em verbose}, int \& {\em suggestedTraversalLimit})}\label{namespaceNFinput_fe0d8bf429922d0a4b5cb4a0f40dd644}
 
 
 Maintains information about a \doxyref{component}{p.}{classNFinput_1_1component} of a TemplateMolecule. 
@@ -120,7 +122,7 @@ The strategy is to look at one MoleculeType at a time, make sure that moleculeTy
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initObservables@{initObservables}}
 \index{initObservables@{initObservables}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initObservables ({\bf TiXmlElement} $\ast$ {\em pListOfObservables}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em verbose})}\label{namespaceNFinput_f70bed5f9ae20a317e3afe838e399dd3}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initObservables ({\bf TiXmlElement} $\ast$ {\em pListOfObservables}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em verbose}, int \& {\em suggestedTraversalLimit})}\label{namespaceNFinput_6ddd5f6690a9a058cd4feeef8e4bb924}
 
 
 Reads an observable XML block and adds the new observables to the system. 
@@ -138,7 +140,7 @@ Reads the parameter XML block and puts them in the parameter map.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!initReactionRules@{initReactionRules}}
 \index{initReactionRules@{initReactionRules}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initReactionRules ({\bf TiXmlElement} $\ast$ {\em pListOfReactionRules}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em blockSameComplexBinding}, bool {\em verbose})}\label{namespaceNFinput_08903395f329bbcd8003d11bfb5baf5a}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::initReactionRules ({\bf TiXmlElement} $\ast$ {\em pListOfReactionRules}, {\bf System} $\ast$ {\em system}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, bool {\em blockSameComplexBinding}, bool {\em verbose}, int \& {\em suggestedTraversalLimit})}\label{namespaceNFinput_f4312a10183a085f6b9d6b7312e2f6cb}
 
 
 Reads a reactionRule XML block and adds the rules to the system. 
@@ -165,6 +167,15 @@ Reads a Species XML block, creates the molecules and adds them to the system.
 
 
 Parses command line arguments from the console nicely. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFinput@{NFinput}!parseAsCommaSeparatedSequence@{parseAsCommaSeparatedSequence}}
+\index{parseAsCommaSeparatedSequence@{parseAsCommaSeparatedSequence}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFinput::parseAsCommaSeparatedSequence (map$<$ string, string $>$ \& {\em argMap}, string {\em argName}, vector$<$ int $>$ \& {\em sequence})}\label{namespaceNFinput_fe4451457efe21d09b4f487402f01f4b}
+
+
+Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints. 
 
 \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
@@ -197,12 +208,12 @@ Parses a matlab style sequence (ie startValue:step:endValue) into the vector.
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFinput@{NFinput}!readObservableForTemplateMolecules@{readObservableForTemplateMolecules}}
 \index{readObservableForTemplateMolecules@{readObservableForTemplateMolecules}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readObservableForTemplateMolecules ({\bf TiXmlElement} $\ast$ {\em pObs}, string {\em observableName}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \& {\em tmList}, vector$<$ string $>$ \& {\em stochRelation}, vector$<$ int $>$ \& {\em stochQuantity}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, int {\em obsType}, bool {\em verbose})}\label{namespaceNFinput_ce4a726c34a7ebf5ee387fd9c53fbd87}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readObservableForTemplateMolecules ({\bf TiXmlElement} $\ast$ {\em pObs}, string {\em observableName}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ \& {\em tmList}, vector$<$ string $>$ \& {\em stochRelation}, vector$<$ int $>$ \& {\em stochQuantity}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, int {\em obsType}, bool {\em verbose}, int \& {\em suggestedTraversalLimit})}\label{namespaceNFinput_445dbc5a529a4527d31900546033a937}
 
 
 \index{NFinput@{NFinput}!readPattern@{readPattern}}
 \index{readPattern@{readPattern}!NFinput@{NFinput}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule} $\ast$ NFinput::readPattern ({\bf TiXmlElement} $\ast$ {\em pListOfMol}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, string {\em patternName}, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \& {\em templates}, map$<$ string, {\bf component} $>$ \& {\em comps}, map$<$ string, {\bf component} $>$ \& {\em symMap}, bool {\em verbose})}\label{namespaceNFinput_ad42aeae0f73436a8d83242c0593541c}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule} $\ast$ NFinput::readPattern ({\bf TiXmlElement} $\ast$ {\em pListOfMol}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, string {\em patternName}, map$<$ string, {\bf TemplateMolecule} $\ast$ $>$ \& {\em templates}, map$<$ string, {\bf component} $>$ \& {\em comps}, map$<$ string, {\bf component} $>$ \& {\em symMap}, bool {\em verbose}, int \& {\em suggestedTraversalLimit})}\label{namespaceNFinput_4447fd23ef00e1b26c4ffe1cc34908b3}
 
 
 Reads a pattern XML block and returns the set of new TemplateMolecule objects. 
