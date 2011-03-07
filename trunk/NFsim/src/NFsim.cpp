@@ -499,6 +499,11 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		s->sim(sTime,oSteps);
 	}
 
+	// save species...
+	if (argMap.find("ss")!=argMap.end()) {
+		s->saveSpecies("species.txt");
+	}
+
 	if(verbose) {
 		cout<<endl<<endl;
 		s->printAllReactions();

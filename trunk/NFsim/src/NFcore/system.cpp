@@ -1125,6 +1125,149 @@ void System::printAllComplexes()
 */
 
 
+// Some data structures to keep track of bonds when listing all the species
+class bond_key {
+	public:
+		int key[4];
+};
+
+struct compare_key {
+	bool operator()(bond_key const *a, bond_key const *b)
+	{
+		//cout<<"comparing"<<endl;
+
+		//cout<<"1: "<<a->key[0]<<" "<<a->key[1]<<" "<<a->key[2]<<" "<<a->key[3]<<endl;
+		//cout<<"2: "<<b->key[0]<<" "<<b->key[1]<<" "<<b->key[2]<<" "<<b->key[3]<<endl;
+
+		if( a->key[0]==b->key[0] && a->key[1]==b->key[1] && a->key[2]==b->key[2] && a->key[3]==b->key[3]) {
+			//cout<<"match"<<endl;
+
+			return false;
+		} else if (a->key[0]<b->key[0])
+			return true;
+		else if(a->key[1]<b->key[1])
+			return true;
+		else if(a->key[2]<b->key[2])
+			return true;
+		else if(a->key[3]<b->key[3])
+			return true;
+		else
+			return false;
+	}
+};
+
+bool System::saveSpecies(string filename)
+{
+	cout<<"saving species... not yet working."<<endl;
+
+
+
+	for( unsigned int k=0; k<allMoleculeTypes.size(); k++)
+	{
+		MoleculeType *mt = allMoleculeTypes.at(k);
+		for(int j=0; j<mt->getMoleculeCount(); j++)
+		{
+			string speciesString = "";
+			list <Molecule *> molecules;
+			mt->getMolecule(j)->traverseBondedNeighborhood(molecules,ReactionClass::NO_LIMIT);
+
+			// key: partnerID1, bsiteID1, partnerID2, bsiteID2
+			map <bond_key *,int,compare_key> bondToIdMap; int currentBondNumber = 1;
+			//map <vector<int>,int> bondToIdMap; int currentBondNumber = 1;
+
+			list <Molecule *>::iterator iter; bool isFirst = true;
+			for( iter = molecules.begin(); iter != molecules.end(); iter++ )
+			{
+				Molecule *m = (*iter);
+				//cout<<m->getUniqueID()<<endl;
+
+				//Fist, output the molecule name
+				if(isFirst) { speciesString += m->getMoleculeTypeName()+"("; isFirst=false; }
+				else { speciesString += "."+m->getMoleculeTypeName()+"("; }
+
+				//Go through each component of the molecule
+				for(int s=0; s<m->getMoleculeType()->getNumOfComponents(); s++)
+				{
+					// output the component name
+					if(s==0) speciesString += m->getMoleculeType()->getComponentName(s);
+					else speciesString += ","+m->getMoleculeType()->getComponentName(s);
+
+					//output the state of the component, if it is set
+					if(m->getComponentState(s)>=0) {
+						speciesString += "~" + m->getMoleculeType()->getComponentStateName(s,m->getComponentState(s));
+					}
+
+					// check if the component is bound, if so we have to output a bond
+					// we will label the bond incrementally, but we have to check to make
+					// sure the bond wasn't declared earlier.  that's what the map is for.
+					if(m->isBindingSiteBonded(s)) {
+						cout<<"binding site is bonded"<<endl;
+						int partnerID = m->getBondedMolecule(s)->getUniqueID();
+						int partnerSite = m->getBondedMoleculeBindingSiteIndex(s);
+						int thisBondNumber = -1;
+						bond_key *bkey = new bond_key();
+						//vector <int> key; key.reserve(4);
+						if(partnerID<m->getUniqueID()) {
+							bkey->key[0] = partnerID; bkey->key[1] = partnerSite;
+							bkey->key[2] = m->getUniqueID(); bkey->key[3]=s;
+							cout<<"key: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
+						} else {
+							bkey->key[2] = partnerID; bkey->key[3] = partnerSite;
+							bkey->key[0] = m->getUniqueID(); bkey->key[1]=s;
+							cout<<"key2: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
+						}
+//						if(partnerID<m->getUniqueID()) {
+//							key[0] = partnerID; key[1] = partnerSite;
+//							key[2] = m->getUniqueID(); key[3]=s;
+//						} else {
+//							key[2] = partnerID; key[3] = partnerSite;
+//							key[0] = m->getUniqueID(); key[1]=s;
+//						}
+
+						cout<<"---here: "<<bondToIdMap.size()<<endl;
+						if(bondToIdMap.find(bkey)!=bondToIdMap.end()) {
+							thisBondNumber = bondToIdMap.find(bkey)->second;
+							cout<<"Found bond number: "<<thisBondNumber<<endl;
+						} else {
+
+							thisBondNumber = currentBondNumber++;
+							bondToIdMap.insert(pair<bond_key*,int>(bkey,thisBondNumber));
+							cout<<"Creating bond number: "<<thisBondNumber<<endl;
+						}
+						speciesString += "!" + NFutil::toString(thisBondNumber);
+					}
+
+
+				}
+
+
+				speciesString += ")";
+			}
+			speciesString += "  1";
+			cout<<speciesString<<endl<<endl<<endl;
+
+			//delete elements of the map
+			map <bond_key *,int,compare_key>::iterator miter;
+			for (miter=bondToIdMap.begin();miter!=bondToIdMap.end();miter++)
+			{
+				bond_key * bkey = miter->first;
+				cout<<"content: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
+//				bond_key * bk = bondToIdMap.find(miter->first)->first;
+//				bondToIdMap.erase(miter);
+//				delete bk;
+			}
+			bondToIdMap.clear();
+			cout<<endl<<endl;
+
+		}
+	}
+
+
+
+	return true;
+}
+
+
 void System::printAllReactions()
 {
 	recompute_A_tot();
