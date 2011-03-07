@@ -366,7 +366,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 
 			if(s!=NULL)
 			{
-				if(verbose) cout<<endl;
+				if(verbose) {cout<<endl;}
 
 				//If requested, be sure to output the values of global functions
 				if (argMap.find("ogf")!=argMap.end()) {
@@ -413,9 +413,10 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
 				} else {
-					if(s->isOutputtingBinary())
+					if(s->isOutputtingBinary()) {
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
-					    if(verbose) cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.dat" <<endl<<endl;
+					    if(verbose) { cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.dat" <<endl<<endl; }
+					}
 					else {
 						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
 						s->outputAllObservableNames();
