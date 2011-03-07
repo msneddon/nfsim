@@ -456,6 +456,8 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				cout<<"Couldn't create a system from your XML file.  I don't know what you did."<<endl;
 				return 0;
 			}
+		} else {
+			cout<<"-xml flag given, but no file was specified, so no system was created."<<endl;
 		}
 	} else {
 		cout<<"Couldn't create a system from your XML file.  No -xml [filename] flag given."<<endl;
@@ -501,9 +503,11 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		s->sim(sTime,oSteps);
 	}
 
-	// save species...
+	// save the final list of species, if requested...
 	if (argMap.find("ss")!=argMap.end()) {
-		s->saveSpecies("species.txt");
+		string filename = argMap.find("ss")->second;
+		if(!filename.empty())  s->saveSpecies(filename);
+		else   s->saveSpecies();
 	}
 
 	if(verbose) {

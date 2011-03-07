@@ -233,6 +233,7 @@ namespace NFcore
 
 			void printAllFunctions();
 
+			bool saveSpecies() { return saveSpecies(string(name+"_nf.species")); };
 			bool saveSpecies(string filename);
 
 
@@ -258,7 +259,7 @@ namespace NFcore
 			void turnOnGlobalFuncOut() { this->outputGlobalFunctionValues=true; };
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
-
+			/* once all elements are added, we need to prepare and initialize for simulations */
 			void tagReaction(int rID);
 
 

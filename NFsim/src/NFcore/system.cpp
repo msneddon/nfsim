@@ -1138,7 +1138,7 @@ bool System::saveSpecies(string filename)
 		exit(1);
 	}
 
-	cout<<"\n\n\n---------------------\n\nsaving species... not yet fully tested...\n"<<endl;
+	cout<<"\n\nsaving list of final molecular species..."<<endl;
 
 	// create a couple data structures to store results as we go
 	list <Molecule *> molecules;
