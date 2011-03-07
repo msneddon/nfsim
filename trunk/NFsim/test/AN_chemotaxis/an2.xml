@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by BioNetGen 2.0.48a+  -->
+<!-- Created by BioNetGen 2.1.5+, mod for NFsim 1.07  -->
 <sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
   <model id="an2">
     <ListOfParameters>
@@ -458,7 +458,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR1_RateLaw" type="Ele">
+        <RateLaw id="RR1_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="konR"/>
           </ListOfRateConstants>
@@ -519,7 +519,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR2_RateLaw" type="Ele">
+        <RateLaw id="RR2_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="konB"/>
           </ListOfRateConstants>
@@ -576,7 +576,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR3_RateLaw" type="Ele">
+        <RateLaw id="RR3_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="koffR"/>
           </ListOfRateConstants>
@@ -631,7 +631,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR4_RateLaw" type="Ele">
+        <RateLaw id="RR4_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="koffB"/>
           </ListOfRateConstants>
@@ -688,7 +688,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR5_RateLaw" type="Ele">
+        <RateLaw id="RR5_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="rateLaw1"/>
           </ListOfRateConstants>
@@ -746,7 +746,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR6_RateLaw" type="Ele">
+        <RateLaw id="RR6_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="rateLaw2"/>
           </ListOfRateConstants>
@@ -806,7 +806,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR7_RateLaw" type="Function" name="rateLaw3">
+        <RateLaw id="RR7_RateLaw" type="Function" name="rateLaw3" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR7_RP1_M1"/>
           </ListOfArguments>
@@ -867,7 +867,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR8_RateLaw" type="Function" name="rateLaw4">
+        <RateLaw id="RR8_RateLaw" type="Function" name="rateLaw4" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR8_RP1_M1"/>
           </ListOfArguments>
@@ -926,7 +926,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR9_RateLaw" type="Function" name="rateLaw5">
+        <RateLaw id="RR9_RateLaw" type="Function" name="rateLaw5" totalrate="0">
           <ListOfArguments>
             <Argument id="x" type="ObjectReference" value="RR9_RP1"/>
           </ListOfArguments>
@@ -985,7 +985,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR10_RateLaw" type="Function" name="rateLaw6">
+        <RateLaw id="RR10_RateLaw" type="Function" name="rateLaw6" totalrate="0">
           <ListOfArguments>
             <Argument id="x" type="ObjectReference" value="RR10_RP1"/>
           </ListOfArguments>
@@ -1060,7 +1060,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR11_RateLaw" type="Function" name="rateLaw7">
+        <RateLaw id="RR11_RateLaw" type="Function" name="rateLaw7" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR11_RP1_M1"/>
           </ListOfArguments>
@@ -1138,7 +1138,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR12_RateLaw" type="Function" name="rateLaw8">
+        <RateLaw id="RR12_RateLaw" type="Function" name="rateLaw8" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR12_RP1_M1"/>
           </ListOfArguments>
@@ -1216,7 +1216,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR13_RateLaw" type="Function" name="rateLaw9">
+        <RateLaw id="RR13_RateLaw" type="Function" name="rateLaw9" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR13_RP1_M1"/>
           </ListOfArguments>
@@ -1294,7 +1294,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR14_RateLaw" type="Function" name="rateLaw10">
+        <RateLaw id="RR14_RateLaw" type="Function" name="rateLaw10" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR14_RP1_M1"/>
           </ListOfArguments>
@@ -1372,7 +1372,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR15_RateLaw" type="Function" name="rateLaw11">
+        <RateLaw id="RR15_RateLaw" type="Function" name="rateLaw11" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR15_RP1_M1"/>
           </ListOfArguments>
@@ -1450,7 +1450,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR16_RateLaw" type="Function" name="rateLaw12">
+        <RateLaw id="RR16_RateLaw" type="Function" name="rateLaw12" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR16_RP1_M1"/>
           </ListOfArguments>
@@ -1528,7 +1528,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR17_RateLaw" type="Function" name="rateLaw13">
+        <RateLaw id="RR17_RateLaw" type="Function" name="rateLaw13" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR17_RP1_M1"/>
           </ListOfArguments>
@@ -1606,7 +1606,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR18_RateLaw" type="Function" name="rateLaw14">
+        <RateLaw id="RR18_RateLaw" type="Function" name="rateLaw14" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR18_RP1_M1"/>
           </ListOfArguments>
@@ -1684,7 +1684,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR19_RateLaw" type="Function" name="rateLaw15">
+        <RateLaw id="RR19_RateLaw" type="Function" name="rateLaw15" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR19_RP1_M1"/>
           </ListOfArguments>
@@ -1762,7 +1762,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR20_RateLaw" type="Function" name="rateLaw16">
+        <RateLaw id="RR20_RateLaw" type="Function" name="rateLaw16" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR20_RP1_M1"/>
           </ListOfArguments>
@@ -1840,7 +1840,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR21_RateLaw" type="Function" name="rateLaw17">
+        <RateLaw id="RR21_RateLaw" type="Function" name="rateLaw17" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR21_RP1_M1"/>
           </ListOfArguments>
@@ -1918,7 +1918,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR22_RateLaw" type="Function" name="rateLaw18">
+        <RateLaw id="RR22_RateLaw" type="Function" name="rateLaw18" totalrate="0">
           <ListOfArguments>
             <Argument id="y" type="ObjectReference" value="RR22_RP1_M1"/>
           </ListOfArguments>
