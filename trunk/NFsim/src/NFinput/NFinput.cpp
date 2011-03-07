@@ -376,14 +376,21 @@ bool NFinput::initMoleculeTypes(
 
 					bool isIntegerState=false;
 
-					//Take a look at the allowed states
+					//Take a look at the list of allowed states - this is where we determine if the component
+					//site should be an integer state or a string
 					vector <string> possibleStateNames;
 					TiXmlElement *pListOfAllowedStates = pComp->FirstChildElement("ListOfAllowedStates");
-					if(pListOfAllowedStates)  {
+					if(pListOfAllowedStates)
+					{
 
-						//Look at the list of allowed states
-						TiXmlElement *pAlStates;
-						int allowedStateCount = 0;
+						// First, loop through all the allowed states to determine if we need to parse this as an
+						// integer site or a string site, by counting up the number of sting or integer sites
+						int stringComponentNameCount = 0;
+						int intComponentNameCount = 0;  int maxStateValue = -1;
+						bool throwStateValLessThanZeroError = false;
+						int plusMinusComponentNameCount = 0;
+
+						TiXmlElement *pAlStates=0;
 						for ( pAlStates = pListOfAllowedStates->FirstChildElement("AllowedState"); pAlStates != 0; pAlStates = pAlStates->NextSiblingElement("AllowedState"))
 						{
 							if(!pAlStates->Attribute("id")) {
@@ -392,98 +399,42 @@ bool NFinput::initMoleculeTypes(
 								return false;
 							}
 
-							////// Original code that always parses possible states as strings
-							//string aState = pAlStates->Attribute("id");
-							//if(allowedStates.find(typeName+"_"+compName+"_"+aState)!=allowedStates.end()) continue;
-							//allowedStates[typeName+"_"+compName+"_"+aState] = allowedStateCount;
-							//allowedStateCount++;
-							//possibleStateNames.push_back(aState);
-							//if(verbose) cout<<"~"<<aState;
-
-							///  New code that allows integer state values, and checks for PLUS and MINUS
 							string aState = pAlStates->Attribute("id");
 							try {
-
-								//First, check for PLUS and MINUS - if we find them, then stateVal is set to
-								//zero and we parse this state as an integer...
-								int stateVal=0;
-								if(aState!="PLUS" && aState!="MINUS") {
-									stateVal = NFutil::convertToInt(aState);
-								}
-
-								//If we got here, then we have to parse this state value as an integer, so there
-								//cannot be any other strings already added as possible state values.
-								if(!possibleStateNames.empty()) {
-									cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-									 typeName +"'.\n  The possible states can be either Integers OR strings," +
-									 " but cannot be both!!  Check your moleculeTypes."<<endl;
-									return false;
-								}
-
-								//Also check to make sure that stateVal is nonnegative - we don't allow that now
-								if(stateVal<0) {
-									cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-										typeName +"'.\n  State values cannot be negative Integers!" +
-										" Check your moleculeTypes."<<endl;
-									return false;
-								}
-
-								//Now find the max value... we will have to create all states between 0 and the max value
-								int maxValue = stateVal;
-								pAlStates->NextSiblingElement("AllowedState");
-								for(; pAlStates != 0; pAlStates = pAlStates->NextSiblingElement("AllowedState")) {
-
-									if(!pAlStates->Attribute("id")) {
-										cerr<<"!!!Error:  AllowedState tag in ComponentType '"+compName+"' of MoleculeType: '" +
-											typeName + "' must contain the id attribute.  Quitting."<<endl;
-										return false;
-									}
-									string aState = pAlStates->Attribute("id");
-									if(aState!="PLUS" && aState!="MINUS") {
-										try {
-											stateVal = NFutil::convertToInt(aState);
-
-										} catch (std::runtime_error e) {
-											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-												typeName +"'.\n  The possible states can be either Integers OR strings," +
-												" but cannot be both!!  Check your moleculeTypes."<<endl;
-										}
-										if(stateVal>maxValue) maxValue = stateVal;
-										if(stateVal<0) {
-											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-													typeName +"'.\n  State values cannot be negative Integers!" +
-													" Check your moleculeTypes."<<endl;
-											return false;
-										}
-										if(stateVal>10000) {
-											cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
-													typeName +"'.\n  State values that are Integers cannot exceed" +
-													" a value of 10,000!  Recheck your moleculeTypes."<<endl;
-											return false;
-										}
-									}
-								}
-
-								//Finally, we have the max value of our integers, and we know that they are correct!  So
-								//Let's build the list of possible state Integer values, and get the heck out of this
-								//annoying loop.
-								string stateString="";
-								for(int sv = 0; sv<=maxValue; sv++) {
-									stringstream out; out << sv;
-									string stateString = out.str();
-									allowedStates[typeName+"_"+compName+"_"+stateString] = sv;
-									allowedStateCount++;
-									possibleStateNames.push_back(stateString);
-								}
-								if(verbose) cout<<"~integer[0-"<<maxValue<<"]";
-
-								//Now we remember that this is an integer state, and break because we have already
-								//created all possible state values for this component
-								isIntegerState=true;
-								break;
+								int stateVal= NFutil::convertToInt(aState);
+								//Also check now to make sure that stateVal is nonnegative - we don't allow that because
+								//of the way states are indexed
+								if(stateVal<0) { throwStateValLessThanZeroError = true; }
+								if(stateVal>maxStateValue) { maxStateValue = stateVal; }
+								intComponentNameCount++;
 							} catch (std::runtime_error e) {
 								//If we catch an error, than the state value was a string (not an integer) and
 								//we should handle as such.
+								if(aState!="PLUS" && aState!="MINUS") {
+									stringComponentNameCount++;
+								}
+								else {
+									plusMinusComponentNameCount++;
+								}
+							}
+						}
+
+
+						// If we should parse the states as strings...
+						if(stringComponentNameCount>0) {
+							if(plusMinusComponentNameCount>0) {
+								cerr<<"Warning!! when creating Component '"+compName+"' of MoleculeType: '"+
+									typeName +"'.\n  State values are being parsed as a string, and you " +
+									"have included 'PLUS' or 'MINUS' as state labels.  In this context, " +
+									"'PLUS' and 'MINUS' do NOT increment or decrement the state values.\n" +
+									"If you want to increment or decrement an integer state, there can be no " +
+									"strings used as component names!  All state values must be integers.  So be careful!" <<endl;
+							}
+
+							int allowedStateCount = 0;
+							for ( pAlStates = pListOfAllowedStates->FirstChildElement("AllowedState"); pAlStates != 0; pAlStates = pAlStates->NextSiblingElement("AllowedState"))
+							{
+								string aState = pAlStates->Attribute("id");
 								if(allowedStates.find(typeName+"_"+compName+"_"+aState)!=allowedStates.end()) continue;
 								allowedStates[typeName+"_"+compName+"_"+aState] = allowedStateCount;
 								//cout<<"\nadding allowed state: "<<typeName+"_"+compName+"_"+aState<<" to be "<<allowedStateCount;
@@ -491,8 +442,48 @@ bool NFinput::initMoleculeTypes(
 								possibleStateNames.push_back(aState);
 								if(verbose) cout<<"~"<<aState;
 							}
-
+							isIntegerState = false;
 						}
+
+						// If we should parse as integer states
+						else if (intComponentNameCount>0 && stringComponentNameCount==0) {
+
+							//First make sure that all the state values were greater than zero
+							if(throwStateValLessThanZeroError || maxStateValue<0) {
+								cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
+									typeName +"'.\n  State values cannot be negative Integers!" +
+									" Check your moleculeTypes."<<endl;
+								return false;
+							}
+							//Second, check that the max state value was less than the limit
+							if(maxStateValue>10000) {
+								cerr<<"Error when creating Component '"+compName+"' of MoleculeType: '"+
+									typeName +"'.\n  State values that are Integers cannot exceed" +
+									" a value of 10,000!  Recheck your moleculeTypes."<<endl;
+								return false;
+							}
+
+							//Finally, we have the max value of our integers, and we know that they are correct!  So
+							//Let's build the list of possible state Integer values, and get the heck out of this
+							//annoying loop.
+							string stateString=""; int allowedStateCount = 0;
+							for(int sv = 0; sv<=maxStateValue; sv++) {
+								stringstream out; out << sv;
+								string stateString = out.str();
+								allowedStates[typeName+"_"+compName+"_"+stateString] = sv;
+								allowedStateCount++;
+								possibleStateNames.push_back(stateString);
+							}
+							if(verbose) cout<<"~integer[0-"<<maxStateValue<<"]";
+
+							//Now we remember that this is an integer state, and break because we have already
+							//created all possible state values for this component
+							isIntegerState=true;
+						}
+
+						else { /* no possible states... */ }
+
+
 					}
 
 					//register if the component has an integer state, if so, remember that
