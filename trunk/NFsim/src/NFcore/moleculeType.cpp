@@ -240,6 +240,30 @@ bool MoleculeType::isEquivalentComponent(int cIndex) const {
 	}
 	return false;
 }
+
+int MoleculeType::getEquivalenceClassNumber(int cIndex) const {
+	for(int i=0; i<n_eqComp; i++) {
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(eqCompIndex[i][k]==cIndex) {
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+string MoleculeType::getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const {
+	for(int i=0; i<n_eqComp; i++) {
+		for(int k=0; k<eqCompSizes[i]; k++) {
+			if(eqCompIndex[i][k]==cIndex) {
+				return eqCompOriginalName[i];
+			}
+		}
+	}
+	cerr<<"Could not find equivalency class component string for component number: "<<cIndex<<"!!!"<<endl;
+	exit(1);
+}
+
 void MoleculeType::getEquivalencyClass(int *&components, int &n_components, string cName) const {
 	for(int i=0; i<n_eqComp; i++) {
 		if(eqCompOriginalName[i].compare(cName)==0) {

@@ -1125,61 +1125,58 @@ void System::printAllComplexes()
 */
 
 
-// Some data structures to keep track of bonds when listing all the species
-class bond_key {
-	public:
-		int key[4];
-};
-
-struct compare_key {
-	bool operator()(bond_key const *a, bond_key const *b)
-	{
-		//cout<<"comparing"<<endl;
-
-		//cout<<"1: "<<a->key[0]<<" "<<a->key[1]<<" "<<a->key[2]<<" "<<a->key[3]<<endl;
-		//cout<<"2: "<<b->key[0]<<" "<<b->key[1]<<" "<<b->key[2]<<" "<<b->key[3]<<endl;
-
-		if( a->key[0]==b->key[0] && a->key[1]==b->key[1] && a->key[2]==b->key[2] && a->key[3]==b->key[3]) {
-			//cout<<"match"<<endl;
-
-			return false;
-		} else if (a->key[0]<b->key[0])
-			return true;
-		else if(a->key[1]<b->key[1])
-			return true;
-		else if(a->key[2]<b->key[2])
-			return true;
-		else if(a->key[3]<b->key[3])
-			return true;
-		else
-			return false;
-	}
-};
-
 bool System::saveSpecies(string filename)
 {
-	cout<<"saving species... not yet working."<<endl;
+	bool debugOut = false;
+
+	//open the output filestream
+	ofstream speciesFile;
+	speciesFile.open(filename.c_str());
+	if(!speciesFile.is_open()) {
+		cerr<<"Error in System when calling System::saveSpecies(string)!  Cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	cout<<"\n\n\n---------------------\n\nsaving species... not yet fully tested...\n"<<endl;
+
+	// create a couple data structures to store results as we go
+	list <Molecule *> molecules;
+	list <Molecule *>::iterator iter;
+	map <int,bool> reportedMolecules;
+    map <string,int> reportedSpecies;
 
 
-
+	// loop over all the types of molecules that exist
 	for( unsigned int k=0; k<allMoleculeTypes.size(); k++)
 	{
+		// retrieve the MoleculeType
 		MoleculeType *mt = allMoleculeTypes.at(k);
+
+		// loop over every individual molecule
 		for(int j=0; j<mt->getMoleculeCount(); j++)
 		{
+			// check if we have looked this molecule before, and skip it if we have
+			if(reportedMolecules.find(mt->getMolecule(j)->getUniqueID())!=reportedMolecules.end()) {
+				continue;
+			}
+
+
+
+			//otherwise, we have not visited this particular species before, so loop over the molecules
+			//that make up the species
 			string speciesString = "";
-			list <Molecule *> molecules;
+			molecules.clear();
 			mt->getMolecule(j)->traverseBondedNeighborhood(molecules,ReactionClass::NO_LIMIT);
 
 			// key: partnerID1, bsiteID1, partnerID2, bsiteID2
-			map <bond_key *,int,compare_key> bondToIdMap; int currentBondNumber = 1;
-			//map <vector<int>,int> bondToIdMap; int currentBondNumber = 1;
+			vector <vector <int> * > bondNumberMap;
 
-			list <Molecule *>::iterator iter; bool isFirst = true;
+			bool isFirst = true;
 			for( iter = molecules.begin(); iter != molecules.end(); iter++ )
 			{
 				Molecule *m = (*iter);
-				//cout<<m->getUniqueID()<<endl;
+				reportedMolecules.insert(pair <int,bool> (m->getUniqueID(),true));
 
 				//Fist, output the molecule name
 				if(isFirst) { speciesString += m->getMoleculeTypeName()+"("; isFirst=false; }
@@ -1189,81 +1186,99 @@ bool System::saveSpecies(string filename)
 				for(int s=0; s<m->getMoleculeType()->getNumOfComponents(); s++)
 				{
 					// output the component name
-					if(s==0) speciesString += m->getMoleculeType()->getComponentName(s);
-					else speciesString += ","+m->getMoleculeType()->getComponentName(s);
+					string compName = m->getMoleculeType()->getComponentName(s);
+					if(m->getMoleculeType()->isEquivalentComponent(s)) {
+						// symmetric site, so we need to look up its sym name
+						compName = m->getMoleculeType()->getEquivalenceClassComponentNameFromComponentIndex(s);
+					}
+					if(s==0) speciesString += compName;
+					else speciesString += ","+compName;
+
 
 					//output the state of the component, if it is set
 					if(m->getComponentState(s)>=0) {
 						speciesString += "~" + m->getMoleculeType()->getComponentStateName(s,m->getComponentState(s));
 					}
 
+
 					// check if the component is bound, if so we have to output a bond
 					// we will label the bond incrementally, but we have to check to make
-					// sure the bond wasn't declared earlier.  that's what the map is for.
+					// sure the bond wasn't declared earlier.  that's what the vector of int vectors is for.
 					if(m->isBindingSiteBonded(s)) {
-						cout<<"binding site is bonded"<<endl;
+						if(debugOut) cout<<"binding site is bonded"<<endl;
 						int partnerID = m->getBondedMolecule(s)->getUniqueID();
 						int partnerSite = m->getBondedMoleculeBindingSiteIndex(s);
 						int thisBondNumber = -1;
-						bond_key *bkey = new bond_key();
-						//vector <int> key; key.reserve(4);
+
+						// create the key
+						vector <int> *key = new vector<int>(4);
 						if(partnerID<m->getUniqueID()) {
-							bkey->key[0] = partnerID; bkey->key[1] = partnerSite;
-							bkey->key[2] = m->getUniqueID(); bkey->key[3]=s;
-							cout<<"key: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
+							key->at(0) = partnerID; key->at(1) = partnerSite;
+							key->at(2) = m->getUniqueID(); key->at(3)=s;
 						} else {
-							bkey->key[2] = partnerID; bkey->key[3] = partnerSite;
-							bkey->key[0] = m->getUniqueID(); bkey->key[1]=s;
-							cout<<"key2: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
+							key->at(2) = partnerID; key->at(3) = partnerSite;
+							key->at(0) = m->getUniqueID(); key->at(1)=s;
 						}
-//						if(partnerID<m->getUniqueID()) {
-//							key[0] = partnerID; key[1] = partnerSite;
-//							key[2] = m->getUniqueID(); key[3]=s;
-//						} else {
-//							key[2] = partnerID; key[3] = partnerSite;
-//							key[0] = m->getUniqueID(); key[1]=s;
-//						}
 
-						cout<<"---here: "<<bondToIdMap.size()<<endl;
-						if(bondToIdMap.find(bkey)!=bondToIdMap.end()) {
-							thisBondNumber = bondToIdMap.find(bkey)->second;
-							cout<<"Found bond number: "<<thisBondNumber<<endl;
-						} else {
+						//search if that key was already inserted
+						bool foundExistingBond = false;
+						for(unsigned int bnmIndex =0; bnmIndex < bondNumberMap.size(); bnmIndex++) {
+							if( key->at(0)==bondNumberMap.at(bnmIndex)->at(0) &&
+								key->at(1)==bondNumberMap.at(bnmIndex)->at(1) &&
+							    key->at(2)==bondNumberMap.at(bnmIndex)->at(2) &&
+							    key->at(3)==bondNumberMap.at(bnmIndex)->at(3) ) {
+								    thisBondNumber = bnmIndex+1;
+									foundExistingBond = true;
+									if(debugOut) cout<<"Found bond number: "<<thisBondNumber<<endl;
+									break;
+							}
+						}
 
-							thisBondNumber = currentBondNumber++;
-							bondToIdMap.insert(pair<bond_key*,int>(bkey,thisBondNumber));
-							cout<<"Creating bond number: "<<thisBondNumber<<endl;
+						//If it was not found, then insert it
+						if(!foundExistingBond) {
+							bondNumberMap.push_back(key);
+							thisBondNumber = bondNumberMap.size();
+							if(debugOut) cout<<"Creating bond number: "<<bondNumberMap.size()<<endl;
 						}
 						speciesString += "!" + NFutil::toString(thisBondNumber);
 					}
-
 
 				}
 
 
 				speciesString += ")";
 			}
-			speciesString += "  1";
-			cout<<speciesString<<endl<<endl<<endl;
+
+			if(reportedSpecies.find(speciesString) != reportedSpecies.end()) {
+				reportedSpecies[speciesString] = reportedSpecies[speciesString] + 1;
+			} else {
+				reportedSpecies.insert(pair <string,int> (speciesString,1));
+			}
+
+			//speciesString += "  1";
+			//cout<<speciesString<<endl;
+
+			if(debugOut) cout<<endl<<endl;
 
 			//delete elements of the map
-			map <bond_key *,int,compare_key>::iterator miter;
-			for (miter=bondToIdMap.begin();miter!=bondToIdMap.end();miter++)
-			{
-				bond_key * bkey = miter->first;
-				cout<<"content: "<<bkey->key[0]<<" "<<bkey->key[1]<<" "<<bkey->key[2]<<" "<<bkey->key[3]<<endl;
-//				bond_key * bk = bondToIdMap.find(miter->first)->first;
-//				bondToIdMap.erase(miter);
-//				delete bk;
+			while(bondNumberMap.size()>0) {
+				vector <int> *v = bondNumberMap.at(bondNumberMap.size()-1);
+				bondNumberMap.pop_back();
+				delete v;
 			}
-			bondToIdMap.clear();
-			cout<<endl<<endl;
+
+			if(debugOut) cout<<endl<<endl;
 
 		}
 	}
 
 
-
+	speciesFile<<"# nfsim generated species list for system: '"<< this->name <<"'\n";
+	speciesFile<<"# warning! this feature is not yet fully tested! \n";
+	for ( map<string,int>::iterator  it=reportedSpecies.begin() ; it != reportedSpecies.end(); it++ )
+		speciesFile << (*it).first << "  " << (*it).second << "\n";
+	speciesFile.flush();
+	speciesFile.close();
 	return true;
 }
 
