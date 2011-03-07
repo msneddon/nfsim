@@ -532,6 +532,8 @@ namespace NFcore
 			bool isEquivalentComponent(int cIndex) const;
 			void getEquivalencyClass(int *&components, int &n_components, string cName) const;
 			int getEquivalencyClassNumber(string cName) const;
+			int getEquivalenceClassNumber(int cIndex) const;
+			string getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const;
 
 
 			bool isIntegerComponent(string cName) const;

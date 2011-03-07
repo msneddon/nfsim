@@ -4,7 +4,7 @@
 //    A software platform for efficient simulation of biochemical reaction
 //    systems with a large or infinite state space.
 //
-//    Copyright (C) 2009,2010
+//    Copyright (C) 2009,2010,2011
 //    Michael W. Sneddon, James R. Faeder, Thierry Emonet
 //
 //    This program is free software: you can redistribute it and/or modify
@@ -131,6 +131,7 @@
 #include <iostream>
 #include <string>
 #include <time.h>
+#include <limits>
 
 using namespace std;
 
@@ -173,7 +174,7 @@ int main(int argc, char *argv[])
 	// turned off for the general release code.
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.08";
+	string versionNumber = "1.09";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
