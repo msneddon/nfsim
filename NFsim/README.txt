@@ -10,7 +10,7 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.08
+NFsim - the network free stochastic simulator, v1.09
 
 michael w. sneddon
 james r. faeder
@@ -50,6 +50,30 @@ Enjoy your new network-free world!
 ################################################################################
 
 Release Notes
+
+
+v1.09   Mar, 2011
+        (a) NFsim now allows the mixing of integers and strings as component
+        labels, although if numbers and strings are mixed, all labels are parsed
+        as strings, NOT integers.  Therefore, PLUS and MINUS keywords cannot
+        be used if mixing integer states and string states, and a warning will
+        be generated if a state is set to PLUS.  One can only use PLUS or MINUS
+        when ALL states are a integer value greater than zero.  This new behavior
+        was needed to handle BNGL files that used the convention of ~P specifying
+        phosphorylated, and ~0 specifying unphosphorylated.
+        (b) Fixed bug whereby if verbose option was turned on without specifying
+        an output file location, no output would be generated.  Now, output to
+        a gdat file will be generated in these cases.
+        (c) Use of 'ss' input argument to 'saveSpecies', which prints a a list of 
+        all species at the end of a simulation, is now handled.  This feature was 
+        implemented to allow future support in BNG by restarting an NFsim simulation 
+        after it ends, which can be done by parsing the output species list together 
+        with a BNGL model file.  This feature still has to be tested in BNG, and will
+        likely be fully documented in v1.10.  The 'ss' flag writes the file to either
+        [system_name]_nf.species, or a file designated by the user.
+
+
+
 
 v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
         specify whether or not to use the microscopic (default) interpretation
