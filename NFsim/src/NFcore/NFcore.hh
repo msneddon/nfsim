@@ -233,6 +233,8 @@ namespace NFcore
 
 			void printAllFunctions();
 
+			bool saveSpecies(string filename);
+
 
 			LocalFunction * getLocalFunctionByName(string fName);
 			//bool addFunctionReference(FunctionReference *fr);
