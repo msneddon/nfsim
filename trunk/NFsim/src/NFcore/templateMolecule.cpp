@@ -1010,7 +1010,7 @@ bool TemplateMolecule::isSymMapValid()
 
 		//If it is valid, then we can just return true, because we are ok
 		//cout<<" is valid? ";
-		if(isValid) { return true; }
+		if(isValid) { delete [] curPos; return true; }
 		//cout<<endl;
 
 		counter++;
@@ -1030,7 +1030,8 @@ bool TemplateMolecule::isSymMapValid()
 			}
 		} while(true);
 	}
-  return foundValid;
+	delete [] curPos;
+	return foundValid;
 }
 
 
