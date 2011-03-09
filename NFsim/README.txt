@@ -26,8 +26,7 @@ funded by the National Science Foundation
 
 please cite NFsim as:
 Sneddon MW, Faeder JR & Emonet T.  Efficient modeling, simulation and 
-coarse-graining of biological complexity with NFsim.  Nature Methods, 
-in press (2011).
+coarse-graining of biological complexity with NFsim.  Nature Methods,(2011) 8(2):177-83.
 
 
 NFsim is released under the GNU General Public License.  See LICENSE.txt for
@@ -71,6 +70,9 @@ v1.09   Mar, 2011
         with a BNGL model file.  This feature still has to be tested in BNG, and will
         likely be fully documented in v1.10.  The 'ss' flag writes the file to either
         [system_name]_nf.species, or a file designated by the user.
+        (d) fixed memory leak in TemplateMolecules that caused memory / performance
+        issues with molecules having multiple identical sites and a high degree
+        of aggregation.
 
 
 
@@ -120,7 +122,7 @@ v1.06   Sept 28, 2010 - added scripts for running NFsim from Matlab, parameter
         and Kappa are now included with a readme file under: 
         models/performance_test_models.
 
-v1.052  First publically released stable build
+v1.052  First publicly released stable build
 
 
 
