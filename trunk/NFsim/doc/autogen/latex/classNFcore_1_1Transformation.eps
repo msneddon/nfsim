@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 448.43
+%%BoundingBox: 0 0 500 487.805
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 1.115 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 1.025 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 10 def
+/rows 12 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -175,7 +175,9 @@ boxfont setfont
 1 boundaspect scale
 (NFcore::Transformation) cw
 (NFcore::AddMoleculeTransform) cw
+(NFcore::AddSpeciesTransform) cw
 (NFcore::BindingTransform) cw
+(NFcore::DecrementPopulationTransform) cw
 (NFcore::DecrementStateTransform) cw
 (NFcore::EmptyTransform) cw
 (NFcore::IncrementStateTransform) cw
@@ -194,10 +196,12 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (NFcore::Transformation) 0 9 box
- (NFcore::AddMoleculeTransform) 1 8 box
- (NFcore::BindingTransform) 1 7 box
-1 7 mark
+ (NFcore::Transformation) 0 11 box
+ (NFcore::AddMoleculeTransform) 1 10 box
+ (NFcore::AddSpeciesTransform) 1 9 box
+ (NFcore::BindingTransform) 1 8 box
+1 8 mark
+ (NFcore::DecrementPopulationTransform) 1 7 box
  (NFcore::DecrementStateTransform) 1 6 box
  (NFcore::EmptyTransform) 1 5 box
  (NFcore::IncrementStateTransform) 1 4 box
@@ -209,7 +213,11 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- relations -----
 
 solid
-1 0 8.25 out
+1 0 10.25 out
+solid
+0 0 10.5 hedge
+solid
+0 0 9.5 hedge
 solid
 0 0 8.5 hedge
 solid
@@ -229,4 +237,4 @@ solid
 solid
 0 0 0.5 hedge
 solid
-0 9 0.5 vedge
+0 11 0.5 vedge

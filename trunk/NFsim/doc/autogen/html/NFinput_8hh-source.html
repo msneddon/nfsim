@@ -187,57 +187,68 @@
 <a name="l00210"></a>00210                         vector &lt; vector &lt;int&gt; &gt; &amp;bindingSiteInformation,
 <a name="l00211"></a>00211                         <span class="keywordtype">bool</span> verbose);
 <a name="l00212"></a>00212 
-<a name="l00213"></a>00213 
-<a name="l00214"></a>00214         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#616c16727e7f86e02affdc873c2beecd">lookup</a>(<a class="code" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> *&amp;c, <span class="keywordtype">string</span> <span class="keywordtype">id</span>, map&lt;string,component&gt; &amp;comps, map&lt;string,component&gt; &amp;symMap);
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217 
-<a name="l00219"></a>00219 
-<a name="l00222"></a>00222         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7dfd0ae7309545a61e7824cea5146696" title="Parses command line arguments from the console nicely.">parseArguments</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> *argv[], map&lt;string,string&gt; &amp;argMap);
-<a name="l00223"></a>00223 
-<a name="l00224"></a>00224 
-<a name="l00226"></a>00226 
-<a name="l00229"></a>00229         <span class="keywordtype">int</span> <a class="code" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5" title="Looks up the argument in the argMap and tries to parse the value as an integer.">parseAsInt</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">int</span> defaultValue);
+<a name="l00214"></a>00214 
+<a name="l00220"></a>00220         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#ce3f1fa191b7d304f83c90a4785bc0ad" title="Reads a product molecule XML block and returns a TemplateMolecule objects.">readProductMolecule</a>(
+<a name="l00221"></a>00221                         <a class="code" href="classTiXmlElement.html">TiXmlElement</a> * pMol,
+<a name="l00222"></a>00222                         <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> * s,
+<a name="l00223"></a>00223                         map &lt;string,double&gt; &amp; parameter,
+<a name="l00224"></a>00224                         map&lt;string,int&gt; &amp; allowedStates,
+<a name="l00225"></a>00225                         <span class="keywordtype">string</span> patternName,
+<a name="l00226"></a>00226                         vector &lt;MoleculeCreator *&gt; &amp; moleculeCreatorsList,
+<a name="l00227"></a>00227                         map &lt;string, component&gt; &amp; comps,
+<a name="l00228"></a>00228                         <span class="keywordtype">bool</span> verbose );
+<a name="l00229"></a>00229 
 <a name="l00230"></a>00230 
+<a name="l00231"></a>00231         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#616c16727e7f86e02affdc873c2beecd">lookup</a>(<a class="code" href="classNFinput_1_1component.html" title="Maintains information about a component of a TemplateMolecule.">component</a> *&amp;c, <span class="keywordtype">string</span> <span class="keywordtype">id</span>, map&lt;string,component&gt; &amp;comps, map&lt;string,component&gt; &amp;symMap);
 <a name="l00232"></a>00232 
-<a name="l00235"></a>00235         <span class="keywordtype">double</span> <a class="code" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4" title="Looks up the argument in the argMap and tries to parse the value as a double.">parseAsDouble</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">double</span> defaultValue);
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234 
 <a name="l00236"></a>00236 
-<a name="l00237"></a>00237 
-<a name="l00239"></a>00239 
-<a name="l00242"></a>00242         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#fe4451457efe21d09b4f487402f01f4b" title="Looks up the argument in the argMap and tries to parse the value as a comma delimited...">parseAsCommaSeparatedSequence</a>(map&lt;string,string&gt; &amp;argMap,<span class="keywordtype">string</span> argName,vector&lt;int&gt; &amp;sequence);
+<a name="l00239"></a>00239         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#7dfd0ae7309545a61e7824cea5146696" title="Parses command line arguments from the console nicely.">parseArguments</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span> *argv[], map&lt;string,string&gt; &amp;argMap);
+<a name="l00240"></a>00240 
+<a name="l00241"></a>00241 
 <a name="l00243"></a>00243 
-<a name="l00244"></a>00244 
-<a name="l00245"></a>00245 
+<a name="l00246"></a>00246         <span class="keywordtype">int</span> <a class="code" href="namespaceNFinput.html#6acf7052e7c42fd29e422ce627b42fe5" title="Looks up the argument in the argMap and tries to parse the value as an integer.">parseAsInt</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">int</span> defaultValue);
 <a name="l00247"></a>00247 
-<a name="l00250"></a>00250         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#62bbaf5f78a0e78b0b4a69a4a18df096" title="Allows the user to walk through the system with an interactive text-based program...">walk</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s);
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252 
+<a name="l00249"></a>00249 
+<a name="l00252"></a>00252         <span class="keywordtype">double</span> <a class="code" href="namespaceNFinput.html#e94e951f3de1d453e79d055c19dce1f4" title="Looks up the argument in the argMap and tries to parse the value as a double.">parseAsDouble</a>(map&lt;string,string&gt; &amp;argMap, <span class="keywordtype">string</span> argName, <span class="keywordtype">double</span> defaultValue);
 <a name="l00253"></a>00253 
-<a name="l00255"></a>00255 
-<a name="l00260"></a>00260         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd" title="Parses the cmd line arg that specifies system dumps, and schedules them.">createSystemDumper</a>(<span class="keywordtype">string</span> paramStr, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, <span class="keywordtype">bool</span> verbose);
+<a name="l00254"></a>00254 
+<a name="l00256"></a>00256 
+<a name="l00259"></a>00259         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#fe4451457efe21d09b4f487402f01f4b" title="Looks up the argument in the argMap and tries to parse the value as a comma delimited...">parseAsCommaSeparatedSequence</a>(map&lt;string,string&gt; &amp;argMap,<span class="keywordtype">string</span> argName,vector&lt;int&gt; &amp;sequence);
+<a name="l00260"></a>00260 
 <a name="l00261"></a>00261 
 <a name="l00262"></a>00262 
-<a name="l00263"></a>00263 
-<a name="l00265"></a>00265 
-<a name="l00268"></a>00268         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#6659a912afe36c187f82add93577693c" title="Parses a matlab style sequence (ie startValue:step:endValue) into the vector.">parseSequence</a>(<span class="keywordtype">string</span> numString, vector &lt;double&gt; &amp;outputTimes);
+<a name="l00264"></a>00264 
+<a name="l00267"></a>00267         <span class="keywordtype">void</span> <a class="code" href="namespaceNFinput.html#62bbaf5f78a0e78b0b4a69a4a18df096" title="Allows the user to walk through the system with an interactive text-based program...">walk</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s);
+<a name="l00268"></a>00268 
 <a name="l00269"></a>00269 
 <a name="l00270"></a>00270 
-<a name="l00271"></a>00271 
 <a name="l00272"></a>00272 
-<a name="l00273"></a>00273 
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#96c43bfa845bbf9c559cc899c17567f0">readRNFfile</a>(map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
-<a name="l00277"></a>00277         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#614dca6b7ccb8c6d75d462d24c18a58b">runRNFcommands</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
+<a name="l00277"></a>00277         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#19ed804a2b6e64acebc7ad49f95498fd" title="Parses the cmd line arg that specifies system dumps, and schedules them.">createSystemDumper</a>(<span class="keywordtype">string</span> paramStr, <a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, <span class="keywordtype">bool</span> verbose);
 <a name="l00278"></a>00278 
 <a name="l00279"></a>00279 
-<a name="l00280"></a>00280         <span class="comment">//bool runRNFscript(map&lt;string,string&gt; argMap) {};</span>
-<a name="l00281"></a>00281    <span class="comment">// bool runRNFscript(System *s, string filename);</span>
-<a name="l00282"></a>00282 }
-<a name="l00283"></a>00283 
-<a name="l00284"></a>00284 
-<a name="l00285"></a>00285 
-<a name="l00286"></a>00286 <span class="preprocessor">#endif </span><span class="comment">/*NFINPUT_HH_*/</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<a name="l00280"></a>00280 
+<a name="l00282"></a>00282 
+<a name="l00285"></a>00285         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#6659a912afe36c187f82add93577693c" title="Parses a matlab style sequence (ie startValue:step:endValue) into the vector.">parseSequence</a>(<span class="keywordtype">string</span> numString, vector &lt;double&gt; &amp;outputTimes);
+<a name="l00286"></a>00286 
+<a name="l00287"></a>00287 
+<a name="l00288"></a>00288 
+<a name="l00289"></a>00289 
+<a name="l00290"></a>00290 
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#96c43bfa845bbf9c559cc899c17567f0">readRNFfile</a>(map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
+<a name="l00294"></a>00294         <span class="keywordtype">bool</span> <a class="code" href="namespaceNFinput.html#614dca6b7ccb8c6d75d462d24c18a58b">runRNFcommands</a>(<a class="code" href="classNFcore_1_1System.html" title="The main class that begins and runs simulations.">System</a> *s, map&lt;string,string&gt; &amp;argMap, vector&lt;string&gt; &amp;commands, <span class="keywordtype">bool</span> verbose);
+<a name="l00295"></a>00295 
+<a name="l00296"></a>00296 
+<a name="l00297"></a>00297         <span class="comment">//bool runRNFscript(map&lt;string,string&gt; argMap) {};</span>
+<a name="l00298"></a>00298    <span class="comment">// bool runRNFscript(System *s, string filename);</span>
+<a name="l00299"></a>00299 }
+<a name="l00300"></a>00300 
+<a name="l00301"></a>00301 
+<a name="l00302"></a>00302 
+<a name="l00303"></a>00303 <span class="preprocessor">#endif </span><span class="comment">/*NFINPUT_HH_*/</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

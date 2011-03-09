@@ -36,6 +36,8 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#3baeb29dbcc458580a4030440ef792be">TransformationSet</a> (vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; reactantTemplates)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#53abe4c46bc78b29a0b956af76b52319">TransformationSet</a> (vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; reactantTemplates, vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt; addMoleculeTemplates)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#bc0808b944f5f70b9b86bc4988501953">~TransformationSet</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#93de73c96860c2516f93bb20be68a46d">getNumOfReactants</a> () const </td></tr>
@@ -56,7 +58,11 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#7f49ec4565e1c301698bf440058c6b60">addDeleteMolecule</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, int deletionType)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#beaf8483f8d9406bf20989c8e45f8156">addAddMolecule</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#3948d1170cb474668feccd15cb8ba444">addDecrementPopulation</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#8d0d72761bbcff447bc02fc54cfb856b">addAddSpecies</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#ee4c40ee84e6d6d615c73cd85b9fd7ca">addAddMolecule</a> (<a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *mc)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#8d86d829f69bffad00d4b6fbddc17764">addLocalFunctionReference</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string PointerName, int scope)</td></tr>
 
@@ -64,15 +70,25 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#f90ee1923a6cd5cb3822acb2b32ef136">generateBlankMappingSet</a> (unsigned int reactantIndex, unsigned int mappingSetId)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#c60fb574f4caccfa06c79bb517506d22">getTemplateMolecule</a> (unsigned int reactantIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#5d1679e7c90497f24a9dd032ae9c7a41">getTemplateMolecule</a> (unsigned int reactantIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#1522fde838bb82db1e9a48a8a86e4b32">getNreactants</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#7a5d3e1ff5932bfa6b4013410abb18cb">getNmappingSets</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#baf6bb313d29710bd0453245069bedeb">getComplexBookkeeping</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#2177016b442392c23f25b6b51d2b8024">setComplexBookkeeping</a> (bool val)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#ff4b1c7450529960cd211ef1949a479f">finalize</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#ea33155adbdedfb8366c2c775fd5e2d6">isFinalized</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#47416ec8412d76dbe63adea39411a7ea">checkMolecularity</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **mappingSets)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#4d37f5e6911f45e2d67d666abd37755a">getListOfProducts</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **mappingSets, list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;products, int traversalLimit)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#8002fecdd63b9517fd563b82e36810de">getListOfAddedMolecules</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **mappingSets, list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;products, int traversalLimit)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#a2a03c0b5740f97f73bd77463cc8dde9">hasSymUnbindingTransform</a> () const </td></tr>
 
@@ -88,13 +104,21 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#a996203ff6d6639858f5936f45e1d07e">finalized</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#a1e9afe6557047d608b74e21f6f39f1e">complex_bookkeeping</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#60b88db3068615195c7f833189c80b65">n_reactants</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#916307ac68cf6486618d5d6237c7cda6">n_addmol</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#8b051f98935a85b038a308c6f9512e6f">reactants</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#74daf7ba0c78b627afb90d2778e382f5">addmol</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> * &gt; *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#f1ae44a2471d34cb9d2579e5779f78e5">transformations</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#3f20cd7f940097ff08c243ac719df4ae">addMoleculeTransformations</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1AddMoleculeTransform.html">AddMoleculeTransform</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#ae269d553aea1043c357325a69e4b8b9">addMoleculeTransformations</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">vector&lt; <a class="el" href="classNFcore_1_1AddSpeciesTransform.html">AddSpeciesTransform</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#c8cdf7f16b7c5abb03c859d70bbad937">addSpeciesTransformations</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#bf0319375114725fa721750c056177bd">hasSymUnbinding</a></td></tr>
 
@@ -127,6 +151,36 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <p>
 Creates a new <a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a> from the given vector of TemplateMolecules. This takes care of setting everything up in the TemplateMolecules (such as adding MappingGenerators). Be sure to call <a class="el" href="classNFcore_1_1TransformationSet.html#ff4b1c7450529960cd211ef1949a479f">finalize()</a> before using this in a ReactionClass! <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="53abe4c46bc78b29a0b956af76b52319"></a><!-- doxytag: member="NFcore::TransformationSet::TransformationSet" ref="53abe4c46bc78b29a0b956af76b52319" args="(vector&lt; TemplateMolecule * &gt; reactantTemplates, vector&lt; TemplateMolecule * &gt; addMoleculeTemplates)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TransformationSet::TransformationSet           </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td>
+          <td class="paramname"> <em>reactantTemplates</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * &gt;&nbsp;</td>
+          <td class="paramname"> <em>addMoleculeTemplates</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Creates a new <a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a> that includds addMolecule Transformations <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg </dd></dl>
 
 </div>
 </div><p>
@@ -454,17 +508,39 @@ Adds an unbinding reaction at the given site of the given <a class="el" href="cl
 <div class="memdoc">
 
 <p>
-Adds a delete rule to the given <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a>. This has not been implemented yet, so it may take other parameters. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon</dd></dl>
+Adds a delete rule to the given <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon</dd></dl>
 Adds a delete rule to the given <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="beaf8483f8d9406bf20989c8e45f8156"></a><!-- doxytag: member="NFcore::TransformationSet::addAddMolecule" ref="beaf8483f8d9406bf20989c8e45f8156" args="(SpeciesCreator *sc)" -->
+<a class="anchor" name="3948d1170cb474668feccd15cb8ba444"></a><!-- doxytag: member="NFcore::TransformationSet::addDecrementPopulation" ref="3948d1170cb474668feccd15cb8ba444" args="(TemplateMolecule *t)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TransformationSet::addAddMolecule           </td>
+          <td class="memname">bool TransformationSet::addDecrementPopulation           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Adds a decrement population transform to the given <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg</dd></dl>
+Adds a decrement population rule to the given <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8d0d72761bbcff447bc02fc54cfb856b"></a><!-- doxytag: member="NFcore::TransformationSet::addAddSpecies" ref="8d0d72761bbcff447bc02fc54cfb856b" args="(SpeciesCreator *sc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TransformationSet::addAddSpecies           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *&nbsp;</td>
           <td class="paramname"> <em>sc</em>          </td>
@@ -476,7 +552,28 @@ Adds a delete rule to the given <a class="el" href="classNFcore_1_1TemplateMolec
 <div class="memdoc">
 
 <p>
-Adds a create molecule rule, but has not been implemented yet. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+Adds a create species transform (this was formerly "addAddMolecule") <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ee4c40ee84e6d6d615c73cd85b9fd7ca"></a><!-- doxytag: member="NFcore::TransformationSet::addAddMolecule" ref="ee4c40ee84e6d6d615c73cd85b9fd7ca" args="(MoleculeCreator *mc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TransformationSet::addAddMolecule           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *&nbsp;</td>
+          <td class="paramname"> <em>mc</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Adds a create molecule transform <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg </dd></dl>
 
 </div>
 </div><p>
@@ -567,17 +664,17 @@ Generates a blank <a class="el" href="classNFcore_1_1MappingSet.html" title="Kee
 
 </div>
 </div><p>
-<a class="anchor" name="c60fb574f4caccfa06c79bb517506d22"></a><!-- doxytag: member="NFcore::TransformationSet::getTemplateMolecule" ref="c60fb574f4caccfa06c79bb517506d22" args="(unsigned int reactantIndex) const " -->
+<a class="anchor" name="5d1679e7c90497f24a9dd032ae9c7a41"></a><!-- doxytag: member="NFcore::TransformationSet::getTemplateMolecule" ref="5d1679e7c90497f24a9dd032ae9c7a41" args="(unsigned int reactantIndex) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>* NFcore::TransformationSet::getTemplateMolecule           </td>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> * TransformationSet::getTemplateMolecule           </td>
           <td>(</td>
           <td class="paramtype">unsigned int&nbsp;</td>
           <td class="paramname"> <em>reactantIndex</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -605,6 +702,66 @@ Returns the <a class="el" href="classNFcore_1_1TemplateMolecule.html" title="Use
 
 <p>
 Get the number of reactants in the rule governed by this <a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a>. This function is really only used for initial initializations of a <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="7a5d3e1ff5932bfa6b4013410abb18cb"></a><!-- doxytag: member="NFcore::TransformationSet::getNmappingSets" ref="7a5d3e1ff5932bfa6b4013410abb18cb" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int NFcore::TransformationSet::getNmappingSets           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get the number of added Molecules in the rule governed by this <a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a>. This function is really only used for initial initializations of a <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>JustinHogg </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="baf6bb313d29710bd0453245069bedeb"></a><!-- doxytag: member="NFcore::TransformationSet::getComplexBookkeeping" ref="baf6bb313d29710bd0453245069bedeb" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::TransformationSet::getComplexBookkeeping           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get/set complex bookkeeping. If complex bookkeeping is true, we should check molecularity when firing rules. <dl class="author" compact><dt><b>Author:</b></dt><dd>JustinHogg </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="2177016b442392c23f25b6b51d2b8024"></a><!-- doxytag: member="NFcore::TransformationSet::setComplexBookkeeping" ref="2177016b442392c23f25b6b51d2b8024" args="(bool val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NFcore::TransformationSet::setComplexBookkeeping           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>val</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -648,6 +805,27 @@ Check whether or not the <a class="el" href="classNFcore_1_1TransformationSet.ht
 
 </div>
 </div><p>
+<a class="anchor" name="47416ec8412d76dbe63adea39411a7ea"></a><!-- doxytag: member="NFcore::TransformationSet::checkMolecularity" ref="47416ec8412d76dbe63adea39411a7ea" args="(MappingSet **mappingSets)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TransformationSet::checkMolecularity           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **&nbsp;</td>
+          <td class="paramname"> <em>mappingSets</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+After selecting mappingSets, call this to check if the molecularity of the reactants is correct. Returns true if molecularity is correct, false otherwise. <dl class="author" compact><dt><b>Author:</b></dt><dd>JustinHogg </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="4d37f5e6911f45e2d67d666abd37755a"></a><!-- doxytag: member="NFcore::TransformationSet::getListOfProducts" ref="4d37f5e6911f45e2d67d666abd37755a" args="(MappingSet **mappingSets, list&lt; Molecule * &gt; &amp;products, int traversalLimit)" -->
 <div class="memitem">
 <div class="memproto">
@@ -681,6 +859,42 @@ Check whether or not the <a class="el" href="classNFcore_1_1TransformationSet.ht
 
 <p>
 From an array of <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> objects, this function populates the list of Molecules with all the Molecules that can be affected by this <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a>. The traversalLimit parameters sets the depth at which the Molecules should be searched (starting at the original TemplateMolecules given in the initial vector of TemplateMolecules). So giving a value of 1 will only give you the immediate reactant Molecules. Setting this to two will explore down one level of bonds, and so on. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8002fecdd63b9517fd563b82e36810de"></a><!-- doxytag: member="NFcore::TransformationSet::getListOfAddedMolecules" ref="8002fecdd63b9517fd563b82e36810de" args="(MappingSet **mappingSets, list&lt; Molecule * &gt; &amp;products, int traversalLimit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TransformationSet::getListOfAddedMolecules           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **&nbsp;</td>
+          <td class="paramname"> <em>mappingSets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">list&lt; <a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>products</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>traversalLimit</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+This is a companion to getListOfProducts. This is called after applying transformations and gathers all the newly added molecules. <dl class="author" compact><dt><b>Author:</b></dt><dd>JustinHogg </dd></dl>
 
 </div>
 </div><p>
@@ -812,6 +1026,21 @@ Used for error checking when setting up a <a class="el" href="classNFcore_1_1Tra
 Remembers if the finalize function has been called 
 </div>
 </div><p>
+<a class="anchor" name="a1e9afe6557047d608b74e21f6f39f1e"></a><!-- doxytag: member="NFcore::TransformationSet::complex_bookkeeping" ref="a1e9afe6557047d608b74e21f6f39f1e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1TransformationSet.html#a1e9afe6557047d608b74e21f6f39f1e">NFcore::TransformationSet::complex_bookkeeping</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remember if we're tracking complexes. --Justin, 3Mar2011 
+</div>
+</div><p>
 <a class="anchor" name="60b88db3068615195c7f833189c80b65"></a><!-- doxytag: member="NFcore::TransformationSet::n_reactants" ref="60b88db3068615195c7f833189c80b65" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -825,6 +1054,21 @@ Remembers if the finalize function has been called
 
 <p>
 Keeps track of the number of reactants in the rule monitored by this <a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a> 
+</div>
+</div><p>
+<a class="anchor" name="916307ac68cf6486618d5d6237c7cda6"></a><!-- doxytag: member="NFcore::TransformationSet::n_addmol" ref="916307ac68cf6486618d5d6237c7cda6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1TransformationSet.html#916307ac68cf6486618d5d6237c7cda6">NFcore::TransformationSet::n_addmol</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Keeps track of the number of added molecules 
 </div>
 </div><p>
 <a class="anchor" name="8b051f98935a85b038a308c6f9512e6f"></a><!-- doxytag: member="NFcore::TransformationSet::reactants" ref="8b051f98935a85b038a308c6f9512e6f" args="" -->
@@ -842,6 +1086,21 @@ Keeps track of the number of reactants in the rule monitored by this <a class="e
 The array of TemplateMolecules that represent the reactants 
 </div>
 </div><p>
+<a class="anchor" name="74daf7ba0c78b627afb90d2778e382f5"></a><!-- doxytag: member="NFcore::TransformationSet::addmol" ref="74daf7ba0c78b627afb90d2778e382f5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a>** <a class="el" href="classNFcore_1_1TransformationSet.html#74daf7ba0c78b627afb90d2778e382f5">NFcore::TransformationSet::addmol</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+The array of TemplateMolecules that represent the added molecules. Not sure if this will be used. --Justin 
+</div>
+</div><p>
 <a class="anchor" name="f1ae44a2471d34cb9d2579e5779f78e5"></a><!-- doxytag: member="NFcore::TransformationSet::transformations" ref="f1ae44a2471d34cb9d2579e5779f78e5" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -857,12 +1116,12 @@ The array of TemplateMolecules that represent the reactants
 A vector that holds the actual <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> objects 
 </div>
 </div><p>
-<a class="anchor" name="3f20cd7f940097ff08c243ac719df4ae"></a><!-- doxytag: member="NFcore::TransformationSet::addMoleculeTransformations" ref="3f20cd7f940097ff08c243ac719df4ae" args="" -->
+<a class="anchor" name="ae269d553aea1043c357325a69e4b8b9"></a><!-- doxytag: member="NFcore::TransformationSet::addMoleculeTransformations" ref="ae269d553aea1043c357325a69e4b8b9" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&gt; <a class="el" href="classNFcore_1_1TransformationSet.html#3f20cd7f940097ff08c243ac719df4ae">NFcore::TransformationSet::addMoleculeTransformations</a><code> [protected]</code>          </td>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1AddMoleculeTransform.html">AddMoleculeTransform</a> *&gt; <a class="el" href="classNFcore_1_1TransformationSet.html#ae269d553aea1043c357325a69e4b8b9">NFcore::TransformationSet::addMoleculeTransformations</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -870,6 +1129,21 @@ A vector that holds the actual <a class="el" href="classNFcore_1_1Transformation
 
 <p>
 A vector that holds the addMolecule Transformations, because they are handled separately 
+</div>
+</div><p>
+<a class="anchor" name="c8cdf7f16b7c5abb03c859d70bbad937"></a><!-- doxytag: member="NFcore::TransformationSet::addSpeciesTransformations" ref="c8cdf7f16b7c5abb03c859d70bbad937" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;<a class="el" href="classNFcore_1_1AddSpeciesTransform.html">AddSpeciesTransform</a> *&gt; <a class="el" href="classNFcore_1_1TransformationSet.html#c8cdf7f16b7c5abb03c859d70bbad937">NFcore::TransformationSet::addSpeciesTransformations</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+A vector that holds the addSpecies Transformations, because they are handled separately 
 </div>
 </div><p>
 <a class="anchor" name="5a56156f8cc62c1dd06bf324d161c70b"></a><!-- doxytag: member="NFcore::TransformationSet::deleteList" ref="5a56156f8cc62c1dd06bf324d161c70b" args="" -->
@@ -949,7 +1223,7 @@ keeps track if this set has a symmetric binding reaction
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8hh-source.html">transformationSet.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8cpp.html">transformationSet.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:49 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

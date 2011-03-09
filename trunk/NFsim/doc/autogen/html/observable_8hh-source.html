@@ -90,111 +90,120 @@
 <a name="l00083"></a>00083                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#81bc9664e3794a2de15062f827cee0f8">straightSubtract</a>();
 <a name="l00084"></a><a class="code" href="classNFcore_1_1Observable.html#2413c48e53ed66c2a5c79999cc3825ed">00084</a>                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#2413c48e53ed66c2a5c79999cc3825ed">clear</a>() { <a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">count</a>=0; };
 <a name="l00085"></a>00085 
-<a name="l00086"></a><a class="code" href="classNFcore_1_1Observable.html#333ddbb37e5605346ea4d6821916bbc9">00086</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#333ddbb37e5605346ea4d6821916bbc9">getCount</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span>)<a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">count</a>; };
-<a name="l00087"></a><a class="code" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">00087</a>                         <span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">getName</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">obsName</a>; };
-<a name="l00088"></a><a class="code" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">00088</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">getType</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">type</a>; };
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#fe649cd5b73b652fdf9dcc002706963f">getTemplateMoleculeList</a>(<span class="keywordtype">int</span> &amp;<a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">n_templates</a>, <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> **&amp;tmList);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#3210dd6179e6cfb124d012fa22f1e5c4">addReferenceToMyself</a>(mu::Parser *p);
-<a name="l00093"></a>00093                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#3210dd6179e6cfb124d012fa22f1e5c4">addReferenceToMyself</a>(<span class="keywordtype">string</span> referenceName, mu::Parser *p);
-<a name="l00094"></a>00094                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#7f982704d5ae35afc68513e331bdb88c">addDependentRxn</a>(<a class="code" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a> *r);
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#5bb3a7e96509e474052d34af09a2a9b4">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span> = 0;
-<a name="l00097"></a>00097                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#5bb3a7e96509e474052d34af09a2a9b4">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span> = 0;
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100                         <span class="comment">//Indentifiers</span>
-<a name="l00101"></a><a class="code" href="classNFcore_1_1Observable.html#1e4e85dcff351ce51f317c64ce082879">00101</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#1e4e85dcff351ce51f317c64ce082879">NO_RELATION</a> = -1;
-<a name="l00102"></a><a class="code" href="classNFcore_1_1Observable.html#67aab713c53284308b8d295f09cb66a5">00102</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#67aab713c53284308b8d295f09cb66a5">EQUALS</a> = 0;
-<a name="l00103"></a><a class="code" href="classNFcore_1_1Observable.html#c20f1c81138ae4996198540de86c95f8">00103</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c20f1c81138ae4996198540de86c95f8">NOT_EQUALS</a> = 1;
-<a name="l00104"></a><a class="code" href="classNFcore_1_1Observable.html#e8509b33505152413f4d92a9e30f10f9">00104</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#e8509b33505152413f4d92a9e30f10f9">GREATER_THAN</a> = 2;
-<a name="l00105"></a><a class="code" href="classNFcore_1_1Observable.html#4abf1421f675cd922829d9a79c69955b">00105</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#4abf1421f675cd922829d9a79c69955b">LESS_THAN</a> = 3;
-<a name="l00106"></a><a class="code" href="classNFcore_1_1Observable.html#c7713ae992fddb60feee06fc29c977f1">00106</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c7713ae992fddb60feee06fc29c977f1">GREATOR_OR_EQUAL_TO</a> = 4;
-<a name="l00107"></a><a class="code" href="classNFcore_1_1Observable.html#81f2b299bd03c9b6a82ceb984201ec2e">00107</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#81f2b299bd03c9b6a82ceb984201ec2e">LESS_THAN_OR_EQUAL_TO</a> = 5;
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 
-<a name="l00110"></a><a class="code" href="classNFcore_1_1Observable.html#3cf1b516517be8b2dc87ba6414172fa2">00110</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#3cf1b516517be8b2dc87ba6414172fa2">NO_TYPE</a> = 0;
-<a name="l00111"></a><a class="code" href="classNFcore_1_1Observable.html#f8bf08e6d9669ab7d5a4b0cb4a42a7c0">00111</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#f8bf08e6d9669ab7d5a4b0cb4a42a7c0">MOLECULES</a> = 1;
-<a name="l00112"></a><a class="code" href="classNFcore_1_1Observable.html#09c3dd7f62c71128655b8e18da21fdbd">00112</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#09c3dd7f62c71128655b8e18da21fdbd">SPECIES</a> = 2;
+<a name="l00086"></a>00086                         <span class="comment">/* add multiple new matches, all at once. useful for counter updates --justin */</span>
+<a name="l00087"></a>00087                         <span class="keywordtype">void</span> <span class="keyword">add</span>( <span class="keywordtype">int</span> n_matches );
+<a name="l00088"></a>00088                         <span class="comment">/* remove multiple new matches, all at once. useful for counter updates --justin */</span>
+<a name="l00089"></a>00089                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#89bb17beddaec3e99b5fc11898d12a2a">subtract</a>( <span class="keywordtype">int</span> n_matches );
+<a name="l00090"></a>00090 
+<a name="l00091"></a><a class="code" href="classNFcore_1_1Observable.html#333ddbb37e5605346ea4d6821916bbc9">00091</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#333ddbb37e5605346ea4d6821916bbc9">getCount</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span>)<a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">count</a>; };
+<a name="l00092"></a><a class="code" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">00092</a>                         <span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">getName</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">obsName</a>; };
+<a name="l00093"></a><a class="code" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">00093</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">getType</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">type</a>; };
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#fe649cd5b73b652fdf9dcc002706963f">getTemplateMoleculeList</a>(<span class="keywordtype">int</span> &amp;<a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">n_templates</a>, <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> **&amp;tmList);
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#3210dd6179e6cfb124d012fa22f1e5c4">addReferenceToMyself</a>(mu::Parser *p);
+<a name="l00098"></a>00098                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#3210dd6179e6cfb124d012fa22f1e5c4">addReferenceToMyself</a>(<span class="keywordtype">string</span> referenceName, mu::Parser *p);
+<a name="l00099"></a>00099                         <span class="keywordtype">void</span> <a class="code" href="classNFcore_1_1Observable.html#7f982704d5ae35afc68513e331bdb88c">addDependentRxn</a>(<a class="code" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a> *r);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#5bb3a7e96509e474052d34af09a2a9b4">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span> = 0;
+<a name="l00102"></a>00102                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#5bb3a7e96509e474052d34af09a2a9b4">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span> = 0;
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105                         <span class="comment">//Indentifiers</span>
+<a name="l00106"></a><a class="code" href="classNFcore_1_1Observable.html#1e4e85dcff351ce51f317c64ce082879">00106</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#1e4e85dcff351ce51f317c64ce082879">NO_RELATION</a> = -1;
+<a name="l00107"></a><a class="code" href="classNFcore_1_1Observable.html#67aab713c53284308b8d295f09cb66a5">00107</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#67aab713c53284308b8d295f09cb66a5">EQUALS</a> = 0;
+<a name="l00108"></a><a class="code" href="classNFcore_1_1Observable.html#c20f1c81138ae4996198540de86c95f8">00108</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c20f1c81138ae4996198540de86c95f8">NOT_EQUALS</a> = 1;
+<a name="l00109"></a><a class="code" href="classNFcore_1_1Observable.html#e8509b33505152413f4d92a9e30f10f9">00109</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#e8509b33505152413f4d92a9e30f10f9">GREATER_THAN</a> = 2;
+<a name="l00110"></a><a class="code" href="classNFcore_1_1Observable.html#4abf1421f675cd922829d9a79c69955b">00110</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#4abf1421f675cd922829d9a79c69955b">LESS_THAN</a> = 3;
+<a name="l00111"></a><a class="code" href="classNFcore_1_1Observable.html#c7713ae992fddb60feee06fc29c977f1">00111</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c7713ae992fddb60feee06fc29c977f1">GREATOR_OR_EQUAL_TO</a> = 4;
+<a name="l00112"></a><a class="code" href="classNFcore_1_1Observable.html#81f2b299bd03c9b6a82ceb984201ec2e">00112</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#81f2b299bd03c9b6a82ceb984201ec2e">LESS_THAN_OR_EQUAL_TO</a> = 5;
 <a name="l00113"></a>00113 
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115                 <span class="keyword">protected</span>:
-<a name="l00116"></a>00116                         <span class="comment">//string obsName;   /* The name that will be output for this observable */</span>
-<a name="l00117"></a>00117                         <span class="comment">//TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */</span>
-<a name="l00118"></a>00118                         <span class="comment">//double count; /* the number of molecules that match this observable, its a double so that functions can use it (as a reference) */</span>
+<a name="l00115"></a><a class="code" href="classNFcore_1_1Observable.html#3cf1b516517be8b2dc87ba6414172fa2">00115</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#3cf1b516517be8b2dc87ba6414172fa2">NO_TYPE</a> = 0;
+<a name="l00116"></a><a class="code" href="classNFcore_1_1Observable.html#f8bf08e6d9669ab7d5a4b0cb4a42a7c0">00116</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#f8bf08e6d9669ab7d5a4b0cb4a42a7c0">MOLECULES</a> = 1;
+<a name="l00117"></a><a class="code" href="classNFcore_1_1Observable.html#09c3dd7f62c71128655b8e18da21fdbd">00117</a>                         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#09c3dd7f62c71128655b8e18da21fdbd">SPECIES</a> = 2;
+<a name="l00118"></a>00118 
 <a name="l00119"></a>00119 
-<a name="l00120"></a>00120                         <span class="comment">//vector &lt;ReactionClass *&gt; dependentRxns;/* signifies that some reaction's propensity depends on this observable */</span>
-<a name="l00121"></a>00121                         <span class="comment">//vector &lt;ReactionClass *&gt;::iterator rxnIter;</span>
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123 
-<a name="l00125"></a><a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">00125</a>                         <span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">obsName</a>;
-<a name="l00126"></a><a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">00126</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">type</a>;
-<a name="l00127"></a><a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">00127</a>                         <span class="keywordtype">double</span> <a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">count</a>;
+<a name="l00120"></a>00120                 <span class="keyword">protected</span>:
+<a name="l00121"></a>00121                         <span class="comment">//string obsName;   /* The name that will be output for this observable */</span>
+<a name="l00122"></a>00122                         <span class="comment">//TemplateMolecule * templateMolecule; /* The template molecule which represents what we want to observe */</span>
+<a name="l00123"></a>00123                         <span class="comment">//double count; /* the number of molecules that match this observable, its a double so that functions can use it (as a reference) */</span>
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125                         <span class="comment">//vector &lt;ReactionClass *&gt; dependentRxns;/* signifies that some reaction's propensity depends on this observable */</span>
+<a name="l00126"></a>00126                         <span class="comment">//vector &lt;ReactionClass *&gt;::iterator rxnIter;</span>
+<a name="l00127"></a>00127 
 <a name="l00128"></a>00128 
-<a name="l00129"></a>00129 
-<a name="l00130"></a><a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">00130</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">n_templates</a>;
-<a name="l00131"></a><a class="code" href="classNFcore_1_1Observable.html#43172368fcf189d961e28ca5779a4a1d">00131</a>                         <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> ** <a class="code" href="classNFcore_1_1Observable.html#43172368fcf189d961e28ca5779a4a1d">templateMolecules</a>;
-<a name="l00132"></a>00132 
-<a name="l00133"></a><a class="code" href="classNFcore_1_1Observable.html#c10d30f6708db3b53f3dbc6ef80bb590">00133</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c10d30f6708db3b53f3dbc6ef80bb590">n_dependentRxns</a>;
-<a name="l00134"></a><a class="code" href="classNFcore_1_1Observable.html#f89658a16ca21e6e551b74b7cd794719">00134</a>                         <a class="code" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a> ** <a class="code" href="classNFcore_1_1Observable.html#f89658a16ca21e6e551b74b7cd794719">dependentRxns</a>;
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136         };
+<a name="l00130"></a><a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">00130</a>                         <span class="keywordtype">string</span> <a class="code" href="classNFcore_1_1Observable.html#06986b4fabfb8c94945348eaa293e60d">obsName</a>;
+<a name="l00131"></a><a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">00131</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#b9bac48941af41674c89c8cfdbc11efb">type</a>;
+<a name="l00132"></a><a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">00132</a>                         <span class="keywordtype">double</span> <a class="code" href="classNFcore_1_1Observable.html#a71c7a1b37fe6a58dd93647e4e2600b0">count</a>;
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134 
+<a name="l00135"></a><a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">00135</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#4be30b646494cabcb08c669985feca47">n_templates</a>;
+<a name="l00136"></a><a class="code" href="classNFcore_1_1Observable.html#43172368fcf189d961e28ca5779a4a1d">00136</a>                         <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> ** <a class="code" href="classNFcore_1_1Observable.html#43172368fcf189d961e28ca5779a4a1d">templateMolecules</a>;
 <a name="l00137"></a>00137 
-<a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="classNFcore_1_1MoleculesObservable.html">00139</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a>
-<a name="l00140"></a>00140         {
-<a name="l00141"></a>00141                 <span class="keyword">public</span>:
-<a name="l00142"></a>00142                         <a class="code" href="classNFcore_1_1MoleculesObservable.html#b5705863dd2540fdcc6079d0f2a74aad">MoleculesObservable</a>(<span class="keywordtype">string</span> name, <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> *tm);
-<a name="l00143"></a>00143                         <a class="code" href="classNFcore_1_1MoleculesObservable.html#b5705863dd2540fdcc6079d0f2a74aad">MoleculesObservable</a>(<span class="keywordtype">string</span> name, vector &lt;TemplateMolecule *&gt; &amp;tmList);
-<a name="l00144"></a>00144 
-<a name="l00145"></a>00145                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#a689aa8a4479247c7ccc022f7bc10be3">~MoleculesObservable</a>();
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a> * <a class="code" href="classNFcore_1_1MoleculesObservable.html#77f8e6a370243e0ff2551d0361bcd215">clone</a>();
-<a name="l00148"></a>00148 
-<a name="l00149"></a>00149                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#7b4d920281f90b7eb012292661ba397e">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span>;
-<a name="l00150"></a>00150                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#7b4d920281f90b7eb012292661ba397e">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span>;
+<a name="l00138"></a><a class="code" href="classNFcore_1_1Observable.html#c10d30f6708db3b53f3dbc6ef80bb590">00138</a>                         <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1Observable.html#c10d30f6708db3b53f3dbc6ef80bb590">n_dependentRxns</a>;
+<a name="l00139"></a><a class="code" href="classNFcore_1_1Observable.html#f89658a16ca21e6e551b74b7cd794719">00139</a>                         <a class="code" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Class that defines the interface for all reaction rules.">ReactionClass</a> ** <a class="code" href="classNFcore_1_1Observable.html#f89658a16ca21e6e551b74b7cd794719">dependentRxns</a>;
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141         };
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144         <span class="comment">// NOTE: class updated to count populations as well as particles.</span>
+<a name="l00145"></a>00145         <span class="comment">//  --Justin, 4Mar2011</span>
+<a name="l00146"></a><a class="code" href="classNFcore_1_1MoleculesObservable.html">00146</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1MoleculesObservable.html">MoleculesObservable</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a>
+<a name="l00147"></a>00147         {
+<a name="l00148"></a>00148                 <span class="keyword">public</span>:
+<a name="l00149"></a>00149                         <a class="code" href="classNFcore_1_1MoleculesObservable.html#b5705863dd2540fdcc6079d0f2a74aad">MoleculesObservable</a>(<span class="keywordtype">string</span> name, <a class="code" href="classNFcore_1_1TemplateMolecule.html" title="Used for matching Molecule objects to the given pattern.">TemplateMolecule</a> *tm);
+<a name="l00150"></a>00150                         <a class="code" href="classNFcore_1_1MoleculesObservable.html#b5705863dd2540fdcc6079d0f2a74aad">MoleculesObservable</a>(<span class="keywordtype">string</span> name, vector &lt;TemplateMolecule *&gt; &amp;tmList);
 <a name="l00151"></a>00151 
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153                 <span class="keyword">protected</span>:
-<a name="l00154"></a>00154 
+<a name="l00152"></a>00152                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#a689aa8a4479247c7ccc022f7bc10be3">~MoleculesObservable</a>();
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a> * <a class="code" href="classNFcore_1_1MoleculesObservable.html#77f8e6a370243e0ff2551d0361bcd215">clone</a>();
 <a name="l00155"></a>00155 
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157         };
+<a name="l00156"></a>00156                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#7b4d920281f90b7eb012292661ba397e">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span>;
+<a name="l00157"></a>00157                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1MoleculesObservable.html#7b4d920281f90b7eb012292661ba397e">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span>;
 <a name="l00158"></a>00158 
 <a name="l00159"></a>00159 
-<a name="l00160"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html">00160</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1SpeciesObservable.html">SpeciesObservable</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a>
-<a name="l00161"></a>00161         {
-<a name="l00162"></a>00162                 <span class="keyword">public</span>:
-<a name="l00163"></a>00163                         <a class="code" href="classNFcore_1_1SpeciesObservable.html#b70c3cca3c04043def794b6076ed807e">SpeciesObservable</a>(<span class="keywordtype">string</span> name, vector &lt;TemplateMolecule *&gt; &amp;tmList, vector &lt;string&gt; &amp;stochRelation, vector &lt;int&gt; &amp;stochQuantity);
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#437d92dd54e82d262a5ffc7331d127e7">~SpeciesObservable</a>();
+<a name="l00160"></a>00160                 <span class="keyword">protected</span>:
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162 
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164         };
+<a name="l00165"></a>00165 
 <a name="l00166"></a>00166 
-<a name="l00167"></a>00167                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a> * <a class="code" href="classNFcore_1_1SpeciesObservable.html#652806ac6c30f1b79c6ae89a1c8869d2">clone</a>();
-<a name="l00168"></a>00168 
-<a name="l00169"></a>00169                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#4336db4bd41d6846454a001e8d86cb22">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span>;
-<a name="l00170"></a>00170                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#4336db4bd41d6846454a001e8d86cb22">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span>;
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172                 <span class="keyword">protected</span>:
+<a name="l00167"></a>00167         <span class="comment">// NOTE: class updated to count populations as well as particles.</span>
+<a name="l00168"></a>00168         <span class="comment">//  --Justin, 4Mar2011</span>
+<a name="l00169"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html">00169</a>         <span class="keyword">class </span><a class="code" href="classNFcore_1_1SpeciesObservable.html">SpeciesObservable</a> : <span class="keyword">public</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a>
+<a name="l00170"></a>00170         {
+<a name="l00171"></a>00171                 <span class="keyword">public</span>:
+<a name="l00172"></a>00172                         <a class="code" href="classNFcore_1_1SpeciesObservable.html#b70c3cca3c04043def794b6076ed807e">SpeciesObservable</a>(<span class="keywordtype">string</span> name, vector &lt;TemplateMolecule *&gt; &amp;tmList, vector &lt;string&gt; &amp;stochRelation, vector &lt;int&gt; &amp;stochQuantity);
 <a name="l00173"></a>00173 
-<a name="l00174"></a>00174                         <span class="comment">// information for processing stochiometric observables</span>
-<a name="l00175"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html#0aacc53bff8b1e435cbcc52ad2ba10b7">00175</a>                         <span class="keywordtype">int</span> *<a class="code" href="classNFcore_1_1SpeciesObservable.html#0aacc53bff8b1e435cbcc52ad2ba10b7">relation</a>;
-<a name="l00176"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html#22fdb44a42fe63079eb76dc23aadad72">00176</a>                         <span class="keywordtype">int</span> *<a class="code" href="classNFcore_1_1SpeciesObservable.html#22fdb44a42fe63079eb76dc23aadad72">quantity</a>;
+<a name="l00174"></a>00174                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#437d92dd54e82d262a5ffc7331d127e7">~SpeciesObservable</a>();
+<a name="l00175"></a>00175 
+<a name="l00176"></a>00176                         <span class="keyword">virtual</span> <a class="code" href="classNFcore_1_1Observable.html" title="Tracks the counts of predefined observables in the simulation.">Observable</a> * <a class="code" href="classNFcore_1_1SpeciesObservable.html#652806ac6c30f1b79c6ae89a1c8869d2">clone</a>();
 <a name="l00177"></a>00177 
-<a name="l00178"></a>00178 
-<a name="l00179"></a>00179 
+<a name="l00178"></a>00178                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#4336db4bd41d6846454a001e8d86cb22">isObservable</a>(<a class="code" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> *m) <span class="keyword">const</span>;
+<a name="l00179"></a>00179                         <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classNFcore_1_1SpeciesObservable.html#4336db4bd41d6846454a001e8d86cb22">isObservable</a>(<a class="code" href="classNFcore_1_1Complex.html" title="Container to dynamically keep track of all system complexes.">Complex</a> *c) <span class="keyword">const</span>;
 <a name="l00180"></a>00180 
-<a name="l00181"></a>00181 
-<a name="l00182"></a>00182         };
-<a name="l00183"></a>00183 
-<a name="l00184"></a>00184 
-<a name="l00185"></a>00185 
-<a name="l00186"></a>00186 }
+<a name="l00181"></a>00181                 <span class="keyword">protected</span>:
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183                         <span class="comment">// information for processing stochiometric observables</span>
+<a name="l00184"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html#0aacc53bff8b1e435cbcc52ad2ba10b7">00184</a>                         <span class="keywordtype">int</span> *<a class="code" href="classNFcore_1_1SpeciesObservable.html#0aacc53bff8b1e435cbcc52ad2ba10b7">relation</a>;
+<a name="l00185"></a><a class="code" href="classNFcore_1_1SpeciesObservable.html#22fdb44a42fe63079eb76dc23aadad72">00185</a>                         <span class="keywordtype">int</span> *<a class="code" href="classNFcore_1_1SpeciesObservable.html#22fdb44a42fe63079eb76dc23aadad72">quantity</a>;
+<a name="l00186"></a>00186 
 <a name="l00187"></a>00187 
 <a name="l00188"></a>00188 
 <a name="l00189"></a>00189 
-<a name="l00190"></a>00190 <span class="preprocessor">#endif </span><span class="comment">/* OBSERVABLE_HH_ */</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<a name="l00190"></a>00190 
+<a name="l00191"></a>00191         };
+<a name="l00192"></a>00192 
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194 
+<a name="l00195"></a>00195 }
+<a name="l00196"></a>00196 
+<a name="l00197"></a>00197 
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199 <span class="preprocessor">#endif </span><span class="comment">/* OBSERVABLE_HH_ */</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

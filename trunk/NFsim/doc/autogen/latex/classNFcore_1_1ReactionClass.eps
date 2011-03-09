@@ -178,6 +178,7 @@ boxfont setfont
 (NFcore::DORRxnClass) cw
 (NFcore::FunctionalRxnClass) cw
 (NFcore::MMRxnClass) cw
+(NFcore::PopulationRxnClass) cw
 /boxwidth boxwidth marginwidth 2 mul add def
 /xspacing boxwidth distx add def
 /yspacing boxheight disty add def
@@ -189,27 +190,30 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (NFcore::ReactionClass) 1 2 box
- (NFcore::BasicRxnClass) 0.5 1 box
- (NFcore::DORRxnClass) 1.5 1 box
+ (NFcore::ReactionClass) 1.5 2 box
+ (NFcore::BasicRxnClass) 1 1 box
+ (NFcore::DORRxnClass) 2 1 box
  (NFcore::FunctionalRxnClass) 0 0 box
  (NFcore::MMRxnClass) 1 0 box
+ (NFcore::PopulationRxnClass) 2 0 box
 
 % ----- relations -----
 
 solid
-1 1 1.25 out
+1 1.5 1.25 out
 solid
-0.5 1.5 2 conn
+1 2 2 conn
 solid
-0 0.5 1.75 in
+0 1 1.75 in
 solid
-1 0.5 0.25 out
+1 1 0.25 out
 solid
-0 1 1 conn
+0 2 1 conn
 solid
-0 1.5 1.75 in
+0 2 1.75 in
 solid
 0 0 0.75 in
 solid
 0 1 0.75 in
+solid
+0 2 0.75 in

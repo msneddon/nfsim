@@ -20,6 +20,8 @@ This class maintains information about a \char`\"{}type\char`\"{} of molecule in
 \item 
 {\bf MoleculeType} (string {\bf name}, vector$<$ string $>$ \&{\bf compName}, vector$<$ string $>$ \&{\bf defaultCompState}, vector$<$ vector$<$ string $>$ $>$ \&{\bf possibleCompStates}, vector$<$ bool $>$ isIntegerComponent, {\bf System} $\ast${\bf system})
 \item 
+{\bf MoleculeType} (string {\bf name}, vector$<$ string $>$ \&{\bf compName}, vector$<$ string $>$ \&{\bf defaultCompState}, vector$<$ vector$<$ string $>$ $>$ \&{\bf possibleCompStates}, vector$<$ bool $>$ isIntegerComponent, bool pop\_\-type, {\bf System} $\ast${\bf system})
+\item 
 {\bf $\sim$MoleculeType} ()
 \item 
 string {\bf getName} () const 
@@ -55,6 +57,12 @@ bool {\bf isEquivalentComponent} (int cIndex) const
 void {\bf getEquivalencyClass} (int $\ast$\&components, int \&n\_\-components, string cName) const 
 \item 
 int {\bf getEquivalencyClassNumber} (string cName) const 
+\item 
+int {\bf getEquivalenceClassNumber} (int cIndex) const 
+\item 
+string {\bf getEquivalenceClassComponentNameFromComponentIndex} (int cIndex) const 
+\item 
+bool {\bf isPopulationType} () const 
 \item 
 bool {\bf isIntegerComponent} (string cName) const 
 \item 
@@ -94,7 +102,11 @@ int {\bf getRxnIndex} ({\bf ReactionClass} $\ast${\bf rxn}, int rxnPosition)
 \item 
 void {\bf addMoleculeToRunningSystem} ({\bf Molecule} $\ast$\&mol)
 \item 
+void {\bf addMoleculeToRunningSystemButDontUpdate} ({\bf Molecule} $\ast$\&mol)
+\item 
 void {\bf removeMoleculeFromRunningSystem} ({\bf Molecule} $\ast$\&m)
+\item 
+void {\bf removeMoleculeFromRunningSystemButDontUpdate} ({\bf Molecule} $\ast$\&m)
 \item 
 void {\bf removeFromRxns} ({\bf Molecule} $\ast$m)
 \item 
@@ -169,6 +181,8 @@ int $\ast$ {\bf defaultCompState}
 \item 
 bool $\ast$ {\bf isIntegerCompState}
 \item 
+const bool {\bf population\_\-type}
+\item 
 int {\bf n\_\-eqComp}
 \item 
 string $\ast$ {\bf eqCompOriginalName}
@@ -214,6 +228,11 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!MoleculeType@{MoleculeType}}
 \index{MoleculeType@{MoleculeType}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}MoleculeType::MoleculeType (string {\em name}, vector$<$ string $>$ \& {\em compName}, vector$<$ string $>$ \& {\em defaultCompState}, vector$<$ vector$<$ string $>$ $>$ \& {\em possibleCompStates}, vector$<$ bool $>$ {\em isIntegerComponent}, {\bf System} $\ast$ {\em system})}\label{classNFcore_1_1MoleculeType_8aa69e2d970225a36f993e9d56814eda}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!MoleculeType@{MoleculeType}}
+\index{MoleculeType@{MoleculeType}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MoleculeType::MoleculeType (string {\em name}, vector$<$ string $>$ \& {\em compName}, vector$<$ string $>$ \& {\em defaultCompState}, vector$<$ vector$<$ string $>$ $>$ \& {\em possibleCompStates}, vector$<$ bool $>$ {\em isIntegerComponent}, bool {\em pop\_\-type}, {\bf System} $\ast$ {\em system})}\label{classNFcore_1_1MoleculeType_fdb1301990085df7073b22270e042989}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!$\sim$MoleculeType@{$\sim$MoleculeType}}
@@ -307,6 +326,21 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!getEquivalencyClassNumber@{getEquivalencyClassNumber}}
 \index{getEquivalencyClassNumber@{getEquivalencyClassNumber}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int MoleculeType::getEquivalencyClassNumber (string {\em cName}) const}\label{classNFcore_1_1MoleculeType_94244f5be674a28a33985b1f10448268}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getEquivalenceClassNumber@{getEquivalenceClassNumber}}
+\index{getEquivalenceClassNumber@{getEquivalenceClassNumber}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int MoleculeType::getEquivalenceClassNumber (int {\em cIndex}) const}\label{classNFcore_1_1MoleculeType_6c004694b03839fd7479a322ea3dcd15}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!getEquivalenceClassComponentNameFromComponentIndex@{getEquivalenceClassComponentNameFromComponentIndex}}
+\index{getEquivalenceClassComponentNameFromComponentIndex@{getEquivalenceClassComponentNameFromComponentIndex}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string MoleculeType::getEquivalenceClassComponentNameFromComponentIndex (int {\em cIndex}) const}\label{classNFcore_1_1MoleculeType_f4d59c21bc41178a557c0d9dd2eaf016}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!isPopulationType@{isPopulationType}}
+\index{isPopulationType@{isPopulationType}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::MoleculeType::isPopulationType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MoleculeType_6bc5dbeafe377cf26676a8e06fbe1be9}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!isIntegerComponent@{isIntegerComponent}}
@@ -404,9 +438,19 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::addMoleculeToRunningSystem ({\bf Molecule} $\ast$\& {\em mol})}\label{classNFcore_1_1MoleculeType_7946b482cf6c24fc991ef66438df5ee8}
 
 
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!addMoleculeToRunningSystemButDontUpdate@{addMoleculeToRunningSystemButDontUpdate}}
+\index{addMoleculeToRunningSystemButDontUpdate@{addMoleculeToRunningSystemButDontUpdate}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::addMoleculeToRunningSystemButDontUpdate ({\bf Molecule} $\ast$\& {\em mol})}\label{classNFcore_1_1MoleculeType_36fc1be26b12253fac31bb64c289616f}
+
+
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!removeMoleculeFromRunningSystem@{removeMoleculeFromRunningSystem}}
 \index{removeMoleculeFromRunningSystem@{removeMoleculeFromRunningSystem}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::removeMoleculeFromRunningSystem ({\bf Molecule} $\ast$\& {\em m})}\label{classNFcore_1_1MoleculeType_75f848d752a31ac28d2bb608eaa4c926}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!removeMoleculeFromRunningSystemButDontUpdate@{removeMoleculeFromRunningSystemButDontUpdate}}
+\index{removeMoleculeFromRunningSystemButDontUpdate@{removeMoleculeFromRunningSystemButDontUpdate}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void MoleculeType::removeMoleculeFromRunningSystemButDontUpdate ({\bf Molecule} $\ast$\& {\em m})}\label{classNFcore_1_1MoleculeType_96aded449510c0f470a398aebeef2acc}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!removeFromRxns@{removeFromRxns}}
@@ -570,6 +614,11 @@ vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\bf allTemplates}
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!isIntegerCompState@{isIntegerCompState}}
 \index{isIntegerCompState@{isIntegerCompState}!NFcore::MoleculeType@{NFcore::MoleculeType}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool$\ast$ {\bf NFcore::MoleculeType::isIntegerCompState}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_8d2a49ed145df19a98e1bc8172323d6e}
+
+
+\index{NFcore::MoleculeType@{NFcore::MoleculeType}!population\_\-type@{population\_\-type}}
+\index{population\_\-type@{population\_\-type}!NFcore::MoleculeType@{NFcore::MoleculeType}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const bool {\bf NFcore::MoleculeType::population\_\-type}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MoleculeType_241ebdc0d049661b1156a8fc25776b5b}
 
 
 \index{NFcore::MoleculeType@{NFcore::MoleculeType}!n\_\-eqComp@{n\_\-eqComp}}

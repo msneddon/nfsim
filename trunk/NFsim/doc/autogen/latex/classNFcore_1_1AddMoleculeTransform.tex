@@ -11,25 +11,33 @@ Inheritance diagram for NFcore::AddMoleculeTransform::\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-{\bf AddMoleculeTransform} ({\bf SpeciesCreator} $\ast${\bf sc})
+{\bf AddMoleculeTransform} ({\bf MoleculeCreator} $\ast$\_\-mc)
 \item 
 virtual {\bf $\sim$AddMoleculeTransform} ()
 \item 
 virtual void {\bf apply} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms)
 \item 
 virtual int {\bf getComponentIndex} () const 
+\item 
+void {\bf apply\_\-and\_\-map} ({\bf MappingSet} $\ast$ms)
+\item 
+bool {\bf isPopulationType} () const 
+\item 
+{\bf Molecule} $\ast$ {\bf get\_\-population\_\-pointer} () const 
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
 \item 
-{\bf SpeciesCreator} $\ast$ {\bf sc}
+{\bf MoleculeCreator} $\ast$ {\bf mc}
+\item 
+{\bf Molecule} $\ast$ {\bf new\_\-molecule}
 \end{CompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
 \index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!AddMoleculeTransform@{AddMoleculeTransform}}
 \index{AddMoleculeTransform@{AddMoleculeTransform}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}AddMoleculeTransform::AddMoleculeTransform ({\bf SpeciesCreator} $\ast$ {\em sc})}\label{classNFcore_1_1AddMoleculeTransform_93613b59c64a8f0147cab031647be7b7}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}AddMoleculeTransform::AddMoleculeTransform ({\bf MoleculeCreator} $\ast$ {\em \_\-mc})}\label{classNFcore_1_1AddMoleculeTransform_94e28073fbce87029b25076af721acf7}
 
 
 \index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!$\sim$AddMoleculeTransform@{$\sim$AddMoleculeTransform}}
@@ -42,7 +50,7 @@ virtual int {\bf getComponentIndex} () const
 \subsection{Member Function Documentation}
 \index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!apply@{apply}}
 \index{apply@{apply}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void AddMoleculeTransform::apply ({\bf Mapping} $\ast$ {\em m}, {\bf MappingSet} $\ast$$\ast$ {\em ms})\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1AddMoleculeTransform_18b5845ce1e6d9c249acc40ff7b49dfd}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual void NFcore::AddMoleculeTransform::apply ({\bf Mapping} $\ast$ {\em m}, {\bf MappingSet} $\ast$$\ast$ {\em ms})\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1AddMoleculeTransform_abf8ed753858994d292f9c3afbb738e2}
 
 
 
@@ -54,12 +62,32 @@ Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transforma
 
 
 
-Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.
+Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!apply\_\-and\_\-map@{apply\_\-and\_\-map}}
+\index{apply\_\-and\_\-map@{apply\_\-and\_\-map}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void AddMoleculeTransform::apply\_\-and\_\-map ({\bf MappingSet} $\ast$ {\em ms})}\label{classNFcore_1_1AddMoleculeTransform_fb1f0cf4a77195282873feb3d948e7d2}
+
+
+\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!isPopulationType@{isPopulationType}}
+\index{isPopulationType@{isPopulationType}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool AddMoleculeTransform::isPopulationType () const}\label{classNFcore_1_1AddMoleculeTransform_ebb19123327801ad5c2d31b1799c3514}
+
+
+\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!get\_\-population\_\-pointer@{get\_\-population\_\-pointer}}
+\index{get\_\-population\_\-pointer@{get\_\-population\_\-pointer}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule} $\ast$ AddMoleculeTransform::get\_\-population\_\-pointer () const}\label{classNFcore_1_1AddMoleculeTransform_21421dd639337c8c14e2d03d7e6ca58e}
+
+
+
 
 \subsection{Member Data Documentation}
-\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!sc@{sc}}
-\index{sc@{sc}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf SpeciesCreator}$\ast$ {\bf NFcore::AddMoleculeTransform::sc}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1AddMoleculeTransform_f36cd25da702f62343aed9a172f05af0}
+\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!mc@{mc}}
+\index{mc@{mc}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeCreator}$\ast$ {\bf NFcore::AddMoleculeTransform::mc}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1AddMoleculeTransform_5752bbf09fdbfa12be6e403e2e613b32}
+
+
+\index{NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}!new\_\-molecule@{new\_\-molecule}}
+\index{new\_\-molecule@{new\_\-molecule}!NFcore::AddMoleculeTransform@{NFcore::AddMoleculeTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule}$\ast$ {\bf NFcore::AddMoleculeTransform::new\_\-molecule}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1AddMoleculeTransform_87d5dd6aed949a9b57b04d07de5c32b7}
 
 
 

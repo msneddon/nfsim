@@ -36,6 +36,16 @@ int {\bf getComplexID} () const
 \item 
 int {\bf getDegree} ()
 \item 
+bool {\bf isPopulationType} () const 
+\item 
+bool {\bf setPopulation} (int count)
+\item 
+int {\bf getPopulation} () const 
+\item 
+bool {\bf incrementPopulation} ()
+\item 
+bool {\bf decrementPopulation} ()
+\item 
 int {\bf getComponentState} (int cIndex) const 
 \item 
 int {\bf getComponentIndexOfBond} (int cIndex) const 
@@ -150,6 +160,8 @@ int {\bf listId}
 \item 
 bool {\bf useComplex}
 \item 
+int {\bf population\_\-count}
+\item 
 int $\ast$ {\bf component}
 \item 
 int {\bf numOfComponents}
@@ -235,6 +247,31 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!getDegree@{getDegree}}
 \index{getDegree@{getDegree}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getDegree ()}\label{classNFcore_1_1Molecule_390f0d1223bdd2ab075b25993902a520}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isPopulationType@{isPopulationType}}
+\index{isPopulationType@{isPopulationType}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Molecule::isPopulationType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_16b6745c6533c31333334dc3d39417e4}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setPopulation@{setPopulation}}
+\index{setPopulation@{setPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::setPopulation (int {\em count})}\label{classNFcore_1_1Molecule_efdeb81a3b9d98a8644db2e1acd59404}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getPopulation@{getPopulation}}
+\index{getPopulation@{getPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getPopulation () const}\label{classNFcore_1_1Molecule_912defe8c71ea04e15b94d161a50a61c}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!incrementPopulation@{incrementPopulation}}
+\index{incrementPopulation@{incrementPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::incrementPopulation ()}\label{classNFcore_1_1Molecule_854b5ead187df0c2aeb04b208ad4c0b0}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!decrementPopulation@{decrementPopulation}}
+\index{decrementPopulation@{decrementPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::decrementPopulation ()}\label{classNFcore_1_1Molecule_eda502a7eb99b0b319491ed416000b92}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!getComponentState@{getComponentState}}
@@ -498,6 +535,11 @@ static int {\bf uniqueIdCount} = 0
 \index{NFcore::Molecule@{NFcore::Molecule}!useComplex@{useComplex}}
 \index{useComplex@{useComplex}!NFcore::Molecule@{NFcore::Molecule}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::useComplex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_63f93bdf7d7245f3fb58464338123bfe}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!population\_\-count@{population\_\-count}}
+\index{population\_\-count@{population\_\-count}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::population\_\-count}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_609b46545caff1d1f80082a90fb5112f}
 
 
 \index{NFcore::Molecule@{NFcore::Molecule}!component@{component}}

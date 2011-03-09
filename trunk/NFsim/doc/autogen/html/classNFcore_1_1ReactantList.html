@@ -49,6 +49,8 @@ This is essentially a specialized vector implementation that allows a <a class="
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#f7ee7d25b15ee7adb71714c4f8cc5a0f">size</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#e1f83bdddaca3f084f669cbba66cf042">getPopulation</a> () const </td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#cbd9b70dc5bec6a90afdff65e708bdbb">pushNextAvailableMappingSet</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#733d6d8d54398b5a5615f1f8f597b70f">popLastMappingSet</a> ()</td></tr>
@@ -56,6 +58,8 @@ This is essentially a specialized vector implementation that allows a <a class="
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#eff0073ca4bcda7cdd601fb78719caac">removeMappingSet</a> (unsigned int mappingSetId)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#fe1c91c30e5096eaebf6d3bd12ee824e">pickRandom</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&amp;ms)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#0dde54cce4398b10b7c1f572ec13fd9a">pickRandomFromPopulation</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&amp;ms)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactantList.html#9ce2c8a0c49cf0f40a5057cd311907ce">getMappingSet</a> (unsigned int mappingSetId) const </td></tr>
 
@@ -152,6 +156,25 @@ Returns the number of mappingSets that have been added to this list
 
 </div>
 </div><p>
+<a class="anchor" name="e1f83bdddaca3f084f669cbba66cf042"></a><!-- doxytag: member="NFcore::ReactantList::getPopulation" ref="e1f83bdddaca3f084f669cbba66cf042" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ReactantList::getPopulation           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns the sum population of all mappingSets that have been added to this list 
+</div>
+</div><p>
 <a class="anchor" name="cbd9b70dc5bec6a90afdff65e708bdbb"></a><!-- doxytag: member="NFcore::ReactantList::pushNextAvailableMappingSet" ref="cbd9b70dc5bec6a90afdff65e708bdbb" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -234,6 +257,26 @@ Removes the mapping set with the specified mappingSetId. Be careful here: make s
 
 <p>
 Randomly selects a <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> from the list of available MappingSets. 
+</div>
+</div><p>
+<a class="anchor" name="0dde54cce4398b10b7c1f572ec13fd9a"></a><!-- doxytag: member="NFcore::ReactantList::pickRandomFromPopulation" ref="0dde54cce4398b10b7c1f572ec13fd9a" args="(MappingSet *&amp;ms)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReactantList::pickRandomFromPopulation           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&amp;&nbsp;</td>
+          <td class="paramname"> <em>ms</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Randomly selects a <a class="el" href="classNFcore_1_1MappingSet.html" title="Keeps a list of mappings needed by a particular list of reactants.">MappingSet</a> from the population weighted list of available MappingSets. 
 </div>
 </div><p>
 <a class="anchor" name="9ce2c8a0c49cf0f40a5057cd311907ce"></a><!-- doxytag: member="NFcore::ReactantList::getMappingSet" ref="9ce2c8a0c49cf0f40a5057cd311907ce" args="(unsigned int mappingSetId) const " -->
@@ -372,7 +415,7 @@ The actual array that stores a list of pointers to <a class="el" href="classNFco
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactantLists/<a class="el" href="reactantList_8hh-source.html">reactantList.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/reactantLists/<a class="el" href="reactantList_8cpp.html">reactantList.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

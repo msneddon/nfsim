@@ -42,7 +42,9 @@ Static object that generates transformations with the given sites. <dl class="au
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#6d0b9445e9c48c59f807c727445054ab">genUnbindingTransform</a> (unsigned int bSiteIndex)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#f11322a3ba45cabe38b2eadf032a1ff6">genAddMoleculeTransform</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1AddSpeciesTransform.html">AddSpeciesTransform</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#d1dbc61c0869543b639948c6aca7407c">genAddSpeciesTransform</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *sc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1AddMoleculeTransform.html">AddMoleculeTransform</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#46a9edf522aa36598e1bc4ecd6b67475">genAddMoleculeTransform</a> (<a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *mc)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#81d0b2c7cd8efe29ff45333ac16dc657">genRemoveMoleculeTransform</a> (int removalType)</td></tr>
 
@@ -51,6 +53,8 @@ Static object that generates transformations with the given sites. <dl class="au
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#250f200fbcc8e794b8b99cc45302ab3b">genIncrementStateTransform</a> (unsigned int cIndex)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#eece84f71547208fa9e27ecda1032489">genDecrementStateTransform</a> (unsigned int cIndex)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#c5498f0b27dc9275fe781b54fcdb56d0">genDecrementPopulationTransform</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#206a59330bba84e1b0131b8b0ba919f4">genLocalFunctionReference</a> (string PointerName, int type, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *tm)</td></tr>
 
@@ -78,6 +82,10 @@ Static object that generates transformations with the given sites. <dl class="au
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#ef1bf254664f1baaa23127355a427fde">DECREMENT_STATE</a> = 7</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#2082f8fc11ff7315d0454c2bf61bf0e4">LOCAL_FUNCTION_REFERENCE</a> = 8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#fe90e7c56cc555fc34fc33f5a1625672">INCREMENT_POPULATION</a> = 9</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#082fd8c6064a34272676df0595f4735b">DECREMENT_POPULATION</a> = 10</td></tr>
 
 </table>
 <hr><h2>Member Function Documentation</h2>
@@ -224,12 +232,12 @@ Generates an unbinding transformation for a particular binding site. Only one of
 
 </div>
 </div><p>
-<a class="anchor" name="f11322a3ba45cabe38b2eadf032a1ff6"></a><!-- doxytag: member="NFcore::TransformationFactory::genAddMoleculeTransform" ref="f11322a3ba45cabe38b2eadf032a1ff6" args="(SpeciesCreator *sc)" -->
+<a class="anchor" name="d1dbc61c0869543b639948c6aca7407c"></a><!-- doxytag: member="NFcore::TransformationFactory::genAddSpeciesTransform" ref="d1dbc61c0869543b639948c6aca7407c" args="(SpeciesCreator *sc)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Transformation.html">NFcore::Transformation</a> * TransformationFactory::genAddMoleculeTransform           </td>
+          <td class="memname"><a class="el" href="classNFcore_1_1AddSpeciesTransform.html">NFcore::AddSpeciesTransform</a> * TransformationFactory::genAddSpeciesTransform           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *&nbsp;</td>
           <td class="paramname"> <em>sc</em>          </td>
@@ -241,7 +249,27 @@ Generates an unbinding transformation for a particular binding site. Only one of
 <div class="memdoc">
 
 <p>
-Generates an Add <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+Generates an Add <a class="el" href="classNFcore_1_1Molecule.html" title="Each molecule in the system is represented by an instance of this.">Molecule</a> transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon</dd></dl>
+Changes by JustinHogg, 3Mar2011: Unlike other generators, this now returns a specific child class. AddMoleculeTransforms are handled seperately from other transforms, so we don't need to follow the polymorphic interface. Also, we need to call the method "create_and_map" which is specifc to <a class="el" href="classNFcore_1_1AddMoleculeTransform.html">AddMoleculeTransform</a>. 
+</div>
+</div><p>
+<a class="anchor" name="46a9edf522aa36598e1bc4ecd6b67475"></a><!-- doxytag: member="NFcore::TransformationFactory::genAddMoleculeTransform" ref="46a9edf522aa36598e1bc4ecd6b67475" args="(MoleculeCreator *mc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html">NFcore::AddMoleculeTransform</a> * TransformationFactory::genAddMoleculeTransform           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *&nbsp;</td>
+          <td class="paramname"> <em>mc</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -325,6 +353,27 @@ Generates an IncrementState transformation. <dl class="author" compact><dt><b>Au
 
 <p>
 Generates an DecrementState transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="c5498f0b27dc9275fe781b54fcdb56d0"></a><!-- doxytag: member="NFcore::TransformationFactory::genDecrementPopulationTransform" ref="c5498f0b27dc9275fe781b54fcdb56d0" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1Transformation.html">NFcore::Transformation</a> * TransformationFactory::genDecrementPopulationTransform           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Generates an IncrementPopulation transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg</dd></dl>
+Generates an DecrementPopulation transformation. <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin Hogg </dd></dl>
 
 </div>
 </div><p>
@@ -544,9 +593,39 @@ Indicates a decrement transformation
 
 </div>
 </div><p>
+<a class="anchor" name="fe90e7c56cc555fc34fc33f5a1625672"></a><!-- doxytag: member="NFcore::TransformationFactory::INCREMENT_POPULATION" ref="fe90e7c56cc555fc34fc33f5a1625672" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int <a class="el" href="classNFcore_1_1TransformationFactory.html#fe90e7c56cc555fc34fc33f5a1625672">NFcore::TransformationFactory::INCREMENT_POPULATION</a> = 9<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Indicates a population increment transform 
+</div>
+</div><p>
+<a class="anchor" name="082fd8c6064a34272676df0595f4735b"></a><!-- doxytag: member="NFcore::TransformationFactory::DECREMENT_POPULATION" ref="082fd8c6064a34272676df0595f4735b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int <a class="el" href="classNFcore_1_1TransformationFactory.html#082fd8c6064a34272676df0595f4735b">NFcore::TransformationFactory::DECREMENT_POPULATION</a> = 10<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Indicates a population decrement transform 
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

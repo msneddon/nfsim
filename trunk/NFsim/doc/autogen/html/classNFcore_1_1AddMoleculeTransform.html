@@ -39,28 +39,36 @@ Inheritance diagram for NFcore::AddMoleculeTransform:</div>
 <a href="classNFcore_1_1AddMoleculeTransform-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#93613b59c64a8f0147cab031647be7b7">AddMoleculeTransform</a> (<a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *<a class="el" href="classNFcore_1_1AddMoleculeTransform.html#f36cd25da702f62343aed9a172f05af0">sc</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#94e28073fbce87029b25076af721acf7">AddMoleculeTransform</a> (<a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *_mc)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#2672f3a25595bacb7f64dfb3ddba8aa8">~AddMoleculeTransform</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#18b5845ce1e6d9c249acc40ff7b49dfd">apply</a> (<a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *m, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **ms)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#abf8ed753858994d292f9c3afbb738e2">apply</a> (<a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *m, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **ms)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#8a352eb7aa54568e417701461d507b9e">getComponentIndex</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#fb1f0cf4a77195282873feb3d948e7d2">apply_and_map</a> (<a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *ms)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#ebb19123327801ad5c2d31b1799c3514">isPopulationType</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#21421dd639337c8c14e2d03d7e6ca58e">get_population_pointer</a> () const </td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#f36cd25da702f62343aed9a172f05af0">sc</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#5752bbf09fdbfa12be6e403e2e613b32">mc</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1AddMoleculeTransform.html#87d5dd6aed949a9b57b04d07de5c32b7">new_molecule</a></td></tr>
 
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="93613b59c64a8f0147cab031647be7b7"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::AddMoleculeTransform" ref="93613b59c64a8f0147cab031647be7b7" args="(SpeciesCreator *sc)" -->
+<a class="anchor" name="94e28073fbce87029b25076af721acf7"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::AddMoleculeTransform" ref="94e28073fbce87029b25076af721acf7" args="(MoleculeCreator *_mc)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">AddMoleculeTransform::AddMoleculeTransform           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a> *&nbsp;</td>
-          <td class="paramname"> <em>sc</em>          </td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> *&nbsp;</td>
+          <td class="paramname"> <em>_mc</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -92,12 +100,12 @@ Inheritance diagram for NFcore::AddMoleculeTransform:</div>
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="18b5845ce1e6d9c249acc40ff7b49dfd"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::apply" ref="18b5845ce1e6d9c249acc40ff7b49dfd" args="(Mapping *m, MappingSet **ms)" -->
+<a class="anchor" name="abf8ed753858994d292f9c3afbb738e2"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::apply" ref="abf8ed753858994d292f9c3afbb738e2" args="(Mapping *m, MappingSet **ms)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AddMoleculeTransform::apply           </td>
+          <td class="memname">virtual void NFcore::AddMoleculeTransform::apply           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *&nbsp;</td>
           <td class="paramname"> <em>m</em>, </td>
@@ -111,7 +119,7 @@ Inheritance diagram for NFcore::AddMoleculeTransform:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -144,13 +152,86 @@ Inheritance diagram for NFcore::AddMoleculeTransform:</div>
 
 </div>
 </div><p>
-<hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="f36cd25da702f62343aed9a172f05af0"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::sc" ref="f36cd25da702f62343aed9a172f05af0" args="" -->
+<a class="anchor" name="fb1f0cf4a77195282873feb3d948e7d2"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::apply_and_map" ref="fb1f0cf4a77195282873feb3d948e7d2" args="(MappingSet *ms)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1SpeciesCreator.html">SpeciesCreator</a>* <a class="el" href="classNFcore_1_1AddMoleculeTransform.html#f36cd25da702f62343aed9a172f05af0">NFcore::AddMoleculeTransform::sc</a><code> [protected]</code>          </td>
+          <td class="memname">void AddMoleculeTransform::apply_and_map           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> *&nbsp;</td>
+          <td class="paramname"> <em>ms</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ebb19123327801ad5c2d31b1799c3514"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::isPopulationType" ref="ebb19123327801ad5c2d31b1799c3514" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool AddMoleculeTransform::isPopulationType           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="21421dd639337c8c14e2d03d7e6ca58e"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::get_population_pointer" ref="21421dd639337c8c14e2d03d7e6ca58e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> * AddMoleculeTransform::get_population_pointer           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="5752bbf09fdbfa12be6e403e2e613b32"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::mc" ref="5752bbf09fdbfa12be6e403e2e613b32" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a>* <a class="el" href="classNFcore_1_1AddMoleculeTransform.html#5752bbf09fdbfa12be6e403e2e613b32">NFcore::AddMoleculeTransform::mc</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="87d5dd6aed949a9b57b04d07de5c32b7"></a><!-- doxytag: member="NFcore::AddMoleculeTransform::new_molecule" ref="87d5dd6aed949a9b57b04d07de5c32b7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a>* <a class="el" href="classNFcore_1_1AddMoleculeTransform.html#87d5dd6aed949a9b57b04d07de5c32b7">NFcore::AddMoleculeTransform::new_molecule</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -162,7 +243,7 @@ Inheritance diagram for NFcore::AddMoleculeTransform:</div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:49 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
