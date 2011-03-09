@@ -18,8 +18,14 @@ MappingSet::MappingSet(unsigned int id, vector <Transformation *> &transformatio
 	this->clonedMappingSet=MappingSet::NO_CLONE;
 
 	for(unsigned int t=0; t<n_mappings; t++) {
-		if(transformations.at(t)->getType()==(int)TransformationFactory::REMOVE) {
-			this->isDeletion=true;
+		if(transformations.at(t)->getType()==(int)TransformationFactory::REMOVE)
+		{
+			// only flag "isDeletion" for species deletion. we can handle molecule deletions
+			//  with other transforms
+			if ( transformations.at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
+				this->isDeletion=true;
+
+			// add mapping with component index -1
 			mappings[t] = new Mapping(transformations.at(t)->getType(), -1 );
 		}
 		else
@@ -88,8 +94,16 @@ void MappingSet::printDetails(ostream &o) const
 }
 
 
+int MappingSet::getComplexID() const
+{
+	return mappings[0]->getMolecule()->getComplexID();
+}
 
 
+int MappingSet::getPopulation() const
+{
+	return mappings[0]->getMolecule()->getPopulation();
+};
 
 
 

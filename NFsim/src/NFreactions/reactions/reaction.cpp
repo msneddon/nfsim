@@ -356,7 +356,94 @@ void BasicRxnClass::pickMappingSets(double random_A_number) const
 
 
 
+/* Population Reaction Class */
+/* --Justin, 7Mar2011 */
 
+PopulationRxnClass::PopulationRxnClass(string name, double baseRate, string baseRateName,
+                                       TransformationSet *transformationSet, System *s) :
+	BasicRxnClass(name,baseRate,baseRateName,transformationSet,s)
+{
+	reactant_types = new int[n_reactants];
+	for( unsigned int i=0; i < n_reactants; ++i )
+	{
+		if ( reactantTemplates[i]->getMoleculeType()->isPopulationType() )
+		{
+			reactant_types[i] = PopulationRxnClass::POPULATION_REACTANT;
+		}
+		else
+		{
+			reactant_types[i] = PopulationRxnClass::PARTICLE_REACTANT;
+		}
+	}
+}
+
+
+PopulationRxnClass::~PopulationRxnClass ( )
+{
+	delete [] reactant_types;
+}
+
+
+double PopulationRxnClass::update_a ( )
+{
+	a = 1.0;
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		a *= getReactantCount(r);
+	}
+	a *= baseRate;
+	return a;
+}
+
+
+unsigned int PopulationRxnClass::getReactantCount(unsigned int reactantIndex) const
+{
+	if      ( reactant_types[reactantIndex] == PARTICLE_REACTANT )
+	{	// tally pattern matches in the the ReactantList
+		return  reactantLists[reactantIndex]->size();
+	}
+	else if ( reactant_types[reactantIndex] == POPULATION_REACTANT )
+	{	// Grab population from head molecule of this reactantTemplate
+		// tally pattern matches in the the ReactantList
+		return  reactantLists[reactantIndex]->getPopulation();
+	}
+
+}
+
+
+void PopulationRxnClass::pickMappingSets(double random_A_number) const
+{
+	//Note here that we completely ignore the argument.  The argument is only
+	//used for DOR reactions because we need that number to select the reactant to fire
+
+	//Select a reactant from each list
+	for(unsigned int i=0; i<n_reactants; i++)
+	{
+		if ( reactant_types[i] == PARTICLE_REACTANT )
+		{
+			reactantLists[i]->pickRandom(mappingSet[i]);
+		}
+		else
+		{
+			reactantLists[i]->pickRandomFromPopulation(mappingSet[i]);
+		}
+	}
+}
+
+
+
+void PopulationRxnClass::printDetails() const
+{
+	cout<<"PopulationRxnClass: " << name <<"  ( a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+
+	for(unsigned int r=0; r<n_reactants; r++)
+	{
+		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
+		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
+	}
+	if(n_reactants==0)
+		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
+}
 
 
 

@@ -185,25 +185,70 @@ bool NFinput::FindReactionRuleSymmetry(
 
 			}
 
-			if(comps.find(site1)!=comps.end() && comps.find(site2)!=comps.end()) {
+			// Handle site1 and site2 separately!
+			//  If we can't find a site, look to see if it's on a product molecule.
+			//  If so, then we'll move on and assume the missing site won't affect symmetry
+			// TODO: think carefully w.r.t. symmetry and new Molecules.
+			// --Justin
+			if(comps.find(site1)!=comps.end() )
+			{
 				component c1 = comps.find(site1)->second;
-				component c2 = comps.find(site2)->second;
-
 				MoleculeType *mt1 = c1.mt;
-				MoleculeType *mt2 = c2.mt;
 
-				if(mt1->isEquivalentComponent(c1.name)) {
+				if( mt1->isEquivalentComponent(c1.name) )
+				{
 					symRxnCenter.insert(pair <string, component> (site1,c1));
 					symComps.erase(site1);
 				}
-				if(mt2->isEquivalentComponent(c2.name)) {
+			}
+		    else
+		    {
+		    	if ( site1.find("_PP") != string::npos )
+		    	{
+		    		if (verbose)
+		    		{
+			    		cout << "\n\t\t\tAddBond transform includes site '" << site1 << "' on a newly created molecule."
+			    		     << "\n\t\t\t(I am ignoring this site with respect to symmetry.)"
+			    		     <<	endl;
+		    		}
+		    	}
+		    	else
+		    	{
+		    		cerr<<"\nError in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
+					return false;
+		    	}
+			}
+
+			// Now handle site2.
+			if( comps.find(site2)!=comps.end())
+			{
+				component c2 = comps.find(site2)->second;
+				MoleculeType *mt2 = c2.mt;
+
+				if( mt2->isEquivalentComponent(c2.name) )
+				{
 					symRxnCenter.insert(pair <string, component> (site2,c2));
 					symComps.erase(site2);
 				}
-			} else {
-				cerr<<"\nError in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
-				cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
-				return false;
+			}
+		    else
+		    {
+		    	if ( site2.find("_PP") != string::npos )
+		    	{
+		    		if (verbose)
+		    		{
+			    		cout << "\n\t\t\tAddBond transform includes site '" << site1 << "' on a newly created molecule."
+			    		     << "\n\t\t\t(I am ignoring this site with respect to symmetry.)"
+			    		     <<	endl;
+		    		}
+		    	}
+		    	else
+		    	{
+		    		cerr<<"\nError in adding a binding operation in ReactionClass: '"+rxnName+"'."<<endl;
+					cerr<<"It seems that either I couldn't find the binding sites you are refering to."<<endl;
+					return false;
+		    	}
 			}
 		}
 
@@ -270,7 +315,7 @@ bool NFinput::FindReactionRuleSymmetry(
 					cout<<"\t\t\t\t\t"<<mapIter->first<<"   "<<mapIter->second.name<<endl;
 				}
 			} else {
-				cout<<"None found.\n";
+				cout<<"\t\t\tNo symmetry found.\n";
 			}
 		}
 

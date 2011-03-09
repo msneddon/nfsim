@@ -30,6 +30,7 @@ namespace NFcore
 			 */
 			virtual int size() const = 0;
 
+
 			/*!
 			 */
 			virtual MappingSet * pushNextAvailableMappingSet() = 0;;

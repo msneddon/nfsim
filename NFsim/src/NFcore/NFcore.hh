@@ -507,6 +507,14 @@ namespace NFcore
 					vector <bool> isIntegerComponent,
 					System *system);
 
+			MoleculeType(
+					string name,
+					vector <string> &compName,
+					vector <string> &defaultCompState,
+					vector < vector<string> > &possibleCompStates,
+					vector <bool> isIntegerComponent,
+					bool pop_type,
+					System *system);
 
 			~MoleculeType();
 
@@ -536,6 +544,8 @@ namespace NFcore
 			int getEquivalenceClassNumber(int cIndex) const;
 			string getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const;
 
+			// query or set population type
+			bool isPopulationType() const { return population_type; };
 
 			bool isIntegerComponent(string cName) const;
 			bool isIntegerComponent(int cIndex) const;
@@ -572,7 +582,9 @@ namespace NFcore
 			Molecule *genDefaultMolecule();
 
 			void addMoleculeToRunningSystem(Molecule *&mol);
+			void addMoleculeToRunningSystemButDontUpdate(Molecule *&mol);
 			void removeMoleculeFromRunningSystem(Molecule *&m);
+			void removeMoleculeFromRunningSystemButDontUpdate(Molecule *&m);
 			void removeFromRxns(Molecule * m);
 
 
@@ -580,8 +592,6 @@ namespace NFcore
 			//Adds the basic components that this MoleculeType needs to reference
 			void addReactionClass(ReactionClass * r, int rPosition);
 			void addMolObs(MoleculesObservable * mo) { molObs.push_back(mo); }; //could add check here to make sure observable is of this type
-			// TODO: Question by Justin... why doesn't the Molecule construct create the complex directly?
-			// I believe it is because the System must know about all complexes that are created. -michael
 			int createComplex(Molecule *m) { return (system->getAllComplexes()).createComplex(m); };
 			void addTemplateMolecule(TemplateMolecule *t);
 
@@ -667,6 +677,7 @@ namespace NFcore
 			vector < vector < string > > possibleCompStates;
 			int *defaultCompState;
 			bool *isIntegerCompState;
+			const bool population_type;
 
 
 			//set of variables to keep track of equivalent (aka symmetric) components
@@ -736,6 +747,13 @@ namespace NFcore
 			Complex * getComplex() const { return (parentMoleculeType->getSystem()->getAllComplexes()).getComplex(ID_complex); };
 			int getDegree();
 
+
+			////////////////////////////////////////////////////////////////////////
+			bool isPopulationType() const { return parentMoleculeType->isPopulationType(); } ;
+			bool setPopulation( int count );
+			int  getPopulation() const;
+			bool incrementPopulation();
+			bool decrementPopulation();
 
 			///////////////////////////////////////////////////////////////////////
 			int getComponentState(int cIndex) const { return component[cIndex]; };
@@ -864,6 +882,8 @@ namespace NFcore
 			MoleculeType *parentMoleculeType;
 			bool useComplex;
 
+			/* track population properties */
+			int population_count;
 
 			/* store the states and bonds in arrays */
 
@@ -1024,6 +1044,7 @@ namespace NFcore
 			string name;
 			int reactionType;
 			unsigned int n_reactants;
+			unsigned int n_mappingsets;
 
 			System * system;
 

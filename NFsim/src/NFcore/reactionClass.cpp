@@ -27,7 +27,8 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->transformationSet = transformationSet;
 
 	//Set up the template molecules from the transformationSet
-	this->n_reactants = transformationSet->getNreactants();
+	this->n_reactants   = transformationSet->getNreactants();
+	this->n_mappingsets = transformationSet->getNmappingSets();
 	this->reactantTemplates = new TemplateMolecule *[n_reactants];
 	vector <TemplateMolecule*> tmList;
 	vector <int> hasMapGenerator;
@@ -61,9 +62,18 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		reactantTemplates[r] = curTemplate;
 		tmList.clear(); hasMapGenerator.clear();
 	}
-	mappingSet = new MappingSet *[n_reactants];
+	mappingSet = new MappingSet *[n_mappingsets];
 
 
+
+	/* create blank mappingSets for the added molecules. These will be used
+	 * to hold mappings to added molecules, which is useful for rules that create
+	 *  molecules and then perform other transformations.  --Justin, 1Mar2011
+	 */
+	for ( unsigned int r = n_reactants; r < n_mappingsets; ++r )
+	{
+		mappingSet[r] = transformationSet->generateBlankMappingSet(r,0);
+	}
 
 
 
@@ -252,71 +262,88 @@ void ReactionClass::fire(double random_A_number)
 {
 	fireCounter++; //Remember that we fired
 
-//	if(getName()=="Rule2") {
-//		this->printFullDetails();
-//		this->system->printAllObservableCounts(0);
-//		this->system->printAllReactions();
-//
-//		cout<<"---"<<endl;cout<<"found: "<<products.size()<<" products."<<endl;
-//		exit(1);
-//	}
+	//if(getName()=="Rule2") {
+	//	this->printFullDetails();
+	//	this->system->printAllObservableCounts(0);
+	//	this->system->printAllReactions();
+	//	cout<<"---"<<endl; cout<<"found: "<<products.size()<<" products."<<endl;
+	//	exit(1);
+	//}
 
-    //cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
+	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
 	//this->system->printAllObservableCounts(0);
 	//this->system->printAllReactions();
 
 
-	//First randomly pick the reactants to fire by selecting the MappingSets
-	pickMappingSets(random_A_number);
+	// First randomly pick the reactants to fire by selecting the MappingSets
+	this->pickMappingSets(random_A_number);
 
-	// output something if the reaction was tagged
-	if(tagged) {
-			cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
-			for(unsigned int k=0; k<n_reactants; k++) {
-				cout<<" [";
-				for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
-					Molecule *mForTag = mappingSet[k]->get(p)->getMolecule();
-					cout<<" "<<mForTag->getMoleculeTypeName()<<mForTag->getUniqueID();
-				}
-				cout<<" ]";
-			}
-			cout<<endl;
+
+	// Check reactants for correct molecularity
+	// (This is more general than the previous checks for intra- and inter-complex
+	//   binding, and is compliant with the BNGL definition of molecularity.
+	//   However, we still aren't checking for correct product molecularity,
+	//   which is a harder problem.)
+	if ( !(transformationSet->checkMolecularity( mappingSet )) )
+	{
+		// wrong molecularity!  this is a NULL event
+		++(System::NULL_EVENT_COUNTER);
+		return;
 	}
 
-	//Generate the set of possible products that we need to update
+
+
+	// output something if the reaction was tagged
+	if(tagged)
+	{
+		cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
+		for(unsigned int k=0; k<n_reactants; k++) {
+			cout<<" [";
+			for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
+				Molecule *mForTag = mappingSet[k]->get(p)->getMolecule();
+				cout<<" "<<mForTag->getMoleculeTypeName()<<mForTag->getUniqueID();
+			}
+			cout<<" ]";
+		}
+		cout<<endl;
+	}
+
+
+	// Generate the set of possible products that we need to update
+	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 
-//	if(getName()=="Rule2") {
-//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-//			(*molIter)->printDetails();
-
-	//	cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-//	}
-
+	//	if(getName()=="Rule2") {
+	//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
+	//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+	//			(*molIter)->printDetails();
+	//		cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
+	//	}
 
 	//cout<<"found: "<<products.size()<<" products."<<endl;
-	//Loop through the products and remove them from their observables
-	//cout<<"------------------------------------------"<<endl;
-	if(this->onTheFlyObservables) {
 
-		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+
+	// Loop through the products and remove them from their observables
+	if(this->onTheFlyObservables)
+	{
+		// remove products from molecule observables
+		for ( molIter = products.begin(); molIter != products.end(); molIter++ )
 		{
 			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getUniqueID()<<endl;
 			//(*molIter)->printDetails();
 			(*molIter)->removeFromObservables();
 		}
 
-		//If we have Species observables in the product complexes, remove them from the count
+		// Remove complexes containing products from species oservables
 		if(system->getNumOfSpeciesObs()>0) {
 			bool found = false;
 			// we can assume that complex bookkeeping is on, and that each reactant
 			// is in a separate (and single) complex
 			int matches = 0;
-			for(int k=0; k<transformationSet->getNumOfReactants(); k++) {
-
-				//First make sure we don't check the same complex twice
+			for (int k=0; k<transformationSet->getNumOfReactants(); k++)
+			{
+				// get complexID and check if we've already updated that complex
 				int complexId = mappingSet[k]->get(0)->getMolecule()->getComplexID();
 				found = false;
 				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
@@ -325,9 +352,13 @@ void ReactionClass::fire(double random_A_number)
 						break;
 					}
 				}
+				// if we already handled this, go to the next product
 				if(found) continue;
+
+				// if we didn't handle this, remember that we're handling it now..
 				updatedComplexes.push_back(complexId);
 
+				// update species observables for this complex
 				Complex *c = mappingSet[k]->get(0)->getMolecule()->getComplex();
 				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
 					matches = system->getSpeciesObs(i)->isObservable(c);
@@ -339,52 +370,62 @@ void ReactionClass::fire(double random_A_number)
 
 	}
 
-	//cout<<",  obs removed";
 
-	//cout<<"before: "<<endl;
-	//Molecule::printMoleculeList(products);
-
-	//Through the MappingSet, transform all the molecules as neccessary
+	// Through the MappingSet, transform all the molecules as neccessary
+	//  This will also create new molecules, as required
 	this->transformationSet->transform(this->mappingSet);
 
 
-//	cout<<",  transformed updated";
+	// Add newly created molecules to the list of products
+	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
 
-	//Tell each molecule in the list of products to add itself back into
-	//the counts of observables and update its class lists, and update any DOR Groups
+
+	// If we're handling observables on the fly, tell each molecule to add
+	//  itself back into observable counts.
+	//  NOTE: this will also take care of adding new molecules into the observables. --Justin, 8Mar2011
 	if(onTheFlyObservables)
 	{
+		// add product molecules to molecule observables
 		for( molIter = products.begin(); molIter != products.end(); molIter++ )
 		{
-			//if(!(*molIter)->isAlive()) continue;
+			// skip dead molecules
+			if ( !(*molIter)->isAlive() ) continue;
 			(*molIter)->addToObservables();
 		}
 
-		//If we have Species observables in the product complexes, add them back to the count
-		if(system->getNumOfSpeciesObs()>0) {
+		// add complexes containing products into species observables
+		if(system->getNumOfSpeciesObs()>0)
+		{
 			// we can assume that complex bookkeeping is on, and that each reactant
 			bool found = false;
 			for( molIter = products.begin(); molIter != products.end(); molIter++ )
 			{
+				// skip dead molecules
+				if ( !(*molIter)->isAlive() ) continue;
+
+				// get complexID and check if we've already updated that complex
 				int complexId = (*molIter)->getComplexID();
 				found = false;
-				for(unsigned int k=0; k<updatedComplexes.size(); k++) {
+				for (unsigned int k=0; k<updatedComplexes.size(); k++) {
 					if(updatedComplexes.at(k)==complexId) {
 						found = true;
 						break;
 					}
 				}
+				// if we already handled this, go to the next product
 				if(found) continue;
+
+				// if we didn't handle this, remember that we're handling it now..
 				updatedComplexes.push_back(complexId);
 
+				// update species observables for this complex
 				Complex *c = (*molIter)->getComplex();
 				int matches = 0;
-				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+				for ( int i=0; i<system->getNumOfSpeciesObs(); i++ ) {
 					matches = system->getSpeciesObs(i)->isObservable(c);
 					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightAdd();
 				}
 			}
-
 			updatedComplexes.clear();
 		}
 	}
@@ -398,19 +439,19 @@ void ReactionClass::fire(double random_A_number)
 	//}
 
 
-//	cout<<",  obs updated";
-
-	//cout<<"after:"<<endl;
+	// Now update reaction membership, functions, and update any DOR Groups
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
 	{
-		//if(!(*molIter)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
+		// skip over dead molecules (NOTE: we do need this now.  --Justin, 8Mar2011
+		if ( !(*molIter)->isAlive() ) continue;
 	  	(*molIter)->updateRxnMembership();
 	  	(*molIter)->updateTypeIIFunctions();
 	  	(*molIter)->updateDORRxnValues();
 	  	//(*molIter)->printDetails();
 	}
-	//Molecule::printMoleculeList(products);
 
+
+	//Molecule::printMoleculeList(products);
 	//this->printFullDetails();
 	//this->system->printAllObservableCounts(0);
 	//this->system->printAllReactions();
@@ -421,7 +462,7 @@ void ReactionClass::fire(double random_A_number)
 	//cout<<",  everything done"<<endl;
 	//Tidy up
 	products.clear();
-
+	
 }
 
 

@@ -210,6 +210,23 @@ namespace NFinput {
 			vector < vector <int> > &bindingSiteInformation,
 			bool verbose);
 
+	//! Reads a product molecule XML block and returns a TemplateMolecule objects.
+	/*!
+	 *  As a side-effect, this also creates components for the product molecule
+	 *   and all its sites/
+	   	@author JustinHogg (based on Michael Sneddon's readProductPattern method)
+	 */
+
+	bool readProductMolecule(
+			TiXmlElement * pMol,
+			System * s,
+			map <string,double> & parameter,
+			map<string,int> & allowedStates,
+			string patternName,
+			vector <MoleculeCreator *> & moleculeCreatorsList,
+			map <string, component> & comps,
+			bool verbose );
+
 
 	bool lookup(component *&c, string id, map<string,component> &comps, map<string,component> &symMap);
 

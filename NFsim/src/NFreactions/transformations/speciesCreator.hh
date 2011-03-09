@@ -30,7 +30,7 @@ namespace NFcore
 			
 			Molecule **newMoleculeCreations;
 			
-			
+
 			//Save the configuration of states we have to set
 			//nd prefix stands for non-default 
 			unsigned int n_ndStates;

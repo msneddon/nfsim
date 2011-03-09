@@ -211,7 +211,7 @@ ReactionClass * NFtest_transcription::createReactionRNAtranscribed(MoleculeType 
 
 	TransformationSet *ts = new TransformationSet(templates);
 	SpeciesCreator *sc = new SpeciesCreator(newProduct);
-	ts->addAddMolecule(sc);
+	ts->addAddSpecies(sc);
 	ts->finalize();
 
 	ReactionClass *r = new BasicRxnClass("RNA_transcription",rate,"",ts,molRNA->getSystem());

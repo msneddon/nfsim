@@ -39,8 +39,6 @@ namespace NFcore
 				return a;
 			}
 
-
-
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
 			virtual unsigned int getReactantCount(unsigned int reactantIndex) const;
 
@@ -53,6 +51,27 @@ namespace NFcore
 
 			ReactantList *rl;
 			MappingSet *ms;
+	};
+
+	// Simple population ReactionClass. This may become inefficient if reactantLists that include
+	//  populations become large.
+	class PopulationRxnClass : public BasicRxnClass {
+		public:
+			PopulationRxnClass(string name, double baseRate, string baseRateName,
+					           TransformationSet *transformationSet, System *s);
+			virtual ~PopulationRxnClass();
+
+			virtual double update_a();
+			virtual unsigned int getReactantCount(unsigned int reactantIndex) const;
+			void pickMappingSets(double random_A_number) const;
+
+			virtual void printDetails() const;
+
+			static const int PARTICLE_REACTANT   = 0;
+			static const int POPULATION_REACTANT = 1;
+
+		protected:
+			int *reactant_types;
 	};
 
 
@@ -89,8 +108,6 @@ namespace NFcore
 			double kcat;
 			double sFree;
 	};
-
-
 
 
 	class DORRxnClass : public ReactionClass {
