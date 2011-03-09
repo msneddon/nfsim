@@ -69,6 +69,7 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
 	//Currently, this is set to block all binding events that happen internally to a single
 	//molecule.  I think this is reasonable to do...
+	// (Intra-molecular binding is probably ok. BNGL supports it. --Justin.)
 	if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
 		System::NULL_EVENT_COUNTER++;
 	} else {
@@ -105,25 +106,69 @@ void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 	Molecule::unbind(m->getMolecule(),m->getIndex());
 }
 
-
-
-
-
-
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-AddMoleculeTransform::AddMoleculeTransform(SpeciesCreator *sc) :
+AddSpeciesTransform::AddSpeciesTransform(SpeciesCreator *sc) :
 	Transformation(TransformationFactory::ADD)
 {
 	this->sc=sc;
 }
-AddMoleculeTransform::~AddMoleculeTransform()
+
+
+AddSpeciesTransform::~AddSpeciesTransform()
 {
 	delete sc;
 }
-void AddMoleculeTransform::apply(Mapping *m, MappingSet **ms)
+
+
+void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms)
 {
 	this->sc->create();
+}
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+AddMoleculeTransform::AddMoleculeTransform( MoleculeCreator * _mc )
+ : Transformation( TransformationFactory::ADD )
+{
+	this->mc = _mc;
+	new_molecule = NULL;
+}
+
+
+AddMoleculeTransform::~AddMoleculeTransform()
+{
+	delete mc;
+}
+
+
+bool
+AddMoleculeTransform::isPopulationType() const
+{
+	return mc->isPopulationType();
+};
+
+
+// get pointer to population molecule
+Molecule *
+AddMoleculeTransform::get_population_pointer() const
+{
+	return mc->get_population_pointer();
+};
+
+
+void AddMoleculeTransform::apply_and_map(MappingSet *ms)
+{
+	// create molecule and get pointer
+	new_molecule = this->mc->create_molecule();
+
+	// point mappings to the new molecule
+	unsigned int n_mappings = ms->getNumOfMappings();
+	for ( unsigned int im = 0;  im < n_mappings;  ++im )
+	{
+		ms->set( im, new_molecule );
+	}
 }
 
 
@@ -138,8 +183,21 @@ RemoveMoleculeTransform::RemoveMoleculeTransform(int removalType) :
 
 void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 {
-	cout<<"!! Warning: calling apply on a RemoveMoleculeTransform!  This cannot be handled here!"<<endl;
-	cout<<"!! This function should not be called.  The TransformationSet object should handle this!"<<endl;
+	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
+	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
+}
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+DecrementPopulationTransform::DecrementPopulationTransform() :
+	Transformation(TransformationFactory::DECREMENT_POPULATION)
+{
+	this->cIndex = -1;
+}
+void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms)
+{
+	m->getMolecule()->decrementPopulation();
 }
 
 
@@ -184,9 +242,13 @@ NFcore::Transformation * TransformationFactory::genUnbindingTransform(unsigned i
 {
 	return new UnbindingTransform(bSiteIndex);
 }
-NFcore::Transformation * TransformationFactory::genAddMoleculeTransform(SpeciesCreator *sc)
+NFcore::AddSpeciesTransform * TransformationFactory::genAddSpeciesTransform(SpeciesCreator *sc)
 {
-	return new AddMoleculeTransform(sc);
+	return new AddSpeciesTransform(sc);
+}
+NFcore::AddMoleculeTransform * TransformationFactory::genAddMoleculeTransform(MoleculeCreator *mc)
+{
+	return new AddMoleculeTransform(mc);
 }
 NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform(int removalType)
 {
@@ -202,6 +264,12 @@ NFcore::Transformation * TransformationFactory::genDecrementStateTransform(unsig
 {
 	return new DecrementStateTransform(cIndex);
 }
+
+NFcore::Transformation * TransformationFactory::genDecrementPopulationTransform()
+{
+	return new DecrementPopulationTransform();
+}
+
 
 Transformation * TransformationFactory::genLocalFunctionReference(string PointerName, int type, TemplateMolecule *tm)
 {

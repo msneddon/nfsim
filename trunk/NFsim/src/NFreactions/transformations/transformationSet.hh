@@ -3,6 +3,7 @@
 
 
 #include "../NFreactions.hh"
+#include <set>
 
 using namespace std;
 
@@ -10,9 +11,12 @@ namespace NFcore
 {
 	//Forward declarations
 	class Transformation;
+	class AddSpeciesTransform;
+	class AddMoleculeTransform;
 	class TemplateMolecule;
 	class Molecule;
 	class SpeciesCreator;
+	class MoleculeCreator;
 
 
 	//!  Maintains a set of Transformation objects for a ReactionClass
@@ -48,13 +52,21 @@ namespace NFcore
 			TransformationSet(vector <TemplateMolecule *> reactantTemplates);
 
 			/*!
+			 	Creates a new TransformationSet that includds addMolecule
+			 	Transformations
+				@author Justin Hogg
+			*/
+			TransformationSet(vector <TemplateMolecule *> reactantTemplates,
+					          vector <TemplateMolecule *> addMoleculeTemplates );
+
+			/*!
 				Destroys the TransformationSet and associated Transformation objects.
 				@author Michael Sneddon
 			*/
 			~TransformationSet();
 
-
-			int getNumOfReactants() const { return n_reactants; };
+			// this duplicates getNreactants below. Can we remove?  --Justin
+			int getNumOfReactants()   const { return n_reactants; };
 
 			/*!
 				Adds a state change transformation on the given TemplateMolecule (that must have been included
@@ -110,18 +122,29 @@ namespace NFcore
 
 
 			/*!
-				Adds a delete rule to the given TemplateMolecule.  This has not been
-				implemented yet, so it may take other parameters.
+				Adds a delete rule to the given TemplateMolecule.
 				@author Michael Sneddon
 			*/
 			bool addDeleteMolecule(TemplateMolecule *t, int deletionType);
 
+
 			/*!
-				Adds a create molecule rule, but has not been implemented yet.
+				Adds a decrement population transform to the given TemplateMolecule.
+				@author Justin Hogg
+			*/
+			bool addDecrementPopulation(TemplateMolecule *t);
+
+			/*!
+				Adds a create species transform (this was formerly "addAddMolecule")
 				@author Michael Sneddon
 			*/
-			bool addAddMolecule(SpeciesCreator *sc);
+			bool addAddSpecies( SpeciesCreator * sc );
 
+			/*!
+				Adds a create molecule transform
+				@author Justin Hogg
+			*/
+			bool addAddMolecule( MoleculeCreator * mc );
 
 			/*!
 				Adds a create molecule rule, but has not been implemented yet.
@@ -152,14 +175,30 @@ namespace NFcore
 				used for initial initializations of a ReactionClass.
 				@author Michael Sneddon
 			*/
-			TemplateMolecule * getTemplateMolecule(unsigned int reactantIndex) const { return reactants[reactantIndex]; };
+			TemplateMolecule * getTemplateMolecule(unsigned int reactantIndex) const;
 
 			/*!
 				Get the number of reactants in the rule governed by this TransformationSet.  This
 				function is really only used for initial initializations of a ReactionClass.
 				@author Michael Sneddon
 			*/
-			unsigned int getNreactants() const {return n_reactants; };
+			unsigned int getNreactants() const { return n_reactants; };
+
+			/*!
+				Get the number of added Molecules in the rule governed by this TransformationSet.
+				This function is really only used for initial initializations of a ReactionClass.
+				@author JustinHogg
+			*/
+			unsigned int getNmappingSets() const { return n_reactants + n_addmol; };
+
+			/*!
+			 * Get/set complex bookkeeping.
+			 * If complex bookkeeping is true, we should check molecularity when firing rules.
+			 * @author JustinHogg
+			 */
+			bool getComplexBookkeeping() const { return complex_bookkeeping; };
+			void setComplexBookkeeping( bool val ) { complex_bookkeeping = val; };
+
 
 			/*!
 				This function sets up the actual array of Transformation objects for this TransformationSet
@@ -177,6 +216,13 @@ namespace NFcore
 			bool isFinalized() const { return finalized; };
 
 			/*!
+				After selecting mappingSets, call this to check if the molecularity of the reactants
+				is correct.  Returns true if molecularity is correct, false otherwise.
+				@author JustinHogg
+			*/
+			bool checkMolecularity( MappingSet ** mappingSets );
+
+			/*!
 				From an array of MappingSet objects, this function populates the list of Molecules
 				with all the Molecules that can be affected by this Transformation.  The traversalLimit
 				parameters sets the depth at which the Molecules should be searched (starting at the
@@ -185,7 +231,14 @@ namespace NFcore
 				will explore down one level of bonds, and so on.
 				@author Michael Sneddon
 			*/
-			bool getListOfProducts(MappingSet **mappingSets, list<Molecule *> &products, int traversalLimit);
+			bool getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+
+			/*!
+				This is a companion to getListOfProducts. This is called after applying transformations and
+				gathers all the newly added molecules.
+				@author JustinHogg
+			*/
+			bool getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
 
 			/*!
 				Called by reaction class to determine if the rate of a rule must be adjusted to
@@ -233,21 +286,33 @@ namespace NFcore
 			/*!	Remembers if the finalize function has been called	*/
 			bool finalized;
 
+			/*! Remember if we're tracking complexes. --Justin, 3Mar2011 */
+			bool complex_bookkeeping;
+
 			/*!	Keeps track of the number of reactants in the rule monitored by this TransformationSet	*/
 			unsigned int n_reactants;
 
-			/*!	The array of TemplateMolecules that represent the reactants		*/
+			/*!	Keeps track of the number of added molecules */
+			unsigned int n_addmol;
+
+			/*!	The array of TemplateMolecules that represent the reactants */
 			TemplateMolecule ** reactants;
+
+			/*!	The array of TemplateMolecules that represent the added molecules.
+			 *   Not sure if this will be used.  --Justin */
+			TemplateMolecule ** addmol;
 
 			/*!	A vector that holds the actual Transformation objects	*/
 			vector <Transformation *> *transformations;
 
 			/*!	A vector that holds the addMolecule Transformations, because they are handled separately	*/
-			vector <Transformation *> addMoleculeTransformations;
+			vector <AddMoleculeTransform *> addMoleculeTransformations;
+
+			/*!	A vector that holds the addSpecies Transformations, because they are handled separately	*/
+			vector <AddSpeciesTransform *> addSpeciesTransformations;
 
 			/*!	List to keep track of the molecules that we are going to delete when a transformation is applied	*/
 			static list <Molecule *> deleteList;
-
 
 			/*!	List to keep track of the molecules that we have to update as a result of a deletion	*/
 			static list <Molecule *> updateAfterDeleteList;
@@ -262,6 +327,10 @@ namespace NFcore
 
 			/*!	keeps track if this set has a symmetric binding reaction	*/
 			bool hasSymBinding;
+
+		private:
+			set < int >                        complex_ids;
+			pair < set<int>::iterator, bool >  insert_retval;
 	};
 
 }

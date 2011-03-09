@@ -12,6 +12,7 @@ MoleculeType::MoleculeType(
 	string name,
 	vector <string> &compName,
 	System *s)
+ : population_type( false )
 {
 	vector <string> defaultCompState;
 	vector < vector <string> > possibleCompStates;
@@ -31,6 +32,7 @@ MoleculeType::MoleculeType(
 	vector <string> &compName,
 	vector <string> &defaultCompState,
 	System *s)
+ : population_type( false )
 {
 	vector < vector <string> > possibleCompStates;
 	vector <bool> isIntegerComponent;
@@ -54,6 +56,7 @@ MoleculeType::MoleculeType(
 		vector <string> &defaultCompState,
 		vector < vector<string> > &possibleCompStates,
 		System *system)
+ : population_type( false )
 {
 	vector <bool> isIntegerComponent;
 	for(unsigned int i=0; i<compName.size(); i++) {
@@ -69,8 +72,23 @@ MoleculeType::MoleculeType(
 		vector < vector<string> > &possibleCompStates,
 		vector <bool> isIntegerComponent,
 		System *system)
+ : population_type( false )
 {
-	init(name, compName, defaultCompState, possibleCompStates, isIntegerComponent,system);
+	init(name, compName, defaultCompState, possibleCompStates, isIntegerComponent, system);
+}
+
+
+MoleculeType::MoleculeType(
+		string name,
+		vector <string> &compName,
+		vector <string> &defaultCompState,
+		vector < vector<string> > &possibleCompStates,
+		vector <bool> isIntegerComponent,
+		bool pop_type,
+		System *system)
+ : population_type( pop_type )
+{
+	init(name, compName, defaultCompState, possibleCompStates, isIntegerComponent, system);
 }
 
 
@@ -316,6 +334,16 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 }
 
 
+void MoleculeType::addMoleculeToRunningSystemButDontUpdate(Molecule *&mol)
+{
+	//First prepare the molecule for simulation
+	mol->prepareForSimulation();
+	mol->setAlive(true);
+
+	//We assume observables and reaction membership will be updated later
+	// (this is now the case for reaction firing)
+}
+
 
 void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 {
@@ -324,6 +352,24 @@ void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 	removeFromObservables(m);
 	removeFromRxns(m);
 
+
+	//We also have to remove all bonds
+	for(int c=0; c<getNumOfComponents(); c++) {
+		if(m->isBindingSiteBonded(c)) {
+			Molecule::unbind(m,c);
+		}
+	}
+
+	m->setAlive(false);
+}
+
+
+void MoleculeType::removeMoleculeFromRunningSystemButDontUpdate(Molecule *&m)
+{
+	//Remove this guy from the list, the observables list, and from all rxns
+	mList->remove(m->getMolListId(), m);
+	//removeFromObservables(m);
+	//removeFromRxns(m);
 
 	//We also have to remove all bonds
 	for(int c=0; c<getNumOfComponents(); c++) {
@@ -508,8 +554,14 @@ void MoleculeType::removeFromObservables(Molecule *m)
   	{
   		//Only subtract if m happened to be an observable... this saves us a compare call
   		//int matches = (*molObsIter)->isObservable(m);
+
+  		// How many times does this observable match the molecule?
   		int matches = m->isObs(ind);
-  		for(int k=0; k<matches; k++) { (*molObsIter)->subtract(); }
+  		// subtract matches from observable
+  		(*molObsIter)->subtract(matches);
+		// set IsObs to zero, so if remove is called twice, we don't get negative counts.
+  		m->setIsObs(ind,0);
+
   		ind++;
 	}
 }
@@ -572,9 +624,7 @@ void MoleculeType::addAllToObservables()
   		{
   			mol = mList->at(m);
   			matches = (*molObsIter)->isObservable(mol);
-  			for(int k=0; k<matches; k++) {
-  				(*molObsIter)->add();
-  			}
+  			(*molObsIter)->add(matches);
   			mol->setIsObs(o,matches);
   		}
   		o++;
@@ -596,11 +646,10 @@ void MoleculeType::addToObservables(Molecule *m)
 		int matches = (*molObsIter)->isObservable(m);
 		m->setIsObs(o,matches);
 
-		for(int k=0; k<matches; k++)
-		{	(*molObsIter)->add();	}
+		(*molObsIter)->add(matches);
 		o++;
 	}
-
+	
 }
 
 

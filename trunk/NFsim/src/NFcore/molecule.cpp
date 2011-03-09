@@ -20,12 +20,16 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	if(DEBUG) cout<<"-creating molecule instance of type " << parentMoleculeType->getName() << endl;
 	this->parentMoleculeType = parentMoleculeType;
 
+	// set population type (1 for particle type, 0 for population type)
+	this->population_count = ( parentMoleculeType->isPopulationType()  ?  0  :  1 );
+
 	//First initialize the component states and bonds
 	this->numOfComponents = parentMoleculeType->getNumOfComponents();
 	this->component = new int [parentMoleculeType->getNumOfComponents()];
 	for(int c=0; c<numOfComponents; c++)
 		component[c] = parentMoleculeType->getDefaultComponentState(c);
 
+	// initialize bond sites
 	this->bond = new Molecule * [numOfComponents];
 	this->indexOfBond = new int [numOfComponents];
 	this->hasVisitedBond = new bool [numOfComponents];
@@ -241,6 +245,45 @@ void Molecule::addToObservables()
 }
 
 
+// set population
+bool Molecule::setPopulation( int count )
+{
+	if ( isPopulationType()  &&  (count >= 0) )
+	{
+		population_count = count;
+		return true;
+	}
+	else return false;
+}
+
+// get popualtion
+int Molecule::getPopulation() const
+{
+	return population_count;
+}
+
+// increase population by one
+bool Molecule::incrementPopulation()
+{
+	if ( isPopulationType() )
+	{
+		++population_count;
+		return true;
+	}
+	else return false;
+}
+
+// decrease population by one
+bool Molecule::decrementPopulation()
+{
+	if ( isPopulationType()  &&  (population_count > 0) )
+	{
+		--population_count;
+		return true;
+	}
+	else return false;
+
+}
 
 
 void Molecule::setComponentState(int cIndex, int newValue)

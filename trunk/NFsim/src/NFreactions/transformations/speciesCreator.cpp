@@ -12,7 +12,7 @@ SpeciesCreator::SpeciesCreator(
 {
 	try {
 		this->n_molecules = productMoleculeTypes.size();
-		cout<<"New species Creator!! num of molecules in species: "<<n_molecules<<endl;
+		cout << "\t\t\tNew species Creator!! num of molecules in species: "<<n_molecules<<endl;
 
 		//Copy over the molecules
 		n_molecules = productMoleculeTypes.size();
@@ -20,7 +20,7 @@ SpeciesCreator::SpeciesCreator(
 		for(unsigned int m=0; m<n_molecules; m++)
 		{
 			moleculeTypes[m]=productMoleculeTypes.at(m);
-			cout<<m<<": "<<moleculeTypes[m]->getName()<<endl;
+			cout << "\t\t\t\t" << m << ": " << moleculeTypes[m]->getName() << endl;
 		}
 
 		newMoleculeCreations = new Molecule *[n_molecules];

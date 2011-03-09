@@ -58,8 +58,8 @@ void Observable::straightSubtract()
 void Observable::subtract()
 {
 	if(count==0){
-		cout<<"Error in observable count!! Removing from an empty observable!"<<endl;
-		cout<<"Observable named: "<<obsName<<endl;
+		cerr << "Error in observable count!! Removing from an empty observable!"
+		     << "Observable named: " << obsName << endl;
 		exit(1);
 	}
 
@@ -70,6 +70,53 @@ void Observable::subtract()
 		double old_a = dependentRxns[r]->get_a();
 		double new_a = dependentRxns[r]->update_a();
 		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(dependentRxns[r],old_a,new_a);
+	}
+}
+
+
+/* add multiple new matches to an observable (rather than call 'add' a bunch of times --justin */
+/* useful for counters! */
+void Observable::add( int n_matches )
+{
+	//debug
+	//cout << "Observable::add( " << n_matches << " )" << endl;
+
+	// First, we add to our observable count
+	count += n_matches;
+
+	// Next, we update our dependent reactions, if there are any
+	for (int r=0; r<n_dependentRxns; r++)
+	{
+		double old_a = dependentRxns[r]->get_a();
+		double new_a = dependentRxns[r]->update_a();
+		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot( dependentRxns[r], old_a, new_a);
+	}
+}
+
+
+/* Remove multiple matches fron an observable (rather than call 'subtract' a bunch of times --justin */
+/* Necessary to make counters fast! */
+void Observable::subtract( int n_matches )
+{
+	//debug
+	//cout << "Observable::subtract( " << n_matches << " )" << endl;
+
+	if (count - n_matches < 0)
+	{
+		cerr << "Error in observable count!! Removing " << n_matches << " matches will result in a negative match count!"
+		     << "Observable named: " << obsName << endl;
+		exit(1);
+	}
+
+	// First, we subtract from our observable count
+	count -= n_matches;
+
+	// Next, we update our dependent reactions, if there are any
+	for (int r=0; r<n_dependentRxns; r++)
+	{
+		double old_a = dependentRxns[r]->get_a();
+		double new_a = dependentRxns[r]->update_a();
+		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot( dependentRxns[r], old_a, new_a);
 	}
 }
 
@@ -164,7 +211,8 @@ int MoleculesObservable::isObservable(Molecule *m) const
 		//cout<<endl<<endl<<endl;
 		//cout<<"starting!"<<endl;
 
-		if ( templateMolecules[t]->compare(m) )  ++matches;
+		if ( templateMolecules[t]->compare(m) )
+			matches += m->getPopulation();
 		//else { cout<<"nothing."<<endl; }
 	}
 	//cout << "total_matches: " << matches << endl;
@@ -270,7 +318,7 @@ int SpeciesObservable::isObservable(Complex *c) const
 			for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
 				//For each template, we only have to find one match, then we match for sure.
 				if(templateMolecules[t]->compare((*c->molIter))) {
-					matches++;
+					matches += (*c->molIter)->getPopulation();
 					break;
 				}
 			}
@@ -286,23 +334,26 @@ int SpeciesObservable::isObservable(Complex *c) const
 				}
 			}
 
+			// reset iterator to beginning
+			c->molIter = c->complexMembers.begin();
+
 			if(relation[t]==EQUALS) {
-				if(localMatches==quantity[t]) matches++;
+				if(localMatches==quantity[t]) matches += (*c->molIter)->getPopulation();
 
 			} else if(relation[t]==NOT_EQUALS) {
-				if(localMatches!=quantity[t]) matches++;
+				if(localMatches!=quantity[t]) matches += (*c->molIter)->getPopulation();
 
 			} else if(relation[t]==GREATER_THAN) {
-				if(localMatches>quantity[t]) matches++;
+				if(localMatches>quantity[t])  matches += (*c->molIter)->getPopulation();
 
 			} else if(relation[t]==LESS_THAN) {
-				if(localMatches<quantity[t]) matches++;
+				if(localMatches<quantity[t])  matches += (*c->molIter)->getPopulation();
 
 			} else if(relation[t]==GREATOR_OR_EQUAL_TO) {
-				if(localMatches>=quantity[t]) matches++;
+				if(localMatches>=quantity[t]) matches += (*c->molIter)->getPopulation();
 
 			} else if(relation[t]==LESS_THAN_OR_EQUAL_TO) {
-				if(localMatches<=quantity[t]) matches++;
+				if(localMatches<=quantity[t]) matches += (*c->molIter)->getPopulation();
 
 			}
 

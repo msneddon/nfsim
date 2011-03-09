@@ -14,6 +14,7 @@
 #include "reactantLists/reactantTree.hh"
 #include "transformations/transformationSet.hh"
 #include "transformations/transformation.hh"
+#include "transformations/moleculeCreator.hh"
 #include "transformations/speciesCreator.hh"
 #include "mappings/mapping.hh"
 #include "mappings/mappingSet.hh"

@@ -56,6 +56,12 @@ namespace NFcore
 			virtual int size() const { return n_mappingSets; };
 
 			/*!
+				Returns the sum population of all mappingSets that have been added to this list
+			 */
+			virtual int getPopulation() const;
+
+
+			/*!
 				Adds a new MappingSet to this list and returns a pointer to the new mapping set for you
 				to map (usually by comparing to some template molecule).  Warning: even if you don't use
 				this mapping set, it will be counted until you pop it! (see popLastMappingSet()).
@@ -77,6 +83,11 @@ namespace NFcore
 				Randomly selects a MappingSet from the list of available MappingSets.
 			 */
 			void pickRandom(MappingSet *&ms);
+
+			/*!
+				Randomly selects a MappingSet from the population weighted list of available MappingSets.
+			 */
+			void pickRandomFromPopulation(MappingSet *&ms);
 
 
 			virtual MappingSet * getMappingSet(unsigned int mappingSetId) const;

@@ -7,9 +7,12 @@
 namespace NFcore
 {
 
+	class MoleculeCreator;
 	class SpeciesCreator;
 	class Mapping;
 	class Transformation;
+	class AddMoleculeTransform;
+	class AddSpeciesTransform;
 
 
 	/*!
@@ -51,8 +54,16 @@ namespace NFcore
 			/*!
 			 	Generates an Add Molecule transformation.
 			    @author Michael Sneddon
+
+			    Changes by JustinHogg, 3Mar2011:
+			    Unlike other generators, this now returns a specific child class.
+			    AddMoleculeTransforms are handled seperately from other transforms, so
+			    we don't need to follow the polymorphic interface. Also, we need to
+			    call the method "create_and_map" which is specifc to AddMoleculeTransform.
 			 */
-			static Transformation * genAddMoleculeTransform(SpeciesCreator *sc);
+			static AddSpeciesTransform  * genAddSpeciesTransform(  SpeciesCreator  * sc );
+			static AddMoleculeTransform * genAddMoleculeTransform( MoleculeCreator * mc );
+
 
 			/*!
 			 	Generates a removal of a molecule from the system.  The removalType specifies
@@ -81,6 +92,18 @@ namespace NFcore
 			*/
 			static Transformation * genDecrementStateTransform(unsigned int cIndex);
 
+			/*!
+			 	Generates an IncrementPopulation transformation.
+			    @author Justin Hogg
+			*/
+			//static Transformation * genIncrementPopulationTransform();
+
+
+			/*!
+			 	Generates an DecrementPopulation transformation.
+			    @author Justin Hogg
+			*/
+			static Transformation * genDecrementPopulationTransform();
 
 
 			/*! Indicates that a delete transform deletes the entire connected species */
@@ -130,6 +153,12 @@ namespace NFcore
 			static Transformation * genLocalFunctionReference(string PointerName, int type, TemplateMolecule *tm);
 			static const unsigned int LOCAL_FUNCTION_REFERENCE = 8;
 			////////////////////////////////
+
+			/*!	Indicates a population increment transform */
+			static const unsigned int INCREMENT_POPULATION = 9;
+
+			/*!	Indicates a population decrement transform */
+			static const unsigned int DECREMENT_POPULATION = 10;
 
 	};
 
@@ -227,14 +256,37 @@ namespace NFcore
 			int cIndex;
 	};
 
-	class AddMoleculeTransform : public Transformation {
+
+	class AddSpeciesTransform : public Transformation {
 		public:
-			AddMoleculeTransform(SpeciesCreator *sc);
-			virtual ~AddMoleculeTransform();
-			virtual void apply(Mapping *m, MappingSet **ms);
+			AddSpeciesTransform( SpeciesCreator * sc );
+			virtual ~AddSpeciesTransform();
+			virtual void apply( Mapping *m, MappingSet **ms );
 			virtual int getComponentIndex() const {cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
+
 		protected:
-			SpeciesCreator *sc;
+			SpeciesCreator * sc;
+	};
+
+
+	class AddMoleculeTransform : public Transformation
+	{
+		public:
+			AddMoleculeTransform( MoleculeCreator * _mc );
+			virtual ~AddMoleculeTransform();
+			virtual void apply( Mapping * m, MappingSet ** ms ) { cerr<<"apply method should not be called from an AddMoleculeTranform!!"<<endl;};
+			virtual int getComponentIndex() const { cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
+
+			// adds molecule and points mapping set to that new molecule
+			void apply_and_map( MappingSet * ms );
+			// is this a population type?
+			bool isPopulationType() const;
+			// get pointer to population molecule
+			Molecule * get_population_pointer() const;
+
+		protected:
+			MoleculeCreator * mc;
+			Molecule *        new_molecule;
 	};
 
 	class RemoveMoleculeTransform : public Transformation {
@@ -251,6 +303,16 @@ namespace NFcore
 	};
 
 
+	class DecrementPopulationTransform : public Transformation
+	{
+		public:
+			DecrementPopulationTransform();
+			virtual ~DecrementPopulationTransform() {};
+			virtual void apply(Mapping *m, MappingSet **ms);
+			virtual int getComponentIndex() const { return cIndex; };
+		protected:
+			int cIndex;
+	};
 
 
 	class IncrementStateTransform : public Transformation {

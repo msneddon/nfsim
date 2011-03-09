@@ -533,8 +533,20 @@ bool NFinput::initMoleculeTypes(
 			}
 
 
+			//Check for population flag  --justin
+			bool isPopulation = false;
+			if ( pMoTypeEl->Attribute("population") )
+			{
+				string popFlag = pMoTypeEl->Attribute("population");
+				if( popFlag.compare("1") == 0 )
+				{
+					isPopulation = true;
+					if(verbose) cout << "\t\tTreating molecule type '" << typeName << "' as a population" << endl;
+				}
+			}
+
 			//Create the moleculeType and register any symmetric sites we may have...
-			MoleculeType *mt = new MoleculeType(typeName,compLabels,defaultCompState,possibleComponentStates,isIntegerComponent,s);
+			MoleculeType *mt = new MoleculeType(typeName,compLabels,defaultCompState,possibleComponentStates,isIntegerComponent,isPopulation,s);
 			mt->addEquivalentComponents(identicalComponents);
 
 			//Finally, clear the states and binding site labels that we read in
@@ -633,11 +645,16 @@ bool NFinput::initStartSpecies(
 				return false;
 			}
 
-			//If we're not going to make anything, well, then, don't make anything silly!  Stop here!
+			// Removed this next check!!
+			// We need to instantiate a population species, even if it does not
+			// currently have a positive species count.  --Justin.
+			/*
+			// If we're not going to make anything, well, then, don't make anything silly!  Stop here!
 			if(specCountInteger==0) {
 				if(verbose) cout<<"\t\tNot creating any instances of the Species: "<<speciesName<<" because you said I should make zero of them."<<endl;
 				continue;
 			}
+			*/
 
 
 			//Make sure we have some molecules in our list of species
@@ -653,9 +670,19 @@ bool NFinput::initStartSpecies(
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 			// Now loop through the molecules
+			bool found_population = false;
+			bool found_particle = false;
 			TiXmlElement *pMol;
 			for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule"))
 			{
+				// only one molecule per population species!!  --justin
+				if ( found_population )
+				{
+					cerr << "!!!Error.  More than one population molecule when creating species '"
+					     << speciesName << "'. Quitting"<<endl;
+					return false;
+				}
+
 				//First get the type of molecule and retrieve the moleculeType object from the system
 				string molName, molUid;
 				if(!pMol->Attribute("name") || ! pMol->Attribute("id"))  {
@@ -676,6 +703,19 @@ bool NFinput::initStartSpecies(
 				MoleculeType *mt = s->getMoleculeTypeByName(molName);
 				if(verbose) cout<<"\t\t\tIncluding Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
 
+				// check if this is a population molecule type  --justin
+				if ( mt->isPopulationType() )
+					found_population = true;
+				else
+					found_particle = true;
+
+				// we can't mix populations and agents!  --justin
+				if ( found_population  &&  found_particle )
+				{
+					cerr << "!!!Error.  Found mixed population and agent molecule types when creating species '"
+					     << speciesName << "'. Quitting"<<endl;
+					return false;
+				}
 
 				vector <string> usedComponentNames;
 
@@ -686,7 +726,7 @@ bool NFinput::initStartSpecies(
 					TiXmlElement *pComp;
 					for ( pComp = pListOfComp->FirstChildElement("Component"); pComp != 0; pComp = pComp->NextSiblingElement("Component"))
 					{
-
+					
 						//Get the basic properties of the component
 						string compId,compName,compBondCount;
 						if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
@@ -698,6 +738,13 @@ bool NFinput::initStartSpecies(
 							compBondCount = pComp->Attribute("numberOfBonds");
 						}
 
+					/*	// Get component index from name (first symmetric component ok),
+						// then check if this is an integer component.  --justin
+						bool isIntegerComp;
+						int compIndex;
+						compIndex = mt->getCompIndexFromName(compName);
+						isIntegerComp = mt->isIntegerComponent( compIndex );
+					*/
 
 						//cout<<" parsing comp: "<<compName<<endl;
 
@@ -785,26 +832,47 @@ bool NFinput::initStartSpecies(
 				//loop to create the actual molecules of this type
 				vector <Molecule *> currentM;
 				molecules.push_back(currentM);
-				for(int m=0; m<specCountInteger; m++)
+
+				if ( !found_population )
+				{
+					for(int m=0; m<specCountInteger; m++)
+					{
+						Molecule *mol = mt->genDefaultMolecule();
+
+						//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
+
+						//Loop through the states and set the ones we need to set
+						int k=0;
+						for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
+						{
+							//if(mt->isEquivalentComponent((*snIter))) {
+							//	int eqNum = mt->getEquivalencyClassNumber((*snIter));
+							//	std::stringstream numStream; numStream << currentCount[eqNum];
+							//	string postFix = numStream.str();
+							//	m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
+							//	currentCount[eqNum]++;
+							//} else {
+								mol->setComponentState((*snIter), (int)stateValue.at(k));
+							//}
+						}
+
+						molecules.at(molecules.size()-1).push_back(mol);
+					}
+				}
+				// handle population case (only create one instance of this molecule type) --Justin
+				else
 				{
 					Molecule *mol = mt->genDefaultMolecule();
-					//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
+					// set population
+					mol->setPopulation( specCountInteger );
 
 					//Loop through the states and set the ones we need to set
 					int k=0;
-					for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ ) {
-						//if(mt->isEquivalentComponent((*snIter))) {
-						//	int eqNum = mt->getEquivalencyClassNumber((*snIter));
-						//	std::stringstream numStream; numStream << currentCount[eqNum];
-						//	string postFix = numStream.str();
-						//	m->setComponentState((*snIter)+postFix, (int)stateValue.at(k));
-						//	currentCount[eqNum]++;
-						//} else {
-							mol->setComponentState((*snIter), (int)stateValue.at(k));
-						//}
-					}
+					for(snIter = stateName.begin(); snIter != stateName.end(); k++, snIter++ )
+						mol->setComponentState((*snIter), (int)stateValue.at(k));
 
 					molecules.at(molecules.size()-1).push_back(mol);
+
 				}
 
 				//delete [] currentCount;
@@ -820,6 +888,15 @@ bool NFinput::initStartSpecies(
 			TiXmlElement *pListOfBonds = pListOfMol->NextSiblingElement("ListOfBonds");
 			if(pListOfBonds)
 			{
+				// Complain and quit if this is a population species (no bonds allowed!)
+				//  --Justin, 4Mar2011
+				if ( found_population )
+				{
+					cerr << "!! Attempt to create illegal bond in population species: "
+					     << speciesName << ".  Quitting." << endl;
+					return false;
+				}
+
 				//First get the information on the bonds in the complex
 				TiXmlElement *pBond;
 				for ( pBond = pListOfBonds->FirstChildElement("Bond"); pBond != 0; pBond = pBond->NextSiblingElement("Bond"))
@@ -845,8 +922,9 @@ bool NFinput::initStartSpecies(
 
 						for(int j=0;j<specCountInteger;j++) {
 							Molecule::bind( molecules.at(bSiteMolIndex1).at(j),bSiteName1.c_str(),
-									        molecules.at(bSiteMolIndex2).at(j),bSiteName2.c_str());
+											molecules.at(bSiteMolIndex2).at(j),bSiteName2.c_str());
 						}
+
 					} catch (exception& e) {
 						cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
 						return false;
@@ -926,6 +1004,7 @@ bool NFinput::initReactionRules(
 			{
 				map <string,component> symMap = permutations.at(p);
 
+
 				//Grab the name of the rule
 				string rxnName;
 				if(!pRxnRule->Attribute("id")) {
@@ -946,9 +1025,14 @@ bool NFinput::initReactionRules(
 
 
 				//First, read in the template molecules using these data structures
+				// maps reactant pattern ids to TemplateMolecule pointers
 				map <string,TemplateMolecule *> reactants;
+				// maps component ids to component objects
 				map <string, component> comps;
+				// points to TemplateMolecules for Reactants
 				vector <TemplateMolecule *> templates;
+				// points to TemplateMolecules for AddMoleculeTransforms
+				vector <TemplateMolecule *> addmol_templates;
 
 
 
@@ -987,21 +1071,217 @@ bool NFinput::initReactionRules(
 				//		cout << (*it).first << " => " << (*it).second->getMoleculeType()->getName() << endl;
 
 
-
-				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
-				TransformationSet *ts = new TransformationSet(templates);
-
-
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//Read in the list of operations we need to perform in this rule
 				TiXmlElement *pListOfOperations = pRxnRule->FirstChildElement("ListOfOperations");
-				if(!pListOfOperations) {
+				if ( !pListOfOperations )
+				{
 					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no operations!  This rule will do nothing!"<<endl;
 					continue;
 				}
 
-				//First extract out the state changes
+
+				//Find new molecule creations before we creating the transformation set!
+				// This has to be done first so we know how many extra mappingSets we'll
+				// need for new product molecules in the TransformationSet
+				//   --Justin, 2May2011
+
+				//As new product molecules are identified, we'll create components and
+				// add them to the 'comps' map. THen we'll be able to apply further
+				// transformations to the new molecules late on.
+
+				// I'm pretty sure we don't need to worry about symmetry here.
+				//   --Justin
+
+				// remember added product ids, to avoid adding something more than once
+				vector <string>            addedProductPatterns;
+				// remember MoleculeCreator objects
+				vector <MoleculeCreator *> moleculeCreatorsList;
+
+				TiXmlElement *pAdd;
+				for ( pAdd = pListOfOperations->FirstChildElement("Add");
+						pAdd != 0;  pAdd = pAdd->NextSiblingElement("Add") )
+				{
+
+					//Make sure all the information about the state change is here
+					string id;       // the full molecule id
+					string patt_id;  // the pattern id
+
+					if ( !pAdd->Attribute("id") )
+					{
+						cerr << "A specified Add operation in ReactionClass: '" << rxnName << "' does not\n"
+						     << "have a valid id attribute.  Quitting." << endl;
+						return false;
+					}
+
+					id = pAdd->Attribute("id");
+
+
+					//Now make sure we're not adding something twice...
+					bool foundAddedPattern = false;
+					for ( unsigned int appIndex=0; appIndex<addedProductPatterns.size(); appIndex++ )
+					{
+						if( addedProductPatterns.at(appIndex).compare(id)==0 )
+						{
+							foundAddedPattern = true;
+							break;
+						}
+					}
+					if ( !foundAddedPattern )
+					{
+						addedProductPatterns.push_back(id);
+					}
+					else continue;
+
+
+					if(verbose) cout<<"\t\t\t***Identified addition of product: "+id+"."<<endl;
+
+					// Some preprocessing of the ID to make sure we are getting the right thing
+					//First, check if we are pointing to a molecule - if we are, we have to stop
+					//this nonsense! (current BNGL returns add transforms for each molecule, not
+					//per the entire pattern...)  [Michael]
+
+					// Pointing to molecules is more general, because we might
+					//  want to create a molecule and then bind it to an existing molecule.
+					//  And if we need to create an entire species, we create each molecule and
+					//  then perform bond operations. Going forward, we should create new molecules
+					//  one at a time. --Justin, 2Mar2011
+
+					// Extract pattern substring
+					int M_position = id.find("M");
+					if ( M_position >= 0 )
+					{
+						patt_id = id.substr(0,M_position-1);
+					}
+					else
+					{
+						cerr << "Error:: ReactionClass " << rxnName << " contains an Add transform\n"
+						     << "with id that does not refer to a molecule." << endl;
+						return false;
+					}
+
+
+					//Go get the product pattern we need which will specify how to make this new species
+					TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
+					if ( !pListOfProductPatterns )
+					{
+						cerr << "Error:: ReactionRule " << rxnName << " contains no product patterns,\n"
+						     << "but needs at least one to add a molecule creation rule!" << endl;
+						return false;
+					}
+
+					bool found_mol = false;
+					TiXmlElement * pProduct;
+					for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern");
+							pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern") )
+					{
+						//First extract out the product Id
+						string productName;
+						if( !pProduct->Attribute("id") )
+						{
+							cerr<<"Product pattern in ReactionRule "+rxnName+" does not have a valid id attribute!"<<endl;
+							return false;
+						}
+						productName = pProduct->Attribute("id");
+
+						// If this isn't the pattern we're looking for, go onto the next pattern
+						if ( productName != patt_id ) continue;
+
+						TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
+
+						if( pListOfMols==NULL )
+						{
+							cerr << "Reactant product pattern " << productName << " in reaction\n"
+							     << rxnName << " without a valid 'ListOfMolecules'!  Quiting." << endl;
+							return false;
+						}
+
+						TiXmlElement * pMolecule;
+						for ( pMolecule = pListOfMols->FirstChildElement("Molecule");
+								pMolecule != 0;  pMolecule = pMolecule->NextSiblingElement("Molecule") )
+						{
+							//First extract out the molecule Id
+							string moleculeName;
+							if ( !pMolecule->Attribute("id") )
+							{
+								cerr << "Product molecule in ReactionRule " << rxnName << " does not\n"
+								     << "have a valid id attribute!" << endl;
+								return false;
+							}
+
+							moleculeName = pMolecule->Attribute("id");
+
+							// Is this the molecule we're looking for?
+							if ( moleculeName != id ) continue;
+
+
+							// This will create templates and components for the product molecule and its sites
+							//  (also handles increment population transforms!)
+							bool ok = NFinput::readProductMolecule(
+									      pMolecule, s, parameter, allowedStates,
+										  productName, moleculeCreatorsList,
+										  comps, verbose );
+
+							if( !ok )
+							{
+								cerr << "Some problem reading product molecule for Add transform in reaction "
+								     << rxnName << "." << endl;
+								return false;
+							}
+
+							// if we haven't found a problem yet, then we found the right molecule
+							//  (even if the molecule is being ignored, like null
+							found_mol = true;
+							break;
+						}
+						if (found_mol) break;
+					}
+
+					// make sure we found the molecule!
+					if ( !found_mol )
+					{
+						cerr << "Could not find product molecule '" << id << "' referenced in\n"
+						     << "Add transform in reaction " << rxnName << "." << endl;
+						return false;
+					}
+				}
+
+
+
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
+				TransformationSet *ts;
+				if ( moleculeCreatorsList.empty() )
+				{
+					// create transformation set without add molecule transformas
+					ts = new TransformationSet(templates);
+				}
+				else
+				{
+					// get the templates for added molecules
+					vector <MoleculeCreator *>::iterator  mc_iter;
+					for ( mc_iter = moleculeCreatorsList.begin();
+							mc_iter != moleculeCreatorsList.end();  ++mc_iter )
+					{
+						addmol_templates.push_back( (*mc_iter)->getTemplateMolecule() );
+					}
+
+					// create transformation set with add molecule transforms!
+					ts = new TransformationSet( templates, addmol_templates );
+
+					// add molecule creators!
+					for ( mc_iter = moleculeCreatorsList.begin();
+							mc_iter != moleculeCreatorsList.end();  ++mc_iter )
+					{
+						if( !ts->addAddMolecule( *mc_iter ) ) return false;
+					}
+				}
+
+				// Should we use complex bookkeeping?
+				ts->setComplexBookkeeping( blockSameComplexBinding );
+
+
+				//Next extract out the state changes
 				TiXmlElement *pStateChange;
 				for ( pStateChange = pListOfOperations->FirstChildElement("StateChange"); pStateChange != 0; pStateChange = pStateChange->NextSiblingElement("StateChange"))
 				{
@@ -1021,6 +1301,14 @@ bool NFinput::initReactionRules(
 					int finalStateInt = 0;
 					if(!lookup(c, site, comps, symMap)) return false;
 
+					// Check if this is modifying a population (illegal!)
+					if ( c->t->getMoleculeType()->isPopulationType() )
+					{
+						cerr << "Attempt to change state of a population type molecule in ReactionClass: '"
+						     << rxnName << "'. Quitting." << endl;
+						return false;
+					}
+
 					//handle both increment and decrement states first...
 					if(finalState=="PLUS") {
 						if(!ts->addIncrementStateTransform(c->t,c->symPermutationName)) return false;
@@ -1032,7 +1320,6 @@ bool NFinput::initReactionRules(
 					}
 					else if(finalState=="MINUS") {
 						if(!ts->addDecrementStateTransform(c->t,c->symPermutationName)) return false;
-
 
 						if(verbose) {
 							cout<<"\t\t\t***Identified decrement state of site: "+c->t->getMoleculeTypeName()+"("+c->symPermutationName;
@@ -1077,7 +1364,8 @@ bool NFinput::initReactionRules(
 				//it is possible to add a bond before another was deleted in the same rule!  This
 				//would give you an error!)
 				TiXmlElement *pDeleteBond;
-				for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond"); pDeleteBond != 0; pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond"))
+				for ( pDeleteBond = pListOfOperations->FirstChildElement("DeleteBond");
+						pDeleteBond != 0;  pDeleteBond = pDeleteBond->NextSiblingElement("DeleteBond") )
 				{
 					//Make sure all the information about the unbinding operation change is here
 					string site1,site2;
@@ -1112,29 +1400,44 @@ bool NFinput::initReactionRules(
 
 				//Next extract out the new bonds that are formed
 				TiXmlElement *pAddBond;
-				for ( pAddBond = pListOfOperations->FirstChildElement("AddBond"); pAddBond != 0; pAddBond = pAddBond->NextSiblingElement("AddBond"))
+				for ( pAddBond = pListOfOperations->FirstChildElement("AddBond");
+						pAddBond != 0;  pAddBond = pAddBond->NextSiblingElement("AddBond") )
 				{
 					//cout<<"adding binding transform!"<<endl;
 					//Make sure all the information about the binding operation is here
 					string site1, site2;
-					if(!pAddBond->Attribute("site1") || !pAddBond->Attribute("site2")) {
-						cerr<<"A specified binding operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-						cerr<<"have a valid site1 or site2 attribute.  Quitting."<<endl;
+					if( !pAddBond->Attribute("site1") || !pAddBond->Attribute("site2") )
+					{
+						cerr << "A specified binding operation in ReactionClass: '" << rxnName << "' does not\n"
+						     << "have a valid site1 or site2 attribute.  Quitting." << endl;
 						return false;
-					} else {
+					}
+					else
+					{
 						site1 = pAddBond->Attribute("site1");
 						site2 = pAddBond->Attribute("site2");
-
-						//Skip this if we are messing with a bond in the product pattern....
-						// @TODO:  FIX THIS!  should reject adds in molecule species that are newly added!
-						//if(site1.find("RP")>=0 || site2.find("RP")>=0) continue;
 					}
+
+					// NFsim now is able to add bonds to newly created molecules. While processing
+					//  AddMoleculeTransforms, we created components corresponding to new molecules
+					//  and inserted maps from site id to component object into 'comps'
+					// --Justin, 3Mar2011
 
 					component *c1;
 					component *c2;
 
-					if(!lookup(c1, site1, comps, symMap)) return false;
-					if(!lookup(c2, site2, comps, symMap)) return false;
+					if ( !lookup( c1, site1, comps, symMap) ) return false;
+					if ( !lookup( c2, site2, comps, symMap) ) return false;
+
+
+					// Check if this is binding a population (illegal!)
+					if (    c1->t->getMoleculeType()->isPopulationType()
+						 || c2->t->getMoleculeType()->isPopulationType() )
+					{
+						cerr << "Attempt to AddBond at site on a population type molecule in ReactionClass: '"
+						     << rxnName << "'. Quitting." << endl;
+						return false;
+					}
 
 					//Make sure we only block binding on the same complex if they were on separate reactants
 					//if this is an internal binding, then we have to allow it, even if we have the flag
@@ -1142,40 +1445,65 @@ bool NFinput::initReactionRules(
 					//cout<<"\n"<<site1<<endl;
 					//cout<<site2<<endl;
 
+					// Comment about binding to new product molecules
+					// 1) Binding two new molecules:
+					// 2) Binding a new molecule and an existing molecule:
+
 					int underScore1 = site1.find_first_of("_");
 					int underScore2 = site2.find_first_of("_");
 
-					string reactantNum1=site1.substr(0,site1.find_first_of("_",underScore1+1));
-					string reactantNum2=site2.substr(0,site2.find_first_of("_",underScore2+1));
-					//cout<<reactantNum1<<endl;
-					//cout<<reactantNum2<<endl;
+					string reactantNum1 = site1.substr( 0, site1.find_first_of("_",underScore1+1) );
+					string reactantNum2 = site2.substr( 0, site2.find_first_of("_",underScore2+1) );
+					//cout << "reactant1: " << reactantNum1 << endl;
+					//cout << "reactant2: " << reactantNum2 << endl;
 
-					if(reactantNum1.compare(reactantNum2)==0) {
+					// Handling inter- and intra-complex binding is now part of a general procedure
+					//  for handling reaction molecularity  --Justin, 4Mar2011
+					/*if ( reactantNum1.compare(reactantNum2)==0 )
+					{
 						//this means that they were on the same reactant, so we should always add
 						//this as a normal binding reaction...
-						if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
-					} else {
-
-						//Otherwise, we should check how we should add this reaction, depending on the input flags
-						if(!blockSameComplexBinding) {
-							if(!ts->addBindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
-						} else {
-							if(!ts->addBindingSeparateComplexTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) {return false; }
-						}
-						if(verbose) {
-							cout<<"\t\t\t***Identified binding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
-							cout<<" to site " + c2->t->getMoleculeTypeName()+"("+c2->symPermutationName<<")"<<endl;
-						}
+						if ( !ts->addBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+							return false;
 					}
+					else
+					{
+						//Otherwise, we should check how we should add this reaction, depending on the input flags
+						if ( !blockSameComplexBinding )
+						{
+							if ( !ts->addBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+								return false;
+						}
+						else
+						{
+							if ( !ts->addBindingSeparateComplexTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+								return false;
+						}
+						if (verbose)
+						{
+							cout << "\t\t\t***Identified binding of site: " << c1->t->getMoleculeTypeName()
+							     << "(" << c1->symPermutationName << ")" << " to site " << c2->t->getMoleculeTypeName()
+							     << "(" << c2->symPermutationName << ")" << endl;
+						}
+					}*/
 
+					// Add binding transform
+					if ( !ts->addBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+						return false;
 
+					if (verbose)
+					{
+						cout << "\t\t\t***Identified binding of site: " << c1->t->getMoleculeTypeName()
+						     << "(" << c1->symPermutationName << ")" << " to site " << c2->t->getMoleculeTypeName()
+						     << "(" << c2->symPermutationName << ")" << endl;
+					}
 				}
-
 
 
 				//Next extract out anything that is destroyed
 				TiXmlElement *pDelete;
-				for ( pDelete = pListOfOperations->FirstChildElement("Delete"); pDelete != 0; pDelete = pDelete->NextSiblingElement("Delete"))
+				for ( pDelete = pListOfOperations->FirstChildElement("Delete");
+						pDelete != 0;  pDelete = pDelete->NextSiblingElement("Delete") )
 				{
 					//Make sure all the information about the state change is here
 					string id,delMolKeyword;
@@ -1220,13 +1548,26 @@ bool NFinput::initReactionRules(
 									cerr<<"keyword in such situations, as in this rule.  So go update your rule now.\n"<<endl;
 									return false;
 
-									if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES_NO_KEYWORD)) return false;
+									if ( c.mt->isPopulationType() )
+									{
+										if(!ts->addDeleteMolecule(c.t,TransformationFactory::DECREMENT_POPULATION)) return false;
+									}
+									else
+									{
+										if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES_NO_KEYWORD)) return false;
+									}
 								} else {
 									//Pointing to a single molecule, DeleteMolecules keyword is on, so delete it regardless
 									//cout<<"Using the DeleteMolecules keyword, so delete only the molecules"
 									//	" that are being pointed to..."<<endl;
-									if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES)) return false;
-
+									if ( c.t->getMoleculeType()->isPopulationType() )
+									{
+										if(!ts->addDecrementPopulation(c.t)) return false;
+									}
+									else
+									{
+										if(!ts->addDeleteMolecule(c.t,TransformationFactory::DELETE_MOLECULES)) return false;
+									}
 								}
 							}
 
@@ -1240,13 +1581,23 @@ bool NFinput::initReactionRules(
 									}
 								}
 
-
+								// get component
+								component c = comps.find(id)->second;
 								if(delMolKeyword.compare("0")==0) {
 									//Pointing to the whole complex, no DeleteMolecules keyword, so delete it all!
 									//cout<<"Pointing to the whole complex, without DeleteMolecules keyword, so delete it and all connected..."<<endl;
 									component c = comps.find(id)->second;
-									if(!ts->addDeleteMolecule(c.t,TransformationFactory::COMPLETE_SPECIES_REMOVAL)) return false;
-								} else {
+									if ( c.t->getMoleculeType()->isPopulationType() )
+									{   // we're dealing with a population here, create a decrement population transform
+										if(!ts->addDecrementPopulation(c.t)) return false;
+									}
+									else
+									{	// we're dealing with a particle here, create regular delete transform
+										if(!ts->addDeleteMolecule(c.t,TransformationFactory::COMPLETE_SPECIES_REMOVAL)) return false;
+									}
+								}
+								else
+								{
 									//Pointing to the whole complex, DeleteMolecules keyword is turned on.  According to
 									//BNGL logic, this will only delete the molecule(s) specified in the pattern, and not
 									//the entire species.  Fortunately, BNG should detect that the keyword is on, and pass
@@ -1280,98 +1631,6 @@ bool NFinput::initReactionRules(
 						}
 					}
 
-
-				}
-
-				//Finally, figure out any new creations
-				vector <string> addedProductPatterns;
-				TiXmlElement *pAdd;
-				for ( pAdd = pListOfOperations->FirstChildElement("Add"); pAdd != 0; pAdd = pAdd->NextSiblingElement("Add"))
-				{
-
-					//Make sure all the information about the state change is here
-					string id;
-					if(!pAdd->Attribute("id")) {
-						cerr<<"A specified add operation in ReactionClass: '"+rxnName+"' does not "<<endl;
-						cerr<<"have a valid id attribute.  Quitting."<<endl;
-						return false;
-					} else {
-						id = pAdd->Attribute("id");
-
-						// Some preprocessing of the ID to make sure we are getting the right thing
-						//First, check if we are pointing to a molecule - if we are, we have to stop
-						//this nonsense! (current BNGL returns add transforms for each molecule, not
-						//per the entire pattern...)
-						int M_position = id.find("M");
-						if(M_position>=0) {
-						//	cout<<endl<<id<<endl;
-							id = id.substr(0,M_position-1);
-						//	cout<<endl<<id<<endl;
-						//	exit(1);
-						}
-						//Now make sure we haven't seen this pattern before...
-						bool foundAddedPattern=false;
-						for(unsigned int appIndex=0; appIndex<addedProductPatterns.size(); appIndex++) {
-							if(addedProductPatterns.at(appIndex).compare(id)==0) {
-								foundAddedPattern=true;
-								break;
-							}
-						}
-						if(!foundAddedPattern) {
-							addedProductPatterns.push_back(id);
-						} else {
-							continue;
-						}
-
-						if(verbose) cout<<"\t\t\t***Identified addition of product pattern: "+id+"."<<endl;
-
-						SpeciesCreator *sc = NULL;
-
-						//Go get the product pattern we need which will specify how to make this new species
-						TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
-						if(!pListOfProductPatterns) {
-							cerr<<"Error:: ReactionRule "<<rxnName<<" contains no product patterns, but needs at least one to add a species creation rule!"<<endl;
-							return false;
-						}
-						TiXmlElement * pProduct;
-						for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern"))
-						{
-							//First extract out the product Id
-							string productName;
-							if(!pProduct->Attribute("id")) {
-								cerr<<"Product pattern in ReactionRule "+rxnName+" does not have a valid id attribute!"<<endl;
-								return false;
-							} else {
-								productName = pProduct->Attribute("id");
-							}
-
-							//When we find the product pattern with the correct Id, then lets create it
-							if(productName==id) {
-								TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
-									if(pListOfMols) {
-
-										vector <MoleculeType *> productMoleculeTypes;
-										vector < vector <int> > stateInformation;
-										vector < vector <int> > bindingSiteInformation;
-
-										bool ok = NFinput::readProductPattern(pListOfMols,s,parameter,allowedStates, productName,
-												productMoleculeTypes, stateInformation, bindingSiteInformation, verbose);
-
-										if(!ok) {
-											cout<<"Could not read the list of product patterns for addition of a molecule in reaction "<<rxnName<<endl;
-
-										} else if(productMoleculeTypes.size()>0){
-											sc = new SpeciesCreator(productMoleculeTypes,stateInformation,bindingSiteInformation);
-											if(!ts->addAddMolecule(sc)) return false;
-										}
-									}
-									else {
-										cerr<<"Reactant product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
-										return false;
-									}
-							}
-						}
-					}
 				}
 
 
@@ -1419,7 +1678,28 @@ bool NFinput::initReactionRules(
 					{
 						//Create the Elementary Reaction...
 						ts->finalize();
-						r = new BasicRxnClass(rxnName,0,"",ts,s);
+
+						// decide if we need a basic or population reaction
+						bool found_pop = false;
+						for ( unsigned int ir = 0;  ir < ts->getNreactants();  ++ir )
+						{
+							if ( ts->getTemplateMolecule(ir)->getMoleculeType()->isPopulationType() )
+							{
+								found_pop = true;
+								break;
+							}
+						}
+
+						if ( !found_pop )
+						{	// create Basic RxnClass
+							r = new BasicRxnClass(rxnName,0,"",ts,s);
+						}
+						else
+						{	// create Population RxnClass
+							if(verbose) cout << "\t\t\tFound population reactants: selecting elementary population reaction class." << endl;
+							r = new PopulationRxnClass(rxnName,0,"",ts,s);
+						}
+
 
 						//Make sure that the rate constant exists
 						TiXmlElement *pListOfRateConstants = pRateLaw->FirstChildElement("ListOfRateConstants");
@@ -1903,10 +2183,9 @@ bool NFinput::initObservables(
 				SpeciesObservable *so = new SpeciesObservable(observableName,tmList,stochRelation,stochQuantity);
 				s->addObservableForOutput(so);
 
-
-
-
-			} else {
+			}
+			else
+			{
 				cerr<<"Cannot create an Observable of type '"<<observableType<<"'."<<endl;
 				cerr<<"The only valid types in NFsim are: 'Molecules' and 'Species', case sensitive."<<endl;
 				return false;
@@ -2665,6 +2944,142 @@ bool NFinput::readProductPattern(
 
 
 
+bool NFinput::readProductMolecule(
+		TiXmlElement * pMol,
+		System * s,
+		map <string,double> & parameter,
+		map<string,int> & allowedStates,
+		string patternName,
+		vector <MoleculeCreator *> & moleculeCreatorsList,
+		map <string, component> & comps,
+		bool verbose )
+{
+	//cout<<"reading the product molecule!"<<endl;
+	try
+	{
+		// this will hold the template molecule
+		TemplateMolecule * tempmol;
+		// this holds a pointer to the molecule type
+		MoleculeType     * moltype;
+		// this will hold the state information
+		vector < pair <int,int> >  component_states;
+
+
+		//First get the type of molecule and retrieve the moleculeType object from the system
+		string molName, molUid;
+
+		if( !pMol->Attribute("name") || !pMol->Attribute("id") )
+		{
+			cerr << "!!!Error.  Invalid 'Molecule' tag found when creating product molecule '"
+			     << patternName << "'. Quitting" << endl;
+			return false;
+		}
+
+		molName = pMol->Attribute("name");
+		molUid  = pMol->Attribute("id");
+
+
+		//Skip anything that is a null molecule
+		if(molName=="Null" || molName=="NULL" || molName=="null")
+		{
+			if(verbose) cout<<"\t\t\t\treadProductMolecule is ignoring " << molName << " molecule..."<<endl;
+			return true;
+		}
+
+		//Skip anything that is trash molecule
+		if(molName=="Trash" || molName=="TRASH" || molName=="trash")
+		{
+			if(verbose) cout<<"\t\t\t\treadProductMolecule is ignoring " << molName << " molecule..."<<endl;
+			return true;
+		}
+
+
+		// Retrieve the moleculeType and remember it
+		moltype = s->getMoleculeTypeByName( molName );
+
+		// Create the TemplateMolecule
+		tempmol = new TemplateMolecule( moltype );
+
+		// Create a component object for this molecule
+		component c_mol(tempmol,"");
+		comps.insert( pair <string, component> (molUid,c_mol) );
+
+
+	    // Write some info if verbose
+		if(verbose) cout << "\t\t\t\tIncluding Product Molecule of type: " << molName
+		                 << " with local id: " << molUid << endl;
+
+
+		//Loop through the components of the molecule in order to remember state values
+		TiXmlElement * pListOfComp = pMol->FirstChildElement("ListOfComponents");
+		if(pListOfComp)
+		{
+			TiXmlElement *pComp;
+			for ( pComp = pListOfComp->FirstChildElement("Component");
+					pComp != 0;  pComp = pComp->NextSiblingElement("Component") )
+			{
+
+				//Get the basic components of this molecule (ignore any bonds)
+				string compId, compName, compStateValue;
+				int componentIndex, stateValueIndex;
+
+				if( !pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds") )
+				{
+					cerr << "!!!Error.  Invalid 'Component' tag found when creating '" << molUid
+					     << "' of pattern '"<< patternName << "'. Quitting." << endl;
+					return false;
+				}
+
+				compId   = pComp->Attribute("id");
+				compName = pComp->Attribute("name");
+
+				// Add empty component site to the templateMolecule
+				tempmol->addEmptyComponent( compName );
+
+				// Construct a component object for ths site
+				component c_site(tempmol,compName);
+				comps.insert(pair <string, component> (compId,c_site));
+
+				// Read in a state, if it is in fact a state
+				if(pComp->Attribute("state"))
+				{
+					compStateValue = pComp->Attribute("state");
+
+					//Make sure the given state is allowed
+					if( allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end() )
+					{
+						cerr << "Attempt to assign invalid component state value '" << compStateValue
+						     << "' in product molecule '" << molName << "'.  Quitting now." << endl;
+						return false;
+					}
+
+					// State is a valid allowed state: get component index
+					componentIndex  = moltype->getCompIndexFromName(compName);
+					// Get state value index
+					stateValueIndex = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
+					// Push onto component states vector
+					component_states.push_back( pair <int,int> (componentIndex, stateValueIndex) );
+
+					// add component state value constraint to the template molecule
+					tempmol->addComponentConstraint( compName, compStateValue );
+				}
+
+			} //end loop over components
+
+		} //end if statement for compenents to exist
+
+		// don't forget:  add molecule creator to list
+		moleculeCreatorsList.push_back( new MoleculeCreator( tempmol, moltype, component_states ) );
+
+		// return the templateMolecule
+		return true;
+	}
+	catch (...)
+	{
+		//Here's our final catch all!
+		return false;
+	}
+}
 
 
 

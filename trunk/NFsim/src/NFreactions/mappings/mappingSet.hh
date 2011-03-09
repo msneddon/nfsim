@@ -78,6 +78,12 @@ namespace NFcore
 			};*/
 
 
+			/*!
+			 	Gets the population
+			    @author JustinHogg
+			 */
+			int getPopulation() const;
+
 
 			bool hasDeletionTransform() const { return isDeletion; };
 
@@ -103,7 +109,8 @@ namespace NFcore
 			void printDetails() const;
 			void printDetails(ostream &o) const;
 
-
+			// get the ID of the complex that this mappingSet is pointing to.
+			int getComplexID() const;
 
 		protected:
 

@@ -83,6 +83,11 @@ namespace NFcore
 			void straightSubtract();
 			void clear() { count=0; };
 
+			/* add multiple new matches, all at once. useful for counter updates --justin */
+			void add( int n_matches );
+			/* remove multiple new matches, all at once. useful for counter updates --justin */
+			void subtract( int n_matches );
+
 			int getCount() const { return (int)count; };
 			string getName() const { return obsName; };
 			int getType() const { return type; };
@@ -136,6 +141,8 @@ namespace NFcore
 	};
 
 
+	// NOTE: class updated to count populations as well as particles.
+	//  --Justin, 4Mar2011
 	class MoleculesObservable : public Observable
 	{
 		public:
@@ -157,6 +164,8 @@ namespace NFcore
 	};
 
 
+	// NOTE: class updated to count populations as well as particles.
+	//  --Justin, 4Mar2011
 	class SpeciesObservable : public Observable
 	{
 		public:
