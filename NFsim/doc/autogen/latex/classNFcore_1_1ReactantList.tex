@@ -24,6 +24,8 @@ virtual {\bf $\sim$ReactantList} ()
 \item 
 virtual int {\bf size} () const 
 \item 
+virtual int {\bf getPopulation} () const 
+\item 
 virtual {\bf MappingSet} $\ast$ {\bf pushNextAvailableMappingSet} ()
 \item 
 virtual void {\bf popLastMappingSet} ()
@@ -31,6 +33,8 @@ virtual void {\bf popLastMappingSet} ()
 virtual void {\bf removeMappingSet} (unsigned int mappingSetId)
 \item 
 void {\bf pickRandom} ({\bf MappingSet} $\ast$\&ms)
+\item 
+void {\bf pickRandomFromPopulation} ({\bf MappingSet} $\ast$\&ms)
 \item 
 virtual {\bf MappingSet} $\ast$ {\bf getMappingSet} (unsigned int mappingSetId) const 
 \item 
@@ -74,7 +78,12 @@ Deconstructor that deletes all mappingSets associated with this list.
 
 Returns the number of mappingSets that have been added to this list 
 
-Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_5c8282ceba6fcdf04ea4708a9ec5056a}.\index{NFcore::ReactantList@{NFcore::ReactantList}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
+Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1ReactantContainer_5c8282ceba6fcdf04ea4708a9ec5056a}.\index{NFcore::ReactantList@{NFcore::ReactantList}!getPopulation@{getPopulation}}
+\index{getPopulation@{getPopulation}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int ReactantList::getPopulation () const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantList_e1f83bdddaca3f084f669cbba66cf042}
+
+
+Returns the sum population of all mappingSets that have been added to this list \index{NFcore::ReactantList@{NFcore::ReactantList}!pushNextAvailableMappingSet@{pushNextAvailableMappingSet}}
 \index{pushNextAvailableMappingSet@{pushNextAvailableMappingSet}!NFcore::ReactantList@{NFcore::ReactantList}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantList::pushNextAvailableMappingSet ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantList_cbd9b70dc5bec6a90afdff65e708bdbb}
 
@@ -100,7 +109,12 @@ Implements {\bf NFcore::ReactantContainer} \doxyref{}{p.}{classNFcore_1_1Reactan
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::pickRandom ({\bf MappingSet} $\ast$\& {\em ms})}\label{classNFcore_1_1ReactantList_fe1c91c30e5096eaebf6d3bd12ee824e}
 
 
-Randomly selects a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} from the list of available MappingSets. \index{NFcore::ReactantList@{NFcore::ReactantList}!getMappingSet@{getMappingSet}}
+Randomly selects a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} from the list of available MappingSets. \index{NFcore::ReactantList@{NFcore::ReactantList}!pickRandomFromPopulation@{pickRandomFromPopulation}}
+\index{pickRandomFromPopulation@{pickRandomFromPopulation}!NFcore::ReactantList@{NFcore::ReactantList}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactantList::pickRandomFromPopulation ({\bf MappingSet} $\ast$\& {\em ms})}\label{classNFcore_1_1ReactantList_0dde54cce4398b10b7c1f572ec13fd9a}
+
+
+Randomly selects a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} from the population weighted list of available MappingSets. \index{NFcore::ReactantList@{NFcore::ReactantList}!getMappingSet@{getMappingSet}}
 \index{getMappingSet@{getMappingSet}!NFcore::ReactantList@{NFcore::ReactantList}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MappingSet} $\ast$ ReactantList::getMappingSet (unsigned int {\em mappingSetId}) const\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1ReactantList_9ce2c8a0c49cf0f40a5057cd311907ce}
 

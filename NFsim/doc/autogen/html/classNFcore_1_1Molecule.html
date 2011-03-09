@@ -58,6 +58,16 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#390f0d1223bdd2ab075b25993902a520">getDegree</a> ()</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#16b6745c6533c31333334dc3d39417e4">isPopulationType</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#efdeb81a3b9d98a8644db2e1acd59404">setPopulation</a> (int count)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#912defe8c71ea04e15b94d161a50a61c">getPopulation</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#854b5ead187df0c2aeb04b208ad4c0b0">incrementPopulation</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#eda502a7eb99b0b319491ed416000b92">decrementPopulation</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#7b79c8463c9c4dc88549aa74ba7179cc">getComponentState</a> (int cIndex) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#644b32b9f8609ee675f2ecc4f458d678">getComponentIndexOfBond</a> (int cIndex) const </td></tr>
@@ -163,6 +173,8 @@ The base unit of the NFsim program, this class maintains instances of individual
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#ef848f04c27d380beb9044880f473268">parentMoleculeType</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#63f93bdf7d7245f3fb58464338123bfe">useComplex</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#609b46545caff1d1f80082a90fb5112f">population_count</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1Molecule.html#99d853296129fe8ec10967f40a05f683">component</a></td></tr>
 
@@ -413,6 +425,102 @@ The base unit of the NFsim program, this class maintains instances of individual
       <table class="memname">
         <tr>
           <td class="memname">int Molecule::getDegree           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="16b6745c6533c31333334dc3d39417e4"></a><!-- doxytag: member="NFcore::Molecule::isPopulationType" ref="16b6745c6533c31333334dc3d39417e4" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::Molecule::isPopulationType           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="efdeb81a3b9d98a8644db2e1acd59404"></a><!-- doxytag: member="NFcore::Molecule::setPopulation" ref="efdeb81a3b9d98a8644db2e1acd59404" args="(int count)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Molecule::setPopulation           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>count</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="912defe8c71ea04e15b94d161a50a61c"></a><!-- doxytag: member="NFcore::Molecule::getPopulation" ref="912defe8c71ea04e15b94d161a50a61c" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Molecule::getPopulation           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="854b5ead187df0c2aeb04b208ad4c0b0"></a><!-- doxytag: member="NFcore::Molecule::incrementPopulation" ref="854b5ead187df0c2aeb04b208ad4c0b0" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Molecule::incrementPopulation           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="eda502a7eb99b0b319491ed416000b92"></a><!-- doxytag: member="NFcore::Molecule::decrementPopulation" ref="eda502a7eb99b0b319491ed416000b92" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Molecule::decrementPopulation           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -1511,6 +1619,21 @@ The base unit of the NFsim program, this class maintains instances of individual
 
 </div>
 </div><p>
+<a class="anchor" name="609b46545caff1d1f80082a90fb5112f"></a><!-- doxytag: member="NFcore::Molecule::population_count" ref="609b46545caff1d1f80082a90fb5112f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classNFcore_1_1Molecule.html#609b46545caff1d1f80082a90fb5112f">NFcore::Molecule::population_count</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="99d853296129fe8ec10967f40a05f683"></a><!-- doxytag: member="NFcore::Molecule::component" ref="99d853296129fe8ec10967f40a05f683" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1633,7 +1756,7 @@ The base unit of the NFsim program, this class maintains instances of individual
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="molecule_8cpp.html">molecule.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

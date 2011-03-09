@@ -103,6 +103,8 @@ int {\bf reactionType}
 \item 
 unsigned int {\bf n\_\-reactants}
 \item 
+unsigned int {\bf n\_\-mappingsets}
+\item 
 {\bf System} $\ast$ {\bf system}
 \item 
 double {\bf baseRate}
@@ -203,7 +205,7 @@ class {\bf Netgen}
 
 
 
-Reimplemented in {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_54fa8f462e0d990d8b547892fca9b918}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_2dc1bbf290be2f3d535954d006efc385}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_9d90ba3fc8f0effd97f14080ed76b608}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!fire@{fire}}
+Reimplemented in {\bf NFcore::PopulationRxnClass} \doxyref{}{p.}{classNFcore_1_1PopulationRxnClass_cd148069d8d74285e5b539d3b96570f4}, {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_54fa8f462e0d990d8b547892fca9b918}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_2dc1bbf290be2f3d535954d006efc385}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_9d90ba3fc8f0effd97f14080ed76b608}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!fire@{fire}}
 \index{fire@{fire}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void ReactionClass::fire (double {\em random\_\-A\_\-number})}\label{classNFcore_1_1ReactionClass_a29cf3993e835405202ca462be86dc0c}
 
@@ -257,7 +259,7 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_9a679d57f4cfdd184f3bf312ecd20cc6}, {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_23dd5630ec0157ce7ab6d240720a57cb}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_63709cdada0fc7c63125bd2e562f4b42}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_077d5dc28b205d46a14d22487c08bb7e}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!tag@{tag}}
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_9a679d57f4cfdd184f3bf312ecd20cc6}, {\bf NFcore::PopulationRxnClass} \doxyref{}{p.}{classNFcore_1_1PopulationRxnClass_12585ef6755324a068e75ca7cc2cd7e9}, {\bf NFcore::FunctionalRxnClass} \doxyref{}{p.}{classNFcore_1_1FunctionalRxnClass_23dd5630ec0157ce7ab6d240720a57cb}, {\bf NFcore::MMRxnClass} \doxyref{}{p.}{classNFcore_1_1MMRxnClass_63709cdada0fc7c63125bd2e562f4b42}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_077d5dc28b205d46a14d22487c08bb7e}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!tag@{tag}}
 \index{tag@{tag}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::ReactionClass::tag ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1ReactionClass_77c272fe7042f8121a2fefdf3348245c}
 
@@ -269,7 +271,7 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_908c2d7fdceeb2c77f43d47275b707ff}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_bff81c460e3398249e095f1f52a60652}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!printFullDetails@{printFullDetails}}
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_908c2d7fdceeb2c77f43d47275b707ff}, {\bf NFcore::PopulationRxnClass} \doxyref{}{p.}{classNFcore_1_1PopulationRxnClass_14c489c34e521228f5580a30e1018ffe}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_bff81c460e3398249e095f1f52a60652}.\index{NFcore::ReactionClass@{NFcore::ReactionClass}!printFullDetails@{printFullDetails}}
 \index{printFullDetails@{printFullDetails}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual void NFcore::ReactionClass::printFullDetails () const\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1ReactionClass_521a0b7a474568522bec973cfa6b5242}
 
@@ -313,7 +315,7 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 
 
 
-Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_8d194b51f6338bc68bc8440d02249f0e}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_5d5d078d2a84602132b708a9bcfb078f}.
+Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRxnClass_8d194b51f6338bc68bc8440d02249f0e}, {\bf NFcore::PopulationRxnClass} \doxyref{}{p.}{classNFcore_1_1PopulationRxnClass_0004eb8b2a18ed687c975b7ba7e0b522}, and {\bf NFcore::DORRxnClass} \doxyref{}{p.}{classNFcore_1_1DORRxnClass_5d5d078d2a84602132b708a9bcfb078f}.
 
 \subsection{Friends And Related Function Documentation}
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!MatchSetIter@{MatchSetIter}}
@@ -372,6 +374,11 @@ Implemented in {\bf NFcore::BasicRxnClass} \doxyref{}{p.}{classNFcore_1_1BasicRx
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!n\_\-reactants@{n\_\-reactants}}
 \index{n\_\-reactants@{n\_\-reactants}!NFcore::ReactionClass@{NFcore::ReactionClass}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactionClass::n\_\-reactants}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_302fc738473605c9645142943e174f10}
+
+
+\index{NFcore::ReactionClass@{NFcore::ReactionClass}!n\_\-mappingsets@{n\_\-mappingsets}}
+\index{n\_\-mappingsets@{n\_\-mappingsets}!NFcore::ReactionClass@{NFcore::ReactionClass}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::ReactionClass::n\_\-mappingsets}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1ReactionClass_9c2e9c5eecce4136163df72ab80e54be}
 
 
 \index{NFcore::ReactionClass@{NFcore::ReactionClass}!system@{system}}

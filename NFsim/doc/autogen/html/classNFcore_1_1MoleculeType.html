@@ -42,6 +42,8 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#8aa69e2d970225a36f993e9d56814eda">MoleculeType</a> (string <a class="el" href="classNFcore_1_1MoleculeType.html#755780d41e72badcf20531dd3621f97e">name</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#d20eea9395a1c5ec71003eb0965babc0">compName</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#4d187266eb075bf495a765382bab2a4e">defaultCompState</a>, vector&lt; vector&lt; string &gt; &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#db4c1194995c547eca84c0c112a26c03">possibleCompStates</a>, vector&lt; bool &gt; isIntegerComponent, <a class="el" href="classNFcore_1_1System.html">System</a> *<a class="el" href="classNFcore_1_1MoleculeType.html#6bd4d56816120d51823c41cf9cca9460">system</a>)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#fdb1301990085df7073b22270e042989">MoleculeType</a> (string <a class="el" href="classNFcore_1_1MoleculeType.html#755780d41e72badcf20531dd3621f97e">name</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#d20eea9395a1c5ec71003eb0965babc0">compName</a>, vector&lt; string &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#4d187266eb075bf495a765382bab2a4e">defaultCompState</a>, vector&lt; vector&lt; string &gt; &gt; &amp;<a class="el" href="classNFcore_1_1MoleculeType.html#db4c1194995c547eca84c0c112a26c03">possibleCompStates</a>, vector&lt; bool &gt; isIntegerComponent, bool pop_type, <a class="el" href="classNFcore_1_1System.html">System</a> *<a class="el" href="classNFcore_1_1MoleculeType.html#6bd4d56816120d51823c41cf9cca9460">system</a>)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#1b62655acafa2ba0271a7bc5cab51357">~MoleculeType</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#c26965aba9dcf36b96ca9fbe32227fc8">getName</a> () const </td></tr>
@@ -77,6 +79,12 @@ This class maintains information about a "type" of molecule in the <a class="el"
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#93779fa9dfd88b98a8e79d9403e4d211">getEquivalencyClass</a> (int *&amp;components, int &amp;n_components, string cName) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#94244f5be674a28a33985b1f10448268">getEquivalencyClassNumber</a> (string cName) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#6c004694b03839fd7479a322ea3dcd15">getEquivalenceClassNumber</a> (int cIndex) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#f4d59c21bc41178a557c0d9dd2eaf016">getEquivalenceClassComponentNameFromComponentIndex</a> (int cIndex) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#6bc5dbeafe377cf26676a8e06fbe1be9">isPopulationType</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#4c803a676be6c8be2082e0a3198cf70e">isIntegerComponent</a> (string cName) const </td></tr>
 
@@ -116,7 +124,11 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#7946b482cf6c24fc991ef66438df5ee8">addMoleculeToRunningSystem</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;mol)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#36fc1be26b12253fac31bb64c289616f">addMoleculeToRunningSystemButDontUpdate</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;mol)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#75f848d752a31ac28d2bb608eaa4c926">removeMoleculeFromRunningSystem</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;m)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#96aded449510c0f470a398aebeef2acc">removeMoleculeFromRunningSystemButDontUpdate</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;m)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#71304b63fe38f035c75ce0dde036acce">removeFromRxns</a> (<a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *m)</td></tr>
 
@@ -184,6 +196,8 @@ This class maintains information about a "type" of molecule in the <a class="el"
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#4d187266eb075bf495a765382bab2a4e">defaultCompState</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#8d2a49ed145df19a98e1bc8172323d6e">isIntegerCompState</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#241ebdc0d049661b1156a8fc25776b5b">population_type</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MoleculeType.html#10a36b6c678bb4b0f296363eaee9b5e3">n_eqComp</a></td></tr>
 
@@ -367,6 +381,65 @@ This class maintains information about a "type" of molecule in the <a class="el"
           <td></td>
           <td class="paramtype">vector&lt; bool &gt;&nbsp;</td>
           <td class="paramname"> <em>isIntegerComponent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>system</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="fdb1301990085df7073b22270e042989"></a><!-- doxytag: member="NFcore::MoleculeType::MoleculeType" ref="fdb1301990085df7073b22270e042989" args="(string name, vector&lt; string &gt; &amp;compName, vector&lt; string &gt; &amp;defaultCompState, vector&lt; vector&lt; string &gt; &gt; &amp;possibleCompStates, vector&lt; bool &gt; isIntegerComponent, bool pop_type, System *system)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MoleculeType::MoleculeType           </td>
+          <td>(</td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>compName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>defaultCompState</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; vector&lt; string &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>possibleCompStates</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; bool &gt;&nbsp;</td>
+          <td class="paramname"> <em>isIntegerComponent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>pop_type</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -783,6 +856,65 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="6c004694b03839fd7479a322ea3dcd15"></a><!-- doxytag: member="NFcore::MoleculeType::getEquivalenceClassNumber" ref="6c004694b03839fd7479a322ea3dcd15" args="(int cIndex) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int MoleculeType::getEquivalenceClassNumber           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>cIndex</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="f4d59c21bc41178a557c0d9dd2eaf016"></a><!-- doxytag: member="NFcore::MoleculeType::getEquivalenceClassComponentNameFromComponentIndex" ref="f4d59c21bc41178a557c0d9dd2eaf016" args="(int cIndex) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string MoleculeType::getEquivalenceClassComponentNameFromComponentIndex           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>cIndex</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6bc5dbeafe377cf26676a8e06fbe1be9"></a><!-- doxytag: member="NFcore::MoleculeType::isPopulationType" ref="6bc5dbeafe377cf26676a8e06fbe1be9" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::MoleculeType::isPopulationType           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="4c803a676be6c8be2082e0a3198cf70e"></a><!-- doxytag: member="NFcore::MoleculeType::isIntegerComponent" ref="4c803a676be6c8be2082e0a3198cf70e" args="(string cName) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -1165,12 +1297,52 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="36fc1be26b12253fac31bb64c289616f"></a><!-- doxytag: member="NFcore::MoleculeType::addMoleculeToRunningSystemButDontUpdate" ref="36fc1be26b12253fac31bb64c289616f" args="(Molecule *&amp;mol)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MoleculeType::addMoleculeToRunningSystemButDontUpdate           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;&nbsp;</td>
+          <td class="paramname"> <em>mol</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="75f848d752a31ac28d2bb608eaa4c926"></a><!-- doxytag: member="NFcore::MoleculeType::removeMoleculeFromRunningSystem" ref="75f848d752a31ac28d2bb608eaa4c926" args="(Molecule *&amp;m)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void MoleculeType::removeMoleculeFromRunningSystem           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;&nbsp;</td>
+          <td class="paramname"> <em>m</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="96aded449510c0f470a398aebeef2acc"></a><!-- doxytag: member="NFcore::MoleculeType::removeMoleculeFromRunningSystemButDontUpdate" ref="96aded449510c0f470a398aebeef2acc" args="(Molecule *&amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MoleculeType::removeMoleculeFromRunningSystemButDontUpdate           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1Molecule.html">Molecule</a> *&amp;&nbsp;</td>
           <td class="paramname"> <em>m</em>          </td>
@@ -1811,6 +1983,21 @@ This class maintains information about a "type" of molecule in the <a class="el"
 
 </div>
 </div><p>
+<a class="anchor" name="241ebdc0d049661b1156a8fc25776b5b"></a><!-- doxytag: member="NFcore::MoleculeType::population_type" ref="241ebdc0d049661b1156a8fc25776b5b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="classNFcore_1_1MoleculeType.html#241ebdc0d049661b1156a8fc25776b5b">NFcore::MoleculeType::population_type</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="10a36b6c678bb4b0f296363eaee9b5e3"></a><!-- doxytag: member="NFcore::MoleculeType::n_eqComp" ref="10a36b6c678bb4b0f296363eaee9b5e3" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1993,7 +2180,7 @@ This class maintains information about a "type" of molecule in the <a class="el"
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="moleculeType_8cpp.html">moleculeType.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

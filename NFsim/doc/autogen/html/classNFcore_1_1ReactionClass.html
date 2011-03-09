@@ -31,10 +31,11 @@ Inheritance diagram for NFcore::ReactionClass:</div>
 
 <p><center><img src="classNFcore_1_1ReactionClass.png" usemap="#NFcore::ReactionClass_map" border="0" alt=""></center>
 <map name="NFcore::ReactionClass_map">
-<area href="classNFcore_1_1BasicRxnClass.html" alt="NFcore::BasicRxnClass" shape="rect" coords="91,56,263,80">
-<area href="classNFcore_1_1DORRxnClass.html" alt="NFcore::DORRxnClass" shape="rect" coords="273,56,445,80">
+<area href="classNFcore_1_1BasicRxnClass.html" alt="NFcore::BasicRxnClass" shape="rect" coords="182,56,354,80">
+<area href="classNFcore_1_1DORRxnClass.html" alt="NFcore::DORRxnClass" shape="rect" coords="364,56,536,80">
 <area href="classNFcore_1_1FunctionalRxnClass.html" alt="NFcore::FunctionalRxnClass" shape="rect" coords="0,112,172,136">
 <area href="classNFcore_1_1MMRxnClass.html" alt="NFcore::MMRxnClass" shape="rect" coords="182,112,354,136">
+<area href="classNFcore_1_1PopulationRxnClass.html" alt="NFcore::PopulationRxnClass" shape="rect" coords="364,112,536,136">
 </map>
 </div>
 
@@ -124,6 +125,8 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#5c4b85024376502137b82a16af46be32">reactionType</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#302fc738473605c9645142943e174f10">n_reactants</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#9c2e9c5eecce4136163df72ab80e54be">n_mappingsets</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1ReactionClass.html#f1df6e7866c79df25276fa3477d52277">system</a></td></tr>
 
@@ -409,7 +412,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Reimplemented in <a class="el" href="classNFcore_1_1FunctionalRxnClass.html#54fa8f462e0d990d8b547892fca9b918">NFcore::FunctionalRxnClass</a>, <a class="el" href="classNFcore_1_1MMRxnClass.html#2dc1bbf290be2f3d535954d006efc385">NFcore::MMRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#9d90ba3fc8f0effd97f14080ed76b608">NFcore::DORRxnClass</a>.</p>
+<p>Reimplemented in <a class="el" href="classNFcore_1_1PopulationRxnClass.html#cd148069d8d74285e5b539d3b96570f4">NFcore::PopulationRxnClass</a>, <a class="el" href="classNFcore_1_1FunctionalRxnClass.html#54fa8f462e0d990d8b547892fca9b918">NFcore::FunctionalRxnClass</a>, <a class="el" href="classNFcore_1_1MMRxnClass.html#2dc1bbf290be2f3d535954d006efc385">NFcore::MMRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#9d90ba3fc8f0effd97f14080ed76b608">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -612,7 +615,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#9a679d57f4cfdd184f3bf312ecd20cc6">NFcore::BasicRxnClass</a>, <a class="el" href="classNFcore_1_1FunctionalRxnClass.html#23dd5630ec0157ce7ab6d240720a57cb">NFcore::FunctionalRxnClass</a>, <a class="el" href="classNFcore_1_1MMRxnClass.html#63709cdada0fc7c63125bd2e562f4b42">NFcore::MMRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#077d5dc28b205d46a14d22487c08bb7e">NFcore::DORRxnClass</a>.</p>
+<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#9a679d57f4cfdd184f3bf312ecd20cc6">NFcore::BasicRxnClass</a>, <a class="el" href="classNFcore_1_1PopulationRxnClass.html#12585ef6755324a068e75ca7cc2cd7e9">NFcore::PopulationRxnClass</a>, <a class="el" href="classNFcore_1_1FunctionalRxnClass.html#23dd5630ec0157ce7ab6d240720a57cb">NFcore::FunctionalRxnClass</a>, <a class="el" href="classNFcore_1_1MMRxnClass.html#63709cdada0fc7c63125bd2e562f4b42">NFcore::MMRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#077d5dc28b205d46a14d22487c08bb7e">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -653,7 +656,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#908c2d7fdceeb2c77f43d47275b707ff">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#bff81c460e3398249e095f1f52a60652">NFcore::DORRxnClass</a>.</p>
+<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#908c2d7fdceeb2c77f43d47275b707ff">NFcore::BasicRxnClass</a>, <a class="el" href="classNFcore_1_1PopulationRxnClass.html#14c489c34e521228f5580a30e1018ffe">NFcore::PopulationRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#bff81c460e3398249e095f1f52a60652">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -814,7 +817,7 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
 
 <p>
 
-<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#8d194b51f6338bc68bc8440d02249f0e">NFcore::BasicRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#5d5d078d2a84602132b708a9bcfb078f">NFcore::DORRxnClass</a>.</p>
+<p>Implemented in <a class="el" href="classNFcore_1_1BasicRxnClass.html#8d194b51f6338bc68bc8440d02249f0e">NFcore::BasicRxnClass</a>, <a class="el" href="classNFcore_1_1PopulationRxnClass.html#0004eb8b2a18ed687c975b7ba7e0b522">NFcore::PopulationRxnClass</a>, and <a class="el" href="classNFcore_1_1DORRxnClass.html#5d5d078d2a84602132b708a9bcfb078f">NFcore::DORRxnClass</a>.</p>
 
 </div>
 </div><p>
@@ -976,6 +979,21 @@ A <a class="el" href="classNFcore_1_1ReactionClass.html" title="Abstract Base Cl
       <table class="memname">
         <tr>
           <td class="memname">unsigned int <a class="el" href="classNFcore_1_1ReactionClass.html#302fc738473605c9645142943e174f10">NFcore::ReactionClass::n_reactants</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9c2e9c5eecce4136163df72ab80e54be"></a><!-- doxytag: member="NFcore::ReactionClass::n_mappingsets" ref="9c2e9c5eecce4136163df72ab80e54be" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int <a class="el" href="classNFcore_1_1ReactionClass.html#9c2e9c5eecce4136163df72ab80e54be">NFcore::ReactionClass::n_mappingsets</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -1212,7 +1230,7 @@ flag to identify if the macroscopic vs. microscopic rate is to be used (TotalRat
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="NFcore_8hh-source.html">NFcore.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFcore/<a class="el" href="reactionClass_8cpp.html">reactionClass.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

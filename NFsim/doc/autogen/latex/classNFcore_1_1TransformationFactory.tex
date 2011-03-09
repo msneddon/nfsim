@@ -20,7 +20,9 @@ static {\bf Transformation} $\ast$ {\bf genBindingTransform2} (unsigned int bSit
 \item 
 static {\bf Transformation} $\ast$ {\bf genUnbindingTransform} (unsigned int bSiteIndex)
 \item 
-static {\bf Transformation} $\ast$ {\bf genAddMoleculeTransform} ({\bf SpeciesCreator} $\ast$sc)
+static {\bf AddSpeciesTransform} $\ast$ {\bf genAddSpeciesTransform} ({\bf SpeciesCreator} $\ast$sc)
+\item 
+static {\bf AddMoleculeTransform} $\ast$ {\bf genAddMoleculeTransform} ({\bf MoleculeCreator} $\ast$mc)
 \item 
 static {\bf Transformation} $\ast$ {\bf genRemoveMoleculeTransform} (int removalType)
 \item 
@@ -29,6 +31,8 @@ static {\bf Transformation} $\ast$ {\bf genEmptyTransform} ()
 static {\bf Transformation} $\ast$ {\bf genIncrementStateTransform} (unsigned int cIndex)
 \item 
 static {\bf Transformation} $\ast$ {\bf genDecrementStateTransform} (unsigned int cIndex)
+\item 
+static {\bf Transformation} $\ast$ {\bf genDecrementPopulationTransform} ()
 \item 
 static {\bf Transformation} $\ast$ {\bf genLocalFunctionReference} (string PointerName, int type, {\bf TemplateMolecule} $\ast$tm)
 \end{CompactItemize}
@@ -58,6 +62,10 @@ static const unsigned int {\bf INCREMENT\_\-STATE} = 6
 static const unsigned int {\bf DECREMENT\_\-STATE} = 7
 \item 
 static const unsigned int {\bf LOCAL\_\-FUNCTION\_\-REFERENCE} = 8
+\item 
+static const unsigned int {\bf INCREMENT\_\-POPULATION} = 9
+\item 
+static const unsigned int {\bf DECREMENT\_\-POPULATION} = 10
 \end{CompactItemize}
 
 
@@ -95,13 +103,18 @@ Generates the second half of a binding transform. The other site already knows a
 
 Generates an unbinding transformation for a particular binding site. Only one of the binding sites must be specified as a \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} - the other is automatically taken care of. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
-\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genAddMoleculeTransform@{genAddMoleculeTransform}}
-\index{genAddMoleculeTransform@{genAddMoleculeTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genAddMoleculeTransform ({\bf SpeciesCreator} $\ast$ {\em sc})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_f11322a3ba45cabe38b2eadf032a1ff6}
+\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genAddSpeciesTransform@{genAddSpeciesTransform}}
+\index{genAddSpeciesTransform@{genAddSpeciesTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::AddSpeciesTransform} $\ast$ TransformationFactory::genAddSpeciesTransform ({\bf SpeciesCreator} $\ast$ {\em sc})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_d1dbc61c0869543b639948c6aca7407c}
 
 
 Generates an Add \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} transformation. \begin{Desc}
-\item[Author:]Michael Sneddon \end{Desc}
+\item[Author:]Michael Sneddon\end{Desc}
+Changes by JustinHogg, 3Mar2011: Unlike other generators, this now returns a specific child class. AddMoleculeTransforms are handled seperately from other transforms, so we don't need to follow the polymorphic interface. Also, we need to call the method \char`\"{}create\_\-and\_\-map\char`\"{} which is specifc to \doxyref{AddMoleculeTransform}{p.}{classNFcore_1_1AddMoleculeTransform}. \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genAddMoleculeTransform@{genAddMoleculeTransform}}
+\index{genAddMoleculeTransform@{genAddMoleculeTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::AddMoleculeTransform} $\ast$ TransformationFactory::genAddMoleculeTransform ({\bf MoleculeCreator} $\ast$ {\em mc})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_46a9edf522aa36598e1bc4ecd6b67475}
+
+
 \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genRemoveMoleculeTransform@{genRemoveMoleculeTransform}}
 \index{genRemoveMoleculeTransform@{genRemoveMoleculeTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genRemoveMoleculeTransform (int {\em removalType})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_81d0b2c7cd8efe29ff45333ac16dc657}
@@ -130,6 +143,15 @@ Generates an IncrementState transformation. \begin{Desc}
 
 Generates an DecrementState transformation. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genDecrementPopulationTransform@{genDecrementPopulationTransform}}
+\index{genDecrementPopulationTransform@{genDecrementPopulationTransform}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genDecrementPopulationTransform ()\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_c5498f0b27dc9275fe781b54fcdb56d0}
+
+
+Generates an IncrementPopulation transformation. \begin{Desc}
+\item[Author:]Justin Hogg\end{Desc}
+Generates an DecrementPopulation transformation. \begin{Desc}
+\item[Author:]Justin Hogg \end{Desc}
 \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genLocalFunctionReference@{genLocalFunctionReference}}
 \index{genLocalFunctionReference@{genLocalFunctionReference}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Transformation} $\ast$ TransformationFactory::genLocalFunctionReference (string {\em PointerName}, int {\em type}, {\bf TemplateMolecule} $\ast$ {\em tm})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_206a59330bba84e1b0131b8b0ba919f4}
@@ -198,7 +220,17 @@ Indicates a decrement transformation \index{NFcore::TransformationFactory@{NFcor
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::LOCAL\_\-FUNCTION\_\-REFERENCE} = 8\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_2082f8fc11ff7315d0454c2bf61bf0e4}
 
 
+\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!INCREMENT\_\-POPULATION@{INCREMENT\_\-POPULATION}}
+\index{INCREMENT\_\-POPULATION@{INCREMENT\_\-POPULATION}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::INCREMENT\_\-POPULATION} = 9\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_fe90e7c56cc555fc34fc33f5a1625672}
 
+
+Indicates a population increment transform \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!DECREMENT\_\-POPULATION@{DECREMENT\_\-POPULATION}}
+\index{DECREMENT\_\-POPULATION@{DECREMENT\_\-POPULATION}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const unsigned int {\bf NFcore::TransformationFactory::DECREMENT\_\-POPULATION} = 10\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_082fd8c6064a34272676df0595f4735b}
+
+
+Indicates a population decrement transform 
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 

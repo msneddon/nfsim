@@ -14,6 +14,8 @@ This class is one of the core pieces of a \doxyref{ReactionClass}{p.}{classNFcor
 \item 
 {\bf TransformationSet} (vector$<$ {\bf TemplateMolecule} $\ast$ $>$ reactantTemplates)
 \item 
+{\bf TransformationSet} (vector$<$ {\bf TemplateMolecule} $\ast$ $>$ reactantTemplates, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ addMoleculeTemplates)
+\item 
 {\bf $\sim$TransformationSet} ()
 \item 
 int {\bf getNumOfReactants} () const 
@@ -34,7 +36,11 @@ bool {\bf addUnbindingTransform} ({\bf TemplateMolecule} $\ast$t, string bSiteNa
 \item 
 bool {\bf addDeleteMolecule} ({\bf TemplateMolecule} $\ast$t, int deletionType)
 \item 
-bool {\bf addAddMolecule} ({\bf SpeciesCreator} $\ast$sc)
+bool {\bf addDecrementPopulation} ({\bf TemplateMolecule} $\ast$t)
+\item 
+bool {\bf addAddSpecies} ({\bf SpeciesCreator} $\ast$sc)
+\item 
+bool {\bf addAddMolecule} ({\bf MoleculeCreator} $\ast$mc)
 \item 
 bool {\bf addLocalFunctionReference} ({\bf TemplateMolecule} $\ast$t, string PointerName, int scope)
 \item 
@@ -46,11 +52,21 @@ bool {\bf transform} ({\bf MappingSet} $\ast$$\ast$mappingSets)
 \item 
 unsigned int {\bf getNreactants} () const 
 \item 
+unsigned int {\bf getNmappingSets} () const 
+\item 
+bool {\bf getComplexBookkeeping} () const 
+\item 
+void {\bf setComplexBookkeeping} (bool val)
+\item 
 void {\bf finalize} ()
 \item 
 bool {\bf isFinalized} () const 
 \item 
+bool {\bf checkMolecularity} ({\bf MappingSet} $\ast$$\ast$mappingSets)
+\item 
 bool {\bf getListOfProducts} ({\bf MappingSet} $\ast$$\ast$mappingSets, list$<$ {\bf Molecule} $\ast$ $>$ \&products, int traversalLimit)
+\item 
+bool {\bf getListOfAddedMolecules} ({\bf MappingSet} $\ast$$\ast$mappingSets, list$<$ {\bf Molecule} $\ast$ $>$ \&products, int traversalLimit)
 \item 
 bool {\bf hasSymUnbindingTransform} () const 
 \item 
@@ -70,13 +86,21 @@ int {\bf find} ({\bf TemplateMolecule} $\ast$t)
 \item 
 bool {\bf finalized}
 \item 
+bool {\bf complex\_\-bookkeeping}
+\item 
 unsigned int {\bf n\_\-reactants}
+\item 
+unsigned int {\bf n\_\-addmol}
 \item 
 {\bf TemplateMolecule} $\ast$$\ast$ {\bf reactants}
 \item 
+{\bf TemplateMolecule} $\ast$$\ast$ {\bf addmol}
+\item 
 vector$<$ {\bf Transformation} $\ast$ $>$ $\ast$ {\bf transformations}
 \item 
-vector$<$ {\bf Transformation} $\ast$ $>$ {\bf addMoleculeTransformations}
+vector$<$ {\bf AddMoleculeTransform} $\ast$ $>$ {\bf addMoleculeTransformations}
+\item 
+vector$<$ {\bf AddSpeciesTransform} $\ast$ $>$ {\bf addSpeciesTransformations}
 \item 
 bool {\bf hasSymUnbinding}
 \item 
@@ -101,6 +125,13 @@ static list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf it}
 
 Creates a new \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} from the given vector of TemplateMolecules. This takes care of setting everything up in the TemplateMolecules (such as adding MappingGenerators). Be sure to call \doxyref{finalize()}{p.}{classNFcore_1_1TransformationSet_ff4b1c7450529960cd211ef1949a479f} before using this in a ReactionClass! \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!TransformationSet@{TransformationSet}}
+\index{TransformationSet@{TransformationSet}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}TransformationSet::TransformationSet (vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\em reactantTemplates}, vector$<$ {\bf TemplateMolecule} $\ast$ $>$ {\em addMoleculeTemplates})}\label{classNFcore_1_1TransformationSet_53abe4c46bc78b29a0b956af76b52319}
+
+
+Creates a new \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} that includds addMolecule Transformations \begin{Desc}
+\item[Author:]Justin Hogg \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!$\sim$TransformationSet@{$\sim$TransformationSet}}
 \index{$\sim$TransformationSet@{$\sim$TransformationSet}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}TransformationSet::$\sim$TransformationSet ()}\label{classNFcore_1_1TransformationSet_bc0808b944f5f70b9b86bc4988501953}
@@ -170,17 +201,33 @@ Adds an unbinding reaction at the given site of the given \doxyref{TemplateMolec
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addDeleteMolecule ({\bf TemplateMolecule} $\ast$ {\em t}, int {\em deletionType})}\label{classNFcore_1_1TransformationSet_7f49ec4565e1c301698bf440058c6b60}
 
 
-Adds a delete rule to the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. This has not been implemented yet, so it may take other parameters. \begin{Desc}
+Adds a delete rule to the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. \begin{Desc}
 \item[Author:]Michael Sneddon\end{Desc}
 Adds a delete rule to the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!addDecrementPopulation@{addDecrementPopulation}}
+\index{addDecrementPopulation@{addDecrementPopulation}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addDecrementPopulation ({\bf TemplateMolecule} $\ast$ {\em t})}\label{classNFcore_1_1TransformationSet_3948d1170cb474668feccd15cb8ba444}
+
+
+Adds a decrement population transform to the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. \begin{Desc}
+\item[Author:]Justin Hogg\end{Desc}
+Adds a decrement population rule to the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. \begin{Desc}
+\item[Author:]Justin Hogg \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!addAddSpecies@{addAddSpecies}}
+\index{addAddSpecies@{addAddSpecies}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addAddSpecies ({\bf SpeciesCreator} $\ast$ {\em sc})}\label{classNFcore_1_1TransformationSet_8d0d72761bbcff447bc02fc54cfb856b}
+
+
+Adds a create species transform (this was formerly \char`\"{}addAddMolecule\char`\"{}) \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addAddMolecule@{addAddMolecule}}
 \index{addAddMolecule@{addAddMolecule}!NFcore::TransformationSet@{NFcore::TransformationSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addAddMolecule ({\bf SpeciesCreator} $\ast$ {\em sc})}\label{classNFcore_1_1TransformationSet_beaf8483f8d9406bf20989c8e45f8156}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addAddMolecule ({\bf MoleculeCreator} $\ast$ {\em mc})}\label{classNFcore_1_1TransformationSet_ee4c40ee84e6d6d615c73cd85b9fd7ca}
 
 
-Adds a create molecule rule, but has not been implemented yet. \begin{Desc}
-\item[Author:]Michael Sneddon \end{Desc}
+Adds a create molecule transform \begin{Desc}
+\item[Author:]Justin Hogg \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addLocalFunctionReference@{addLocalFunctionReference}}
 \index{addLocalFunctionReference@{addLocalFunctionReference}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addLocalFunctionReference ({\bf TemplateMolecule} $\ast$ {\em t}, string {\em PointerName}, int {\em scope})}\label{classNFcore_1_1TransformationSet_8d86d829f69bffad00d4b6fbddc17764}
@@ -204,7 +251,7 @@ Generates a blank \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} (blank in 
 \item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!getTemplateMolecule@{getTemplateMolecule}}
 \index{getTemplateMolecule@{getTemplateMolecule}!NFcore::TransformationSet@{NFcore::TransformationSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ NFcore::TransformationSet::getTemplateMolecule (unsigned int {\em reactantIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TransformationSet_c60fb574f4caccfa06c79bb517506d22}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule} $\ast$ TransformationSet::getTemplateMolecule (unsigned int {\em reactantIndex}) const}\label{classNFcore_1_1TransformationSet_5d1679e7c90497f24a9dd032ae9c7a41}
 
 
 Returns the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} of a given reactant. This function is primarily used for initial initializations of a \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass}. \begin{Desc}
@@ -216,6 +263,25 @@ Returns the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} of a
 
 Get the number of reactants in the rule governed by this \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet}. This function is really only used for initial initializations of a \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass}. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!getNmappingSets@{getNmappingSets}}
+\index{getNmappingSets@{getNmappingSets}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::TransformationSet::getNmappingSets () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TransformationSet_7a5d3e1ff5932bfa6b4013410abb18cb}
+
+
+Get the number of added Molecules in the rule governed by this \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet}. This function is really only used for initial initializations of a \doxyref{ReactionClass}{p.}{classNFcore_1_1ReactionClass}. \begin{Desc}
+\item[Author:]JustinHogg \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!getComplexBookkeeping@{getComplexBookkeeping}}
+\index{getComplexBookkeeping@{getComplexBookkeeping}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::TransformationSet::getComplexBookkeeping () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TransformationSet_baf6bb313d29710bd0453245069bedeb}
+
+
+Get/set complex bookkeeping. If complex bookkeeping is true, we should check molecularity when firing rules. \begin{Desc}
+\item[Author:]JustinHogg \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!setComplexBookkeeping@{setComplexBookkeeping}}
+\index{setComplexBookkeeping@{setComplexBookkeeping}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::TransformationSet::setComplexBookkeeping (bool {\em val})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TransformationSet_2177016b442392c23f25b6b51d2b8024}
+
+
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!finalize@{finalize}}
 \index{finalize@{finalize}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}void TransformationSet::finalize ()}\label{classNFcore_1_1TransformationSet_ff4b1c7450529960cd211ef1949a479f}
@@ -230,6 +296,13 @@ This function sets up the actual array of \doxyref{Transformation}{p.}{classNFco
 
 Check whether or not the \doxyref{finalize()}{p.}{classNFcore_1_1TransformationSet_ff4b1c7450529960cd211ef1949a479f} function has been called. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!checkMolecularity@{checkMolecularity}}
+\index{checkMolecularity@{checkMolecularity}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::checkMolecularity ({\bf MappingSet} $\ast$$\ast$ {\em mappingSets})}\label{classNFcore_1_1TransformationSet_47416ec8412d76dbe63adea39411a7ea}
+
+
+After selecting mappingSets, call this to check if the molecularity of the reactants is correct. Returns true if molecularity is correct, false otherwise. \begin{Desc}
+\item[Author:]JustinHogg \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!getListOfProducts@{getListOfProducts}}
 \index{getListOfProducts@{getListOfProducts}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::getListOfProducts ({\bf MappingSet} $\ast$$\ast$ {\em mappingSets}, list$<$ {\bf Molecule} $\ast$ $>$ \& {\em products}, int {\em traversalLimit})}\label{classNFcore_1_1TransformationSet_4d37f5e6911f45e2d67d666abd37755a}
@@ -237,6 +310,13 @@ Check whether or not the \doxyref{finalize()}{p.}{classNFcore_1_1TransformationS
 
 From an array of \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects, this function populates the list of Molecules with all the Molecules that can be affected by this \doxyref{Transformation}{p.}{classNFcore_1_1Transformation}. The traversalLimit parameters sets the depth at which the Molecules should be searched (starting at the original TemplateMolecules given in the initial vector of TemplateMolecules). So giving a value of 1 will only give you the immediate reactant Molecules. Setting this to two will explore down one level of bonds, and so on. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!getListOfAddedMolecules@{getListOfAddedMolecules}}
+\index{getListOfAddedMolecules@{getListOfAddedMolecules}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::getListOfAddedMolecules ({\bf MappingSet} $\ast$$\ast$ {\em mappingSets}, list$<$ {\bf Molecule} $\ast$ $>$ \& {\em products}, int {\em traversalLimit})}\label{classNFcore_1_1TransformationSet_8002fecdd63b9517fd563b82e36810de}
+
+
+This is a companion to getListOfProducts. This is called after applying transformations and gathers all the newly added molecules. \begin{Desc}
+\item[Author:]JustinHogg \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!hasSymUnbindingTransform@{hasSymUnbindingTransform}}
 \index{hasSymUnbindingTransform@{hasSymUnbindingTransform}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::TransformationSet::hasSymUnbindingTransform () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1TransformationSet_a2a03c0b5740f97f73bd77463cc8dde9}
@@ -280,27 +360,47 @@ Used for error checking when setting up a \doxyref{TransformationSet}{p.}{classN
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::TransformationSet::finalized}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_a996203ff6d6639858f5936f45e1d07e}
 
 
-Remembers if the finalize function has been called \index{NFcore::TransformationSet@{NFcore::TransformationSet}!n\_\-reactants@{n\_\-reactants}}
+Remembers if the finalize function has been called \index{NFcore::TransformationSet@{NFcore::TransformationSet}!complex\_\-bookkeeping@{complex\_\-bookkeeping}}
+\index{complex\_\-bookkeeping@{complex\_\-bookkeeping}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::TransformationSet::complex\_\-bookkeeping}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_a1e9afe6557047d608b74e21f6f39f1e}
+
+
+Remember if we're tracking complexes. --Justin, 3Mar2011 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!n\_\-reactants@{n\_\-reactants}}
 \index{n\_\-reactants@{n\_\-reactants}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::TransformationSet::n\_\-reactants}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_60b88db3068615195c7f833189c80b65}
 
 
-Keeps track of the number of reactants in the rule monitored by this \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} \index{NFcore::TransformationSet@{NFcore::TransformationSet}!reactants@{reactants}}
+Keeps track of the number of reactants in the rule monitored by this \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} \index{NFcore::TransformationSet@{NFcore::TransformationSet}!n\_\-addmol@{n\_\-addmol}}
+\index{n\_\-addmol@{n\_\-addmol}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::TransformationSet::n\_\-addmol}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_916307ac68cf6486618d5d6237c7cda6}
+
+
+Keeps track of the number of added molecules \index{NFcore::TransformationSet@{NFcore::TransformationSet}!reactants@{reactants}}
 \index{reactants@{reactants}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$$\ast$ {\bf NFcore::TransformationSet::reactants}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_8b051f98935a85b038a308c6f9512e6f}
 
 
-The array of TemplateMolecules that represent the reactants \index{NFcore::TransformationSet@{NFcore::TransformationSet}!transformations@{transformations}}
+The array of TemplateMolecules that represent the reactants \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addmol@{addmol}}
+\index{addmol@{addmol}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$$\ast$ {\bf NFcore::TransformationSet::addmol}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_74daf7ba0c78b627afb90d2778e382f5}
+
+
+The array of TemplateMolecules that represent the added molecules. Not sure if this will be used. --Justin \index{NFcore::TransformationSet@{NFcore::TransformationSet}!transformations@{transformations}}
 \index{transformations@{transformations}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Transformation} $\ast$$>$$\ast$ {\bf NFcore::TransformationSet::transformations}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_f1ae44a2471d34cb9d2579e5779f78e5}
 
 
 A vector that holds the actual \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} objects \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addMoleculeTransformations@{addMoleculeTransformations}}
 \index{addMoleculeTransformations@{addMoleculeTransformations}!NFcore::TransformationSet@{NFcore::TransformationSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf Transformation} $\ast$$>$ {\bf NFcore::TransformationSet::addMoleculeTransformations}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_3f20cd7f940097ff08c243ac719df4ae}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf AddMoleculeTransform} $\ast$$>$ {\bf NFcore::TransformationSet::addMoleculeTransformations}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_ae269d553aea1043c357325a69e4b8b9}
 
 
-A vector that holds the addMolecule Transformations, because they are handled separately \index{NFcore::TransformationSet@{NFcore::TransformationSet}!deleteList@{deleteList}}
+A vector that holds the addMolecule Transformations, because they are handled separately \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addSpeciesTransformations@{addSpeciesTransformations}}
+\index{addSpeciesTransformations@{addSpeciesTransformations}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf AddSpeciesTransform} $\ast$$>$ {\bf NFcore::TransformationSet::addSpeciesTransformations}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1TransformationSet_c8cdf7f16b7c5abb03c859d70bbad937}
+
+
+A vector that holds the addSpecies Transformations, because they are handled separately \index{NFcore::TransformationSet@{NFcore::TransformationSet}!deleteList@{deleteList}}
 \index{deleteList@{deleteList}!NFcore::TransformationSet@{NFcore::TransformationSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<$ {\bf Molecule} $\ast$ $>$ {\bf TransformationSet::deleteList}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1TransformationSet_5a56156f8cc62c1dd06bf324d161c70b}
 

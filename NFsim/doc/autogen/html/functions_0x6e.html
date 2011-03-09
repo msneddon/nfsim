@@ -69,6 +69,8 @@ Here is a list of all class members with links to the classes they belong to:
 <h3><a class="anchor" name="index_n">- n -</a></h3><ul>
 <li>n_activeLogClasses
 : <a class="el" href="classNFcore_1_1LogClassSelector.html#184aca6d5d451dfaf035a28f47f2a456">NFcore::LogClassSelector</a>
+<li>n_addmol
+: <a class="el" href="classNFcore_1_1TransformationSet.html#916307ac68cf6486618d5d6237c7cda6">NFcore::TransformationSet</a>
 <li>n_allFuncs
 : <a class="el" href="classNFcore_1_1CompositeFunction.html#5b9bb7a8abf16242bdde14e19bc1963d">NFcore::CompositeFunction</a>
 <li>n_argMolecules
@@ -77,8 +79,8 @@ Here is a list of all class members with links to the classes they belong to:
 : <a class="el" href="classNFcore_1_1LocalFunction.html#78a13bca5c8d724f126862b8d09392f4">NFcore::LocalFunction</a>
 , <a class="el" href="classNFcore_1_1CompositeFunction.html#25694f7e3fceddba531667a3ade8b3a8">NFcore::CompositeFunction</a>
 <li>n_bonds
-: <a class="el" href="classNFcore_1_1TemplateMolecule.html#d13e27de208f4a4323adf02232464744">NFcore::TemplateMolecule</a>
-, <a class="el" href="classNFcore_1_1SpeciesCreator.html#ae6b5119f145f5f9dd90d3fec3ecc5ef">NFcore::SpeciesCreator</a>
+: <a class="el" href="classNFcore_1_1SpeciesCreator.html#ae6b5119f145f5f9dd90d3fec3ecc5ef">NFcore::SpeciesCreator</a>
+, <a class="el" href="classNFcore_1_1TemplateMolecule.html#d13e27de208f4a4323adf02232464744">NFcore::TemplateMolecule</a>
 <li>n_compStateConstraint
 : <a class="el" href="classNFcore_1_1TemplateMolecule.html#7de6b735cb11d93a6320d3e5d8e559a0">NFcore::TemplateMolecule</a>
 <li>n_compStateExclusion
@@ -102,6 +104,8 @@ Here is a list of all class members with links to the classes they belong to:
 <li>n_mappingSets
 : <a class="el" href="classNFcore_1_1ReactantList.html#7425bc756e19906c0b021ac68ea476b5">NFcore::ReactantList</a>
 , <a class="el" href="classNFcore_1_1ReactantTree.html#879ca3d3ae77fc230370d22f0e5d0e2b">NFcore::ReactantTree</a>
+<li>n_mappingsets
+: <a class="el" href="classNFcore_1_1ReactionClass.html#9c2e9c5eecce4136163df72ab80e54be">NFcore::ReactionClass</a>
 <li>n_molecules
 : <a class="el" href="classNFcore_1_1MoleculeList.html#61273d0422f974177f427bd3b887b1ae">NFcore::MoleculeList</a>
 , <a class="el" href="classNFcore_1_1SpeciesCreator.html#b7cd601dd7e66e075593c073ece2c200">NFcore::SpeciesCreator</a>
@@ -157,18 +161,20 @@ Here is a list of all class members with links to the classes they belong to:
 <li>necessaryUpdateRxns
 : <a class="el" href="classNFcore_1_1System.html#43cb1df4bda30d1c117a0d36e6403e8f">NFcore::System</a>
 <li>Netgen
-: <a class="el" href="classNFcore_1_1ReactionClass.html#ba6e336204af7fb6e650375559c23f96">NFcore::ReactionClass</a>
-, <a class="el" href="classNFcore_1_1System.html#ba6e336204af7fb6e650375559c23f96">NFcore::System</a>
+: <a class="el" href="classNFcore_1_1System.html#ba6e336204af7fb6e650375559c23f96">NFcore::System</a>
+, <a class="el" href="classNFcore_1_1ReactionClass.html#ba6e336204af7fb6e650375559c23f96">NFcore::ReactionClass</a>
+<li>new_molecule
+: <a class="el" href="classNFcore_1_1AddMoleculeTransform.html#87d5dd6aed949a9b57b04d07de5c32b7">NFcore::AddMoleculeTransform</a>
 <li>newMoleculeCreations
 : <a class="el" href="classNFcore_1_1SpeciesCreator.html#af8a0cc618176574ce9a6689fa9e0161">NFcore::SpeciesCreator</a>
 <li>newValue
 : <a class="el" href="classNFcore_1_1StateChangeTransform.html#e0572474fd78825928ef9b9a3d926681">NFcore::StateChangeTransform</a>
 <li>Next()
-: <a class="el" href="classTiXmlAttribute.html#776478980776a024f7c2846eec640f65">TiXmlAttribute</a>
+: <a class="el" href="classTiXmlAttribute.html#138320aa7793b148ba7e5bd0a0ea4db6">TiXmlAttribute</a>
 <li>next
 : <a class="el" href="classTiXmlNode.html#2f329cc993d2d34df76e17dcbb776b45">TiXmlNode</a>
 <li>Next()
-: <a class="el" href="classTiXmlAttribute.html#138320aa7793b148ba7e5bd0a0ea4db6">TiXmlAttribute</a>
+: <a class="el" href="classTiXmlAttribute.html#776478980776a024f7c2846eec640f65">TiXmlAttribute</a>
 <li>nextAvailableComplex
 : <a class="el" href="classNFcore_1_1ComplexList.html#981bea128eeea140b44ad1b28b50784a">NFcore::ComplexList</a>
 <li>nextComplex()
@@ -178,9 +184,9 @@ Here is a list of all class members with links to the classes they belong to:
 <li>NextSibling()
 : <a class="el" href="classTiXmlNode.html#f854baeba384f5fe9859f5aee03b548e">TiXmlNode</a>
 <li>NextSiblingElement()
-: <a class="el" href="classTiXmlNode.html#6e1ac6b800e18049bc75e9f8e63a8e5f">TiXmlNode</a>
+: <a class="el" href="classTiXmlNode.html#3d7897999f99cf4870dd59df6331d7ff">TiXmlNode</a>
 <li>NFstream()
-: <a class="el" href="classNFstream.html#1b5a7c78a012438667ce9b4fc1d9fa84">NFstream</a>
+: <a class="el" href="classNFstream.html#ddf778a9a709d0dc010292d1b1c6d3d1">NFstream</a>
 <li>nicename
 : <a class="el" href="classNFcore_1_1LocalFunction.html#fd440817c06cfd32fbedb92a624a7d8c">NFcore::LocalFunction</a>
 <li>NO_CLONE
@@ -188,8 +194,8 @@ Here is a list of all class members with links to the classes they belong to:
 <li>NO_CONSTRAINT
 : <a class="el" href="classNFcore_1_1TemplateMolecule.html#fd3cf17861f4fad733af314643322ed8">NFcore::TemplateMolecule</a>
 <li>NO_LIMIT
-: <a class="el" href="classNFcore_1_1ReactionClass.html#6f410f39e8be240209cad19f1aab7f48">NFcore::ReactionClass</a>
-, <a class="el" href="classNFcore_1_1MoleculeList.html#3932d54c7de3b24d0593806a85d7ab9a">NFcore::MoleculeList</a>
+: <a class="el" href="classNFcore_1_1MoleculeList.html#3932d54c7de3b24d0593806a85d7ab9a">NFcore::MoleculeList</a>
+, <a class="el" href="classNFcore_1_1ReactionClass.html#6f410f39e8be240209cad19f1aab7f48">NFcore::ReactionClass</a>
 <li>NO_RELATION
 : <a class="el" href="classNFcore_1_1Observable.html#1e4e85dcff351ce51f317c64ce082879">NFcore::Observable</a>
 <li>NO_TYPE
@@ -232,7 +238,7 @@ Here is a list of all class members with links to the classes they belong to:
 <li>numOfNodes
 : <a class="el" href="classNFcore_1_1ReactantTree.html#11514f01532f7b0f286df1e4d806e3b2">NFcore::ReactantTree</a>
 </ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:48 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

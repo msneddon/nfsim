@@ -49,6 +49,8 @@ bool {\bf initObservables} ({\bf TiXmlElement} $\ast$pListOfObservables, {\bf Sy
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
 bool {\bf readProductPattern} ({\bf TiXmlElement} $\ast$pListOfMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, vector$<$ {\bf MoleculeType} $\ast$ $>$ \&productMoleculeTypes, vector$<$ vector$<$ int $>$ $>$ \&stateInformation, vector$<$ vector$<$ int $>$ $>$ \&bindingSiteInformation, bool verbose)
 \begin{CompactList}\small\item\em Reads a pattern XML block and returns the set of new TemplateMolecule objects. \item\end{CompactList}\item 
+bool {\bf readProductMolecule} ({\bf TiXmlElement} $\ast$pMol, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, string patternName, vector$<$ {\bf MoleculeCreator} $\ast$ $>$ \&moleculeCreatorsList, map$<$ string, {\bf component} $>$ \&comps, bool verbose)
+\begin{CompactList}\small\item\em Reads a product molecule XML block and returns a TemplateMolecule objects. \item\end{CompactList}\item 
 bool {\bf initFunctions} ({\bf TiXmlElement} $\ast$pListOfFunctions, {\bf System} $\ast$system, map$<$ string, double $>$ \&parameter, {\bf TiXmlElement} $\ast$pListOfObservables, map$<$ string, int $>$ \&allowedStates, bool verbose)
 \begin{CompactList}\small\item\em Reads the Function XML block and adds the Functions to the system. \item\end{CompactList}\item 
 bool {\bf FindReactionRuleSymmetry} ({\bf TiXmlElement} $\ast$pRxnRule, {\bf System} $\ast$s, map$<$ string, double $>$ \&parameter, map$<$ string, int $>$ \&allowedStates, map$<$ string, {\bf component} $>$ \&symComps, map$<$ string, {\bf component} $>$ \&symRxnCenter, bool verbose)
@@ -225,6 +227,15 @@ Reads a pattern XML block and returns the set of new TemplateMolecule objects.
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readPatternForSymmetry ({\bf TiXmlElement} $\ast$ {\em pListOfMol}, {\bf System} $\ast$ {\em s}, string {\em patternName}, map$<$ string, {\bf component} $>$ \& {\em comps}, map$<$ string, {\bf component} $>$ \& {\em symComps}, bool {\em verbose})}\label{namespaceNFinput_60d74a003353edf262b5be31e05e68dc}
 
 
+\index{NFinput@{NFinput}!readProductMolecule@{readProductMolecule}}
+\index{readProductMolecule@{readProductMolecule}!NFinput@{NFinput}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readProductMolecule ({\bf TiXmlElement} $\ast$ {\em pMol}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, string {\em patternName}, vector$<$ {\bf MoleculeCreator} $\ast$ $>$ \& {\em moleculeCreatorsList}, map$<$ string, {\bf component} $>$ \& {\em comps}, bool {\em verbose})}\label{namespaceNFinput_ce3f1fa191b7d304f83c90a4785bc0ad}
+
+
+Reads a product molecule XML block and returns a TemplateMolecule objects. 
+
+As a side-effect, this also creates components for the product molecule and all its sites/ \begin{Desc}
+\item[Author:]JustinHogg (based on Michael Sneddon's readProductPattern method) \end{Desc}
 \index{NFinput@{NFinput}!readProductPattern@{readProductPattern}}
 \index{readProductPattern@{readProductPattern}!NFinput@{NFinput}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFinput::readProductPattern ({\bf TiXmlElement} $\ast$ {\em pListOfMol}, {\bf System} $\ast$ {\em s}, map$<$ string, double $>$ \& {\em parameter}, map$<$ string, int $>$ \& {\em allowedStates}, string {\em patternName}, vector$<$ {\bf MoleculeType} $\ast$ $>$ \& {\em productMoleculeTypes}, vector$<$ vector$<$ int $>$ $>$ \& {\em stateInformation}, vector$<$ vector$<$ int $>$ $>$ \& {\em bindingSiteInformation}, bool {\em verbose})}\label{namespaceNFinput_7e8ab2b49a2798dc1993710ca200d331}

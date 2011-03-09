@@ -79,6 +79,9 @@ This is a very straightforward set of functions and simple classes that together
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#7e8ab2b49a2798dc1993710ca200d331">readProductPattern</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; <a class="el" href="classNFcore_1_1MoleculeType.html">MoleculeType</a> * &gt; &amp;productMoleculeTypes, vector&lt; vector&lt; int &gt; &gt; &amp;stateInformation, vector&lt; vector&lt; int &gt; &gt; &amp;bindingSiteInformation, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a pattern XML block and returns the set of new TemplateMolecule objects.  <a href="#7e8ab2b49a2798dc1993710ca200d331"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#ce3f1fa191b7d304f83c90a4785bc0ad">readProductMolecule</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pMol, <a class="el" href="classNFcore_1_1System.html">System</a> *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; <a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> * &gt; &amp;moleculeCreatorsList, map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;comps, bool verbose)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads a product molecule XML block and returns a TemplateMolecule objects.  <a href="#ce3f1fa191b7d304f83c90a4785bc0ad"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceNFinput.html#bc6239da9790d1c8d2698fedd5d5b2ab">initFunctions</a> (<a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfFunctions, <a class="el" href="classNFcore_1_1System.html">System</a> *system, map&lt; string, double &gt; &amp;parameter, <a class="el" href="classTiXmlElement.html">TiXmlElement</a> *pListOfObservables, map&lt; string, int &gt; &amp;allowedStates, bool verbose)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads the Function XML block and adds the Functions to the system.  <a href="#bc6239da9790d1c8d2698fedd5d5b2ab"></a><br></td></tr>
@@ -1044,6 +1047,74 @@ Reads a pattern XML block and returns the set of new TemplateMolecule objects.
 
 </div>
 </div><p>
+<a class="anchor" name="ce3f1fa191b7d304f83c90a4785bc0ad"></a><!-- doxytag: member="NFinput::readProductMolecule" ref="ce3f1fa191b7d304f83c90a4785bc0ad" args="(TiXmlElement *pMol, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; MoleculeCreator * &gt; &amp;moleculeCreatorsList, map&lt; string, component &gt; &amp;comps, bool verbose)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFinput::readProductMolecule           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTiXmlElement.html">TiXmlElement</a> *&nbsp;</td>
+          <td class="paramname"> <em>pMol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1System.html">System</a> *&nbsp;</td>
+          <td class="paramname"> <em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">map&lt; string, double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>parameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">map&lt; string, int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>allowedStates</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>patternName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; <a class="el" href="classNFcore_1_1MoleculeCreator.html">MoleculeCreator</a> * &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>moleculeCreatorsList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">map&lt; string, <a class="el" href="classNFinput_1_1component.html">component</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>comps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>verbose</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Reads a product molecule XML block and returns a TemplateMolecule objects. 
+<p>
+As a side-effect, this also creates components for the product molecule and all its sites/ <dl class="author" compact><dt><b>Author:</b></dt><dd>JustinHogg (based on Michael Sneddon's readProductPattern method) </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="7e8ab2b49a2798dc1993710ca200d331"></a><!-- doxytag: member="NFinput::readProductPattern" ref="7e8ab2b49a2798dc1993710ca200d331" args="(TiXmlElement *pListOfMol, System *s, map&lt; string, double &gt; &amp;parameter, map&lt; string, int &gt; &amp;allowedStates, string patternName, vector&lt; MoleculeType * &gt; &amp;productMoleculeTypes, vector&lt; vector&lt; int &gt; &gt; &amp;stateInformation, vector&lt; vector&lt; int &gt; &gt; &amp;bindingSiteInformation, bool verbose)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1217,7 +1288,7 @@ Allows the user to walk through the system with an interactive text-based progra
 
 </div>
 </div><p>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Dec 9 11:02:49 2010 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
