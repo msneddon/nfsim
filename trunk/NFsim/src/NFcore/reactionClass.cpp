@@ -262,13 +262,13 @@ void ReactionClass::fire(double random_A_number)
 {
 	fireCounter++; //Remember that we fired
 
-	//if(getName()=="Rule2") {
-	//	this->printFullDetails();
-	//	this->system->printAllObservableCounts(0);
-	//	this->system->printAllReactions();
-	//	cout<<"---"<<endl; cout<<"found: "<<products.size()<<" products."<<endl;
-	//	exit(1);
-	//}
+//	if(getName()=="Rule1") {
+//		//this->printFullDetails();
+//		this->system->printAllObservableCounts(0);
+//		this->system->printAllReactions();
+//		//cout<<"---"<<endl; cout<<"found: "<<products.size()<<" products."<<endl;
+//		//exit(1);
+//	}
 
 	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
 	//this->system->printAllObservableCounts(0);
@@ -314,12 +314,12 @@ void ReactionClass::fire(double random_A_number)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 
-	//	if(getName()=="Rule2") {
-	//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
-	//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-	//			(*molIter)->printDetails();
-	//		cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-	//	}
+//		if(getName()=="Rule2") {
+//			cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
+//			for( molIter = products.begin(); molIter != products.end(); molIter++ )
+//				(*molIter)->printDetails();
+//			//cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
+//		}
 
 	//cout<<"found: "<<products.size()<<" products."<<endl;
 
@@ -430,13 +430,13 @@ void ReactionClass::fire(double random_A_number)
 		}
 	}
 
-	//if(getName()=="Rule2") {
-	//	cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
-	//	for( molIter = products.begin(); molIter != products.end(); molIter++ )
-	//				(*molIter)->printDetails();
-	//
-	//	cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-	//}
+//	if(getName()=="Rule1") {
+//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" transformed products."<<endl;
+//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
+//					(*molIter)->printDetails();
+//
+//		//cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
+//	}
 
 
 	// Now update reaction membership, functions, and update any DOR Groups
@@ -458,10 +458,12 @@ void ReactionClass::fire(double random_A_number)
 	//exit(1);
 
 
-
+	//this->system->printAllObservableCounts(0);
 	//cout<<",  everything done"<<endl;
+
 	//Tidy up
 	products.clear();
+	//exit(1);
 	
 }
 

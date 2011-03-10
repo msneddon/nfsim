@@ -341,8 +341,9 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 
 		//Check for symmetric unbinding
 		bool isSymmetric = TemplateMolecule::checkSymmetryAroundBond(t,t2,bSiteName,bSiteName2);
-		if( isSymmetric )
+		if( isSymmetric ) {
 			hasSymUnbinding = true;
+		}
 
 	}
 
@@ -515,17 +516,29 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	for(unsigned int r=0; r<getNmappingSets(); r++)
 	{
 		MappingSet *ms = mappingSets[r];
+
+		//If there is a species removal, we have to do this first
+		if(ms->hasSpeciesDeletionTransform()) {
+			for ( unsigned int t=0;  t<transformations[r].size();  t++ )
+			{
+				if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
+				{
+					Molecule * mol = ms->get(t)->getMolecule();
+					if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
+					{   // handle species deletion
+						mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
+					}
+				}
+			}
+		}
 		for ( unsigned int t=0;  t<transformations[r].size();  t++ )
 		{
 			if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
 			{
+				// handle molecule deletion
 				Molecule * mol = ms->get(t)->getMolecule();
-				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
-				{   // handle species deletion
-					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
-				}
-				else
-				{   // handle molecule deletion
+				if ( !transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
+				{
 					deleteList.push_back( mol );
 				}
 			}
@@ -598,7 +611,7 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 	{
 		// if we are deleting this guy, it doesn't have to get updated...
 		// NOTE: this only applies to Species deletion!!
-		if(mappingSets[r]->hasDeletionTransform())
+		if(mappingSets[r]->hasSpeciesDeletionTransform())
 		{
 			continue;
 		}
@@ -616,6 +629,10 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 		{
 			// For each of the molecules that we possibly affect, traverse the neighborhood
 			// TODO:Is it sufficient to just look at the first mapping???  --Justin, 8Mar2011
+			// It should be if the traversal limit is set high enough, at least for
+			// all standard reactions.  I'm wondering now, though, if it is enough in
+			// all cases where you would use the connected-to syntax.  I think so, but
+			// someone should test it.  --michael 9Mar2011
 			Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 
 			isPresent=false;
