@@ -85,7 +85,11 @@ namespace NFcore
 			int getPopulation() const;
 
 
-			bool hasDeletionTransform() const { return isDeletion; };
+			/*!
+			 	We only have to know if this is a species deletion- molecule deletions
+			 	are handled automatically within the rest of the framework.
+			 */
+			bool hasSpeciesDeletionTransform() const { return isSpeciesDeletion; };
 
 			/*!
 			 	Returns the Id of this MappingSet.  The Id of the MappingSet is used to track the
@@ -132,7 +136,7 @@ namespace NFcore
 			Mapping ** mappings;
 
 
-			bool isDeletion;
+			bool isSpeciesDeletion;
 
 
 			/*!

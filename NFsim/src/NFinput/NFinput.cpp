@@ -2,6 +2,7 @@
 
 
 
+#include <algorithm>
 
 
 using namespace NFinput;
@@ -295,12 +296,11 @@ bool NFinput::initMoleculeTypes(
 			string typeName = pMoTypeEl->Attribute("id");
 
 			//Make sure the name isn't null & output a message if needed
-			if(typeName.compare("Null")==0 || typeName.compare("NULL")==0){
+			string lowerCaseTypeName = "";
+			lowerCaseTypeName.reserve(typeName.size());
+			std::transform(typeName.begin(),typeName.end(),lowerCaseTypeName.begin(),::tolower);
+			if(typeName.compare("null")==0 || typeName.compare("trash")==0){
 				if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + typeName + "'"<<endl;
-				continue;
-			}
-			if(typeName=="Trash" || typeName=="trash" || typeName=="TRASH") {
-					if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + typeName + "'"<<endl;
 				continue;
 			}
 			if(verbose) cout<<"\t\tReading and Creating MoleculeType: "+typeName+"(";
@@ -694,8 +694,11 @@ bool NFinput::initStartSpecies(
 				}
 
 				//Skip over null molecules
-				if(molName=="Null" || molName=="NULL") {
-					if(verbose) cout<<"\t\t\tSkipping Molecule of type: "<<molName<<" with local id: " << molUid<<endl;
+				string lowerCaseTypeName = "";
+				lowerCaseTypeName.reserve(molName.size());
+				std::transform(molName.begin(),molName.end(),lowerCaseTypeName.begin(),::tolower);
+				if(molName.compare("null")==0 || molName.compare("trash")==0){
+					if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + molName + "'"<<endl;
 					continue;
 				}
 
