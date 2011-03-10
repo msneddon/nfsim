@@ -1,0 +1,2 @@
+test deletion of species, and addition, and dimerization
+-sim 10 -oSteps 100 -cb
