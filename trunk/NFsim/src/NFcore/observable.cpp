@@ -211,8 +211,10 @@ int MoleculesObservable::isObservable(Molecule *m) const
 		//cout<<endl<<endl<<endl;
 		//cout<<"starting!"<<endl;
 
-		if ( templateMolecules[t]->compare(m) )
+		if ( templateMolecules[t]->compare(m) ) {
 			matches += m->getPopulation();
+			//return 1;
+		}
 		//else { cout<<"nothing."<<endl; }
 	}
 	//cout << "total_matches: " << matches << endl;
