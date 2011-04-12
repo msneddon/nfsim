@@ -51,7 +51,7 @@ Enjoy your new network-free world!
 Release Notes
 
 
-v1.09   Mar, 2011
+v1.09   Apr, 2011
         (a) NFsim now allows the mixing of integers and strings as component
         labels, although if numbers and strings are mixed, all labels are parsed
         as strings, NOT integers.  Therefore, PLUS and MINUS keywords cannot
@@ -72,7 +72,8 @@ v1.09   Mar, 2011
         [system_name]_nf.species, or a file designated by the user.
         (d) fixed memory leak in TemplateMolecules that caused memory / performance
         issues with molecules having multiple identical sites and a high degree
-        of aggregation.
+        of aggregation. (e) fixed csv error, where when the csv flag is used, the
+        header line is not comma delimited.
 
 
 
