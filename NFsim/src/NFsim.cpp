@@ -408,6 +408,26 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				}
 
 
+				if(argMap.find("csv")!=argMap.end()) {
+					s->turnOnCSVformat();
+				}
+
+
+				// tag any reactions that were tagged
+				if (argMap.find("rtag")!=argMap.end()) {
+					vector <int> sequence;
+					NFinput::parseAsCommaSeparatedSequence(argMap,"rtag",sequence);
+
+					if(verbose) {
+						cout<<"\tTagging reactions by id (from the -rtag flag):";
+						for(unsigned int k=0; k<sequence.size(); k++) cout<<" "<<sequence.at(k);
+						cout<<endl;
+					}
+					for(unsigned int k=0; k<sequence.size(); k++) s->tagReaction(sequence.at(k));
+
+				}
+
+
 				//Register the output file location, if given
 				if (argMap.find("o")!=argMap.end()) {
 					string outputFileName = argMap.find("o")->second;
@@ -431,23 +451,9 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					if(verbose) cout<<"\tOn-the-fly observables is turned on (detected -notf flag)."<<endl<<endl;
 				}
 
-				// tag any reactions that were tagged
-				if (argMap.find("rtag")!=argMap.end()) {
-					vector <int> sequence;
-					NFinput::parseAsCommaSeparatedSequence(argMap,"rtag",sequence);
 
-					if(verbose) {
-						cout<<"\tTagging reactions by id (from the -rtag flag):";
-						for(unsigned int k=0; k<sequence.size(); k++) cout<<" "<<sequence.at(k);
-						cout<<endl;
-					}
-					for(unsigned int k=0; k<sequence.size(); k++) s->tagReaction(sequence.at(k));
 
-				}
 
-				if(argMap.find("csv")!=argMap.end()) {
-					s->turnOnCSVformat();
-				}
 
 				//Finally, return the system if we made it here without problems
 				return s;
