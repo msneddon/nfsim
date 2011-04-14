@@ -3013,6 +3013,54 @@ bool NFinput::readProductMolecule(
 		                 << " with local id: " << molUid << endl;
 
 
+		// BEGIN building the symmetric component list that we need to consider
+		// we have to remember the symmetric sites- the input file is going to provide us
+		// with the generic site name, but to actually create the molecule, those site names
+		// must be mapped onto a specific site name.  So here, we use the molecule type
+		// to create us a vector of queues of names that, when given a generic site component, such
+		// as 'r', will return us the next available specific site name, such as 'r3' (if we
+		// have used up 'r1' and 'r2' already).  This also allows us to check at the end
+		// if we used up all the sites, because if we didn't, then this new molecule has
+		// not been completely specified.  --michael
+
+		//step 1: generate the vector of queues.  The way this is set up is the vector is as
+		//long as the number of equivalence classes (which is the number of unique site names)
+		//and for each type of symmetric site, we list all the individual names of the specific
+		//sites.
+		int numberOfSymmetricSites = moltype->getNumOfEquivalencyClasses();
+		vector < queue <string> > symmetricSitesNotUsed;
+		for(int i=0; i<numberOfSymmetricSites; i++)
+		{
+			queue <string> q;
+			symmetricSitesNotUsed.push_back(q);
+		}
+
+
+
+
+		//step 2: loop over the molecules components and populate the vector of queues
+        for(int k=0; k<moltype->getNumOfComponents(); k++) {
+
+        	string compName = moltype->getComponentName(k);
+
+        	// if the component is symmetric...
+        	if(moltype->isEquivalentComponent(k)) {
+
+        		string genericCompName = moltype->getEquivalenceClassComponentNameFromComponentIndex(k);
+        		//cout<<"generic compname: "<< genericCompName <<endl;
+
+        		// then we determine the component equivalence class number and add it to the queue
+        		int eqClassNumber = moltype->getEquivalenceClassNumber(k);
+        		symmetricSitesNotUsed.at(eqClassNumber).push(compName);
+        		//cout<<"eq class number: "<< moltype->getEquivalenceClassNumber(k) <<endl;
+        	}
+        }
+
+
+		// END building the symmetric component list that we need to consider
+        // /////////////////////////////////////////////////////////////////////////////
+
+
 		//Loop through the components of the molecule in order to remember state values
 		TiXmlElement * pListOfComp = pMol->FirstChildElement("ListOfComponents");
 		if(pListOfComp)
@@ -3035,6 +3083,22 @@ bool NFinput::readProductMolecule(
 
 				compId   = pComp->Attribute("id");
 				compName = pComp->Attribute("name");
+
+				// we need to make sure this isn't a symmetric component
+				if(moltype->isEquivalentComponent(compName))
+				{
+					//cout<<"Is EQ component!"<<endl;
+					int eqClass = moltype->getEquivalencyClassNumber(compName);
+					//cout<<"class: "<<moltype->getEquivalencyClassNumber(compName)<<endl;
+					if (symmetricSitesNotUsed.at(eqClass).size()>0) {
+						compName = (symmetricSitesNotUsed.at(eqClass)).front();
+						(symmetricSitesNotUsed.at(eqClass)).pop();
+					} else {
+						cerr <<"In NFinput::readProductMolecule(...): some symmetric components were specified more times than they were originally declared!"<<endl;
+						cerr <<"This must be an error in BioNetGen, as all molecules to be created must have all component sites specified!\n\n"<<endl;
+						return false;
+					}
+				}
 
 				// Add empty component site to the templateMolecule
 				tempmol->addEmptyComponent( compName );
@@ -3070,6 +3134,21 @@ bool NFinput::readProductMolecule(
 			} //end loop over components
 
 		} //end if statement for compenents to exist
+
+
+		// //// quick check to see if we used up all symmetric component sites
+		for(int i=0; i<symmetricSitesNotUsed.size(); i++) {
+			if(symmetricSitesNotUsed.at(i).size()>0) {
+				cerr <<"In NFinput::readProductMolecule(...): some symmetric components exist, but were not defined!"<<endl;
+				cerr <<"This must be an error in BioNetGen, as all molecules to be created must have all component sites specified!\n\n"<<endl;
+				return false;
+			}
+		}
+
+
+
+
+
 
 		// don't forget:  add molecule creator to list
 		moleculeCreatorsList.push_back( new MoleculeCreator( tempmol, moltype, component_states ) );

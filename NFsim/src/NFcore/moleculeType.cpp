@@ -319,13 +319,17 @@ Molecule *MoleculeType::genDefaultMolecule()
 	Molecule *m;
 	mList->create(m);
 	m->setAlive(true);
+	//cout<<"adding molecule: "<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<endl;
+
 	return m;
 }
 
 
 void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 {
+	//cout<<"adding molecule: "<<mol->getMoleculeTypeName()<<"_"<<mol->getUniqueID()<<endl;
 	//First prepare the molecule for simulation
+	mol->setUpLocalFunctionList();
 	mol->prepareForSimulation();
 	mol->setAlive(true);
 
@@ -337,6 +341,8 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 void MoleculeType::addMoleculeToRunningSystemButDontUpdate(Molecule *&mol)
 {
 	//First prepare the molecule for simulation
+
+	mol->setUpLocalFunctionList();
 	mol->prepareForSimulation();
 	mol->setAlive(true);
 
