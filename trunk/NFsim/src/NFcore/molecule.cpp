@@ -121,6 +121,16 @@ void Molecule::setLocalFunctionValue(double newValue,int localFunctionIndex) {
 		cout<<"index provided was out of bounds!  I shall quit now."<<endl;
 		exit(1);
 	}
+	//cout<<"here, mol: "<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
+	//cout<<"localfunctionIndex given: "<< localFunctionIndex<<endl;
+	//cout<<"n_localfunctionValue given: "<< localFunctionIndex<<endl;
+
+	//cout<<"localFunctionValues="<<endl;
+	//for(int k=0; k<parentMoleculeType->getNumOfTypeIFunctions(); k++) {
+	//	cout<<"  "<<localFunctionValues[k]<<endl;
+	//}
+	//cout<<"done."<<endl;
+
 	localFunctionValues[localFunctionIndex] = newValue;
 }
 

@@ -533,16 +533,33 @@ namespace NFcore
 			int getStateValueFromName(int cIndex, string stateName) const;
 
 
-			//set of functions that deal with equivalent (aka symmetric) components
+
+
+			// set of functions that deal with equivalent (aka symmetric) components
+		    // Here is how this works:
+			// Every set of sites with an equivalent name is termed an "equivalency class".  For instance,
+			// given a molecule such as: L(r,r,r,t,t), there are two equivalency classes, one for site 'r'
+			// and one for site 't'.  Internally to NFsim, the sites are relabeled 'r1','r2','r3', etc.
+			//
+			//
 			int getNumOfEquivalencyClasses() const { return this->n_eqComp; };
+			// returns a string array with length numberOfEquivalencyClasses giving the generic component names
 			string *getEquivalencyClassCompNames() const { return this->eqCompOriginalName; };
 			void addEquivalentComponents(vector <vector <string> > &identicalComponents);
 			bool isEquivalentComponent(string cName) const;
 			bool isEquivalentComponent(int cIndex) const;
 			void getEquivalencyClass(int *&components, int &n_components, string cName) const;
+
+			// given a generic component name or specific component index, return the equivalence class number
 			int getEquivalencyClassNumber(string cName) const;
 			int getEquivalenceClassNumber(int cIndex) const;
+
+			// given a component index, return the generic component name
 			string getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const;
+
+
+
+
 
 			// query or set population type
 			bool isPopulationType() const { return population_type; };
