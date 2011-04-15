@@ -226,6 +226,11 @@ ReactionClass::~ReactionClass()
 {
 	delete [] reactantTemplates;
 	delete transformationSet;
+	for ( unsigned int r = n_reactants; r < n_mappingsets; ++r )
+	{
+		delete mappingSet[r];
+	}
+
 	delete [] mappingSet;
 
 }
