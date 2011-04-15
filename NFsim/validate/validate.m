@@ -10,7 +10,8 @@ fprintf('=======================\n');
 fprintf('running nfsim validation...\n\n');
 
 % Identify the path to NFsim and BioNetGen that you want to test
-bngPath = '/home/msneddon/Desktop/bng/test/trunk/Perl2/BNG2.pl';
+%bngPath = '/home/msneddon/Desktop/bng/test/trunk/Perl2/BNG2.pl';
+bngPath = '/home/msneddon/Desktop/bionetgen/bng_svn/trunk/Perl2/BNG2.pl';
 nfsimPath = '../bin/NFsim';
 deleteTempFiles = 1; %set to 1 to delete temporary files, 0 otherwise
 tol = 0.35; %this is the error tolerance when comparing nfsim's run to the ssa where 0.35 = 35%
@@ -156,8 +157,6 @@ for f=1:length(files)
         ylabel('Molecule Number');
         drawnow;
     end;
-    
-    
     
 end;
 
