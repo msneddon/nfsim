@@ -632,11 +632,28 @@ bool NFinput::initStartSpecies(
 			try {
 				specCountInteger = NFutil::convertToInt(specCount);
 			} catch (std::runtime_error &e1) {
-				if(parameter.find(specCount)==parameter.end()) {
-					cerr<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
-					return false;
+
+				// if we cannot get it as an integer, try as a double (for instance, for notation
+				// such as 2e4).  We cast it as an int, which will always round the number down
+				// to the nearest whole integer.
+				try {
+					specCountInteger = (int) NFutil::convertToDouble(specCount);
+
+				} catch (std::runtime_error &e1) {
+					// if we cannot get it as an integer, try as a double (for instance, for notation
+					// such as 2e4).  We cast it as an int, which will always round the number down
+					// to the nearest whole integer.
+					try {
+						specCountInteger = (int) NFutil::convertToDouble(specCount);
+					} catch (std::runtime_error &e1) {
+						if(parameter.find(specCount)==parameter.end()) {
+							cerr<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
+							return false;
+						}
+						specCountInteger = (int)parameter.find(specCount)->second;
+					}
+
 				}
-				specCountInteger = (int)parameter.find(specCount)->second;
 			}
 
 			//Make sure we didn't try to create a negative number of molecules
