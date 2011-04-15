@@ -46,7 +46,7 @@ Keeps a list of mappings needed by a particular list of reactants.
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#d97b13ab5c1eb87ab5c36e9c7eb7ba6a">getPopulation</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#9f2aea4b22819f3db1bd641e0ecd5d92">hasDeletionTransform</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#28c18be20c69806af4e027f188f31c3e">hasSpeciesDeletionTransform</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#b772e7b28b5791d32edea1cf72e9207b">getId</a> () const </td></tr>
 
@@ -75,7 +75,7 @@ Keeps a list of mappings needed by a particular list of reactants.
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> **&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#4ef96ade03850810832af011585303fe">mappings</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">isDeletion</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#de44dc089f7759e39fe165bb04e15ab3">isSpeciesDeletion</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1MappingSet.html#1cdb52d2e7f6b17ee95ef489cb587047">clonedMappingSet</a></td></tr>
 
@@ -223,12 +223,12 @@ Gets the population <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin
 
 </div>
 </div><p>
-<a class="anchor" name="9f2aea4b22819f3db1bd641e0ecd5d92"></a><!-- doxytag: member="NFcore::MappingSet::hasDeletionTransform" ref="9f2aea4b22819f3db1bd641e0ecd5d92" args="() const " -->
+<a class="anchor" name="28c18be20c69806af4e027f188f31c3e"></a><!-- doxytag: member="NFcore::MappingSet::hasSpeciesDeletionTransform" ref="28c18be20c69806af4e027f188f31c3e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool NFcore::MappingSet::hasDeletionTransform           </td>
+          <td class="memname">bool NFcore::MappingSet::hasSpeciesDeletionTransform           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -239,7 +239,7 @@ Gets the population <dl class="author" compact><dt><b>Author:</b></dt><dd>Justin
 <div class="memdoc">
 
 <p>
-
+We only have to know if this is a species deletion- molecule deletions are handled automatically within the rest of the framework. 
 </div>
 </div><p>
 <a class="anchor" name="b772e7b28b5791d32edea1cf72e9207b"></a><!-- doxytag: member="NFcore::MappingSet::getId" ref="b772e7b28b5791d32edea1cf72e9207b" args="() const " -->
@@ -467,12 +467,12 @@ Keeps track of the number of <a class="el" href="classNFcore_1_1Mapping.html" ti
 An array of pointers to <a class="el" href="classNFcore_1_1Mapping.html" title="Keeps a pointer to a molecule and remembers a single component to act on.">Mapping</a> objects. This is where the actual Mappings are stored. 
 </div>
 </div><p>
-<a class="anchor" name="6961fa835fa9e641ffe2a9f1d3b44b6f"></a><!-- doxytag: member="NFcore::MappingSet::isDeletion" ref="6961fa835fa9e641ffe2a9f1d3b44b6f" args="" -->
+<a class="anchor" name="de44dc089f7759e39fe165bb04e15ab3"></a><!-- doxytag: member="NFcore::MappingSet::isSpeciesDeletion" ref="de44dc089f7759e39fe165bb04e15ab3" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classNFcore_1_1MappingSet.html#6961fa835fa9e641ffe2a9f1d3b44b6f">NFcore::MappingSet::isDeletion</a><code> [protected]</code>          </td>
+          <td class="memname">bool <a class="el" href="classNFcore_1_1MappingSet.html#de44dc089f7759e39fe165bb04e15ab3">NFcore::MappingSet::isSpeciesDeletion</a><code> [protected]</code>          </td>
         </tr>
       </table>
 </div>
@@ -499,7 +499,7 @@ An array of pointers to <a class="el" href="classNFcore_1_1Mapping.html" title="
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mappingSet_8hh-source.html">mappingSet.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/mappings/<a class="el" href="mappingSet_8cpp.html">mappingSet.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Mar 9 10:08:52 2011 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Apr 15 12:49:25 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
