@@ -73,7 +73,8 @@ v1.09   Apr, 2011
         (d) fixed memory leak in TemplateMolecules that caused memory / performance
         issues with molecules having multiple identical sites and a high degree
         of aggregation. (e) fixed csv error, where when the csv flag is used, the
-        header line is not comma delimited.
+        header line is not comma delimited.  (f)  nfsim now supports intra-molecular
+        binding.  Previously these events were rejected as null events.
 
 
 
