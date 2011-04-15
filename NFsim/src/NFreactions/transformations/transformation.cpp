@@ -70,11 +70,12 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	//Currently, this is set to block all binding events that happen internally to a single
 	//molecule.  I think this is reasonable to do...
 	// (Intra-molecular binding is probably ok. BNGL supports it. --Justin.)
-	if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
-		System::NULL_EVENT_COUNTER++;
-	} else {
+	// (this is commented out, and so nfsim now supports internal binding events --michael)
+	//if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
+	//	System::NULL_EVENT_COUNTER++;
+	//} else {
 		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
-	}
+	//}
 
 }
 ///////////////////////////////////////////////////////////////
