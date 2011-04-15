@@ -24,7 +24,7 @@ void {\bf clear} ()
 \item 
 int {\bf getPopulation} () const 
 \item 
-bool {\bf hasDeletionTransform} () const 
+bool {\bf hasSpeciesDeletionTransform} () const 
 \item 
 unsigned int {\bf getId} () const 
 \item 
@@ -59,7 +59,7 @@ unsigned int {\bf n\_\-mappings}
 \item 
 {\bf Mapping} $\ast$$\ast$ {\bf mappings}
 \item 
-bool {\bf isDeletion}
+bool {\bf isSpeciesDeletion}
 \item 
 unsigned int {\bf clonedMappingSet}
 \end{CompactItemize}
@@ -111,12 +111,12 @@ This clears the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects belonging 
 
 Gets the population \begin{Desc}
 \item[Author:]JustinHogg \end{Desc}
-\index{NFcore::MappingSet@{NFcore::MappingSet}!hasDeletionTransform@{hasDeletionTransform}}
-\index{hasDeletionTransform@{hasDeletionTransform}!NFcore::MappingSet@{NFcore::MappingSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::MappingSet::hasDeletionTransform () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_9f2aea4b22819f3db1bd641e0ecd5d92}
+\index{NFcore::MappingSet@{NFcore::MappingSet}!hasSpeciesDeletionTransform@{hasSpeciesDeletionTransform}}
+\index{hasSpeciesDeletionTransform@{hasSpeciesDeletionTransform}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::MappingSet::hasSpeciesDeletionTransform () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_28c18be20c69806af4e027f188f31c3e}
 
 
-\index{NFcore::MappingSet@{NFcore::MappingSet}!getId@{getId}}
+We only have to know if this is a species deletion- molecule deletions are handled automatically within the rest of the framework. \index{NFcore::MappingSet@{NFcore::MappingSet}!getId@{getId}}
 \index{getId@{getId}!NFcore::MappingSet@{NFcore::MappingSet}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int NFcore::MappingSet::getId () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MappingSet_b772e7b28b5791d32edea1cf72e9207b}
 
@@ -181,9 +181,9 @@ Keeps track of the number of \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objec
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Mapping}$\ast$$\ast$ {\bf NFcore::MappingSet::mappings}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_4ef96ade03850810832af011585303fe}
 
 
-An array of pointers to \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects. This is where the actual Mappings are stored. \index{NFcore::MappingSet@{NFcore::MappingSet}!isDeletion@{isDeletion}}
-\index{isDeletion@{isDeletion}!NFcore::MappingSet@{NFcore::MappingSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::MappingSet::isDeletion}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_6961fa835fa9e641ffe2a9f1d3b44b6f}
+An array of pointers to \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects. This is where the actual Mappings are stored. \index{NFcore::MappingSet@{NFcore::MappingSet}!isSpeciesDeletion@{isSpeciesDeletion}}
+\index{isSpeciesDeletion@{isSpeciesDeletion}!NFcore::MappingSet@{NFcore::MappingSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::MappingSet::isSpeciesDeletion}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MappingSet_de44dc089f7759e39fe165bb04e15ab3}
 
 
 \index{NFcore::MappingSet@{NFcore::MappingSet}!clonedMappingSet@{clonedMappingSet}}
