@@ -176,6 +176,9 @@ namespace NFcore
 			virtual void apply(Mapping *m, MappingSet **ms) = 0;
 			virtual int getComponentIndex() const = 0;
 			virtual int getRemovalType() { return -1; };
+			// returns false if it does not meet a null condition, true if the reaction
+			// should be rejected do to a null condition
+			virtual bool checkForNullCondition(Mapping *m, MappingSet **ms) { return false; };
 		protected:
 			int type;
 	};
@@ -231,6 +234,8 @@ namespace NFcore
 			virtual ~BindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
+
+			virtual bool checkForNullCondition(Mapping *m, MappingSet **ms);
 		protected:
 			int cIndex;
 			int otherReactantIndex;

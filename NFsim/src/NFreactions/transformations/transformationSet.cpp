@@ -274,6 +274,7 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 
 bool TransformationSet::addBindingSeparateComplexTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)
 {
+	cout<<"adding separate complex binding"<<endl;
 	if(finalized) { cerr<<"TransformationSet cannot add another transformation once it has been finalized!"<<endl; exit(1); }
 	//Again, first find the reactants that the binding pertains to
 	int reactantIndex1 = find(t1);
@@ -494,6 +495,21 @@ int TransformationSet::find(TemplateMolecule *t)
 bool TransformationSet::transform(MappingSet **mappingSets)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
+
+	// loop over reactants and decide if this reaction has any null conditions
+	for(unsigned int r=0; r<getNmappingSets(); r++)
+	{
+		MappingSet *ms = mappingSets[r];
+		for ( unsigned int t=0;  t<transformations[r].size();  t++ )
+		{
+			if(transformations[r].at(t)->checkForNullCondition(ms->get(t),mappingSets)) {
+				return false;
+			}
+		}
+	}
+
+
+
 
 	// addMolecule transforms applied before other transforms so the molecules exist
 	//  for potential modification by other transforms.  --Justin
