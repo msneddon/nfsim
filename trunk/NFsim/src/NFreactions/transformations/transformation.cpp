@@ -67,17 +67,31 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	//cout<<" otherMappingIndex: "<<otherMappingIndex;
 
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+
 	//Currently, this is set to block all binding events that happen internally to a single
 	//molecule.  I think this is reasonable to do...
 	// (Intra-molecular binding is probably ok. BNGL supports it. --Justin.)
 	// (this is commented out, and so nfsim now supports internal binding events --michael)
+	//
 	//if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
 	//	System::NULL_EVENT_COUNTER++;
 	//} else {
-		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
-	//}
-
+	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 }
+
+
+bool BindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
+{
+	// the null condition in this case is if a molecule is trying to bind a site to the same site on itself!
+	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+	if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID() && m->getIndex() == m2->getIndex())
+	{
+		System::NULL_EVENT_COUNTER++;
+		return true;
+	}
+	return false;
+}
+
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
@@ -92,6 +106,7 @@ void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
 	} else {
 		System::NULL_EVENT_COUNTER++;
 	}
+
 }
 
 
