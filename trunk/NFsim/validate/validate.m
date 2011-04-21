@@ -52,7 +52,7 @@ for f=1:length(files)
     runOptions = runFile{2};
     
     % run the test 3 times and average the results
-    ssaDiff = []; nfDiff = []; maxRuns=3;
+    ssaDiff = []; nfDiff = []; maxRuns=10;
     for runs = 1:maxRuns
     
         [status,bngTerminal]=system(['perl ',bngPath,' ',modelDirName,'/',bngFilename]);

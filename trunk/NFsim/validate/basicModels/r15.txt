@@ -1,0 +1,2 @@
+basic dimerization reaction test without complex bookkeeping
+-sim 1 -oSteps 100

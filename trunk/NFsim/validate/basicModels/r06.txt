@@ -1,2 +1,2 @@
 cross phosphorylation of linked molecules, explicit
--sim 20 -oSteps 100 
+-sim 20 -oSteps 100  -cb
