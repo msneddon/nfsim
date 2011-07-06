@@ -103,7 +103,35 @@ int MappingSet::getComplexID() const
 int MappingSet::getPopulation() const
 {
 	return mappings[0]->getMolecule()->getPopulation();
-};
+}
+
+
+
+vector <Molecule *> MappingSet::molList;
+vector <Molecule *>::iterator  MappingSet::molIter;
+
+bool MappingSet::checkForCollisions( MappingSet * ms1, MappingSet * ms2 )
+{
+	unsigned int imap;
+	molList.clear();
+	// make a list of molecules pointed to by mappingSet1
+	for ( imap = 0; imap < ms1->n_mappings;  ++imap )
+	{
+		molList.push_back( (ms1->mappings)[imap]->getMolecule() );
+	}
+
+	// see if mappingSet2 points to any of the same molecules
+	for ( imap = 0; imap < ms2->n_mappings;  ++imap )
+	{
+		molIter = find( molList.begin(), molList.end(), (ms2->mappings)[imap]->getMolecule() );
+		if ( molIter != molList.end() )
+		{
+			// found overlap
+			return true;
+		}
+	}
+	return false;
+}
 
 
 
