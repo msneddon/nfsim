@@ -1,0 +1,66 @@
+\section{NFcore::MapGenerator Class Reference}
+\label{classNFcore_1_1MapGenerator}\index{NFcore::MapGenerator@{NFcore::MapGenerator}}
+{\tt \#include $<$mappingGenerator.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Knows how to assign mappings in a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} to a particular \doxyref{Molecule}{p.}{classNFcore_1_1Molecule}. 
+
+MapGenerators are simple objects given to TemplateMolecules (so are maintained and deleted by \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} objects) that assign \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} objects to particular \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} objects. This allows us to Map specific components of a reactant as we compare the potential molecules to the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule}. (see the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} compare() functions). If there is a match, the Template \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} uses this to assign a mapping. This class is useful because it knows which \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} to use in the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} provided in the \doxyref{map()}{p.}{classNFcore_1_1MapGenerator_1276176a858d99789be940a93d4b83ae} function. This is necessary information as we always reuse \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} and \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} objects for effeciency. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf MapGenerator} (unsigned int {\bf mappingIndex})
+\item 
+{\bf $\sim$MapGenerator} ()
+\item 
+bool {\bf map} ({\bf MappingSet} $\ast$mappingSet, {\bf Molecule} $\ast$molecule)
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+unsigned int {\bf mappingIndex}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::MapGenerator@{NFcore::MapGenerator}!MapGenerator@{MapGenerator}}
+\index{MapGenerator@{MapGenerator}!NFcore::MapGenerator@{NFcore::MapGenerator}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}MapGenerator::MapGenerator (unsigned int {\em mappingIndex})}\label{classNFcore_1_1MapGenerator_7cbf945f55fe6131f36390d73d445fe4}
+
+
+Creates a \doxyref{MapGenerator}{p.}{classNFcore_1_1MapGenerator} (generally created in a \doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} when we are creating Transformations) that remembers the index of a \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} in a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} so that we always reuse the same \doxyref{Mapping}{p.}{classNFcore_1_1Mapping}. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::MapGenerator@{NFcore::MapGenerator}!$\sim$MapGenerator@{$\sim$MapGenerator}}
+\index{$\sim$MapGenerator@{$\sim$MapGenerator}!NFcore::MapGenerator@{NFcore::MapGenerator}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}NFcore::MapGenerator::$\sim$MapGenerator ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1MapGenerator_4cf1ecd3d7a23859d2620cd0959a0dfd}
+
+
+Deconstructor that does nothing significant. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::MapGenerator@{NFcore::MapGenerator}!map@{map}}
+\index{map@{map}!NFcore::MapGenerator@{NFcore::MapGenerator}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool MapGenerator::map ({\bf MappingSet} $\ast$ {\em mappingSet}, {\bf Molecule} $\ast$ {\em molecule})}\label{classNFcore_1_1MapGenerator_1276176a858d99789be940a93d4b83ae}
+
+
+The one key function of a \doxyref{MapGenerator}{p.}{classNFcore_1_1MapGenerator} - this takes a \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} and finds the particular \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} that this \doxyref{MapGenerator}{p.}{classNFcore_1_1MapGenerator} needs to create and sets that \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} to point to the given molecule. This is called in the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} compare() function. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::MapGenerator@{NFcore::MapGenerator}!mappingIndex@{mappingIndex}}
+\index{mappingIndex@{mappingIndex}!NFcore::MapGenerator@{NFcore::MapGenerator}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::MapGenerator::mappingIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1MapGenerator_806fe3e757d9f19b07a520689dd34877}
+
+
+Keeps track of the index of the \doxyref{Mapping}{p.}{classNFcore_1_1Mapping} in the \doxyref{MappingSet}{p.}{classNFcore_1_1MappingSet} that this \doxyref{MapGenerator}{p.}{classNFcore_1_1MapGenerator} must assign. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/mappings/{\bf mappingGenerator.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/mappings/{\bf mappingGenerator.cpp}\end{CompactItemize}

@@ -1,0 +1,279 @@
+\section{NFcore::LocalFunction Class Reference}
+\label{classNFcore_1_1LocalFunction}\index{NFcore::LocalFunction@{NFcore::LocalFunction}}
+{\tt \#include $<$NFfunction.hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf LocalFunction} ({\bf System} $\ast$s, string {\bf name}, string {\bf originalExpression}, string {\bf parsedExpression}, vector$<$ string $>$ \&args, vector$<$ string $>$ \&{\bf varRefNames}, vector$<$ string $>$ \&{\bf varObservableNames}, vector$<$ {\bf Observable} $\ast$ $>$ \&varObservables, vector$<$ int $>$ \&{\bf varRefScope}, vector$<$ string $>$ {\bf paramNames})
+\item 
+{\bf $\sim$LocalFunction} ()
+\item 
+string {\bf getName} () const 
+\item 
+string {\bf getNiceName} () const 
+\item 
+string {\bf getExpression} () const 
+\item 
+string {\bf getParsedExpression} () const 
+\item 
+void {\bf printDetails} ({\bf System} $\ast$s)
+\item 
+void {\bf prepareForSimulation} ({\bf System} $\ast$s)
+\item 
+double {\bf getValue} ({\bf Molecule} $\ast$m, int scope)
+\item 
+double {\bf evaluateOn} ({\bf Molecule} $\ast$m, int scope)
+\item 
+void {\bf addTypeIMoleculeDependency} ({\bf MoleculeType} $\ast$mt)
+\item 
+void {\bf updateParameters} ({\bf System} $\ast$s)
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+mu::Parser $\ast$ {\bf p}
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const int {\bf SPECIES} = 0
+\item 
+static const int {\bf MOLECULE} = 1
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+string {\bf name}
+\item 
+string {\bf nicename}
+\item 
+string {\bf originalExpression}
+\item 
+string {\bf parsedExpression}
+\item 
+unsigned int {\bf n\_\-args}
+\item 
+string $\ast$ {\bf argNames}
+\item 
+unsigned int {\bf n\_\-params}
+\item 
+string $\ast$ {\bf paramNames}
+\item 
+unsigned int {\bf n\_\-varRefs}
+\item 
+string $\ast$ {\bf varRefNames}
+\item 
+string $\ast$ {\bf varObservableNames}
+\item 
+int $\ast$ {\bf varRefScope}
+\item 
+{\bf Observable} $\ast$$\ast$ {\bf varLocalObservables}
+\item 
+vector$<$ {\bf MoleculeType} $\ast$ $>$ {\bf typeI\_\-mol}
+\item 
+vector$<$ int $>$ {\bf typeI\_\-localFunctionIndex}
+\item 
+int {\bf n\_\-typeIImolecules}
+\item 
+{\bf MoleculeType} $\ast$$\ast$ {\bf typeII\_\-mol}
+\item 
+vector$<$ int $>$ {\bf typeII\_\-localFunctionIndex}
+\end{CompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{CompactItemize}
+\item 
+static list$<$ {\bf Molecule} $\ast$ $>$ {\bf molList}
+\item 
+static list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf molIter}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!LocalFunction@{LocalFunction}}
+\index{LocalFunction@{LocalFunction}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}LocalFunction::LocalFunction ({\bf System} $\ast$ {\em s}, string {\em name}, string {\em originalExpression}, string {\em parsedExpression}, vector$<$ string $>$ \& {\em args}, vector$<$ string $>$ \& {\em varRefNames}, vector$<$ string $>$ \& {\em varObservableNames}, vector$<$ {\bf Observable} $\ast$ $>$ \& {\em varObservables}, vector$<$ int $>$ \& {\em varRefScope}, vector$<$ string $>$ {\em paramNames})}\label{classNFcore_1_1LocalFunction_7c669519fe3ec402f65c8117372da775}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!$\sim$LocalFunction@{$\sim$LocalFunction}}
+\index{$\sim$LocalFunction@{$\sim$LocalFunction}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}LocalFunction::$\sim$LocalFunction ()}\label{classNFcore_1_1LocalFunction_a78ebddc2c447014891ac0b591e39445}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!getName@{getName}}
+\index{getName@{getName}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string LocalFunction::getName () const}\label{classNFcore_1_1LocalFunction_53e067c7b8d204ab4c8cf552b000999d}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!getNiceName@{getNiceName}}
+\index{getNiceName@{getNiceName}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string LocalFunction::getNiceName () const}\label{classNFcore_1_1LocalFunction_ccb96efc45b9c37eb77b86389877a9ed}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!getExpression@{getExpression}}
+\index{getExpression@{getExpression}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string LocalFunction::getExpression () const}\label{classNFcore_1_1LocalFunction_34e2e490a88cefddafd4ca05459779f0}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!getParsedExpression@{getParsedExpression}}
+\index{getParsedExpression@{getParsedExpression}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string LocalFunction::getParsedExpression () const}\label{classNFcore_1_1LocalFunction_280382a148d8cf1adde257faaa3f8ab3}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void LocalFunction::printDetails ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1LocalFunction_20531f336920310a7827841df3e3e60a}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!prepareForSimulation@{prepareForSimulation}}
+\index{prepareForSimulation@{prepareForSimulation}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void LocalFunction::prepareForSimulation ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1LocalFunction_78194708521f4f38d9167a729d6faaaf}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!getValue@{getValue}}
+\index{getValue@{getValue}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double LocalFunction::getValue ({\bf Molecule} $\ast$ {\em m}, int {\em scope})}\label{classNFcore_1_1LocalFunction_216854e02c151f6d0d9cf61ea63c6eb2}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!evaluateOn@{evaluateOn}}
+\index{evaluateOn@{evaluateOn}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double LocalFunction::evaluateOn ({\bf Molecule} $\ast$ {\em m}, int {\em scope})}\label{classNFcore_1_1LocalFunction_d2dd436e78f735368db406747556bcd7}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!addTypeIMoleculeDependency@{addTypeIMoleculeDependency}}
+\index{addTypeIMoleculeDependency@{addTypeIMoleculeDependency}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void LocalFunction::addTypeIMoleculeDependency ({\bf MoleculeType} $\ast$ {\em mt})}\label{classNFcore_1_1LocalFunction_106c3395c67c310f720e904e36ab0fe2}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!updateParameters@{updateParameters}}
+\index{updateParameters@{updateParameters}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void LocalFunction::updateParameters ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1LocalFunction_66d11851be45bdb8dd91b39670c8a3f7}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!SPECIES@{SPECIES}}
+\index{SPECIES@{SPECIES}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::LocalFunction::SPECIES} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1LocalFunction_631b9459359729d43d3520568dfaf9b9}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!MOLECULE@{MOLECULE}}
+\index{MOLECULE@{MOLECULE}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::LocalFunction::MOLECULE} = 1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1LocalFunction_75212d20f5301281a93b87deb6a43377}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!p@{p}}
+\index{p@{p}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}mu::Parser$\ast$ {\bf NFcore::LocalFunction::p}}\label{classNFcore_1_1LocalFunction_357eb0be17fca1e7cecf1889c77e09ab}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!name@{name}}
+\index{name@{name}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::LocalFunction::name}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_180d78e57b560f518601ea00abe93cc1}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!nicename@{nicename}}
+\index{nicename@{nicename}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::LocalFunction::nicename}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_fd440817c06cfd32fbedb92a624a7d8c}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!originalExpression@{originalExpression}}
+\index{originalExpression@{originalExpression}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::LocalFunction::originalExpression}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_575bcbed465855ba7ab45e87c17c47a8}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!parsedExpression@{parsedExpression}}
+\index{parsedExpression@{parsedExpression}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::LocalFunction::parsedExpression}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_4572b6b4acff5c3930e9b86941d69969}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!n\_\-args@{n\_\-args}}
+\index{n\_\-args@{n\_\-args}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::LocalFunction::n\_\-args}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_78a13bca5c8d724f126862b8d09392f4}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!argNames@{argNames}}
+\index{argNames@{argNames}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::LocalFunction::argNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_7ab8c060b1b626e539606b1695e516b2}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!n\_\-params@{n\_\-params}}
+\index{n\_\-params@{n\_\-params}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::LocalFunction::n\_\-params}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_2af28cf4caaa2d8437f9021a88b46c15}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!paramNames@{paramNames}}
+\index{paramNames@{paramNames}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::LocalFunction::paramNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_33700bd74d5284c805b03628d255388f}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!n\_\-varRefs@{n\_\-varRefs}}
+\index{n\_\-varRefs@{n\_\-varRefs}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::LocalFunction::n\_\-varRefs}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_d21b0b0d54df4613e24619a4779d0326}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!varRefNames@{varRefNames}}
+\index{varRefNames@{varRefNames}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::LocalFunction::varRefNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_dc858f57c65c66538d087f80485f456c}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!varObservableNames@{varObservableNames}}
+\index{varObservableNames@{varObservableNames}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::LocalFunction::varObservableNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_5e70ae1a4e2b50324c8c035a06055fc7}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!varRefScope@{varRefScope}}
+\index{varRefScope@{varRefScope}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::LocalFunction::varRefScope}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_2d28e00727b049acd315a26c08c00b3f}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!varLocalObservables@{varLocalObservables}}
+\index{varLocalObservables@{varLocalObservables}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Observable}$\ast$$\ast$ {\bf NFcore::LocalFunction::varLocalObservables}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_c323425b06d5f6d354ba2f6f88f49a9d}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!molList@{molList}}
+\index{molList@{molList}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<$ {\bf Molecule} $\ast$ $>$ {\bf LocalFunction::molList}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1LocalFunction_9eb147b90ff439b16a009f737bf8af60}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!molIter@{molIter}}
+\index{molIter@{molIter}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf LocalFunction::molIter}\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1LocalFunction_695d9899671a07a84e567f592011be62}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!typeI\_\-mol@{typeI\_\-mol}}
+\index{typeI\_\-mol@{typeI\_\-mol}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf MoleculeType} $\ast$$>$ {\bf NFcore::LocalFunction::typeI\_\-mol}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_37e3bd04f3b6e7c1fe99c66459f8aeb5}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!typeI\_\-localFunctionIndex@{typeI\_\-localFunctionIndex}}
+\index{typeI\_\-localFunctionIndex@{typeI\_\-localFunctionIndex}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::LocalFunction::typeI\_\-localFunctionIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_c91487d90e85032a532af09eac26bb15}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!n\_\-typeIImolecules@{n\_\-typeIImolecules}}
+\index{n\_\-typeIImolecules@{n\_\-typeIImolecules}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::LocalFunction::n\_\-typeIImolecules}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_02acb589165bf598387771403bd78e04}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!typeII\_\-mol@{typeII\_\-mol}}
+\index{typeII\_\-mol@{typeII\_\-mol}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$$\ast$ {\bf NFcore::LocalFunction::typeII\_\-mol}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_18a40f1cc4dba13502a542c60aa3961d}
+
+
+\index{NFcore::LocalFunction@{NFcore::LocalFunction}!typeII\_\-localFunctionIndex@{typeII\_\-localFunctionIndex}}
+\index{typeII\_\-localFunctionIndex@{typeII\_\-localFunctionIndex}!NFcore::LocalFunction@{NFcore::LocalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vector$<$int$>$ {\bf NFcore::LocalFunction::typeII\_\-localFunctionIndex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1LocalFunction_90a0774ef85096dbdd99ccabcc045553}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFfunction/{\bf NFfunction.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFfunction/{\bf localFunction.cpp}\end{CompactItemize}

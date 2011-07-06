@@ -1,0 +1,137 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#  Example of a Run NF (RNF) scripting file
+#
+#  The purpose of an RNF file is to allow NFsim to run for some amount of
+#  time, change certain parameters or output certain values, then continue
+#  running.  In doing so, RNF files also allow users to save command
+#  line options so that they do not have to be reentered every time
+#  the user decides to run a model.  Therefore, when sharing models,
+#  particularly those that require many command line parameters to
+#  run, it may be useful to also include an RNF file.
+#
+#
+#  To run this file, enter the command line and change directories
+#  to the installation path of NFsim, then into the models directory
+#  where this file is located.  NFsim executables are located in the
+#  bin directory. So we can call NFsim to run on this RNF file as:
+#
+#     >../bin/NFsim_[version] -rnf example.rnf
+#
+#  where [version] is the name of the NFsim executable for your
+#  particular operating system.  Not that in windows, you have
+#  to explicitly use the '.exe' file extension as in:
+#
+#     >../bin/NFsim_[version].exe -rnf example.rnf
+#
+#  Note that to run this simulation, you will need to have generated the xml
+#  file named simple_system.xml.  This file should already be in the models
+#  directory, but if not, run BioNetGen on the model simple_system.bngl in the
+#  models directory with the run command "writeXML()", then rename the xml
+#  file appropriately.  See the comments at end of the simple_system.bngl file 
+#  for more help.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+
+# First, comments can be placed anywhere in the file if they are
+# preceded by the pound (#) character.
+
+
+# Second, we can provide NFsim with any command line arguments that
+# tell us how to run the simulation.  For instance, here we tell
+# NFsim to run on an xml file named simple_system.xml, with verbose
+# output (-v), setting the universal traversal limit to 3 (-utl 3).
+# We also can set the name of the output file with the -o command.
+# Note that commands to simulate (-sim) for a set time with a set
+# number of output steps (-oSteps) are ignored, as the simulation
+# is run directly later.
+# 
+
+-xml simple_system.xml
+-v
+-utl 3      # comments can go here too, after commands
+-o simple_system_fromRNF.gdat
+
+
+
+#Key words include start, eq, sim, set, add, step, output, dump all, query, echo
+
+# Now we use the 'begin' tag to tell NFsim to begin a simulation run
+begin
+
+  # The 'echo' command allows us to print things to the console during simulation
+  # so that you can track where in the simulation you are.
+  echo Inside my first RNF file, running simple_system.xml.
+
+
+  # We can tell NFsim to equilbrate for 50s, giving us an output message 5 times so
+  # that we can track the equilibrate status.  Equilibration is the same as simulation,
+  # except that no output to the gdat file is generated
+  eq 50 5
+  
+  
+  # We can also tell NFsim to simulate for 50s outputting 100 times during that run, or
+  # twice per second.
+  sim 50 100
+  
+  
+  # Now say we want to print some basic information to the console so that we have
+  # a sense of what happened so far in the system.  We can do that with the print
+  # command.  We just write down the word "print" with any number of any of the 
+  # following keywords.  NFsim allows you to print:
+  #   - reactions (using the name "rxns" or "reactions")
+  #   - observables (using the keyword "obs" or "observables")
+  #   - moleculeTypes (using the keyword "moleculeTypes")
+  #   - molecules (using the keyword "molecules" -- careful here, there may be a lot!)
+  #   - functions (using the keyword "functions" or "funcs")
+  #   - parameters (using the keyword "parameters" or "params")
+
+  echo Printing some basic simulation stuff.
+  print rxns observables
+  print moleculeTypes
+  
+  
+  # Great.  Now we want to change something in our system.  RNF files allow you to change
+  # parameters that were defined in the model.  An important note though: BNGL processes
+  # parameter expressions BEFORE NFsim sees the input XML file.  Therefore, changing one
+  # parameter will NOT reevaluate all other parameters.  For instance, if we defined
+  # parameter kOn to be 3, and kOff to be 3*kOn, and we update kOn, the RNF script will
+  # NOT currently update kOff as well.
+  
+  # first, take a look at the list of parameters.
+  print params
+  
+  # now, let's update the catalytic rate of the reaction to a very low value, and then
+  # tell the system to update.  Note that we can change as many parameter values as we
+  # need to before we call the update command.  However, if we don't call the update
+  # command, then the changes will not be reflected in reaction rates or functional
+  # expressions when we go back to simulate.
+  set kcat 0.01
+  update
+  
+  # we can double check our parameter value changed, both in the list of parameters
+  # and the reactions
+  print params
+  print reactions
+  
+  
+  # finally, lets run the simulation again with the new rate.  If you take a look at the
+  # output GDAT file, which should be named "simpleSystemRunFromRNF.gdat", you will see
+  # that indeed the catalytic rate change affected the course of the simulation. You can
+  # therefore use this type of syntax to add input, or see what happens to the system
+  # in response to stimuli.
+  sim 50 100  
+  
+
+ 
+
+  
+
+
+# The 'end' tag tells NFsim to stop and exit
+end
+
+
+

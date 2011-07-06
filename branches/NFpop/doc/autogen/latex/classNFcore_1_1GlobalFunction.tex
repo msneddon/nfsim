@@ -1,0 +1,173 @@
+\section{NFcore::GlobalFunction Class Reference}
+\label{classNFcore_1_1GlobalFunction}\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+{\tt \#include $<$NFfunction.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Defines functions to be used globally in a simulation. 
+
+This small class is a small wrapper for the \doxyref{mu}{p.}{namespacemu} parser that allows the \doxyref{System}{p.}{classNFcore_1_1System} to keep track of functions that will be used throughout the course of the simulation. These functions are only evaluated as needed to either output the value or when recomputing the rate of some reaction. \subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf GlobalFunction} (string {\bf name}, string {\bf funcExpression}, vector$<$ string $>$ \&{\bf varRefNames}, vector$<$ string $>$ \&{\bf varRefTypes}, vector$<$ string $>$ \&{\bf paramNames}, {\bf System} $\ast$s)
+\item 
+{\bf $\sim$GlobalFunction} ()
+\item 
+void {\bf prepareForSimulation} ({\bf System} $\ast$s)
+\item 
+void {\bf updateParameters} ({\bf System} $\ast$s)
+\item 
+string {\bf getNiceName} () const 
+\item 
+string {\bf getName} () const 
+\item 
+void {\bf printDetails} ()
+\item 
+void {\bf printDetails} ({\bf System} $\ast$s)
+\item 
+void {\bf attatchRxn} ({\bf ReactionClass} $\ast$r)
+\item 
+int {\bf getNumOfVarRefs} () const 
+\item 
+string {\bf getVarRefName} (int varRefIndex) const 
+\item 
+string {\bf getVarRefType} (int varRefIndex) const 
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+mu::Parser $\ast$ {\bf p}
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+string {\bf name}
+\item 
+string {\bf funcExpression}
+\item 
+unsigned int {\bf n\_\-varRefs}
+\item 
+string $\ast$ {\bf varRefNames}
+\item 
+string $\ast$ {\bf varRefTypes}
+\item 
+unsigned int {\bf n\_\-params}
+\item 
+string $\ast$ {\bf paramNames}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!GlobalFunction@{GlobalFunction}}
+\index{GlobalFunction@{GlobalFunction}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}GlobalFunction::GlobalFunction (string {\em name}, string {\em funcExpression}, vector$<$ string $>$ \& {\em varRefNames}, vector$<$ string $>$ \& {\em varRefTypes}, vector$<$ string $>$ \& {\em paramNames}, {\bf System} $\ast$ {\em s})}\label{classNFcore_1_1GlobalFunction_aaab0b95f7aa0a1ac4d9fcc071136cdb}
+
+
+Creates a \doxyref{GlobalFunction}{p.}{classNFcore_1_1GlobalFunction} with the given variables (which should be \doxyref{Observable}{p.}{classNFcore_1_1Observable} objects that the \doxyref{System}{p.}{classNFcore_1_1System} has) as well as a set of parameter values. Note that creating a \doxyref{GlobalFunction}{p.}{classNFcore_1_1GlobalFunction} does not initialize its parser. The initialize, you have to call the \doxyref{prepareForSimulation()}{p.}{classNFcore_1_1GlobalFunction_31e9557210e6fdc3e5c87edc00a40be4} function which is currently handled by the \doxyref{System}{p.}{classNFcore_1_1System}. \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!$\sim$GlobalFunction@{$\sim$GlobalFunction}}
+\index{$\sim$GlobalFunction@{$\sim$GlobalFunction}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}GlobalFunction::$\sim$GlobalFunction ()}\label{classNFcore_1_1GlobalFunction_156e1b570424dde89dbe32c0217ed449}
+
+
+Deletes the \doxyref{GlobalFunction}{p.}{classNFcore_1_1GlobalFunction} along with all of its associated variable and constant parameter information. 
+
+\subsection{Member Function Documentation}
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!prepareForSimulation@{prepareForSimulation}}
+\index{prepareForSimulation@{prepareForSimulation}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void GlobalFunction::prepareForSimulation ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1GlobalFunction_31e9557210e6fdc3e5c87edc00a40be4}
+
+
+This actually initializes the Function Parser so that it can be used. \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!updateParameters@{updateParameters}}
+\index{updateParameters@{updateParameters}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void GlobalFunction::updateParameters ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1GlobalFunction_191b3bd5b9cdc95cb799371f94d714a7}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!getNiceName@{getNiceName}}
+\index{getNiceName@{getNiceName}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::GlobalFunction::getNiceName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1GlobalFunction_1f8462a4c988a039aa5db1bea0eab698}
+
+
+Simply gives the name of the function nicely (meaning something like func1()) for debugging / outputing. \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!getName@{getName}}
+\index{getName@{getName}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::GlobalFunction::getName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1GlobalFunction_5b4b99a92729f87d69dca911a930c6eb}
+
+
+Simply gives the name of the function only (without the open and close parentheses) . \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void GlobalFunction::printDetails ()}\label{classNFcore_1_1GlobalFunction_5a352818f7bceb358f34f5c6c9b5b793}
+
+
+For Debugging, prints out the details of the function including the defined variables and constant parameters as well as what the function currently evaluates to. \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void GlobalFunction::printDetails ({\bf System} $\ast$ {\em s})}\label{classNFcore_1_1GlobalFunction_79d146aa41d590ae1413b1d50fd394a6}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!attatchRxn@{attatchRxn}}
+\index{attatchRxn@{attatchRxn}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void GlobalFunction::attatchRxn ({\bf ReactionClass} $\ast$ {\em r})}\label{classNFcore_1_1GlobalFunction_434556d0375f13a99ab532dbc206ab29}
+
+
+When a reaction uses this function, we have to keep track of it here so that we can notify it to update is propensity when this function changes... \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!getNumOfVarRefs@{getNumOfVarRefs}}
+\index{getNumOfVarRefs@{getNumOfVarRefs}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::GlobalFunction::getNumOfVarRefs () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1GlobalFunction_4280527acd4f3d4e7e0312b2b2441039}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!getVarRefName@{getVarRefName}}
+\index{getVarRefName@{getVarRefName}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::GlobalFunction::getVarRefName (int {\em varRefIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1GlobalFunction_d7503dc9b5c99fe7011f7abb89ae5d63}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!getVarRefType@{getVarRefType}}
+\index{getVarRefType@{getVarRefType}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::GlobalFunction::getVarRefType (int {\em varRefIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1GlobalFunction_3584cb6ae93b3c09d41e743b13e13158}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!p@{p}}
+\index{p@{p}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}mu::Parser$\ast$ {\bf NFcore::GlobalFunction::p}}\label{classNFcore_1_1GlobalFunction_e7d1724b1ba1c604e2f35e9a2970f9a1}
+
+
+This is the actual Parser object that keeps track of the function and has references to all of its arguments. It is publicly visible, so be careful with it! Use this variable to evaluate the function. See the \doxyref{mu}{p.}{namespacemu} parser documentation and the \doxyref{FuncFactory}{p.}{classNFcore_1_1FuncFactory} class for details on how to use this. \index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!name@{name}}
+\index{name@{name}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::GlobalFunction::name}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_f6c9cd92eb143d8ce24b275a26a4ff52}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!funcExpression@{funcExpression}}
+\index{funcExpression@{funcExpression}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::GlobalFunction::funcExpression}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_b7df2d72675e2d12f4f3ea3b91909f3f}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!n\_\-varRefs@{n\_\-varRefs}}
+\index{n\_\-varRefs@{n\_\-varRefs}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::GlobalFunction::n\_\-varRefs}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_f3098d98bf9e7963b2b835809456ffd6}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!varRefNames@{varRefNames}}
+\index{varRefNames@{varRefNames}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::GlobalFunction::varRefNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_e606a0e792d11d015d57114bf1de4222}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!varRefTypes@{varRefTypes}}
+\index{varRefTypes@{varRefTypes}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::GlobalFunction::varRefTypes}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_417641f7c7d360d87730adad7c5961d3}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!n\_\-params@{n\_\-params}}
+\index{n\_\-params@{n\_\-params}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int {\bf NFcore::GlobalFunction::n\_\-params}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_95cdfab1d860b34463f8135392711c4f}
+
+
+\index{NFcore::GlobalFunction@{NFcore::GlobalFunction}!paramNames@{paramNames}}
+\index{paramNames@{paramNames}!NFcore::GlobalFunction@{NFcore::GlobalFunction}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string$\ast$ {\bf NFcore::GlobalFunction::paramNames}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1GlobalFunction_2f3c212d8164a5212ad3a9cdc67e0cce}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFfunction/{\bf NFfunction.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFfunction/{\bf function.cpp}\end{CompactItemize}

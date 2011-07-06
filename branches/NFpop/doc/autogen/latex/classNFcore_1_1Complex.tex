@@ -1,0 +1,213 @@
+\section{NFcore::Complex Class Reference}
+\label{classNFcore_1_1Complex}\index{NFcore::Complex@{NFcore::Complex}}
+{\tt \#include $<$NFcore.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Container to dynamically keep track of all system complexes. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Complex} ({\bf System} $\ast$s, int {\bf ID\_\-complex}, {\bf Molecule} $\ast$m)
+\item 
+{\bf $\sim$Complex} ()
+\item 
+bool {\bf isAlive} ()
+\item 
+int {\bf getComplexID} () const 
+\item 
+int {\bf getComplexSize} () const 
+\item 
+int {\bf getMoleculeCountOfType} ({\bf MoleculeType} $\ast$m)
+\item 
+void {\bf mergeWithList} ({\bf Complex} $\ast$c)
+\item 
+void {\bf updateComplexMembership} ({\bf Molecule} $\ast$m)
+\item 
+void {\bf refactorToNewComplex} (int new\_\-ID\_\-complex)
+\item 
+void {\bf emptyComplexForever} ()
+\item 
+void {\bf printDegreeDistribution} ()
+\item 
+void {\bf getDegreeDistribution} (vector$<$ int $>$ \&degreeDist)
+\item 
+void {\bf printDetails} ()
+\item 
+void {\bf printDetailsLong} ()
+\item 
+double {\bf getDistance} ({\bf Complex} $\ast$c)
+\item 
+double {\bf getXpos} ()
+\item 
+double {\bf getYpos} ()
+\item 
+double {\bf getZpos} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+list$<$ {\bf Molecule} $\ast$ $>$ {\bf complexMembers}
+\item 
+list$<$ {\bf Molecule} $\ast$ $>$::iterator {\bf molIter}
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const int {\bf UNIFORM} = 0
+\item 
+static const int {\bf FIXED\_\-POINT} = 1
+\item 
+static const int {\bf DIFFUSE\_\-3D} = 2
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+{\bf System} $\ast$ {\bf system}
+\item 
+int {\bf ID\_\-complex}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::Complex@{NFcore::Complex}!Complex@{Complex}}
+\index{Complex@{Complex}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Complex::Complex ({\bf System} $\ast$ {\em s}, int {\em ID\_\-complex}, {\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1Complex_f21fb570112128eaf141081404504a67}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!$\sim$Complex@{$\sim$Complex}}
+\index{$\sim$Complex@{$\sim$Complex}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Complex::$\sim$Complex ()}\label{classNFcore_1_1Complex_70e14b17c92e3da779686b98f9f3bb2d}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::Complex@{NFcore::Complex}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Complex::isAlive ()}\label{classNFcore_1_1Complex_2b4bfa37f0d9767e387a18ba9764d181}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getComplexID@{getComplexID}}
+\index{getComplexID@{getComplexID}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Complex::getComplexID () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_72339ce32267d5aab1dfaa573a281d5c}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getComplexSize@{getComplexSize}}
+\index{getComplexSize@{getComplexSize}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Complex::getComplexSize () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_8ee0c095d1fddd3e0e758ff0cdb29b27}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getMoleculeCountOfType@{getMoleculeCountOfType}}
+\index{getMoleculeCountOfType@{getMoleculeCountOfType}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Complex::getMoleculeCountOfType ({\bf MoleculeType} $\ast$ {\em m})}\label{classNFcore_1_1Complex_7ef1c1b74f0d87d95e7ffa10f2120a4a}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!mergeWithList@{mergeWithList}}
+\index{mergeWithList@{mergeWithList}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::mergeWithList ({\bf Complex} $\ast$ {\em c})}\label{classNFcore_1_1Complex_a11aaab6753e3e2b0ce594a878721b1d}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!updateComplexMembership@{updateComplexMembership}}
+\index{updateComplexMembership@{updateComplexMembership}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::updateComplexMembership ({\bf Molecule} $\ast$ {\em m})}\label{classNFcore_1_1Complex_dab8d5e7e2ac410d7469e6d8f17ac998}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!refactorToNewComplex@{refactorToNewComplex}}
+\index{refactorToNewComplex@{refactorToNewComplex}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::refactorToNewComplex (int {\em new\_\-ID\_\-complex})}\label{classNFcore_1_1Complex_456f86fedae315aa417f12a0589dbac1}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!emptyComplexForever@{emptyComplexForever}}
+\index{emptyComplexForever@{emptyComplexForever}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Complex::emptyComplexForever ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_2e22d230882b9d1dfdea9ecf0c743440}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!printDegreeDistribution@{printDegreeDistribution}}
+\index{printDegreeDistribution@{printDegreeDistribution}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::printDegreeDistribution ()}\label{classNFcore_1_1Complex_ade8e1f169483806a9e0d4fcc0092390}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getDegreeDistribution@{getDegreeDistribution}}
+\index{getDegreeDistribution@{getDegreeDistribution}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::getDegreeDistribution (vector$<$ int $>$ \& {\em degreeDist})}\label{classNFcore_1_1Complex_4d11db80f44edc51ccfc98d50a9a2125}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::printDetails ()}\label{classNFcore_1_1Complex_c2b10523459c98c2d465a8fbe63f0536}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!printDetailsLong@{printDetailsLong}}
+\index{printDetailsLong@{printDetailsLong}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Complex::printDetailsLong ()}\label{classNFcore_1_1Complex_7eef40d39a4eabc6519cbaddd28e8071}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getDistance@{getDistance}}
+\index{getDistance@{getDistance}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::Complex::getDistance ({\bf Complex} $\ast$ {\em c})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_5b68ccedb435018ecbecfc2d87efe13a}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getXpos@{getXpos}}
+\index{getXpos@{getXpos}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::Complex::getXpos ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_13118693140f69e620ec1c16daec9094}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getYpos@{getYpos}}
+\index{getYpos@{getYpos}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::Complex::getYpos ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_fd1731cf30137d822365c551233d9619}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!getZpos@{getZpos}}
+\index{getZpos@{getZpos}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double NFcore::Complex::getZpos ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Complex_e1a2b42aaefbcccf6cbc72f1269f7321}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::Complex@{NFcore::Complex}!UNIFORM@{UNIFORM}}
+\index{UNIFORM@{UNIFORM}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Complex::UNIFORM} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Complex_15091c1106920e003a2e9b060f158f39}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!FIXED\_\-POINT@{FIXED\_\-POINT}}
+\index{FIXED\_\-POINT@{FIXED\_\-POINT}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Complex::FIXED\_\-POINT} = 1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Complex_6a246e3f3d3523d409a6bc22ee955885}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!DIFFUSE\_\-3D@{DIFFUSE\_\-3D}}
+\index{DIFFUSE\_\-3D@{DIFFUSE\_\-3D}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Complex::DIFFUSE\_\-3D} = 2\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Complex_f647fd600ba3d9d6fd5025ca68c17a50}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!complexMembers@{complexMembers}}
+\index{complexMembers@{complexMembers}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$ {\bf NFcore::Complex::complexMembers}}\label{classNFcore_1_1Complex_eb6d1fcb66f1c7ae39edb701f1443024}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!molIter@{molIter}}
+\index{molIter@{molIter}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}list$<${\bf Molecule} $\ast$$>$::iterator {\bf NFcore::Complex::molIter}}\label{classNFcore_1_1Complex_2551a54dfa379df3bc200b729e3e35bf}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!system@{system}}
+\index{system@{system}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System}$\ast$ {\bf NFcore::Complex::system}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Complex_507911a7d8e341fe531173a178011cc3}
+
+
+\index{NFcore::Complex@{NFcore::Complex}!ID\_\-complex@{ID\_\-complex}}
+\index{ID\_\-complex@{ID\_\-complex}!NFcore::Complex@{NFcore::Complex}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Complex::ID\_\-complex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Complex_fa83ffe4d89fe79396145cf245960d9d}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf complex.cpp}\end{CompactItemize}

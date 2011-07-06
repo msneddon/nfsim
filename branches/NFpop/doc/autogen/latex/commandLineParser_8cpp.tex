@@ -1,0 +1,20 @@
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp File Reference}
+\label{commandLineParser_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFinput/commandLineParser.cpp}}
+
+
+{\tt \#include \char`\"{}NFinput.hh\char`\"{}}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+bool {\bf NFinput::parseArguments} (int argc, const char $\ast$argv[$\,$], map$<$ string, string $>$ \&argMap)
+\begin{CompactList}\small\item\em Parses command line arguments from the console nicely. \item\end{CompactList}\item 
+int {\bf NFinput::parseAsInt} (map$<$ string, string $>$ \&argMap, string argName, int defaultValue)
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as an integer. \item\end{CompactList}\item 
+void {\bf NFinput::parseAsCommaSeparatedSequence} (map$<$ string, string $>$ \&argMap, string argName, vector$<$ int $>$ \&sequence)
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a comma delimited sequence of ints. \item\end{CompactList}\item 
+double {\bf NFinput::parseAsDouble} (map$<$ string, string $>$ \&argMap, string argName, double defaultValue)
+\begin{CompactList}\small\item\em Looks up the argument in the argMap and tries to parse the value as a double. \item\end{CompactList}\item 
+bool {\bf NFinput::parseSequence} (string numString, vector$<$ double $>$ \&outputTimes)
+\begin{CompactList}\small\item\em Parses a matlab style sequence (ie startValue:step:endValue) into the vector. \item\end{CompactList}\item 
+bool {\bf NFinput::createSystemDumper} (string paramStr, {\bf System} $\ast$s, bool verbose)
+\begin{CompactList}\small\item\em Parses the cmd line arg that specifies system dumps, and schedules them. \item\end{CompactList}\end{CompactItemize}

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by BioNetGen 2.0.48a+  -->
+<sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
+  <model id="motor">
+    <ListOfParameters>
+      <Parameter id="kpy" type="Constant" value="3.5"/>
+      <Parameter id="kmy" type="Constant" value="10"/>
+      <Parameter id="Kd" type="Constant" value="3.06"/>
+      <Parameter id="g1" type="Constant" value="35"/>
+      <Parameter id="w" type="Constant" value="1.02"/>
+      <Parameter id="cellVolume" type="Constant" value="1.41e-15"/>
+      <Parameter id="_Na" type="Constant" value="6.02e23"/>
+      <Parameter id="motorCount" type="Constant" value="10"/>
+      <Parameter id="CheYCount" type="Constant" value="8200"/>
+    </ListOfParameters>
+    <ListOfMoleculeTypes>
+      <MoleculeType id="CheY">
+        <ListOfComponentTypes>
+          <ComponentType id="p">
+            <ListOfAllowedStates>
+              <AllowedState id="unphos"/>
+              <AllowedState id="PHOS"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+      <MoleculeType id="Motor">
+        <ListOfComponentTypes>
+          <ComponentType id="state">
+            <ListOfAllowedStates>
+              <AllowedState id="CW"/>
+              <AllowedState id="CCW"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+    </ListOfMoleculeTypes>
+    <ListOfCompartments>
+    </ListOfCompartments>
+    <ListOfSpecies>
+      <Species id="S1"  concentration="CheYCount" name="CheY(p~unphos)">
+        <ListOfMolecules>
+          <Molecule id="S1_M1" name="CheY">
+            <ListOfComponents>
+              <Component id="S1_M1_C1" name="p" state="unphos" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S2"  concentration="motorCount" name="Motor(state~CW)">
+        <ListOfMolecules>
+          <Molecule id="S2_M1" name="Motor">
+            <ListOfComponents>
+              <Component id="S2_M1_C1" name="state" state="CW" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+    </ListOfSpecies>
+    <ListOfReactionRules>
+      <ReactionRule id="RR1" name="Rule1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR1_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_RP1_M1" name="CheY">
+                <ListOfComponents>
+                  <Component id="RR1_RP1_M1_C1" name="p" state="unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR1_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_PP1_M1" name="CheY">
+                <ListOfComponents>
+                  <Component id="RR1_PP1_M1_C1" name="p" state="PHOS" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR1_RateLaw" type="Ele">
+          <ListOfRateConstants>
+            <RateConstant value="kpy"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR1_RP1_M1" targetID="RR1_PP1_M1"/>
+          <MapItem sourceID="RR1_RP1_M1_C1" targetID="RR1_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR1_RP1_M1_C1" finalState="PHOS"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR2" name="Rule1r">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR2_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP1_M1" name="CheY">
+                <ListOfComponents>
+                  <Component id="RR2_RP1_M1_C1" name="p" state="PHOS" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR2_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_PP1_M1" name="CheY">
+                <ListOfComponents>
+                  <Component id="RR2_PP1_M1_C1" name="p" state="unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR2_RateLaw" type="Ele">
+          <ListOfRateConstants>
+            <RateConstant value="kmy"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR2_RP1_M1" targetID="RR2_PP1_M1"/>
+          <MapItem sourceID="RR2_RP1_M1_C1" targetID="RR2_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR2_RP1_M1_C1" finalState="unphos"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR3" name="Rule2">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR3_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_RP1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="RR3_RP1_M1_C1" name="state" state="CW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR3_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_PP1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="RR3_PP1_M1_C1" name="state" state="CCW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR3_RateLaw" type="Function" name="rateLaw1">
+          <ListOfArguments>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR3_RP1_M1" targetID="RR3_PP1_M1"/>
+          <MapItem sourceID="RR3_RP1_M1_C1" targetID="RR3_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR3_RP1_M1_C1" finalState="CCW"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR4" name="Rule3">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR4_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_RP1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="RR4_RP1_M1_C1" name="state" state="CCW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR4_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_PP1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="RR4_PP1_M1_C1" name="state" state="CW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR4_RateLaw" type="Function" name="rateLaw2">
+          <ListOfArguments>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR4_RP1_M1" targetID="RR4_PP1_M1"/>
+          <MapItem sourceID="RR4_RP1_M1_C1" targetID="RR4_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR4_RP1_M1_C1" finalState="CW"/>
+        </ListOfOperations>
+      </ReactionRule>
+    </ListOfReactionRules>
+    <ListOfObservables>
+      <Observable id="O1" name="CheYp" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O1_P1">
+            <ListOfMolecules>
+              <Molecule id="O1_P1_M1" name="CheY">
+                <ListOfComponents>
+                  <Component id="O1_P1_M1_C1" name="p" state="PHOS" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O2" name="MotCW" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O2_P1">
+            <ListOfMolecules>
+              <Molecule id="O2_P1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="O2_P1_M1_C1" name="state" state="CW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O3" name="MotCCW" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O3_P1">
+            <ListOfMolecules>
+              <Molecule id="O3_P1_M1" name="Motor">
+                <ListOfComponents>
+                  <Component id="O3_P1_M1_C1" name="state" state="CCW" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+    </ListOfObservables>
+    <ListOfFunctions>
+      <Function id="kPlus">
+        <ListOfReferences>
+          <Reference name="CheYp" type="Observable"/>
+          <Reference name="MotCW" type="Observable"/>
+          <Reference name="Kd" type="Constant"/>
+          <Reference name="w" type="Constant"/>
+          <Reference name="cellVolume" type="Constant"/>
+          <Reference name="g1" type="Constant"/>
+          <Reference name="_Na" type="Constant"/>
+        </ListOfReferences>
+        <Expression> (MotCW*w)*exp(((g1/2.0)*((1.0/2.0)-((CheYp/((cellVolume*_Na)*(10^-6)))/(Kd+(CheYp/((cellVolume*_Na)*(10^-6)))))))) </Expression>
+      </Function>
+      <Function id="kMinus">
+        <ListOfReferences>
+          <Reference name="CheYp" type="Observable"/>
+          <Reference name="MotCCW" type="Observable"/>
+          <Reference name="Kd" type="Constant"/>
+          <Reference name="w" type="Constant"/>
+          <Reference name="cellVolume" type="Constant"/>
+          <Reference name="g1" type="Constant"/>
+          <Reference name="_Na" type="Constant"/>
+        </ListOfReferences>
+        <Expression> (MotCCW*w)*exp((-((g1/2.0)*((1.0/2.0)-((CheYp/((cellVolume*_Na)*(10^-6)))/(Kd+(CheYp/((cellVolume*_Na)*(10^-6))))))))) </Expression>
+      </Function>
+      <Function id="rateLaw1">
+        <ListOfReferences>
+          <Reference name="kPlus" type="Function"/>
+        </ListOfReferences>
+        <Expression> kPlus() </Expression>
+      </Function>
+      <Function id="rateLaw2">
+        <ListOfReferences>
+          <Reference name="kMinus" type="Function"/>
+        </ListOfReferences>
+        <Expression> kMinus() </Expression>
+      </Function>
+    </ListOfFunctions>
+  </model>
+</sbml>

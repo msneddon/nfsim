@@ -1,0 +1,2 @@
+basic dimerization reaction test and basic species observable
+-sim 1 -oSteps 100 -cb

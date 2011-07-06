@@ -1,0 +1,2 @@
+test creation of molecules with multiple identical sites
+-sim 30 -oSteps 100 -cb

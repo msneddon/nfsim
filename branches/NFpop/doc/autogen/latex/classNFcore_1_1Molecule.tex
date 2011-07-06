@@ -1,0 +1,590 @@
+\section{NFcore::Molecule Class Reference}
+\label{classNFcore_1_1Molecule}\index{NFcore::Molecule@{NFcore::Molecule}}
+{\tt \#include $<$NFcore.hh$>$}
+
+
+
+\subsection{Detailed Description}
+Each molecule in the system is represented by an instance of this. 
+
+The base unit of the NFsim program, this class maintains instances of individual objects that exist in the simulation. Molecules are able to interact with their \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType} so that they also 'know' about the reactions and observables they need to keep updated as they react and change states. There are also two static functions which are used to create and delete bonds (bind and unbind). \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Molecule} ({\bf MoleculeType} $\ast${\bf parentMoleculeType}, int {\bf listId})
+\item 
+{\bf $\sim$Molecule} ()
+\item 
+int {\bf getMolListId} () const 
+\item 
+string {\bf getMoleculeTypeName} () const 
+\item 
+{\bf MoleculeType} $\ast$ {\bf getMoleculeType} () const 
+\item 
+int {\bf getUniqueID} () const 
+\item 
+bool {\bf isAlive} () const 
+\item 
+void {\bf setAlive} (bool isAlive)
+\item 
+void {\bf setComplexID} (int currentComplex)
+\item 
+int {\bf getComplexID} () const 
+\item 
+{\bf Complex} $\ast$ {\bf getComplex} () const 
+\item 
+int {\bf getDegree} ()
+\item 
+bool {\bf isPopulationType} () const 
+\item 
+bool {\bf setPopulation} (int count)
+\item 
+int {\bf getPopulation} () const 
+\item 
+bool {\bf incrementPopulation} ()
+\item 
+bool {\bf decrementPopulation} ()
+\item 
+int {\bf getComponentState} (int cIndex) const 
+\item 
+int {\bf getComponentIndexOfBond} (int cIndex) const 
+\item 
+void {\bf setComponentState} (int cIndex, int newValue)
+\item 
+void {\bf setComponentState} (string cName, int newValue)
+\item 
+void {\bf setLocalFunctionValue} (double newValue, int localFunctionIndex)
+\item 
+double {\bf getLocalFunctionValue} (int localFunctionIndex)
+\item 
+{\bf LocalFunction} $\ast$ {\bf getLocalFunction} (int localFunctionIndex)
+\item 
+void {\bf setUpLocalFunctionList} ()
+\item 
+bool {\bf isBindingSiteOpen} (int bIndex) const 
+\item 
+bool {\bf isBindingSiteBonded} (int bIndex) const 
+\item 
+{\bf Molecule} $\ast$ {\bf getBondedMolecule} (int bSiteIndex) const 
+\item 
+int {\bf getBondedMoleculeBindingSiteIndex} (int cIndex) const 
+\item 
+int {\bf getRxnListMappingId} (int rxnIndex) const 
+\item 
+void {\bf setRxnListMappingId} (int rxnIndex, int {\bf rxnListMappingId})
+\item 
+void {\bf setBondTo} ({\bf Molecule} $\ast$m2, int bindingSiteIndex)
+\item 
+void {\bf moveToNewComplex} (int newComplexID)
+\item 
+void {\bf traverseBondedNeighborhood} (list$<$ {\bf Molecule} $\ast$ $>$ \&members, int traversalLimit)
+\item 
+void {\bf depthFirstSearch} (list$<$ {\bf Molecule} $\ast$ $>$ \&members)
+\item 
+void {\bf prepareForSimulation} ()
+\item 
+void {\bf updateRxnMembership} ()
+\item 
+void {\bf removeFromObservables} ()
+\item 
+void {\bf addToObservables} ()
+\item 
+void {\bf updateTypeIIFunctions} ()
+\item 
+void {\bf updateDORRxnValues} ()
+\item 
+void {\bf printDetails} ()
+\item 
+void {\bf printDetails} (ostream \&o)
+\item 
+int {\bf isObs} (int oIndex) const 
+\item 
+void {\bf setIsObs} (int oIndex, int isObs)
+\end{CompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static void {\bf bind} ({\bf Molecule} $\ast$m1, int cIndex1, {\bf Molecule} $\ast$m2, int cIndex2)
+\item 
+static void {\bf bind} ({\bf Molecule} $\ast$m1, string compName1, {\bf Molecule} $\ast$m2, string compName2)
+\item 
+static void {\bf unbind} ({\bf Molecule} $\ast$m1, int bSiteIndex)
+\item 
+static void {\bf unbind} ({\bf Molecule} $\ast$m1, char $\ast$bSiteName)
+\item 
+static void {\bf breadthFirstSearch} (list$<$ {\bf Molecule} $\ast$ $>$ \&members, {\bf Molecule} $\ast$m, int depth)
+\item 
+static void {\bf printMoleculeList} (list$<$ {\bf Molecule} $\ast$ $>$ \&members)
+\item 
+static int {\bf getUniqueIdCount} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+bool {\bf hasVisitedMolecule}
+\item 
+bool $\ast$ {\bf hasVisitedBond}
+\item 
+{\bf TemplateMolecule} $\ast$ {\bf isMatchedTo}
+\item 
+bool {\bf hasEvaluatedMolecule}
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const int {\bf NOT\_\-IN\_\-RXN} = -1
+\item 
+static const int {\bf NOSTATE} = -1
+\item 
+static const int {\bf NOBOND} = 0
+\item 
+static const int {\bf NOINDEX} = -1
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+bool {\bf isPrepared}
+\item 
+bool {\bf isAliveInSim}
+\item 
+int {\bf ID\_\-complex}
+\item 
+int {\bf ID\_\-type}
+\item 
+int {\bf ID\_\-unique}
+\item 
+int {\bf listId}
+\item 
+{\bf MoleculeType} $\ast$ {\bf parentMoleculeType}
+\item 
+bool {\bf useComplex}
+\item 
+int {\bf population\_\-count}
+\item 
+int $\ast$ {\bf component}
+\item 
+int {\bf numOfComponents}
+\item 
+{\bf Molecule} $\ast$$\ast$ {\bf bond}
+\item 
+int $\ast$ {\bf indexOfBond}
+\item 
+double $\ast$ {\bf localFunctionValues}
+\item 
+int $\ast$ {\bf isObservable}
+\item 
+int $\ast$ {\bf rxnListMappingId}
+\item 
+int {\bf nReactions}
+\end{CompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{CompactItemize}
+\item 
+static int {\bf uniqueIdCount} = 0
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::Molecule@{NFcore::Molecule}!Molecule@{Molecule}}
+\index{Molecule@{Molecule}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Molecule::Molecule ({\bf MoleculeType} $\ast$ {\em parentMoleculeType}, int {\em listId})}\label{classNFcore_1_1Molecule_09f19b608d8bcc051b61e2ab1fffa207}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!$\sim$Molecule@{$\sim$Molecule}}
+\index{$\sim$Molecule@{$\sim$Molecule}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Molecule::$\sim$Molecule ()}\label{classNFcore_1_1Molecule_1ff980b574a62526abff3d631c83bf94}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::Molecule@{NFcore::Molecule}!getMolListId@{getMolListId}}
+\index{getMolListId@{getMolListId}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getMolListId () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_5b8fa63376968f8905e7979e8648647b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getMoleculeTypeName@{getMoleculeTypeName}}
+\index{getMoleculeTypeName@{getMoleculeTypeName}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::Molecule::getMoleculeTypeName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_54b335a50f427d3af013b3f833552c78}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getMoleculeType@{getMoleculeType}}
+\index{getMoleculeType@{getMoleculeType}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$ NFcore::Molecule::getMoleculeType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_7b3552809de0a478b64c4eb4ca4096d5}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getUniqueID@{getUniqueID}}
+\index{getUniqueID@{getUniqueID}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getUniqueID () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_bdc033d5a74f5453712ac9ec36b0564f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Molecule::isAlive () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_026c2150941021241376f31ab5cdfa8b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setAlive@{setAlive}}
+\index{setAlive@{setAlive}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setAlive (bool {\em isAlive})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_70a78e2f3cc4020ab0224e03f722f568}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setComplexID@{setComplexID}}
+\index{setComplexID@{setComplexID}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setComplexID (int {\em currentComplex})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_69465045c57bb005157fc2aea3efb39d}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getComplexID@{getComplexID}}
+\index{getComplexID@{getComplexID}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getComplexID () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_16f3f77ac1f62468a6f77be13f224b2b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getComplex@{getComplex}}
+\index{getComplex@{getComplex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Complex}$\ast$ NFcore::Molecule::getComplex () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_42b4fdfe04c8da86bfd2ac5f4a93492d}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getDegree@{getDegree}}
+\index{getDegree@{getDegree}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getDegree ()}\label{classNFcore_1_1Molecule_390f0d1223bdd2ab075b25993902a520}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isPopulationType@{isPopulationType}}
+\index{isPopulationType@{isPopulationType}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::Molecule::isPopulationType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_16b6745c6533c31333334dc3d39417e4}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setPopulation@{setPopulation}}
+\index{setPopulation@{setPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::setPopulation (int {\em count})}\label{classNFcore_1_1Molecule_efdeb81a3b9d98a8644db2e1acd59404}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getPopulation@{getPopulation}}
+\index{getPopulation@{getPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getPopulation () const}\label{classNFcore_1_1Molecule_912defe8c71ea04e15b94d161a50a61c}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!incrementPopulation@{incrementPopulation}}
+\index{incrementPopulation@{incrementPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::incrementPopulation ()}\label{classNFcore_1_1Molecule_854b5ead187df0c2aeb04b208ad4c0b0}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!decrementPopulation@{decrementPopulation}}
+\index{decrementPopulation@{decrementPopulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::decrementPopulation ()}\label{classNFcore_1_1Molecule_eda502a7eb99b0b319491ed416000b92}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getComponentState@{getComponentState}}
+\index{getComponentState@{getComponentState}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getComponentState (int {\em cIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_7b79c8463c9c4dc88549aa74ba7179cc}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getComponentIndexOfBond@{getComponentIndexOfBond}}
+\index{getComponentIndexOfBond@{getComponentIndexOfBond}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getComponentIndexOfBond (int {\em cIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_644b32b9f8609ee675f2ecc4f458d678}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setComponentState@{setComponentState}}
+\index{setComponentState@{setComponentState}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::setComponentState (int {\em cIndex}, int {\em newValue})}\label{classNFcore_1_1Molecule_0eb79f69d465c6407b078f59465d1413}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setComponentState@{setComponentState}}
+\index{setComponentState@{setComponentState}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::setComponentState (string {\em cName}, int {\em newValue})}\label{classNFcore_1_1Molecule_7e96ad7ebb9ebde9324b1f069f8078d4}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setLocalFunctionValue@{setLocalFunctionValue}}
+\index{setLocalFunctionValue@{setLocalFunctionValue}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::setLocalFunctionValue (double {\em newValue}, int {\em localFunctionIndex})}\label{classNFcore_1_1Molecule_d5f5d4f6094fc06d21ee7834dd1d6ca5}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getLocalFunctionValue@{getLocalFunctionValue}}
+\index{getLocalFunctionValue@{getLocalFunctionValue}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double Molecule::getLocalFunctionValue (int {\em localFunctionIndex})}\label{classNFcore_1_1Molecule_10dc17ce9638bbfe58693a428c95e3a8}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getLocalFunction@{getLocalFunction}}
+\index{getLocalFunction@{getLocalFunction}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf LocalFunction} $\ast$ Molecule::getLocalFunction (int {\em localFunctionIndex})}\label{classNFcore_1_1Molecule_b85c118563895e50c619fb584c2ace5b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setUpLocalFunctionList@{setUpLocalFunctionList}}
+\index{setUpLocalFunctionList@{setUpLocalFunctionList}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::setUpLocalFunctionList ()}\label{classNFcore_1_1Molecule_74b2a51b8799923556e413a4955a3926}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isBindingSiteOpen@{isBindingSiteOpen}}
+\index{isBindingSiteOpen@{isBindingSiteOpen}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::isBindingSiteOpen (int {\em bIndex}) const}\label{classNFcore_1_1Molecule_80db66e3d3582f040a363fc625130a88}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isBindingSiteBonded@{isBindingSiteBonded}}
+\index{isBindingSiteBonded@{isBindingSiteBonded}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Molecule::isBindingSiteBonded (int {\em bIndex}) const}\label{classNFcore_1_1Molecule_4e50fb96e3a9cbd47d8ae7156f2a10bc}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getBondedMolecule@{getBondedMolecule}}
+\index{getBondedMolecule@{getBondedMolecule}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule} $\ast$ Molecule::getBondedMolecule (int {\em bSiteIndex}) const}\label{classNFcore_1_1Molecule_7833785f509d95b6a97b299526d1d6e4}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getBondedMoleculeBindingSiteIndex@{getBondedMoleculeBindingSiteIndex}}
+\index{getBondedMoleculeBindingSiteIndex@{getBondedMoleculeBindingSiteIndex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Molecule::getBondedMoleculeBindingSiteIndex (int {\em cIndex}) const}\label{classNFcore_1_1Molecule_bcc94973b4d615d2d8ade51b782b0e35}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getRxnListMappingId@{getRxnListMappingId}}
+\index{getRxnListMappingId@{getRxnListMappingId}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::getRxnListMappingId (int {\em rxnIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_a352c3ff40bb38555c772124de0f0ac8}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setRxnListMappingId@{setRxnListMappingId}}
+\index{setRxnListMappingId@{setRxnListMappingId}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setRxnListMappingId (int {\em rxnIndex}, int {\em rxnListMappingId})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_9cf1eae438fc06f9e70d541e4a0b32d5}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setBondTo@{setBondTo}}
+\index{setBondTo@{setBondTo}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setBondTo ({\bf Molecule} $\ast$ {\em m2}, int {\em bindingSiteIndex})}\label{classNFcore_1_1Molecule_83f24f5163f0521e1ce77bb8aef2ac97}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!moveToNewComplex@{moveToNewComplex}}
+\index{moveToNewComplex@{moveToNewComplex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::moveToNewComplex (int {\em newComplexID})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_691daed6bab7b13dd5bfe6da41a8ab48}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!bind@{bind}}
+\index{bind@{bind}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::bind ({\bf Molecule} $\ast$ {\em m1}, int {\em cIndex1}, {\bf Molecule} $\ast$ {\em m2}, int {\em cIndex2})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_776a89ff6affb64d02f180403207d0ac}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!bind@{bind}}
+\index{bind@{bind}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::bind ({\bf Molecule} $\ast$ {\em m1}, string {\em compName1}, {\bf Molecule} $\ast$ {\em m2}, string {\em compName2})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_7a43a97c3f1baad5eb5e11b91683d782}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!unbind@{unbind}}
+\index{unbind@{unbind}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::unbind ({\bf Molecule} $\ast$ {\em m1}, int {\em bSiteIndex})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_e37cae25c4e0e544ae0b9b9930ae309b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!unbind@{unbind}}
+\index{unbind@{unbind}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::unbind ({\bf Molecule} $\ast$ {\em m1}, char $\ast$ {\em bSiteName})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_b29bc47ee1304d31173dc00af20bbafd}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!traverseBondedNeighborhood@{traverseBondedNeighborhood}}
+\index{traverseBondedNeighborhood@{traverseBondedNeighborhood}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::traverseBondedNeighborhood (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members}, int {\em traversalLimit})}\label{classNFcore_1_1Molecule_410a708dc5a802794c49a1b547e220cb}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!breadthFirstSearch@{breadthFirstSearch}}
+\index{breadthFirstSearch@{breadthFirstSearch}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::breadthFirstSearch (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members}, {\bf Molecule} $\ast$ {\em m}, int {\em depth})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_6242f0f2226f92690f67d2d60e39209e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!depthFirstSearch@{depthFirstSearch}}
+\index{depthFirstSearch@{depthFirstSearch}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::depthFirstSearch (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members})}\label{classNFcore_1_1Molecule_20fc55c24b214a07d4dd10b966c1dcb7}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!prepareForSimulation@{prepareForSimulation}}
+\index{prepareForSimulation@{prepareForSimulation}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::prepareForSimulation ()}\label{classNFcore_1_1Molecule_e7791ea7d5c718e769355885264ed27c}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!updateRxnMembership@{updateRxnMembership}}
+\index{updateRxnMembership@{updateRxnMembership}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::updateRxnMembership ()}\label{classNFcore_1_1Molecule_418a61a3ccd7c37c53e30cbe90d35a94}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!removeFromObservables@{removeFromObservables}}
+\index{removeFromObservables@{removeFromObservables}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::removeFromObservables ()}\label{classNFcore_1_1Molecule_b996dfd73160b4e2e0f060db729663c8}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!addToObservables@{addToObservables}}
+\index{addToObservables@{addToObservables}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::addToObservables ()}\label{classNFcore_1_1Molecule_e971b5fde9399fab335e572c02ba253b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!updateTypeIIFunctions@{updateTypeIIFunctions}}
+\index{updateTypeIIFunctions@{updateTypeIIFunctions}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::updateTypeIIFunctions ()}\label{classNFcore_1_1Molecule_6339cd45a1ebb484a93bec719a2d0c76}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!updateDORRxnValues@{updateDORRxnValues}}
+\index{updateDORRxnValues@{updateDORRxnValues}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::updateDORRxnValues ()}\label{classNFcore_1_1Molecule_2ed78fda19237bbfdc179530cce22e27}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printDetails ()}\label{classNFcore_1_1Molecule_5abd4eb1ec78c0877a0e1ae4b085866e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!printDetails@{printDetails}}
+\index{printDetails@{printDetails}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printDetails (ostream \& {\em o})}\label{classNFcore_1_1Molecule_492aea103ce2471d82cf2571a1263f04}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!printMoleculeList@{printMoleculeList}}
+\index{printMoleculeList@{printMoleculeList}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Molecule::printMoleculeList (list$<$ {\bf Molecule} $\ast$ $>$ \& {\em members})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_6773f433bfb5546ddc0e8546aaec9817}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!getUniqueIdCount@{getUniqueIdCount}}
+\index{getUniqueIdCount@{getUniqueIdCount}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}static int NFcore::Molecule::getUniqueIdCount ()\hspace{0.3cm}{\tt  [inline, static]}}\label{classNFcore_1_1Molecule_e11f21aabfaa393b34f680bbbee6b20d}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isObs@{isObs}}
+\index{isObs@{isObs}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Molecule::isObs (int {\em oIndex}) const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_7f72bdf2e57d118402cf66037ecdd7a7}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!setIsObs@{setIsObs}}
+\index{setIsObs@{setIsObs}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Molecule::setIsObs (int {\em oIndex}, int {\em isObs})\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Molecule_07ebe50f8f57c9d2ee2c313b1c21d25e}
+
+
+
+
+\subsection{Member Data Documentation}
+\index{NFcore::Molecule@{NFcore::Molecule}!NOT\_\-IN\_\-RXN@{NOT\_\-IN\_\-RXN}}
+\index{NOT\_\-IN\_\-RXN@{NOT\_\-IN\_\-RXN}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Molecule::NOT\_\-IN\_\-RXN} = -1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_b17b0ab2e0bd3746c065351e346f4ffe}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!hasVisitedMolecule@{hasVisitedMolecule}}
+\index{hasVisitedMolecule@{hasVisitedMolecule}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::hasVisitedMolecule}}\label{classNFcore_1_1Molecule_e828ebe80d90495cb772bde29177166e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!hasVisitedBond@{hasVisitedBond}}
+\index{hasVisitedBond@{hasVisitedBond}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool$\ast$ {\bf NFcore::Molecule::hasVisitedBond}}\label{classNFcore_1_1Molecule_f06428c674091090c7cc647e72bbe031}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isMatchedTo@{isMatchedTo}}
+\index{isMatchedTo@{isMatchedTo}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$ {\bf NFcore::Molecule::isMatchedTo}}\label{classNFcore_1_1Molecule_080156e6c2368bb8c2ea5c5eac80a7ed}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!hasEvaluatedMolecule@{hasEvaluatedMolecule}}
+\index{hasEvaluatedMolecule@{hasEvaluatedMolecule}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::hasEvaluatedMolecule}}\label{classNFcore_1_1Molecule_ea3516e9686a0b8f2ee867956cc31c3c}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!NOSTATE@{NOSTATE}}
+\index{NOSTATE@{NOSTATE}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Molecule::NOSTATE} = -1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_6909d5d11595ba857c28e382a81526b8}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!NOBOND@{NOBOND}}
+\index{NOBOND@{NOBOND}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Molecule::NOBOND} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_2b8a424459016c1e580029e7170ce167}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!NOINDEX@{NOINDEX}}
+\index{NOINDEX@{NOINDEX}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Molecule::NOINDEX} = -1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Molecule_df16a8aa5b8b53462e2d569eec7f2e87}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isPrepared@{isPrepared}}
+\index{isPrepared@{isPrepared}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::isPrepared}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_74d0c636185f07f1d8dc8fe75f67bc5f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isAliveInSim@{isAliveInSim}}
+\index{isAliveInSim@{isAliveInSim}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::isAliveInSim}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_426236fe8eb31ab69e4729e83c360689}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!ID\_\-complex@{ID\_\-complex}}
+\index{ID\_\-complex@{ID\_\-complex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::ID\_\-complex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_4f60e43c6a3dd9fe030dbb46e4cecec3}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!ID\_\-type@{ID\_\-type}}
+\index{ID\_\-type@{ID\_\-type}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::ID\_\-type}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_8d3189072332d25bb33310dba5018a6e}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!ID\_\-unique@{ID\_\-unique}}
+\index{ID\_\-unique@{ID\_\-unique}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::ID\_\-unique}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_df1361fab7ec14d70ee6956f0a3aeb1b}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!listId@{listId}}
+\index{listId@{listId}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::listId}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_6910e617031aff17cbe1f33d1bf763b8}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!uniqueIdCount@{uniqueIdCount}}
+\index{uniqueIdCount@{uniqueIdCount}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Molecule::uniqueIdCount} = 0\hspace{0.3cm}{\tt  [static, protected]}}\label{classNFcore_1_1Molecule_48087dabb110f4ca4bcb40cae1916f7d}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!parentMoleculeType@{parentMoleculeType}}
+\index{parentMoleculeType@{parentMoleculeType}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf MoleculeType}$\ast$ {\bf NFcore::Molecule::parentMoleculeType}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_ef848f04c27d380beb9044880f473268}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!useComplex@{useComplex}}
+\index{useComplex@{useComplex}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf NFcore::Molecule::useComplex}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_63f93bdf7d7245f3fb58464338123bfe}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!population\_\-count@{population\_\-count}}
+\index{population\_\-count@{population\_\-count}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::population\_\-count}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_609b46545caff1d1f80082a90fb5112f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!component@{component}}
+\index{component@{component}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::Molecule::component}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_99d853296129fe8ec10967f40a05f683}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!numOfComponents@{numOfComponents}}
+\index{numOfComponents@{numOfComponents}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::numOfComponents}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_d4eaff2cd6a7330fb368febe44cf0566}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!bond@{bond}}
+\index{bond@{bond}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Molecule}$\ast$$\ast$ {\bf NFcore::Molecule::bond}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_da5a46cb5da967a564bbee5ded5ff26f}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!indexOfBond@{indexOfBond}}
+\index{indexOfBond@{indexOfBond}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::Molecule::indexOfBond}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_8d794a2cc6d62ae44a808eb6338b5168}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!localFunctionValues@{localFunctionValues}}
+\index{localFunctionValues@{localFunctionValues}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double$\ast$ {\bf NFcore::Molecule::localFunctionValues}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_672b2d6623ef78af5ae2fabd55bebdfc}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::Molecule::isObservable}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_af300e34672d085f16ba6202be017ceb}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!rxnListMappingId@{rxnListMappingId}}
+\index{rxnListMappingId@{rxnListMappingId}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int$\ast$ {\bf NFcore::Molecule::rxnListMappingId}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_3dbaf63fe81ddc0bf6f183570d4a2a1c}
+
+
+\index{NFcore::Molecule@{NFcore::Molecule}!nReactions@{nReactions}}
+\index{nReactions@{nReactions}!NFcore::Molecule@{NFcore::Molecule}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Molecule::nReactions}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Molecule_d9e264d48c45c3e11e668d4014241359}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf NFcore.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf molecule.cpp}\end{CompactItemize}

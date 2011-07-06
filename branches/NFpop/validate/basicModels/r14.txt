@@ -1,0 +1,2 @@
+test binding of a molecule to itself
+-sim 30 -oSteps 100

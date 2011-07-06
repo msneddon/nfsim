@@ -1,0 +1,24 @@
+
+#####################################################
+##  NFsim Autogen Documentation with Doxygen
+#####################################################
+last updated 10/10/2008 by michael sneddon
+
+NFsim was written to support automatic technical documentation using the
+the freely available Doxygen (http://www.stack.nl/~dimitri/doxygen/).
+
+To automatically generate documentation on NFsim, download a copy
+of Doxygen from the above website, cd to the NFsim/doc directory, and
+run the Doxygen program as follows:
+
+>doxygen NF_docGenConfig
+
+
+
+The NF_docGenConfig is the relavent configuration file that tells
+Doxygen how to correctly parse the NFsim source code.  Note that to run
+doxygen, you need to either provide the complete path to the Doxygen
+executable, or add the Doxygen executable to your computer's Path.
+Doxygen binaries are available for windows, linux, and mac, along
+with source code, from the Doxygen website.  Again, for more information 
+on Doxygen, see their above website.

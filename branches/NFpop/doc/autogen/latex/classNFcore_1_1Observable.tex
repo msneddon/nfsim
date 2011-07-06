@@ -1,0 +1,301 @@
+\section{NFcore::Observable Class Reference}
+\label{classNFcore_1_1Observable}\index{NFcore::Observable@{NFcore::Observable}}
+{\tt \#include $<$observable.hh$>$}
+
+Inheritance diagram for NFcore::Observable::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classNFcore_1_1Observable}
+\end{center}
+\end{figure}
+
+
+\subsection{Detailed Description}
+Tracks the counts of predefined observables in the simulation. 
+
+Observables keep track of the counts of specific \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} configurations in the system. Observables use TemplateMolecules to determine if a \doxyref{Molecule}{p.}{classNFcore_1_1Molecule} configuration should be counted as an \doxyref{Observable}{p.}{classNFcore_1_1Observable}. Users have the choice of computing Observables on the fly so that they are incrementally updated after each event or recomputing all Observables before each output step. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Observable} (string name)
+\item 
+virtual {\bf $\sim$Observable} ()
+\item 
+virtual {\bf Observable} $\ast$ {\bf clone} ()=0
+\item 
+void {\bf add} ()
+\item 
+void {\bf straightAdd} ()
+\item 
+void {\bf subtract} ()
+\item 
+void {\bf straightSubtract} ()
+\item 
+void {\bf clear} ()
+\item 
+void {\bf add} (int n\_\-matches)
+\item 
+void {\bf subtract} (int n\_\-matches)
+\item 
+int {\bf getCount} () const 
+\item 
+string {\bf getName} () const 
+\item 
+int {\bf getType} () const 
+\item 
+void {\bf getTemplateMoleculeList} (int \&{\bf n\_\-templates}, {\bf TemplateMolecule} $\ast$$\ast$\&tmList)
+\item 
+void {\bf addReferenceToMyself} (mu::Parser $\ast$p)
+\item 
+void {\bf addReferenceToMyself} (string referenceName, mu::Parser $\ast$p)
+\item 
+void {\bf addDependentRxn} ({\bf ReactionClass} $\ast$r)
+\item 
+virtual int {\bf isObservable} ({\bf Molecule} $\ast$m) const =0
+\item 
+virtual int {\bf isObservable} ({\bf Complex} $\ast$c) const =0
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const int {\bf NO\_\-RELATION} = -1
+\item 
+static const int {\bf EQUALS} = 0
+\item 
+static const int {\bf NOT\_\-EQUALS} = 1
+\item 
+static const int {\bf GREATER\_\-THAN} = 2
+\item 
+static const int {\bf LESS\_\-THAN} = 3
+\item 
+static const int {\bf GREATOR\_\-OR\_\-EQUAL\_\-TO} = 4
+\item 
+static const int {\bf LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO} = 5
+\item 
+static const int {\bf NO\_\-TYPE} = 0
+\item 
+static const int {\bf MOLECULES} = 1
+\item 
+static const int {\bf SPECIES} = 2
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+string {\bf obsName}
+\item 
+int {\bf type}
+\item 
+double {\bf count}
+\item 
+int {\bf n\_\-templates}
+\item 
+{\bf TemplateMolecule} $\ast$$\ast$ {\bf templateMolecules}
+\item 
+int {\bf n\_\-dependentRxns}
+\item 
+{\bf ReactionClass} $\ast$$\ast$ {\bf dependentRxns}
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!Observable@{Observable}}
+\index{Observable@{Observable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Observable::Observable (string {\em name})}\label{classNFcore_1_1Observable_23bd8aef6e1dc340b65d8e5f6cbbe866}
+
+
+Constructor that creates a basic \doxyref{Observable}{p.}{classNFcore_1_1Observable} which monitors the given \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} and can be referenced via the alias name
+
+Deconstructor that doesn't do too much. It doesn't free the memory associated with the \doxyref{TemplateMolecule}{p.}{classNFcore_1_1TemplateMolecule} because the \doxyref{MoleculeType}{p.}{classNFcore_1_1MoleculeType} class handles that. \index{NFcore::Observable@{NFcore::Observable}!$\sim$Observable@{$\sim$Observable}}
+\index{$\sim$Observable@{$\sim$Observable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Observable::$\sim$Observable ()\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1Observable_89d963584ab7007ee9412ebdc859f5f2}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!clone@{clone}}
+\index{clone@{clone}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf Observable}$\ast$ NFcore::Observable::clone ()\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1Observable_f88f2bd78b0a8c0e52ee5999286535c7}
+
+
+
+
+Implemented in {\bf NFcore::MoleculesObservable} \doxyref{}{p.}{classNFcore_1_1MoleculesObservable_77f8e6a370243e0ff2551d0361bcd215}, and {\bf NFcore::SpeciesObservable} \doxyref{}{p.}{classNFcore_1_1SpeciesObservable_652806ac6c30f1b79c6ae89a1c8869d2}.\index{NFcore::Observable@{NFcore::Observable}!add@{add}}
+\index{add@{add}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::add ()}\label{classNFcore_1_1Observable_955408d15da68cb8c420d0c62765edc0}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!straightAdd@{straightAdd}}
+\index{straightAdd@{straightAdd}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::straightAdd ()}\label{classNFcore_1_1Observable_80ee38d3a664489bc02e82cbfe3c5b6c}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!subtract@{subtract}}
+\index{subtract@{subtract}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::subtract ()}\label{classNFcore_1_1Observable_89bb17beddaec3e99b5fc11898d12a2a}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!straightSubtract@{straightSubtract}}
+\index{straightSubtract@{straightSubtract}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::straightSubtract ()}\label{classNFcore_1_1Observable_81bc9664e3794a2de15062f827cee0f8}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!clear@{clear}}
+\index{clear@{clear}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void NFcore::Observable::clear ()\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_2413c48e53ed66c2a5c79999cc3825ed}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!add@{add}}
+\index{add@{add}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::add (int {\em n\_\-matches})}\label{classNFcore_1_1Observable_2c89d982b984efb9b4cc49a665711484}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!subtract@{subtract}}
+\index{subtract@{subtract}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::subtract (int {\em n\_\-matches})}\label{classNFcore_1_1Observable_9bf92fce049ec78b887268bc01a2d795}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getCount@{getCount}}
+\index{getCount@{getCount}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Observable::getCount () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_333ddbb37e5605346ea4d6821916bbc9}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getName@{getName}}
+\index{getName@{getName}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string NFcore::Observable::getName () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_3214bcd71d03cfe2e0f1ba6f103f8ca1}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getType@{getType}}
+\index{getType@{getType}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int NFcore::Observable::getType () const\hspace{0.3cm}{\tt  [inline]}}\label{classNFcore_1_1Observable_78eedca2a29d801953412a1c804a8d4a}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!getTemplateMoleculeList@{getTemplateMoleculeList}}
+\index{getTemplateMoleculeList@{getTemplateMoleculeList}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::getTemplateMoleculeList (int \& {\em n\_\-templates}, {\bf TemplateMolecule} $\ast$$\ast$\& {\em tmList})}\label{classNFcore_1_1Observable_fe649cd5b73b652fdf9dcc002706963f}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!addReferenceToMyself@{addReferenceToMyself}}
+\index{addReferenceToMyself@{addReferenceToMyself}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::addReferenceToMyself (mu::Parser $\ast$ {\em p})}\label{classNFcore_1_1Observable_3210dd6179e6cfb124d012fa22f1e5c4}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!addReferenceToMyself@{addReferenceToMyself}}
+\index{addReferenceToMyself@{addReferenceToMyself}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::addReferenceToMyself (string {\em referenceName}, mu::Parser $\ast$ {\em p})}\label{classNFcore_1_1Observable_c7aead3bf16975cfccc3250cd7f1779e}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!addDependentRxn@{addDependentRxn}}
+\index{addDependentRxn@{addDependentRxn}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Observable::addDependentRxn ({\bf ReactionClass} $\ast$ {\em r})}\label{classNFcore_1_1Observable_7f982704d5ae35afc68513e331bdb88c}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::Observable::isObservable ({\bf Molecule} $\ast$ {\em m}) const\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1Observable_5bb3a7e96509e474052d34af09a2a9b4}
+
+
+
+
+Implemented in {\bf NFcore::MoleculesObservable} \doxyref{}{p.}{classNFcore_1_1MoleculesObservable_7b4d920281f90b7eb012292661ba397e}, and {\bf NFcore::SpeciesObservable} \doxyref{}{p.}{classNFcore_1_1SpeciesObservable_4336db4bd41d6846454a001e8d86cb22}.\index{NFcore::Observable@{NFcore::Observable}!isObservable@{isObservable}}
+\index{isObservable@{isObservable}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::Observable::isObservable ({\bf Complex} $\ast$ {\em c}) const\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1Observable_c853d88512ad41e94ec663aa8d40b169}
+
+
+
+
+Implemented in {\bf NFcore::MoleculesObservable} \doxyref{}{p.}{classNFcore_1_1MoleculesObservable_d56601ef461b701f54974ca55eebaab5}, and {\bf NFcore::SpeciesObservable} \doxyref{}{p.}{classNFcore_1_1SpeciesObservable_57dfa6b24272b437eb3da0aa4570030b}.
+
+\subsection{Member Data Documentation}
+\index{NFcore::Observable@{NFcore::Observable}!NO\_\-RELATION@{NO\_\-RELATION}}
+\index{NO\_\-RELATION@{NO\_\-RELATION}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::NO\_\-RELATION} = -1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_1e4e85dcff351ce51f317c64ce082879}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!EQUALS@{EQUALS}}
+\index{EQUALS@{EQUALS}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::EQUALS} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_67aab713c53284308b8d295f09cb66a5}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!NOT\_\-EQUALS@{NOT\_\-EQUALS}}
+\index{NOT\_\-EQUALS@{NOT\_\-EQUALS}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::NOT\_\-EQUALS} = 1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_c20f1c81138ae4996198540de86c95f8}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!GREATER\_\-THAN@{GREATER\_\-THAN}}
+\index{GREATER\_\-THAN@{GREATER\_\-THAN}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::GREATER\_\-THAN} = 2\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_e8509b33505152413f4d92a9e30f10f9}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!LESS\_\-THAN@{LESS\_\-THAN}}
+\index{LESS\_\-THAN@{LESS\_\-THAN}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::LESS\_\-THAN} = 3\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_4abf1421f675cd922829d9a79c69955b}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!GREATOR\_\-OR\_\-EQUAL\_\-TO@{GREATOR\_\-OR\_\-EQUAL\_\-TO}}
+\index{GREATOR\_\-OR\_\-EQUAL\_\-TO@{GREATOR\_\-OR\_\-EQUAL\_\-TO}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::GREATOR\_\-OR\_\-EQUAL\_\-TO} = 4\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_c7713ae992fddb60feee06fc29c977f1}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO@{LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO}}
+\index{LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO@{LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::LESS\_\-THAN\_\-OR\_\-EQUAL\_\-TO} = 5\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_81f2b299bd03c9b6a82ceb984201ec2e}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!NO\_\-TYPE@{NO\_\-TYPE}}
+\index{NO\_\-TYPE@{NO\_\-TYPE}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::NO\_\-TYPE} = 0\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_3cf1b516517be8b2dc87ba6414172fa2}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!MOLECULES@{MOLECULES}}
+\index{MOLECULES@{MOLECULES}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::MOLECULES} = 1\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_f8bf08e6d9669ab7d5a4b0cb4a42a7c0}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!SPECIES@{SPECIES}}
+\index{SPECIES@{SPECIES}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const int {\bf NFcore::Observable::SPECIES} = 2\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1Observable_09c3dd7f62c71128655b8e18da21fdbd}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!obsName@{obsName}}
+\index{obsName@{obsName}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}string {\bf NFcore::Observable::obsName}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_06986b4fabfb8c94945348eaa293e60d}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!type@{type}}
+\index{type@{type}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Observable::type}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_b9bac48941af41674c89c8cfdbc11efb}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!count@{count}}
+\index{count@{count}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf NFcore::Observable::count}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_a71c7a1b37fe6a58dd93647e4e2600b0}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!n\_\-templates@{n\_\-templates}}
+\index{n\_\-templates@{n\_\-templates}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Observable::n\_\-templates}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_4be30b646494cabcb08c669985feca47}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!templateMolecules@{templateMolecules}}
+\index{templateMolecules@{templateMolecules}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf TemplateMolecule}$\ast$$\ast$ {\bf NFcore::Observable::templateMolecules}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_43172368fcf189d961e28ca5779a4a1d}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!n\_\-dependentRxns@{n\_\-dependentRxns}}
+\index{n\_\-dependentRxns@{n\_\-dependentRxns}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf NFcore::Observable::n\_\-dependentRxns}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_c10d30f6708db3b53f3dbc6ef80bb590}
+
+
+\index{NFcore::Observable@{NFcore::Observable}!dependentRxns@{dependentRxns}}
+\index{dependentRxns@{dependentRxns}!NFcore::Observable@{NFcore::Observable}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf ReactionClass}$\ast$$\ast$ {\bf NFcore::Observable::dependentRxns}\hspace{0.3cm}{\tt  [protected]}}\label{classNFcore_1_1Observable_f89658a16ca21e6e551b74b7cd794719}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf observable.hh}\item 
+/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFcore/{\bf observable.cpp}\end{CompactItemize}

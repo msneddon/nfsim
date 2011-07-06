@@ -1,0 +1,2 @@
+cross phosphorylation of linked molecules, more complex setup
+-sim 20 -oSteps 100 

@@ -1,0 +1,2 @@
+multiple identical site binding reactions
+-sim 50 -oSteps 100

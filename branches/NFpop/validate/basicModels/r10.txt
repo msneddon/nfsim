@@ -1,0 +1,2 @@
+simple ring closure with two molecule types
+-sim 100 -oSteps 100 

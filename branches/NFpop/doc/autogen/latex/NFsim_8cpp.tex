@@ -1,0 +1,81 @@
+\section{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFsim.cpp File Reference}
+\label{NFsim_8cpp}\index{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFsim.cpp@{/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFsim.cpp}}
+
+
+{\tt \#include \char`\"{}NFsim.hh\char`\"{}}\par
+{\tt \#include $<$iostream$>$}\par
+{\tt \#include $<$string$>$}\par
+{\tt \#include $<$time.h$>$}\par
+{\tt \#include $<$limits$>$}\par
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+void {\bf printLogo} (int indent, string version)
+\begin{CompactList}\small\item\em Outputs an Ascii NFsim logo. \item\end{CompactList}\item 
+void {\bf printHelp} (string version)
+\begin{CompactList}\small\item\em Outputs a friendly help message. \item\end{CompactList}\item 
+bool {\bf runRNFscript} (map$<$ string, string $>$ argMap, bool verbose)
+\begin{CompactList}\small\item\em Executes an RNF script from the command line arguments. \item\end{CompactList}\item 
+{\bf System} $\ast$ {\bf initSystemFromFlags} (map$<$ string, string $>$ argMap, bool verbose)
+\begin{CompactList}\small\item\em Initializes a System object from the arguments. \item\end{CompactList}\item 
+int {\bf main} (int argc, char $\ast$argv[$\,$])
+\begin{CompactList}\small\item\em Main executable for the NFsim program. \item\end{CompactList}\item 
+bool {\bf runFromArgs} ({\bf System} $\ast$s, map$<$ string, string $>$ argMap, bool verbose)
+\begin{CompactList}\small\item\em Runs a given System with the specified arguments. \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Function Documentation}
+\index{NFsim.cpp@{NFsim.cpp}!initSystemFromFlags@{initSystemFromFlags}}
+\index{initSystemFromFlags@{initSystemFromFlags}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf System} $\ast$ initSystemFromFlags (map$<$ string, string $>$ {\em argMap}, bool {\em verbose})}\label{NFsim_8cpp_ba72a46366f8d33295a853f07c43a288}
+
+
+Initializes a System object from the arguments. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFsim.cpp@{NFsim.cpp}!main@{main}}
+\index{main@{main}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int main (int {\em argc}, char $\ast$ {\em argv}[$\,$])}\label{NFsim_8cpp_0ddf1224851353fc92bfbff6f499fa97}
+
+
+Main executable for the NFsim program. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFsim.cpp@{NFsim.cpp}!printHelp@{printHelp}}
+\index{printHelp@{printHelp}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void printHelp (string {\em version})}\label{NFsim_8cpp_e16641224ad0a169d8db2dbcec348157}
+
+
+Outputs a friendly help message. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFsim.cpp@{NFsim.cpp}!printLogo@{printLogo}}
+\index{printLogo@{printLogo}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void printLogo (int {\em indent}, string {\em version})}\label{NFsim_8cpp_74763fe62871a5e5e685b885c63d30a4}
+
+
+Outputs an Ascii NFsim logo. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFsim.cpp@{NFsim.cpp}!runFromArgs@{runFromArgs}}
+\index{runFromArgs@{runFromArgs}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool runFromArgs ({\bf System} $\ast$ {\em s}, map$<$ string, string $>$ {\em argMap}, bool {\em verbose})}\label{NFsim_8cpp_1df3932ce2db1db1f6c546529a162aa2}
+
+
+Runs a given System with the specified arguments. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
+\index{NFsim.cpp@{NFsim.cpp}!runRNFscript@{runRNFscript}}
+\index{runRNFscript@{runRNFscript}!NFsim.cpp@{NFsim.cpp}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool runRNFscript (map$<$ string, string $>$ {\em argMap}, bool {\em verbose})}\label{NFsim_8cpp_845f3f1c09965a9e54010b0f0c4c84f2}
+
+
+Executes an RNF script from the command line arguments. 
+
+\begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
