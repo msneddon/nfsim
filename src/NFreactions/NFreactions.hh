@@ -4,6 +4,7 @@
 //Standard Libraries that we need
 #include <vector>
 #include <string>
+#include <algorithm>
 
 //Include the core NFsim objects
 #include "../NFcore/NFcore.hh"

@@ -995,15 +995,7 @@ namespace NFcore
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
 
-			void setBaseRate(double newBaseRate,string newBaseRateName) {
-				if(isDimerStyle) {
-					this->baseRate=newBaseRate*0.5;
-				}
-				else this->baseRate=newBaseRate;
-				this->baseRateParameterName=newBaseRateName;
-				update_a();
-			};
-
+			void setBaseRate(double newBaseRate,string newBaseRateName);
 			void resetBaseRateFromSystemParamter();
 
 			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
@@ -1032,7 +1024,8 @@ namespace NFcore
 			void tag() { tagged = true; };
 
 
-			virtual unsigned int getReactantCount(unsigned int reactantIndex) const = 0;
+			virtual int getReactantCount(unsigned int reactantIndex) const = 0;
+			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const = 0;
 			virtual void printFullDetails() const = 0;
 
 
@@ -1044,6 +1037,7 @@ namespace NFcore
 
 
 			void setTotalRateFlag(bool totalRate) { totalRateFlag = totalRate; };
+
 
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
@@ -1079,7 +1073,6 @@ namespace NFcore
 			bool onTheFlyObservables;
 			bool isDimerStyle;
 
-
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
 
@@ -1088,10 +1081,18 @@ namespace NFcore
 			vector <int> updatedComplexes;
 
 
-			/** flag to identify if the macroscopic vs. microscopic rate is to
+			/* flag to identify if the macroscopic vs. microscopic rate is to
 			 * be used (TotalRate = macroscopic)
 			 */
 			bool totalRateFlag;
+
+			/* flag population reactants */
+			bool *isPopulationType;
+
+			/* if population reactants are identical, this is the discrete
+			 * count correction for calculating the ratelaw
+			 */
+			int *identicalPopCountCorrection;
 	};
 
 

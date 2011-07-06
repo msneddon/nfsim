@@ -3,7 +3,7 @@
 
 
 #include "../NFreactions.hh"
-#include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -217,7 +217,10 @@ namespace NFcore
 
 			/*!
 				After selecting mappingSets, call this to check if the molecularity of the reactants
-				is correct.  Returns true if molecularity is correct, false otherwise.
+				is correct.  Returns true if molecularity is correct, false otherwise.  If complex
+				bookkeeping is enabled, this is a simple check for unique complex IDs.  Otherwise,
+				we only check for collisions at the reaction center and cannot guarantee that
+				molecularity is valid.
 				@author JustinHogg
 			*/
 			bool checkMolecularity( MappingSet ** mappingSets );
@@ -269,7 +272,21 @@ namespace NFcore
 			*/
 			Transformation *getTransformation(int reactantIndex, int index) const { return transformations[reactantIndex].at(index); };
 
+			/*
+			 * Query the number of of addMoleculeTransforms in this set
+			 */
+			int getNumOfAddMoleculeTransforms() const { return addMoleculeTransformations.size(); };
 
+			/*
+			 * If AddMolecule is a population, returns a pointer to the population object,
+			 *  otherwise returns null.  --Justin
+			 */
+			Molecule * getPopulationPointer( unsigned int r ) const;
+
+			// New general method for handling system
+			bool usingSymmetryFactor() const { return useSymmetryFactor; };
+			double getSymmetryFactor() const { return symmetryFactor; };
+			void   setSymmetryFactor(double val) { symmetryFactor = val; useSymmetryFactor = true; };
 
 
 		protected:
@@ -328,9 +345,19 @@ namespace NFcore
 			/*!	keeps track if this set has a symmetric binding reaction	*/
 			bool hasSymBinding;
 
+			/*! are we using the new general method for symmetry handling	*/
+			bool   useSymmetryFactor;
+			double symmetryFactor;
+
+			bool   check_collisions;
+			vector < pair<int,int> >  collision_pairs;
+
 		private:
-			set < int >                        complex_ids;
-			pair < set<int>::iterator, bool >  insert_retval;
+			int                      complex_id;
+			vector <int>             complex_ids;
+			vector <int>::iterator   complex_id_iter;
+
+			vector< pair <int,int> >::iterator  collision_pair_iter;
 	};
 
 }

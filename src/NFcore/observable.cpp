@@ -44,36 +44,6 @@ void Observable::add()
 	}
 }
 
-
-void Observable::straightAdd()
-{
-	count++;
-}
-
-void Observable::straightSubtract()
-{
-	count--;
-}
-
-void Observable::subtract()
-{
-	if(count==0){
-		cerr << "Error in observable count!! Removing from an empty observable!"
-		     << "Observable named: " << obsName << endl;
-		exit(1);
-	}
-
-	count--;
-
-	//Next, we update our dependent reactions, if there are any
-	for(int r=0; r<n_dependentRxns; r++) {
-		double old_a = dependentRxns[r]->get_a();
-		double new_a = dependentRxns[r]->update_a();
-		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(dependentRxns[r],old_a,new_a);
-	}
-}
-
-
 /* add multiple new matches to an observable (rather than call 'add' a bunch of times --justin */
 /* useful for counters! */
 void Observable::add( int n_matches )
@@ -93,6 +63,34 @@ void Observable::add( int n_matches )
 	}
 }
 
+
+void Observable::straightAdd()
+{
+	count++;
+}
+
+void Observable::straightAdd(int n_matches)
+{
+	count += n_matches;
+}
+
+void Observable::subtract()
+{
+	if(count==0){
+		cerr << "Error in observable count!! Removing from an empty observable!"
+		     << "Observable named: " << obsName << endl;
+		exit(1);
+	}
+
+	count--;
+
+	//Next, we update our dependent reactions, if there are any
+	for(int r=0; r<n_dependentRxns; r++) {
+		double old_a = dependentRxns[r]->get_a();
+		double new_a = dependentRxns[r]->update_a();
+		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot(dependentRxns[r],old_a,new_a);
+	}
+}
 
 /* Remove multiple matches fron an observable (rather than call 'subtract' a bunch of times --justin */
 /* Necessary to make counters fast! */
@@ -119,6 +117,17 @@ void Observable::subtract( int n_matches )
 		templateMolecules[0]->getMoleculeType()->getSystem()->update_A_tot( dependentRxns[r], old_a, new_a);
 	}
 }
+
+void Observable::straightSubtract()
+{
+	count--;
+}
+
+void Observable::straightSubtract(int n_matches)
+{
+	count -= n_matches;
+}
+
 
 
 void Observable::getTemplateMoleculeList(int &n_templates, TemplateMolecule **&tmList)
@@ -315,12 +324,11 @@ int SpeciesObservable::isObservable(Complex *c) const
 {
 	int matches = 0;
 	for(int t=0; t<n_templates; t++) {
-
 		if(relation[t]==NO_RELATION) {
 			for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
 				//For each template, we only have to find one match, then we match for sure.
-				if(templateMolecules[t]->compare((*c->molIter))) {
-					matches += (*c->molIter)->getPopulation();
+				if ( templateMolecules[t]->compare(*(c->molIter)) ) {
+					matches += (*(c->molIter))->getPopulation();
 					break;
 				}
 			}
@@ -331,7 +339,7 @@ int SpeciesObservable::isObservable(Complex *c) const
 			int localMatches = 0;
 			for(c->molIter=c->complexMembers.begin(); c->molIter!=c->complexMembers.end();c->molIter++) {
 				//For each template, we only have to find one match, then we match for sure.
-				if(templateMolecules[t]->compare((*c->molIter))) {
+				if(templateMolecules[t]->compare(*(c->molIter)) ) {
 					localMatches++;
 				}
 			}
@@ -340,28 +348,27 @@ int SpeciesObservable::isObservable(Complex *c) const
 			c->molIter = c->complexMembers.begin();
 
 			if(relation[t]==EQUALS) {
-				if(localMatches==quantity[t]) matches += (*c->molIter)->getPopulation();
+				if(localMatches==quantity[t]) matches += (*(c->molIter))->getPopulation();
 
 			} else if(relation[t]==NOT_EQUALS) {
-				if(localMatches!=quantity[t]) matches += (*c->molIter)->getPopulation();
+				if(localMatches!=quantity[t]) matches += (*(c->molIter))->getPopulation();
 
 			} else if(relation[t]==GREATER_THAN) {
-				if(localMatches>quantity[t])  matches += (*c->molIter)->getPopulation();
+				if(localMatches>quantity[t])  matches += (*(c->molIter))->getPopulation();
 
 			} else if(relation[t]==LESS_THAN) {
-				if(localMatches<quantity[t])  matches += (*c->molIter)->getPopulation();
+				if(localMatches<quantity[t])  matches += (*(c->molIter))->getPopulation();
 
 			} else if(relation[t]==GREATOR_OR_EQUAL_TO) {
-				if(localMatches>=quantity[t]) matches += (*c->molIter)->getPopulation();
+				if(localMatches>=quantity[t]) matches += (*(c->molIter))->getPopulation();
 
 			} else if(relation[t]==LESS_THAN_OR_EQUAL_TO) {
-				if(localMatches<=quantity[t]) matches += (*c->molIter)->getPopulation();
+				if(localMatches<=quantity[t]) matches += (*(c->molIter))->getPopulation();
 
 			}
 
 		}
 	}
-
 	return matches;
 }
 

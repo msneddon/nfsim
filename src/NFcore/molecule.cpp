@@ -105,9 +105,12 @@ void Molecule::prepareForSimulation()
 
 void Molecule::setUpLocalFunctionList()
 {
-	localFunctionValues=new double[parentMoleculeType->getNumOfTypeIFunctions()];
-	for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
-		localFunctionValues[lf]=0;
+	if (parentMoleculeType->getNumOfTypeIFunctions() > 0)
+	{
+		localFunctionValues=new double[parentMoleculeType->getNumOfTypeIFunctions()];
+		for(int lf=0; lf<parentMoleculeType->getNumOfTypeIFunctions(); lf++) {
+			localFunctionValues[lf]=0;
+		}
 	}
 }
 

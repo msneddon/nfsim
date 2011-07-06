@@ -189,7 +189,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 							parsedExpression.replace(openPar,closePar-openPar+1,identifier);
 
 							bool found = false;
-							for(int x=0; x<lfIndexValues.size(); x++) {
+							for(unsigned int x=0; x<lfIndexValues.size(); x++) {
 								if(lfReferenceName.at(x)==(lfNames[f]+identifier)){
 									found=true;
 								}
@@ -263,7 +263,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 		} else {
 			//cout<<endl<<numTwoDigits<<endl;
 			try {
-				int i = NFutil::convertToInt(numTwoDigits);
+				NFutil::convertToInt(numTwoDigits);
 			} catch (std::runtime_error e) {
 				isTwoDigitNumber = false;
 			}
