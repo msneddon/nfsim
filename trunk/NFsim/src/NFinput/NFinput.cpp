@@ -244,6 +244,7 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, System *s, map <st
 		cerr<<"Undefined exception thrown while parsing the parameters."<<endl;
 		return false;
 	}
+	return false;
 }
 
 
@@ -571,6 +572,8 @@ bool NFinput::initMoleculeTypes(
 		cerr<<"Caught some unknown error when creating MoleculeTypes."<<endl;
 		return false;
 	}
+
+	return false;
 }
 
 
@@ -617,6 +620,8 @@ bool NFinput::initStartSpecies(
 			} else {
 				speciesName = pSpec->Attribute("id");
 			}
+
+
 
 			//Get the number of molecules of this species to create
 			string specCount;
@@ -710,14 +715,16 @@ bool NFinput::initStartSpecies(
 					molUid = pMol->Attribute("id");
 				}
 
-				//Skip over null molecules
-				string lowerCaseTypeName = "";
-				lowerCaseTypeName.reserve(molName.size());
-				std::transform(molName.begin(),molName.end(),lowerCaseTypeName.begin(),::tolower);
-				if(molName.compare("null")==0 || molName.compare("trash")==0){
-					if(verbose) cout<<"\t\tSkipping Moleculetype of name: '" + molName + "'"<<endl;
+				//Skip anything that is null or trash molecule
+				if(molName=="Null" || molName=="NULL" || molName=="null") {
+					if(verbose) cout<<"\t\t\tSkipping a null molecule in species declaration"<<endl;
 					continue;
 				}
+				if(molName=="Trash" || molName=="TRASH" || molName=="trash") {
+					if(verbose) cout<<"\t\t\tSkipping a trash molecule in species declaration"<<endl;
+					continue;
+				}
+
 
 				// Identify the moleculeType if we can (note that this call could potentially kill our code if we can't find the type);
 				MoleculeType *mt = s->getMoleculeTypeByName(molName);
@@ -973,6 +980,8 @@ bool NFinput::initStartSpecies(
 		cerr<<"Caught some unknown error when creating Species."<<endl;
 		return false;
 	}
+
+	return false;
 }
 
 
@@ -1985,6 +1994,8 @@ bool NFinput::initReactionRules(
 		cout<<"caught something when creating reaction rules.."<<endl;
 		return false;
 	}
+
+	return false;
 }
 
 
@@ -2220,6 +2231,8 @@ bool NFinput::initObservables(
 		//oh no, what happened this time?
 		return false;
 	}
+
+	return false;
 }
 
 
@@ -2277,9 +2290,21 @@ TemplateMolecule *NFinput::readPattern(
 				molUid = pMol->Attribute("id");
 			}
 
-			//Skip anything that is a null molecule
-			if(molName=="Null" || molName=="NULL" || molName=="null") continue;
-			if(molName=="Trash" || molName=="trash" || molName=="TRASH") continue;
+
+			//Generate an error for any null or trash molecule
+			if(molName=="Null" || molName=="NULL" || molName=="null") {
+				cerr<<"\n\nError!  You cannot include a 'null' molecule in any reactant or observable pattern!"<<endl;
+				cerr<<"Null is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
+				cerr<<"rules and patterns and remove any usage of 'Null' or 'null' or 'NULL'."<<endl;
+				exit(1);
+			}
+			if(molName=="Trash" || molName=="TRASH" || molName=="trash") {
+				cerr<<"\n\nError!  You cannot include a 'trash' molecule in any reactant or observable pattern!"<<endl;
+			    cerr<<"Trash is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
+			    cerr<<"rules and patterns and remove any usage of 'Trash' or 'trash' or 'TRASH'."<<endl;
+				exit(1);
+			}
+
 
 			//Get the moleculeType and create the actual template
 			MoleculeType *moltype = s->getMoleculeTypeByName(molName);
@@ -2721,6 +2746,8 @@ TemplateMolecule *NFinput::readPattern(
 		//Here's our final catch all!
 		return NULL;
 	}
+
+	return false;
 }
 
 
@@ -2960,6 +2987,8 @@ bool NFinput::readProductPattern(
 		//Here's our final catch all!
 		return false;
 	}
+
+	return false;
 }
 
 
@@ -3178,6 +3207,9 @@ bool NFinput::readProductMolecule(
 		//Here's our final catch all!
 		return false;
 	}
+
+
+	return false;
 }
 
 
