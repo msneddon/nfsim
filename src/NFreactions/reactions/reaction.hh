@@ -130,7 +130,37 @@ namespace NFcore
 
 	};
 
+	class PopulationRxnClass : public ReactionClass {
+		public:
+			PopulationRxnClass(
+					string name,
+					double baseRate,
+					string baseRateName,
+					TransformationSet *transformationSet,
+					System *s);
+			virtual ~PopulationRxnClass();
 
+			virtual void init();
+			virtual void prepareForSimulation() {};
+			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
+			virtual void remove(Molecule *m, unsigned int reactantPos);
+			virtual double update_a();
+
+			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
+			virtual int getReactantCount(unsigned int reactantIndex) const;
+			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;
+
+			virtual void printDetails() const;
+			virtual void printFullDetails() const {};
+
+		protected:
+
+			virtual void pickMappingSets(double randNumber) const;
+
+			ReactantTree **reactantTrees;
+			ReactantTree  *rt;
+			MappingSet    *ms;
+	};
 
 
 

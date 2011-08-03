@@ -302,6 +302,9 @@ bool Molecule::decrementPopulation()
 void Molecule::setComponentState(int cIndex, int newValue)
 {
 	this->component[cIndex]=newValue;
+	if (useComplex)
+		// Need to manually unset canonical flag since we're not calling a Complex method
+		getComplex()->unsetCanonical();
 
 	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
 	//Let all the listeners know that the state of a molecule has changed...
@@ -310,6 +313,11 @@ void Molecule::setComponentState(int cIndex, int newValue)
 }
 void Molecule::setComponentState(string cName, int newValue) {
 	this->component[this->parentMoleculeType->getCompIndexFromName(cName)]=newValue;
+
+	if (useComplex)
+		// Need to manually unset canonical flag since we're not calling a Complex method
+		getComplex()->unsetCanonical();
+
 }
 
 
@@ -356,6 +364,27 @@ int Molecule::getDegree()
 		if(bond[c]!=NOBOND) degree++;
 	return degree;
 }
+
+// Get a label for this molecule or one of it's components (labels are not unique)
+//   cIndex==-1  =>  get label for molecule, "m:typename"
+//   cIndex>=0   =>  get label for component cIndex, "c:name~state"
+string Molecule::getLabel ( int cIndex ) const
+{
+    string label("");
+    if ( cIndex < 0 )
+    {	// molecule label
+        label += "m:" + getMoleculeTypeName();
+    }
+    else
+    {	// component label
+        label += "c:" + (   getMoleculeType()->isEquivalentComponent(cIndex)
+        		          ? getMoleculeType()->getEquivalenceClassComponentNameFromComponentIndex(cIndex)
+        		          : getMoleculeType()->getComponentName(cIndex) )
+        		      + "~" + getMoleculeType()->getComponentStateName(cIndex, getComponentState(cIndex));
+    }
+    return label;
+}
+
 
 bool Molecule::isBindingSiteOpen(int cIndex) const
 {
@@ -418,7 +447,13 @@ void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 	if(m1->useComplex)
 	{
 		if(m1->getComplex()!=m2->getComplex())
+		{
+			// NOTE: mergeWithList will handle canonical flags
 			m1->getComplex()->mergeWithList(m2->getComplex());
+		}
+		else
+			// Need to manually unset canonical flag since we're not calling a Complex method
+			m1->getComplex()->unsetCanonical();
 	}
 }
 
@@ -460,6 +495,7 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 	//Handle Complexes
 	if(m1->useComplex)
 	{
+		// NOTE: mergeWithList will handle canonical flags
 		m1->getComplex()->updateComplexMembership(m1);
 	}
 
