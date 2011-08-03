@@ -769,6 +769,9 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //			printAllReactions();
 //			exit(1);
 //		}
+
+		// TODO: debug!
+		this->getAllComplexes().printAllComplexes();
 	}
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);

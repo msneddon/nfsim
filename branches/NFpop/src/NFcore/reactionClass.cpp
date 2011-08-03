@@ -243,12 +243,12 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 
 	// check for identical population reactants and calculate count corrections.
 	identicalPopCountCorrection = new int[n_reactants];
-	for ( int i=0; i < n_reactants; ++i )
+	for ( unsigned int i=0; i < n_reactants; ++i )
 	{
 		identicalPopCountCorrection[i] = 0;
 		if ( isPopulationType[i] )
 		{
-			for ( int j=i-1; j >= 0; --j )
+			for ( unsigned int j=i-1; j >= 0; --j )
 			{
 				if ( reactantTemplates[i]->getMoleculeType() == reactantTemplates[j]->getMoleculeType() )
 				{

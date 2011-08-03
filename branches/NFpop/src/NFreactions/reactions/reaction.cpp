@@ -207,7 +207,7 @@ BasicRxnClass::~BasicRxnClass()
 	//cout<<endl<<endl<<endl;
 	//this->reactantLists[0]->printDetails();
 
-	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
+	if(DEBUG) cout<<"Destroying rxn: "<<name<<endl;
 
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
