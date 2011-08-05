@@ -23,7 +23,7 @@ PopulationRxnClass::PopulationRxnClass(
 	this->reactionType = ReactionClass::POP_RXN;
 
 	//Set up the reactantTrees
-	reactantTrees = new ReactantTrees *[n_reactants];
+	reactantTrees = new ReactantTree *[n_reactants];
 	for(unsigned int r=0; r<n_reactants; r++) {
 		reactantTrees[r]=(new ReactantTree(r,transformationSet,32));
 	}

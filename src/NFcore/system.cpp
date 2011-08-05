@@ -347,17 +347,6 @@ void System::tryToDump() {
 }
 
 
-// NETGEN  moved to ComplexList
-/*
-int System::createComplex(Molecule * m)
-{
-	if(!useComplex) return -1;  //Only create complexes if we intend on using them...
-	int c_id = allComplexes.size();
-	Complex * c = new Complex(this, c_id, m);
-	allComplexes.push_back(c);
-	return c_id;
-}
-*/
 
 bool System::addGlobalFunction(GlobalFunction *gf)
 {
@@ -416,32 +405,6 @@ int System::getMolObsCount(int moleculeTypeIndex, int observableIndex) const
 	return allMoleculeTypes.at(moleculeTypeIndex)->getMolObsCount(observableIndex);
 }
 
-
-// NETGEN  moved to ComplexList
-/*
-Complex * System::getNextAvailableComplex()
-{
-	Complex * c = allComplexes.at(nextAvailableComplex.front());
-	nextAvailableComplex.pop();
-	return c;
-}
-
-void System::notifyThatComplexIsAvailable(int ID_complex)
-{
-	nextAvailableComplex.push(ID_complex);
-}
-
-void System::purgeAndPrintAvailableComplexList()
-{
-	cout<<"AvailableComplexes:";
-	while(	!nextAvailableComplex.empty() )
-	{
-		cout<<" -> "<<nextAvailableComplex.front();
-		nextAvailableComplex.pop();
-	}
-	cout<<endl;
-}
-*/
 
 
 //When you are ready to run the simulation (meaning that all moleculeTypes
@@ -771,7 +734,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //		}
 
 		// TODO: debug!
-		this->getAllComplexes().printAllComplexes();
+		//this->getAllComplexes().printAllComplexes();
 	}
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
@@ -1253,9 +1216,9 @@ bool System::saveSpecies(string filename)
 			}
 
 			if(reportedSpecies.find(speciesString) != reportedSpecies.end()) {
-				reportedSpecies[speciesString] = reportedSpecies[speciesString] + 1;
+				reportedSpecies[speciesString] = reportedSpecies[speciesString] + mt->getMolecule(j)->getPopulation();
 			} else {
-				reportedSpecies.insert(pair <string,int> (speciesString,1));
+				reportedSpecies.insert(pair <string,int> (speciesString, mt->getMolecule(j)->getPopulation()));
 			}
 
 			//speciesString += "  1";
