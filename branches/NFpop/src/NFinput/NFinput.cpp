@@ -244,6 +244,7 @@ bool NFinput::initParameters(TiXmlElement *pListOfParameters, System *s, map <st
 		cerr<<"Undefined exception thrown while parsing the parameters."<<endl;
 		return false;
 	}
+	return false;
 }
 
 
@@ -1292,7 +1293,6 @@ bool NFinput::initReactionRules(
 				}
 
 
-
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// Create the TransformationSet so that we can collect all the operations that are specified for this rule
 				TransformationSet *ts;
@@ -1321,6 +1321,7 @@ bool NFinput::initReactionRules(
 						if( !ts->addAddMolecule( *mc_iter ) ) return false;
 					}
 				}
+
 
 				// Should we use complex bookkeeping?
 				ts->setComplexBookkeeping( blockSameComplexBinding );

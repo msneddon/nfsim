@@ -26,6 +26,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->traversalLimit = ReactionClass::NO_LIMIT;
 	this->transformationSet = transformationSet;
 
+
 	//Set up the template molecules from the transformationSet
 	this->n_reactants   = transformationSet->getNreactants();
 	this->n_mappingsets = transformationSet->getNmappingSets();
@@ -163,13 +164,10 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		}
 
 
-
 		//cout<<"++++++++++++++++"<<endl;
 		//for(unsigned int i=0; i<tmList.size(); i++) {
 		//	tmList.at(i)->printDetails();
 		//}
-
-
 
 
 		//Finally, clear out the data structures.
@@ -177,11 +175,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		sets.clear(); uniqueSetId.clear();
 		numMapGenerators.clear();
 	}
-
-
-	//cout<<"good, very good."<<endl;
-	//exit(0);
-
 
 
 	//Check here to see if we have molecule types that are the same across different reactants
@@ -232,7 +225,9 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		}
 	}
 
+
 	onTheFlyObservables=true;
+
 
 	// check for population type reactants
 	isPopulationType = new bool[n_reactants];
@@ -241,14 +236,17 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		isPopulationType[i] = reactantTemplates[i]->getMoleculeType()->isPopulationType();
 	}
 
-	// check for identical population reactants and calculate count corrections.
+
+	// calculate discrete count corrections for symmetric population reactants
+	//  e.g. number of reactant pairs = A*(A-1)/2.  Note that the factor of two
+	//  is part of the symmetry factor above.
 	identicalPopCountCorrection = new int[n_reactants];
-	for ( unsigned int i=0; i < n_reactants; ++i )
+	for ( int i=0; i < (int)n_reactants; ++i )
 	{
 		identicalPopCountCorrection[i] = 0;
 		if ( isPopulationType[i] )
 		{
-			for ( unsigned int j=i-1; j >= 0; --j )
+			for ( int j=i-1; j >= 0; --j )
 			{
 				if ( reactantTemplates[i]->getMoleculeType() == reactantTemplates[j]->getMoleculeType() )
 				{
