@@ -10,7 +10,7 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.09
+NFsim - the network free stochastic simulator, v1.10
 
 michael w. sneddon
 james r. faeder
@@ -49,6 +49,19 @@ Enjoy your new network-free world!
 ################################################################################
 
 Release Notes
+
+
+v1.10   Aug, 2011
+        (a) Command line parser now detects arguments that are not properly
+        preceeded by a dash, and generates a warning.  (b) Includes a check when 
+        creating template molecules that throws an error when users attempt to 
+        use Null or Trash in reactant or observable patterns (anything that 
+        requires the creation of a Template molecule). (c) fixed a bug introduced 
+        in v1.09 whereby a site was allowed to bind to itself, for instance, in a 
+        dimerization rxn.  (e) Support for creating a new molecule bound to an
+        existing molecule, as in a rule like A(a) -> A(a!1).A(a!1). Existing code
+        that implemented this feature did not function properly with the check
+        for null conditions before reactions were fired.
 
 
 v1.09   Apr, 2011
