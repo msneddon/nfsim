@@ -36,7 +36,7 @@ Static object that generates transformations with the given sites. <dl class="au
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#b43cb8fbbaa03e4edd9366bc922f9c2c">genBindingTransform1</a> (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#275722d56c36dfe9be8e8cca8fcc4fab">genBindingSeparateComplexTransform1</a> (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#e0662a0c03ff370d74ac8dd4fe7d48ef">genNewMoleculeBindingTransform1</a> (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationFactory.html#60536e9fb733aa835613410f1cf3ec25">genBindingTransform2</a> (unsigned int bSiteIndex)</td></tr>
 
@@ -155,12 +155,12 @@ Generates a binding transformation for one of the two binding sites in the bindi
 
 </div>
 </div><p>
-<a class="anchor" name="275722d56c36dfe9be8e8cca8fcc4fab"></a><!-- doxytag: member="NFcore::TransformationFactory::genBindingSeparateComplexTransform1" ref="275722d56c36dfe9be8e8cca8fcc4fab" args="(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)" -->
+<a class="anchor" name="e0662a0c03ff370d74ac8dd4fe7d48ef"></a><!-- doxytag: member="NFcore::TransformationFactory::genNewMoleculeBindingTransform1" ref="e0662a0c03ff370d74ac8dd4fe7d48ef" args="(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNFcore_1_1Transformation.html">NFcore::Transformation</a> * TransformationFactory::genBindingSeparateComplexTransform1           </td>
+          <td class="memname"><a class="el" href="classNFcore_1_1Transformation.html">NFcore::Transformation</a> * TransformationFactory::genNewMoleculeBindingTransform1           </td>
           <td>(</td>
           <td class="paramtype">unsigned int&nbsp;</td>
           <td class="paramname"> <em>bSiteIndex</em>, </td>
@@ -187,6 +187,7 @@ Generates a binding transformation for one of the two binding sites in the bindi
 <div class="memdoc">
 
 <p>
+Generates a binding transformation for one of the two binding sites in the binding Transform, where at least one of the molecules is a newly created object, so that null condition checks are omitted. You will still have to tell it where the other <a class="el" href="classNFcore_1_1Transformation.html">Transformation</a> object lives (<a class="el" href="classNFcore_1_1TransformationSet.html" title="Maintains a set of Transformation objects for a ReactionClass.">TransformationSet</a> has this information). <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
 
 </div>
 </div><p>
@@ -624,8 +625,8 @@ Indicates a population decrement transform
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Apr 15 12:49:25 2011 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Aug 25 15:48:35 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

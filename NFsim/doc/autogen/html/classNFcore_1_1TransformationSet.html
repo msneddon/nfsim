@@ -52,7 +52,9 @@ This class is one of the core pieces of a <a class="el" href="classNFcore_1_1Rea
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#019e58a617dadd7290fba8574d27c486">addBindingTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, string bSiteName1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#c16924c35a475e3afb360356aa1180a3">addBindingSeparateComplexTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, string bSiteName1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#568ff5152f41f57dfcba73b98dad7e45">addNewMoleculeBindingTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, string bSiteName1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#6d663cedb1c3816f57d7758d8f2698bd">addBindingSeparateComplexTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t1, string bSiteName1, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1TransformationSet.html#0887a640ecfcd9a9289aacab866ebc60">addUnbindingTransform</a> (<a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t, string bSiteName, <a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *t2, string bSiteName2)</td></tr>
 
@@ -398,12 +400,54 @@ Adds a binding reaction between the two given TemplateMolecules at the specified
 
 </div>
 </div><p>
-<a class="anchor" name="c16924c35a475e3afb360356aa1180a3"></a><!-- doxytag: member="NFcore::TransformationSet::addBindingSeparateComplexTransform" ref="c16924c35a475e3afb360356aa1180a3" args="(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)" -->
+<a class="anchor" name="568ff5152f41f57dfcba73b98dad7e45"></a><!-- doxytag: member="NFcore::TransformationSet::addNewMoleculeBindingTransform" ref="568ff5152f41f57dfcba73b98dad7e45" args="(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TransformationSet::addBindingSeparateComplexTransform           </td>
+          <td class="memname">bool TransformationSet::addNewMoleculeBindingTransform           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSiteName1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
+          <td class="paramname"> <em>t2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&nbsp;</td>
+          <td class="paramname"> <em>bSiteName2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Adds a binding reaction between the two given TemplateMolecules at the specified binding sites for molecules that are newly created by the current rule (so as to avoid any null condition checks. <dl class="author" compact><dt><b>Author:</b></dt><dd>Michael Sneddon </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="6d663cedb1c3816f57d7758d8f2698bd"></a><!-- doxytag: member="NFcore::TransformationSet::addBindingSeparateComplexTransform" ref="6d663cedb1c3816f57d7758d8f2698bd" args="(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NFcore::TransformationSet::addBindingSeparateComplexTransform           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classNFcore_1_1TemplateMolecule.html">TemplateMolecule</a> *&nbsp;</td>
           <td class="paramname"> <em>t1</em>, </td>
@@ -1222,8 +1266,8 @@ keeps track if this set has a symmetric binding reaction
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8hh-source.html">transformationSet.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8cpp.html">transformationSet.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Apr 15 12:49:25 2011 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8hh-source.html">transformationSet.hh</a><li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformationSet_8cpp.html">transformationSet.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Aug 25 15:48:35 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

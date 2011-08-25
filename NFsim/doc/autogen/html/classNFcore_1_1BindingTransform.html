@@ -31,8 +31,8 @@ Inheritance diagram for NFcore::BindingTransform:</div>
 
 <p><center><img src="classNFcore_1_1BindingTransform.png" usemap="#NFcore::BindingTransform_map" border="0" alt=""></center>
 <map name="NFcore::BindingTransform_map">
-<area href="classNFcore_1_1Transformation.html" alt="NFcore::Transformation" shape="rect" coords="0,0,259,24">
-<area href="classNFcore_1_1BindingSeparateComplexTransform.html" alt="NFcore::BindingSeparateComplexTransform" shape="rect" coords="0,112,259,136">
+<area href="classNFcore_1_1Transformation.html" alt="NFcore::Transformation" shape="rect" coords="0,0,237,24">
+<area href="classNFcore_1_1NewMoleculeBindingTransform.html" alt="NFcore::NewMoleculeBindingTransform" shape="rect" coords="0,112,237,136">
 </map>
 </div>
 
@@ -47,6 +47,8 @@ Inheritance diagram for NFcore::BindingTransform:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BindingTransform.html#45f7022ec7b76e0ba90021de650026e9">apply</a> (<a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *m, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **ms)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BindingTransform.html#9dad3bcc59c0c0dfd316fc494b7689be">getComponentIndex</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BindingTransform.html#0bec86cfe6a25c759030797865e317a5">checkForNullCondition</a> (<a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *m, <a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **ms)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNFcore_1_1BindingTransform.html#69746a4bc7d57793bfa42ea8a9494062">cIndex</a></td></tr>
@@ -141,8 +143,6 @@ Inheritance diagram for NFcore::BindingTransform:</div>
 
 <p>Implements <a class="el" href="classNFcore_1_1Transformation.html#6a57f607676c92b2465427e57bc7fae5">NFcore::Transformation</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classNFcore_1_1BindingSeparateComplexTransform.html#af8be6214ca8a9a4041754bb3189ca09">NFcore::BindingSeparateComplexTransform</a>.</p>
-
 </div>
 </div><p>
 <a class="anchor" name="9dad3bcc59c0c0dfd316fc494b7689be"></a><!-- doxytag: member="NFcore::BindingTransform::getComponentIndex" ref="9dad3bcc59c0c0dfd316fc494b7689be" args="() const " -->
@@ -164,7 +164,38 @@ Inheritance diagram for NFcore::BindingTransform:</div>
 
 <p>Implements <a class="el" href="classNFcore_1_1Transformation.html#2ba394b20768b21ba328431103474607">NFcore::Transformation</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classNFcore_1_1BindingSeparateComplexTransform.html#5ea6920bf3d0a5fb624cff52cf0c97ce">NFcore::BindingSeparateComplexTransform</a>.</p>
+</div>
+</div><p>
+<a class="anchor" name="0bec86cfe6a25c759030797865e317a5"></a><!-- doxytag: member="NFcore::BindingTransform::checkForNullCondition" ref="0bec86cfe6a25c759030797865e317a5" args="(Mapping *m, MappingSet **ms)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BindingTransform::checkForNullCondition           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1Mapping.html">Mapping</a> *&nbsp;</td>
+          <td class="paramname"> <em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classNFcore_1_1MappingSet.html">MappingSet</a> **&nbsp;</td>
+          <td class="paramname"> <em>ms</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Reimplemented from <a class="el" href="classNFcore_1_1Transformation.html#1f9aef7f2a2435e3116224884afccc83">NFcore::Transformation</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classNFcore_1_1NewMoleculeBindingTransform.html#422103cefcdcef333619990c20a8b16a">NFcore::NewMoleculeBindingTransform</a>.</p>
 
 </div>
 </div><p>
@@ -215,8 +246,8 @@ Inheritance diagram for NFcore::BindingTransform:</div>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/galileoSR1_cpp/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Apr 15 12:49:25 2011 for NFsim by&nbsp;
+<li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8hh-source.html">transformation.hh</a><li>/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/<a class="el" href="transformation_8cpp.html">transformation.cpp</a></ul>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Aug 25 15:48:35 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
