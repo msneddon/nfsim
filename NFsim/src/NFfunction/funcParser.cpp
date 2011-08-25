@@ -90,6 +90,7 @@ double FuncFactory::Eval(mu::Parser *p)
 		cout<<"Terminating your simulation. Better luck next time."<<endl;
 		exit(1);
 	}
+	return 0;
 }
 
 

@@ -165,6 +165,7 @@ MoleculesObservable::MoleculesObservable(string name, TemplateMolecule *tm) :
 	templateMolecules[0]=tm;
 
 	this->type=Observable::MOLECULES;
+
 }
 MoleculesObservable::MoleculesObservable(string name, vector <TemplateMolecule *> &tmList) :
 	Observable(name)
@@ -176,6 +177,12 @@ MoleculesObservable::MoleculesObservable(string name, vector <TemplateMolecule *
 	}
 
 	this->type=Observable::MOLECULES;
+
+	//cout<<" creating observable "<< name <<endl;
+	//tmList.at(0)->printDetails(cout);
+	//tmList.at(0)->printPattern(cout);
+	//cout<<"-------------\n"<<endl;
+
 }
 
 MoleculesObservable::~MoleculesObservable()
@@ -212,10 +219,11 @@ int MoleculesObservable::isObservable(Molecule *m) const
 		//cout<<"starting!"<<endl;
 
 		if ( templateMolecules[t]->compare(m) ) {
+			//cout<<"  adding one"<<endl;
 			matches += m->getPopulation();
 			//return 1;
 		}
-		//else { cout<<"nothing."<<endl; }
+		//else { cout<<"  nothing."<<endl; }
 	}
 	//cout << "total_matches: " << matches << endl;
 	return matches;

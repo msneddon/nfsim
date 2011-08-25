@@ -622,19 +622,25 @@ void MoleculeType::addAllToObservables()
 	/////  WARNING:: when calling this function, be sure to clear all observables
 	/////  first, because this function will not clear observables.
 
+	cout<<"+++++++++ "<<this->getName()<<endl;
+
 	//Check each observable and see if this molecule should be counted
 	Molecule *mol;  int o=0;  int matches=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
   	{
+  		cout<<"comparing to obs: "<<(*molObsIter)->getName()<<endl;
+
   		for( int m=0; m<mList->size(); m++ )
   		{
   			mol = mList->at(m);
   			matches = (*molObsIter)->isObservable(mol);
   			(*molObsIter)->add(matches);
   			mol->setIsObs(o,matches);
+  			cout<<"matches:"<<matches<<endl;
   		}
   		o++;
 	}
+
 }
 
 

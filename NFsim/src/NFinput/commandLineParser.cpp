@@ -48,15 +48,23 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 			}
 			if(sVal.compare(0,1,"-")==0) {
 				sVal = "";
+			} else {
+				a++;
 			}
 
 			//cout<<"found:  '"<<sFlag<<"' with arg: '"<<sVal<<"' "<<endl;
 			if(argMap.find(sFlag)!=argMap.end()) {
-				cout<<"Found two values for the same flag: '"<<sFlag<<"' so I am stopping"<<endl;
+				cout<<"Found two values for the same command line flag: '"<<sFlag<<"' so I am stopping"<<endl;
 				return false;
 			}
 
 			argMap[sFlag] = sVal;
+		}
+		else
+		{
+			cout<<"   Warning when parsing command line arguments.  Valid arguments are preceded by a standard dash, as in '-logo'."<<endl;
+			cout<<"\n   This argument: '"<< s <<"'"<<endl;
+			cout<<"   did not begin with a proper dash and was ignored."<<endl<<endl;
 		}
 	}
 	return true;

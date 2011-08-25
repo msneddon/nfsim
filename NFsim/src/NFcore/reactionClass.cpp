@@ -274,10 +274,9 @@ void ReactionClass::fire(double random_A_number)
 //		//cout<<"---"<<endl; cout<<"found: "<<products.size()<<" products."<<endl;
 //		//exit(1);
 //	}
-
-	//cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
-	//this->system->printAllObservableCounts(0);
-	//this->system->printAllReactions();
+//	cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
+//	this->system->printAllObservableCounts(0);
+//  this->system->printAllReactions();
 
 
 	// First randomly pick the reactants to fire by selecting the MappingSets
@@ -326,7 +325,8 @@ void ReactionClass::fire(double random_A_number)
 //			//cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
 //		}
 
-	//cout<<"found: "<<products.size()<<" products."<<endl;
+
+//   cout<<"found: "<<products.size()<<" products."<<endl;
 
 
 	// Loop through the products and remove them from their observables
@@ -375,11 +375,13 @@ void ReactionClass::fire(double random_A_number)
 
 	}
 
+	//cout<<"transforming"<<endl;
 
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required
 	this->transformationSet->transform(this->mappingSet);
 
+	//cout<<"transforming done"<<endl;
 
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
@@ -461,7 +463,6 @@ void ReactionClass::fire(double random_A_number)
 	//this->system->printAllObservableCounts(0);
 	//this->system->printAllReactions();
 	//exit(1);
-
 
 	//this->system->printAllObservableCounts(0);
 	//cout<<",  everything done"<<endl;
