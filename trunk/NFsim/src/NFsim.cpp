@@ -112,10 +112,10 @@
  *
  * A partial list of these people include:
  *
+ * Justin Hogg,
  * Garrit Jentsch,
  * William Pontius,
  * Oleksii Sliusarenko,
- * Justin Hogg,
  * Christopher Henry,
  * Fangfang Xia,
  * Ryan Gutenkunst,
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 	// turned off for the general release code.
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.09b";
+	string versionNumber = "1.10";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;

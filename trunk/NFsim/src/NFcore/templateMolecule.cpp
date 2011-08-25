@@ -128,6 +128,7 @@ TemplateMolecule::~TemplateMolecule() {
 }
 
 
+
 string TemplateMolecule::getMoleculeTypeName() const {
 	return moleculeType->getName();
 }
@@ -1039,7 +1040,7 @@ bool TemplateMolecule::isSymMapValid()
 
 bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd)
 {
-	//cout<<"\n\ncomparing template id "<<this->uniqueTemplateID<<" to molecule "<< m->getUniqueID()<<endl;
+	//cout<<"TemplateMolecule::compare()- comparing template id "<<this->uniqueTemplateID<<" to molecule "<< m->getUniqueID()<<endl;
 	//this->printDetails();
 	//cout<<"comparing to: "<<endl;
 	//m->printDetails();
@@ -1052,25 +1053,29 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	}
 
 	// cout<<"\n\nComparing!"<<endl;
+	//cout<<"0!"<<endl;
 
 	//First check if we've been here before, and return accordingly
 	if(this->matchMolecule!=0) {
 		if(matchMolecule==m) { return true; }
-		else { clear(); return false; }
+		else {cout<<"matched to somethang else."<<endl;
+			clear(); return false; }
 	}
 
+	//cout<<"1!"<<endl;
 	if(m->isMatchedTo!=0) {
 		if(m->isMatchedTo!=this) {
 			clear(); return false;
 		}
 	}
 
-
+	//cout<<"2!"<<endl;
 	//Make sure we are of the same type
 	if(m->getMoleculeType()!=this->moleculeType) {
 		clear(); return false;
 	}
 
+	//cout<<"3!"<<endl;
 	//Check all the basic components first to get them out of the way
 	//First check that all of our states match
 	for(int c=0; c<n_compStateConstraint; c++) {
@@ -1097,7 +1102,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	}
 
 	//if(this->uniqueTemplateID==28) { cout<<"basic things match"<<endl; }
-	// cout<<"all the basic things match."<<endl;
+	//cout<<"all the basic things match."<<endl;
 	//Good, good - everything matches so let's set our match molecule
 	matchMolecule = m;
 	m->isMatchedTo=this;

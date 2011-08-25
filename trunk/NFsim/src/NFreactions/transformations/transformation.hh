@@ -34,7 +34,20 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
-			static Transformation * genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+
+			/*!
+			 	Generates a binding transformation for one of the two binding sites in the binding Transform, where at least
+			 	one of the molecules is a newly created object, so that null condition checks are omitted. 	You will still have
+			 	to tell it where the other Transformation object lives (TransformationSet has this information).
+			    @author Michael Sneddon
+			*/
+			static Transformation * genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+
+
+			// deprecated
+			//static Transformation * genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+
+
 
 			/*!
 			 	Generates the second half of a binding transform.  The other site already knows about this site, so all you
@@ -242,14 +255,22 @@ namespace NFcore
 			int otherMappingIndex;
 	};
 
-	class BindingSeparateComplexTransform : public BindingTransform {
+	class NewMoleculeBindingTransform : public BindingTransform {
 			public:
-				BindingSeparateComplexTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
-					BindingTransform(cIndex, otherReactantIndex, otherMappingIndex) {};
-				virtual ~BindingSeparateComplexTransform() {};
-				virtual void apply(Mapping *m, MappingSet **ms);
-				virtual int getComponentIndex() const {return cIndex;};
+				NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex);
+				virtual ~NewMoleculeBindingTransform() {};
+				virtual bool checkForNullCondition(Mapping *m, MappingSet **ms);
 	};
+
+	/*! Deprecated!!!  molecularity is now checked at a more basic level with checkForNullCondition!! */
+//	class BindingSeparateComplexTransform : public BindingTransform {
+//			public:
+//				BindingSeparateComplexTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
+//					BindingTransform(cIndex, otherReactantIndex, otherMappingIndex) {};
+//				virtual ~BindingSeparateComplexTransform() {};
+//				virtual void apply(Mapping *m, MappingSet **ms);
+//				virtual int getComponentIndex() const {return cIndex;};
+//	};
 
 	class UnbindingTransform : public Transformation {
 		public:

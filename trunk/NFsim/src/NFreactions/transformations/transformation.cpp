@@ -50,6 +50,22 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 
 
 
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+NewMoleculeBindingTransform::NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
+		BindingTransform(cIndex, otherReactantIndex, otherMappingIndex)
+{ }
+
+bool NewMoleculeBindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
+{
+	// binding to a new molecule cannot break a null condition (because null conditions are thus far
+	// dependent on molecularity, which must be correct if the molecule did not exist in the reactant pattern.
+	return false;
+}
+
+
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
@@ -95,19 +111,23 @@ bool BindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-
-void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
-{
-	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
-	//cout<<"complex ID: "<<m->getMolecule()->getComplexID()<<" "<<m2->getMolecule()->getComplexID()<<endl;
-
-	if(m->getMolecule()->getComplexID()!=m2->getMolecule()->getComplexID()) {
-		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
-	} else {
-		System::NULL_EVENT_COUNTER++;
-	}
-
-}
+// deprecated
+//
+//void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
+//{
+//	cerr<<"Using BindingSeparateComplexTransform!!  This transformation is deprecated in v1.09+!"<<endl;
+//	exit(1);
+//
+//	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+//	//cout<<"complex ID: "<<m->getMolecule()->getComplexID()<<" "<<m2->getMolecule()->getComplexID()<<endl;
+//
+//	if(m->getMolecule()->getComplexID()!=m2->getMolecule()->getComplexID()) {
+//		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+//	} else {
+//		System::NULL_EVENT_COUNTER++;
+//	}
+//
+//}
 
 
 ///////////////////////////////////////////////////////////////
@@ -245,10 +265,15 @@ NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned in
 {
 	return new BindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
 }
-NFcore::Transformation * TransformationFactory::genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+NFcore::Transformation * TransformationFactory::genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 {
-	return new BindingSeparateComplexTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
+	return new NewMoleculeBindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
 }
+
+//NFcore::Transformation * TransformationFactory::genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+//{
+//	return new BindingSeparateComplexTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
+//}
 
 NFcore::Transformation * TransformationFactory::genBindingTransform2(unsigned int bSiteIndex)
 {

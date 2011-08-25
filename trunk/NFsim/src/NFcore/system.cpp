@@ -1,3 +1,7 @@
+#ifdef __CDT_PARSER__
+#define CLOCKS_PER_SEC
+#endif
+
 
 #include "NFcore.hh"
 

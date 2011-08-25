@@ -106,6 +106,15 @@ namespace NFcore
 
 			/*!
 				Adds a binding reaction between the two given TemplateMolecules at the specified
+				binding sites for molecules that are newly created by the current rule (so as to
+				avoid any null condition checks.
+				@author Michael Sneddon
+			*/
+			bool addNewMoleculeBindingTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2);
+
+
+			/*!
+				Adds a binding reaction between the two given TemplateMolecules at the specified
 				binding sites with the constraint that the two molecules are not connected.  Note: This only stops
 				the binding transform!  It does not prevent the entire reaction!  That is not programmed in yet!
 				@author Michael Sneddon

@@ -1117,7 +1117,7 @@ bool NFinput::initReactionRules(
 
 				//As new product molecules are identified, we'll create components and
 				// add them to the 'comps' map. THen we'll be able to apply further
-				// transformations to the new molecules late on.
+				// transformations to the new molecules later on.
 
 				// I'm pretty sure we don't need to worry about symmetry here.
 				//   --Justin
@@ -1452,11 +1452,40 @@ bool NFinput::initReactionRules(
 					//  and inserted maps from site id to component object into 'comps'
 					// --Justin, 3Mar2011
 
+					// Adding newly created molecules that are bound turns out to not be compatible with
+					// generalized checks for null conditions because in TransformationSet::transform, the
+					// null conditions are checked before new molecules are created.  You cannot create
+					// new molecules before you check for null conditions, because otherwise if a null
+					// condition is met, then the newly created molecules would have to be removed from
+					// the system.  But if the new molecules are not created yet, then the check for null
+					// conditions creates a segfault in some cases because it is looking into a mappingset
+					// that has a null mapping.  Checking for null mappings is insuffecient, because mappings
+					// are not required to be cleared after comparisons or usage, thus there can be dangling
+					// mappings which will not match null, but still may be incorrect.  The work around implemented
+					// here addresses this by creating a new type of transformation that is unique for binding
+					// reactions taking place between newly created molecules.  For these binding reactions, a null
+					// condition can never be met because molecularity constraints cannot be broken by a new molecule,
+					// because that molecule did not exist before.  To check for bonds to new molecules, we use the
+					// component lookup name, which if pointing to a reactant (designated in the XML by ..._RP_...),
+					// then we know it existed, but if it is pointing to a product (designated by ..._PP_...), we
+					// know that it was created by this rule.
+					// --michael Aug2011
+
 					component *c1;
 					component *c2;
 
 					if ( !lookup( c1, site1, comps, symMap) ) return false;
 					if ( !lookup( c2, site2, comps, symMap) ) return false;
+
+
+					// check if these are bonds to new product molecules
+					size_t PPpos1 = site1.find("_PP"); size_t PPpos2 = site2.find("_PP");
+					// if either is a new molecule, set the flag so that we use the special
+					// newMoleculeBinding transform instead of the standard transform.
+					bool isNewMoleculeBond = false;
+					if(PPpos1!=string::npos || PPpos2!=string::npos) {
+						isNewMoleculeBond = true;
+					}
 
 
 					// Check if this is binding a population (illegal!)
@@ -1517,14 +1546,21 @@ bool NFinput::initReactionRules(
 					}*/
 
 					// Add binding transform
-					if ( !ts->addBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
-						return false;
+					if(isNewMoleculeBond) {
+						if ( !ts->addNewMoleculeBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+							return false;
+					} else {
+						if ( !ts->addBindingTransform( c1->t, c1->symPermutationName, c2->t, c2->symPermutationName) )
+							return false;
+					}
 
 					if (verbose)
 					{
 						cout << "\t\t\t***Identified binding of site: " << c1->t->getMoleculeTypeName()
 						     << "(" << c1->symPermutationName << ")" << " to site " << c2->t->getMoleculeTypeName()
 						     << "(" << c2->symPermutationName << ")" << endl;
+						if(isNewMoleculeBond)
+							cout << "\t\t\t   (this bond connects a new molecule that was synthesized by this rule)" << endl;
 					}
 				}
 
