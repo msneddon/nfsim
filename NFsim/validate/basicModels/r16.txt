@@ -1,0 +1,2 @@
+creation of a molecule that is bound to an existing molecule
+-sim 5 -oSteps 100
