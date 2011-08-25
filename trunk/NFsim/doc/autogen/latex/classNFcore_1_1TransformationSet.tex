@@ -30,6 +30,8 @@ bool {\bf addDecrementStateTransform} ({\bf TemplateMolecule} $\ast$t, string cN
 \item 
 bool {\bf addBindingTransform} ({\bf TemplateMolecule} $\ast$t1, string bSiteName1, {\bf TemplateMolecule} $\ast$t2, string bSiteName2)
 \item 
+bool {\bf addNewMoleculeBindingTransform} ({\bf TemplateMolecule} $\ast$t1, string bSiteName1, {\bf TemplateMolecule} $\ast$t2, string bSiteName2)
+\item 
 bool {\bf addBindingSeparateComplexTransform} ({\bf TemplateMolecule} $\ast$t1, string bSiteName1, {\bf TemplateMolecule} $\ast$t2, string bSiteName2)
 \item 
 bool {\bf addUnbindingTransform} ({\bf TemplateMolecule} $\ast$t, string bSiteName, {\bf TemplateMolecule} $\ast$t2, string bSiteName2)
@@ -182,9 +184,16 @@ Adds an decrement state change to the given templateMolecule \begin{Desc}
 
 Adds a binding reaction between the two given TemplateMolecules at the specified binding sites. \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
+\index{NFcore::TransformationSet@{NFcore::TransformationSet}!addNewMoleculeBindingTransform@{addNewMoleculeBindingTransform}}
+\index{addNewMoleculeBindingTransform@{addNewMoleculeBindingTransform}!NFcore::TransformationSet@{NFcore::TransformationSet}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addNewMoleculeBindingTransform ({\bf TemplateMolecule} $\ast$ {\em t1}, string {\em bSiteName1}, {\bf TemplateMolecule} $\ast$ {\em t2}, string {\em bSiteName2})}\label{classNFcore_1_1TransformationSet_568ff5152f41f57dfcba73b98dad7e45}
+
+
+Adds a binding reaction between the two given TemplateMolecules at the specified binding sites for molecules that are newly created by the current rule (so as to avoid any null condition checks. \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationSet@{NFcore::TransformationSet}!addBindingSeparateComplexTransform@{addBindingSeparateComplexTransform}}
 \index{addBindingSeparateComplexTransform@{addBindingSeparateComplexTransform}!NFcore::TransformationSet@{NFcore::TransformationSet}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool TransformationSet::addBindingSeparateComplexTransform ({\bf TemplateMolecule} $\ast$ {\em t1}, string {\em bSiteName1}, {\bf TemplateMolecule} $\ast$ {\em t2}, string {\em bSiteName2})}\label{classNFcore_1_1TransformationSet_c16924c35a475e3afb360356aa1180a3}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool NFcore::TransformationSet::addBindingSeparateComplexTransform ({\bf TemplateMolecule} $\ast$ {\em t1}, string {\em bSiteName1}, {\bf TemplateMolecule} $\ast$ {\em t2}, string {\em bSiteName2})}\label{classNFcore_1_1TransformationSet_6d663cedb1c3816f57d7758d8f2698bd}
 
 
 Adds a binding reaction between the two given TemplateMolecules at the specified binding sites with the constraint that the two molecules are not connected. Note: This only stops the binding transform! It does not prevent the entire reaction! That is not programmed in yet! \begin{Desc}
@@ -429,5 +438,5 @@ keeps track if this set has a symmetric binding reaction
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformationSet.hh}\item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformationSet.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformationSet.hh}\item 
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformationSet.cpp}\end{CompactItemize}

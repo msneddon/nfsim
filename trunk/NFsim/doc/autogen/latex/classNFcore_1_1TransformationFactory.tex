@@ -14,7 +14,7 @@ static {\bf Transformation} $\ast$ {\bf genStateChangeTransform} (unsigned int c
 \item 
 static {\bf Transformation} $\ast$ {\bf genBindingTransform1} (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 \item 
-static {\bf Transformation} $\ast$ {\bf genBindingSeparateComplexTransform1} (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
+static {\bf Transformation} $\ast$ {\bf genNewMoleculeBindingTransform1} (unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 \item 
 static {\bf Transformation} $\ast$ {\bf genBindingTransform2} (unsigned int bSiteIndex)
 \item 
@@ -84,11 +84,13 @@ Generates a state change \doxyref{Transformation}{p.}{classNFcore_1_1Transformat
 
 Generates a binding transformation for one of the two binding sites in the binding Transform. You will have to tell it where the other \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} object lives (\doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} has this information). \begin{Desc}
 \item[Author:]Michael Sneddon \end{Desc}
-\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genBindingSeparateComplexTransform1@{genBindingSeparateComplexTransform1}}
-\index{genBindingSeparateComplexTransform1@{genBindingSeparateComplexTransform1}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genBindingSeparateComplexTransform1 (unsigned int {\em bSiteIndex}, unsigned int {\em otherReactantIndex}, unsigned int {\em otherMappingIndex})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_275722d56c36dfe9be8e8cca8fcc4fab}
+\index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genNewMoleculeBindingTransform1@{genNewMoleculeBindingTransform1}}
+\index{genNewMoleculeBindingTransform1@{genNewMoleculeBindingTransform1}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genNewMoleculeBindingTransform1 (unsigned int {\em bSiteIndex}, unsigned int {\em otherReactantIndex}, unsigned int {\em otherMappingIndex})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_e0662a0c03ff370d74ac8dd4fe7d48ef}
 
 
+Generates a binding transformation for one of the two binding sites in the binding Transform, where at least one of the molecules is a newly created object, so that null condition checks are omitted. You will still have to tell it where the other \doxyref{Transformation}{p.}{classNFcore_1_1Transformation} object lives (\doxyref{TransformationSet}{p.}{classNFcore_1_1TransformationSet} has this information). \begin{Desc}
+\item[Author:]Michael Sneddon \end{Desc}
 \index{NFcore::TransformationFactory@{NFcore::TransformationFactory}!genBindingTransform2@{genBindingTransform2}}
 \index{genBindingTransform2@{genBindingTransform2}!NFcore::TransformationFactory@{NFcore::TransformationFactory}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf NFcore::Transformation} $\ast$ TransformationFactory::genBindingTransform2 (unsigned int {\em bSiteIndex})\hspace{0.3cm}{\tt  [static]}}\label{classNFcore_1_1TransformationFactory_60536e9fb733aa835613410f1cf3ec25}
@@ -234,5 +236,5 @@ Indicates a population decrement transform
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}

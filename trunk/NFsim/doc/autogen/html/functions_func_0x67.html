@@ -71,8 +71,6 @@
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#46a9edf522aa36598e1bc4ecd6b67475">NFcore::TransformationFactory</a>
 <li>genAddSpeciesTransform()
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#d1dbc61c0869543b639948c6aca7407c">NFcore::TransformationFactory</a>
-<li>genBindingSeparateComplexTransform1()
-: <a class="el" href="classNFcore_1_1TransformationFactory.html#275722d56c36dfe9be8e8cca8fcc4fab">NFcore::TransformationFactory</a>
 <li>genBindingTransform1()
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#b43cb8fbbaa03e4edd9366bc922f9c2c">NFcore::TransformationFactory</a>
 <li>genBindingTransform2()
@@ -91,6 +89,8 @@
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#250f200fbcc8e794b8b99cc45302ab3b">NFcore::TransformationFactory</a>
 <li>genLocalFunctionReference()
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#206a59330bba84e1b0131b8b0ba919f4">NFcore::TransformationFactory</a>
+<li>genNewMoleculeBindingTransform1()
+: <a class="el" href="classNFcore_1_1TransformationFactory.html#e0662a0c03ff370d74ac8dd4fe7d48ef">NFcore::TransformationFactory</a>
 <li>genRemoveMoleculeTransform()
 : <a class="el" href="classNFcore_1_1TransformationFactory.html#81d0b2c7cd8efe29ff45333ac16dc657">NFcore::TransformationFactory</a>
 <li>genStateChangeTransform()
@@ -145,7 +145,6 @@
 , <a class="el" href="classNFcore_1_1EmptyTransform.html#7263f704ef8b0fe2388da3379880df4d">NFcore::EmptyTransform</a>
 , <a class="el" href="classNFcore_1_1StateChangeTransform.html#5ae788f00d608b4d4417408d2559a0fb">NFcore::StateChangeTransform</a>
 , <a class="el" href="classNFcore_1_1BindingTransform.html#9dad3bcc59c0c0dfd316fc494b7689be">NFcore::BindingTransform</a>
-, <a class="el" href="classNFcore_1_1BindingSeparateComplexTransform.html#5ea6920bf3d0a5fb624cff52cf0c97ce">NFcore::BindingSeparateComplexTransform</a>
 , <a class="el" href="classNFcore_1_1UnbindingTransform.html#d0f5ce90812bad1d25a8b3de001f04d7">NFcore::UnbindingTransform</a>
 , <a class="el" href="classNFcore_1_1AddSpeciesTransform.html#e76ed3c44e5eadd7ddc25257dd5eded4">NFcore::AddSpeciesTransform</a>
 , <a class="el" href="classNFcore_1_1AddMoleculeTransform.html#8a352eb7aa54568e417701461d507b9e">NFcore::AddMoleculeTransform</a>
@@ -249,8 +248,8 @@
 <li>getMoleculeTypeByName()
 : <a class="el" href="classNFcore_1_1System.html#bc623e9206d68c41d19fda348f53ab5c">NFcore::System</a>
 <li>getMoleculeTypeName()
-: <a class="el" href="classNFcore_1_1TemplateMolecule.html#23ceffa4feddb7148cebd7cbf1005d46">NFcore::TemplateMolecule</a>
-, <a class="el" href="classNFcore_1_1Molecule.html#54b335a50f427d3af013b3f833552c78">NFcore::Molecule</a>
+: <a class="el" href="classNFcore_1_1Molecule.html#54b335a50f427d3af013b3f833552c78">NFcore::Molecule</a>
+, <a class="el" href="classNFcore_1_1TemplateMolecule.html#23ceffa4feddb7148cebd7cbf1005d46">NFcore::TemplateMolecule</a>
 <li>getMolListId()
 : <a class="el" href="classNFcore_1_1Molecule.html#5b8fa63376968f8905e7979e8648647b">NFcore::Molecule</a>
 <li>getMolObs()
@@ -269,13 +268,13 @@
 <li>getN_symComps()
 : <a class="el" href="classNFcore_1_1TemplateMolecule.html#e03338eb619d40f78573be7b2118a9b6">NFcore::TemplateMolecule</a>
 <li>getName()
-: <a class="el" href="classNFcore_1_1CompositeFunction.html#7da7067eef107591b79093a216f5507e">NFcore::CompositeFunction</a>
-, <a class="el" href="classNFcore_1_1ReactionClass.html#0aa7c6260c3917d955c49fc00ef0599a">NFcore::ReactionClass</a>
+: <a class="el" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">NFcore::Observable</a>
 , <a class="el" href="classNFcore_1_1System.html#11395716c7875a899b5b05549e95ffa7">NFcore::System</a>
 , <a class="el" href="classNFcore_1_1MoleculeType.html#c26965aba9dcf36b96ca9fbe32227fc8">NFcore::MoleculeType</a>
-, <a class="el" href="classNFcore_1_1Observable.html#3214bcd71d03cfe2e0f1ba6f103f8ca1">NFcore::Observable</a>
+, <a class="el" href="classNFcore_1_1ReactionClass.html#0aa7c6260c3917d955c49fc00ef0599a">NFcore::ReactionClass</a>
 , <a class="el" href="classNFcore_1_1GlobalFunction.html#5b4b99a92729f87d69dca911a930c6eb">NFcore::GlobalFunction</a>
 , <a class="el" href="classNFcore_1_1LocalFunction.html#53e067c7b8d204ab4c8cf552b000999d">NFcore::LocalFunction</a>
+, <a class="el" href="classNFcore_1_1CompositeFunction.html#7da7067eef107591b79093a216f5507e">NFcore::CompositeFunction</a>
 <li>getNextAvailableComplex()
 : <a class="el" href="classNFcore_1_1ComplexList.html#bb6812b53c88ea10f790a6222e9f97d7">NFcore::ComplexList</a>
 <li>getNextReactionClass()
@@ -310,8 +309,8 @@
 <li>getNumOfMolObs()
 : <a class="el" href="classNFcore_1_1MoleculeType.html#8008f8a94ff6a75c46e8474d65b244d0">NFcore::MoleculeType</a>
 <li>getNumOfReactants()
-: <a class="el" href="classNFcore_1_1ReactionClass.html#907f938981002f15e6c7c6a622ba49a5">NFcore::ReactionClass</a>
-, <a class="el" href="classNFcore_1_1TransformationSet.html#93de73c96860c2516f93bb20be68a46d">NFcore::TransformationSet</a>
+: <a class="el" href="classNFcore_1_1TransformationSet.html#93de73c96860c2516f93bb20be68a46d">NFcore::TransformationSet</a>
+, <a class="el" href="classNFcore_1_1ReactionClass.html#907f938981002f15e6c7c6a622ba49a5">NFcore::ReactionClass</a>
 <li>getNumOfSpeciesObs()
 : <a class="el" href="classNFcore_1_1System.html#26c913da9c3a4dfe46a9a0ed4229e218">NFcore::System</a>
 <li>getNumOfTransformations()
@@ -335,30 +334,30 @@
 <li>getPointerName()
 : <a class="el" href="classNFcore_1_1LocalFunctionReference.html#678751a7f9100b013311ee46f1f71219">NFcore::LocalFunctionReference</a>
 <li>getPopulation()
-: <a class="el" href="classNFcore_1_1MappingSet.html#d97b13ab5c1eb87ab5c36e9c7eb7ba6a">NFcore::MappingSet</a>
-, <a class="el" href="classNFcore_1_1ReactantList.html#e1f83bdddaca3f084f669cbba66cf042">NFcore::ReactantList</a>
+: <a class="el" href="classNFcore_1_1ReactantList.html#e1f83bdddaca3f084f669cbba66cf042">NFcore::ReactantList</a>
 , <a class="el" href="classNFcore_1_1Molecule.html#912defe8c71ea04e15b94d161a50a61c">NFcore::Molecule</a>
+, <a class="el" href="classNFcore_1_1MappingSet.html#d97b13ab5c1eb87ab5c36e9c7eb7ba6a">NFcore::MappingSet</a>
 <li>getPossibleComponentStates()
 : <a class="el" href="classNFcore_1_1MoleculeType.html#5e947d23ed072416203ee392b1d0fc2b">NFcore::MoleculeType</a>
 <li>getRateFactorSum()
 : <a class="el" href="classNFcore_1_1ReactantTree.html#bb9dee084a3bd0a6c9b6957c68c0865e">NFcore::ReactantTree</a>
 <li>getReactantCount()
-: <a class="el" href="classNFcore_1_1PopulationRxnClass.html#14c489c34e521228f5580a30e1018ffe">NFcore::PopulationRxnClass</a>
-, <a class="el" href="classNFcore_1_1ReactionClass.html#a39fd321f4d58d79fa72812d65f1c762">NFcore::ReactionClass</a>
-, <a class="el" href="classNFcore_1_1DORRxnClass.html#bff81c460e3398249e095f1f52a60652">NFcore::DORRxnClass</a>
+: <a class="el" href="classNFcore_1_1DORRxnClass.html#bff81c460e3398249e095f1f52a60652">NFcore::DORRxnClass</a>
 , <a class="el" href="classNFcore_1_1BasicRxnClass.html#908c2d7fdceeb2c77f43d47275b707ff">NFcore::BasicRxnClass</a>
+, <a class="el" href="classNFcore_1_1PopulationRxnClass.html#14c489c34e521228f5580a30e1018ffe">NFcore::PopulationRxnClass</a>
+, <a class="el" href="classNFcore_1_1ReactionClass.html#a39fd321f4d58d79fa72812d65f1c762">NFcore::ReactionClass</a>
 <li>getReaction()
 : <a class="el" href="classNFcore_1_1System.html#ca83418d50b8e82d1bf534f4ee63d5c9">NFcore::System</a>
 <li>getReactionCount()
 : <a class="el" href="classNFcore_1_1MoleculeType.html#f3aeef699a4c3f3e0338b6614658a5e6">NFcore::MoleculeType</a>
 <li>getRemovalType()
-: <a class="el" href="classNFcore_1_1Transformation.html#d664f83913869feb14f2bd80b6851311">NFcore::Transformation</a>
-, <a class="el" href="classNFcore_1_1RemoveMoleculeTransform.html#5dccf8d515fd99ab849dd13e7c4ccef1">NFcore::RemoveMoleculeTransform</a>
+: <a class="el" href="classNFcore_1_1RemoveMoleculeTransform.html#5dccf8d515fd99ab849dd13e7c4ccef1">NFcore::RemoveMoleculeTransform</a>
+, <a class="el" href="classNFcore_1_1Transformation.html#d664f83913869feb14f2bd80b6851311">NFcore::Transformation</a>
 <li>getRxnId()
 : <a class="el" href="classNFcore_1_1ReactionClass.html#cba58796ba1be7b569ba4138820942e0">NFcore::ReactionClass</a>
 <li>getRxnIndex()
-: <a class="el" href="classNFcore_1_1MoleculeType.html#92bbb3373f1f4f1ccb3ad6614f2915cc">NFcore::MoleculeType</a>
-, <a class="el" href="classNFcore_1_1System.html#2ef2c3b370a452ec7ec8c227f8436c03">NFcore::System</a>
+: <a class="el" href="classNFcore_1_1System.html#2ef2c3b370a452ec7ec8c227f8436c03">NFcore::System</a>
+, <a class="el" href="classNFcore_1_1MoleculeType.html#92bbb3373f1f4f1ccb3ad6614f2915cc">NFcore::MoleculeType</a>
 <li>getRxnListMappingId()
 : <a class="el" href="classNFcore_1_1Molecule.html#a352c3ff40bb38555c772124de0f0ac8">NFcore::Molecule</a>
 <li>getRxnType()
@@ -366,8 +365,8 @@
 <li>getSpeciesObs()
 : <a class="el" href="classNFcore_1_1System.html#ef0753cfdc3f37ffc19f346877cc745b">NFcore::System</a>
 <li>getStartPosition()
-: <a class="el" href="classLinearEnvironment.html#b67281c04b7a267229f8a4ee03fa9196">LinearEnvironment</a>
-, <a class="el" href="classEnvironment.html#44275329226731286967ed7e992d4f03">Environment</a>
+: <a class="el" href="classEnvironment.html#44275329226731286967ed7e992d4f03">Environment</a>
+, <a class="el" href="classLinearEnvironment.html#b67281c04b7a267229f8a4ee03fa9196">LinearEnvironment</a>
 <li>getStateValueFromName()
 : <a class="el" href="classNFcore_1_1MoleculeType.html#b52837d02a22679accd1b602af9b981d">NFcore::MoleculeType</a>
 <li>getStrName()
@@ -387,8 +386,8 @@
 : <a class="el" href="classNFcore_1_1TransformationSet.html#971b68ec494d219d314e6d39224fe91f">NFcore::TransformationSet</a>
 <li>getType()
 : <a class="el" href="classNFcore_1_1Transformation.html#ad557022a9df81b8009ee0230cbd901e">NFcore::Transformation</a>
-, <a class="el" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">NFcore::Observable</a>
 , <a class="el" href="classNFcore_1_1Mapping.html#b1ae10a65cd858cdb9feb40bcbe2fb59">NFcore::Mapping</a>
+, <a class="el" href="classNFcore_1_1Observable.html#78eedca2a29d801953412a1c804a8d4a">NFcore::Observable</a>
 <li>getTypeID()
 : <a class="el" href="classNFcore_1_1MoleculeType.html#a1a5acddb08b8ac33e8164aee7c22a2f">NFcore::MoleculeType</a>
 <li>getTypeIILocalFunction()
@@ -429,7 +428,7 @@
 <li>GlobalFunction()
 : <a class="el" href="classNFcore_1_1GlobalFunction.html#aaab0b95f7aa0a1ac4d9fcc071136cdb">NFcore::GlobalFunction</a>
 </ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Apr 15 12:49:25 2011 for NFsim by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Aug 25 15:48:34 2011 for NFsim by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

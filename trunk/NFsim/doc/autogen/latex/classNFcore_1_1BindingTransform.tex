@@ -18,6 +18,8 @@ virtual {\bf $\sim$BindingTransform} ()
 virtual void {\bf apply} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms)
 \item 
 virtual int {\bf getComponentIndex} () const 
+\item 
+virtual bool {\bf checkForNullCondition} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms)
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -51,18 +53,23 @@ int {\bf otherMappingIndex}
 
 
 
-Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_6a57f607676c92b2465427e57bc7fae5}.
-
-Reimplemented in {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_af8be6214ca8a9a4041754bb3189ca09}.\index{NFcore::BindingTransform@{NFcore::BindingTransform}!getComponentIndex@{getComponentIndex}}
+Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_6a57f607676c92b2465427e57bc7fae5}.\index{NFcore::BindingTransform@{NFcore::BindingTransform}!getComponentIndex@{getComponentIndex}}
 \index{getComponentIndex@{getComponentIndex}!NFcore::BindingTransform@{NFcore::BindingTransform}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::BindingTransform::getComponentIndex () const\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1BindingTransform_9dad3bcc59c0c0dfd316fc494b7689be}
 
 
 
 
-Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.
+Implements {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}.\index{NFcore::BindingTransform@{NFcore::BindingTransform}!checkForNullCondition@{checkForNullCondition}}
+\index{checkForNullCondition@{checkForNullCondition}!NFcore::BindingTransform@{NFcore::BindingTransform}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool BindingTransform::checkForNullCondition ({\bf Mapping} $\ast$ {\em m}, {\bf MappingSet} $\ast$$\ast$ {\em ms})\hspace{0.3cm}{\tt  [virtual]}}\label{classNFcore_1_1BindingTransform_0bec86cfe6a25c759030797865e317a5}
 
-Reimplemented in {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_5ea6920bf3d0a5fb624cff52cf0c97ce}.
+
+
+
+Reimplemented from {\bf NFcore::Transformation} \doxyref{}{p.}{classNFcore_1_1Transformation_1f9aef7f2a2435e3116224884afccc83}.
+
+Reimplemented in {\bf NFcore::NewMoleculeBindingTransform} \doxyref{}{p.}{classNFcore_1_1NewMoleculeBindingTransform_422103cefcdcef333619990c20a8b16a}.
 
 \subsection{Member Data Documentation}
 \index{NFcore::BindingTransform@{NFcore::BindingTransform}!cIndex@{cIndex}}
@@ -84,5 +91,5 @@ Reimplemented in {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{cl
 
 The documentation for this class was generated from the following files:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\item 
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.cpp}\end{CompactItemize}

@@ -27,6 +27,8 @@ virtual void {\bf apply} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms
 virtual int {\bf getComponentIndex} () const =0
 \item 
 virtual int {\bf getRemovalType} ()
+\item 
+virtual bool {\bf checkForNullCondition} ({\bf Mapping} $\ast$m, {\bf MappingSet} $\ast$$\ast$ms)
 \end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
@@ -61,21 +63,28 @@ int {\bf type}
 
 
 
-Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_62280a5922e15fcda20b801ca2662ba8}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_fd2dd5c89bfd563a2343a9a40a3a21b1}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_a74df84e5d6eac3709ea4636a674edee}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_45f7022ec7b76e0ba90021de650026e9}, {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_af8be6214ca8a9a4041754bb3189ca09}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_bc0ad11a6deed270f892cc2c072f016d}, {\bf NFcore::AddSpeciesTransform} \doxyref{}{p.}{classNFcore_1_1AddSpeciesTransform_c1e48c66bfed76209e42b8b1b0f6d01d}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_abf8ed753858994d292f9c3afbb738e2}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_c277e491df71ad554a93e93ad1e02a7a}, {\bf NFcore::DecrementPopulationTransform} \doxyref{}{p.}{classNFcore_1_1DecrementPopulationTransform_283694b7bca0d09343f7332145b55bbb}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_47ec72e990cfad2110e251b2749e6a34}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_2094268f2958cc380cc9ec1c8a8332da}.\index{NFcore::Transformation@{NFcore::Transformation}!getComponentIndex@{getComponentIndex}}
+Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_62280a5922e15fcda20b801ca2662ba8}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_fd2dd5c89bfd563a2343a9a40a3a21b1}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_a74df84e5d6eac3709ea4636a674edee}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_45f7022ec7b76e0ba90021de650026e9}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_bc0ad11a6deed270f892cc2c072f016d}, {\bf NFcore::AddSpeciesTransform} \doxyref{}{p.}{classNFcore_1_1AddSpeciesTransform_c1e48c66bfed76209e42b8b1b0f6d01d}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_abf8ed753858994d292f9c3afbb738e2}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_c277e491df71ad554a93e93ad1e02a7a}, {\bf NFcore::DecrementPopulationTransform} \doxyref{}{p.}{classNFcore_1_1DecrementPopulationTransform_283694b7bca0d09343f7332145b55bbb}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_47ec72e990cfad2110e251b2749e6a34}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_2094268f2958cc380cc9ec1c8a8332da}.\index{NFcore::Transformation@{NFcore::Transformation}!getComponentIndex@{getComponentIndex}}
 \index{getComponentIndex@{getComponentIndex}!NFcore::Transformation@{NFcore::Transformation}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::Transformation::getComponentIndex () const\hspace{0.3cm}{\tt  [pure virtual]}}\label{classNFcore_1_1Transformation_2ba394b20768b21ba328431103474607}
 
 
 
 
-Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_fad70297f131516af5b68ef5f508dfc9}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_7263f704ef8b0fe2388da3379880df4d}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_5ae788f00d608b4d4417408d2559a0fb}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_9dad3bcc59c0c0dfd316fc494b7689be}, {\bf NFcore::BindingSeparateComplexTransform} \doxyref{}{p.}{classNFcore_1_1BindingSeparateComplexTransform_5ea6920bf3d0a5fb624cff52cf0c97ce}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_d0f5ce90812bad1d25a8b3de001f04d7}, {\bf NFcore::AddSpeciesTransform} \doxyref{}{p.}{classNFcore_1_1AddSpeciesTransform_e76ed3c44e5eadd7ddc25257dd5eded4}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_8a352eb7aa54568e417701461d507b9e}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_02344a04ae5aa77f01786cb88cbe1185}, {\bf NFcore::DecrementPopulationTransform} \doxyref{}{p.}{classNFcore_1_1DecrementPopulationTransform_d1cc0bdb6dda9ea6b6feb4b79f48942d}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_c43495e0e7ad7ef79ad7bd8dfb940825}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_8609049e75d2a31fb64c32f1608565bf}.\index{NFcore::Transformation@{NFcore::Transformation}!getRemovalType@{getRemovalType}}
+Implemented in {\bf NFcore::LocalFunctionReference} \doxyref{}{p.}{classNFcore_1_1LocalFunctionReference_fad70297f131516af5b68ef5f508dfc9}, {\bf NFcore::EmptyTransform} \doxyref{}{p.}{classNFcore_1_1EmptyTransform_7263f704ef8b0fe2388da3379880df4d}, {\bf NFcore::StateChangeTransform} \doxyref{}{p.}{classNFcore_1_1StateChangeTransform_5ae788f00d608b4d4417408d2559a0fb}, {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_9dad3bcc59c0c0dfd316fc494b7689be}, {\bf NFcore::UnbindingTransform} \doxyref{}{p.}{classNFcore_1_1UnbindingTransform_d0f5ce90812bad1d25a8b3de001f04d7}, {\bf NFcore::AddSpeciesTransform} \doxyref{}{p.}{classNFcore_1_1AddSpeciesTransform_e76ed3c44e5eadd7ddc25257dd5eded4}, {\bf NFcore::AddMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1AddMoleculeTransform_8a352eb7aa54568e417701461d507b9e}, {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_02344a04ae5aa77f01786cb88cbe1185}, {\bf NFcore::DecrementPopulationTransform} \doxyref{}{p.}{classNFcore_1_1DecrementPopulationTransform_d1cc0bdb6dda9ea6b6feb4b79f48942d}, {\bf NFcore::IncrementStateTransform} \doxyref{}{p.}{classNFcore_1_1IncrementStateTransform_c43495e0e7ad7ef79ad7bd8dfb940825}, and {\bf NFcore::DecrementStateTransform} \doxyref{}{p.}{classNFcore_1_1DecrementStateTransform_8609049e75d2a31fb64c32f1608565bf}.\index{NFcore::Transformation@{NFcore::Transformation}!getRemovalType@{getRemovalType}}
 \index{getRemovalType@{getRemovalType}!NFcore::Transformation@{NFcore::Transformation}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual int NFcore::Transformation::getRemovalType ()\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1Transformation_d664f83913869feb14f2bd80b6851311}
 
 
 
 
-Reimplemented in {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_5dccf8d515fd99ab849dd13e7c4ccef1}.
+Reimplemented in {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcore_1_1RemoveMoleculeTransform_5dccf8d515fd99ab849dd13e7c4ccef1}.\index{NFcore::Transformation@{NFcore::Transformation}!checkForNullCondition@{checkForNullCondition}}
+\index{checkForNullCondition@{checkForNullCondition}!NFcore::Transformation@{NFcore::Transformation}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}virtual bool NFcore::Transformation::checkForNullCondition ({\bf Mapping} $\ast$ {\em m}, {\bf MappingSet} $\ast$$\ast$ {\em ms})\hspace{0.3cm}{\tt  [inline, virtual]}}\label{classNFcore_1_1Transformation_1f9aef7f2a2435e3116224884afccc83}
+
+
+
+
+Reimplemented in {\bf NFcore::BindingTransform} \doxyref{}{p.}{classNFcore_1_1BindingTransform_0bec86cfe6a25c759030797865e317a5}, and {\bf NFcore::NewMoleculeBindingTransform} \doxyref{}{p.}{classNFcore_1_1NewMoleculeBindingTransform_422103cefcdcef333619990c20a8b16a}.
 
 \subsection{Member Data Documentation}
 \index{NFcore::Transformation@{NFcore::Transformation}!type@{type}}
@@ -87,4 +96,4 @@ Reimplemented in {\bf NFcore::RemoveMoleculeTransform} \doxyref{}{p.}{classNFcor
 
 The documentation for this class was generated from the following file:\begin{CompactItemize}
 \item 
-/home/msneddon/eclipse/galileoSR1\_\-cpp/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\end{CompactItemize}
+/home/msneddon/eclipse/indigo/workspace/NFsim/src/NFreactions/transformations/{\bf transformation.hh}\end{CompactItemize}
