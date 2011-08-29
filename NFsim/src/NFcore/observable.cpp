@@ -165,7 +165,6 @@ MoleculesObservable::MoleculesObservable(string name, TemplateMolecule *tm) :
 	templateMolecules[0]=tm;
 
 	this->type=Observable::MOLECULES;
-
 }
 MoleculesObservable::MoleculesObservable(string name, vector <TemplateMolecule *> &tmList) :
 	Observable(name)
@@ -178,7 +177,18 @@ MoleculesObservable::MoleculesObservable(string name, vector <TemplateMolecule *
 
 	this->type=Observable::MOLECULES;
 
-	//cout<<" creating observable "<< name <<endl;
+//	cout<<" creating observable "<< name <<endl;
+//	if(this->getName()=="CbpTot")
+//	{
+//		vector <TemplateMolecule *> tms;
+//		TemplateMolecule::traverse(tmList.at(0),tms,false);
+//		for(int k=0; k<tms.size(); k++)
+//		{
+//			tms.at(k)->printDetails(cout);
+//		}
+//		exit(1);
+//	}
+
 	//tmList.at(0)->printDetails(cout);
 	//tmList.at(0)->printPattern(cout);
 	//cout<<"-------------\n"<<endl;

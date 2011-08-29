@@ -545,21 +545,10 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 }
 
 
-//void Molecule::traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit)
-//{
-//	traverseBondedNeighborhood(members,traversalLimit);
-//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
-//	{
-//		bool isPresent=false;
-//		for( molIter2 = members.begin(); molIter2 != members.end(); molIter2++ ) {
-//			if((*molIter)==(*molIter2)) { isPresent = true; break;}
-//		}
-//		if(!isPresent) members.push_back((*molIter));
-//	}
+
+
+
 //
-//}
-
-
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster

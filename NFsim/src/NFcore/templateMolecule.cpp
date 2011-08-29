@@ -1040,7 +1040,14 @@ bool TemplateMolecule::isSymMapValid()
 
 bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd)
 {
-	//cout<<"TemplateMolecule::compare()- comparing template id "<<this->uniqueTemplateID<<" to molecule "<< m->getUniqueID()<<endl;
+	//bool de=false;
+	//if(this->uniqueTemplateID==5 ) cout<<"\n\n---\n";
+	//if( this->uniqueTemplateID==5 || this->uniqueTemplateID==6 || this->uniqueTemplateID==7) {
+	//	//de=true;
+	//}
+	//if(de) {
+	//	cout<<"TemplateMolecule::compare()- comparing template id "<<this->uniqueTemplateID<<" to molecule "<< m->getUniqueID()<<endl;
+	//}
 	//this->printDetails();
 	//cout<<"comparing to: "<<endl;
 	//m->printDetails();
@@ -1058,14 +1065,17 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//First check if we've been here before, and return accordingly
 	if(this->matchMolecule!=0) {
 		if(matchMolecule==m) { return true; }
-		else {cout<<"matched to somethang else."<<endl;
-			clear(); return false; }
+		else {
+			clear(); return false;
+		}
 	}
 
 	//cout<<"1!"<<endl;
 	if(m->isMatchedTo!=0) {
 		if(m->isMatchedTo!=this) {
-			clear(); return false;
+			clear();
+			//if(this->uniqueTemplateID==3) {cout<<"matched to somethang else."<<endl; exit(1);}
+			return false;
 		}
 	}
 
@@ -1132,7 +1142,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		if(t2->matchMolecule!=0) {
 			if(t2->matchMolecule!=m2) {
 				//cout<<"match molecules do not match"<<endl;
-				clear(); return false;
+				clear();  return false;
 			} else { continue; }
 		}
 
@@ -1149,11 +1159,11 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				this->hasVisitedBond[b]=true;
 				bool match = t2->compare(m2,rc,ms,holdMolClearToEnd);
 				if(!match) {
-					clear(); return false;
+					clear();  return false;
 				}
 			} else {
 				//cout<<"cannot map sym site.."<<endl;
-				clear(); return false;
+				clear();  return false;
 			}
 
 		} else { //Phew!  we can check this guy normally.
@@ -1335,8 +1345,6 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//Check connected-to molecules
 	if(n_connectedTo>0) {
 
-		//if(this->uniqueTemplateID==28) { cout<<"\ncomparing connected-to"<<endl; }
-
 		vector <MappingSet *> lastMappingSets;
 		lastMappingSets.push_back(ms);
 
@@ -1356,10 +1364,20 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			if(!hasTraversed) {
 				m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 			//	cout<<"traversing...\n"<<endl;
+
+				// remove all that are already matched...
+				for(molIter=molList.begin(); molIter!=molList.end();) {
+					if((*molIter)->isMatchedTo!=0) {
+						molIter=molList.erase(molIter);
+					} else {
+						molIter++;
+					}
+				}
+
 				hasTraversed = true;
 			}
 
-			//cout<<"in here...\n"<<endl;
+			//if(de) cout<<" -in here..."<<endl;
 
 
 			bool canMatch=false;
@@ -1399,24 +1417,19 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				}
 			}
 			if(!canMatch) {
+				if(head) {
+					// clear out anything that is dangling
+					list <Molecule *> molList;
+					list <Molecule *>::iterator molIter;
+					m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+					for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
+						(*molIter)->isMatchedTo=0;
+					}
+				}
 				//cout<<"could not match this!"<<endl;
-				//Clear out all mapping sets that we tried to assign.  We can do this
-				//easily by just clearing the clone pointer from the original mappingset
-				//
-				//ms->clearClonedMapping();
-				//if(lastMappingSets.size()>1)
-				//	rc->removeMappingSet(lastMappingSets.at(1)->getId());
-				//if(this->uniqueTemplateID==28) cout<<" I cannot match!";
 				clear(); return false;
 			}
-			//else {
-			//	if(this->uniqueTemplateID==28) cout<<" I can match that!";
-			//}
-
 		}
-		//if(lastMappingSets.size()>2) {
-		//	rc->notifyPresenceOfClonedMappings();
-		//}
 
 		if(lastMappingSets.size()>1) {
 			lastMappingSets.at(lastMappingSets.size()-2)->clearClonedMapping();
@@ -1438,6 +1451,13 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	if(holdMolClearToEnd) {
 		if(head) {
+			// clear out anything that is dangling
+			list <Molecule *> molList;
+			list <Molecule *>::iterator molIter;
+			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
+			for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
+				(*molIter)->isMatchedTo=0;
+			}
 			clear();
 		} else {
 			this->clearTemplateOnly();
@@ -1445,7 +1465,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	} else {
 		clear();
 	}
-	//cout<<this->uniqueTemplateID<<" matched!!!"<<endl;
+
+	//if(de)cout<<this->uniqueTemplateID<<" matched!!!"<<endl;
 	return true;
 }
 
@@ -1454,8 +1475,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 string addStateConstraint(string original, string compName, string newConstraint)
 {
-	int id1 = original.find("(",0);
-	int idx = original.find(compName,id1);
+	unsigned int id1 = original.find("(",0);
+	unsigned int idx = original.find(compName,id1);
 	if(idx!=string::npos) {
 		return original.insert(idx+compName.size(),newConstraint);
 	}
