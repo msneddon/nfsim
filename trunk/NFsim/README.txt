@@ -61,7 +61,11 @@ v1.10   Aug, 2011
         dimerization rxn.  (e) Support for creating a new molecule bound to an
         existing molecule, as in a rule like A(a) -> A(a!1).A(a!1). Existing code
         that implemented this feature did not function properly with the check
-        for null conditions before reactions were fired.
+        for null conditions before reactions were fired. (f) Fixed bug in template 
+        molecule when clearing molecules after a connected-to syntax search.  In 
+        some cases, not all molecules were being cleared, giving rise to situations 
+        where adding one observable created dangling matches which affected the 
+        results of other observables.
 
 
 v1.09   Apr, 2011
