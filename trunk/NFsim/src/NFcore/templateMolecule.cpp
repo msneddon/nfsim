@@ -753,9 +753,7 @@ void TemplateMolecule::clearTemplateOnly() {
 	}
 }
 
-/* TODO: compare returns a boolean value, therefore if there are multiple
- * matches to a "connectedTo" templateMolecule, we still only get 1 match.
- */
+
 
 bool TemplateMolecule::compare(Molecule *m)
 {
