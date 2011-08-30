@@ -58,14 +58,21 @@ v1.10   Aug, 2011
         use Null or Trash in reactant or observable patterns (anything that 
         requires the creation of a Template molecule). (c) fixed a bug introduced 
         in v1.09 whereby a site was allowed to bind to itself, for instance, in a 
-        dimerization rxn.  (e) Support for creating a new molecule bound to an
+        dimerization rxn.  (d) Support for creating a new molecule bound to an
         existing molecule, as in a rule like A(a) -> A(a!1).A(a!1). Existing code
         that implemented this feature did not function properly with the check
-        for null conditions before reactions were fired. (f) Fixed bug in template 
+        for null conditions before reactions were fired. (e) Fixed bug in template 
         molecule when clearing molecules after a connected-to syntax search.  In 
         some cases, not all molecules were being cleared, giving rise to situations 
         where adding one observable created dangling matches which affected the 
-        results of other observables.
+        results of other observables. (f) NFsim is now packaged with Network3, an
+        updated version of the run_network code to execute ODE and SSA simulations.
+        Network3 allows global functions in BNGL models among other release features
+        given here: http://bionetgen.org/index.php/Release_Notes.  Note that Network3
+        does not support On-The-Fly Stochastic Simulation (you will have to recompile
+        Network2 to use this feature).  (g)  Mac 32bit is no longer supported by NFsim,
+        but you can make executables for older Macs by recompiling the code on your
+        own machine.  See the manual for instructions.
 
 
 v1.09   Apr, 2011
