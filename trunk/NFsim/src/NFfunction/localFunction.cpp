@@ -67,6 +67,7 @@ LocalFunction::LocalFunction(System *s,
 	this->name = name;
 	this->originalExpression=originalExpression;
 	this->parsedExpression=parsedExpression;
+	this->isEverEvaluatedOnSpeciesScope=false;
 
 
 	//Move the vectors into our neat little arrays
@@ -271,7 +272,11 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 	//cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
 
 	if(scope==LocalFunction::SPECIES) {
-		//cout<<"evaluating on Species scope"<<endl;
+
+		if(!isEverEvaluatedOnSpeciesScope) {
+			return 0;
+		}
+
 		molList.clear();
 
 		//cout<<"from local function"<<endl;
