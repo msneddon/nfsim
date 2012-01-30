@@ -285,6 +285,12 @@ namespace NFcore {
 			mu::Parser *p;
 		protected:
 
+			// this variable defaults to false. If we detect that a rule requires
+			// this function to evaluate on a species scope at any time, this is set
+			// to true.  Otherwise, this allows us to just say zero if a typeII local
+			// function molecule requests to be evaluated over the species scope, because,
+			// by golly, that is never needed.  Is that clear?
+			bool isEverEvaluatedOnSpeciesScope;
 
 			string name;
 			string nicename;
