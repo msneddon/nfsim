@@ -1850,15 +1850,16 @@ bool NFinput::initReactionRules(
 
 								//add a reference to it with the given name
 								if(comps.find(argValue)!=comps.end()){
-									//cout<<"found ref to species"<<endl;
 									component c = comps.find(argValue)->second;
 									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
+									if(verbose) {cout<<"\t\t\t\tScope is SPECIES"<<endl; }
+									exit(1); // set all local functions to allow species scope here!!
 								}
 
 								if(reactants.find(argValue)!=reactants.end()) {
 
 									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
-									//cout<<"found it!"<<endl;
+									if(verbose) {cout<<"\t\t\t\tScope is MOLECULE"<<endl; }
 								}
 								//ts->addLocalFunctionReference(t,argValue,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
 								//ts->addLocalFunctionReference(
@@ -1866,7 +1867,6 @@ bool NFinput::initReactionRules(
 
 							}
 						}
-
 
 						//cout<<"found args (in vector):"<<endl;
 						//for(int i=0; i<funcArgs.size(); i++) {
