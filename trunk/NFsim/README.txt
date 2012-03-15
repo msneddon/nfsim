@@ -30,7 +30,8 @@ coarse-graining of biological complexity with NFsim.  Nature Methods,(2011) 8(2)
 
 
 NFsim is released under the GNU General Public License.  See LICENSE.txt for
-more details about redistribution restrictions.
+more details about redistribution restrictions.  The svn repository is hosted
+at google code at: https://nfsim.googlecode.com/svn
   
 For help with running NFsim, see the user manual, NFsim_manual_[version].pdf,
 and open the example model "simple_system.bngl".
