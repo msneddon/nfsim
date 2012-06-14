@@ -666,9 +666,9 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		//3: Select next reaction time (making sure we have something that can react)
 		//   dt = -ln(rand) / a_tot;
-		//Choose a random number on the closed interval (0,1) so that we never
+		//Choose a random number on the OPEN interval (0,1) so that we never
 		//have a dt=0 or a dt=infinity
-		if(a_tot>ATOT_TOLERANCE) delta_t = -log(NFutil::RANDOM_CLOSED()) / a_tot;
+		if(a_tot>ATOT_TOLERANCE) delta_t = -log(NFutil::RANDOM_OPEN()) / a_tot;
 		else { delta_t=0; current_time=end_time; }
 		if(DEBUG) cout<<"   Determine dt : " << delta_t << endl;
 
@@ -681,14 +681,13 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			{
 				if(curSampleTime>end_time) break;
 				outputAllObservableCounts(curSampleTime,globalEventCounter);
-//				outputGroupData(curSampleTime);
+				//outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
 			if(verbose) {
-				cout<<"Sim time: "<<curSampleTime-dSampleTime<<"\tCPU time: ";
-				cout<<(double(clock())-double(start))/CLOCKS_PER_SEC<<"s";
-				cout<<"\t events: "<<stepIteration<<endl;
-				//cout<<"\tAtot:"<<a_tot<<endl;
+				cout << "Sim time: "           << (curSampleTime-dSampleTime);
+				cout << "\tCPU time (total): " << ((double)(clock() - start)/(double)CLOCKS_PER_SEC) << "s";
+				cout << "\t events (step): "   << stepIteration<<endl;
 			}
 			stepIteration=0;
 			recompute_A_tot();
@@ -701,7 +700,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//4: Select next reaction class based on smallest j,
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
-//		cout<<endl<<endl<<endl<<"-----------------------------------------------"<<endl;
+		//cout<<endl<<endl<<endl<<"-----------------------------------------------"<<endl;
 
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		//Output selected reaction for debugging
@@ -709,7 +708,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//nextReaction->printFullDetails();
 		//cout<<endl<<endl;
 
-//		this->printAllReactions();
+		//this->printAllReactions();
 		//this->printAllObservableCounts(this->current_time);
 		//cout<<"\n";
 		//Increment time
@@ -727,11 +726,11 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//	outputAllPropensities(current_time, nextReaction->getRxnId());
 
 		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-//		if(nextReaction->getName()=="Rule7") {
-//			cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-//			printAllReactions();
-//			exit(1);
-//		}
+		//if(nextReaction->getName()=="Rule7") {
+		//	cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
+		//	printAllReactions();
+		//	exit(1);
+		//}
 
 		// TODO: debug!
 		//this->getAllComplexes().printAllComplexes();
