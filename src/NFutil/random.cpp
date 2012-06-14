@@ -57,7 +57,7 @@ double NFutil::RANDOM( double max )
 	return ( (1-dRand()) * max );
 }
 
-/* Return a random double on the range (0,1) */
+/* Return a random double on the closed interval [0,1] */
 double NFutil::RANDOM_CLOSED()
 {
 	if (initflag) {
@@ -65,6 +65,16 @@ double NFutil::RANDOM_CLOSED()
 		initflag=0;
     }
 	return dRandClosed();
+}
+
+/* Return a random double on the open interval (0,1) */
+double NFutil::RANDOM_OPEN()
+{
+	if (initflag) {
+		iRand.seed( (int) time(NULL));
+		initflag=0;
+    }
+	return dRandOpen();
 }
 
 
