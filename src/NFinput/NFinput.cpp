@@ -1742,15 +1742,7 @@ bool NFinput::initReactionRules(
 							}
 						}
 
-						//if ( !found_pop )
-						//{	// create Basic RxnClass
-							r = new BasicRxnClass(rxnName,0,"",ts,s);
-						//}
-						//else
-						//{	// create Population RxnClass
-						//	if(verbose) cout << "\t\t\tFound population reactants: selecting elementary population reaction class." << endl;
-						//	r = new PopulationRxnClass(rxnName,0,"",ts,s);
-						//}
+						r = new BasicRxnClass(rxnName,0,"",ts,s);
 
 
 						//Make sure that the rate constant exists
