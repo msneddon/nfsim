@@ -135,6 +135,76 @@ namespace NFcore
 
 	};
 
+	/* A reaction class with DOR calculations on two reactants.
+	 * The rate function must be factored as  f(x,y) = g(x)*h(y)
+	 * */
+	class DOR2RxnClass : public ReactionClass {
+		public:
+			DOR2RxnClass(
+					string name,
+					double baseRate,
+					string baseRateName,
+					TransformationSet *transformationSet,
+					CompositeFunction *function1,
+					CompositeFunction *function2,
+					vector <string> &lfArgumentPointerNameList1,
+					vector <string> &lfArgumentPointerNameList2,
+					System *s);
+			virtual ~DOR2RxnClass();
+
+			virtual void init();
+			virtual void prepareForSimulation() {};
+			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
+			virtual void remove(Molecule *m, unsigned int reactantPos);
+			virtual double update_a();
+
+			virtual int getDORreactantPosition()  const { return DORreactantIndex1; };
+			virtual int getDORreactantPosition2() const { return DORreactantIndex2; };
+
+			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
+			virtual int getReactantCount(unsigned int reactantIndex) const;
+			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;
+
+			virtual void printDetails() const;
+			virtual void printFullDetails() const {};
+
+			void directAddForDebugging(Molecule *m);
+			void printTreeForDebugging();
+
+			static void test1(System *s);
+
+		protected:
+
+			virtual double evaluateLocalFunctions1(MappingSet *ms);
+			virtual double evaluateLocalFunctions2(MappingSet *ms);
+
+			virtual void pickMappingSets(double randNumber) const;
+
+			ReactantList **reactantLists;
+			ReactantTree *reactantTree1;
+			ReactantTree *reactantTree2;
+
+			// TODO: figure out if we need one of two of these
+			MappingSet *ms;
+
+			CompositeFunction *cf1;
+			CompositeFunction *cf2;
+
+			//Parameters to keep track of local functions
+			int DORreactantIndex1;
+			int DORreactantIndex2;
+
+			int n_argMolecules1;
+			int n_argMolecules2;
+			int * argIndexIntoMappingSet1;
+			int * argIndexIntoMappingSet2;
+			Molecule ** argMappedMolecule1;
+			Molecule ** argMappedMolecule2;
+			int * argScope1;
+			int * argScope2;
+
+	};
+
 }
 
 
