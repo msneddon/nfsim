@@ -42,9 +42,10 @@ void ReactantList::pickRandom(MappingSet *&ms)
 
 void ReactantList::pickRandomFromPopulation(MappingSet *&ms)
 {
+	/*
 	unsigned int rand = NFutil::RANDOM_INT(0,getPopulation());
 
-	int cum = 0;
+	unsigned int cum = 0;
 	unsigned int ii = 0;
 	while ( ii < n_mappingSets )
 	{
@@ -59,17 +60,26 @@ void ReactantList::pickRandomFromPopulation(MappingSet *&ms)
 		exit(1);
 	}
 	ms = mappingSets[ii];
+	*/
+
+	// for now, assume there's only one thing in a population reactantList.  --Justin
+	ms = mappingSets[0];
 }
 
 
 int ReactantList::getPopulation() const
 {
+	/*
 	int pop = 0;
 	for ( unsigned int ii=0;  ii < n_mappingSets;  ++ii )
 	{
 		pop += mappingSets[ii]->getPopulation();
 	}
 	return pop;
+	*/
+
+	// for now, assume there's only one thing in a population reactantList.  --Justin
+	return (n_mappingSets > 0) ? mappingSets[0]->getPopulation() : 0;
 }
 
 

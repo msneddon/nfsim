@@ -353,6 +353,10 @@ void MoleculeType::addMoleculeToRunningSystemButDontUpdate(Molecule *&mol)
 
 void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 {
+	if (system->isUsingComplex())
+		// Need to manually unset canonical flag since we're not calling a Complex method
+		m->getComplex()->unsetCanonical();
+
 	//Remove this guy from the list, the observables list, and from all rxns
 	mList->remove(m->getMolListId(), m);
 	removeFromObservables(m);

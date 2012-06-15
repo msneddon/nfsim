@@ -35,7 +35,17 @@ DORRxnClass::DORRxnClass(
 //			cout<<"found transformation of type: "<<transform->getType()<<" for reactant: "<<r<<endl;
 			if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 
-				if(DORreactantIndex==-1) { DORreactantIndex=r; }
+				if(DORreactantIndex==-1)
+				{
+					if ( transformationSet->getTemplateMolecule(r)->getMoleculeType()->isPopulationType() )
+					{   // DOR reactant is a population!
+						cout<<"Error when creating DORRxnClass: "<<name<<endl;
+						cout<<"DOR reactant cannot be a population type."<<endl;
+						exit(1);
+					}
+
+					DORreactantIndex=r;
+				}
 				else if(DORreactantIndex!=r) {
 					cout<<"Error when creating DORRxnClass: "<<name<<endl;
 					cout<<"DOR reactions currently only support one DOR reactant.  This means that you can"<<endl;
@@ -329,13 +339,28 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 }
 
 
-unsigned int DORRxnClass::getReactantCount(unsigned int reactantIndex) const
+int DORRxnClass::getReactantCount(unsigned int reactantIndex) const
 {
 	if(reactantIndex==(unsigned)this->DORreactantIndex) {
 		return reactantTree->size();
 	}
-	return reactantLists[reactantIndex]->size();
+	return isPopulationType[reactantIndex] ?
+		       reactantLists[reactantIndex]->getPopulation()
+	         : reactantLists[reactantIndex]->size();
 }
+
+
+int DORRxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
+{
+	if(reactantIndex==(unsigned)this->DORreactantIndex) {
+		return reactantTree->size();
+	}
+	return isPopulationType[reactantIndex] ?
+			   std::max( reactantLists[reactantIndex]->getPopulation()
+			             - identicalPopCountCorrection[reactantIndex], 0 )
+			 : reactantLists[reactantIndex]->size();
+}
+
 
 //This function takes a given mappingset and looks up the value of its local
 //functions based on the local functions that were defined
@@ -355,8 +380,8 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 
 	//cout<<"done setting molecules, so know calling the composite function evaluate method."<<endl;
 	int * reactantCounts = new int[this->n_reactants];
-	for(int r=0; r<n_reactants; r++) {
-		if(r==(unsigned)this->DORreactantIndex) {
+	for(unsigned int r=0; r<n_reactants; r++) {
+		if(r==this->DORreactantIndex) {
 			reactantCounts[r]= reactantTree->size();
 		}
 		else {
@@ -385,7 +410,7 @@ double DORRxnClass::update_a() {
 	a = baseRate;
 	for(unsigned int i=0; i<n_reactants; i++) {
 		if(i!=DORreactantIndex) {
-			a*=reactantLists[i]->size();
+			a*=(double)getCorrectedReactantCount(i);
 		} else {
 			a*=reactantTree->getRateFactorSum();
 		}
@@ -401,8 +426,12 @@ void DORRxnClass::pickMappingSets(double randNumber) const
 	double rateFactorMultiplier = baseRate;
 	for(unsigned int i=0; i<n_reactants; i++) {
 		if(i!=(unsigned)DORreactantIndex) {
-			reactantLists[i]->pickRandom(mappingSet[i]);
-			rateFactorMultiplier*=reactantLists[i]->size();
+			if ( isPopulationType[i] ) {
+				reactantLists[i]->pickRandomFromPopulation(mappingSet[i]);
+			} else {
+				reactantLists[i]->pickRandom(mappingSet[i]);
+			}
+			rateFactorMultiplier*=getReactantCount(i);
 		}
 	}
 

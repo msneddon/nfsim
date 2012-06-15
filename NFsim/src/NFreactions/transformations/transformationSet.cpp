@@ -29,6 +29,13 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 	// complex bookkeeping is off by default
 	this->complex_bookkeeping = false;
 
+	// for now, symmetry factor is off by default
+	this->useSymmetryFactor = false;
+	this->symmetryFactor = 1.0;
+
+	// check collisions is off by default
+	this->check_collisions = false;
+
 	//Set up our transformation vectors
 	this->transformations = new vector <Transformation *> [n_reactants];
 	finalized = false;
@@ -56,6 +63,13 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 
 	// complex bookkeeping is off by default
 	this->complex_bookkeeping = false;
+
+	// for now, symmetry factor is off by default
+	this->useSymmetryFactor = false;
+	this->symmetryFactor = 1.0;
+
+	// check collisions is off by default
+	this->check_collisions = false;
 
 	//Set up our transformation vectors
 	this->transformations = new vector <Transformation *> [ this->getNmappingSets() ];
@@ -544,27 +558,21 @@ int TransformationSet::find(TemplateMolecule *t)
 	}
 	return findIndex;
 }
+
+
 bool TransformationSet::transform(MappingSet **mappingSets)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
-	// loop over reactants and decide if this reaction has any null conditions
-	for(unsigned int r=0; r<getNmappingSets(); r++)
-	{
-		MappingSet *ms = mappingSets[r];
-		for ( unsigned int t=0;  t<transformations[r].size();  t++ )
-		{
-			if(transformations[r].at(t)->checkForNullCondition(ms->get(t),mappingSets)) {
-				return false;
-			}
-		}
-	}
+	/*
+	 * NOTE: Check for "null conditions" was moved to ReactionClass::fire. This allows rejection of a reaction 
+	 * prior to removing molecules from observables. A general method TransformationSet::checkMolecularity has
+	 * been implemented to check for incorrect molecularity or reaction center conflicts. --Justin
+	 */
 
 
-
-
-	// addMolecule transforms applied before other transforms so the molecules exist
-	//  for potential modification by other transforms.  --Justin
+	// addMolecule transforms are applied before other transforms so the molecules exist
+	//  for potential modification by other transforms.
 	int size = addMoleculeTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
@@ -584,38 +592,23 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	for(unsigned int r=0; r<getNmappingSets(); r++)
 	{
 		MappingSet *ms = mappingSets[r];
-
-		//If there is a species removal, we have to do this first
-		if(ms->hasSpeciesDeletionTransform()) {
-			for ( unsigned int t=0;  t<transformations[r].size();  t++ )
-			{
-				if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
-				{
-					Molecule * mol = ms->get(t)->getMolecule();
-					if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
-					{   // handle species deletion
-						mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
-					}
-				}
-			}
-		}
 		for ( unsigned int t=0;  t<transformations[r].size();  t++ )
 		{
 			if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
-			{
-				// handle molecule deletion
+			{	// handle deletions
 				Molecule * mol = ms->get(t)->getMolecule();
-				if ( !transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
-				{
+				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
+				{	// complex deletion: flag connected molecules for deletion
+					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
+				}
+				else
+				{	// molecule deletion: flag this molecule for deletion
 					deleteList.push_back( mol );
 				}
 			}
 			else
-			{
-				//cout<<transformations[r].at(t)->getType()<<endl;
-				//ms->printDetails();
-				//cout<<"here"<<endl;
-				transformations[r].at(t)->apply(ms->get(t),mappingSets);
+			{	// handle other transforms
+				transformations[r].at(t)->apply(ms->get(t), mappingSets);
 			}
 		}
 	}
@@ -630,59 +623,67 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	}
 	deleteList.clear();
 
-
-	// Made some changes here:  we identify neighbor molecules that need to be updated following
-	//  a delete molecule transform in the usual way (getListOfProducts), so it's no longer
-	//  necessary to update reaction membership here. This change was made because (I think)
-	//  we weren't updating observables associated with these neighbor molecules.
-	//--Justin, 8Mar2010
-
-	//Update anything we have to update because we deleted some of its connected friends
-	// (needed when we delete some, but not all molecules, in a species)
-	//for( it = updateAfterDeleteList.begin(); it != updateAfterDeleteList.end(); it++ )
-	//{
-	//	if(!(*it)->isAlive()) { continue; } // skip over molecules that we just removed...  don't actually need this check
-	//  	(*it)->updateRxnMembership();
-	//  	(*it)->updateTypeIIFunctions();
-	//  	(*it)->updateDORRxnValues();
-	//}
-	//updateAfterDeleteList.clear();
-
 	return true;
 }
 
 
 bool TransformationSet::checkMolecularity( MappingSet ** mappingSets )
 {
-	// no need to check if fewer than 2 reactants or complex bookkeeping is off
-	if ( (n_reactants < 2)  ||  !complex_bookkeeping )
+	if ( n_reactants < 2 )
+	{	// unimolecular, so there's nothing to check
 		return true;
-
-	// otherwise we need to make sure each mappingSet is targeting a different complex
-	complex_ids.clear();
-	for ( unsigned int ir = 0;  ir < n_reactants;  ++ir )
-	{
-		insert_retval = complex_ids.insert( mappingSets[ir]->getComplexID() );
-		if ( insert_retval.second==false ) return false;
 	}
+	else if ( complex_bookkeeping )
+	{	// verify that each reactant pattern points to a unique complex
+		complex_ids.clear();
+		for ( unsigned int ir = 0;  ir < n_reactants;  ++ir )
+		{
+			// skip populations
+			if ( reactants[ir]->getMoleculeType()->isPopulationType() ) continue;
 
-	return true;
+			complex_id = mappingSets[ir]->getComplexID();
+			complex_id_iter = std::find( complex_ids.begin(), complex_ids.end(), complex_id );
+			if ( complex_id_iter == complex_ids.end() )
+			{
+				complex_ids.push_back( complex_id );
+			}
+			else
+			{   // two reactant patterns matched the same complex!
+				return false;
+			}
+		}
+		return true;
+	}
+	else if ( check_collisions )
+	{	// we won't do a proper check for molecularity, but we should ensure that mappingSets
+		//  point to non-overlapping reaction centers.
+		for ( collision_pair_iter = collision_pairs.begin(); collision_pair_iter != collision_pairs.end(); ++collision_pair_iter )
+		{
+			if ( MappingSet::checkForCollisions( mappingSets[ (*collision_pair_iter).first  ],
+					                             mappingSets[ (*collision_pair_iter).second ]  ) )
+			{	// reaction centers overlap!
+				return false;
+			}
+		}
+		return true;
+	}
+	else
+	{   // do nothing
+		return true;
+	}
 }
 
 
 bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
-	bool isPresent = false;
+
 	list <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
-		// if we are deleting this guy, it doesn't have to get updated...
-		// NOTE: this only applies to Species deletion!!
-		if(mappingSets[r]->hasSpeciesDeletionTransform())
-		{
-			continue;
-		}
+		// if we are deleting the entire complex, we don't have to track molecules in this complex
+		if (mappingSets[r]->hasSpeciesDeletionTransform()) continue;
+
 		//cout<<"Traversing:"<<endl;
 		//mappingSets[r]->get(0)->getMolecule()->printDetails();
 		//mappingSets[r]->get(0)->getMolecule()->traverseBondedNeighborhood(products,traversalLimit);
@@ -692,24 +693,20 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 		 * times would make the code faster - but this is rarely used for most rxn
 		 * systems, so it is commented out for now.  But actually, we do have to check
 		 * because if have the same molecule in here twice, then it can mess up our
-		 * observable lists... */
+		 * observable lists...  --michael */
 		else
 		{
 			// For each of the molecules that we possibly affect, traverse the neighborhood
-			// TODO:Is it sufficient to just look at the first mapping???  --Justin, 8Mar2011
-			// It should be if the traversal limit is set high enough, at least for
+			// Q: Is it sufficient to just look at the first mapping?
+			// A: It should be if the traversal limit is set high enough, at least for
 			// all standard reactions.  I'm wondering now, though, if it is enough in
 			// all cases where you would use the connected-to syntax.  I think so, but
 			// someone should test it.  --michael 9Mar2011
 			Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 
-			isPresent=false;
-			for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-				if((*molIter)==molecule) { isPresent = true; break;}
-			}
-
-			if(!isPresent)
-			{
+			// is this molecule already on the product list?
+			if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+			{	// Traverse neighbor and add molecules to list
 				molecule->traverseBondedNeighborhood(products,traversalLimit);
 				//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
 			}
@@ -718,9 +715,7 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 
 	// Next, find added molecules that are treated as populations.
 	//  Populations molecules have to be removed from observables, then incremented,
-	//  and then added back to the observables
-	// (Add molecules treated as particles are handled later)
-	isPresent = false;
+	//  and then added back to the observables (Add molecules treated as particles are handled later)
 	vector <AddMoleculeTransform *>::iterator addmol_iter;
 	for ( addmol_iter = addMoleculeTransformations.begin();
 			addmol_iter != addMoleculeTransformations.end();  ++addmol_iter )
@@ -732,19 +727,23 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 		// Get the population molecule pointer
 		Molecule * molecule = addmol->get_population_pointer();
 
-		// See if its already in the products list
-		isPresent=false;
-		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-		{
-			if ( (*molIter)==molecule ) { isPresent = true; break; }
+		// is this molecule already on the product list?
+		if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+		{	// Add molecule to list
+			products.push_back( molecule );
 		}
-
-		// Add to products list, if not already there..
-		if(!isPresent) products.push_back( molecule );
 	}
 
 	//cout<<"All together, we have: "<<products.size()<<endl;
 	return true;
+}
+
+
+Molecule * TransformationSet::getPopulationPointer( unsigned int r ) const
+{
+	return addMoleculeTransformations.at(r)->isPopulationType()
+			? addMoleculeTransformations.at(r)->get_population_pointer()
+		    : NULL;
 }
 
 
@@ -753,32 +752,25 @@ bool TransformationSet::getListOfAddedMolecules(MappingSet **mappingSets, list <
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
 	// Add new molecules (particle type) to the list of products
-	bool isPresent = false;
 	list <Molecule *>::iterator molIter;
 	for (unsigned int r=n_reactants; r<getNmappingSets(); r++)
 	{
 		//For each of the molecules that we possibly affect, traverse the neighborhood
 		// NOTE: in this instance, it's okay to only look at the first mapping
-		//  Molecule
 		Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 
-		// Is this a population?
+		// Skip populations
 		if ( molecule->isPopulationType() ) continue;
 
-		isPresent=false;
-		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-		{
-			if ((*molIter)==molecule) { isPresent = true; break;}
-		}
-
-		if(!isPresent)
-		{
+		// Is the molecule already in the products list?  If not, add to list.
+		if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+		{	// Add molecule to list.
 			products.push_back( molecule );
-			// Pretty sure we don't need to traverse neighbors --Justin
+			// NOTE: we don't need to traverse neighbors. All new molecules will be put in this
+			//  list separately and old molecules that bind to new molecules will be traversed elsewhere
 		}
-
 	}
-	//cout<<"All together, we have: "<<products.size()<<endl;
+
 	return true;
 }
 
@@ -804,5 +796,64 @@ void TransformationSet::finalize()
 			getTemplateMolecule(r)->addMapGenerator(mg);
 		}
 	}
+
+	// Determine if we need to do any reactant center overlap checks.
+	// Currently we check a necessary (but not sufficient) condition for the
+	//   possibility of reactant center overlap: are there a common molecule types in
+	//   a pair of reactant templates. In the future, we could check a necessary and sufficent condition
+	//   (e.g. pattern overlap) to avoid extra work.
+	if ( (n_reactants>1)  &&  !complex_bookkeeping )
+	{
+		vector <TemplateMolecule *> tmList1;
+		vector <TemplateMolecule *> tmList2;
+		vector <TemplateMolecule *>::iterator tm_iter;
+
+		vector <MoleculeType *> moltypes;
+		vector <MoleculeType *>::iterator  found_iter;
+
+		for ( unsigned int ir1 = 0;  ir1 < n_reactants;  ++ir1 )
+		{
+			// skip populations
+			if ( reactants[ir1]->getMoleculeType()->isPopulationType() ) continue;
+
+			tmList1.clear();
+			moltypes.clear();
+
+			// get all the template molecules in reactant pattern ir1
+			TemplateMolecule::traverse(reactants[ir1], tmList1, false);
+
+			// collect the molecule types included in the pattern
+			for ( tm_iter = tmList1.begin(); tm_iter != tmList1.end();  ++tm_iter )
+			{
+				moltypes.push_back( (*tm_iter)->getMoleculeType() );
+			}
+
+			for ( unsigned  int ir2 = ir1 + 1;  ir2 < n_reactants;  ++ir2 )
+			{
+				// skip populations
+				if ( reactants[ir2]->getMoleculeType()->isPopulationType() ) continue;
+
+				tmList2.clear();
+
+				// get all the template molecules in reactant pattern ir2
+				TemplateMolecule::traverse(reactants[ir2], tmList2, false);
+
+				// check if any moleculeTypes collide
+				for ( tm_iter = tmList2.begin(); tm_iter != tmList2.end();  ++tm_iter )
+				{
+					found_iter = std::find( moltypes.begin(), moltypes.end(), (*tm_iter)->getMoleculeType() );
+					if ( found_iter != moltypes.end() )
+					{
+						// we found a molecule type that is commont to patterns ir1 and ir2!
+						check_collisions = true;
+						collision_pairs.push_back( pair<int,int>(ir1,ir2) );
+						break;
+					}
+				}
+			}
+		}
+
+	}
+
 	finalized = true;
 }

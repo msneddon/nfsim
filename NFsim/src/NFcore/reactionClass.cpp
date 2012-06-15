@@ -26,6 +26,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->traversalLimit = ReactionClass::NO_LIMIT;
 	this->transformationSet = transformationSet;
 
+
 	//Set up the template molecules from the transformationSet
 	this->n_reactants   = transformationSet->getNreactants();
 	this->n_mappingsets = transformationSet->getNmappingSets();
@@ -163,13 +164,10 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		}
 
 
-
 		//cout<<"++++++++++++++++"<<endl;
 		//for(unsigned int i=0; i<tmList.size(); i++) {
 		//	tmList.at(i)->printDetails();
 		//}
-
-
 
 
 		//Finally, clear out the data structures.
@@ -179,17 +177,12 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	}
 
 
-	//cout<<"good, very good."<<endl;
-	//exit(0);
-
-
-
 	//Check here to see if we have molecule types that are the same across different reactants
 	//Because if so, we will give a warning
 	if(n_reactants>2) cerr<<"Warning!! You created a reaction ("<< name <<") that has more than 2 reactants.  This has not been extensively tested!"<<endl;
+
 	if(n_reactants==2)
-	{
-		//If the reactants are of the same type, then we have to make a few special considerations
+	{	//If the reactants are of the same type, then we have to make a few special considerations
 		if(reactantTemplates[0]->getMoleculeType()==reactantTemplates[1]->getMoleculeType())
 		{
 			cout<<endl;
@@ -197,29 +190,74 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 			cout<<"Make sure that is correct, because this can potentially make long polymers or large aggregates."<<endl;
 			cout<<endl;
 		}
-		//If the binding is symmetric
-		if(transformationSet->hasSymBindingTransform()) {
-			cout<<endl;
-			cout<<"Warning! You have an binding rxn (" << name << ") that is symmetric."<<endl;
-			cout<<"Make sure that is correct."<<endl;
+	}
 
-			cout<<endl;
-			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
-			isDimerStyle=true;
+	if ( this->transformationSet->usingSymmetryFactor() )
+	{	// new general method for handling reaction center symmetry
+		baseRate *= this->transformationSet->getSymmetryFactor();
+	}
+	else
+	{	// old method for handling symmetric binding and unbinding
+		if(n_reactants==2)
+		{
+			//If the binding is symmetric
+			if(transformationSet->hasSymBindingTransform()) {
+				cout<<endl;
+				cout<<"Warning! You have an binding rxn (" << name << ") that is symmetric."<<endl;
+				cout<<"Make sure that is correct."<<endl;
+
+				cout<<endl;
+				baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
+				isDimerStyle=true;
+			}
+		}
+		if(n_reactants==1)
+		{
+			if(transformationSet->hasSymUnbindingTransform())
+			{
+				cout<<endl;
+				cout<<"Warning! You have an unbinding rxn (" << name << ") that is symmetric."<<endl;
+				cout<<"Make sure that is correct."<<endl;
+				cout<<endl;
+				baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
+				isDimerStyle=true;
+			}
 		}
 	}
-	if(n_reactants==1) {
-		if(transformationSet->hasSymUnbindingTransform()) {
-			cout<<endl;
-			cout<<"Warning! You have an unbinding rxn (" << name << ") that is symmetric."<<endl;
-			cout<<"Make sure that is correct."<<endl;
-			cout<<endl;
-			baseRate = baseRate*0.5;  //We have to correct the rate to get the proper factor
-			isDimerStyle=true;
-		}
-	}
+
+
 	onTheFlyObservables=true;
+
+
+	// check for population type reactants
+	isPopulationType = new bool[n_reactants];
+	for( unsigned int i=0; i < n_reactants; ++i )
+	{
+		isPopulationType[i] = reactantTemplates[i]->getMoleculeType()->isPopulationType();
+	}
+
+
+	// calculate discrete count corrections for symmetric population reactants
+	//  e.g. number of reactant pairs = A*(A-1)/2.  Note that the factor of two
+	//  is part of the symmetry factor above.
+	identicalPopCountCorrection = new int[n_reactants];
+	for ( int i=0; i < (int)n_reactants; ++i )
+	{
+		identicalPopCountCorrection[i] = 0;
+		if ( isPopulationType[i] )
+		{
+			for ( int j=i-1; j >= 0; --j )
+			{
+				if ( reactantTemplates[i]->getMoleculeType() == reactantTemplates[j]->getMoleculeType() )
+				{
+					identicalPopCountCorrection[i] = identicalPopCountCorrection[j] + 1;
+					break;
+				}
+			}
+		}
+	}
 }
+
 
 
 ReactionClass::~ReactionClass()
@@ -232,15 +270,34 @@ ReactionClass::~ReactionClass()
 	}
 
 	delete [] mappingSet;
-
+	delete [] isPopulationType;
+	delete [] identicalPopCountCorrection;
 }
 
+
+void ReactionClass::setBaseRate(double newBaseRate,string newBaseRateName) {
+	if ( this->transformationSet->usingSymmetryFactor() )
+	{	this->baseRate = this->transformationSet->getSymmetryFactor() * newBaseRate;   }
+	else if (isDimerStyle)
+	{	this->baseRate = 0.5 * newBaseRate;   }
+	else
+	{	this->baseRate = newBaseRate;   }
+
+	this->baseRateParameterName = newBaseRateName;
+	update_a();
+};
 
 
 void ReactionClass::resetBaseRateFromSystemParamter() {
 
 	if(!this->baseRateParameterName.empty()) {
-		this->baseRate=system->getParameter(this->baseRateParameterName);
+		if ( transformationSet->usingSymmetryFactor() ) {
+			this->baseRate = transformationSet->getSymmetryFactor() * system->getParameter(this->baseRateParameterName);
+		}
+		else {
+			// TODO: do we need to handle DimerStyle here?? --Justin
+			this->baseRate=system->getParameter(this->baseRateParameterName);
+		}
 		this->update_a();
 	}
 
@@ -283,13 +340,17 @@ void ReactionClass::fire(double random_A_number)
 	this->pickMappingSets(random_A_number);
 
 
-	// Check reactants for correct molecularity
-	// (This is more general than the previous checks for intra- and inter-complex
-	//   binding, and is compliant with the BNGL definition of molecularity.
-	//   However, we still aren't checking for correct product molecularity,
-	//   which is a harder problem.)
-	if ( !(transformationSet->checkMolecularity( mappingSet )) )
+	// Check reactants for correct molecularity:
+	//   This is more general than the previous checks for intra- and inter-complex
+	//   binding, and is compliant with the BNGL definition of reactant molecularity
+	//   if complex bookkeeping is enabled. If complex bookkeeping is disabled, we
+	//   just verify that reaction centers don't overlap (with the exception of
+	//   complex deletions). However, we still aren't checking for correct product molecularity,
+	//   which is a harder problem.
+	//cerr << "molecularity check  rulename: " << name << endl;
+	if ( !(transformationSet->checkMolecularity(mappingSet)) )
 	{
+		//cerr << "NULL EVENT!" << endl;
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
 		return;
@@ -346,7 +407,7 @@ void ReactionClass::fire(double random_A_number)
 			// we can assume that complex bookkeeping is on, and that each reactant
 			// is in a separate (and single) complex
 			int matches = 0;
-			for (int k=0; k<transformationSet->getNumOfReactants(); k++)
+			for ( unsigned int k=0; k<transformationSet->getNreactants(); k++)
 			{
 				// get complexID and check if we've already updated that complex
 				int complexId = mappingSet[k]->get(0)->getMolecule()->getComplexID();
@@ -367,7 +428,36 @@ void ReactionClass::fire(double random_A_number)
 				Complex *c = mappingSet[k]->get(0)->getMolecule()->getComplex();
 				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
 					matches = system->getSpeciesObs(i)->isObservable(c);
-					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightSubtract();
+					system->getSpeciesObs(i)->straightSubtract(matches);
+				}
+			}
+
+			// grab added molecules that are represented as populations and remove from observables
+			for ( unsigned int k=0; k<transformationSet->getNumOfAddMoleculeTransforms(); k++)
+			{
+				Molecule * addmol = transformationSet->getPopulationPointer(k);
+				if ( addmol == NULL ) continue;
+
+				// get complexID and check if we've already updated that complex
+				int complexId = addmol->getComplexID();
+				found = false;
+				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
+					if(updatedComplexes.at(k2)==complexId) {
+						found = true;
+						break;
+					}
+				}
+				// if we already handled this, go to the next product
+				if(found) continue;
+
+				// if we didn't handle this, remember that we're handling it now..
+				updatedComplexes.push_back(complexId);
+
+				// update species observables for this complex
+				Complex *c = addmol->getComplex();
+				for (int i=0; i<system->getNumOfSpeciesObs(); i++) {
+					matches = system->getSpeciesObs(i)->isObservable(c);
+					system->getSpeciesObs(i)->straightSubtract(matches);
 				}
 			}
 			updatedComplexes.clear();
@@ -378,7 +468,8 @@ void ReactionClass::fire(double random_A_number)
 	//cout<<"transforming"<<endl;
 
 	// Through the MappingSet, transform all the molecules as neccessary
-	//  This will also create new molecules, as required
+	//  This will also create new molecules, as required.  As a side effect,
+	//  deleted molecules will be removed from observables.
 	this->transformationSet->transform(this->mappingSet);
 
 	//cout<<"transforming done"<<endl;
@@ -430,7 +521,7 @@ void ReactionClass::fire(double random_A_number)
 				int matches = 0;
 				for ( int i=0; i<system->getNumOfSpeciesObs(); i++ ) {
 					matches = system->getSpeciesObs(i)->isObservable(c);
-					for(int j=0; j<matches; j++) system->getSpeciesObs(i)->straightAdd();
+					system->getSpeciesObs(i)->straightAdd(matches);
 				}
 			}
 			updatedComplexes.clear();

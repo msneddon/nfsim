@@ -101,20 +101,27 @@ int MoleculeList::create(Molecule *&m)
 
 void MoleculeList::remove(int listId, Molecule *m)
 {
+	// I think this is redundant (see below).  --Justin
 	//Make sure this mappingSet is not empty
-	if(n_molecules==0) {
-		cerr<<"Trying to remove from an empty MoleculeList!!"<<endl;
-		exit(1);
-	}
+	//if(n_molecules==0) {
+	//	cerr<<"Trying to remove from an empty MoleculeList!!"<<endl;
+	//	exit(1);
+	//}
 
 	//First, get the position of the mappingSet we need to remove
 	int pos = molPos[listId];
 
 	//Make sure the position is valid (not out of bounds of the List)
 	if(pos+1>(n_molecules)) {
-		cout<<"Error in MoleculeList:  you can't remove a molecule that is not in the simulation! (trying to remove: "<< listId << " in pos " << pos <<" but size is: "<<size()<<endl;
-		m->printDetails();
-		exit(1);
+		// Handle this graciously, but don't abort!
+		cout << "!! Warning in MoleculeList: attempt to remove a dead molecule!\n"
+		     << "   This may occur when complex bookkeeping is disabled and two reactant patterns\n"
+		     << "   with delete transforms match the same complex. Enable complex bookkeeping (-cb)\n"
+		     << "   and see if this message disappears.\n"
+		     << "   (trying to remove: " << listId << " in pos " << pos <<" but size is: " << size() << endl;
+		//cout<<"Error in MoleculeList:  you can't remove a molecule that is not in the simulation! (trying to remove: "<< listId << " in pos " << pos <<" but size is: "<<size()<<endl;
+		//m->printDetails();
+		//exit(1);
 		return;
 	}
 
@@ -166,7 +173,7 @@ void MoleculeList::printDetails()
 		cout<<"["<<i<<"]: "<<molPos[i];
 		if(i<(n_molecules)) {
 			cout<<"\t\tpos="<<i<<"(mol="<<mArray[i]->getMolListId()<<") ";
-			}
+		}
 
 		if(i==n_molecules-1) cout<<"  _"<<endl;
 		else cout<<endl;
