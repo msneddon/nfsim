@@ -31,6 +31,8 @@
 #define DEBUG 0   			// Set to 1 to display all debug messages
 #define BASIC_MESSAGE 0		// Set to 1 to display basic messages (eg runtime)
 
+// debug nauty?
+#define DEBUG_NAUTY 0
 
 using namespace std;
 
@@ -764,6 +766,8 @@ namespace NFcore
 			Complex * getComplex() const { return (parentMoleculeType->getSystem()->getAllComplexes()).getComplex(ID_complex); };
 			int getDegree();
 
+			// get (non-unqiue) label for this molecule (cIndex==-1) or one of it's components (cIndex>=0)
+			string getLabel(int cIndex) const;
 
 			////////////////////////////////////////////////////////////////////////
 			bool isPopulationType() const { return parentMoleculeType->isPopulationType(); } ;
@@ -777,7 +781,6 @@ namespace NFcore
 			int getComponentIndexOfBond(int cIndex) const { return indexOfBond[cIndex]; };
 			void setComponentState(int cIndex, int newValue);
 			void setComponentState(string cName, int newValue);
-
 
 			///////////// local function methods...
 			void setLocalFunctionValue(double newValue,int localFunctionIndex);
@@ -983,6 +986,7 @@ namespace NFcore
 			static const int BASIC_RXN = 0;
 			static const int DOR_RXN = 1;
 			static const int OBS_DEPENDENT_RXN = 2;
+			static const int POP_RXN = 3;
 
 
 
@@ -995,15 +999,7 @@ namespace NFcore
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
 
-			void setBaseRate(double newBaseRate,string newBaseRateName) {
-				if(isDimerStyle) {
-					this->baseRate=newBaseRate*0.5;
-				}
-				else this->baseRate=newBaseRate;
-				this->baseRateParameterName=newBaseRateName;
-				update_a();
-			};
-
+			void setBaseRate(double newBaseRate,string newBaseRateName);
 			void resetBaseRateFromSystemParamter();
 
 			void setTraversalLimit(int limit) { this->traversalLimit = limit; };
@@ -1032,7 +1028,8 @@ namespace NFcore
 			void tag() { tagged = true; };
 
 
-			virtual unsigned int getReactantCount(unsigned int reactantIndex) const = 0;
+			virtual int getReactantCount(unsigned int reactantIndex) const = 0;
+			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const = 0;
 			virtual void printFullDetails() const = 0;
 
 
@@ -1044,6 +1041,7 @@ namespace NFcore
 
 
 			void setTotalRateFlag(bool totalRate) { totalRateFlag = totalRate; };
+
 
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
@@ -1079,7 +1077,6 @@ namespace NFcore
 			bool onTheFlyObservables;
 			bool isDimerStyle;
 
-
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
 
@@ -1088,10 +1085,18 @@ namespace NFcore
 			vector <int> updatedComplexes;
 
 
-			/** flag to identify if the macroscopic vs. microscopic rate is to
+			/* flag to identify if the macroscopic vs. microscopic rate is to
 			 * be used (TotalRate = macroscopic)
 			 */
 			bool totalRateFlag;
+
+			/* flag population reactants */
+			bool *isPopulationType;
+
+			/* if population reactants are identical, this is the discrete
+			 * count correction for calculating the ratelaw
+			 */
+			int *identicalPopCountCorrection;
 	};
 
 
@@ -1148,6 +1153,13 @@ namespace NFcore
 			double getYpos() { return 0; };
 			double getZpos() { return 0; };
 
+			// get canonical label
+			string getCanonicalLabel ( );
+			// check if this is canonical
+			bool isCanonical ( ) const { return is_canonical; };
+			// unset canonical flag
+			void unsetCanonical ( ) { is_canonical = false; };
+
 			//This is public so that anybody can access the molecules quickly
 			list <Molecule *> complexMembers;
 			list <Molecule *>::iterator molIter;
@@ -1155,13 +1167,62 @@ namespace NFcore
 
 
 		protected:
+			// generate a canonical label using Nauty
+			void   generateCanonicalLabel ( );
+
 			System * system;
 			int ID_complex;
 
+			bool    is_canonical;
+			string  canonical_label;
 
 		private:
 
 	};
+
+	//!  Node object for creating labeled graphs from NFsim complexes.
+	/*!
+	    @author JustinHogg
+	*/
+	class Node
+	{
+	    public:
+	        // constructor
+	        Node ( Molecule * mol, int comp )
+				: molecule(mol), component(comp), label( mol->getLabel(comp) ), index(-1) { };
+
+	        // get methods
+	        Molecule *  getMolecule ( ) const { return molecule; };
+	        int         getComponent ( ) const { return component; };
+	        string      getLabel ( ) const { return label; };
+	        int         getIndex ( ) const { return index; };
+
+	        // set methods
+	        void  setIndex ( int val ) { index = val; };
+
+	        // check if this is a molecule
+	        bool  isMolecule ( ) const { return component == IS_MOLECULE; };
+
+	        // compare methods
+	        static bool less_by_label ( Node * node1, Node * node2 )
+	        {   return node1->label < node2->label;   };
+
+	        static bool less_by_index ( Node * node1, Node * node2 )
+	        {   return node1->index < node2->index;   };
+
+	        // definition
+	        static const int IS_MOLECULE = -1;
+
+	    protected:
+
+	        Molecule *  molecule;
+	        int         component;
+	        string      label;
+	        int         index;
+	};
+
+	typedef  pair < Molecule *, int >  node_t;
+	typedef  pair < node_t, Node * >   node_index_t;
 
 }
 

@@ -58,7 +58,7 @@ double FunctionalRxnClass::update_a() {
 	} else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {
-			reactantCounts[r]=reactantLists[r]->size();
+			reactantCounts[r] = (int)getReactantCount(r);
 		}
 		a=cf->evaluateOn(0,0, reactantCounts, n_reactants);
 		delete [] reactantCounts;
@@ -85,21 +85,24 @@ double FunctionalRxnClass::update_a() {
 	// then we have to multiply here by the reactant counts
 	if(!this->totalRateFlag) {
 		for(unsigned int i=0; i<n_reactants; i++)
-			a*=reactantLists[i]->size();
+			a*=(double)getCorrectedReactantCount(i);
 	}
-
-	//Finally, use a check to
-	for(unsigned int i=0; i<n_reactants; i++) {
-		if(reactantLists[i]->size()==0) {
-			a=0;
-	//		cout<<"Warning!  Function evaluates to positive rate for a reaction, but"<<endl;
-//			cout<<"one of the reactant lists is empty!"<<endl;
-//			this->printDetails();
-//			cf->printDetails(reactantTemplates[0]->getMoleculeType()->getSystem());
-			//exit(1);
+	else
+	{
+		// Check that we have at least one set of reactants!
+		for(unsigned int i=0; i<n_reactants; i++) {
+			if(getCorrectedReactantCount(i)==0) {
+				a=0.0;
+				break;
+				//cout<<"Warning!  Function evaluates to positive rate for a reaction, but"<<endl;
+				//cout<<"one of the reactant lists is empty!"<<endl;
+				//this->printDetails();
+				//cf->printDetails(reactantTemplates[0]->getMoleculeType()->getSystem());
+				//exit(1);
+			}
 		}
 	}
-
+	
 	return a;
 }
 
@@ -113,7 +116,7 @@ void FunctionalRxnClass::printDetails() const {
 	else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {
-			reactantCounts[r]=reactantLists[r]->size();
+			reactantCounts[r]=getReactantCount(r);
 		}
 		double value=cf->evaluateOn(0,0, reactantCounts, n_reactants);
 		delete [] reactantCounts;
@@ -156,8 +159,8 @@ MMRxnClass::~MMRxnClass() {};
 
 double MMRxnClass::update_a()
 {
-	double S = (double)reactantLists[0]->size();
-	double E = (double)reactantLists[1]->size();
+	double S = (double)getCorrectedReactantCount(0);
+	double E = (double)getCorrectedReactantCount(1);
 	sFree=0.5*( (S-Km-E) + pow((pow( (S-Km-E),2.0) + 4.0*Km*S),  0.5) );
 	a=kcat*sFree*E/(Km+sFree);
 	return a;
@@ -210,7 +213,7 @@ BasicRxnClass::~BasicRxnClass()
 
 
 
-	if(DEBUG) cout<<"Destorying rxn: "<<name<<endl;
+	if(DEBUG) cout<<"Destroying rxn: "<<name<<endl;
 
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
@@ -318,100 +321,71 @@ void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 
 
 
-
-
-
 void BasicRxnClass::notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex)
 {
 	cerr<<"You are trying to notify a Basic Reaction of a rate Factor Change!!! You should only use this"<<endl;
 	cerr<<"function for DORrxnClass rules!  For this offense, I must abort now."<<endl;
 	exit(1);
 }
-unsigned int BasicRxnClass::getReactantCount(unsigned int reactantIndex) const
+
+double BasicRxnClass::update_a()
 {
-	return reactantLists[reactantIndex]->size();
+	// Use the total rate law convention (macroscopic rate)
+	if(this->totalRateFlag) {
+		a=baseRate;
+		for(unsigned int i=0; i<n_reactants; i++)
+			if(getCorrectedReactantCount(i)==0) a=0.0;
+
+	// Use the standard microscopic rate
+	} else {
+		a = 1.0;
+		for(unsigned int i=0; i<n_reactants; i++) {
+			a*=getCorrectedReactantCount(i);
+		}
+		a*=baseRate;
+	}
+	return a;
 }
+
+
+int BasicRxnClass::getReactantCount(unsigned int reactantIndex) const
+{
+	return isPopulationType[reactantIndex] ?
+			   reactantLists[reactantIndex]->getPopulation()
+			 : reactantLists[reactantIndex]->size();
+}
+
+
+int BasicRxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
+{
+	/*cerr << "  getCorrectedReactantCount rindex: " << reactantIndex << "  isPop? " << isPopulationType[reactantIndex] << endl;
+	if ( isPopulationType[reactantIndex] )
+	{
+		cerr << "  corr:  " << identicalPopCountCorrection[reactantIndex];
+		cerr << "  pop:   " << reactantLists[reactantIndex]->getPopulation() << endl;
+		cerr << "  final: " << std::max( reactantLists[reactantIndex]->getPopulation()
+	             - identicalPopCountCorrection[reactantIndex], 0 ) << endl;
+	}
+	else
+	{
+		cerr << "  count: " << reactantLists[reactantIndex]->size() << endl;
+	}
+	*/
+	return isPopulationType[reactantIndex] ?
+			   std::max( reactantLists[reactantIndex]->getPopulation()
+			             - identicalPopCountCorrection[reactantIndex], 0 )
+			 : reactantLists[reactantIndex]->size();
+}
+
 void BasicRxnClass::printFullDetails() const
 {
 	cout<<"BasicRxnClass: "<<name<<endl;
 	for(unsigned int i=0; i<n_reactants; i++)
 		reactantLists[i]->printDetails();
 }
+
+
 void BasicRxnClass::pickMappingSets(double random_A_number) const
-{
-	//Note here that we completely ignore the argument.  The argument is only
-	//used for DOR reactions because we need that number to select the reactant to fire
-
-	//So, we shall loop through the lists and extract out the MappingSets and
-	//the molecule ID that the mappingSet was generated from
-	//unsigned int *moleculeIDs = new unsigned int [n_reactants];
-	for(unsigned int i=0; i<n_reactants; i++)
-	{
-		reactantLists[i]->pickRandom(mappingSet[i]);
-		//mappingSet[i]->get(0)
-	}
-
-	//delete [] moleculeIDs;
-}
-
-
-
-/* Population Reaction Class */
-/* --Justin, 7Mar2011 */
-
-PopulationRxnClass::PopulationRxnClass(string name, double baseRate, string baseRateName,
-                                       TransformationSet *transformationSet, System *s) :
-	BasicRxnClass(name,baseRate,baseRateName,transformationSet,s)
-{
-	reactant_types = new int[n_reactants];
-	for( unsigned int i=0; i < n_reactants; ++i )
-	{
-		if ( reactantTemplates[i]->getMoleculeType()->isPopulationType() )
-		{
-			reactant_types[i] = PopulationRxnClass::POPULATION_REACTANT;
-		}
-		else
-		{
-			reactant_types[i] = PopulationRxnClass::PARTICLE_REACTANT;
-		}
-	}
-}
-
-
-PopulationRxnClass::~PopulationRxnClass ( )
-{
-	delete [] reactant_types;
-}
-
-
-double PopulationRxnClass::update_a ( )
-{
-	a = 1.0;
-	for(unsigned int r=0; r<n_reactants; r++)
-	{
-		a *= getReactantCount(r);
-	}
-	a *= baseRate;
-	return a;
-}
-
-
-unsigned int PopulationRxnClass::getReactantCount(unsigned int reactantIndex) const
-{
-	if      ( reactant_types[reactantIndex] == PARTICLE_REACTANT )
-	{	// tally pattern matches in the the ReactantList
-		return  reactantLists[reactantIndex]->size();
-	}
-	else if ( reactant_types[reactantIndex] == POPULATION_REACTANT )
-	{	// Grab population from head molecule of this reactantTemplate
-		// tally pattern matches in the the ReactantList
-		return  reactantLists[reactantIndex]->getPopulation();
-	}
-
-}
-
-
-void PopulationRxnClass::pickMappingSets(double random_A_number) const
 {
 	//Note here that we completely ignore the argument.  The argument is only
 	//used for DOR reactions because we need that number to select the reactant to fire
@@ -419,55 +393,13 @@ void PopulationRxnClass::pickMappingSets(double random_A_number) const
 	//Select a reactant from each list
 	for(unsigned int i=0; i<n_reactants; i++)
 	{
-		if ( reactant_types[i] == PARTICLE_REACTANT )
-		{
+		if ( isPopulationType[i] ) {
+			reactantLists[i]->pickRandomFromPopulation(mappingSet[i]);
+		} else {
 			reactantLists[i]->pickRandom(mappingSet[i]);
 		}
-		else
-		{
-			reactantLists[i]->pickRandomFromPopulation(mappingSet[i]);
-		}
 	}
 }
-
-
-
-void PopulationRxnClass::printDetails() const
-{
-	cout<<"PopulationRxnClass: " << name <<"  ( a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
-
-	for(unsigned int r=0; r<n_reactants; r++)
-	{
-		cout<<"      -"<< this->reactantTemplates[r]->getMoleculeTypeName();
-		cout<<"	(count="<< this->getReactantCount(r) <<")."<<endl;
-	}
-	if(n_reactants==0)
-		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -307,10 +307,28 @@ bool NFinput::initMoleculeTypes(
 			if(verbose) cout<<"\t\tReading and Creating MoleculeType: "+typeName+"(";
 
 
+			//Check for population flag  --justin
+			bool isPopulation = false;
+			if ( pMoTypeEl->Attribute("population") )
+			{
+				string popFlag = pMoTypeEl->Attribute("population");
+				if( popFlag.compare("1") == 0 )
+				{
+					isPopulation = true;
+					if(verbose) cout << "\t\tTreating molecule type '" << typeName << "' as a population" << endl;
+				}
+			}
+
 			//Get the list of components in the moleculeType
 			TiXmlElement *pListOfComp = pMoTypeEl->FirstChildElement("ListOfComponentTypes");
 			if(pListOfComp)
 			{
+				if ( isPopulation )
+				{   // Populations aren't allowed to have components!  --Justin
+					cerr<<"!!!Error:  Population type " << typeName << " is not allowed to have components! Quitting." << endl;
+					return false;
+				}
+
 				//Loop through the list of components
 				TiXmlElement *pComp;
 				for ( pComp = pListOfComp->FirstChildElement("ComponentType"); pComp != 0; pComp = pComp->NextSiblingElement("ComponentType"))
@@ -534,17 +552,6 @@ bool NFinput::initMoleculeTypes(
 			}
 
 
-			//Check for population flag  --justin
-			bool isPopulation = false;
-			if ( pMoTypeEl->Attribute("population") )
-			{
-				string popFlag = pMoTypeEl->Attribute("population");
-				if( popFlag.compare("1") == 0 )
-				{
-					isPopulation = true;
-					if(verbose) cout << "\t\tTreating molecule type '" << typeName << "' as a population" << endl;
-				}
-			}
 
 			//Create the moleculeType and register any symmetric sites we may have...
 			MoleculeType *mt = new MoleculeType(typeName,compLabels,defaultCompState,possibleComponentStates,isIntegerComponent,isPopulation,s);
@@ -845,7 +852,9 @@ bool NFinput::initStartSpecies(
 				}
 				else
 				{
-					cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
+					if ( mt->getNumOfComponents() > 0 )	{
+						cout<<"!!! warning: no list of components specified for molecule: '"<<molUid<<"' of species '"<<speciesName<<"'"<<endl;
+					}
 				}
 				usedComponentNames.clear();
 
@@ -1052,6 +1061,21 @@ bool NFinput::initReactionRules(
 				}
 				if(verbose) cout<<"\t\tCreating Reaction Rule: "<<rxnName<<endl;
 
+				// grab symmetry factor, if any..
+				bool useSymmetryFactor = false;
+				double symmetryFactor = 1.0;
+				if (pRxnRule->Attribute("symmetry_factor"))
+				{
+					try {
+						symmetryFactor = NFutil::convertToDouble(pRxnRule->Attribute("symmetry_factor"));
+						if ( symmetryFactor <= 0.0 ) throw std::runtime_error("Symmetry Factor must be a positive value!");
+						useSymmetryFactor = true;
+						if (verbose) cout << "\t\t\tUsing symmetry factor = " << symmetryFactor << endl;
+					} catch (std::runtime_error &e1) {
+						cerr<<"Error!! Symmetry Factor for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+						exit(1);
+					}
+				}
 
 				//First, read in the template molecules using these data structures
 				// maps reactant pattern ids to TemplateMolecule pointers
@@ -1308,6 +1332,12 @@ bool NFinput::initReactionRules(
 
 				// Should we use complex bookkeeping?
 				ts->setComplexBookkeeping( blockSameComplexBinding );
+
+				// Are we using a symmetry factor?
+				if (useSymmetryFactor)
+				{
+					ts->setSymmetryFactor(symmetryFactor);
+				}
 
 
 				//Next extract out the state changes
@@ -1755,15 +1785,8 @@ bool NFinput::initReactionRules(
 							}
 						}
 
-						if ( !found_pop )
-						{	// create Basic RxnClass
-							r = new BasicRxnClass(rxnName,0,"",ts,s);
-						}
-						else
-						{	// create Population RxnClass
-							if(verbose) cout << "\t\t\tFound population reactants: selecting elementary population reaction class." << endl;
-							r = new PopulationRxnClass(rxnName,0,"",ts,s);
-						}
+						r = new BasicRxnClass(rxnName,0,"",ts,s);
+
 
 
 						//Make sure that the rate constant exists
@@ -1986,7 +2009,7 @@ bool NFinput::initReactionRules(
 							//Finally, we can make the actual reaction
 							ts->finalize();
 							r = new MMRxnClass(rxnName,kcat,Km,ts,s);
-
+							
 						}
 					}
 					else if(rateLawType=="Sat") {
@@ -3219,7 +3242,7 @@ bool NFinput::readProductMolecule(
 
 
 		// //// quick check to see if we used up all symmetric component sites
-		for(int i=0; i<symmetricSitesNotUsed.size(); i++) {
+		for(unsigned int i=0; i<symmetricSitesNotUsed.size(); i++) {
 			if(symmetricSitesNotUsed.at(i).size()>0) {
 				cerr <<"In NFinput::readProductMolecule(...): some symmetric components exist, but were not defined!"<<endl;
 				cerr <<"This must be an error in BioNetGen, as all molecules to be created must have all component sites specified!\n\n"<<endl;

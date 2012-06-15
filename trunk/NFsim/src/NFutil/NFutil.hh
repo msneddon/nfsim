@@ -53,10 +53,17 @@ namespace NFutil {
 
 	//!  Uniform random number on the interval (0,1)
 	/*!
-		This function returns a random double on the closed interval
+		This function returns a random double on the open interval
 		(0,1).  This is important for choosing the next dt in the simulation
 		because we will take the log of this number and we don't want
 		dt=0 or dt=infinity.
+		    @author Michael Sneddon
+	*/
+	double RANDOM_OPEN();
+
+	//!  Uniform random number on the closed interval [0,1]
+	/*!
+		This function returns a random double on the closed interval [0,1].
 		    @author Michael Sneddon
 	*/
 	double RANDOM_CLOSED();

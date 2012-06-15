@@ -83,6 +83,8 @@ namespace NFcore
 			    @author JustinHogg
 			 */
 			int getPopulation() const;
+			// TODO POP: implement!
+			int getComplexPopulation() const { return 0; };
 
 
 			/*!
@@ -116,6 +118,9 @@ namespace NFcore
 			// get the ID of the complex that this mappingSet is pointing to.
 			int getComplexID() const;
 
+			// check if two mappingsets point to any common molecules
+			static bool checkForCollisions( MappingSet * ms1, MappingSet * ms2 );
+
 		protected:
 
 			/*!
@@ -145,6 +150,10 @@ namespace NFcore
 			 */
 			unsigned int clonedMappingSet;
 
+		private:
+
+			static vector <Molecule *>           molList;
+			static vector <Molecule *>::iterator molIter;
 	};
 
 }

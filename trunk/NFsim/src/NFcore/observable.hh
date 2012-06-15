@@ -85,8 +85,10 @@ namespace NFcore
 
 			/* add multiple new matches, all at once. useful for counter updates --justin */
 			void add( int n_matches );
+			void straightAdd( int n_matches );
 			/* remove multiple new matches, all at once. useful for counter updates --justin */
 			void subtract( int n_matches );
+			void straightSubtract( int n_matches );
 
 			int getCount() const { return (int)count; };
 			string getName() const { return obsName; };
