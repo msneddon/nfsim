@@ -67,7 +67,9 @@ LocalFunction::LocalFunction(System *s,
 	this->name = name;
 	this->originalExpression=originalExpression;
 	this->parsedExpression=parsedExpression;
-	this->isEverEvaluatedOnSpeciesScope=false;
+	//set this false for best efficiency. TODO: add command line switch
+	//this->isEverEvaluatedOnSpeciesScope=false;
+	this->isEverEvaluatedOnSpeciesScope=true;
 
 
 	//Move the vectors into our neat little arrays
@@ -202,8 +204,8 @@ void LocalFunction::prepareForSimulation(System *s) {
 
 double LocalFunction::getValue(Molecule *m, int scope)
 {
-//	cout<<"getting local function value: "<<this->nicename<<endl;
-//	cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
+	//cout<<"getting local function value: "<<this->nicename<<endl;
+	//cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
 
 	//Scope in this sense relates to how the local observable
 	//is calculated.  Species is calculated across the entire connected set of molecules,
@@ -212,9 +214,10 @@ double LocalFunction::getValue(Molecule *m, int scope)
 	int MOLECULE = 1;
 
 	if(scope==SPECIES) {
-//			cout<<"Species scope"<<endl;
-//
+		//cout<<"Species scope"<<endl;
 		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+			//cout << "this molecule has type: " << m->getMoleculeTypeName() << endl;
+			//cout << "current typeI_mol is: " << typeI_mol.at(ti)->getName() << endl;
 			if(m->getMoleculeType()==typeI_mol.at(ti)) {
 				return m->getLocalFunctionValue(typeI_localFunctionIndex.at(ti));
 			}

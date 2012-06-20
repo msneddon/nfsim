@@ -407,18 +407,24 @@ void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 
 
 double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curReactantCounts, int n_reactants) {
+	//cout << "CompositeFunction::evaluateOn()" << endl;
 
 	//1 evaluate all global functions
+	//cout << "n_gfs=" << n_gfs << endl;
 	for(int f=0; f<n_gfs; f++) {
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 	}
 
 	//2 evaluate all local functions
+	//cout << "n_lfs=" << n_lfs << endl;
+	//cout << "scope[0]=" << scope[0] << endl;
+	//cout << "molList[0]" << molList[0]->getMoleculeTypeName() << endl;
 	if(n_lfs>0) {
 
-	//	cout<<"evaluating composite function with local dependencies."<<endl;
+		//cout<<"evaluating composite function with local dependencies."<<endl;
 		if(molList!=0 && scope!=0) {
 
+			//cout << "n_refLfs=" << n_refLfs << endl;
 			for(int i=0; i<n_refLfs; i++) {
 				//cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
 				this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
