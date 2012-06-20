@@ -1012,7 +1012,9 @@ namespace NFcore
 			//For DOR reactions
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;
 			virtual int getDORreactantPosition() const { cerr<<"Trying to get DOR reactant Position from a reaction that is not of type DOR!"<<endl;
-			cerr<<"this is an internal error, and so I will quit."<<endl; exit(1); return -1; };
+															cerr<<"this is an internal error, and so I will quit."<<endl; exit(1); return -1; };
+			virtual int getDORreactantPosition2() const { cerr<<"Trying to get DOR reactant Position2 from a reaction that is not of type DOR2!"<<endl;
+															cerr<<"this is an internal error, and so I will quit."<<endl; exit(1); return -1; };
 
 
 			//The main virtual functions that must be implemented in all implementing classes

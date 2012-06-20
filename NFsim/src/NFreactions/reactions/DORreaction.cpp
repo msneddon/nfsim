@@ -950,28 +950,35 @@ int DOR2RxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
 //functions based on the local functions that were defined
 double DOR2RxnClass::evaluateLocalFunctions1(MappingSet *ms)
 {
+	//cout << "DOR2RxnClass::evaluateLocalFunctions1(" << ms << ")" << endl;
+	//cout << "n_argMolecules1: " << n_argMolecules1 << endl;
+	//cout << "argIndexIntoMappingSet1: " << argIndexIntoMappingSet1[0] << endl;
 	//Go through each function, and set the value of the function
 
 	//Grab the molecules needed for the local function to evaluate
 	for(int i=0; i < n_argMolecules1; i++) {
 		argMappedMolecule1[i] = ms->get(argIndexIntoMappingSet1[i])->getMolecule();
 	}
+	//cout << "argMappedMolecule1: " << argMappedMolecule1[0]->getMoleculeTypeName() << endl;
+	//cout << "argScope1: " << argScope1[0] << endl;
 
 	// done setting molecules, so now calling the composite function evaluate method
 	int * reactantCounts = new int[n_reactants];
 	for(unsigned int r=0; r<n_reactants; r++) {
-		if(r==this->DORreactantIndex1) {
-			reactantCounts[r]= reactantTree1->size();
+		if(r==DORreactantIndex1) {
+			reactantCounts[r] = reactantTree1->size();
 		}
-		else if(r==this->DORreactantIndex2) {
-			reactantCounts[r]= reactantTree2->size();
+		else if(r==DORreactantIndex2) {
+			reactantCounts[r] = reactantTree2->size();
 		}
 		else {
-			reactantCounts[r]=reactantLists[r]->size();
+			reactantCounts[r] = reactantLists[r]->size();
 		}
+		//cout << "n_reactants[" << r << "]=" << reactantCounts[r] << endl;
 	}
 
-	double value = this->cf1->evaluateOn(argMappedMolecule1, argScope1, reactantCounts, n_reactants);
+	double value = cf1->evaluateOn(argMappedMolecule1, argScope1, reactantCounts, n_reactants);
+	//cout << "return value=" << value << endl;
 
 	delete [] reactantCounts;
 	return value;
@@ -982,28 +989,31 @@ double DOR2RxnClass::evaluateLocalFunctions1(MappingSet *ms)
 //functions based on the local functions that were defined
 double DOR2RxnClass::evaluateLocalFunctions2(MappingSet *ms)
 {
+	//cout << "DOR2RxnClass::evaluateLocalFunctions2(" << ms << ")" << endl;
+	//cout << "mapping molecule type: " << ms->get(0)->getMolecule()->getMoleculeTypeName() << endl;
 	//Go through each function, and set the value of the function
 
 	//Grab the molecules needed for the local function to evaluate
-	for(int i=0; i < n_argMolecules2; i++) {
+	for (int i=0; i < n_argMolecules2; i++) {
 		argMappedMolecule2[i] = ms->get(argIndexIntoMappingSet2[i])->getMolecule();
 	}
 
 	// done setting molecules, so now calling the composite function evaluate method
 	int * reactantCounts = new int[n_reactants];
 	for(unsigned int r=0; r<n_reactants; r++) {
-		if(r==this->DORreactantIndex1) {
-			reactantCounts[r]= reactantTree1->size();
+		if(r==DORreactantIndex1) {
+			reactantCounts[r] = reactantTree1->size();
 		}
 		else if(r==this->DORreactantIndex2) {
-			reactantCounts[r]= reactantTree2->size();
+			reactantCounts[r] = reactantTree2->size();
 		}
 		else {
-			reactantCounts[r]=reactantLists[r]->size();
+			reactantCounts[r] = reactantLists[r]->size();
 		}
 	}
 
-	double value = this->cf2->evaluateOn(argMappedMolecule2, argScope2, reactantCounts, n_reactants);
+	double value = cf2->evaluateOn(argMappedMolecule2, argScope2, reactantCounts, n_reactants);
+	//cout << "return value=" << value << endl;
 
 	delete [] reactantCounts;
 	return value;
@@ -1012,17 +1022,23 @@ double DOR2RxnClass::evaluateLocalFunctions2(MappingSet *ms)
 //OK
 double DOR2RxnClass::update_a() {
 	a = baseRate;
+	//cout << "> DOR2RxnClass::update_a()" << endl;
+	//cout << "baseRate=" << baseRate << endl;
 	for (unsigned int i=0; i<n_reactants; i++) {
 		if (i==DORreactantIndex1) {
 			a*=reactantTree1->getRateFactorSum();
+			//cout << i << ":rateFactorSum1=" << reactantTree1->getRateFactorSum() << endl;
 		}
 		else if (i==DORreactantIndex2) {
 			a*=reactantTree2->getRateFactorSum();
+			//cout << i << ":rateFactorSum2=" << reactantTree2->getRateFactorSum() << endl;
 		}
 		else {
 			a*=(double)getCorrectedReactantCount(i);
+			//cout << i << ":ReactantCount=" << (double)getCorrectedReactantCount(i) << endl;
 		}
 	}
+	//cout << "update_a=" << a << endl;
 	return a;
 }
 
@@ -1051,10 +1067,6 @@ void DOR2RxnClass::pickMappingSets(double randNumber) const
 	double randNumber2 = NFutil::RANDOM( reactantTree2->getRateFactorSum() );
 	reactantTree2->pickReactantFromValue( mappingSet[DORreactantIndex2], randNumber2, 1.0);
 
-	//cout<<"tree size:        "<<reactantTree->size()<<endl;
-	//cout<<"Choosing at tree: "<<mappingSet[DORreactantIndex]->getId()<<endl;
-	//mappingSet[DORreactantIndex]->printDetails();
-	//reactantTree->printDetails();
 }
 
 

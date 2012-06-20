@@ -1876,7 +1876,7 @@ bool NFinput::initReactionRules(
 									component c = comps.find(argValue)->second;
 									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
 									if(verbose) {cout<<"\t\t\t\tScope is SPECIES"<<endl; }
-									exit(1); // set all local functions to allow species scope here!!
+									//exit(1); // set all local functions to allow species scope here!!
 								}
 
 								if(reactants.find(argValue)!=reactants.end()) {
@@ -1931,6 +1931,128 @@ bool NFinput::initReactionRules(
 								r=new DORRxnClass(rxnName,1,"",ts,cf,funcArgs,s);
 							}
 						}
+					}
+					else if(rateLawType=="FunctionProduct") {
+
+						//make sure the function1 has a name
+						if(!pRateLaw->Attribute("name1")) {
+							cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: cannot read 'name' attribute!"<<endl;
+							return false;
+						}
+
+						//make sure the function2 has a name
+						if(!pRateLaw->Attribute("name2")) {
+							cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: cannot read 'name' attribute!"<<endl;
+							return false;
+						}
+
+						//find argument1
+						vector <string> funcArgs1;
+						TiXmlElement *pListOfArgs1 = pRateLaw->FirstChildElement("ListOfArguments1");
+						if(pListOfArgs1)
+						{
+							TiXmlElement *pArg;
+							for ( pArg = pListOfArgs1->FirstChildElement("Argument"); pArg != 0; pArg = pArg->NextSiblingElement("Argument"))
+							{
+								if(!pArg->Attribute("id") || !pArg->Attribute("type") || !pArg->Attribute("value") ) {
+									cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: Argument tag \n";
+									cerr<<"must have id, type and value attributes defined!"<<endl;
+									return false;
+								}
+								string argId = pArg->Attribute("id");
+								string argType = pArg->Attribute("type");
+								string argValue = pArg->Attribute("value");
+								funcArgs1.push_back(argId);
+
+								//Get the template molecule we are referring to
+								//add a reference to it with the given name
+								if(comps.find(argValue)!=comps.end()){
+									component c = comps.find(argValue)->second;
+									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
+									if(verbose) {cout<<"\t\t\t\tScope is SPECIES"<<endl; }
+									//exit(1); // set all local functions to allow species scope here!!
+								}
+
+								if(reactants.find(argValue)!=reactants.end())
+								{
+									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
+									if(verbose) {cout<<"\t\t\t\tScope is MOLECULE"<<endl; }
+								}
+							}
+						}
+
+						//find argument2
+						vector <string> funcArgs2;
+						TiXmlElement *pListOfArgs2 = pRateLaw->FirstChildElement("ListOfArguments2");
+						if(pListOfArgs2)
+						{
+							TiXmlElement *pArg;
+							for ( pArg = pListOfArgs2->FirstChildElement("Argument"); pArg != 0; pArg = pArg->NextSiblingElement("Argument"))
+							{
+								if(!pArg->Attribute("id") || !pArg->Attribute("type") || !pArg->Attribute("value") ) {
+									cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function: Argument tag \n";
+									cerr<<"must have id, type and value attributes defined!"<<endl;
+									return false;
+								}
+								string argId = pArg->Attribute("id");
+								string argType = pArg->Attribute("type");
+								string argValue = pArg->Attribute("value");
+								funcArgs2.push_back(argId);
+
+								//Get the template molecule we are referring to
+								//add a reference to it with the given name
+								if(comps.find(argValue)!=comps.end()){
+									component c = comps.find(argValue)->second;
+									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
+									if(verbose) {cout<<"\t\t\t\tScope is SPECIES"<<endl; }
+									//exit(1); // set all local functions to allow species scope here!!
+								}
+
+								if(reactants.find(argValue)!=reactants.end())
+								{
+									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
+									if(verbose) {cout<<"\t\t\t\tScope is MOLECULE"<<endl; }
+								}
+							}
+						}
+
+						if ( funcArgs1.size() < 1 )
+						{
+							cout<<"Error!! FunctionProduct ratelaw is missing argument for function1."<<endl;
+							exit(1);
+						}
+
+						if ( funcArgs2.size() < 1 )
+						{
+							cout<<"Error!! FunctionProduct ratelaw is missing argument for function2."<<endl;
+							exit(1);
+						}
+
+						//cout << "n_funcArgs1: " << funcArgs1.size() << endl;
+						//cout << "n_funcArgs2: " << funcArgs2.size() << endl;
+
+						string functionName1 = pRateLaw->Attribute("name1");
+						LocalFunction *lf1 = s->getLocalFunctionByName(functionName1);
+						if(lf1 != NULL) {
+							cout<<"Error!! call a local function through a composite function always!"<<endl;
+							cout<<"DOR rxn should never directly call a local function."<<endl;
+							exit(1);
+						}
+
+						string functionName2 = pRateLaw->Attribute("name2");
+						LocalFunction *lf2 = s->getLocalFunctionByName(functionName2);
+						if(lf2 != NULL) {
+							cout<<"Error!! call a local function through a composite function always!"<<endl;
+							cout<<"DOR rxn should never directly call a local function."<<endl;
+							exit(1);
+						}
+
+						ts->finalize();
+						CompositeFunction *cf1 = s->getCompositeFunctionByName(functionName1);
+						CompositeFunction *cf2 = s->getCompositeFunctionByName(functionName2);
+
+						r=new DOR2RxnClass(rxnName,1,"",ts,cf1,cf2,funcArgs1,funcArgs2,s);
+
 					}
 					else if(rateLawType=="MM") {
 						//Make sure that the rate constant exists

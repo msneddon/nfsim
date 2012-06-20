@@ -456,6 +456,14 @@ void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
 			indexOfDORrxns.push_back(reactions.size()-1);
 		}
 	}
+	else if(r->getRxnType()==ReactionClass::DOR2_RXN) {
+		if( r->getDORreactantPosition()==rPosition) {
+			indexOfDORrxns.push_back(reactions.size()-1);
+		}
+		else if( r->getDORreactantPosition2()==rPosition) {
+			indexOfDORrxns.push_back(reactions.size()-1);
+		}
+	}
 }
 
 
