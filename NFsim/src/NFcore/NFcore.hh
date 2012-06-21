@@ -249,6 +249,8 @@ namespace NFcore
 			void setUniversalTraversalLimit(int utl);
 
 
+			void setEvaluateComplexScopedLocalFunctions( bool val ) { evaluateComplexScopedLocalFunctions = val; };
+			bool getEvaluateComplexScopedLocalFunctions( ) const { return evaluateComplexScopedLocalFunctions; };
 
 			/* tell the system where to ouptut results*/
 			void setOutputToBinary();
@@ -375,6 +377,7 @@ namespace NFcore
 			// NETGEN -- is this needed?
 			bool useComplex;     /*!< sets whether or not to dynamically track complexes */
 			bool useBinaryOutput; /*!< set to true to turn on binary output of data */
+			bool evaluateComplexScopedLocalFunctions; /*!< set to true to turn on enable complex-scoped local functions */
 			int universalTraversalLimit; /*!< sets depth to traverse molecules when updating reactant lists */
 			bool onTheFlyObservables;    /*!< sets whether or not observables are calculated on the fly */
 		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */

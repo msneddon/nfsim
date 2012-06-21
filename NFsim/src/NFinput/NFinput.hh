@@ -64,7 +64,8 @@ namespace NFinput {
 			bool blockSameComplexBinding,
 			int globalMoleculeLimit,
 			bool verbose,
-			int &suggestedTraversalLimit);
+			int &suggestedTraversalLimit,
+			bool evaluateComplexScopedLocalFunctions=false );
 
 	//! Reads the parameter XML block and puts them in the parameter map.
 	/*!

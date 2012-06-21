@@ -48,7 +48,8 @@ System * NFinput::initializeFromXML(
 		bool blockSameComplexBinding,
 		int globalMoleculeLimit,
 		bool verbose,
-		int &suggestedTraversalLimit)
+		int &suggestedTraversalLimit,
+		bool evaluateComplexScopedLocalFunctions )
 {
 	if(!verbose) cout<<"reading xml file ("+filename+")  \n\t[";
 	if(verbose) cout<<"\tTrying to read xml model specification file: \t\n'"<<filename<<"'"<<endl;
@@ -83,6 +84,10 @@ System * NFinput::initializeFromXML(
 			if(verbose) cout<<"\tCreating system: "<<s->getName()<<endl;
 		}
 
+		// enable complex-scoped local functions, if desired
+		if (evaluateComplexScopedLocalFunctions){
+			s->setEvaluateComplexScopedLocalFunctions(true);
+		}
 
 		//Read the key lists needed for the simulation and make sure they exist...
 		TiXmlElement *pListOfParameters = pModel->FirstChildElement("ListOfParameters");
