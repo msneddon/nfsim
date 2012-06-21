@@ -76,6 +76,11 @@
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
+ *  -cslf = enable evaluation of Complex-Scoped Local Functions (default is disabled!)
+ *
+ *  -ss [filename] = write list of species to file (BNGL format) at the end of simulation.
+ *                     This list is not guaranteed to be canonical. Filename argument is
+ *                     optional (defaults to [model]_nf.species).
  *
  *  \section devel_sec Developers
  * To begin developing and extending NFsim, the best place to start looking is in
@@ -360,7 +365,12 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			if (argMap.find("cb")!=argMap.end())
 				turnOnComplexBookkeeping = true;
 
-			int globalMoleculeLimit = 100000;
+			// enable evaluation of complex scoped local functions
+			bool evaluateComplexScopedLocalFunctions = false;
+			if (argMap.find("cslf")!=argMap.end())
+				evaluateComplexScopedLocalFunctions = true;
+
+			int globalMoleculeLimit = 200000;
 			if (argMap.find("gml")!=argMap.end()) {
 				globalMoleculeLimit = NFinput::parseAsInt(argMap,"gml",globalMoleculeLimit);
 			}
@@ -369,7 +379,8 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
-			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,suggestedTraveralLimit);
+			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
+													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
 
 
 			if(s!=NULL)
@@ -401,6 +412,19 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->setUniversalTraversalLimit(suggestedTraveralLimit);
 					if(verbose) cout<<"\tUniversal Traversal Limit (UTL) set automatically to: "<<suggestedTraveralLimit<<endl<<endl;
 				}
+
+				if (verbose){
+					// report status of complex-scoped local functions
+					if ( s->getEvaluateComplexScopedLocalFunctions() ) {
+						cout<<"\tComplex-scoped local function evaluation is enabled."<<endl<<endl;
+					}
+					else {
+						cout<<"\tComplex-scoped local function evaluation is disabled!"<<endl;
+						cout<<"\t(use \"-cslf\" switch to enable.)"<<endl<<endl;
+					}
+				}
+
+
 
 				// turn on the event counter, if need be
 				if (argMap.find("oec")!=argMap.end()) {

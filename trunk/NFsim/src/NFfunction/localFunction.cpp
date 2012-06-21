@@ -67,9 +67,7 @@ LocalFunction::LocalFunction(System *s,
 	this->name = name;
 	this->originalExpression=originalExpression;
 	this->parsedExpression=parsedExpression;
-	//set this false for best efficiency. TODO: add command line switch
-	//this->isEverEvaluatedOnSpeciesScope=false;
-	this->isEverEvaluatedOnSpeciesScope=true;
+	this->isEverEvaluatedOnSpeciesScope = s->getEvaluateComplexScopedLocalFunctions();
 
 
 	//Move the vectors into our neat little arrays

@@ -1095,19 +1095,19 @@ void DOR2RxnClass::printDetails() const
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		if( r==(unsigned)DORreactantIndex1) {
-			cout<<"      -(DOR1) |"<< this->getReactantCount(r)<<" mappings|\t";
-			cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+			cout<<"      -(DOR1) |"<< getReactantCount(r)<<" mappings|\t";
+			cout<<reactantTemplates[r]->getPatternString()<<"\n";
 			cout<<"             (rateFactorSum="<<reactantTree1->getRateFactorSum();
 			cout<<")."<<endl;
 		}
 		else if( r==(unsigned)DORreactantIndex2) {
-			cout<<"      -(DOR2) |"<< this->getReactantCount(r)<<" mappings|\t";
-			cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+			cout<<"      -(DOR2) |"<< getReactantCount(r)<<" mappings|\t";
+			cout<<reactantTemplates[r]->getPatternString()<<"\n";
 			cout<<"             (rateFactorSum="<<reactantTree2->getRateFactorSum();
 			cout<<")."<<endl;
 		} else {
-			cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
-			cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+			cout<<"      -|"<< getReactantCount(r)<<" mappings|\t";
+			cout<<reactantTemplates[r]->getPatternString()<<"\n";
 
 		}
 	}
