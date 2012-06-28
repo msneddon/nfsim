@@ -67,8 +67,10 @@ LocalFunction::LocalFunction(System *s,
 	this->name = name;
 	this->originalExpression=originalExpression;
 	this->parsedExpression=parsedExpression;
-	this->isEverEvaluatedOnSpeciesScope = s->getEvaluateComplexScopedLocalFunctions();
-
+	// default to false
+	this->isEverEvaluatedOnSpeciesScope=false;
+	// remember the system
+	this->system = s;
 
 	//Move the vectors into our neat little arrays
 	this->n_args=args.size();
@@ -156,15 +158,29 @@ LocalFunction::LocalFunction(System *s,
 	n_typeIImolecules = addedMoleculeTypes.size();
 	typeII_mol = new MoleculeType * [n_typeIImolecules];
 	for(int m=0; m<n_typeIImolecules; m++) {
+		//TODO: commented this section for debugging (undo!)
 		int index = addedMoleculeTypes.at(m)->addLocalFunc_TypeII(this);
 		typeII_mol[m]=addedMoleculeTypes.at(m);
-		//this->typeII_mol.push_back(addedMoleculeTypes.at(m));
+		////this->typeII_mol.push_back(addedMoleculeTypes.at(m));
 		this->typeII_localFunctionIndex.push_back(index);
 	}
 
 }
 
-
+// set/get whether this evaluates on complex complex
+bool LocalFunction::getEvaluateComplexScope() const {
+	return isEverEvaluatedOnSpeciesScope;
+};
+void LocalFunction::setEvaluateComplexScope( bool val ) {
+	if ( system->getEvaluateComplexScopedLocalFunctions() ) {
+		// yes! this is is evaluated on complex scope.
+		isEverEvaluatedOnSpeciesScope=val;
+	} else {
+		// warn user that complex-scoped evaluations are disabled.
+		cout<<"Warning! LocalFunction argument has complex scope, but complex-scoped"<<endl;
+		cout<<"  local functions are disabled. Try the command line argument '-cslf' to enable!"<<endl;
+	}
+};
 
 
 void LocalFunction::prepareForSimulation(System *s) {
@@ -205,13 +221,7 @@ double LocalFunction::getValue(Molecule *m, int scope)
 	//cout<<"getting local function value: "<<this->nicename<<endl;
 	//cout<<"using molecule: "<<m->getUniqueID()<<" with scope: "<<scope<<endl;
 
-	//Scope in this sense relates to how the local observable
-	//is calculated.  Species is calculated across the entire connected set of molecules,
-	//while molecule scope is calculated on THIS molecule only.
-	int SPECIES = 0;
-	int MOLECULE = 1;
-
-	if(scope==SPECIES) {
+	if(scope==LocalFunction::SPECIES) {
 		//cout<<"Species scope"<<endl;
 		for(unsigned int ti=0; ti<typeI_mol.size(); ti++) {
 			//cout << "this molecule has type: " << m->getMoleculeTypeName() << endl;
@@ -221,8 +231,8 @@ double LocalFunction::getValue(Molecule *m, int scope)
 			}
 		}
 
-	} else if(scope==MOLECULE) {
-//		cout<<"Molecule scope."<<endl;
+	} else if(scope==LocalFunction::MOLECULE) {
+		//cout<<"Molecule scope."<<endl;
 
 		//For each of our variables
 		int matches = 0;
@@ -302,11 +312,8 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 					//If the observable is of type MOLECULES
 					if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
 						matches = varLocalObservables[i]->isObservable((*molIter));
-						for(int k=0; k<matches; k++) {
-							varLocalObservables[i]->straightAdd();
-						}
+						varLocalObservables[i]->straightAdd(matches);
 					}
-
 					//If the observables is of a different type
 					else {
 						cerr<<"Error in LocalFunction::evaluateOn()! cannot handle Species observable when"<<endl;
@@ -384,6 +391,55 @@ double LocalFunction::evaluateOn(Molecule *m, int scope) {
 	return -1;
 }
 
+//This version accepts a complex and evaluates the LocalFunction with SPECIES scope.
+double LocalFunction::evaluateOn(Complex *c) {
+
+	if (!isEverEvaluatedOnSpeciesScope) return 0;
+
+	//First, clear out all the observables
+	for(unsigned int i=0; i<n_varRefs; i++) {
+		if (varLocalObservables[i]!=0) {
+			varLocalObservables[i]->clear();
+		}
+	}
+
+	//recompute the observables
+	int matches = 0;
+	for ( molIter = (c->complexMembers).begin(); molIter!=(c->complexMembers).end(); ++molIter) {
+		//Loop over each observable
+		for(unsigned int i=0; i<n_varRefs; i++) {
+			if(varLocalObservables[i]!=0) {
+				//If the observable is of type MOLECULES
+				if(varLocalObservables[i]->getType()==Observable::MOLECULES) {
+					matches = varLocalObservables[i]->isObservable((*molIter));
+					varLocalObservables[i]->straightAdd(matches);
+				}
+				//If the observables is of a different type
+				else {
+					cerr<<"Error in LocalFunction::evaluateOn()! cannot handle Species observable when"<<endl;
+					cerr<<"evaluating on a single molecule."<<endl;
+					exit(1);
+				}
+			}
+		}
+
+	}
+
+	//evaluate the function
+	double newValue = FuncFactory::Eval(p);
+
+	//Here we have to notify the type I molecules that this function has changed
+	//Update the molecules (Type I) that needed this function evaluated...
+	for (molIter=(c->complexMembers).begin(); molIter!=(c->complexMembers).end(); ++molIter) {
+		for ( unsigned int ti=0; ti<typeI_mol.size(); ti++) {
+			if ((*molIter)->getMoleculeType()==typeI_mol.at(ti)) {
+				(*molIter)->setLocalFunctionValue(newValue,this->typeI_localFunctionIndex.at(ti));
+				(*molIter)->updateDORRxnValues();
+			}
+		}
+	}
+	return newValue;
+}
 
 
 LocalFunction::~LocalFunction() {
@@ -463,6 +519,7 @@ void LocalFunction::printDetails(System *s)
 	cout<<"Local Function: "+this->nicename+"\n";
 	cout<<" = "<<this->originalExpression<<endl;
 	cout<<" parsed expression = "<<this->parsedExpression<<endl;
+	cout<<" ever evaluated on complex scope? "<<isEverEvaluatedOnSpeciesScope <<endl;
 
 	cout<<"   -Variable References:"<<endl;
 	for(unsigned int i=0; i<n_varRefs; i++) {

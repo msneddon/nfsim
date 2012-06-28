@@ -841,7 +841,16 @@ namespace NFcore
 
 
 			/* DOR Functions*/
+			// update local functions that may depend on this molecule,
+			// i.e. this molecule's type appears in an observable that some local fcn references.
+			// (this version only updateds lfcns on connected to this molecule) --Justin
 			void updateTypeIIFunctions();
+			// update local functions that may depend on this molecule,
+			// i.e. this molecule's type appears in an observable that some local fcn references.
+			// (this version updates lfcns on all product complexes) --Justin
+			void updateTypeIIFunctions( vector <Complex *> & productComplexes );
+			// update DOR reaction propensity that depends on this molecule (type I),
+			// i.e. this molecule is an argument passed to a local function.
 			void updateDORRxnValues();
 
 
@@ -989,7 +998,7 @@ namespace NFcore
 			static const int BASIC_RXN = 0;
 			static const int DOR_RXN = 1;
 			static const int OBS_DEPENDENT_RXN = 2;
-			static const int POP_RXN = 3;
+			static const int POP_RXN = 3;  // deprecated
 			static const int DOR2_RXN = 4;
 
 
@@ -1086,9 +1095,15 @@ namespace NFcore
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
 
+			// remember the molecule type of each product molecule a with typeII dependencies
+			list <MoleculeType *> typeII_products;
+			list <MoleculeType *>::iterator typeII_iter;
+
 			//Used by the reaction class to make sure that it only updates
 			//each complex once (for observables, and matchOnce reactants)
 			vector <int> updatedComplexes;
+			vector <Complex*> productComplexes;  // Justin 24Jun12
+			vector <Complex*>::iterator complexIter; // Justin 24Jun12
 
 
 			/* flag to identify if the macroscopic vs. microscopic rate is to
@@ -1132,6 +1147,7 @@ namespace NFcore
 			int getComplexID() const { return ID_complex; };
 			int getComplexSize() const {return complexMembers.size();};
 			int getMoleculeCountOfType(MoleculeType *m);
+			Molecule * getFirstMolecule() { return complexMembers.front(); };
 
 			void mergeWithList(Complex * c);
 

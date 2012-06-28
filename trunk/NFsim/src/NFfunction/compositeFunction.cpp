@@ -401,7 +401,13 @@ void CompositeFunction::printDetails(System *s) {
 void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 
 	for(int i=0; i<n_lfs; i++) {
+		// add typeI dependency, which means this local function influences
+		//  the propensity of some DOR reaction for which mt is the head template molecule.
 		lfs[i]->addTypeIMoleculeDependency(mt);
+		if ( refLfScopes[i]==LocalFunction::SPECIES ) {
+			// enable complex-scoped evaluation for this local fcn!
+			lfs[i]->setEvaluateComplexScope( true );
+		}
 	}
 }
 
