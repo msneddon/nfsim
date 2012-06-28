@@ -38,8 +38,8 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 					NFutil::trim(line);
 
 					//identify and remove comments
-					int pos = line.find_first_of("#");
-					if(pos!=(int)string::npos) {
+					string::size_type pos = line.find_first_of("#");
+					if(pos!=string::npos) {
 						//cout<<"identified the comment."<<endl;
 						line = line.substr(0,pos);
 						NFutil::trim(line);
@@ -50,14 +50,14 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 
 					//Identify the start tag...
 					pos = line.find("begin");
-					if(pos!=(int)string::npos) {
+					if(pos!=string::npos) {
 					//	cout<<"found begin, all parameters have been found."<<endl;
 						started = true;
 						continue;
 					}
 					//Stop once we get to the end tag
 					pos = line.find("end");
-					if(pos!=(int)string::npos) {
+					if(pos!=string::npos) {
 					//	cout<<"found end, ending the parse."<<endl;
 						ended = true;
 						break;
@@ -75,18 +75,18 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 
 					//Make sure that we have an argument
 					pos = line.find_first_of("-");
-					if(pos==(int)string::npos || pos!=0) {
+					if(pos==string::npos || pos!=0) {
 						cout<<"\nSyntax error in rnf file: '"<<filename<<"' on line ["<<lineCounter<<"]\n";
 						cout<<"   >> "+line+"\n";
 						cout<<"   This line gives no argument and is not commented out."<<endl;
 						break;
 					}
 
-					int firstWhiteSpace = line.find_first_of(" \t");
+					string::size_type firstWhiteSpace = line.find_first_of(" \t");
 
 					string argName = "";
 					string argValue = "";
-					if(firstWhiteSpace==(int)string::npos) {
+					if(firstWhiteSpace==string::npos) {
 						argName = line.substr(1,line.size()-1);
 						argValue = "";
 					//	cout<<"got argname: '"<<argName<<"'"<<endl;
@@ -210,11 +210,11 @@ void simulate(string command,System *s, bool verbose)
 	string times = command.substr(id1+3);
 	NFutil::trim(times);
 
-	int firstWhiteSpace = times.find_first_of(" \t");
+	string::size_type firstWhiteSpace = times.find_first_of(" \t");
 
 	string simTime_str = "0"; double simTime = 0;
 	string oSteps_str = "0";  int oSteps = 0;
-	if(firstWhiteSpace==(int)string::npos) {
+	if(firstWhiteSpace==string::npos) {
 		simTime_str = times.substr(0);
 	} else {
 		simTime_str = times.substr(0,firstWhiteSpace);
@@ -245,11 +245,11 @@ void equilibrate(string command,System *s)
 	string times = command.substr(id1+3);
 	NFutil::trim(times);
 
-	int firstWhiteSpace = times.find_first_of(" \t");
+	string::size_type firstWhiteSpace = times.find_first_of(" \t");
 
 	string simTime_str = "0"; double simTime = 0;
 	string oSteps_str = "0";  int oSteps = 0;
-	if(firstWhiteSpace==(int)string::npos) {
+	if(firstWhiteSpace==string::npos) {
 		simTime_str = times.substr(0);
 	} else {
 		simTime_str = times.substr(0,firstWhiteSpace);
@@ -282,11 +282,11 @@ void setParameter(string command, System *s) {
 	string paramString = command.substr(id1+3);
 	NFutil::trim(paramString);
 
-	int firstWhiteSpace = paramString.find_first_of(" \t");
+	string::size_type firstWhiteSpace = paramString.find_first_of(" \t");
 
 	string paramName = "";
 	string paramValue_str = "0";  double paramValue = 0;
-	if(firstWhiteSpace==(int)string::npos) {
+	if(firstWhiteSpace==string::npos) {
 		cout<<"Could not update parameter: '"<<paramName<<"'! No value given!"<<endl;
 		return;
 	} else {

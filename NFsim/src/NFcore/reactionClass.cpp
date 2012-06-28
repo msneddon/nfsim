@@ -320,20 +320,9 @@ void ReactionClass::printDetails() const {
 }
 
 
-void ReactionClass::fire(double random_A_number)
-{
-	fireCounter++; //Remember that we fired
-
-//	if(getName()=="Rule1") {
-//		//this->printFullDetails();
-//		this->system->printAllObservableCounts(0);
-//		this->system->printAllReactions();
-//		//cout<<"---"<<endl; cout<<"found: "<<products.size()<<" products."<<endl;
-//		//exit(1);
-//	}
-//	cout<<"\n\n-----------------------\nfiring: "<<name<<endl;;
-//	this->system->printAllObservableCounts(0);
-//  this->system->printAllReactions();
+void ReactionClass::fire(double random_A_number) {
+	//cout<<endl<<">FIRE "<<getName()<<endl;
+	fireCounter++;
 
 
 	// First randomly pick the reactants to fire by selecting the MappingSets
@@ -341,26 +330,15 @@ void ReactionClass::fire(double random_A_number)
 
 
 	// Check reactants for correct molecularity:
-	//   This is more general than the previous checks for intra- and inter-complex
-	//   binding, and is compliant with the BNGL definition of reactant molecularity
-	//   if complex bookkeeping is enabled. If complex bookkeeping is disabled, we
-	//   just verify that reaction centers don't overlap (with the exception of
-	//   complex deletions). However, we still aren't checking for correct product molecularity,
-	//   which is a harder problem.
-	//cerr << "molecularity check  rulename: " << name << endl;
-	if ( !(transformationSet->checkMolecularity(mappingSet)) )
-	{
-		//cerr << "NULL EVENT!" << endl;
+	if ( ! transformationSet->checkMolecularity(mappingSet) ) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
 		return;
 	}
 
 
-
 	// output something if the reaction was tagged
-	if(tagged)
-	{
+	if(tagged) {
 		cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
 		for(unsigned int k=0; k<n_reactants; k++) {
 			cout<<" [";
@@ -379,189 +357,192 @@ void ReactionClass::fire(double random_A_number)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 
-//		if(getName()=="Rule2") {
-//			cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" products."<<endl;
-//			for( molIter = products.begin(); molIter != products.end(); molIter++ )
-//				(*molIter)->printDetails();
-//			//cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-//		}
+	// display product molecules for debugging..
+	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
+	//	(*molIter)->printDetails();
+	//	cout<<"<<"<<endl;
+	//}
 
 
-//   cout<<"found: "<<products.size()<<" products."<<endl;
+	// Loop through the products (excluding added molecules) and remove from observables
+	if (this->onTheFlyObservables) {
 
-
-	// Loop through the products and remove them from their observables
-	if(this->onTheFlyObservables)
-	{
-		// remove products from molecule observables
+		// molecule observables..
 		for ( molIter = products.begin(); molIter != products.end(); molIter++ )
-		{
-			//cout<<"Removing: "<<(*molIter)->getMoleculeTypeName()<<"_"<<(*molIter)->getUniqueID()<<endl;
-			//(*molIter)->printDetails();
 			(*molIter)->removeFromObservables();
-		}
 
-		// Remove complexes containing products from species oservables
+		// species observables..
 		if(system->getNumOfSpeciesObs()>0) {
-			bool found = false;
-			// we can assume that complex bookkeeping is on, and that each reactant
-			// is in a separate (and single) complex
+			// we can find reactant complexes by following mappingSets to target molecules
 			int matches = 0;
-			for ( unsigned int k=0; k<transformationSet->getNreactants(); k++)
-			{
+			Complex * c;
+			for ( unsigned int k=0; k<transformationSet->getNreactants(); k++) {
 				// get complexID and check if we've already updated that complex
 				int complexId = mappingSet[k]->get(0)->getMolecule()->getComplexID();
-				found = false;
-				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
-					if(updatedComplexes.at(k2)==complexId) {
-						found = true;
-						break;
+				if ( std::find( updatedComplexes.begin(), updatedComplexes.end(), complexId ) == updatedComplexes.end() ) {
+					// complex has not been updated, so do it now.
+					updatedComplexes.push_back(complexId);
+					c = mappingSet[k]->get(0)->getMolecule()->getComplex();
+					for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
+						matches = system->getSpeciesObs(i)->isObservable(c);
+						system->getSpeciesObs(i)->straightSubtract(matches);
 					}
-				}
-				// if we already handled this, go to the next product
-				if(found) continue;
-
-				// if we didn't handle this, remember that we're handling it now..
-				updatedComplexes.push_back(complexId);
-
-				// update species observables for this complex
-				Complex *c = mappingSet[k]->get(0)->getMolecule()->getComplex();
-				for(int i=0; i<system->getNumOfSpeciesObs(); i++) {
-					matches = system->getSpeciesObs(i)->isObservable(c);
-					system->getSpeciesObs(i)->straightSubtract(matches);
 				}
 			}
 
 			// grab added molecules that are represented as populations and remove from observables
-			for ( unsigned int k=0; k<transformationSet->getNumOfAddMoleculeTransforms(); k++)
+			for ( int k=0; k<transformationSet->getNumOfAddMoleculeTransforms(); k++)
 			{
-				Molecule * addmol = transformationSet->getPopulationPointer(k);
+				Molecule * addmol = transformationSet->getPopulationPointer((unsigned int)k);
 				if ( addmol == NULL ) continue;
 
 				// get complexID and check if we've already updated that complex
 				int complexId = addmol->getComplexID();
-				found = false;
-				for(unsigned int k2=0; k2<updatedComplexes.size(); k2++) {
-					if(updatedComplexes.at(k2)==complexId) {
-						found = true;
-						break;
+				if ( std::find( updatedComplexes.begin(), updatedComplexes.end(), complexId ) == updatedComplexes.end() ) {
+					// complex has not been updated, so do it now.
+					updatedComplexes.push_back(complexId);
+					c = addmol->getComplex();
+					for (int i=0; i < system->getNumOfSpeciesObs(); i++) {
+						matches = system->getSpeciesObs(i)->isObservable(c);
+						system->getSpeciesObs(i)->straightSubtract(matches);
 					}
-				}
-				// if we already handled this, go to the next product
-				if(found) continue;
-
-				// if we didn't handle this, remember that we're handling it now..
-				updatedComplexes.push_back(complexId);
-
-				// update species observables for this complex
-				Complex *c = addmol->getComplex();
-				for (int i=0; i<system->getNumOfSpeciesObs(); i++) {
-					matches = system->getSpeciesObs(i)->isObservable(c);
-					system->getSpeciesObs(i)->straightSubtract(matches);
 				}
 			}
 			updatedComplexes.clear();
 		}
-
 	}
 
-	//cout<<"transforming"<<endl;
 
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
 	this->transformationSet->transform(this->mappingSet);
 
-	//cout<<"transforming done"<<endl;
 
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
 
 
-	// If we're handling observables on the fly, tell each molecule to add
-	//  itself back into observable counts.
-	//  NOTE: this will also take care of adding new molecules into the observables. --Justin, 8Mar2011
-	if(onTheFlyObservables)
-	{
-		// add product molecules to molecule observables
-		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-		{
+	// if complex bookkeeping is on, find all product complexes
+	// (this is useful for updating Species Observables and TypeII functions, so keep the info handy).
+	// NOTE: this is a brute force approach: check complex of each molecule. there may be a more
+	//  elegant way to do this, but it's tricky to get it right.
+	if (system->isUsingComplex()) {
+		Complex * complex;
+		for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 			// skip dead molecules
-			if ( !(*molIter)->isAlive() ) continue;
+			if ( ! (*molIter)->isAlive() ) continue;
+			// get complexID and check if we've already updated that complex
+			complex = (*molIter)->getComplex();
+			if ( std::find( productComplexes.begin(), productComplexes.end(), complex ) == productComplexes.end() )
+				productComplexes.push_back(complex);
+		}
+	}
+
+
+	// If we're handling observables on the fly, tell each molecule to add itself to observables.
+	if (onTheFlyObservables) {
+
+		// molecule observables..
+		for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+			// skip dead molecules
+			if ( ! (*molIter)->isAlive() ) continue;
 			(*molIter)->addToObservables();
 		}
 
-		// add complexes containing products into species observables
-		if(system->getNumOfSpeciesObs()>0)
-		{
-			// we can assume that complex bookkeeping is on, and that each reactant
-			bool found = false;
-			for( molIter = products.begin(); molIter != products.end(); molIter++ )
-			{
-				// skip dead molecules
-				if ( !(*molIter)->isAlive() ) continue;
-
-				// get complexID and check if we've already updated that complex
-				int complexId = (*molIter)->getComplexID();
-				found = false;
-				for (unsigned int k=0; k<updatedComplexes.size(); k++) {
-					if(updatedComplexes.at(k)==complexId) {
-						found = true;
-						break;
-					}
-				}
-				// if we already handled this, go to the next product
-				if(found) continue;
-
-				// if we didn't handle this, remember that we're handling it now..
-				updatedComplexes.push_back(complexId);
-
-				// update species observables for this complex
-				Complex *c = (*molIter)->getComplex();
-				int matches = 0;
-				for ( int i=0; i<system->getNumOfSpeciesObs(); i++ ) {
+		// species observables..
+		if (system->getNumOfSpeciesObs()>0) {
+			Complex * c;
+			int matches;
+			// we can assume that complex bookkeeping is enabled..
+			for ( complexIter = productComplexes.begin(); complexIter != productComplexes.end(); ++complexIter ) {
+				// update all species observables for this complex
+				c = *complexIter;
+				matches = 0;
+				for ( int i=0; i < system->getNumOfSpeciesObs(); i++ ) {
 					matches = system->getSpeciesObs(i)->isObservable(c);
 					system->getSpeciesObs(i)->straightAdd(matches);
 				}
 			}
-			updatedComplexes.clear();
+
+			// NOTE: we don't need to handle added population types separately since they are
+			//  among the product molecules
 		}
 	}
 
-//	if(getName()=="Rule1") {
-//		cout<<"---"<<endl;cout<<"-------found: "<<products.size()<<" transformed products."<<endl;
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ )
-//					(*molIter)->printDetails();
-//
-//		//cout<<system->getObservableByName("Lig_free")->getCount()<<"/"<<system->getObservableByName("Lig_tot")->getCount()<<endl;
-//	}
-
 
 	// Now update reaction membership, functions, and update any DOR Groups
-	for( molIter = products.begin(); molIter != products.end(); molIter++ )
-	{
-		// skip over dead molecules (NOTE: we do need this now.  --Justin, 8Mar2011
-		if ( !(*molIter)->isAlive() ) continue;
-	  	(*molIter)->updateRxnMembership();
-	  	(*molIter)->updateTypeIIFunctions();
-	  	(*molIter)->updateDORRxnValues();
-	  	//(*molIter)->printDetails();
+	//  also, gather a list of typeII dependencies that will require updating
+	typeII_products.clear();
+	for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		Molecule * mol = *molIter;
+		MoleculeType * mt = mol->getMoleculeType();
+
+		// If this moleculeType has typeII dependencies, add it to the list
+		// (do this for alive and dead molecules, since molecule deletion may influence
+		//    the value of a local function)
+		if ( mt->getNumOfTypeIIFunctions() > 0 ) {
+			if ( std::find( typeII_products.begin(), typeII_products.end(), mt ) == typeII_products.end() )
+				typeII_products.push_back( mt );
+		}
+
+		//Update this molcule's reaction membership
+		//  NOTE: as a side-effect, DORreactions that depend on molecule-scoped local functions
+		//   (typeI relationship) will be updated as long as UTL is set appropriately.
+		if ( mol->isAlive() )
+			mol->updateRxnMembership();
 	}
 
 
-	//Molecule::printMoleculeList(products);
-	//this->printFullDetails();
-	//this->system->printAllObservableCounts(0);
-	//this->system->printAllReactions();
-	//exit(1);
+	// update complex-scoped local functions for typeII dependencies
+	// NOTE: as a side-effect, dependent DOR reactions (via typeI molecule dependencies) will be updated
+	if (system->getEvaluateComplexScopedLocalFunctions()) {
+		// for each typeII product molecule, update all dependent local functions
+		if (system->isUsingComplex()) {
+			// this is the easy way: update all typeI molecules on each complex
+			for ( typeII_iter = typeII_products.begin(); typeII_iter != typeII_products.end(); ++typeII_iter ) {
+				MoleculeType * mt = *typeII_iter;
+				for (int i=0; i < mt->getNumOfTypeIIFunctions(); i++) {
+					for ( complexIter = productComplexes.begin(); complexIter != productComplexes.end(); ++complexIter )
+						mt->getTypeIILocalFunction(i)->evaluateOn( *complexIter );
+				}
+			}
+		}
+		else {
+			// this is the hard way: find a representative molecule from each connected set
+			//  and evaluate TypeII functions on that representative.
+			list <Molecule *> allMols;
+			Molecule * mol;
+			for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+				mol = *molIter;
+				if ( std::find( allMols.begin(), allMols.end(), mol ) == allMols.end() ) {
+					// remember everything connected to this molecule
+					//  (so we don't evaluate this connected set multiple times)
+					mol->traverseBondedNeighborhood( allMols, ReactionClass::NO_LIMIT );
+					// evaluate typeII local functions on this connected set
+					for ( typeII_iter = typeII_products.begin(); typeII_iter != typeII_products.end(); ++typeII_iter ) {
+						MoleculeType * mt = *typeII_iter;
+						for (int i=0; i<mt->getNumOfTypeIIFunctions(); i++)
+							mt->getTypeIILocalFunction(i)->evaluateOn( mol, LocalFunction::SPECIES );
+					}
+				}
+			}
+		}
+	} // done updating complex-scoped local functions
 
-	//this->system->printAllObservableCounts(0);
-	//cout<<",  everything done"<<endl;
+
+	// display final product molecules for debugging..
+	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
+	// 	(*molIter)->printDetails();
+	//  	cout<<"<<"<<endl;
+	//}
+
 
 	//Tidy up
 	products.clear();
-	//exit(1);
-	
+	productComplexes.clear();
 }
 
 

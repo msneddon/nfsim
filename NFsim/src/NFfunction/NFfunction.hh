@@ -14,6 +14,7 @@ namespace NFcore {
 	class System;
 	class ReactionClass;
 	class Observable;
+	class Complex; // this seems superfluous, but won't compile without it --Justin
 
 	//! Parses mathmatical functions that can be easily used anywhere
 	/*!
@@ -266,6 +267,9 @@ namespace NFcore {
 			string getExpression() const;
 			string getParsedExpression() const;
 
+			// set/get whether this evaluates on complex complex
+			bool getEvaluateComplexScope() const;
+			void setEvaluateComplexScope( bool val );
 
 			void printDetails(System *s);
 
@@ -274,6 +278,8 @@ namespace NFcore {
 
 			double getValue(Molecule *m, int scope);
 			double evaluateOn(Molecule *m, int scope);
+			// this version evaluates local fcn on a complex with SPECIES scope
+			double evaluateOn(Complex *c);
 
 
 			void addTypeIMoleculeDependency(MoleculeType *mt);
@@ -296,6 +302,8 @@ namespace NFcore {
 			string nicename;
 			string originalExpression;
 			string parsedExpression;
+
+			System * system;
 
 			unsigned int n_args;
 			string *argNames;

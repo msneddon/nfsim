@@ -166,11 +166,21 @@ void Molecule::updateRxnMembership()
 
 void Molecule::updateTypeIIFunctions()
 {
-	//cout<<"exit!!"<<endl; exit(1);
-	for(int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
+	for (int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
 		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this, LocalFunction::SPECIES);
 	}
 }
+
+void Molecule::updateTypeIIFunctions( vector <Complex *> & productComplexes )
+{
+	for (int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
+		vector <Complex *>::iterator complexIter;
+		for ( complexIter = productComplexes.begin(); complexIter != productComplexes.end(); ++complexIter ) {
+			parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn( (*complexIter)->getFirstMolecule(), LocalFunction::SPECIES);
+		}
+	}
+}
+
 void Molecule::updateDORRxnValues()
 {
 	ReactionClass *rxn=0; int rxnIndex=-1, rxnPos=-1;
@@ -179,22 +189,19 @@ void Molecule::updateDORRxnValues()
 		rxn=parentMoleculeType->getDORrxn(i);
 		rxnIndex=parentMoleculeType->getDORrxnIndex(i);
 		rxnPos=parentMoleculeType->getDORrxnPosition(i);
-
-		//cout<<"found DOR rxn: "<<r->getName()<<endl;
+		//cout<<"\t\ti="<<i<<" rxn="<<rxn->getName()<<" rxnIndex="<<rxnIndex<<" rxnPos="<<rxnPos<<endl;
 
 		if(isPrepared) {
 			//If we are in this reaction, then we have to update our value...
-			if(this->getRxnListMappingId(rxnIndex)>=0) {
-
+			if(getRxnListMappingId(rxnIndex)>=0) {
 				//Careful here!  remember to update the propensity of this
 				//reaction in the system after we notify of the rate factor change!
 				double oldA = rxn->get_a();
-				rxn->notifyRateFactorChange(this,rxnPos,this->getRxnListMappingId(rxnIndex));
-				this->parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
+				rxn->notifyRateFactorChange(this,rxnPos,getRxnListMappingId(rxnIndex));
+				parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
 			}
 		}
 	}
-
 }
 
 ///////////////

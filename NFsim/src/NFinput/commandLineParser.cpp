@@ -137,9 +137,9 @@ bool NFinput::parseSequence(string numString, vector <double> &outputTimes)
 	double startVal=0, stepVal=1, endVal=0;
 	try {
 
-		int c1 = numString.find_first_of(':');
+		string::size_type c1 = numString.find_first_of(':');
 		if(c1!=string::npos) {
-			int c2 = numString.find_first_of(':',c1+1);
+			string::size_type c2 = numString.find_first_of(':',c1+1);
 			if(c2!=string::npos) {
 					startVal= NFutil::convertToDouble(numString.substr(0,c1));
 					stepVal= NFutil::convertToDouble(numString.substr(c1+1,c2-c1-1));
@@ -198,7 +198,7 @@ bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
 	//Now find path to the folder we are dumping to
 	string pathToFolder = paramStr.substr(b2+1);
 	if(pathToFolder.size()!=0) {
-		int arrowPos = pathToFolder.find("->");
+		string::size_type arrowPos = pathToFolder.find("->");
 		if(arrowPos!=string::npos) {
 			pathToFolder = pathToFolder.substr(arrowPos+2);
 		} else {

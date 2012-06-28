@@ -1473,8 +1473,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 string addStateConstraint(string original, string compName, string newConstraint)
 {
-	unsigned int id1 = original.find("(",0);
-	unsigned int idx = original.find(compName,id1);
+	string::size_type id1 = original.find("(",0);
+	string::size_type idx = original.find(compName,id1);
 	if(idx!=string::npos) {
 		return original.insert(idx+compName.size(),newConstraint);
 	}
@@ -1489,8 +1489,8 @@ string addStateConstraint(string original, string compName, string newConstraint
 // side effects: updates the original string
 string addBondConstraint(string original, string compName, int bondNumber)
 {
-	int id1 = original.find("(",0);
-	int idx = original.find(compName,id1);
+	string::size_type id1 = original.find("(",0);
+	string::size_type idx = original.find(compName,id1);
 	if(idx!=string::npos) {
 		//Only add it if it wasn't added before
 		if(original.at(idx+compName.size())=='!')

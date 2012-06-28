@@ -56,6 +56,8 @@
  *
  *  -xml [filename] = specifies the xml file to read
  *
+ *  -rnf [filename] = specify an rnf script to execute
+ *
  *  -sim [Duration in sec] = specifies the length of time to simulate the system
  *
  *  -oSteps [num of steps] = specifies the number of times to output during the simulation
@@ -525,6 +527,8 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		s->printAllMoleculeTypes();
 		s->printAllReactions();
 		s->printAllObservableCounts(0);
+		cout<<endl;
+		s->printAllFunctions();
 		cout<<"-------------------------\n";
 	}
 
@@ -602,6 +606,8 @@ void printHelp(string version)
 	cout<<""<<endl;
 	cout<<"  -xml [filename]   used to specify the input xml file to read.  the xml"<<endl;
 	cout<<"                    file must be given directly after this flag."<<endl;
+	cout<<""<<endl;
+	cout<<"  -rnf [filename]   used to specify an rnf script to execute."<<endl;
 	cout<<""<<endl;
 	cout<<"  -o [filename]     used to specify the output file name."<<endl;
 	cout<<""<<endl;

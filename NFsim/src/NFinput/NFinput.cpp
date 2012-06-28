@@ -732,7 +732,7 @@ bool NFinput::initStartSpecies(
 					if(verbose) cout<<"\t\t\tSkipping a null molecule in species declaration"<<endl;
 					continue;
 				}
-				if(molName=="Trash" || molName=="TRASH" || molName=="trash") {
+				if(molName=="Trash" || molName=="TRASH" || molName=="trash" ) {
 					if(verbose) cout<<"\t\t\tSkipping a trash molecule in species declaration"<<endl;
 					continue;
 				}
@@ -1514,7 +1514,7 @@ bool NFinput::initReactionRules(
 
 
 					// check if these are bonds to new product molecules
-					size_t PPpos1 = site1.find("_PP"); size_t PPpos2 = site2.find("_PP");
+					string::size_type PPpos1 = site1.find("_PP"); string::size_type PPpos2 = site2.find("_PP");
 					// if either is a new molecule, set the flag so that we use the special
 					// newMoleculeBinding transform instead of the standard transform.
 					bool isNewMoleculeBond = false;
@@ -1873,25 +1873,36 @@ bool NFinput::initReactionRules(
 								//cout<<"found argument:"<<argId<<" of type "<<argType<<" which points to "<<argValue<<endl;
 								isGlobal=false;
 
-
-								//Get the template molecule we are referring to
-
-								//add a reference to it with the given name
-								if(comps.find(argValue)!=comps.end()){
-									component c = comps.find(argValue)->second;
-									ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
-									if(verbose) {cout<<"\t\t\t\tScope is SPECIES"<<endl; }
-									//exit(1); // set all local functions to allow species scope here!!
+								// Let's find out what object this argument points to..
+								if ( argValue.find("_M")!=string::npos ){
+									// this appears to be a molecule reference
+									// ..make sure the molecule reference is good
+									if( reactants.find(argValue)!=reactants.end() ) {
+										// found good molecule reference!
+										ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
+										if(verbose) {cout<<"\t\t\t\tScope of tag "<< argId <<" is MOLECULE (argValue="<<argValue<<")"<<endl; }
+									}
+									else {
+										cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function:\n"
+												<<" cannot find referent "<<argId<<" for local function tag "<<argValue<<"."<<endl;
+										return false;
+									}
 								}
-
-								if(reactants.find(argValue)!=reactants.end()) {
-
-									ts->addLocalFunctionReference(reactants.find(argValue)->second,argId,LocalFunction::MOLECULE);
-									if(verbose) {cout<<"\t\t\t\tScope is MOLECULE"<<endl; }
+								else if ( argValue.find("_RP")!=string::npos ) {
+									// this appears to be a pattern ("species") reference
+									// ..make sure the pattern reference is good
+									if ( comps.find(argValue)!=comps.end() ) {
+										// found good pattern reference!
+										component c = comps.find(argValue)->second;
+										ts->addLocalFunctionReference(c.t,argId,LocalFunction::SPECIES);
+										if(verbose) {cout<<"\t\t\t\tScope of tag "<<argId<<" is SPECIES  (argValue="<<argValue<<")"<<endl; }
+									}
+									else {
+										cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification Function:\n"
+												<<" cannot find referent "<<argId<<" for local function tag "<<argValue<<"."<<endl;
+										return false;
+									}
 								}
-								//ts->addLocalFunctionReference(t,argValue,LocalFunctionReference::SINGLE_MOLECULE_FUNCTION);
-								//ts->addLocalFunctionReference(
-
 
 							}
 						}
@@ -1919,7 +1930,6 @@ bool NFinput::initReactionRules(
 								r=new FunctionalRxnClass(rxnName,cf,ts,s);
 							}
 						} else {
-
 
 							string functionName = pRateLaw->Attribute("name");
 							LocalFunction *lf = s->getLocalFunctionByName(functionName);
