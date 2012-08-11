@@ -4,7 +4,7 @@
 //    A software platform for efficient simulation of biochemical reaction
 //    systems with a large or infinite state space.
 //
-//    Copyright (C) 2009,2010
+//    Copyright (C) 2009,2010,2011,2012
 //    Michael W. Sneddon, James R. Faeder, Thierry Emonet
 //
 //    This program is free software: you can redistribute it and/or modify

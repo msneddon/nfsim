@@ -10,7 +10,7 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.10
+NFsim - the network free stochastic simulator, v1.11
 
 michael w. sneddon
 james r. faeder
@@ -50,6 +50,8 @@ Enjoy your new network-free world!
 ################################################################################
 
 Release Notes
+
+v1.11   Aug, 2012
 
 
 v1.10   Aug, 2011
