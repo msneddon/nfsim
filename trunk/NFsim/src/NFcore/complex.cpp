@@ -10,6 +10,7 @@
 using namespace std;
 using namespace NFcore;
 
+const int Node::IS_MOLECULE = -1;
 
 Complex::Complex(System * s, int ID_complex, Molecule * m)
 	: is_canonical( false ), canonical_label("")

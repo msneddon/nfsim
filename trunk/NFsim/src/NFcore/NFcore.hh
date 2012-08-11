@@ -1233,7 +1233,7 @@ namespace NFcore
 	        {   return node1->index < node2->index;   };
 
 	        // definition
-	        static const int IS_MOLECULE = -1;
+	        static const int IS_MOLECULE;
 
 	    protected:
 
