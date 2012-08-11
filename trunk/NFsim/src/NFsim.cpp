@@ -4,7 +4,7 @@
 //    A software platform for efficient simulation of biochemical reaction
 //    systems with a large or infinite state space.
 //
-//    Copyright (C) 2009,2010,2011
+//    Copyright (C) 2009,2010,2011,2012
 //    Michael W. Sneddon, James R. Faeder, Thierry Emonet
 //
 //    This program is free software: you can redistribute it and/or modify
@@ -109,9 +109,11 @@
  * you ask for help.
  *
  *  \section author_sec Authors & Acknowledgments
- * The NFsim code was written and developed by Michael Sneddon with help from James Faeder and
+ * The original NFsim code was written and developed by Michael Sneddon with help from James Faeder and
  * Thierry Emonet.  James Faeder wrote the original extended BioNetGen code that can output XML
- * encodings of the BNGL and contains the functional rate law syntax.
+ * encodings of the BNGL and contains the functional rate law syntax.  Justin Hogg developed the
+ * capability to simulate population objects (a single object that aggregates multiple identical
+ * molecular agents) and significantly improved NFsim's internal local function handling.
  *
  * A number of other people have helped in getting NFsim to where it is today, either by
  * aiding in the concepts of the design, testing the implementation, adding some features
@@ -119,7 +121,6 @@
  *
  * A partial list of these people include:
  *
- * Justin Hogg,
  * Garrit Jentsch,
  * William Pontius,
  * Oleksii Sliusarenko,
@@ -188,7 +189,7 @@ int main(int argc, char *argv[])
 	// turned off for the general release code.
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.10";
+	string versionNumber = "1.11";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
