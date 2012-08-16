@@ -177,8 +177,8 @@ void LocalFunction::setEvaluateComplexScope( bool val ) {
 		isEverEvaluatedOnSpeciesScope=val;
 	} else {
 		// warn user that complex-scoped evaluations are disabled.
-		cout<<"Warning! LocalFunction argument has complex scope, but complex-scoped"<<endl;
-		cout<<"  local functions are disabled. Try the command line argument '-cslf' to enable!"<<endl;
+		cout<<"Warning! LocalFunction argument has complex scope, but complex-scoped local functions"<<endl;
+		cout<<"  are disabled. Remove '-nocslf' argument to enable complex-scoped evaluation!"<<endl;
 	}
 };
 

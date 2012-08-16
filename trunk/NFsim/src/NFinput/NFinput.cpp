@@ -84,10 +84,8 @@ System * NFinput::initializeFromXML(
 			if(verbose) cout<<"\tCreating system: "<<s->getName()<<endl;
 		}
 
-		// enable complex-scoped local functions, if desired
-		if (evaluateComplexScopedLocalFunctions){
-			s->setEvaluateComplexScopedLocalFunctions(true);
-		}
+		// set evaluation of complex-scoped local functions (true or false)
+		s->setEvaluateComplexScopedLocalFunctions(evaluateComplexScopedLocalFunctions);
 
 		//Read the key lists needed for the simulation and make sure they exist...
 		TiXmlElement *pListOfParameters = pModel->FirstChildElement("ListOfParameters");
