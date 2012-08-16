@@ -78,7 +78,7 @@
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
- *  -cslf = enable evaluation of Complex-Scoped Local Functions (default is disabled!)
+ *  -nocslf = disable evaluation of Complex-Scoped Local Functions
  *
  *  -ss [filename] = write list of species to file (BNGL format) at the end of simulation.
  *                     This list is not guaranteed to be canonical. Filename argument is
@@ -368,10 +368,10 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			if (argMap.find("cb")!=argMap.end())
 				turnOnComplexBookkeeping = true;
 
-			// enable evaluation of complex scoped local functions
-			bool evaluateComplexScopedLocalFunctions = false;
-			if (argMap.find("cslf")!=argMap.end())
-				evaluateComplexScopedLocalFunctions = true;
+			// enable/disable evaluation of complex scoped local functions
+			bool evaluateComplexScopedLocalFunctions = true;
+			if (argMap.find("nocslf")!=argMap.end())
+				evaluateComplexScopedLocalFunctions = false;
 
 			int globalMoleculeLimit = 200000;
 			if (argMap.find("gml")!=argMap.end()) {
@@ -422,8 +422,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 						cout<<"\tComplex-scoped local function evaluation is enabled."<<endl<<endl;
 					}
 					else {
-						cout<<"\tComplex-scoped local function evaluation is disabled!"<<endl;
-						cout<<"\t(use \"-cslf\" switch to enable.)"<<endl<<endl;
+						cout<<"\tComplex-scoped local function evaluation is DISABLED!"<<endl<<endl;
 					}
 				}
 
@@ -640,6 +639,11 @@ void printHelp(string version)
 	cout<<"  -ogf              output the value of all global functions."<<endl;
 	cout<<""<<endl;
 	cout<<"  -utl [integer]    sets the universal traversal limit"<<endl;
+	cout<<""<<endl;
+	cout<<"  -nocslf           disable evaluation of complex-scoped local functions."<<endl;
+	cout<<"                    This may reduce run-time for some models, but will lead"<<endl;
+	cout<<"                    to erroneous results if complex-scoped local functions"<<endl;
+	cout<<"                    are required."<<endl;
 	cout<<""<<endl;
 	cout<<"  -test             used to specify a given preprogrammed test. Some tests"<<endl;
 	cout<<"                    include \"tlbr\" and \"simple_system\".  Tests do not read"<<endl;
