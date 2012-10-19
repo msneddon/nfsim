@@ -342,7 +342,7 @@ void job2str(job& j, char* p) {
 	if (argc > 0) {
 	for (int i = 0; i < argc; ++i) {
 		sprintf(p, "%s,",  j.argument[i].c_str()); p += strlen(p);
-		sprintf(p, "%s,",  j.argval[i]); p += strlen(p);
+		sprintf(p, "%s,",  j.argval[i].c_str()); p += strlen(p);
 	}
 	}
 
