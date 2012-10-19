@@ -13,6 +13,7 @@
 NFsim - the network free stochastic simulator, v1.11
 
 michael w. sneddon
+justin s. hogg
 james r. faeder
 thierry emonet
 
@@ -52,8 +53,14 @@ Enjoy your new network-free world!
 Release Notes
 
 v1.11   Aug, 2012
-
-
+		(a) 
+		
+		(b) Fixed some problems evaluating complex-scoped local functions (CSLF). 
+		CSLF were not updated properly after reactions that split complexes or 
+		deleted molecules. As in v1.10, complex-scoped local functions are
+		enabled by default. A new command-line switch, -nocslf, has been added
+		which disables complex-scoped evaluation.
+		
 v1.10   Aug, 2011
         (a) Command line parser now detects arguments that are not properly
         preceeded by a dash, and generates a warning.  (b) Includes a check when 
@@ -84,7 +91,7 @@ v1.09   Apr, 2011
         as strings, NOT integers.  Therefore, PLUS and MINUS keywords cannot
         be used if mixing integer states and string states, and a warning will
         be generated if a state is set to PLUS.  One can only use PLUS or MINUS
-        when ALL states are a integer value greater than zero.  This new behavior
+        when ALL states are an integer value greater than zero.  This new behavior
         was needed to handle BNGL files that used the convention of ~P specifying
         phosphorylated, and ~0 specifying unphosphorylated.
         (b) Fixed bug whereby if verbose option was turned on without specifying
@@ -102,8 +109,6 @@ v1.09   Apr, 2011
         of aggregation. (e) fixed csv error, where when the csv flag is used, the
         header line is not comma delimited.  (f)  nfsim now supports intra-molecular
         binding.  Previously these events were rejected as null events.
-
-
 
 
 v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
