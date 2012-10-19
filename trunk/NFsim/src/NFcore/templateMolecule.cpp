@@ -1399,7 +1399,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				//and return as soon as we have matched.
 				if(!connectedToHasRxnCenter[cTo]) {
 					canMatchThis=connectedTo[cTo]->compare((*molIter),0,0,holdMolClearToEnd);
-					if(canMatchThis) { canMatch=true; continue; }
+					if(canMatchThis) { canMatch=true; break; }
 				}
 
 				// otherwise, we have to do more work...
