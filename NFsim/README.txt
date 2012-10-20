@@ -53,13 +53,27 @@ Enjoy your new network-free world!
 Release Notes
 
 v1.11   Aug, 2012
-		(a) 
+		(a) Molecules without components may be treated as population variables
+        rather than individual agents. This feature is useful for reducing memory
+        requirements when a simple molecule has very large population. A molecule
+        type may be flagged for treatment as a population variable by using the
+        "population" keyword following the molecule type definition in the BNGL
+        model file. See section 8.i in the documentation for further detail.
+
+        (b) Added a new Reaction Class called "FunctionProduct" that permits local
+        functions defined on two reactants. The local rate law must have the form
+        f(x)*g(y), where x and y are tags on two distinct reactants. See section
+        7.c in the documentation for complete information.
 		
-		(b) Fixed some problems evaluating complex-scoped local functions (CSLF). 
+		(c) Fixed some problems evaluating complex-scoped local functions (CSLF). 
 		CSLF were not updated properly after reactions that split complexes or 
 		deleted molecules. As in v1.10, complex-scoped local functions are
 		enabled by default. A new command-line switch, -nocslf, has been added
-		which disables complex-scoped evaluation.
+		which disables complex-scoped evaluation. 
+
+        (d) Improved efficiency for matching patterns with conntected-to syntax
+        when the connected-to component does not have reaction center. This may
+        be especially notable in models with large complexes, e.g. polymerization.
 		
 v1.10   Aug, 2011
         (a) Command line parser now detects arguments that are not properly
