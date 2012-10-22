@@ -59,19 +59,16 @@ v1.11   Aug, 2012
         type may be flagged for treatment as a population variable by using the
         "population" keyword following the molecule type definition in the BNGL
         model file. See section 8.i in the documentation for further detail.
-
         (b) Added a new Reaction Class called "FunctionProduct" that permits local
         functions defined on two reactants. The local rate law must have the form
         f(x)*g(y), where x and y are tags on two distinct reactants. See section
         7.c in the documentation for complete information.
-		
 		(c) Fixed some problems evaluating complex-scoped local functions (CSLF). 
 		CSLF were not updated properly after reactions that split complexes or 
 		deleted molecules. As in v1.10, complex-scoped local functions are
 		enabled by default. A new command-line switch, -nocslf, has been added
 		which disables complex-scoped evaluation. 
-
-        (d) Improved efficiency for matching patterns with conntected-to syntax
+        (d) Improved efficiency for matching patterns with connected-to syntax
         when the connected-to component does not have reaction center. This may
         be especially notable in models with large complexes, e.g. polymerization.
 		
