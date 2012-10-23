@@ -52,7 +52,7 @@ Enjoy your new network-free world!
 
 Release Notes
 
-v1.11   Aug, 2012
+v1.11   Oct, 2012
         (a) Molecules without components may be treated as population variables
         rather than individual agents. This feature is useful for reducing memory
         requirements when a simple molecule has very large population. A molecule
