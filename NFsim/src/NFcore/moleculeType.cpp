@@ -306,8 +306,14 @@ int MoleculeType::getEquivalencyClassNumber(string cName) const {
 
 string MoleculeType::getComponentStateName(int cIndex, int cValue) {
 	if(cValue==Molecule::NOSTATE) return "NO_STATE";
-	if(cValue>possibleCompStates.size() || cValue<0)
-		return "?-value was: "+NFutil::toString(cValue);
+	if( cIndex>=(int)possibleCompStates.size() || cIndex<0 ){
+		cerr<<"Component index out of range (moltype="<<getName()<<" cIndex="<<cIndex<<")!!!"<<endl;
+		exit(1);
+	}
+	if( cValue>=(int)possibleCompStates.at(cIndex).size() || cValue<0 ){
+		cerr<<"State index out of range (moltype="<<getName()<<" cIndex="<<cIndex<<" cValue="<<cValue<<")!!!"<<endl;
+		exit(1);
+	}
 	return possibleCompStates.at(cIndex).at(cValue);
 }
 
@@ -530,13 +536,10 @@ void MoleculeType::prepareForSimulation()
 
 void MoleculeType::updateRxnMembership(Molecule * m)
 {
-	unsigned int r=0; ReactionClass *rxn;
-	for(; r<reactions.size(); r++ )
+	for( unsigned int r=0; r<reactions.size(); r++ )
 	{
-		rxn=reactions.at(r);
+		ReactionClass * rxn=reactions.at(r);
 		double oldA = rxn->get_a();
-		//cout<<"\n\n\n\n*****************"<<endl;
-		//cout<<"looking at rxn: "<<rxn->getName()<<endl;
 		rxn->tryToAdd(m, reactionPositions.at(r));
 		this->system->update_A_tot(rxn,oldA,rxn->update_a());
   	}

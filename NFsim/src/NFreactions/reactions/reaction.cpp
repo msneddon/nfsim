@@ -266,6 +266,7 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		}
 	}
 
+	/*
 	//Here we get the standard update...
 	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
 	{
@@ -285,6 +286,24 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		} else {
 			m->setRxnListMappingId(rxnIndex,ms->getId());
 		}
+	}
+	*/
+
+	//Here we get the standard update...
+	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction, remove mappings
+	{
+		rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+		m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+	}
+
+	//Try to map it!
+	ms = rl->pushNextAvailableMappingSet();
+	if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+		//we must remove, if we did not match.  This will also remove
+		//everything that was cloned off of the mapping set
+		rl->removeMappingSet(ms->getId());
+	} else {
+		m->setRxnListMappingId(rxnIndex,ms->getId());
 	}
 
 	return true;
