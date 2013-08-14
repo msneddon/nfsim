@@ -10,7 +10,8 @@ fprintf('=======================\n');
 fprintf('running nfsim validation...\n\n');
 
 % Identify the path to NFsim and BioNetGen that you want to test
-bngPath = '/home/msneddon/bionetgen/bng2/BNG2.pl';  % <<< SET YOUR BIONETGEN PATH HERE <<<
+%bngPath = '/home/msneddon/bionetgen/bng2/BNG2.pl';  % <<< SET YOUR BIONETGEN PATH HERE <<<
+bngPath = '/home/justin/bng-vers/BioNetGen_Testing/BNG2.pl';  % <<< SET YOUR BIONETGEN PATH HERE <<<
 nfsimPath = '../bin/NFsim';                         % <<< SET YOUR NFSIM PATH HERE <<<
 deleteTempFiles = 1; %set to 1 to delete temporary files, 0 otherwise
 tol = 0.35; %this is the error tolerance when comparing nfsim's run to the ssa where 0.35 = 35%
@@ -53,6 +54,7 @@ for f=1:length(files)
     ssaDiff = []; nfDiff = []; maxRuns=10;
     for runs = 1:maxRuns
     
+        %fprintf( 'perl %s -outdir %s %s/%s\n', bngPath, modelDirName, modelDirName, bngFilename );
         [status,bngTerminal]=system(['perl ',bngPath,' -outdir ',modelDirName,' ',modelDirName,'/',bngFilename]);
         [status,nfTerminal]=system([nfsimPath,' -xml ',modelDirName,'/',bngFilename(1:end-5),'.xml ', ...
             ' -o ',modelDirName,'/',bngFilename(1:end-5),'_nf.gdat ' runOptions]);
