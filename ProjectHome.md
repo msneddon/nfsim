@@ -1,0 +1,3 @@
+A general-purpose, open-source, biochemical reaction simulator with advanced capabilities for coarse-graining reaction mechanisms. NFsim implements an agent- and rule-based simulation engine that provides exact stochastic results. For many complex biological systems, NFsim provides orders of magnitude speedup over standard ODE and stochastic methods.
+
+This repository is designed for developers of NFsim or advanced users who want direct access to the latest builds.  For end-users who will not be editing the code, please register and download a stable release of NFsim here: http://emonet.biology.yale.edu/nfsim/
