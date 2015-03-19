@@ -1,0 +1,34 @@
+# Trivalent ligand - bivalent receptor
+
+begin parameters
+	
+
+end parameters
+
+begin molecule types
+	A(b,p)
+end molecule types
+
+begin species
+	A(b,p)	3000
+	A(b,p!1).A(b!1,p) 5
+end species
+
+begin reaction rules
+	A(b,p!+) + A(b,p) <-> A(b!1,p!+).A(b,p!1) 2,1
+    A(b!+,p!1).A(b!1,p) -> A(b!+,p) + A(b,p)  3
+end reaction rules
+
+begin observables
+	Molecules Afree A(b,p)
+	Molecules Asubunit A(b!+,p!+)
+	Molecules Aend A(b!+,p)
+end observables
+
+
+# Run this to test bng performance
+#simulate_ps({t_end=>100,n_steps=>100});
+#simulate_rm({t_end=>100,n_steps=>100});
+
+writeXML();
+

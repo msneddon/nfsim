@@ -1,0 +1,72 @@
+# kappa translation of TLBR model
+# simplx --time 200 --points 100 --plot tlbr_kappa_plot.txt --no-maps --sim tlbr.ka &> tlbr_kappa_out.txt
+
+## rules:
+
+# first binding
+L(r1,r2,r3),R(l1) <-> L(r1!0,r2,r3),R(l1!0)  @ 6.66e-7 (0), 0.01
+L(r1,r2,r3),R(l1) <-> L(r1,r2!0,r3),R(l1!0)  @ 6.66e-7 (0), 0.01
+L(r1,r2,r3),R(l1) <-> L(r1,r2,r3!0),R(l1!0)  @ 6.66e-7 (0), 0.01
+
+L(r1,r2,r3),R(l2) <-> L(r1!0,r2,r3),R(l2!0)  @ 6.66e-7 (0), 0.01
+L(r1,r2,r3),R(l2) <-> L(r1,r2!0,r3),R(l2!0)  @ 6.66e-7 (0), 0.01
+L(r1,r2,r3),R(l2) <-> L(r1,r2,r3!0),R(l2!0)  @ 6.66e-7 (0), 0.01
+
+# second binding
+L(r1,r2,r3!_),R(l1) <-> L(r1!0,r2,r3!_),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2,r3!_),R(l1) <-> L(r1,r2!0,r3!_),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2,r3!_),R(l2) <-> L(r1!0,r2,r3!_),R(l2!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2,r3!_),R(l2) <-> L(r1,r2!0,r3!_),R(l2!0)  @ 3.33e-4 (0), 0.01
+
+L(r1,r2!_,r3),R(l1) <-> L(r1!0,r2!_,r3),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2!_,r3),R(l1) <-> L(r1,r2!_,r3!0),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2!_,r3),R(l2) <-> L(r1!0,r2!_,r3),R(l2!0)  @ 3.33e-4 (0), 0.01
+L(r1,r2!_,r3),R(l2) <-> L(r1,r2!_,r3!0),R(l2!0)  @ 3.33e-4 (0), 0.01
+
+L(r1!_,r2,r3),R(l1) <-> L(r1!_,r2!0,r3),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2,r3),R(l1) <-> L(r1!_,r2,r3!0),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2,r3),R(l2) <-> L(r1!_,r2!0,r3),R(l2!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2,r3),R(l2) <-> L(r1!_,r2,r3!0),R(l2!0)  @ 3.33e-4 (0), 0.01
+
+# third binding
+L(r1,r2!_,r3!_),R(l1) <-> L(r1!0,r2!_,r3!_),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2,r3!_),R(l1) <-> L(r1!_,r2!0,r3!_),R(l1!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2!_,r3),R(l1) <-> L(r1!_,r2!_,r3!0),R(l1!0)  @ 3.33e-4 (0), 0.01
+
+L(r1,r2!_,r3!_),R(l2) <-> L(r1!0,r2!_,r3!_),R(l2!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2,r3!_),R(l2) <-> L(r1!_,r2!0,r3!_),R(l2!0)  @ 3.33e-4 (0), 0.01
+L(r1!_,r2!_,r3),R(l2) <-> L(r1!_,r2!_,r3!0),R(l2!0)  @ 3.33e-4 (0), 0.01
+
+
+## init:
+
+%init: 300  * (R(l1,l2))
+%init: 4200 * (L(r1,r2,r3))
+
+
+## obs:
+
+### WARNING: the observables are not directly comparable to the NFsim obserables!
+### 1) Kappa does not support Species observables.  2) since the sites are not "identical" in
+### the Kappa model, several observables but be combined to get L(r!+,r!+,r) and L(r!+,r,r).
+### 3) Kappa lumps automorphic pattern matches into a single match (unlike BNG Molecule observables).
+
+%obs:  'Lig_tot'       L()
+%obs:  'Lig_free'      L(r1,r2,r3)
+%obs:  'Lig_r1'        L(r1!_,r2,r3)
+%obs:  'Lig_r2'        L(r1,r2!_,r3)
+%obs:  'Lig_r3'        L(r1,r2,r3!_)
+%obs:  'Lig_r1_r2'     L(r1!_,r2!_,r3)
+%obs:  'Lig_r1_r3'     L(r1!_,r2,r3!_)
+%obs:  'Lig_r2_r3'     L(r1,r2!_,r3!_)
+%obs:  'Lig_r1_r2_r3'  L(r1!_,r2!_,r3!_)
+
+# Additional observables for receptor, if desired.
+#%obs:  'Rec_tot'       R()
+#%obs:  'Rec_free'      R(l1,l2)
+#%obs:  'Rec_l1'        R(l1!_,l2)
+#%obs:  'Rec_l2'        R(l1,l2!_)
+#%obs:  'Rec_l1_l2'     R(l1!_,l2!_)
+
+
+

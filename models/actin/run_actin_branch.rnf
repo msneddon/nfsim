@@ -1,0 +1,31 @@
+# Actin dynamic assembly model
+#
+# Based on Roland, Berro, et al, (2008) Biophys. J. 94:2082-94
+#
+
+
+#set all NFsim parameters here first
+-xml actin_branch.xml
+-utl 3
+-v
+
+# If you want comprehensive output so you can recreate the branch
+# structure, you need to uncomment this line below and create
+# a directory called dump where the binary output files will be
+# saved. To read the binary output files, take a look at the Matlab
+# tools that are available in the tools directory in your installation.
+#-dump [0:10:4000;]->dump/
+
+
+
+#begin the script
+begin
+
+  echo Running Actin dynamic assembly model
+  print reactions obs
+  
+  sim 400 400
+
+  print reactions obs
+  echo done.
+end

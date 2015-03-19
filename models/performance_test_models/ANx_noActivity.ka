@@ -1,0 +1,33 @@
+
+
+#rules
+
+RD(RB),CheR(tether,active) -> RD(RB!1),CheR(tether!1,active) @ 0.00329869701
+RD(RB),CheB(tether,active) -> RD(RB!1),CheB(tether!1,active) @ 0.00329869701
+
+CheR(tether!1),RD(RB!1) -> CheR(tether),RD(RB) @ 0.1
+CheB(tether!1),RD(RB!1) -> CheB(tether),RD(RB) @ 0.1
+
+
+
+#initial mixture
+%init: 370 * (RD(RB,a,tri1!10,tri2!30,hex!1,m~2),RD(RB,a,tri1!20,tri2!10,hex!6,m~2),RD(RB,a,tri1!30,tri2!20,hex,m~2),RD(RB,a,tri1!11,tri2!31,hex!1,m~2),RD(RB,a,tri1!21,tri2!11,hex!2,m~2),RD(RB,a,tri1!31,tri2!21,hex,m~2),RD(RB,a,tri1!12,tri2!32,hex!3,m~2),RD(RB,a,tri1!22,tri2!12,hex!2,m~2),RD(RB,a,tri1!32,tri2!22,hex,m~2),RD(RB,a,tri1!13,tri2!33,hex!3,m~2),RD(RB,a,tri1!23,tri2!13,hex!4,m~2),RD(RB,a,tri1!33,tri2!23,hex,m~2),RD(RB,a,tri1!14,tri2!34,hex!5,m~2),RD(RB,a,tri1!24,tri2!14,hex!4,m~2),RD(RB,a,tri1!34,tri2!24,hex,m~2),RD(RB,a,tri1!15,tri2!35,hex!5,m~2),RD(RB,a,tri1!25,tri2!15,hex!6,m~2),RD(RB,a,tri1!35,tri2!25,hex,m~2))
+%init: 500 * (CheR(tether,active))
+%init: 500 * (CheB(tether,active))
+
+#observables and variables
+%obs: 'RD0' RD(m~0)
+%obs: 'RD1' RD(m~1)
+%obs: 'RD2' RD(m~2)
+%obs: 'RD3' RD(m~3)
+%obs: 'RD4' RD(m~4)
+%obs: 'RD5' RD(m~5)
+%obs: 'RD6' RD(m~6)
+%obs: 'RD7' RD(m~7)
+%obs: 'RD8' RD(m~8)
+%obs: 'RDtot' RD()
+%obs: 'RD_R' RD(RB!1),CheR(tether!1)
+%obs: 'RD_B' RD(RB!1),CheB(tether!1)
+%obs: 'RD_Ra' RD(a!1),CheR(active!1)
+%obs: 'RD_Ba' RD(a!1),CheB(active!1)
+

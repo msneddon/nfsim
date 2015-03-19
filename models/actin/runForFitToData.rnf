@@ -1,0 +1,59 @@
+#  This is an RNF script that was used to compare the actin model to experimental
+#  data from the experiments in: Amann and Pollard, Direct real-time observation of
+#  actin filament branching mediated by Arp2/3 complex using total internal reflection
+#  fluorescence microscopy. PNAS 2001.
+
+#  In order to fit the experiments, multiple simulation steps were required and
+#  the use of the RNF scripting function was necessary, as seen below.
+
+
+
+# set command line parameters, here just to set the universal traversal limit
+-utl 2
+
+# If comparing to data, you will have to output the topology of the actin filaments
+# using the -dump flag.  If you are doing this, then you MUST modify this line so
+# that the output files are correctly saved on your computer
+# -dump [0;150;300;399;]->/home/msneddon/Desktop/nf_param/actin/dump/
+
+#begin the set of execution commands
+begin
+
+
+  # first allow a period of time for initial nucleation of the 
+  # filaments onto the glass slides in the flow cell
+  sim 150 15
+
+
+  # Run the simulation for 120 seconds to allow elongation of the filaments, but 
+  # without Arp2/3 complex, as performed in the original experiments
+  set kNuc 0
+  update
+  sim 120 12
+
+  # there was a 30s delay between removing the Actin Monomer solution,
+  # and flowing through the branching solution, so we should simulate
+  # step as well
+  set ActinConcEffective 0
+  set kNuc 0
+  update
+  sim 30 3
+
+  
+  # add arp2/3 and activating complex into the media, and set the nucleation
+  # to zero (because in the experiment, only branches off the filaments that
+  # were already present were measured, so we don't have to consider new nucleation
+  # events that may have occured).  We also refresh Actin Monomers at this
+  # stage so that filaments can resume elongation, as in the experiment
+  set ArpAndVCAReplenishRate 1000
+  set ActinConcEffective 12040
+  set kNuc 0
+  update
+  sim 100 10
+
+
+  # let us know that we are done
+  print rxns
+  echo done.
+  
+end

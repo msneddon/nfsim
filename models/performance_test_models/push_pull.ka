@@ -1,0 +1,25 @@
+
+
+#rules
+
+   E1(s),S(e,p~U) -> E1(s!1),S(e!1,p~U) @ 0.1
+   E1(s!1),S(e!1,p~U) -> E1(s),S(e,p~U) @ 2
+   E1(s!1),S(e!1,p~U) -> E1(s),S(e,p~P) @ 2
+
+   E2(s),S(e,p~P) -> E2(s!1),S(e!1,p~P) @ 0.1
+   E2(s!1),S(e!1,p~P) -> E2(s),S(e,p~P) @ 2
+   E2(s!1),S(e!1,p~P) -> E2(s),S(e,p~U) @ 2
+
+
+#initial mixture
+%init: 500 * (E1(s))
+%init: 500 * (E2(s))
+%init: 2500 * (S(e,p~U))
+
+
+#observables and variables
+%obs: 'S' S(p~U)
+%obs: 'Sp' S(p~P)
+%obs: 'E1S' E1(s!1),S(e!1)
+%obs: 'E2S' E2(s!1),S(e!1)
+

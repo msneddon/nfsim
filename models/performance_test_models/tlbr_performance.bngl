@@ -1,0 +1,45 @@
+# Trivalent ligand - bivalent receptor
+
+begin parameters
+	
+
+	## Performance test
+	Lig_tot 4200
+	Rec_tot 300
+	cTot 0.84	
+	koff 0.01
+	beta 10 # vary beta from 0.01 to 1000
+
+	kp1 (cTot*koff)/(3.0*Lig_tot) #FREE BINDING RATE
+	kp2 (beta*koff)/Rec_tot #CROSSLINKING RATE
+end parameters
+
+begin molecule types
+	L(r,r,r)
+	R(l,l)
+end molecule types
+
+begin species
+	L(r,r,r)	Lig_tot
+	R(l,l)		Rec_tot
+end species
+
+begin reaction rules
+	R(l!1).L(r!1) -> R(l) + L(r) koff
+	L(r,r,r) + R(l) -> L(r!1,r,r).R(l!1) kp1
+	L(r,r,r!+) + R(l) -> L(r!1,r,r!+).R(l!1) kp2
+	L(r,r!+,r!+) + R(l) -> L(r!1,r!+,r!+).R(l!1) kp2
+end reaction rules
+
+begin observables
+	Molecules Rfree R(l,l)
+	Molecules Lfree L(r,r,r)
+end observables
+
+
+# Run this to test bng performance
+#simulate_ps({t_end=>3000,n_steps=>3000});
+#simulate_rm({t_end=>300,n_steps=>300});
+
+#writeXML();
+

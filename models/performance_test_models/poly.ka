@@ -1,0 +1,21 @@
+
+
+#rules
+
+'Barbed'  A(b,p!1),A(b!1),A(b,p) -> A(b!2,p!1),A(b!1),A(b,p!2) @ 2
+'Barbedr'  A(b!2,p!1),A(b!1),A(b,p!2) -> A(b,p!1),A(b!1),A(b,p)  @ 1
+
+'Pointed'  A(b!2,p!1),A(p!2),A(b!1,p) -> A(b!2,p),A(p!2),A(b,p) @ 3
+
+z
+#initial mixture
+%init: 3000 * (A(b,p))
+%init: 5 * (A(b,p!1),A(b!1,p))
+
+
+#observables and variables
+%obs: 'Afree' A(b,p)
+%obs: 'Asubunit' A(p!1),A(b!1,p!2),A(b!2)
+%obs: 'Aend' A(p!1),A(b!1,p)
+
+

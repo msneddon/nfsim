@@ -1,0 +1,58 @@
+# Abstract model of interactions between multiple tyrosine residuals of
+# a receptor dimmer and an adaptor protein. Each receptor has 3 tyrosines,
+# which can be phosphorylated/dephosphorylated
+
+begin parameters
+t_end     100
+n_steps   100
+max_prob 5.000000e-01 
+
+E1_tot 500
+E2_tot 500
+S_tot 2500
+
+k1on   0.1
+k1off  2
+k1cat  2
+
+k2on   0.1
+k2off  2
+k2cat  2
+
+end parameters
+
+begin molecule types
+   E1(s)
+   E2(s)
+   S(e,p~U~P)
+end molecule types
+
+begin species
+   E1(s)  E1_tot
+   E2(s)  E2_tot
+   S(e,p~U) S_tot
+end species
+
+
+begin reaction rules
+
+   E1(s) + S(e,p~U) <-> E1(s!1).S(e!1,p~U) k1on, k1off
+   E1(s!1).S(e!1,p~U) -> E1(s) + S(e,p~P) k1cat
+
+   E2(s) + S(e,p~P) <-> E2(s!1).S(e!1,p~P) k2on, k2off
+   E2(s!1).S(e!1,p~P) -> E2(s) + S(e,p~U) k2cat
+
+end reaction rules
+
+begin observables
+   Molecules S  S(p~U)
+   Molecules Sp S(p~P)
+   Molecules E1S E1(s!1).S(e!1)
+   Molecules E2S E2(s!1).S(e!1)
+end observables
+
+#writeXML();
+#simulate_ps({t_end=>t_end,n_steps=>n_steps});
+simulate_ps({t_end=>t_end,n_steps=>n_steps,max_prob=>max_prob});
+simulate_rm({t_end=>t_end,n_steps=>n_steps});
+

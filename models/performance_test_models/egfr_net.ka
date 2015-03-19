@@ -1,0 +1,98 @@
+# kappa translation of EGFR_net model
+# Blinov et al. 2006. Biosystems, 83:136
+# simplx --time 1000 --points 1000 --plot egfr_kappa_plot.txt --no-maps --sim egfr_net.ka &> egfr_kappa_out.txt
+
+## rules:
+
+# Ligand-receptor binding    
+egfr(l,r),egf(r)  <->  egfr(l!0,r),egf(r!0)  @ 1.667e-4, 0.06
+
+# Receptor-aggregation 
+egfr(l!_,r),egfr(l!_,r)  <->  egfr(l!_,r!0),egfr(l!_,r!0)  @ 5.556e-4, 0.1
+
+# Transphosphorylation of egfr by RTK
+egfr(r!_,Y1068~Y)  ->  egfr(r!_,Y1068~pY)  @ 0.5
+egfr(r!_,Y1148~Y)  ->  egfr(r!_,Y1148~pY)  @ 0.5
+
+# Dephosphorylayion
+egfr(Y1068~pY)  ->  egfr(Y1068~Y)  @ 4.505
+egfr(Y1148~pY)  ->  egfr(Y1148~Y)  @ 4.505
+
+# Shc transphosph
+egfr(r!_,Y1148~pY!0),Shc(PTB!0,Y317~Y)  ->  egfr(r!_,Y1148~pY!0),Shc(PTB!0,Y317~pY)  @ 3.0
+Shc(PTB!_,Y317~pY)  ->  Shc(PTB!_,Y317~Y)  @ 0.03
+
+# Y1068 activity
+egfr(Y1068~pY),Grb2(SH2,SH3)    <->  egfr(Y1068~pY!0),Grb2(SH2!0,SH3)    @ 8.333e-5, 0.05
+egfr(Y1068~pY),Grb2(SH2,SH3!_)  <->  egfr(Y1068~pY!0),Grb2(SH2!0,SH3!_)  @ 1.25e-4,  0.03
+egfr(Y1068~pY!0),Grb2(SH2!0,SH3),Sos(dom)  <->  egfr(Y1068~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)  @ 5.556e-4, 0.06
+
+# Y1148 activity
+egfr(Y1148~pY),Shc(PTB,Y317~Y)   <->  egfr(Y1148~pY!0),Shc(PTB!0,Y317~Y)   @ 2.5e-3, 0.6
+egfr(Y1148~pY),Shc(PTB,Y317~pY)  <->  egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY)  @ 2.5e-5, 0.3
+egfr(Y1148~pY),Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3)  <->  egfr(Y1148~pY!1),Shc(PTB!1,Y317~pY!0),Grb2(SH2!0,SH3)  @ 2.5e-5, 0.3
+egfr(Y1148~pY),Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)  <->  egfr(Y1148~pY!2),Shc(PTB!2,Y317~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)  @ 6.667e-6, 0.12
+egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY),Grb2(SH2,SH3)  <->  egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY!1),Grb2(SH2!1,SH3)  @ 1.667e-4, 0.1
+egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY),Grb2(SH2,SH3!1),Sos(dom!1)  <->  egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY!2),Grb2(SH2!2,SH3!1),Sos(dom!1)  @ 5e-4, 0.0429
+Shc(PTB!_,Y317~pY!0),Grb2(SH2!0,SH3),Sos(dom)   <->  Shc(PTB!_,Y317~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)  @ 5.556e-4, 0.0214
+
+# Cytosolic 
+Shc(PTB,Y317~pY),Grb2(SH2,SH3)    <->  Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3)    @ 1.667e-04, 0.01
+Shc(PTB,Y317~pY),Grb2(SH2,SH3!_)  <->  Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3!_)  @ 1.167e-03, 0.1
+Shc(PTB,Y317~pY)  ->  Shc(PTB,Y317~Y)  @ 0.005
+Grb2(SH2,SH3),Sos(dom)  <->  Grb2(SH2,SH3!0),Sos(dom!0)  @ 5.556e-06, 0.0015
+Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3),Sos(dom)  <->  Shc(PTB,Y317~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)  @ 1.667e-03,0.064
+
+
+## init:
+
+%init: 1.2e4  * (egf(r))
+%init: 1.0e3  * (Grb2(SH2,SH3)  )
+%init: 2.7e3  * (Shc(PTB,Y317~Y))
+%init: 1.3e2  * (Sos(dom))
+%init: 1.8e3  * (egfr(l,r,Y1068~Y,Y1148~Y))
+%init: 4.9e2  * (Grb2(SH2,SH3!0),Sos(dom!0))
+
+
+## obs:
+
+### WARNING: the observables are not directly comparable to the NFsim obserables!
+### 1) Kappa does not support Species observables.
+### 2) Kappa lumps automorphic pattern matches into a single match (unlike BNG Molecule observables).
+### 3) Kappa does not (seem) to support multiple patterns per observable
+
+# multiple by 2 to get BNG oberservable 'Dimers'
+%obs:   'Dimers'           egfr(r!0),egfr(r!0)
+
+# sum these to obtain observable 'Sos_act'   
+%obs:   'Sos_act_no_egfr'  Shc(PTB!_,Y317~pY!2),Grb2(SH2!2,SH3!3),Sos(dom!3)
+%obs:   'Sos_act_egfr'     egfr(Y1068~pY!1),Grb2(SH2!1,SH3!2),Sos(dom!2)
+          
+# sum these to obtain observable 'Y1068'             
+%obs:   'Y1068_free'       egfr(Y1068~pY)
+%obs:   'Y1068_bound'      egfr(Y1068~pY!_)
+
+# sum these to obtain observable 'Y1148'  
+%obs:   'Y1148_free'       egfr(Y1148~pY)
+%obs:   'Y1148_bound'      egfr(Y1148~pY!_)
+
+%obs:   'Shc_Grb'          Shc(Y317~pY!0),Grb2(SH2!0)
+%obs:   'Shc_Grb_Sos'      Shc(Y317~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)
+%obs:   'R_Grb2'           egfr(Y1068~pY!0),Grb2(SH2!0)
+%obs:   'R_Shc'            egfr(Y1148~pY!0),Shc(PTB!0,Y317~Y)
+
+# sum these to obtain observable 'R_ShcP'  
+%obs:   'R_ShcP_free'      egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY)
+%obs:   'R_ShcP_bound'     egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY!_)
+
+# sum these to obtain observable 'ShcP'  
+%obs:   'ShcP_free'        Shc(Y317~pY)
+%obs:   'ShcP_bound'       Shc(Y317~pY!_)
+
+%obs:   'R_G_S'            egfr(Y1068~pY!0),Grb2(SH2!0,SH3!1),Sos(dom!1)
+%obs:   'R_S_G_S'          egfr(Y1148~pY!0),Shc(PTB!0,Y317~pY!1),Grb2(SH2!1,SH3!2),Sos(dom!2)
+%obs:   'Efgr_tot'         egfr()
+
+
+
+
