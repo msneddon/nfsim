@@ -24,15 +24,24 @@ funded by the National Science Foundation
 
 ################################################################################
 
+NFsim is a free, open-source, biochemical reaction simulator designed to handle systems 
+that have a large or even infinite number of possible molecular interactions or states. 
+NFsim also has advanced and flexible options for simulating coarse-grained representations 
+of complex nonlinear reaction mechanisms.
+
+NFsim is ideal for modeling polymerization, aggregation, and cooperative reactions that 
+cannot be handled with traditional stochastic or ODE simulators. Models are specified in 
+the BioNetGen Langauge, providing a powerful model building environment. 
 
 please cite NFsim as:
 Sneddon MW, Faeder JR & Emonet T.  Efficient modeling, simulation and 
 coarse-graining of biological complexity with NFsim.  Nature Methods,(2011) 8(2):177-83.
 
+################################################################################
 
 NFsim is released under the GNU General Public License.  See LICENSE.txt for
-more details about redistribution restrictions.  The svn repository is hosted
-at google code at: https://nfsim.googlecode.com/svn
+more details about redistribution restrictions.  The git repository is now hosted
+on github at: https://github.com/msneddon/nfsim
   
 For help with running NFsim, see the user manual, NFsim_manual_[version].pdf,
 and open the example model "simple_system.bngl".
