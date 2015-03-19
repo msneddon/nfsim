@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>NFsim - features</title>
+
+	<meta NAME="description" CONTENT="A description of the key features and capabilities of NFsim">
+	<meta NAME="keywords" CONTENT="NFsim, biology, simulation, model, modeling, dynamic, agent-based, rule-based, Sneddon, Emonet, Faeder, BNGL, BNG, BioNetGen, network-free, biochemical, reaction, network, computational biology, systems biology">
+	
+	<link rel="stylesheet" type="text/css" href="../css/nf_style.css" />
+
+</head>
+
+<body>
+
+
+	<center>
+	<table border=0 cellspacing=0 cellpadding=0>
+	<tr>
+		<!-- <td width=30%></td> -->
+		<td><img src="../images/topLogo.jpg" align=right></td>
+		<td bgcolor=#2E3192 valign="center">
+			<center>
+			<div class="topMenuDiv">
+				<a href="../" class="topMenu">overview</a>&nbsp&nbsp&nbsp
+				<a href="../download" class="topMenu">download</a>&nbsp&nbsp&nbsp
+				<a href="features.html" class="topMenu">features</a> &nbsp&nbsp&nbsp
+				<a href="feedback.php" class="topMenu">feedback</a> <br>
+				<a href="support/support.html" class="topMenu">support</a> &nbsp&nbsp&nbsp
+				<a href="models/models.html" class="topMenu">models</a> &nbsp&nbsp&nbsp
+				<a href="developers.html" class="topMenu">developers</a> &nbsp&nbsp&nbsp
+				<a href="http://emonet.biology.yale.edu" class="topMenu">emonet lab</a>
+			</div>
+			</center>
+		</td>
+		<td bgcolor=#2E3192 width=15%></td>
+		<td><img src="../images/topRight.jpg" align=left></td>
+		<!-- <td bgcolor=#2E3192 width=50%></td> -->
+	</tr>
+	
+	<tr>
+		<td colspan=4>
+		
+		<div class="sectionTitleDiv">
+			features</div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td colspan=4>
+		<center>
+		<!--  CONTENT -->
+		
+		
+		<table border=0 width=650><tr><td>
+		
+		<p>
+		<b>Key Features</b>
+		<ul>
+			<li>Efficient simulation of large, complex, biochemical reaction networks</li>
+			<li>Efficient tracking of large molecular complexes that can aggregate or polymerize</li>
+			<li>Advanced coarse-graining capabilities to simplify reaction mechanisms</li>
+			<li>Straight-forward specification of models with BNGL</li>
+			<li>Seamless operation with BioNetGen, allowing ODE and SSA simulation</li>
+			<li>Scripting language for changing parameters and rates mid-simulation</li>
+			<li>Interactive model debugger to track events as they occur</li>
+			<li>Comprehensive output options, allowing, for instance, single molecule tracking</li>
+			<li>Includes Matlab-based post-run functions and scripts for rapid visualization and analysis of models and simulations</li>
+			<li>Includes Matlab-based parameter scanning and estimation utilities</li>
+			<li>Object-oriented, documented, and resusable software design to support 3rd party extensions by modelers or developers</li>
+			<li>In-depth user-manual with a suite of example models you can use to start your project </li>
+			<li>Tested and compiled for Windows, Mac, and Linux</li>
+			<li>100% free and open source (under <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>)</li>
+		</ul>
+		</p>
+		
+		
+		<br>
+		<table border=0>
+			<tr><td>
+				<table border=0 cellpadding=0> 
+					<tr>
+					<td width=300><img src="../images/multisitePhosPerformance.png" width=300> </td>
+					<td>
+					<p><b>High performance  simulation of complex biochemical reaction networks</b></p>
+					<p> The runtime performance of NFsim scales with the number of biochemical rules in a model,
+					not with the total number of reactions or molecular configurations.  Therefore, NFsim can often
+					simulate complex biochemical models faster than the Gillespie algorithm (SSA) of even ordinary differential
+					equations (ODEs).  As the detail of a dynamic model is increased (shown in the graph to the left by
+					increasing the number of phosphorylation sites of a protein), NFsim performance exceeds both ODEs and the SSA.
+					</p>
+					</td></tr>
+				</table>
+			</td></tr>
+			
+			<tr><td>
+				<table border=0 cellpadding=15> 
+					<tr>
+					<td>
+					<p><b>Coarse-graining complex reaction mechanisms</b></p>
+					<p> It is often necessary to include approximations or simplifications in a model due to
+					a lack of information or because it is too costly to simulate all of the molecular details.  NFsim supports the definition of
+					reaction rates as arbitrary mathematical or conditional expressions defined in terms of the state of the system
+					or of individual molecules, allowing you to easily incorporate complex biochemical approximations
+					such as cooperativity.
+					</p>
+					</td>
+					<td width=250><img src="../images/coarse_graining.png" width=280> </td>
+				    </tr>
+				</table>
+			</td></tr>
+			
+			<tr><td>
+				<table border=0 cellpadding=15> 
+					<tr>
+					<td width=200><img src="../images/matlab.png" width=200> </td>
+					<td>
+					<p><b>Suite of Matlab-based analysis utilities</b></p>
+					<p> NFsim includes a documented set of Matlab-based scripts and functions to
+					help in analyzing models, visualizing results, and extracting data from simulations.  With these tools,
+					you can automatically vary parameters to help with sensitivity analysis, extract the molecular connectivity
+					of large aggregates or polymers, or use these functions to track single molecules in your system.
+					</p>
+					</td> </tr>
+				</table>
+			</td></tr>
+			
+			<tr><td>
+				<table border=0> 
+					<tr>
+					<td width=560 cellpadding=15>
+					<p><b>Full integration with BioNetGen</b></p>
+					<p> NFsim is integrated with BioNetGen so that many of the models written for NFsim
+					can be immediately simulated with ODEs or the SSA by just adding a single line to your model file.  
+					With this capability, you'll be able to immediately tell which method can simulate your system the fastest
+					and, when possible, compare stochastic and deterministic results.  For some models that have limited
+					numbers of reactions or states, you can even use BioNetGen to export your model to SBML.  The goal is to
+					allow you to write a single model, then choose how exactly how you want to simulate it.  
+					</p>
+					</td>
+					<!-- td width=150><img src=""> </td -->
+				    </tr>
+				</table>
+			</td></tr>
+			
+		</table>
+			
+		
+		</td></tr>
+		</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<br><br><br><br><br><br>
+		
+
+		</table>
+		
+
+		
+		<br><br><br><br><br><br><br><br>
+		
+		
+	</td>
+	</tr>
+
+	
+	
+	
+
+</table>
+</center>
+
+</body>
+</html>

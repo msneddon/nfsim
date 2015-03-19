@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>NFsim - examples</title>
+
+	<meta NAME="description" CONTENT="Example models for use with NFsim.">
+	<meta NAME="keywords" CONTENT="NFsim, biology, simulation, model, modeling, dynamic, agent-based, rule-based, Sneddon, Emonet, Faeder, BNGL, BNG, BioNetGen, network-free, biochemical, reaction, network, computational biology, systems biology">
+	<link rel="stylesheet" type="text/css" href="../../css/nf_style.css" />
+
+</head>
+
+<body>
+
+
+	<center>
+	<table border=0 cellspacing=0 cellpadding=0>
+	<tr>
+		<!-- <td width=30%></td> -->
+		<td><img src="../../images/topLogo.jpg" align=right></td>
+		<td bgcolor=#2E3192 valign="center">
+			<center>
+			<div class="topMenuDiv">
+				<a href="../../" class="topMenu">overview</a>&nbsp&nbsp&nbsp
+				<a href="../../download" class="topMenu">download</a>&nbsp&nbsp&nbsp
+				<a href="../features.html" class="topMenu">features</a> &nbsp&nbsp&nbsp
+				<a href="../feedback.php" class="topMenu">feedback</a> <br>
+				<a href="../support/support.html" class="topMenu">support</a> &nbsp&nbsp&nbsp
+				<a href="models.html" class="topMenu">models</a> &nbsp&nbsp&nbsp
+				<a href="../developers.html" class="topMenu">developers</a> &nbsp&nbsp&nbsp
+				<a href="http://emonet.biology.yale.edu" class="topMenu">emonet lab</a>
+			</div>
+			</center>
+		</td>
+		<td bgcolor=#2E3192 width=15%></td>
+		<td><img src="../../images/topRight.jpg" align=left></td>
+		<!-- <td bgcolor=#2E3192 width=50%></td> -->
+	</tr>
+	
+	<tr>
+		<td colspan=4>
+		
+		<div class="sectionTitleDiv">
+			models</div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td colspan=4>
+		<!--  CONTENT -->
+		<br><br>
+		
+		<center>
+		
+		<table border=0 cellspacing=0 cellpadding=0  width=650>
+		<tr><td>
+		<p>Here are a set of example models that demonstrate the capabilities of 
+		 NFsim, most of which are included with the NFsim distribution.  
+		 If you would like to contribute and highlight any of your own example models, 
+		 please send us a message through the <a href="../feedback.php">feedback</a> page.</p>
+		</tr></td></table>
+		<br><br>
+		
+		
+		<table border=0 cellspacing=0 cellpadding=2>
+		
+		<tr>
+			<td width=220>
+			<img src="examples/multisitePhos.png" width=220>
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Multi-site Phosphorylation</div>
+				
+				<div class="exampleModelTextDiv">
+				Many proteins can be phosphorylated and dephosphorylated at multiple sites to control their function, but simulating
+				the reaction dynamics of molecules with more than just two or three sites is challenging.  NFsim can effeciently
+				simulate proteins with as many sites as you want to consider, which we demonstrate with a suite of example models.
+				
+				<br><br><a href="multisite_phos.zip">multisite_phos.zip</a>
+				</div>
+			</td>
+		</tr>
+		<tr><td><br><br><br></td></tr>
+		
+		
+		<tr>
+			<td width=220>
+			<img src="examples/actin.png" width=220>
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Actin polymerization, branching, and severing</div>
+				<div class="exampleModelTextDiv">
+				Cells are filled with molecules that can polymerize.  One example is Actin, a cytoskeletal protein that
+				rapidly polymerizes into branched patterns to control eukaryotic cell shape, motility,
+				and processes such as endocytosis.  NFsim provides an ideal platform for constructing models of polymerization dynamics.
+				
+				<br><br><a href="actin.zip">actin.zip</a>
+			</td>
+		</tr>		
+		<tr><td><br><br><br></td></tr>
+		
+		
+		
+		<tr>
+			<td width=220>
+			<img src="examples/tlbr.png" width=220>
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Receptor aggregation in the immune system</div>
+				<div class="exampleModelTextDiv">
+				a.k.a., Trivalent Ligand, Bivalent Receptor (TLBR) system.  This classic model system has been used
+				to understand how immune system receptors aggregate when they are crosslinked
+				by mutual binding to the same ligand or antigen.  Aggregation of receptors can eventually activate downstream signaling, so
+				the dynamics of aggregation are important to understand.  Due to the complexity
+				of aggregation, very few biochemical simulators available today can handle this system.  NFsim is one of them, and can
+				do it rather effeciently.
+				
+				
+				<br><br><a href="tlbr.zip">tlbr.zip</a>
+				</div>
+			</td>
+		</tr>		
+		<tr><td><br><br><br></td></tr>
+		
+		
+		<tr>
+			<td width=220>
+			<img src="examples/chemotaxis.png" width=220>
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Assistance Neighborhood model of bacterial chemoreceptor signaling</div>
+				<div class="exampleModelTextDiv">
+				Bacteria can sense and swim towards food using thier chemotaxis sensory system together with flagella.  The receptors
+				that sense food can assemble into highly cooperative clusters that can amplify weak signals by switching between on and off states.  
+				To simulate the details of receptor activity, you need to introduce a functional expression for the coopeartivity that can be applied
+				to the receptor clusters.  Researchers have built custom simulators that can do this (and only this), but NFsim is the only
+				general biochemical reaction simulator that solves this problem and can simulate cooperative receptor activity.
+				
+				<br><br><a href="chemotaxisModels.zip">chemotaxisModels.zip</a>
+			</td>
+		</tr>		
+		<tr><td><br><br><br></td></tr>
+		
+		
+		<tr>
+			<td width=220>
+			<img src="examples/motor.png" width=220>
+			<center><font class="smallText"><i>Image adapted from <a href="http://www.nature.com/nrmicro/journal/v4/n10/full/nrmicro1493.html">Pallen and Matzke, 2006</a> </i></font></center>
+			
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Coarse-grained model of the bacterial flagellar motor</div>
+				<div class="exampleModelTextDiv">
+				Many large molecular structures are complicated and not well understood, but modelers can often approximate their function with a
+				simple equation, such as a Hill function.  NFsim allows you to do write any mathetical function you like and use it directly in
+				your model to control the rate of a reaction rule.  For example,
+				you can write a funciton that captures the dynamic switching behavior of the bacterial flagellar motor.  This allows modelers
+				to quickly connect coarse-grained representations of complex behavior, such as the motor, to the rest of your biochemical reactions.
+				
+				
+				<br><br><a href="flagellar_motor.zip">flagellar_motor.zip</a>
+			</td>
+		</tr>		
+		<tr><td><br><br><br></td></tr>
+		
+		
+		<tr>
+			<td width=220>
+			<img src="examples/fceRI_biocarta.gif" width=220>
+			<center><font class="smallText"><i>Image from <a href="http://main.biocarta.com/pathfiles/h_fcer1Pathway.asp">BioCarta</a> </i></font></center>
+			</td>
+			<td width=420 valign="center">
+				<div class="exampleModelDiv">Fc&epsilon;-RI receptor signaling in the immune system</div>
+				<div class="exampleModelTextDiv">
+				Large signaling pathways, such as Fc&epsilon;-RI signaling in immune cells, can involve hundreds of different 
+				molecules that can interact, aggregate, and modify each other.  Standard simulators force the modeler to consider all
+				distinct chemical species, so modelers generally have to make simplifications.  In NFsim, models never have to enumerate
+				or generate the list of all chemical species, so you can simulate systems like Fc&epsilon;-RI in detail.
+				
+				<br><br><a href="fceRI_compendium.zip">fceRI_compendium.zip</a>
+			</td>
+		</tr>		
+		<tr><td><br><br><br></td></tr>
+		
+		
+		</table>
+		
+		
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<br><br><br><br><br><br>
+		
+		
+		</table>
+		
+
+		
+		<br><br><br><br><br><br><br><br>
+		
+		
+	</td>
+	</tr>
+
+	
+	
+	
+
+</table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+
+/* this is used to force the vertical scrollbar, so there is no shift from page to page */
+html { min-height: 100%; margin-bottom: 1px; }
+
+body {
+	margin-top: 0pt;
+	margin-left: 0pt;
+	margin-right: 0pt;
+	margin-bottom: 0pt;
+	color : #000000;
+	background: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:left;
+}
+
+p {
+	text-align:left;
+}
+
+.smallText{
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 8pt;
+}
+
+
+
+/* adjusts the default link style*/
+a:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a:hover {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	}
+
+/* adjusts the achor points link style*/
+a.anchor:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:left;
+	}
+a.anchor:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:left;
+	}
+a.anchor:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:left;
+	}
+a.anchor:hover {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:left;
+	}
+	
+	
+/* adjusts the internal link style*/
+a.internal:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a.internal:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a.internal:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E3192;
+	}
+a.internal:hover {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	}
+	
+	
+	
+
+
+/* adjusts the properties of the top menu links*/
+a.topMenu:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 13pt;
+	}
+a.topMenu:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 13pt;
+	}
+a.topMenu:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 13pt;
+	}
+a.topMenu:hover {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFC17;
+	font-size: 13pt;
+	}
+	
+	
+	
+	
+	/* adjusts the properties of the top menu links*/
+a.backToTop:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 13pt;
+	}
+a.backToTop:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 13pt;
+	}
+a.backToTop:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 13pt;
+	}
+a.backToTop:hover {
+	
+	text-decoration: underline;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #9B0000;
+	font-size: 13pt;
+	}
+	
+	
+/* for the support FAQ, back to the contents */
+a.backTo:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 8pt;
+	text-align:left;
+	}
+a.backTo:visited {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 8pt;
+	text-align:left;
+	}
+a.backTo:active {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 8pt;
+	text-align:left;
+	}
+a.backTo:hover {
+	
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	font-size: 8pt;
+	text-align:left;
+}
+
+
+.supportStyle {
+	text-decoration: none;
+	text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+}
+	
+	
+	
+	
+	
+ul {
+	list-style-type: circle;
+	padding: 0px;
+	margin-left: 30pt;
+	margin-top: 10pt;
+	margin-bottom: 15pt;
+	text-align:left;
+	}
+li {
+	padding-left: 5px;
+	padding-bottom: 2px; 
+}
+	
+	
+	
+	
+.codeDiv {
+	white-space: nowrap;
+	text-decoration: none;
+	text-align:left;
+	font-family: "Lucida Console", monospace;
+	color: #000000;
+	font-size: 10pt;
+	
+	margin-left: 20pt;
+	margin-top: 15pt;
+	margin-bottom: 15pt;
+	margin-right: 30pt;
+	
+	padding-left: 5pt;
+	padding-right: 5pt;
+	padding-top: 10pt;
+	padding-bottom: 10pt;
+	background-color: #FFFFCC;
+}
+	
+	
+	
+.sectionTitleDiv {
+	white-space: nowrap;
+	text-decoration: none;
+	font-weight: bold;
+	text-align:center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 18pt;
+	/*margin-left: 20pt;*/
+	margin-top: 15pt;
+	margin-bottom: 3pt;
+}
+	
+	
+	
+	
+	
+	
+.topMenuDiv{
+	white-space: nowrap;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-left: 1pt;
+	margin-top: 1pt;
+	margin-bottom: 1pt;
+}
+	
+.sectionTitleDiv {
+	white-space: nowrap;
+	text-decoration: none;
+	font-weight: bold;
+	text-align:center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 20pt;
+	/*margin-left: 20pt;*/
+	margin-top: 15pt;
+	margin-bottom: 3pt;
+}
+
+.exampleModelDiv {
+	text-decoration: none;
+	font-weight: bold;
+	text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 12pt;
+	margin-left: 10pt;
+	margin-top: 3pt;
+	margin-bottom: 10pt;
+}
+
+.exampleModelTextDiv {
+	text-decoration: none;
+	text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	margin-left: 10pt;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+}
+
+.sectionTopLinkDiv {
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	
+	margin-left: 1pt;
+	margin-top: 1pt;
+	margin-right: 1pt;
+	margin-bottom: 3pt;
+	
+	text-align: right;
+}	
+
+
+
+
+.downloadTitleDiv {
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 14pt;
+	font-weight: bold;
+	margin-left: 2pt;
+	margin-top: 5pt;
+	margin-right: 5pt;
+	margin-bottom: 5pt;
+	text-align: left;
+}	
+.downloadTableText{
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 11pt;
+	margin-left: 5pt;
+	margin-top: 3pt;
+	margin-right: 5pt;
+	margin-bottom: 3pt;
+	text-align: left;
+}
+	/* adjusts the properties of the top menu links*/
+a.downloadFileLink:link {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0044FF;
+	font-size: 11pt;
+}
+a.downloadFileLink:visited {
+	text-decoration: underline;
+	font-size: 11pt;
+	color: #0044FF;
+}
+a.downloadFileLink:active {
+	text-decoration: underline;
+	font-size: 11pt;
+	color: #0044FF;
+}
+a.downloadFileLink:hover {
+	font-size: 11pt;
+	text-decoration: underline;
+	color: #FF0000;
+}
+
+
+
+.performanceTitleDiv{
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;	
+	font-weight: bold;
+	font-size: 14pt;
+	margin-left: 5pt;
+	margin-top: 3pt;
+	margin-right: 5pt;
+	margin-bottom: 3pt;
+	text-align: center;
+}
+.performanceTextDiv{
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 11pt;
+	margin-left: 5pt;
+	margin-top: 3pt;
+	margin-right: 5pt;
+	margin-bottom: 3pt;
+	text-align: left;
+}
+
+
+
+
+/* adjusts the registration form text */
+.regTextDiv{
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	text-align: right;
+	margin-left: 1pt;
+	margin-top: 1pt;
+	margin-bottom: 1pt;
+}
+.regTextRequiredFieldDiv{
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	text-align: left;
+	margin-left: 1pt;
+	margin-top: 1pt;
+	margin-bottom: 1pt;
+}
