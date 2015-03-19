@@ -1,4 +1,13 @@
 
+DEPRECATED -- 
+NFsim has migrated to git on github (http://github.com/msneddon/nfsim).  To
+modify or contribute to NFsim, clone the project using git.  This reference
+is kept for legacy purposes, and may still have some relevant information
+regarding installing a compiler and configuring NFsim with Eclipse.  We still
+recommend you use eclipse and the automatic makefile build tools created by
+Eclipse for development, but of course hack how you see fit.
+---
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%            SVN for NFsim              %%
