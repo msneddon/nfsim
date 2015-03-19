@@ -31,9 +31,14 @@ of complex nonlinear reaction mechanisms.
 
 NFsim is ideal for modeling polymerization, aggregation, and cooperative reactions that 
 cannot be handled with traditional stochastic or ODE simulators. Models are specified in 
-the BioNetGen Langauge, providing a powerful model building environment. 
+the BioNetGen Langauge, providing a powerful model building environment.
 
-please cite NFsim as:
+If you just want to download and use NFsim, you should simply download a preconfigured
+packaged release from http://emonet.biology.yale.edu/nfsim.  If you want to hack on the
+code or make contributions, please create a fork and submit pull requests to the dev
+branch.
+
+If you use NFsim for your research or work, please cite NFsim as:
 Sneddon MW, Faeder JR & Emonet T.  Efficient modeling, simulation and 
 coarse-graining of biological complexity with NFsim.  Nature Methods,(2011) 8(2):177-83.
 
