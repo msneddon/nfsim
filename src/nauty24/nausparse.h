@@ -51,10 +51,10 @@ extern int targetcell_sg(graph*,int*,int*,int,int,boolean,int,int,int);
 extern boolean cheapautom_sg(int*,int,boolean,int);
 extern boolean isautom_sg(graph*,permutation*,boolean,int,int);
 extern void
-    refine_sg(graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
+    refine_sg(graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
 extern int testcanlab_sg(graph*,graph*,int*,int*,int,int);
 extern void updatecan_sg(graph*,graph*,permutation*,int,int,int);
-extern void init_sg(graph*,graph**,graph*,graph**,int*,int*,set*,
+extern void init_sg(graph*,graph**,graph*,graph**,int*,int*,nset*,
 	                   struct optionstruct*,int*,int,int);
 extern void nausparse_freedyn(void);
 extern void nausparse_check(int,int,int,int);

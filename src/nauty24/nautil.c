@@ -98,7 +98,7 @@ int labelorg = 0;
 *****************************************************************************/
 
 int
-nextelement(set *set1, int m, int pos)
+nextelement(nset *set1, int m, int pos)
 {
 	setword setwd;
 	int w;
@@ -141,7 +141,7 @@ nextelement(set *set1, int m, int pos)
 *****************************************************************************/
 
 void
-permset(set *set1, set *set2, int m, permutation *perm)
+permset(nset *set1, nset *set2, int m, permutation *perm)
 {
 	setword setw;
 	int pos,w,b;
@@ -362,7 +362,7 @@ writeperm(FILE *f, permutation *perm, boolean cartesian, int linelength, int n)
 *****************************************************************************/
 
 void
-fmperm(permutation *perm, set *fix, set *mcr, int m, int n)
+fmperm(permutation *perm, nset *fix, nset *mcr, int m, int n)
 {
 	int i,k,l;
 
@@ -408,7 +408,7 @@ fmperm(permutation *perm, set *fix, set *mcr, int m, int n)
 *****************************************************************************/
 
 void
-fmptn(int *lab, int *ptn, int level, set *fix, set *mcr, int m, int n)
+fmptn(int *lab, int *ptn, int level, nset *fix, nset *mcr, int m, int n)
 {
 	int i,lmin;
 
@@ -459,8 +459,8 @@ fmptn(int *lab, int *ptn, int level, set *fix, set *mcr, int m, int n)
 
 void
 doref(graph *g, int *lab, int *ptn, int level, int *numcells,
-     int *qinvar, permutation *invar, set *active, int *code,
-     void (*refproc)(graph*,int*,int*,int,int*,permutation*,set*,int*,int,int),
+     int *qinvar, permutation *invar, nset *active, int *code,
+     void (*refproc)(graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int),
      void (*invarproc)(graph*,int*,int*,int,int,int,permutation*,
                                                      int,boolean,int,int),
      int mininvarlev, int maxinvarlev, int invararg,
@@ -567,7 +567,7 @@ doref(graph *g, int *lab, int *ptn, int level, int *numcells,
 *****************************************************************************/
 
 void
-maketargetcell(graph *g, int *lab, int *ptn, int level, set *tcell,
+maketargetcell(graph *g, int *lab, int *ptn, int level, nset *tcell,
            int *tcellsize, int *cellpos, int tc_level, boolean digraph,
 	   int hint,
            int (*targetcell)(graph*,int*,int*,int,int,boolean,int,int,int),
@@ -595,7 +595,7 @@ maketargetcell(graph *g, int *lab, int *ptn, int level, set *tcell,
 *****************************************************************************/
 
 void
-shortprune(set *set1, set *set2, int m)
+shortprune(nset *set1, nset *set2, int m)
 {
 	int i;
 
@@ -616,7 +616,7 @@ shortprune(set *set1, set *set2, int m)
 
 void
 breakout(int *lab, int *ptn, int level, int tc, int tv,
-         set *active, int m)
+         nset *active, int m)
 {
 	int i,prev,next;
 
@@ -649,7 +649,7 @@ breakout(int *lab, int *ptn, int level, int tc, int tv,
 *****************************************************************************/
 
 void
-longprune(set *tcell, set *fix, set *bottom, set *top, int m)
+longprune(nset *tcell, nset *fix, nset *bottom, nset *top, int m)
 {
 	int i;
 

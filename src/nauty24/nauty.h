@@ -250,7 +250,7 @@ it is necessary to check they are correct.
 *   Conventions and Assumptions:                                             *
 *                                                                            *
 *    A 'setword' is the chunk of memory that is occupied by one part of      *
-*    a set.  This is assumed to be >= WORDSIZE bits in size.                 *
+*    a nset.  This is assumed to be >= WORDSIZE bits in size.                 *
 *                                                                            *
 *    The rightmost (loworder) WORDSIZE bits of setwords are numbered         *
 *    0..WORDSIZE-1, left to right.  It is necessary that the 2^WORDSIZE      *
@@ -267,11 +267,11 @@ it is necessary to check they are correct.
 *    is 1 iff x is in the subset.  Bits numbered n or greater, and           *
 *    unnumbered bits, are assumed permanently zero.                          *
 *                                                                            *
-*    A 'graph' consists of n contiguous sets.  The i-th set represents       *
+*    A 'graph' consists of n contiguous sets.  The i-th nset represents       *
 *    the vertices adjacent to vertex i, for i = 0,1,...,n-1.                 *
 *                                                                            *
 *    A 'permutation' is an array of n ints repesenting a permutation of      *
-*    the set {0,1,...,n-1}.  The value of the i-th entry is the number to    *
+*    the nset {0,1,...,n-1}.  The value of the i-th entry is the number to    *
 *    which i is mapped.                                                      *
 *                                                                            *
 *    If g is a graph and p is a permutation, then g^p is the graph in        *
@@ -310,7 +310,7 @@ it is necessary to check they are correct.
 #endif
 #endif
 
-/* WORDSIZE is the number of set elements per setword (16, 32 or 64).
+/* WORDSIZE is the number of nset elements per setword (16, 32 or 64).
    Starting at version 2.2, WORDSIZE and setword are defined as follows:
    If WORDSIZE is so far undefined, use 32 unless longs have more 
       than 32 bits, in which case use 64.
@@ -403,14 +403,14 @@ typedef unsigned long nauty_counter;
 #define MAXN 0
 #define MAXM 0
 #else
-#define MAXM ((MAXN+WORDSIZE-1)/WORDSIZE)  /* max setwords in a set */
+#define MAXM ((MAXN+WORDSIZE-1)/WORDSIZE)  /* max setwords in a nset */
 #endif  /* MAXN */
 
-/* Starting at version 2.2, set operations work for all set sizes unless
+/* Starting at version 2.2, set operations work for all nset sizes unless
    ONE_WORD_SETS is defined.  In the latter case, if MAXM=1, set ops
    work only for single-setword sets.  In any case, macro versions
    ending with 1 work for single-setword sets and versions ending with
-   0 work for all set sizes.
+   0 work for all nset sizes.
 */
 
 #if  WORDSIZE==16
@@ -442,7 +442,7 @@ typedef unsigned long nauty_counter;
 #define FLIPELEMENT1(setadd,pos) (*(setadd) ^= BITT[pos])
 #define ISELEMENT1(setadd,pos)   ((*(setadd) & BITT[pos]) != 0)
 #define EMPTYSET1(setadd,m)   *(setadd) = 0;
-#define GRAPHROW1(g,v,m) ((set*)(g) + (v))
+#define GRAPHROW1(g,v,m) ((nset*)(g) + (v))
 
 #define ADDELEMENT0(setadd,pos)  ((setadd)[SETWD(pos)] |= BITT[SETBT(pos)])
 #define DELELEMENT0(setadd,pos)  ((setadd)[SETWD(pos)] &= ~BITT[SETBT(pos)])
@@ -451,7 +451,7 @@ typedef unsigned long nauty_counter;
 #define EMPTYSET0(setadd,m) \
     {setword *es; \
     for (es = (setword*)(setadd)+(m); --es >= (setword*)(setadd);) *es=0;}
-#define GRAPHROW0(g,v,m) ((set*)(g) + (long)(v)*(long)(m))
+#define GRAPHROW0(g,v,m) ((nset*)(g) + (long)(v)*(long)(m))
 
 #if  (MAXM==1) && defined(ONE_WORD_SETS)
 #define ADDELEMENT ADDELEMENT1
@@ -686,12 +686,12 @@ typedef int boolean;    /* boolean MUST be the same as int */
 
 #define UPROC void      /* obsolete */
 
-typedef setword set,graph;
+typedef setword nset,graph;
 typedef int nvector,np2vector;   /* obsolete */
 typedef shortish permutation;
 #ifdef NAUTY_IN_MAGMA
 typedef graph nauty_graph;
-typedef set nauty_set;
+typedef nset nauty_set;
 #endif
 
 typedef struct
@@ -733,9 +733,9 @@ typedef struct
     void    (*updatecan)      /* update canonical object */
             (graph*,graph*,permutation*,int,int,int);
     void    (*refine)         /* refine partition */
-            (graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
+            (graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
     void    (*refine1)        /* refine partition, MAXM==1 */
-            (graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
+            (graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
     boolean (*cheapautom)     /* test for easy automorphism */
             (int*,int,boolean,int);
     int     (*targetcell)     /* decide which cell to split */
@@ -743,7 +743,7 @@ typedef struct
     void    (*freedyn)(void); /* free dynamic memory */
     void    (*check)          /* check compilation parameters */
             (int,int,int,int);
-    void    (*init)(graph*,graph**,graph*,graph**,int*,int*,set*,
+    void    (*init)(graph*,graph**,graph*,graph**,int*,int*,nset*,
                    struct optionstruct*,int*,int,int);
     void    (*cleanup)(graph*,graph**,graph*,graph**,int*,int*,
                       struct optionstruct*,statsblk*,int,int);
@@ -761,7 +761,7 @@ typedef struct optionstruct
     int linelength;           /* max chars/line (excl. '\n') for output */
     FILE *outfile;            /* file for output, if any */
     void (*userrefproc)       /* replacement for usual refine procedure */
-         (graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
+         (graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
     void (*userautomproc)     /* procedure called for each automorphism */
          (int,permutation*,int*,int,int,int);
     void (*userlevelproc)     /* procedure called for each level */
@@ -791,7 +791,7 @@ typedef struct optionstruct
 
 /* The following are obsolete.  Just use NULL. */
 #define NILFUNCTION ((void(*)())NULL)      /* nil pointer to user-function */
-#define NILSET      ((set*)NULL)           /* nil pointer to set */
+#define NILSET      ((nset*)NULL)           /* nil pointer to nset */
 #define NILGRAPH    ((graph*)NULL)         /* nil pointer to graph */
 
 #define DEFAULTOPTIONS_GRAPH(options) optionblk options = \
@@ -1029,10 +1029,10 @@ extern "C" {
 #endif
 
 extern void alloc_error(char*);
-extern void breakout(int*,int*,int,int,int,set*,int);
+extern void breakout(int*,int*,int,int,int,nset*,int);
 extern boolean cheapautom(int*,int,boolean,int);
-extern void doref(graph*,int*,int*,int,int*,int*,permutation*,set*,int*,
-  void(*)(graph*,int*,int*,int,int*,permutation*,set*,int*,int,int),
+extern void doref(graph*,int*,int*,int,int*,int*,permutation*,nset*,int*,
+  void(*)(graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int),
   void(*)(graph*,int*,int*,int,int,int,permutation*,int,boolean,int,int),
   int,int,int,boolean,int,int);
 extern void extra_autom(permutation*,int);
@@ -1040,20 +1040,20 @@ extern void extra_level(int,int*,int*,int,int,int,int,int,int);
 extern boolean isautom(graph*,permutation*,boolean,int,int);
 extern dispatchvec dispatch_graph;
 extern int itos(int,char*);
-extern void fmperm(permutation*,set*,set*,int,int);
-extern void fmptn(int*,int*,int,set*,set*,int,int);
-extern void longprune(set*,set*,set*,set*,int);
-extern void nauty(graph*,int*,int*,set*,int*,optionblk*,
-                  statsblk*,set*,int,int,int,graph*);
-extern void maketargetcell(graph*,int*,int*,int,set*,int*,int*,int,boolean,
+extern void fmperm(permutation*,nset*,nset*,int,int);
+extern void fmptn(int*,int*,int,nset*,nset*,int,int);
+extern void longprune(nset*,nset*,nset*,nset*,int);
+extern void nauty(graph*,int*,int*,nset*,int*,optionblk*,
+                  statsblk*,nset*,int,int,int,graph*);
+extern void maketargetcell(graph*,int*,int*,int,nset*,int*,int*,int,boolean,
            int,int (*)(graph*,int*,int*,int,int,boolean,int,int,int),int,int);
-extern int nextelement(set*,int,int);
+extern int nextelement(nset*,int,int);
 extern int orbjoin(int*,permutation*,int);
-extern void permset(set*,set*,int,permutation*);
+extern void permset(nset*,nset*,int,permutation*);
 extern void putstring(FILE*,char*);
-extern void refine(graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
-extern void refine1(graph*,int*,int*,int,int*,permutation*,set*,int*,int,int);
-extern void shortprune(set*,set*,int);
+extern void refine(graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
+extern void refine1(graph*,int*,int*,int,int*,permutation*,nset*,int*,int,int);
+extern void shortprune(nset*,nset*,int);
 extern int targetcell(graph*,int*,int*,int,int,boolean,int,int,int);
 extern int testcanlab(graph*,graph*,int*,int*,int,int);
 extern void updatecan(graph*,graph*,permutation*,int,int,int);
