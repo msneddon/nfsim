@@ -74,7 +74,7 @@
 typedef struct tcnode_struct
 {
 	struct tcnode_struct *next;
-	set *tcellptr;
+	nset *tcellptr;
 } tcnode;
 
 /* aproto: header new_nauty_protos.h */
@@ -149,18 +149,18 @@ static int gca_first,     /* level of greatest common ancestor of current
 static boolean needshortprune;       /* used to flag calls to shortprune */
 
 #if !MAXN
-DYNALLSTAT(set,defltwork,defltwork_sz);
+DYNALLSTAT(nset,defltwork,defltwork_sz);
 DYNALLSTAT(permutation,workperm,workperm_sz);
-DYNALLSTAT(set,fixedpts,fixedpts_sz);
+DYNALLSTAT(nset,fixedpts,fixedpts_sz);
 DYNALLSTAT(permutation,firstlab,firstlab_sz);
 DYNALLSTAT(permutation,canonlab,canonlab_sz);
 DYNALLSTAT(short,firstcode,firstcode_sz);
 DYNALLSTAT(short,canoncode,canoncode_sz);
 DYNALLSTAT(shortish,firsttc,firsttc_sz);
-DYNALLSTAT(set,active,active_sz);
+DYNALLSTAT(nset,active,active_sz);
 
 /* In the dynamically allocated case (MAXN=0), each level of recursion
-   needs one set (tcell) to represent the target cell.  This is 
+   needs one nset (tcell) to represent the target cell.  This is 
    implemented by using a linked list of tcnode anchored at the root
    of the search tree.  Each node points to its child (if any) and to
    the dynamically allocated tcell.  Apart from the the first node of
@@ -172,22 +172,22 @@ static tcnode tcnode0 = {NULL,NULL};
 static int alloc_m = 0;
 
 #else
-static set defltwork[2*MAXM];        /* workspace in case none provided */
+static nset defltwork[2*MAXM];        /* workspace in case none provided */
 static permutation workperm[MAXN];   /* various scratch uses */
-static set fixedpts[MAXM];           /* points which were explicitly
+static nset fixedpts[MAXM];           /* points which were explicitly
                                         fixed to get current node */
 static permutation firstlab[MAXN],   /* label from first leaf */
                    canonlab[MAXN];   /* label from bsf leaf */
 static short firstcode[MAXN+2],      /* codes for first leaf */
              canoncode[MAXN+2];      /* codes for bsf leaf */
 static shortish firsttc[MAXN+2];     /* index of target cell for left path */
-static set active[MAXM];             /* used to contain index to cells now
+static nset active[MAXM];             /* used to contain index to cells now
                                         active for refinement purposes */
 #endif
 
-static set *workspace,*worktop;      /* first and just-after-last addresses of
+static nset *workspace,*worktop;      /* first and just-after-last addresses of
                                         work area to hold automorphism data */
-static set *fmptr;                   /* pointer into workspace */
+static nset *fmptr;                   /* pointer into workspace */
 
 
 /*****************************************************************************
@@ -201,16 +201,16 @@ static set *fmptr;                   /* pointer into workspace */
 *  Parameters - <r> means read-only, <w> means write-only, <wr> means both:  *
 *           g <r>  - the graph                                               *
 *     lab,ptn <rw> - used for the partition nest which defines the colouring *
-*                  of g.  The initial colouring will be set by the program,  *
+*                  of g.  The initial colouring will be nset by the program,  *
 *                  using the same colour for every vertex, if                *
-*                  options->defaultptn!=FALSE.  Otherwise, you must set it   *
+*                  options->defaultptn!=FALSE.  Otherwise, you must nset it   *
 *                  yourself (see the Guide). If options->getcanon!=FALSE,    *
 *                  the contents of lab on return give the labelling of g     *
 *                  corresponding to canong.  This does not change the        *
 *                  initial colouring of g as defined by (lab,ptn), since     *
 *                  the labelling is consistent with the colouring.           *
 *     active  <r>  - If this is not NULL and options->defaultptn==FALSE,     *
-*                  it is a set indicating the initial set of active colours. *
+*                  it is a nset indicating the initial nset of active colours. *
 *                  See the Guide for details.                                *
 *     orbits  <w>  - On return, orbits[i] contains the number of the         *
 *                  least-numbered vertex in the same orbit as i, for         *
@@ -235,9 +235,9 @@ static set *fmptr;                   /* pointer into workspace */
 *****************************************************************************/
 
 void
-nauty(graph *g_arg, int *lab, int *ptn, set *active_arg,
+nauty(graph *g_arg, int *lab, int *ptn, nset *active_arg,
       int *orbits_arg, optionblk *options, statsblk *stats_arg,
-      set *ws_arg, int worksize, int m_arg, int n_arg, graph *canong_arg)
+      nset *ws_arg, int worksize, int m_arg, int n_arg, graph *canong_arg)
 {
         int i;
         int numcells;
@@ -328,9 +328,9 @@ nauty(graph *g_arg, int *lab, int *ptn, set *active_arg,
 	OPTCALL(dispatch.check)(WORDSIZE,m,n,NAUTYVERSIONID);
 
 #if !MAXN
-	DYNALLOC1(set,defltwork,defltwork_sz,2*m,"nauty");
-	DYNALLOC1(set,fixedpts,fixedpts_sz,m,"nauty");
-	DYNALLOC1(set,active,active_sz,m,"nauty");
+	DYNALLOC1(nset,defltwork,defltwork_sz,2*m,"nauty");
+	DYNALLOC1(nset,fixedpts,fixedpts_sz,m,"nauty");
+	DYNALLOC1(nset,active,active_sz,m,"nauty");
 	DYNALLOC1(permutation,workperm,workperm_sz,n,"nauty");
 	DYNALLOC1(permutation,firstlab,firstlab_sz,n,"nauty");
 	DYNALLOC1(permutation,canonlab,canonlab_sz,n,"nauty");
@@ -504,7 +504,7 @@ nauty(graph *g_arg, int *lab, int *ptn, set *active_arg,
 *                                                                            *
 *  firstpathnode(lab,ptn,level,numcells) produces a node on the leftmost     *
 *  path down the tree.  The parameters describe the level and the current    *
-*  colour partition.  The set of active cells is taken from the global set   *
+*  colour partition.  The nset of active cells is taken from the global nset   *
 *  'active'.  If the refined partition is not discrete, the leftmost child   *
 *  is produced by calling firstpathnode, and the other children by calling   *
 *  othernode.                                                                *
@@ -530,7 +530,7 @@ firstpathnode(int *lab, int *ptn, int level, int numcells)
         int tv;
         int tv1,index,rtnlevel,tcellsize,tc,childcount,qinvar,refcode;
 #if !MAXN
-        set *tcell;
+        nset *tcell;
         tcnode *tcnode_this;
 
         tcnode_this = tcnode_parent->next;
@@ -538,14 +538,14 @@ firstpathnode(int *lab, int *ptn, int level, int numcells)
         {
             if ((tcnode_this = (tcnode*)ALLOCS(1,sizeof(tcnode))) == NULL ||
                 (tcnode_this->tcellptr
-                             = (set*)ALLOCS(alloc_m,sizeof(set))) == NULL)
+                             = (nset*)ALLOCS(alloc_m,sizeof(nset))) == NULL)
                 alloc_error((char *)"tcell");
             tcnode_parent->next = tcnode_this;
             tcnode_this->next = NULL;
         }
         tcell = tcnode_this->tcellptr;
 #else
-        set tcell[MAXM];
+        nset tcell[MAXM];
 #endif
 
         ++stats->numnodes;
@@ -654,7 +654,7 @@ firstpathnode(int *lab, int *ptn, int level, int numcells)
 *                                                                            *
 *  othernode(lab,ptn,level,numcells) produces a node other than an ancestor  *
 *  of the first leaf.  The parameters describe the level and the colour      *
-*  partition.  The list of active cells is found in the global set 'active'. *
+*  partition.  The list of active cells is found in the global nset 'active'. *
 *  The value returned is the level to return to.                             *
 *                                                                            *
 *  FUNCTIONS CALLED: (*usernodeproc)(),doref(),refine(),recover(),           *
@@ -675,7 +675,7 @@ othernode(int *lab, int *ptn, int level, int numcells)
         int tv1,refcode,rtnlevel,tcellsize,tc,qinvar;
         short code;
 #if !MAXN
-        set *tcell;
+        nset *tcell;
         tcnode *tcnode_this;
 
         tcnode_this = tcnode_parent->next;
@@ -683,14 +683,14 @@ othernode(int *lab, int *ptn, int level, int numcells)
         {
             if ((tcnode_this = (tcnode*)ALLOCS(1,sizeof(tcnode))) == NULL ||
                 (tcnode_this->tcellptr
-                         = (set*)ALLOCS(alloc_m,sizeof(set))) == NULL)
+                         = (nset*)ALLOCS(alloc_m,sizeof(nset))) == NULL)
                 alloc_error((char *)"tcell");
             tcnode_parent->next = tcnode_this;
             tcnode_this->next = NULL;
         }
         tcell = tcnode_this->tcellptr;
 #else
-        set tcell[MAXM];
+        nset tcell[MAXM];
 #endif
 
 #ifdef NAUTY_IN_MAGMA
@@ -734,7 +734,7 @@ othernode(int *lab, int *ptn, int level, int numcells)
         }
 
         tc = -1;
-   /* If children will be required, find new target cell and set tc to its
+   /* If children will be required, find new target cell and nset tc to its
       position in lab, tcell to its contents, and tcellsize to its size: */
 
         if (numcells < n && (eqlev_first == level ||

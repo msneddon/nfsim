@@ -438,7 +438,7 @@ sortints(int *x, int n)
 
 void
 init_sg(graph *gin, graph **gout, graph *hin, graph **hout, int *lab,
-	int *ptn, set *active, struct optionstruct *options, int *status,
+	int *ptn, nset *active, struct optionstruct *options, int *status,
 	int m, int n)
 {
     	sparsegraph *sg,*sh;
@@ -515,7 +515,7 @@ distvals(sparsegraph *g, int v0, shortish *dist, int n)
 
 void
 refine_sg(graph *g, int *lab, int *ptn, int level, int *numcells,
-       permutation *count, set *active, int *code, int m, int n)
+       permutation *count, nset *active, int *code, int m, int n)
 {
 	int i,j,k,l,v1,v2,v3,isplit;
 	shortish w1,w2,w3;
@@ -1239,7 +1239,7 @@ sg_to_nauty(sparsegraph *sg, graph *g, int reqm, int *pm)
 	int *v,*d,*e;
 	int m,n,i,j,di;
 	int vi;
-	set *gi;
+	nset *gi;
 
 	SG_VDE(sg,v,d,e);
 	n = sg->nv;
@@ -1291,7 +1291,7 @@ nauty_to_sg(graph *g, sparsegraph *sg, int m, int n)
 	int i,j,k;
 	int di,nde;
 	long l;
-	set *gi;
+	nset *gi;
 
 	if (!sg)
 	{
