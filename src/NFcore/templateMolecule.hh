@@ -101,8 +101,9 @@ namespace NFcore
 
 		/* functions that are needed to match to a molecule instance */
 		bool compare(Molecule *m);
-		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false);
-		void clear();
+		//JJT: adding optional parameter 'keepCanBeMappedArray' that allows canBeMapped to survive between interations
+		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false,bool keepCanBeMappedArray=false); 
+		void clear(bool keepCanBeMappedArray=false);
 		void clearTemplateOnly();
 		bool tryToMap(Molecule *toMap, string toMapComponent,
 				Molecule *mappedFrom, string mappedFromComponent);

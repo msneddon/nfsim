@@ -712,14 +712,14 @@ void TemplateMolecule::traverse(TemplateMolecule *tempMol, vector <TemplateMolec
 
 
 
-void TemplateMolecule::clear() {
+void TemplateMolecule::clear(bool keepCanBeMappedArray) {
 	if(matchMolecule!=0) {
 		matchMolecule->isMatchedTo=0;
 		matchMolecule=0;
 	}
 	for(int b=0; b<n_bonds; b++) hasVisitedBond[b]=false;
 
-	if(n_symComps>0) {
+	if(n_symComps>0 && !keepCanBeMappedArray) {
 		for(int c=0; c<n_symComps; c++) {
 			canBeMappedTo.at(c).clear();
 		}
@@ -1036,7 +1036,7 @@ bool TemplateMolecule::isSymMapValid()
 
 
 
-bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd)
+bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd, bool keepCanBeMappedArray)
 {
 	//bool de=false;
 	//if(this->uniqueTemplateID==5 ) cout<<"\n\n---\n";
@@ -1119,6 +1119,9 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	//Now for the tricky and fun part.  The actual traversal....
 	//Cycle through the bonds
+
+	
+
 	for(int b=0; b<n_bonds; b++)
 	{
 		//cout<<"cycling through bond "<<b<<endl;
@@ -1205,6 +1208,9 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	//////////////////////////////////////////////////////////////////////////
 	//Now go through each of the symmetric sites and try to map them
+
+	//JJT: boolean flag that tracks whether a match between candidate molecule and the  templateMolecule was found
+	bool matchFoundFlag = false;
 	for(int c=0; c<n_symComps; c++)
 	{
 		//if(this->uniqueTemplateID==41)cout<<"comparing symComp["<<c<<"]: "<<symCompName[c]<<endl;
@@ -1257,6 +1263,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 						// we have to remember this, even if we can map from the other side, in
 						// case we get here before the other side mapped me.
 						this->canBeMappedTo.at(c).push_back(molEqComp[sc]);
+						matchFoundFlag = true;
 						continue;
 					}
 				}
@@ -1298,17 +1305,21 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			for(unsigned int cbm=0; cbm<canBeMappedTo.at(c).size(); cbm++) {
 				if(canBeMappedTo.at(c).at(cbm)==molEqComp[sc]) alreadyMappedHere=true;
 			}
-			if(!alreadyMappedHere) canBeMappedTo.at(c).push_back(molEqComp[sc]);
+			if(!alreadyMappedHere) {
+				canBeMappedTo.at(c).push_back(molEqComp[sc]);
+				matchFoundFlag = true;
+				//JJT: we only want to register this match. previously it would keep iterating, only keeping the last match in memory (MappingSet)
+				break;
+			}
 		}
 
 		//If we couldn't map this symmetric component, then we must quit
-		if(canBeMappedTo.at(c).size()==0) {
+		//if(canBeMappedTo.at(c).size()==0) {
+		if(!matchFoundFlag){ //JJT: adding flag check condtition instead of just checking for size
 			//if(this->uniqueTemplateID==41) cout<<"could not find a mapping. (canMapThisComponent=false)"<<endl;
 			clear(); return false;
 		}
-		//else {
-			//cout<<"can be mapped"<<endl;
-		//}
+
 	}
 
 
@@ -1461,7 +1472,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			this->clearTemplateOnly();
 		}
 	} else {
-		clear();
+		clear(keepCanBeMappedArray);
 	}
 
 	//if(de)cout<<this->uniqueTemplateID<<" matched!!!"<<endl;

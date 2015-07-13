@@ -800,9 +800,13 @@ namespace NFcore
 			Molecule * getBondedMolecule(int bSiteIndex) const;
 			int getBondedMoleculeBindingSiteIndex(int cIndex) const;
 
-			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
+			int getRxnListMappingId(int rxnIndex) { 
+				//return rxnListMappingId[rxnIndex];
+				return (rxnListMappingId2.count(rxnIndex) > 0) ? rxnListMappingId2[rxnIndex][0] : -1;  //JJT: changing to handle multiple mappings per reaction
+			};
 			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
-					this->rxnListMappingId[rxnIndex] = rxnListMappingId;
+					//this->rxnListMappingId[rxnIndex] = rxnListMappingId;
+					this->rxnListMappingId2[rxnIndex].push_back(rxnListMappingId); //using a map instead of int* to deal with multiple mappings per reaction
 			};
 
 			/* set functions for states, bonds, and complexes */
@@ -938,6 +942,7 @@ namespace NFcore
 
 			//Used to keep track of which reactions this molecule is in...
 			int * rxnListMappingId;
+			map<int,vector<int> > rxnListMappingId2;
 			int nReactions;
 
 
@@ -1061,6 +1066,8 @@ namespace NFcore
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
+			bool tagged;
+
 
 
 		protected:
@@ -1069,8 +1076,7 @@ namespace NFcore
 			int rxnId;
 
 			/* if this reaction is tagged, it outputs a message everytime it is fired */
-			bool tagged;
-
+			
 			string name;
 			int reactionType;
 			unsigned int n_reactants;
