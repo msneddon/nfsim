@@ -14,7 +14,8 @@
 #include <list>
 #include <queue>
 #include <map>
-
+#include <algorithm>
+#include <set>
 // Include various NFsim classes from other files
 #include "../NFscheduler/NFstream.h"
 #include "../NFutil/NFutil.hh"
@@ -802,12 +803,29 @@ namespace NFcore
 
 			int getRxnListMappingId(int rxnIndex) { 
 				//return rxnListMappingId[rxnIndex];
-				return (rxnListMappingId2.count(rxnIndex) > 0) ? rxnListMappingId2[rxnIndex][0] : -1;  //JJT: changing to handle multiple mappings per reaction
+				return (rxnListMappingId2.count(rxnIndex) > 0 && rxnListMappingId2[rxnIndex].size() > 0) ? *rxnListMappingId2[rxnIndex].begin() : -1;  //JJT: changing to handle multiple mappings per reaction
 			};
-			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
-					//this->rxnListMappingId[rxnIndex] = rxnListMappingId;
-					this->rxnListMappingId2[rxnIndex].push_back(rxnListMappingId); //using a map instead of int* to deal with multiple mappings per reaction
+
+			set<int> getRxnListMappingSet(int rxnIndex){
+
+				return rxnListMappingId2[rxnIndex];
+			}
+			bool setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
+					if(rxnListMappingId == -1)
+						this->rxnListMappingId2.erase(rxnIndex);
+						return true
+					else
+						pair<std::set<int>::iterator,bool> it = this->rxnListMappingId2[rxnIndex].insert(rxnListMappingId); //JJT: using a map instead of int* to deal with multiple mappings per reaction
+						return it.second //JJT:  return whether it is a new insert or not
 			};
+
+			void deleteRxnListMappingId(int rxnIndex, int rxnListMappingId){
+				rxnListMappingId2[rxnIndex].erase(rxnListMappingId);
+
+    			if(rxnListMappingId2[rxnIndex].size() ==0)
+    				this->rxnListMappingId2.erase(rxnIndex);
+
+			}
 
 			/* set functions for states, bonds, and complexes */
 			//void setState(const char * stateName, int value);
@@ -942,7 +960,7 @@ namespace NFcore
 
 			//Used to keep track of which reactions this molecule is in...
 			int * rxnListMappingId;
-			map<int,vector<int> > rxnListMappingId2;
+			map<int,set<int> > rxnListMappingId2;
 			int nReactions;
 
 

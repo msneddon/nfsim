@@ -234,8 +234,8 @@ void DORRxnClass::remove(Molecule *m, unsigned int reactantPos)
 
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
-	//if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
-	//if(DEBUG_MESSAGE)m->printDetails();
+	if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
+	if(DEBUG_MESSAGE)m->printDetails();
 	if(reactantPos==(unsigned)this->DORreactantIndex) {
 		if(DEBUG_MESSAGE)cout<<" ... as a DOR "<<this->name<<endl;
 		//cout<<"RxnListMappingId: "<<m->getRxnListMappingId(m->getMoleculeType()->getRxnIndex(this,reactantPos))<<endl;
@@ -243,43 +243,76 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		// handle the DOR reactant
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 
-		//cout<<"trying to add to the tree:"<<endl;
-		//m->printDetails();
+		if(DEBUG_MESSAGE)cout<<"trying to add to the tree:"<<endl;
+		if(DEBUG_MESSAGE)m->printDetails();
 
 		if(reactantTree->getHasClonedMappings()) {
 			if(m->getRxnListMappingId(rxnIndex)>=0) {
-				//if(DEBUG_MESSAGE)cout<<"removing"<<endl;
+				if(DEBUG_MESSAGE)cout<<"removing"<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 			}
 		}
-
+		//TODO: keep a list containing those mapping sets that will be deleted/
+		set<int> deleteMs = m->getRxnListMappingSet(rxnIndex);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-			//if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 
-			if(!reactantTemplates[reactantPos]->compare(m)) {
-				//if(DEBUG_MESSAGE)cout<<"removing..."<<endl;
-				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-			} else {if(DEBUG_MESSAGE)cout<<"not removing";}
+			
+			while(true){
+				if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
+				ms=reactantTree->pushNextAvailableMappingSet();
+				if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true)) {
+					for(set<int>::iterator it=deleteMs.begin();it!=deleteMs.end(); ++it){
+						if(DEBUG_MESSAGE)cout<<"removing..."<<*it<<endl;
+						m->deleteRxnListMappingId(rxnIndex,*it);
+						reactantTree->removeMappingSet(*it);
+
+
+
+					}
+					reactantTree->removeMappingSet(ms->getId());
+					break;
+				} else {
+					bool collisionFlag = false;
+					for(set<int>::iterator it= m->getRxnListMappingSet(rxnIndex).begin();it!= m->getRxnListMappingSet(rxnIndex).end(); ++it){
+						MappingSet* ms2 = reactantTree->getMappingSet(*it);
+						if(MappingSet::checkForEquality(ms,ms2)){
+							if(DEBUG_MESSAGE)cout<<"not removing "<<*it<<endl;
+							deleteMs.erase(*it);
+
+							reactantTree->removeMappingSet(ms->getId());		
+							collisionFlag = true;
+							break;
+						}
+					}
+					if(!collisionFlag){
+						double localFunctionValue = this->evaluateLocalFunctions(ms);
+						reactantTree->confirmPush(ms->getId(),localFunctionValue);
+						m->setRxnListMappingId(rxnIndex,ms->getId());
+					}
+					//TODO:in here i should carefully compare the mapping sets in m to the one in ms. 
+					
+				}
+			}
 		} else {
 			while(true){
 				if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 				ms=reactantTree->pushNextAvailableMappingSet();
-				ms->printDetails();
 				if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true)) {
-					cout<<"shouldn't be in the tree, so we pop"<<endl;
+					if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
 					reactantTree->removeMappingSet(ms->getId());
 					break;
 				} else {
-					cout<<"should be in the tree, so confirm push."<<endl;
+					if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
 					//m->printDetails();
-					ms->printDetails();
 					//we are keeping it, so evaluate the function and confirm the push
+					
+					m->setRxnListMappingId(rxnIndex,ms->getId());
+					
 					double localFunctionValue = this->evaluateLocalFunctions(ms);
 					if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 					reactantTree->confirmPush(ms->getId(),localFunctionValue);
-					m->setRxnListMappingId(rxnIndex,ms->getId());
+					
 				}
 			}
 		}
