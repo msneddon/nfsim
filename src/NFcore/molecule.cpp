@@ -43,6 +43,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	hasEvaluatedMolecule = false;
 	isMatchedTo=0;
 	rxnListMappingId = 0;
+	rxnListMappingId2 = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
@@ -73,6 +74,7 @@ Molecule::~Molecule()
 	delete [] component;
 	delete [] indexOfBond;
 	delete [] rxnListMappingId;
+	delete [] rxnListMappingId2;
 	delete [] hasVisitedBond;
 
 	if(localFunctionValues!=0)
@@ -85,6 +87,8 @@ void Molecule::prepareForSimulation()
 	if(isPrepared) return;
 	nReactions = parentMoleculeType->getReactionCount();
 	this->rxnListMappingId = new int[nReactions];
+	this->rxnListMappingId2 = new set<int>[nReactions];
+
 	for(int r=0; r<nReactions; r++)
 		rxnListMappingId[r] = -1;
 	isPrepared = true;
@@ -335,7 +339,7 @@ void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
 	o<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId=" << ID_complex<<", degree="<<degree<<")"<<endl;
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{

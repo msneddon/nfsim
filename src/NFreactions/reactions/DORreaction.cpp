@@ -232,6 +232,19 @@ void DORRxnClass::remove(Molecule *m, unsigned int reactantPos)
 	//if(DEBUG_MESSAGE)cout<<"finished removing"<<endl;
 }
 
+int DORRxnClass::checkForCollision(Molecule *m, MappingSet* ms, int rxnIndex){
+	
+
+	for(set<int>::iterator it= m->getRxnListMappingSet(rxnIndex).begin();it!= m->getRxnListMappingSet(rxnIndex).end(); ++it){
+		MappingSet* ms2 = reactantTree->getMappingSet(*it);
+		if(MappingSet::checkForEquality(ms,ms2)){
+			return *it;
+		}
+	}
+	return -1;
+
+
+}
 
 bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 	if(DEBUG_MESSAGE)cout<<endl<<endl<<"adding molecule to DORRxnClass"<<endl;
@@ -262,30 +275,19 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 				if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 				ms=reactantTree->pushNextAvailableMappingSet();
 				if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true)) {
-					for(set<int>::iterator it=deleteMs.begin();it!=deleteMs.end(); ++it){
-						if(DEBUG_MESSAGE)cout<<"removing..."<<*it<<endl;
-						m->deleteRxnListMappingId(rxnIndex,*it);
-						reactantTree->removeMappingSet(*it);
-
-
-
-					}
 					reactantTree->removeMappingSet(ms->getId());
 					break;
 				} else {
-					bool collisionFlag = false;
-					for(set<int>::iterator it= m->getRxnListMappingSet(rxnIndex).begin();it!= m->getRxnListMappingSet(rxnIndex).end(); ++it){
-						MappingSet* ms2 = reactantTree->getMappingSet(*it);
-						if(MappingSet::checkForEquality(ms,ms2)){
-							if(DEBUG_MESSAGE)cout<<"not removing "<<*it<<endl;
-							deleteMs.erase(*it);
-
-							reactantTree->removeMappingSet(ms->getId());		
-							collisionFlag = true;
+					//JJT: checking if the mapping set we found is new 
+					int mapIndex = checkForCollision(m,ms,rxnIndex);
+					if(mapIndex >= 0){
+						if(DEBUG_MESSAGE)cout<<"not removing "<<mapIndex<<endl;
+						deleteMs.erase(mapIndex);
+						reactantTree->removeMappingSet(ms->getId());
+						if (deleteMs.size() == 0)
 							break;
-						}
 					}
-					if(!collisionFlag){
+					else{
 						double localFunctionValue = this->evaluateLocalFunctions(ms);
 						reactantTree->confirmPush(ms->getId(),localFunctionValue);
 						m->setRxnListMappingId(rxnIndex,ms->getId());
@@ -294,6 +296,13 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 					
 				}
 			}
+			//delete all mappings that were no longer found to match between a molecule and a species
+			for(set<int>::iterator it=deleteMs.begin();it!=deleteMs.end(); ++it){
+				if(DEBUG_MESSAGE)cout<<"removing..."<<*it<<endl;
+				m->deleteRxnListMappingId(rxnIndex,*it);
+				reactantTree->removeMappingSet(*it);
+			}
+
 		} else {
 			while(true){
 				if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
@@ -304,15 +313,27 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 					break;
 				} else {
 					if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
+					int mapIndex = checkForCollision(m,ms,rxnIndex);
+					if(mapIndex >= 0){
+						//the agent already contains this mapping
+						if(DEBUG_MESSAGE)cout<<"not adding "<<mapIndex<<endl;
+						reactantTree->removeMappingSet(ms->getId());		
+						break;
+					}
+					else{
+						//we are keeping it, so evaluate the function and confirm the push
+						double localFunctionValue = this->evaluateLocalFunctions(ms);
+						if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+						reactantTree->confirmPush(ms->getId(),localFunctionValue);
+						m->setRxnListMappingId(rxnIndex,ms->getId());
+					}
+
 					//m->printDetails();
 					//we are keeping it, so evaluate the function and confirm the push
-					
-					m->setRxnListMappingId(rxnIndex,ms->getId());
-					
-					double localFunctionValue = this->evaluateLocalFunctions(ms);
-					if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
-					reactantTree->confirmPush(ms->getId(),localFunctionValue);
-					
+					//double localFunctionValue = this->evaluateLocalFunctions(ms);
+					//if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+					//reactantTree->confirmPush(ms->getId(),localFunctionValue);
+					//m->setRxnListMappingId(rxnIndex,ms->getId());
 				}
 			}
 		}

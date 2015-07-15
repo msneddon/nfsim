@@ -1210,9 +1210,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//Now go through each of the symmetric sites and try to map them
 
 	//JJT: boolean flag that tracks whether a match between candidate molecule and the  templateMolecule was found
-	bool matchFoundFlag = false;
+	
 	for(int c=0; c<n_symComps; c++)
 	{
+		bool matchFoundFlag = false;
 		//if(this->uniqueTemplateID==41)cout<<"comparing symComp["<<c<<"]: "<<symCompName[c]<<endl;
 		//cout<<"comparing symComp["<<c<<"]: "<<symCompName[c]<<endl;
 		//Loop through each of the equivalent components to see if we can match them
@@ -1309,7 +1310,11 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				canBeMappedTo.at(c).push_back(molEqComp[sc]);
 				matchFoundFlag = true;
 				//JJT: we only want to register this match. previously it would keep iterating, only keeping the last match in memory (MappingSet)
-				break;
+				//JTT:this might cause conflicts with n_symComps
+				if(keepCanBeMappedArray)
+					break;
+				
+
 			}
 		}
 
@@ -1325,6 +1330,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	//Great, if we got here, everything matched up, all components can be mapped, and
 	//we just have to double check if our mappings are valid...
+	
 	if(this->n_symComps>1) {
 		if(!isSymMapValid()) {
 			//oh no!  we were so close, but in the end, we couldn't get a unique
