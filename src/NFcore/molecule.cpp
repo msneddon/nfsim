@@ -42,7 +42,6 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	hasVisitedMolecule = false;
 	hasEvaluatedMolecule = false;
 	isMatchedTo=0;
-	rxnListMappingId = 0;
 	rxnListMappingId2 = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
@@ -73,7 +72,6 @@ Molecule::~Molecule()
 	delete [] isObservable;
 	delete [] component;
 	delete [] indexOfBond;
-	delete [] rxnListMappingId;
 	delete [] rxnListMappingId2;
 	delete [] hasVisitedBond;
 
@@ -86,11 +84,8 @@ void Molecule::prepareForSimulation()
 {
 	if(isPrepared) return;
 	nReactions = parentMoleculeType->getReactionCount();
-	this->rxnListMappingId = new int[nReactions];
 	this->rxnListMappingId2 = new set<int>[nReactions];
 
-	for(int r=0; r<nReactions; r++)
-		rxnListMappingId[r] = -1;
 	isPrepared = true;
 
 	//We do not belong to any observable... yet.

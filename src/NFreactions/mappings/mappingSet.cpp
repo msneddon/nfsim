@@ -143,13 +143,13 @@ bool MappingSet::checkForEquality( MappingSet * ms1, MappingSet * ms2 )
 		molList.push_back( (ms1->mappings)[imap]->getMolecule() );
 	}
 
-	// see if mappingSet2 points to any of the same molecules
+	// see if mappingSet2 points to all of the same molecules
 	for ( imap = 0; imap < ms2->n_mappings;  ++imap )
 	{
 		molIter = find( molList.begin(), molList.end(), (ms2->mappings)[imap]->getMolecule() );
 		if ( molIter == molList.end() )
 		{
-			// found overlap
+			// found a difference
 			return false;
 		}
 	}

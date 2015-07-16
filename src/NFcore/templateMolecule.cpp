@@ -1209,11 +1209,13 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//////////////////////////////////////////////////////////////////////////
 	//Now go through each of the symmetric sites and try to map them
 
-	//JJT: boolean flag that tracks whether a match between candidate molecule and the  templateMolecule was found
+	
 	
 	for(int c=0; c<n_symComps; c++)
 	{
+		//JJT: boolean flag that tracks whether a match between candidate molecule and the  templateMolecule was found
 		bool matchFoundFlag = false;
+
 		//if(this->uniqueTemplateID==41)cout<<"comparing symComp["<<c<<"]: "<<symCompName[c]<<endl;
 		//cout<<"comparing symComp["<<c<<"]: "<<symCompName[c]<<endl;
 		//Loop through each of the equivalent components to see if we can match them
@@ -1221,6 +1223,19 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		moleculeType->getEquivalencyClass(molEqComp,n_molEqComp,this->symCompName[c]);
 		for(int sc=0; sc<n_molEqComp; sc++)
 		{
+			//JJT: check if we visited this in the previous comparison
+			/*if(keepCanBeMappedArray){
+				bool skipFlag = false;
+				for(unsigned int cbm=0; cbm<canBeMappedTo.at(c).size(); cbm++) {
+					if(canBeMappedTo.at(c).at(cbm)==molEqComp[sc]){
+						skipFlag = true;
+						break;
+					}
+				}
+				if(skipFlag)
+					continue;
+			}*/
+
 			//if(this->uniqueTemplateID==41)cout<<"  -to molecule comp: "<<m->getMoleculeType()->getComponentName(molEqComp[sc])<<endl;
 
 			//first make sure that we can map to this component

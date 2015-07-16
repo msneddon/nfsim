@@ -957,7 +957,6 @@ namespace NFcore
 
 
 			//Used to keep track of which reactions this molecule is in...
-			int * rxnListMappingId;
 			set<int>* rxnListMappingId2;
 			int nReactions;
 

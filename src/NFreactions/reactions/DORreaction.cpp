@@ -257,7 +257,6 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 
 		if(DEBUG_MESSAGE)cout<<"trying to add to the tree:"<<endl;
-		if(DEBUG_MESSAGE)m->printDetails();
 
 		if(reactantTree->getHasClonedMappings()) {
 			if(m->getRxnListMappingId(rxnIndex)>=0) {
@@ -288,11 +287,16 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 							break;
 					}
 					else{
+
 						double localFunctionValue = this->evaluateLocalFunctions(ms);
 						reactantTree->confirmPush(ms->getId(),localFunctionValue);
 						m->setRxnListMappingId(rxnIndex,ms->getId());
+						if(DEBUG_MESSAGE){
+							cout<<"adding new mapping..."<<endl;
+							ms->printDetails();
+						}
+
 					}
-					//TODO:in here i should carefully compare the mapping sets in m to the one in ms. 
 					
 				}
 			}
@@ -326,6 +330,10 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 						if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 						reactantTree->confirmPush(ms->getId(),localFunctionValue);
 						m->setRxnListMappingId(rxnIndex,ms->getId());
+						if(DEBUG_MESSAGE){
+							cout<<"mapping..."<<endl;
+							ms->printDetails();
+						}
 					}
 
 					//m->printDetails();
