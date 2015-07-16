@@ -1296,7 +1296,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 						if(!match) { continue; } //keep going if we can't match
 					} else {
 						//cout<<"could not map other side!"<<endl;
-						clear(); return false;
+						//clear(); return false;
+						continue;
 					}
 				} else { //Phew!  we can check this guy normally.
 
