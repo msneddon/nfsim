@@ -761,7 +761,7 @@ bool TemplateMolecule::compare(Molecule *m)
 	// answer:  we don't have to because the 4th arg of compare() has a default
 	//          value of false, see the header file declaration.  Although we
 	//          still might want to add it here just so that we're clear.  --michael
-	return compare(m,0,0);
+	return compare(m,0,0).first;
 	// like this:
 	//return compare(m,0,0,false);
 }
@@ -1036,7 +1036,7 @@ bool TemplateMolecule::isSymMapValid()
 
 
 
-bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd, bool keepCanBeMappedArray)
+pair<bool,bool> TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *ms, bool holdMolClearToEnd, bool keepCanBeMappedArray)
 {
 	//bool de=false;
 	//if(this->uniqueTemplateID==5 ) cout<<"\n\n---\n";
@@ -1062,9 +1062,9 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 	//First check if we've been here before, and return accordingly
 	if(this->matchMolecule!=0) {
-		if(matchMolecule==m) { return true; }
+		if(matchMolecule==m) { return make_pair(true,false); }
 		else {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 
@@ -1073,14 +1073,14 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		if(m->isMatchedTo!=this) {
 			clear();
 			//if(this->uniqueTemplateID==3) {cout<<"matched to somethang else."<<endl; exit(1);}
-			return false;
+			return make_pair(false,false);
 		}
 	}
 
 	//cout<<"2!"<<endl;
 	//Make sure we are of the same type
 	if(m->getMoleculeType()!=this->moleculeType) {
-		clear(); return false;
+		clear(); return make_pair(false,false);
 	}
 
 	//cout<<"3!"<<endl;
@@ -1088,24 +1088,24 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//First check that all of our states match
 	for(int c=0; c<n_compStateConstraint; c++) {
 		if(m->getComponentState(compStateConstraint_Comp[c]) != compStateConstraint_Constraint[c]) {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 	//Check that all of our exclusions are indeed not present (for state!=value checks)
 	for(int c=0; c<n_compStateExclusion; c++) {
 		if(m->getComponentState(compStateExclusion_Comp[c]) == compStateExclusion_Exclusion[c]) {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 	//Make sure binding sites that are open / occupied are
 	for(int c=0; c<n_emptyComps; c++) {
 		if(!m->isBindingSiteOpen(emptyComps[c])) {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 	for(int c=0; c<n_occupiedComps; c++) {
 		if(!m->isBindingSiteBonded(occupiedComps[c])) {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 
@@ -1131,7 +1131,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 		//The binding site must be occupied!
 		if(m->isBindingSiteOpen(bondComp[b])) {
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 
 		//Grab the template molecule and the actual molecule that we have to compare
@@ -1143,7 +1143,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		if(t2->matchMolecule!=0) {
 			if(t2->matchMolecule!=m2) {
 				//cout<<"match molecules do not match"<<endl;
-				clear();  return false;
+				clear();  return make_pair(false,false);
 			} else { continue; }
 		}
 
@@ -1158,13 +1158,13 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			if(canMap) {
 				//cout<<"from non sym, can map, going down sym site"<<endl;
 				this->hasVisitedBond[b]=true;
-				bool match = t2->compare(m2,rc,ms,holdMolClearToEnd);
+				bool match = t2->compare(m2,rc,ms,holdMolClearToEnd).first;
 				if(!match) {
-					clear();  return false;
+					clear();  return make_pair(false,false);
 				}
 			} else {
 				//cout<<"cannot map sym site.."<<endl;
-				clear();  return false;
+				clear();  return make_pair(false,false);
 			}
 
 		} else { //Phew!  we can check this guy normally.
@@ -1179,24 +1179,24 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			int thisBond = m2->getBondedMoleculeBindingSiteIndex(bondPartnerCompIndex[b]);
 			if(potentialMatch==Molecule::NOBOND) {
 				//cout<<"potential match site has no bond"<<endl;
-				clear(); return false;
+				clear(); return make_pair(false,false);
 			}
 			if(potentialMatch!=matchMolecule) {
 				//cout<<"potential match site has a bond, but is not connected to me"<<endl;
-				clear(); return false;
+				clear(); return make_pair(false,false);
 			}
 			if(thisBond!=bondComp[b]) {
 				//cout<<"potential match site has a bond,and is connected to me, but not correctly"<<endl;
-				clear(); return false;
+				clear(); return make_pair(false,false);
 			}
 
 			//Remember that we've visited this bond before, should we ever come back to it.
 			this->hasVisitedBond[b]=true;
 
 			//Now traverse onto this molecule, and make sure we match down the list
-			bool match=t2->compare(m2,rc,ms,holdMolClearToEnd);
+			bool match=t2->compare(m2,rc,ms,holdMolClearToEnd).first;
 			if(!match) {
-				clear(); return false;
+				clear(); return make_pair(false,false);
 			}
 		}
 
@@ -1210,7 +1210,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//Now go through each of the symmetric sites and try to map them
 
 	
-	
+	bool repeatFlag = false;
 	for(int c=0; c<n_symComps; c++)
 	{
 		//JJT: boolean flag that tracks whether a match between candidate molecule and the  templateMolecule was found
@@ -1221,20 +1221,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		//Loop through each of the equivalent components to see if we can match them
 		int *molEqComp; int n_molEqComp=0;
 		moleculeType->getEquivalencyClass(molEqComp,n_molEqComp,this->symCompName[c]);
+
+		//int scStartIndex = keepCanBeMappedArray ? canBeMappedTo.at(c).size(): 0;
 		for(int sc=0; sc<n_molEqComp; sc++)
 		{
-			//JJT: check if we visited this in the previous comparison
-			/*if(keepCanBeMappedArray){
-				bool skipFlag = false;
-				for(unsigned int cbm=0; cbm<canBeMappedTo.at(c).size(); cbm++) {
-					if(canBeMappedTo.at(c).at(cbm)==molEqComp[sc]){
-						skipFlag = true;
-						break;
-					}
-				}
-				if(skipFlag)
-					continue;
-			}*/
 
 			//if(this->uniqueTemplateID==41)cout<<"  -to molecule comp: "<<m->getMoleculeType()->getComponentName(molEqComp[sc])<<endl;
 
@@ -1280,6 +1270,9 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 						// case we get here before the other side mapped me.
 						this->canBeMappedTo.at(c).push_back(molEqComp[sc]);
 						matchFoundFlag = true;
+						if(c+1 < n_symComps ||  sc+1 < n_molEqComp)
+							repeatFlag = true;
+
 						continue;
 					}
 				}
@@ -1292,7 +1285,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 						//cout<<"comparing down symmetric site.."<<endl;
 						//if(this->uniqueTemplateID==41)
 						//cout<<"  -traversing down potential sym site match"<<endl;
-						bool match=t2->compare(m2,rc,ms,holdMolClearToEnd);
+						bool match=t2->compare(m2,rc,ms,holdMolClearToEnd).first;
 						if(!match) { continue; } //keep going if we can't match
 					} else {
 						//cout<<"could not map other side!"<<endl;
@@ -1311,7 +1304,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 					//Now traverse onto this molecule, and make sure we match down the list
 					//if(this->uniqueTemplateID==41) cout<<"  -traversing down potential match"<<endl;
-					bool match=t2->compare(m2,rc,ms,holdMolClearToEnd);
+					bool match=t2->compare(m2,rc,ms,holdMolClearToEnd).first;
 					if(!match) { continue; }
 				}
 			}
@@ -1327,8 +1320,11 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				matchFoundFlag = true;
 				//JJT: we only want to register this match. previously it would keep iterating, only keeping the last match in memory (MappingSet)
 				//JTT:this might cause conflicts with n_symComps
-				if(keepCanBeMappedArray)
+				if(c+1 < n_symComps ||  sc+1 < n_molEqComp)
+					repeatFlag = true;
+				if(keepCanBeMappedArray){
 					break;
+				}
 				
 
 			}
@@ -1338,7 +1334,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		//if(canBeMappedTo.at(c).size()==0) {
 		if(!matchFoundFlag){ //JJT: adding flag check condtition instead of just checking for size
 			//if(this->uniqueTemplateID==41) cout<<"could not find a mapping. (canMapThisComponent=false)"<<endl;
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 
 	}
@@ -1353,7 +1349,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			//mapping onto all of the identical components
 			//if(this->uniqueTemplateID==41) { cout<<"sym map not valid!!!"<<endl; }
 			//cout<<"sym map not valid!!!"<<endl;
-			clear(); return false;
+			clear(); return make_pair(false,false);
 		}
 	}
 
@@ -1431,13 +1427,13 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 				//is merely context, so we only have to find a single instance of it
 				//and return as soon as we have matched.
 				if(!connectedToHasRxnCenter[cTo]) {
-					canMatchThis=connectedTo[cTo]->compare((*molIter),0,0,holdMolClearToEnd);
+					canMatchThis=connectedTo[cTo]->compare((*molIter),0,0,holdMolClearToEnd).first;
 					if(canMatchThis) { canMatch=true; break; }
 				}
 
 				// otherwise, we have to do more work...
 				else {
-					canMatchThis=connectedTo[cTo]->compare((*molIter),rc,lastMappingSets.at(lastMappingSets.size()-1),holdMolClearToEnd);
+					canMatchThis=connectedTo[cTo]->compare((*molIter),rc,lastMappingSets.at(lastMappingSets.size()-1),holdMolClearToEnd).first;
 					if(canMatchThis) {
 						rc->notifyPresenceOfClonedMappings();
 						canMatch = true;
@@ -1458,7 +1454,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 					}
 				}
 				//cout<<"could not match this!"<<endl;
-				clear(); return false;
+				clear(); return make_pair(false,false);
 			}
 		}
 
@@ -1498,7 +1494,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	}
 
 	//if(de)cout<<this->uniqueTemplateID<<" matched!!!"<<endl;
-	return true;
+	return make_pair(true,repeatFlag);
 }
 
 

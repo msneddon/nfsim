@@ -234,8 +234,8 @@ void DORRxnClass::remove(Molecule *m, unsigned int reactantPos)
 
 int DORRxnClass::checkForCollision(Molecule *m, MappingSet* ms, int rxnIndex){
 	
-
-	for(set<int>::iterator it= m->getRxnListMappingSet(rxnIndex).begin();it!= m->getRxnListMappingSet(rxnIndex).end(); ++it){
+	set<int> tempSet = m->getRxnListMappingSet(rxnIndex);
+	for(set<int>::iterator it= tempSet.begin();it!= tempSet.end(); ++it){
 		MappingSet* ms2 = reactantTree->getMappingSet(*it);
 		if(MappingSet::checkForEquality(ms,ms2)){
 			return *it;
@@ -259,21 +259,22 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		if(DEBUG_MESSAGE)cout<<"trying to add to the tree:"<<endl;
 
 		if(reactantTree->getHasClonedMappings()) {
-			if(m->getRxnListMappingId(rxnIndex)>=0) {
+			while(m->getRxnListMappingId(rxnIndex)>=0) {
 				if(DEBUG_MESSAGE)cout<<"removing"<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+				m->deleteRxnListMappingId(rxnIndex,m->getRxnListMappingId(rxnIndex));
 			}
 		}
-		//TODO: keep a list containing those mapping sets that will be deleted/
+		//JJT: keep a list containing those mapping sets that will be deleted/
 		set<int> deleteMs = m->getRxnListMappingSet(rxnIndex);
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
 
 			
-			while(true){
+			do{
 				if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 				ms=reactantTree->pushNextAvailableMappingSet();
-				if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true)) {
+				comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true);
+				if(!comparisonResult.first) {
 					reactantTree->removeMappingSet(ms->getId());
 					break;
 				} else {
@@ -299,7 +300,10 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 					}
 					
 				}
-			}
+				if(!comparisonResult.second)
+					break;
+
+			}while(true);
 			//delete all mappings that were no longer found to match between a molecule and a species
 			for(set<int>::iterator it=deleteMs.begin();it!=deleteMs.end(); ++it){
 				if(DEBUG_MESSAGE)cout<<"removing..."<<*it<<endl;
@@ -308,10 +312,11 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			}
 
 		} else {
-			while(true){
+			do{
 				if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 				ms=reactantTree->pushNextAvailableMappingSet();
-				if(!reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true)) {
+				comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true);
+				if(!comparisonResult.first) {
 					if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
 					reactantTree->removeMappingSet(ms->getId());
 					break;
@@ -336,6 +341,9 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 						}
 					}
 
+					if(!comparisonResult.second)
+						break;
+
 					//m->printDetails();
 					//we are keeping it, so evaluate the function and confirm the push
 					//double localFunctionValue = this->evaluateLocalFunctions(ms);
@@ -343,7 +351,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 					//reactantTree->confirmPush(ms->getId(),localFunctionValue);
 					//m->setRxnListMappingId(rxnIndex,ms->getId());
 				}
-			}
+			}while(true);
 		}
 	} else {
 
@@ -352,9 +360,14 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 
 		if(rl->getHasClonedMappings()) {
-			if(m->getRxnListMappingId(rxnIndex)>=0) {
+			/*if(m->getRxnListMappingId(rxnIndex)>=0) {
 				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
+			}*/
+			//JJT: accounting for the fact that we can now have multiple mappings
+			while(m->getRxnListMappingId(rxnIndex)>=0) {
+				rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+				m->deleteRxnListMappingId(rxnIndex,m->getRxnListMappingId(rxnIndex));
 			}
 		}
 
@@ -370,7 +383,9 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			//Try to map it!
 			ms = rl->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms);
+			//if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+			if(!comparisonResult.first){
 				//we must remove, if we did not match.  This will also remove
 				//everything that was cloned off of the mapping set
 				rl->removeMappingSet(ms->getId());
@@ -900,7 +915,9 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			// wasn't in the tree, so trying to push and compare
 			ms=reactantTree1->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,reactantTree1,ms)) {
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree1,ms);
+			if(!comparisonResult.first) {
+			//if(!reactantTemplates[reactantPos]->compare(m,reactantTree1,ms)) {
 				//cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree1->removeMappingSet(ms->getId());
 			} else {
@@ -934,7 +951,9 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			// wasn't in the tree, so trying to push and compare
 			ms=reactantTree2->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,reactantTree2,ms)) {
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree2,ms);
+			if(!comparisonResult.first){
+			//if(!reactantTemplates[reactantPos]->compare(m,reactantTree2,ms)) {
 				//cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree2->removeMappingSet(ms->getId());
 			} else {
@@ -970,7 +989,8 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			//Try to map it!
 			ms = rl->pushNextAvailableMappingSet();
-			if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms);
+			if(!comparisonResult.first) {
 				//we must remove, if we did not match.  This will also remove
 				//everything that was cloned off of the mapping set
 				rl->removeMappingSet(ms->getId());

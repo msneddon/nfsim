@@ -810,9 +810,11 @@ namespace NFcore
 
 				return rxnListMappingId2[rxnIndex];
 			}
+
 			bool setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
 					if(rxnListMappingId == -1){
 						this->rxnListMappingId2[rxnIndex].clear();
+						//this->rxnListMappingId3[rxnIndex].clear();
 						return true;
 					}
 					else{
@@ -820,6 +822,8 @@ namespace NFcore
 						return it.second; //JJT:  return whether it is a new insert or not
 					}
 			};
+
+
 
 			void deleteRxnListMappingId(int rxnIndex, int rxnListMappingId){
 				rxnListMappingId2[rxnIndex].erase(rxnListMappingId);
@@ -958,6 +962,7 @@ namespace NFcore
 
 			//Used to keep track of which reactions this molecule is in...
 			set<int>* rxnListMappingId2;
+			map<vector<Molecule *>, int>* rxnListMappingId3;
 			int nReactions;
 
 
@@ -1139,6 +1144,8 @@ namespace NFcore
 			 * count correction for calculating the ratelaw
 			 */
 			int *identicalPopCountCorrection;
+
+			pair<bool,bool> comparisonResult;
 	};
 
 
