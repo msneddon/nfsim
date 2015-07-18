@@ -294,31 +294,26 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 	*/
 
 	//Here we get the standard update...
-	while(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction, remove mappings
-	{
+	while(m->getRxnListMappingId(rxnIndex)>=0) {
 		rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 		m->deleteRxnListMappingId(rxnIndex,m->getRxnListMappingId(rxnIndex));
 		//m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 	}
 
+
 	//Try to map it!
-	do{
-		ms = rl->pushNextAvailableMappingSet();
-		comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms,false,true);
-		if(!comparisonResult.first) {
-			//cout << "no mapping in normal reaction, remove"<<endl;
-			//we must remove, if we did not match.  This will also remove
-			//everything that was cloned off of the mapping set
-			rl->removeMappingSet(ms->getId());
-			break;
-		} else {
-			//cout << "should be in normal reaction, confirm push"<<endl;
-			//ms->printDetails();
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-		if(!comparisonResult.second)
-			break;
-	}while(true);
+	ms = rl->pushNextAvailableMappingSet();
+	//comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms,false,true);
+	if(!reactantTemplates[reactantPos]->compare(m,rl,ms).first) {
+		//cout << "no mapping in normal reaction, remove"<<endl;
+		//we must remove, if we did not match.  This will also remove
+		//everything that was cloned off of the mapping set
+		rl->removeMappingSet(ms->getId());
+	} else {
+		//cout << "should be in normal reaction, confirm push"<<endl;
+		//ms->printDetails();
+		m->setRxnListMappingId(rxnIndex,ms->getId());
+	}
 
 	return true;
 }
