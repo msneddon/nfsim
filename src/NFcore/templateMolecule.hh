@@ -101,8 +101,8 @@ namespace NFcore
 
 		/* functions that are needed to match to a molecule instance */
 		bool compare(Molecule *m);
-		pair<bool,bool> compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false,bool keepCanBeMappedArray=false);
-		void clear(bool keepCanBeMappedArray=false);
+		bool compare(Molecule *m, ReactantContainer *rc, MappingSet *ms,bool holdMolClearToEnd=false,vector<MappingSet*>* v = 0);
+		void clear();
 		void clearTemplateOnly();
 		bool tryToMap(Molecule *toMap, string toMapComponent,
 				Molecule *mappedFrom, string mappedFromComponent);

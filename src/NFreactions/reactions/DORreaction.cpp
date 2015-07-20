@@ -265,21 +265,48 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 				m->deleteRxnListMappingId(rxnIndex,m->getRxnListMappingId(rxnIndex));
 			}
 		}
-		//JJT: keep a list containing those mapping sets that will be deleted/
+		//JJT: keep a list containing those mapping sets that will be deleted
 		set<int> deleteMs = m->getRxnListMappingSet(rxnIndex);
+		symmetricMappingSet.clear();
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
 
 			
-			do{
-				if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
-				ms=reactantTree->pushNextAvailableMappingSet();
-				comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true);
-				if(!comparisonResult.first) {
+			
+			if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
+			ms=reactantTree->pushNextAvailableMappingSet();
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,&symmetricMappingSet);
+
+			if(!comparisonResult) {
+				reactantTree->removeMappingSet(ms->getId());
+			} else {
+				//JJT: checking if the mapping set we found is new 
+				if (symmetricMappingSet.size() >0){
 					reactantTree->removeMappingSet(ms->getId());
-					break;
-				} else {
-					//JJT: checking if the mapping set we found is new 
-					int mapIndex = checkForCollision(m,ms,rxnIndex);
+					for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+						int mapIndex = checkForCollision(m,*it,rxnIndex);
+						if(mapIndex >= 0){
+							//the agent already contains this mapping
+							deleteMs.erase(mapIndex);
+							reactantTree->removeMappingSet((*it)->getId());
+						}
+						else{
+							//we are keeping it, so evaluate the function and confirm the push
+							double localFunctionValue = this->evaluateLocalFunctions(*it);
+							if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+							reactantTree->confirmPush((*it)->getId(),localFunctionValue);
+							m->setRxnListMappingId(rxnIndex,(*it)->getId());
+							if(DEBUG_MESSAGE){
+								cout<<"mapping..."<<endl;
+								(*it)->printDetails();
+							}
+						}
+
+					}
+
+
+				}
+				else{
+					/*int mapIndex = checkForCollision(m,ms,rxnIndex);
 					if(mapIndex >= 0){
 						if(DEBUG_MESSAGE)cout<<"not removing "<<mapIndex<<endl;
 						deleteMs.erase(mapIndex);
@@ -287,71 +314,88 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 						if (deleteMs.size() == 0)
 							break;
 					}
-					else{
-
+					else{*/
+						//m->setRxnListMappingId(rxnIndex,-1);
 						double localFunctionValue = this->evaluateLocalFunctions(ms);
 						reactantTree->confirmPush(ms->getId(),localFunctionValue);
 						m->setRxnListMappingId(rxnIndex,ms->getId());
 						if(DEBUG_MESSAGE){
-							cout<<"adding new mapping..."<<endl;
+							cout<<"setting new mapping..."<<endl;
 							ms->printDetails();
 						}
-
+						//deleteMs.clear()
 					}
-					
-				}
-				if(!comparisonResult.second)
-					break;
+				
+			}
 
-			}while(true);
-			//delete all mappings that were no longer found to match between a molecule and a species
 			for(set<int>::iterator it=deleteMs.begin();it!=deleteMs.end(); ++it){
 				if(DEBUG_MESSAGE)cout<<"removing..."<<*it<<endl;
 				m->deleteRxnListMappingId(rxnIndex,*it);
 				reactantTree->removeMappingSet(*it);
 			}
 
+				//if(!comparisonResult.second)
+				//	break;
+
+			
+			//delete all mappings that were no longer found to match between a molecule and a species
+
 		} else {
-			do{
-				if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
-				ms=reactantTree->pushNextAvailableMappingSet();
-				comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,true);
-				if(!comparisonResult.first) {
-					if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
+			if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
+			ms=reactantTree->pushNextAvailableMappingSet();
+			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,&symmetricMappingSet);
+			if(!comparisonResult) {
+				if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
+				reactantTree->removeMappingSet(ms->getId());
+			} else {
+				if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
+				if (symmetricMappingSet.size() >0){
+					if(DEBUG_MESSAGE)cout<<"found multiple mappings because of a symmetric set of molecules."<<endl;
 					reactantTree->removeMappingSet(ms->getId());
-					break;
-				} else {
-					if(DEBUG_MESSAGE)cout<<"should be in the tree, so confirm push."<<endl;
-					int mapIndex = checkForCollision(m,ms,rxnIndex);
-					if(mapIndex >= 0){
-						//the agent already contains this mapping
-						if(DEBUG_MESSAGE)cout<<"not adding "<<mapIndex<<endl;
-						reactantTree->removeMappingSet(ms->getId());		
-						break;
-					}
-					else{
-						//we are keeping it, so evaluate the function and confirm the push
-						double localFunctionValue = this->evaluateLocalFunctions(ms);
-						if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
-						reactantTree->confirmPush(ms->getId(),localFunctionValue);
-						m->setRxnListMappingId(rxnIndex,ms->getId());
-						if(DEBUG_MESSAGE){
-							cout<<"mapping..."<<endl;
-							ms->printDetails();
+					for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+						int mapIndex = checkForCollision(m,*it,rxnIndex);
+						if(mapIndex >= 0){
+							//the agent already contains this mapping
+							if(DEBUG_MESSAGE)cout<<"not adding "<<mapIndex<<endl;
+							reactantTree->removeMappingSet((*it)->getId());		
 						}
+						else{
+							//we are keeping it, so evaluate the function and confirm the push
+							double localFunctionValue = this->evaluateLocalFunctions(*it);
+							if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+							reactantTree->confirmPush((*it)->getId(),localFunctionValue);
+							m->setRxnListMappingId(rxnIndex,(*it)->getId());
+							if(DEBUG_MESSAGE){
+								cout<<"mapping..."<<endl;
+								(*it)->printDetails();
+							}
+						}
+
 					}
-
-					if(!comparisonResult.second)
-						break;
-
-					//m->printDetails();
-					//we are keeping it, so evaluate the function and confirm the push
-					//double localFunctionValue = this->evaluateLocalFunctions(ms);
-					//if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
-					//reactantTree->confirmPush(ms->getId(),localFunctionValue);
-					//m->setRxnListMappingId(rxnIndex,ms->getId());
 				}
-			}while(true);
+				else{
+					double localFunctionValue = this->evaluateLocalFunctions(ms);
+					if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+					reactantTree->confirmPush(ms->getId(),localFunctionValue);
+					m->setRxnListMappingId(rxnIndex,ms->getId());
+					if(DEBUG_MESSAGE){
+						cout<<"mapping..."<<endl;
+						ms->printDetails();
+					}
+					
+				}
+
+				//if(!comparisonResult.second)
+				//	break;
+
+				//m->printDetails();
+				//we are keeping it, so evaluate the function and confirm the push
+				//double localFunctionValue = this->evaluateLocalFunctions(ms);
+				//if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
+				//reactantTree->confirmPush(ms->getId(),localFunctionValue);
+				//m->setRxnListMappingId(rxnIndex,ms->getId());
+			}
+
 		}
 	} else {
 
@@ -385,7 +429,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			ms = rl->pushNextAvailableMappingSet();
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms);
 			//if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
-			if(!comparisonResult.first){
+			if(!comparisonResult){
 				//we must remove, if we did not match.  This will also remove
 				//everything that was cloned off of the mapping set
 				rl->removeMappingSet(ms->getId());
@@ -916,7 +960,7 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			// wasn't in the tree, so trying to push and compare
 			ms=reactantTree1->pushNextAvailableMappingSet();
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree1,ms);
-			if(!comparisonResult.first) {
+			if(!comparisonResult) {
 			//if(!reactantTemplates[reactantPos]->compare(m,reactantTree1,ms)) {
 				//cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree1->removeMappingSet(ms->getId());
@@ -952,7 +996,7 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			// wasn't in the tree, so trying to push and compare
 			ms=reactantTree2->pushNextAvailableMappingSet();
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree2,ms);
-			if(!comparisonResult.first){
+			if(!comparisonResult){
 			//if(!reactantTemplates[reactantPos]->compare(m,reactantTree2,ms)) {
 				//cout<<"shouldn't be in the tree, so we pop"<<endl;
 				reactantTree2->removeMappingSet(ms->getId());
@@ -990,7 +1034,7 @@ bool DOR2RxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			//Try to map it!
 			ms = rl->pushNextAvailableMappingSet();
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms);
-			if(!comparisonResult.first) {
+			if(!comparisonResult) {
 				//we must remove, if we did not match.  This will also remove
 				//everything that was cloned off of the mapping set
 				rl->removeMappingSet(ms->getId());

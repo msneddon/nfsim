@@ -239,6 +239,7 @@ void BasicRxnClass::prepareForSimulation()
 }
 
 
+
 bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
 	//First a bit of error checking, that you should skip unless we are debugging...
@@ -303,8 +304,9 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 
 	//Try to map it!
 	ms = rl->pushNextAvailableMappingSet();
-	//comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms,false,true);
-	if(!reactantTemplates[reactantPos]->compare(m,rl,ms).first) {
+	symmetricMappingSet.clear();
+	comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms,false,&symmetricMappingSet);
+	if(!comparisonResult) {
 		//cout << "no mapping in normal reaction, remove"<<endl;
 		//we must remove, if we did not match.  This will also remove
 		//everything that was cloned off of the mapping set
@@ -312,7 +314,21 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 	} else {
 		//cout << "should be in normal reaction, confirm push"<<endl;
 		//ms->printDetails();
-		m->setRxnListMappingId(rxnIndex,ms->getId());
+		
+		//TODO: it is necessary to remove elements that are not used anymore from the rl as well as from the m
+		//for that
+		//m->setRxnListMappingId(rxnIndex,-1);
+
+		if (symmetricMappingSet.size() > 0){
+            rl->removeMappingSet(ms->getId());
+			for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+					m->setRxnListMappingId(rxnIndex,(*it)->getId());
+            }
+		}
+		else{
+			m->setRxnListMappingId(rxnIndex,ms->getId());
+		}
+		
 	}
 
 	return true;
