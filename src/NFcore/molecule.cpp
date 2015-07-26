@@ -193,11 +193,17 @@ void Molecule::updateDORRxnValues()
 		if(isPrepared) {
 			//If we are in this reaction, then we have to update our value...
 			if(getRxnListMappingId(rxnIndex)>=0) {
+				//iterate over all mappings
+				set<int> tempSet = getRxnListMappingSet(rxnIndex);
+				//iterate over all agent-mappings  for the same reaction
+				for(set<int>::iterator it= tempSet.begin();it!= tempSet.end(); ++it){
+
 				//Careful here!  remember to update the propensity of this
 				//reaction in the system after we notify of the rate factor change!
-				double oldA = rxn->get_a();
-				rxn->notifyRateFactorChange(this,rxnPos,getRxnListMappingId(rxnIndex));
-				parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
+					double oldA = rxn->get_a();
+					rxn->notifyRateFactorChange(this,rxnPos,*it);
+					parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
+				}
 			}
 		}
 	}
