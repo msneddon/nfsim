@@ -14,7 +14,8 @@
 #include <list>
 #include <queue>
 #include <map>
-
+#include <algorithm>
+#include <set>
 // Include various NFsim classes from other files
 #include "../NFscheduler/NFstream.h"
 #include "../NFutil/NFutil.hh"
@@ -800,10 +801,33 @@ namespace NFcore
 			Molecule * getBondedMolecule(int bSiteIndex) const;
 			int getBondedMoleculeBindingSiteIndex(int cIndex) const;
 
-			int getRxnListMappingId(int rxnIndex) const { return rxnListMappingId[rxnIndex]; };
-			void setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
-					this->rxnListMappingId[rxnIndex] = rxnListMappingId;
+			int getRxnListMappingId(int rxnIndex) { 
+				//return rxnListMappingId[rxnIndex];
+				return (rxnListMappingId2[rxnIndex].size() > 0) ? *rxnListMappingId2[rxnIndex].begin() : -1;  //JJT: changing to handle multiple mappings per reaction
 			};
+
+			set<int> getRxnListMappingSet(int rxnIndex){
+
+				return rxnListMappingId2[rxnIndex];
+			}
+
+			bool setRxnListMappingId(int rxnIndex, int rxnListMappingId) {
+					if(rxnListMappingId == -1){
+						this->rxnListMappingId2[rxnIndex].clear();
+						//this->rxnListMappingId3[rxnIndex].clear();
+						return true;
+					}
+					else{
+						pair<std::set<int>::iterator,bool> it = this->rxnListMappingId2[rxnIndex].insert(rxnListMappingId); //JJT: using a set* instead of int* to deal with multiple mappings per reaction
+						return it.second; //JJT:  return whether it is a new insert or not
+					}
+			};
+
+
+
+			void deleteRxnListMappingId(int rxnIndex, int rxnListMappingId){
+				rxnListMappingId2[rxnIndex].erase(rxnListMappingId);
+			}
 
 			/* set functions for states, bonds, and complexes */
 			//void setState(const char * stateName, int value);
@@ -937,7 +961,8 @@ namespace NFcore
 
 
 			//Used to keep track of which reactions this molecule is in...
-			int * rxnListMappingId;
+			set<int>* rxnListMappingId2;
+			map<vector<Molecule *>, int>* rxnListMappingId3;
 			int nReactions;
 
 
@@ -1061,6 +1086,8 @@ namespace NFcore
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
+			bool tagged;
+
 
 
 		protected:
@@ -1069,8 +1096,7 @@ namespace NFcore
 			int rxnId;
 
 			/* if this reaction is tagged, it outputs a message everytime it is fired */
-			bool tagged;
-
+			
 			string name;
 			int reactionType;
 			unsigned int n_reactants;
@@ -1118,6 +1144,10 @@ namespace NFcore
 			 * count correction for calculating the ratelaw
 			 */
 			int *identicalPopCountCorrection;
+
+			//JJT: vector for storing multile mapping sites in comparison involing molecules with symmetric components and cycless
+			vector<MappingSet*> symmetricMappingSet;
+			bool comparisonResult;
 	};
 
 

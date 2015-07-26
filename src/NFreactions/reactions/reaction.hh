@@ -90,6 +90,9 @@ namespace NFcore
 
 			virtual int getDORreactantPosition() const { return DORreactantIndex; };
 
+			//JJT: checks if there's an existing mapping set in *m equal to *ms that maps to this reaction
+			virtual int checkForCollision(Molecule *m, MappingSet* ms,int rxnIndex);
+
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
 			virtual int getReactantCount(unsigned int reactantIndex) const;
 			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;

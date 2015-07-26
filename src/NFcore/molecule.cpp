@@ -42,7 +42,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	hasVisitedMolecule = false;
 	hasEvaluatedMolecule = false;
 	isMatchedTo=0;
-	rxnListMappingId = 0;
+	rxnListMappingId2 = 0;
 	nReactions = 0;
 	useComplex = parentMoleculeType->getSystem()->isUsingComplex();
 	isPrepared = false;
@@ -72,7 +72,7 @@ Molecule::~Molecule()
 	delete [] isObservable;
 	delete [] component;
 	delete [] indexOfBond;
-	delete [] rxnListMappingId;
+	delete [] rxnListMappingId2;
 	delete [] hasVisitedBond;
 
 	if(localFunctionValues!=0)
@@ -84,9 +84,8 @@ void Molecule::prepareForSimulation()
 {
 	if(isPrepared) return;
 	nReactions = parentMoleculeType->getReactionCount();
-	this->rxnListMappingId = new int[nReactions];
-	for(int r=0; r<nReactions; r++)
-		rxnListMappingId[r] = -1;
+	this->rxnListMappingId2 = new set<int>[nReactions];
+
 	isPrepared = true;
 
 	//We do not belong to any observable... yet.
@@ -194,11 +193,17 @@ void Molecule::updateDORRxnValues()
 		if(isPrepared) {
 			//If we are in this reaction, then we have to update our value...
 			if(getRxnListMappingId(rxnIndex)>=0) {
+				//iterate over all mappings
+				set<int> tempSet = getRxnListMappingSet(rxnIndex);
+				//iterate over all agent-mappings  for the same reaction
+				for(set<int>::iterator it= tempSet.begin();it!= tempSet.end(); ++it){
+
 				//Careful here!  remember to update the propensity of this
 				//reaction in the system after we notify of the rate factor change!
-				double oldA = rxn->get_a();
-				rxn->notifyRateFactorChange(this,rxnPos,getRxnListMappingId(rxnIndex));
-				parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
+					double oldA = rxn->get_a();
+					rxn->notifyRateFactorChange(this,rxnPos,*it);
+					parentMoleculeType->getSystem()->update_A_tot(rxn,oldA,rxn->update_a());
+				}
 			}
 		}
 	}
@@ -335,7 +340,7 @@ void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
 	o<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId=" << ID_complex<<", degree="<<degree<<")"<<endl;
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
