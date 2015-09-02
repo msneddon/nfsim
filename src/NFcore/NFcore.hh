@@ -1145,7 +1145,9 @@ namespace NFcore
 			 */
 			int *identicalPopCountCorrection;
 
-			//JJT: vector for storing multile mapping sites in comparison involing molecules with symmetric components and cycless
+			/*JJT: vector for storing multiple mapping sets, to address a case involing molecules with symmetric components
+			* that could lead to molecules mapping to reactions more than once
+			*/
 			vector<MappingSet*> symmetricMappingSet;
 			bool comparisonResult;
 	};
