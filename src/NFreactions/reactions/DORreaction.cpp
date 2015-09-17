@@ -269,8 +269,11 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		set<int> deleteMs = m->getRxnListMappingSet(rxnIndex);
 		symmetricMappingSet.clear();
 		if(m->getRxnListMappingId(rxnIndex)>=0) {
-
-			
+			/* JJT: this branch contains those reactions for which a reaction and a molecule had been mapped together before
+			*  in a previous cycle. However it is not sufficient to just check if they still mapped, it is necessary to see if 
+			*  they still map the same way
+			*  or whether some of the mappings are still valid (or there are new mappings to this reation from molecule <m>)
+			*/
 			
 			if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
@@ -281,16 +284,17 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			} else {
 				//JJT: checking if the mapping set we found is new 
 				if (symmetricMappingSet.size() >0){
+					//JJT: delete ms since symmetricMappingSet contains all the mapping information we need
 					reactantTree->removeMappingSet(ms->getId());
 					for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
 						int mapIndex = checkForCollision(m,*it,rxnIndex);
 						if(mapIndex >= 0){
-							//the agent already contains this mapping
+							//JJT: the agent already contains this mapping, so keep  the old one
 							deleteMs.erase(mapIndex);
 							reactantTree->removeMappingSet((*it)->getId());
 						}
 						else{
-							//we are keeping it, so evaluate the function and confirm the push
+							//JJT: new mapping and we are keeping it, so evaluate the function and confirm the push
 							double localFunctionValue = this->evaluateLocalFunctions(*it);
 							if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 							reactantTree->confirmPush((*it)->getId(),localFunctionValue);
@@ -316,6 +320,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 					}
 					else{*/
 						//m->setRxnListMappingId(rxnIndex,-1);
+						//JJT: If instead the mapping information is a single mapping contained in <ms>...
 						double localFunctionValue = this->evaluateLocalFunctions(ms);
 						reactantTree->confirmPush(ms->getId(),localFunctionValue);
 						m->setRxnListMappingId(rxnIndex,ms->getId());
