@@ -3,7 +3,7 @@
 
 #include "reaction.hh"
 
-#define DEBUG_MESSAGE 0
+#define DEBUG_MESSAGE 1
 
 
 using namespace std;
@@ -281,6 +281,9 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
 			if(!comparisonResult) {
 				reactantTree->removeMappingSet(ms->getId());
+				for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+					reactantTree->removeMappingSet((*it)->getId());
+				}
 			} else {
 				//JJT: checking if the mapping set we found is new 
 				if (symmetricMappingSet.size() >0){

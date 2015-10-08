@@ -19,6 +19,10 @@ namespace NFcore
 
 			virtual void init();
 			virtual void prepareForSimulation();
+
+			//JJT: checks if there's an existing mapping set in *m equal to *ms that maps to this reaction
+			virtual int checkForEquality(Molecule *m, MappingSet* ms,int rxnIndex, ReactantList*);
+
 			virtual bool tryToAdd(Molecule *m, unsigned int reactantPos);
 			virtual void remove(Molecule *m, unsigned int reactantPos);
 			virtual double update_a();
