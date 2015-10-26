@@ -281,6 +281,10 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 
 			if(!comparisonResult) {
 				reactantTree->removeMappingSet(ms->getId());
+				//JJT: removes any symmetric mapping sets that might have been added since we are not using them
+				for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+					reactantTree->removeMappingSet((*it)->getId());
+				}
 			} else {
 				//JJT: checking if the mapping set we found is new 
 				if (symmetricMappingSet.size() >0){
