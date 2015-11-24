@@ -1,0 +1,11 @@
+os:
+  - linux
+language: c++
+sudo: false
+addons:
+  apt:
+    packages:
+    - libxml2-dev
+compiler:
+  - g++
+script: cd bin;make;cd ..;cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
