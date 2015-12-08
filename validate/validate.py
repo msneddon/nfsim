@@ -4,6 +4,7 @@ import numpy as np
 import subprocess
 import re
 import fnmatch
+import sys
 
 bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
 #bngPath = '/home/proto/workspace/bionetgen/bng2/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
@@ -93,10 +94,12 @@ class TestNFSimFile(ParametrizedTestCase):
         ssaDiff = ssaDiff / self.param['iterations']
         nfDiff = nfDiff / self.param['iterations']
 
-        rdiff = (nfDiff - ssaDiff) / nfDiff
-        # relative difference should be less than 15%
+        #rdiff = (nfDiff - ssaDiff) / nfDiff
+        rdiff = nfDiff - ssaDiff - (tol * ssaDiff)
+        # relative difference should be less than 'tol'
         for element in rdiff:
-            self.assertTrue(element < 0.15)
+            # self.assertTrue(element < tol)
+            self.assertTrue(element <= 0)
 
 
 def getTests(directory):
@@ -114,5 +117,11 @@ if __name__ == "__main__":
     testFolder = './basicModels'
     tests = getTests(testFolder)
     for index in tests:
-        suite.addTest(ParametrizedTestCase.parametrize(TestNFSimFile, param={'num': index, 'odir': 'basicModels', 'iterations': 10}))
-    unittest.TextTestRunner(verbosity=2).run(suite)
+        suite.addTest(ParametrizedTestCase.parametrize(TestNFSimFile, param={'num': index,
+                      'odir': 'basicModels', 'iterations': 60}))
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+
+    ret = (list(result.failures) == [] and list(result.errors) == [])
+    ret = 0 if ret else 1
+    print ret
+    sys.exit(ret)
