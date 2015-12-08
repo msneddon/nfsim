@@ -14,6 +14,7 @@ NFsim - the network free stochastic simulator, v1.11
 
 michael w. sneddon
 justin s. hogg
+jose-juan tapia
 james r. faeder
 thierry emonet
 
@@ -65,6 +66,13 @@ Enjoy your new network-free world!
 ################################################################################
 
 Release Notes
+
+v1.12   Dec, 2015
+        (a) Changes to how molecule instances are mapped to BasicRxn's (BasicRxnClass::tryToAdd()). It was possible for certain kinds of rules that the mappingSets were not updated correctly because the head molecule matched a reactant pattern before and after a reaction event BUT the mapping was different after the firing. In such cases, the mappingSet was not updated properly. The logic was changed to fix this problem. 
+        (b) Further changes to how molecule instances are mapped to a ReactionClass object (BasicRxn and DORReactions). In particular it is often the case that graph symmetry leads to a complex being able to map to a ReactionClass multiple times. Symmetry considerations were being made on the reaction center but not on the context components which led to an undercounting of the number of times a pattern agent could match a rule instance in some edge cases (see v17.bngl in the validation suite). This led to incorrect results or even NFSim crashes. NOTE: the changes made in points (a) and (b) may cause some models to execute less efficiently.
+        (c) Fixed index bound checking in MoleculeType::getComponentStateName().
+        (d) Updated the validation models to reflect current BNGL formatting standards. Added a few new validation models that address the bugfixes included in this version. This update also includes a Python version of the validation script.
+
 
 v1.11   Oct, 2012
         (a) Molecules without components may be treated as population variables

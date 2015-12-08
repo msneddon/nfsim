@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 	// turned off for the general release code.
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
-	string versionNumber = "1.11";
+	string versionNumber = "1.12";
 	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
 	clock_t start,finish;
 	double time;
