@@ -13,4 +13,4 @@ compiler:
 notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
 
-script: cd bin;make;cd ..;cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
+script: mkdir build; cd build; cmake ..; make; cd ..;cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
