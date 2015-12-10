@@ -123,5 +123,7 @@ if __name__ == "__main__":
 
     ret = (list(result.failures) == [] and list(result.errors) == [])
     ret = 0 if ret else 1
-    print ret
-    sys.exit(ret)
+    if ret > 0:
+        sys.exit("Validation return an error code")
+    else:
+        sys.exit()
