@@ -1,0 +1,30 @@
+version: 1.12
+environment:
+  CTEST_OUTPUT_ON_FAILURE: 1
+  matrix:
+    - generator: "MinGW Makefiles"
+
+install:
+  - choco install -y mingw
+  - "SET PATH=C:\\tools\\mingw64\\bin;%PATH%"
+
+branches:
+  # whitelist
+  only:
+    - master
+    - release
+    - mcell
+    - release-windows
+
+before_build:
+  - echo Running cmake...
+  - mkdir build
+
+install:
+  - cmd: cd build
+  - cmd: cmake ..
+  - cmd: make
+
+
+
+build:
