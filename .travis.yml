@@ -14,3 +14,9 @@ notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
 
 script: mkdir build; cd build; cmake ..; make; cd ..;cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
+deploy:
+  provider: s3
+  access_key_id: "AKIAJEOXCCXGUFNFW6MA"
+  secret_access_key: "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"
+  bucket: "nfsim"
+  skip_cleanup: true
