@@ -13,13 +13,13 @@ compiler:
 notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
 #cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
-script: mkdir -p build; mkdir -p bin; cd build; cmake ..; make; cp NFsim ../bin; cd ..;
+script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist; cd ..;
 deploy:
   provider: s3
   access_key_id: "AKIAJEOXCCXGUFNFW6MA"
   secret_access_key: "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"
   bucket: "nfsim"
   skip_cleanup: true
-  local_dir: bin
+  local_dir: dist
   on:
     branch: release
