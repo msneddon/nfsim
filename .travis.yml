@@ -12,8 +12,8 @@ compiler:
   - g++
 notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
-
-script: mkdir -p build; mkdir -p bin; cd build; cmake ..; make; cp NFsim ../bin; cd ..;cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
+#cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py
+script: mkdir -p build; mkdir -p bin; cd build; cmake ..; make; cp NFsim ../bin; cd ..;
 deploy:
   provider: s3
   access_key_id: "AKIAJEOXCCXGUFNFW6MA"
