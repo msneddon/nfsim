@@ -54,7 +54,7 @@ if(CMAKE_SYSTEM_NAME  EQUAL "Windows")
 else()
     SET(STATIC "")
 endif()
-
+MESSAGE(STATUS "static flags...." ${STATIC})
 SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} )
