@@ -27,7 +27,7 @@ build_script:
 
 artifacts:
  - path: build\NFsim.exe
- - name: NFsim
+   name: NFsim
 
 notifications:
   - provider: Slack
