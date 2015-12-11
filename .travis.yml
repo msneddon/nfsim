@@ -14,16 +14,17 @@ compiler:
 notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
 before_install:
-  - source osx_install.sh
+- source osx_install.sh
 script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist;
+  cd ..; cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py; cd ..
 before_deploy:
-  - cd dist; python changeFilename.py; cd ..
+- cd dist; python changeFilename.py; cd ..
 deploy:
   provider: s3
+  access_key_id: AKIAJEOXCCXGUFNFW6MA
+  secret_access_key: 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
   bucket: nfsim
   skip_cleanup: true
   local_dir: dist
   on:
     branch: release
-  access_key_id: AKIAJEOXCCXGUFNFW6MA
-  secure: "ucWV1uMscDAlSMAR4QCKt0AOyn1w8S5pCIWfIfNIGVys2DvdCoitwQOEIj90xrOmX6YdLW2pt36ulDPrYBpjuDdpzhf4JMrmlZbZLUMEeZk+LlUzhNHztSiVDA7opR933s/+aTAzjK99lQOFV1OGvJYbUXCMhAdNw/oFGYiZ4Bd0n/BpU7mkEP7DlqTS8HPoQwcScoOJnb6ZJOVZgwKtj10YJThQu3sr0A/7RJ3YZH2BqSAnud+QoWNBwKaIorYTjIkBIYUhUMaawnN/giES1kj7bTJLAwOTzXWxAbrQi4ttmR5ZTTzMxhqvyEi+8ti5UnbOzTrIuO3FiOKW0VvbxB8kVI8OYDjL7vrP9we8QimlJYX/I6arXAc50w8239cl02hM/Y5IWr9FJvdMXdT28gz2aEqSIupgrMcfdeitOMeeS/ihaL1zlE5ZYP3bzkHTQ5eqvwkjQT5MA/7KnwDXijZT15OxlXdE/q8SL0313P3BcJoUZeXoMuvvt45Hl06sIQXMxzUUD8x9s6IVL671vxwN0l1XJAjRCVYF1tPE23OJSITyQKej0vdMkAYUy69IzdoNYPMQwxw9inviuvsOa8sEtBehVjFUdO0MpAb8XySyea9X5MexjgULzlWsnIFSYzAvSkmEEOtLExMbvqs5OFrLCePJPzdRX84l4ulaEQU="
