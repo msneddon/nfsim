@@ -4,8 +4,8 @@ environment:
     - generator: "Ninja"
 
 install:
-  - choco install -y mingw
-  - choco install -y ninja
+  - choco install -r -y mingw
+  - choco install -r -y ninja
   - "SET PATH=C:\\tools\\mingw64\\bin;%PATH%"
 
 branches:
