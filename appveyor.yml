@@ -1,7 +1,7 @@
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
   matrix:
-    - generator: "MinGW Makefiles"
+    - generator: "Ninja"
 
 install:
   - choco install -y mingw
@@ -9,9 +9,9 @@ install:
   - "SET PATH=C:\\tools\\mingw64\\bin;%PATH%"
   - cmd: echo Running cmake ...
   - mkdir build
-  - cmd: cd build
-  - cmd: cmake -G "Ninja" ..
-  - cmd: ninja
+  - cd build
+  - cmake -G "Ninja" ..
+  - ninja
 
 branches:
   # whitelist
