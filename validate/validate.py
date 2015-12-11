@@ -64,7 +64,7 @@ class TestNFSimFile(ParametrizedTestCase):
             subprocess.check_call(['perl', bngPath, '-outdir', outputDirectory, bngFileName], stdout=fnull)
 
     def NFsimtrajectoryGeneration(self, outputDirectory, fileNumber, runOptions):
-        runOptions = runOptions.split(' ')
+        runOptions = [x.strip() for x in runOptions.split(' ')]
         with open(os.devnull, "w") as fnull:
             subprocess.check_call([nfsimPath, '-xml', os.path.join(outputDirectory, 'v{0}.xml'.format(fileNumber)),
                                    '-o', os.path.join(outputDirectory, 'v{0}_nf.gdat'.format(fileNumber))] + runOptions,
