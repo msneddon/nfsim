@@ -1,4 +1,3 @@
-version: 1.12
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
   matrix:
