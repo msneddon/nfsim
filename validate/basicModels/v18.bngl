@@ -37,5 +37,6 @@ begin actions
     resetConcentrations()
     simulate({suffix=>"ssa",method=>"ssa",t_start=>0,t_end=>10,n_steps=>100})
     resetConcentrations()
-    simulate({suffix=>"nf",method=>"nf",complex=>1,t_start=>0,t_end=>10,n_steps=>100})
+    writeXML()
+    #simulate({suffix=>"nf",method=>"nf",complex=>1,t_start=>0,t_end=>10,n_steps=>100})
 end actions
