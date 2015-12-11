@@ -7,11 +7,6 @@ install:
   - choco install -y mingw
   - choco install -y ninja
   - "SET PATH=C:\\tools\\mingw64\\bin;%PATH%"
-  - cmd: echo Running cmake ...
-  - mkdir build
-  - cd build
-  - cmake -G "Ninja" ..
-  - ninja
 
 branches:
   # whitelist
@@ -21,7 +16,19 @@ branches:
     - mcell
     - release-windows
 
+build_script:
+  - cmd: echo Running cmake ...
+  - mkdir build
+  - cd build
+  - cmake -G "Ninja" ..
+  - ninja
+
+notifications:
+  - provider: Slack
+    auth_token:
+      secure: jN4Fas2b8/Z1yNInrC6yWZf1sHzA5M7M/wANf+O4nRQLRqNqLsmNFGMNusaS+adFyS0kz3TfGBtLjAEKeh84jw==
+    channel: nfsim
+    
 
 
 
-build:
