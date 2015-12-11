@@ -33,8 +33,8 @@ notifications:
   - provider: Slack
     auth_token:
       secure: jN4Fas2b8/Z1yNInrC6yWZf1sHzA5M7M/wANf+O4nRQLRqNqLsmNFGMNusaS+adFyS0kz3TfGBtLjAEKeh84jw==
-    channel: nfsim
-    
+    channel: build-results
+
 deploy:
 
     # Amazon S3 deployment provider settings
