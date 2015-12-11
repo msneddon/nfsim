@@ -53,7 +53,7 @@ if(CMAKE_SYSTEM_NAME  EQUAL "Windows")
     SET(STATIC "-static -static-libgcc -static-libstdc++")
 else()
     SET(STATIC "")
-endif
+endif()
 
 SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
