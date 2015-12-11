@@ -15,20 +15,19 @@ notifications:
   slack:
     secure: Rxjp4bNLl/kx9dbQxpXtHi2KEl7M25/gJcG874IlF40B9tnPwRmGm+w8m3smQW7gRNLyZ6VfoBcmuGet+GMBTCCa44dCcm9qkx+OZJkOBv/C5TLEO4dBtAMFDhRRmpr2LhZfxvbC0R0CRP3wzGIea4RWFJBcvF/oAtGxYSfISpEE745DDY/W9yNRk3AchFDvb9T3f6ip3JDJnamdBh5xMUD1Ou6HiTUjXm4qrwwG89Lf9MrzmN3LOuP/+wE/w+wz4MeEYuPWMfQIYGdI0Bhz7zglmRpBPX4F6FSN9LyBrTORZz09erXLwcz7kyP+LfA3cXrvoMSD4eR8mSyRxV20o7p5+phHNdYkpohmoOwOPO7cT/yfSSjQIzCN4NYeIxTTXed4AyAfDFCVrB8o5sqs2QC1O7MuNOgKw1DDvUMNRLd+8x41xpdr0dZC1OxgJ0glURaHq1e7C2GqjzKgd0wm1bYhnOWWLMwe4S9mrxo8/bKG6JQ0TchXkr5PHo02QT+HTiDysDgsa+etyM4zIMbNpp3aYQsNMxu3IOgzINUgcnoVreyXlht1QGEu8I6WIWNWYnBmdjx+aK7V2dKeEx5LLqJ/RO5+CWaXyYIdg7EYQn/WIx9Z5ifCs4s8m7ZqKYd6D+1KpfrrhMtnZ/uTJ/HVHkLwyW7DX/caRn7kpnQU5Xc=
 before_install:
-  - source osx_install.sh
-script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist; cd ..; cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py; cd ..
+- source osx_install.sh
+script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist;
+  cd ..; cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py; cd ..
 before_deploy:
-  - cd dist; python changeFilename.py; cd ..
+- cd dist; python changeFilename.py; cd ..
 deploy:
   provider: s3
   access_key_id:
     secure: kXEo/lijzwSCn+0cFwE38LbekshtlMnHUDgCIL4I2Xu+jZ7McgxWvOkjYHP5RV8BiA5m2eBOmMJDUuT9zeZHel1edgRceetO/Bu6jWVvMRA0pONq9As/1aNS3UMRLLpUgzZoUcCjVMMi4+/Dr6Ld8Qc6/iMeK+CvtzmJp/xPh0C1DAouvcUQ7GPvspvXkxBNP2X3rOmuiwel8higrBt3S/NAQ/8stYyUqtZBlxrEWKhHM1rONF6S2xZrVzeC3NVdnDr+Ie/hxyc8F9HAf06/XfsvB5QWT+kqJ3Wpv6kaq7x9ojPW7SQU7p1UmdJU7AFJaVG1gGqBREr3JJZvSQmZu2IVNKOzjhPcVcuM+tJQfHXeyWlCqOsDa5+QNsAk+LN5Xrh6RzFbKWKygore3GxFQx6WkW3ZytkqkLzy6iZ+FaJUjPvpxfGkRfxrVc6I7+2ZwuID9LJ6b7VpbLSN5Qk8S8o4AXOai35OePnCFPr9Gt3IoNJfL4/Y/E2Z+yxlF/bqBKVCuRcqgZGJp0wOuJACn8PubWF0IWNPJh+dzkashbuif0xRnq7Mf3Ag2MhybyZgPbnHju28K6VhxLP0DGTEQ8ko8svywZud/5H457lmRM9/EoqqAs/xFn+IwjT3rDFlxqfX8lTVhiyCxriw7M+hTOvl22hcfNRjZe3GTxtCnNQ=
   secret_access_key:
-    secure: NKSlkZqJFxX5qPiDK1vrVS+eXSUTeL4tiNUvjhkMdEsBAZZtAt1gRtEZs+I4n9Xf68q3T+MhSNvRQkc41wv0XTnmsVrSbAGrkDb2ES2Hkm5AjmDpRkD5svQUDemqn/t5kcxrJub2xKpM5RrtsT/525zdKA+9zppX0mfD2cvVUrMngjgtUA6FcQJOO283EYFZ3xLVgnMmcRc/HkNb4c3XBm1n4Cstz+mEC7x+ubQBkda9G8xYCMPue+Y0a9zUT81RlSRArcJXvaU5hJCOKJlbE/AFfZskT9Wxb6x6oD95158BKlbTrIojQKpixOuSH/DDYwFETqsueCfT+Ks/8rngXBzFnyJeAJRLihd7u6TKsdxGfegzd75Op49RcgigDGEh54GhyHTgApsGNb6Bnuk/wcmr/kOQ/iYUXL1zAwjFsWT9+F+eNzeF2Ke2ZLnwjWB6FCPQiWE1YX6K5z3njcqcOqgVqlWUndbg36iv/6rIAOLR7SCxIt2IOKg/DhgSoLRn3oZlnxlWUZgzpSqsyQvoumWV+Y0FI0afDZKYWCz/LKwcpcWt+/+CaNpR8BHrmgzqN7lzw5JQyiL5LWZztolB1XlmL0OSht9xr+TIgX22v1SnysMPNulHQsdAYd2k+DA/CMNsA0YMIt3Du6P3M92CzmGC23jqrLP1YUl1jopBlL0=
+    secure: a8wls9D05peET2Pcr24RUakoDLfsakGnMKvt+ZScYI5lT2DqowqrEIYHyP8B6mXt8M9c+3k6Bi0bPxBgEl5Ms1paYZVjoTsDdo5DwgfmCb4R0kIPM3nVR5X2vQOsTFCs1c47kg94PnBo5CgJxGvVdI7wjtmQEBFV0qYen0lgtNfG+Uuk1/0mm/PwJlaaQC1t9AY9AZ6kBHpcljZa3Kkrzexse+i/8E6Pqi6hWpKCOEBqsO0OEzfdUZ2I3nQDLt1O2WRu83VndraZ5NKKLSQN5SgJA2i/94UTYP277OiAq14bVIxZhKZ612AXY2yk9rpL/XQhOO7ZXyKONtbIijQsk14qZmnICvpB3krY426reF97Cuhvu/cDwBkkEnJaU4i9XNa1UQHyOqJJ/xjRyS0xrF+MjMW/A/IbIRwB+gn/ljkXLlZo8gdCHA8PqEfbKbv3E7B7I0gOESxP8sufYyegu1Q8I1Qzwpm7kGmrGjuLUIz6zozF9GFhnJxcBI4VReojNTb8Mf5n5I1lsyKwrT9uqHoMpO0MGG8+8HVfpOUxDg6PYUxDigO07Z4n6Xk+IdAe19Rit51v748w5z3PcL91DHKmvv2lKwlYk0aKecJOqFT2qQltEx/DazanNYL42vjpLvjOYs7s7G17EYSKIYv4dkBBotFxsWZpHdSoIViubDM=
   bucket: nfsim
   skip_cleanup: true
   local_dir: dist
   on:
     branch: release
-
-

@@ -40,9 +40,9 @@ deploy:
     # Amazon S3 deployment provider settings
   - provider: S3
     access_key_id:
-      secure: EotWNtrXcaHowzVU6iqENW6Gi6V4+fCQDmn7K2+jhJs=
+      secure: gyxTxeHww7ldSGxRSqjkAA1qa2JodkLDtmZeVrdmPfA=
     secret_access_key:
-      secure: SZG+r69XB5xxm+f+K5VI1awi2Jn0sdrBhFQCuBM4XQuBQaYsWFumUmAkuPqt/mqO
+      secure: qbD+jQk8IRRrHhucUlL6D17o4DffrAObRzBlo1ll8NzHG09o2kCGskQzd828WLJD
     bucket: nfsim
     folder: 1.12
     artifact: nfsim
