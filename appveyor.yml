@@ -15,6 +15,8 @@ branches:
     - release
     - mcell
     - release-windows
+platform: x64
+
 
 build_script:
   - cmd: echo Running cmake ...
@@ -23,12 +25,26 @@ build_script:
   - cmake -G "Ninja" ..
   - ninja
 
+artifacts:
+ - path: build\NFsim.exe
+ - name: NFsim
+
 notifications:
   - provider: Slack
     auth_token:
       secure: jN4Fas2b8/Z1yNInrC6yWZf1sHzA5M7M/wANf+O4nRQLRqNqLsmNFGMNusaS+adFyS0kz3TfGBtLjAEKeh84jw==
     channel: nfsim
     
+deploy:
 
-
+    # Amazon S3 deployment provider settings
+  - provider: S3
+    access_key_id:
+      secure: EotWNtrXcaHowzVU6iqENW6Gi6V4+fCQDmn7K2+jhJs=
+    secret_access_key:
+      secure: SZG+r69XB5xxm+f+K5VI1awi2Jn0sdrBhFQCuBM4XQuBQaYsWFumUmAkuPqt/mqO
+    bucket: nfsim
+    folder: 1.12
+    artifact: nfsim
+    set_public: true
 
