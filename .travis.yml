@@ -1,6 +1,6 @@
 os:
-  - linux
-  - osx
+- linux
+- osx
 language: c++
 sudo: false
 addons:
@@ -10,20 +10,20 @@ addons:
     - python-numpy
     - libxml2-dev
 compiler:
-  - g++
+- g++
 notifications:
   slack: faederlab:bJ2pu0hViE70sbIKASmmT74r
 before_install:
   - source osx_install.sh
-script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist; cd ..; cd validate;tar xfj bionetgen-2.2.6.tar.bz2;python validate.py; cd ..
+script: mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist;
 before_deploy:
   - cd dist; python changeFilename.py; cd ..
 deploy:
   provider: s3
-  access_key_id: "AKIAJEOXCCXGUFNFW6MA"
-  secret_access_key: "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"
-  bucket: "nfsim"
+  bucket: nfsim
   skip_cleanup: true
   local_dir: dist
   on:
     branch: release
+  xaNNfEQgdMwtOnZtQhA+iURGsvidB2p/vLOU4X21:
+    secure: FgX8FaZcFiY5neqKdZQYnawRkEaEAXqrhGYtUWilZH/iq1PjK9P0vEkr8/WjU4wKmAu/Y9/cy1zo5D91TsT59oY/NhmgYv2NWhp8toNvQQxdBgyd0mA7Kc6/NV4my2MGh3wHALfZJRKtbaktmiVn/eABj0SYR8zM3l5gdncqaABy3ufxQaKnJbWorgjhyO6AHNq5szK4XwqbSaRUETbFBCVOjAEjNdkfwrDjepKM/jNGZlNSvEOVSjJEO4F9qll1v6icOGVlfp3a+VndmTZwhGn9laIXP5cmPFbFmFQJ3sYyJ79yYMmujo80T1Arr7J2+d/2fZch+/1UBQCbYwIurCAV4UpKN9tQUPbWnCAPJ3Wz27mZvra11PxoXhWFuAgrlXGMjJ2HuT4JbubZMDNuhCFj2wO5H2y9fhOJB5OFcCMSNaLr7VCEL60kH9BIHVTG5fXKbb/O1/pNXHSii8hN9VmK/y0HbXqgh0JdkvYlDMIE6ZCVdTzSGi/ae3zi4wp9WSP/rYAORPZfdxB0JXe4MGZzBuCJLXb1K+MkEMqL710zsli8Iw9PR9TcUGnspm+8yikAluCkrRaZ+CDohNUcWhfU/Meiw6Mg0MTB9+9zfo+iBKT8pXy1Pqtp34jSdgqDarNl08JS6N+lVEnDpoTbCnUs/P+JedRDb+PmxIBs22Q=

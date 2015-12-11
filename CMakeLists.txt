@@ -49,5 +49,12 @@ set(SRC_FILES
     ${src_files} 
     ${c_src_files} 
 )
+if(CMAKE_SYSTEM_NAME  EQUAL "Windows")
+    SET(STATIC "-static -static-libgcc -static-libstdc++")
+else()
+    SET(STATIC "")
+endif
+
+SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} )
