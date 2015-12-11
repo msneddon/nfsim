@@ -20,7 +20,8 @@ before_deploy:
 - cd dist; python changeFilename.py; cd ..
 deploy:
   provider: s3
-  access_key_id: AKIAJEOXCCXGUFNFW6MA
+  access_key_id: #AKIAJEOXCCXGUFNFW6MA
+    - secure: "oZSnu1UT0NpDSvHdPfE9HpdHBh7VL7OPxyywTlpQQHDUJh3MPTz4Vyrt2S/V2j0YjZqB4r4jDkQIlGG83BjigoAac+XJPV9ta9kyF8Ez4CEDNm7S96CBbGZMeaMzl8bDP1MbfrGNltImpfhyw8lTV39EThZYpE1fVvtLcsa4aEL2nPaxBtBFfliGdTd4VyFMilFcgo8Zictrgvo/mz2971PDtfQ1vy5i/sJB/YARP1+R4Y69WJnLBYBIxEMAWgV6BN5PZffX/AI5LTwtOSGnN7kU5k1h4r0rUTivYstsUJ83gN2nOCk8IBKCPKuistWEIdAORCiNfLHH4wNBBLgPRBe0+u3MUzaX+2rS2zuryEGbS9diLtcIord7tDfNhWqyZ5vVEWCSCn4ep1pL/G4DdItsagc8CwEVIvJ9vnmpOOj65GlqJGNbVfO/dRmHx4c7rMTtbCxjv1Qntu6S2jDnm7JS54vrJVAdT0FgLqSZbE/Rg800BSsuyeC1+EYJKN1jdOX4U1dwOZ4ypahbsk4I7aCmhPfdC57GrVhuUTq7No2KD0kuVfM68ftF6Y+A14uGSAR9W+RTI4YLYYIBNfm1NCiYwmU8guL18AaBAH48Rbf6orGkfIuGKpvBWgIeWaqT9UVXmzFgoO+WH1QiI252AksKr4OReVwu2anlU+55ZMc="
   secret_access_key: xaNNfEQgdMwtOnZtQhA+iURGsvidB2p/vLOU4X21
   bucket: nfsim
   skip_cleanup: true
