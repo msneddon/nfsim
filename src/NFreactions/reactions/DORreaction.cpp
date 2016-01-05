@@ -261,7 +261,13 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 				//if(DEBUG_MESSAGE)cout<<"removing..."<<endl;
 				reactantTree->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 				m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-			} else {}
+			} else {
+				// reevaluate the local function, because the state of the molecule may have changed
+				// if we are trying to add this molecule back to the rxn
+				ms = reactantTree->getMappingSet(m->getRxnListMappingId(rxnIndex));
+				double localFunctionValue = this->evaluateLocalFunctions(ms);
+				reactantTree->updateValue(m->getRxnListMappingId(rxnIndex),localFunctionValue);
+			}
 		} else {
 			//if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
