@@ -88,7 +88,6 @@ v1.12   Dec, 2015
         Added a few new validation models that address the bugfixes included in this 
         version. This update also includes a Python version of the validation script.
 
-
 v1.11   Oct, 2012
         (a) Molecules without components may be treated as population variables
         rather than individual agents. This feature is useful for reducing memory
