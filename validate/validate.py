@@ -8,7 +8,7 @@ import sys
 
 bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
 #bngPath = '/home/proto/workspace/bionetgen/bng2/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
-nfsimPath = os.path.join('..', 'bin', 'NFsim')
+nfsimPath = os.path.join('..', 'build', 'NFsim')
 
 
 class ParametrizedTestCase(unittest.TestCase):
@@ -125,5 +125,7 @@ if __name__ == "__main__":
 
     ret = (list(result.failures) == [] and list(result.errors) == [])
     ret = 0 if ret else 1
-    print ret
-    sys.exit(ret)
+    if ret > 0:
+        sys.exit("Validation return an error code")
+    else:
+        sys.exit()
