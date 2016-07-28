@@ -502,9 +502,10 @@ int DORRxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
 }
 
 /*
-JJT: this function is called if the default mappingset information is sending the wrong parameter to the local function
-for now the solution is to try every molecule referenced by the mapping set. This may be inefficient but it covers our current
-use case
+JJT: this function is called if the default mappingset information is sending the wrong parameter to the local function when using a species
+scope label. for now the solution is to try every molecule referenced by the mapping set. This may be inefficient but it will only be as long
+as the length of a pattern defined by the user (usually 5-6 mt long) multiplied by the lenght of the observable referenced by the local function,
+so O(nm) with n, m <~ 6.
 */
 double DORRxnClass::pickLocalFunctionParameter(MappingSet* ms, int index, vector <MoleculeType *>* type1_Mol, int* reactantCounts)
 {
@@ -529,6 +530,7 @@ double DORRxnClass::pickLocalFunctionParameter(MappingSet* ms, int index, vector
 				}
 			}
 		}
+		// there is truly no possible mapping. User mistake prob, the error message could use somem improvement
 		cout<<"Internal error in LocalFunction::evaluateOn()! Trying to evaluate a function with unknown scope."<<endl;
 		exit(1);
 
