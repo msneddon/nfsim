@@ -230,6 +230,9 @@ double LocalFunction::getValue(Molecule *m, int scope)
 				return m->getLocalFunctionValue(typeI_localFunctionIndex.at(ti));
 			}
 		}
+		LocalFunctionException lfe;
+		lfe.setType1_Mol(&typeI_mol);
+		throw lfe;
 
 	} else if(scope==LocalFunction::MOLECULE) {
 		//cout<<"Molecule scope."<<endl;
@@ -265,8 +268,7 @@ double LocalFunction::getValue(Molecule *m, int scope)
 
 	}
 
-	cout<<"Internal error in LocalFunction::evaluateOn()! trying to evaluate a function with unknown scope."<<endl;
-	exit(1);
+	cout<<"Internal error in LocalFunction::evaluateOn()! Trying to evaluate a function with unknown scope."<<endl;
 	return -1;
 
 }
