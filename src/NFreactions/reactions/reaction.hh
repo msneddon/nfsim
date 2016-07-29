@@ -115,6 +115,8 @@ namespace NFcore
 
 			virtual void pickMappingSets(double randNumber) const;
 
+			virtual double pickLocalFunctionParameter(MappingSet *ms, int, vector <MoleculeType *>*, int*);
+
 			ReactantList **reactantLists;
 			ReactantTree *reactantTree;
 

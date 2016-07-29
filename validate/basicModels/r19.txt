@@ -1,0 +1,2 @@
+Testing for the correct handling of parameters labeled through species-scoped references
+-sim 10 -oSteps 100
