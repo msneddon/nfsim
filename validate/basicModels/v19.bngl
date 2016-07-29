@@ -42,9 +42,7 @@ end functions
 begin reaction rules
 
 %z:X(a!1,a!+).Y(b!1,d~0)-> %z:X(a!1,a!+).Y(b!1,d~1) factor(z)*kmod # factor(z) should evaluate to 1
-#%z:B(b!1,d~0).A(a!1,a!+)->%z:B(b!1,d~1).A(a!1,a!+) factor2(z)*kmod # factor(z) should evaluate to 1
-#%z:X(a!+,a!1).Y(c!1,d~0)->%z:X(a!+,a!1).Y(c!1,d~1) factor(z)*kmod # factor(z) should evaluate to 1
-#%z:B(c!1,d~0).A(a!+,a!1)->%z:B(c!1,d~1).A(a!+,a!1) factor2(z)*kmod # factor(z) should evaluate to 1
+%z:B(b!1,d~0).A(a!1,a!+)->%z:B(b!1,d~1).A(a!1,a!+) factor2(z)*kmod # factor(z) should evaluate to 1
 
 
 end reaction rules
