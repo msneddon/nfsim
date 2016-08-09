@@ -44,7 +44,7 @@ deploy:
     secret_access_key:
       secure: qbD+jQk8IRRrHhucUlL6D17o4DffrAObRzBlo1ll8NzHG09o2kCGskQzd828WLJD
     bucket: nfsim
-    folder: 1.12
+    folder: 1.12.1
     artifact: nfsim
     set_public: true
 

@@ -2,7 +2,7 @@ import shutil
 import platform
 import os
 
-version = '1.12'
+version = '1.12.1'
 destdir = os.path.join(version, '{0}-{1}'.format(platform.system(), platform.architecture()[0]))
 os.makedirs(destdir)
 print 'moving NFSIm to {0}\n'.format(destdir)

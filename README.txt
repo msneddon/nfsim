@@ -10,7 +10,7 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.12
+NFsim - the network free stochastic simulator, v1.12.1
 
 michael w. sneddon
 justin s. hogg
@@ -66,6 +66,11 @@ Enjoy your new network-free world!
 ################################################################################
 
 Release Notes
+
+v1.12.1 Aug, 2016
+        (a) Bugfix release. Addresses an error dealing with local function and species labels.
+        The error dealt with the way mappingSets where created and passed to the localFunction evaluation.
+        A test case (v19.bngl) was added that addresses this case.
 
 v1.12   Dec, 2015
         (a) Changes to how molecule instances are mapped to BasicRxn's 
