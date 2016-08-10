@@ -1177,7 +1177,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			//on this molecule
 			Molecule *potentialMatch=m2->getBondedMolecule(bondPartnerCompIndex[b]);
 			int thisBond = m2->getBondedMoleculeBindingSiteIndex(bondPartnerCompIndex[b]);
-			if(potentialMatch==Molecule::NOBOND) {
+			if(potentialMatch==nullptr) {
 				//cout<<"potential match site has no bond"<<endl;
 				clear(); return false;
 			}
@@ -1302,7 +1302,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 					//First, make sure the opposite molecule is connected to this molecule correctly
 					Molecule *potentialMatch=m2->getBondedMolecule(symBondPartnerCompIndex[c]);
-					if(potentialMatch==Molecule::NOBOND) {
+					if(potentialMatch==nullptr) {
 						continue;
 					} else if(potentialMatch!=matchMolecule) {
 						continue;
