@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>NFsim - developers</title>
+
+	<META NAME="description" CONTENT=".">
+	<META NAME="keywords" CONTENT="">
+	<link rel="stylesheet" type="text/css" href="../css/nf_style.css" />
+
+</head>
+
+<body>
+
+
+	<center>
+	<table border=0 cellspacing=0 cellpadding=0>
+	<tr>
+		<!-- <td width=30%></td> -->
+		<td><img src="../images/topLogo.jpg" align=right></td>
+		<td bgcolor=#2E3192 valign="center">
+			<center>
+			<div class="topMenuDiv">
+				<a href="../" class="topMenu">overview</a>&nbsp&nbsp&nbsp
+				<a href="../download" class="topMenu">download</a>&nbsp&nbsp&nbsp
+				<a href="features.html" class="topMenu">features</a> &nbsp&nbsp&nbsp
+				<a href="feedback.php" class="topMenu">feedback</a> <br>
+				<a href="support/support.html" class="topMenu">support</a> &nbsp&nbsp&nbsp
+				<a href="models/models.html" class="topMenu">models</a> &nbsp&nbsp&nbsp
+				<a href="developers.html" class="topMenu">developers</a> &nbsp&nbsp&nbsp
+				<a href="http://emonet.biology.yale.edu" class="topMenu">emonet lab</a>
+			</div>
+			</center>
+		</td>
+		<td bgcolor=#2E3192 width=15%></td>
+		<td><img src="../images/topRight.jpg" align=left></td>
+		<!-- <td bgcolor=#2E3192 width=50%></td> -->
+	</tr>
+	
+	<tr>
+		<td colspan=4>
+		
+		<div class="sectionTitleDiv">
+			developer resources</div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td colspan=4>
+		<center>
+		<!--  CONTENT -->
+		
+		
+		<table border=0 width=650><tr><td>
+		
+		
+		<center>
+		<br><br>
+		<a href="support/devDoc/NFsimDoc.html">Technical Source Code Documentation</a></center><br><br>
+		
+		<p>
+		NFsim is an open source project and we encourage you to take the time to learn 
+		the code and make your own improvements, tweaks, and adjustments.  While we cannot 
+		guarantee support, feel free to send us technical questions or specific
+		coding requests through the <a href="feedback.php">feedback </a>page. </p>
+		
+		
+		<p>The source code is packaged with the full distribution of NFsim, and this is the best way to begin development.  
+		You can develop, compile, build and test the code in any environment you want, but we strongly suggest you consider 
+		using Eclipse (<a href="http://www.eclipse.org">http://www.eclipse.org</a>) as your IDE.  Eclipse is an excellent and free development environment.  
+		It was originally designed for Java, but it works great for C/C++ and has plug-in support for many other languages 
+		(including a nice XML viewer).  NFsim was originally developed in Eclipse, and you'll notice that all the makefiles
+		in the 'bin' directory have been automatically generated using Eclipse.  To use Eclipse with NFsim, you will need 
+		the CDT set of plugins for Eclipse (<a href="http://www.eclipse.org/cdt">http://www.eclipse.org/cdt</a>).  The instructions for downloading and installing
+		Eclipse and setting up a project in Eclipse from existing source code can be found on their website.</p>
+		
+		
+		<p>The best way to familiarize yourself with the code is to begin with the simple system example 
+		(located in the src/NFtest/simple_system directory).  This file is heavily documented and will allow you 
+		to hard code your own model and show you the basic data structures and utilities that exist in NFsim.  
+		Try building your own system, and as you do, begin learning the basic data structures and functionality of 
+		the classes in the src/NFcore directory.  Finally, once you begin to work with the code, you will find it 
+		useful to have the <a href="support/devDoc/NFsimDoc.html">technical source code documentation</a>.</p>
+
+		<p>And if you do happen to create the next amazing simulator with unheard of capabilities using our code base, 
+		please let us know!  We will definitely be interested and we'll want to talk!</p>
+
+		
+		
+		
+		
+		
+		
+		
+		</center>
+		</td></tr>
+		</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<br><br><br><br><br><br>
+		
+		<!--
+		<table border=1 width=70%>
+		<tr><td colspan=2>
+			<div class="performanceTitleDiv">
+				NFsim effeciency is not affected by network size!
+			</div>
+		
+		</td></tr>
+		
+		<tr><td>
+			<div class="performanceTextDiv">
+				NFsim's algorithms and data structures were designed so that
+				the effeciency of standard simulations depends only on the number of
+				events - not the size of the reaction network.  That means
+				that no matter how large aggregates or clusters become in your model,
+				NFsim's performance will not suffer.  Now you can simulate
+				clustering and aggregate formation in well-mixed volumes
+				exactly and effeciently.
+			</div>
+		</td>
+		<td>
+			 <center><img src="images/networkSizeScaling.png" height=313></center>
+		</td>
+		</tr>
+		
+		
+		<tr><td colspan=2><br><br></td></tr>
+		<tr><td colspan=2>
+			<div class="performanceTitleDiv">
+				NFsim effeciency is not affected by the number of agents!
+			</div>
+		</td></tr>
+		<tr><td>
+				 <center><img src="images/moleculeNumberScaling.png" height=200></center>
+		</td>
+		<td>
+			<div class="performanceTextDiv">
+				NFsim's performance does not depend on the number of agents in
+				the system because molecule reads run in constant time.  That means
+				you can put as many molecules as your computer's memory can support.
+				Combined with the fact that molecules in large concentrations (like ATP
+				or sugars) can be incorporated into simple reactions as state changes
+				or through functionally defined rate laws (thus requiring no extra
+				memory costs), your system can be as large
+				as you need it.
+			</div>
+		</td>
+		</tr>
+		
+		<tr><td colspan=2><br><br></td></tr>
+		<tr><td colspan=2>
+			<div class="performanceTitleDiv">
+				NFsim beats StochSim in head to head tests!
+			</div>
+		</td></tr>
+		<tr><td>
+			<div class="performanceTextDiv">
+				NFsim's algorithm is event-driven and produces exact stochastic
+				trajectories.  This means that compared to StochSim, the current leading
+				platform for simulating systems with a high state space, NFsim is much
+				faster because it does not involve a significant number of null events.
+			</div>
+		</td>
+		<td>
+			<center><img src="images/stochSimCompare.png" height=313></center>
+		</td>
+		</tr>
+		
+		-->
+		</table>
+		
+
+		
+		<br><br><br><br><br><br><br><br>
+		
+		
+	</td>
+	</tr>
+
+	
+	
+	
+
+</table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>NFsim - support</title>
+
+	<meta NAME="description" CONTENT="Online user support for modeling and simulation with NFsim.">
+	<meta NAME="keywords" CONTENT="NFsim, biology, simulation, model, modeling, dynamic, agent-based, rule-based, Sneddon, Emonet, Faeder, BNGL, BNG, BioNetGen, network-free, biochemical, reaction, network, computational biology, systems biology">
+	
+	<link rel="stylesheet" type="text/css" href="../../css/nf_style.css" />
+
+</head>
+
+<body>
+
+
+	<center>
+	<table border=0 cellspacing=0 cellpadding=0>
+	<tr>
+		<!-- <td width=30%></td> -->
+		<td><img src="../../images/topLogo.jpg" align=right></td>
+		<td bgcolor=#2E3192 valign="center">
+			<center>
+			<div class="topMenuDiv">
+				<a href="../../" class="topMenu">overview</a>&nbsp&nbsp&nbsp
+				<a href="../../download" class="topMenu">download</a>&nbsp&nbsp&nbsp
+				<a href="../features.html" class="topMenu">features</a> &nbsp&nbsp&nbsp
+				<a href="../feedback.php" class="topMenu">feedback</a> <br>
+				<a href="support.html" class="topMenu">support</a> &nbsp&nbsp&nbsp
+				<a href="../models/models.html" class="topMenu">models</a> &nbsp&nbsp&nbsp
+				<a href="../developers.html" class="topMenu">developers</a> &nbsp&nbsp&nbsp
+				<a href="http://emonet.biology.yale.edu" class="topMenu">emonet lab</a>
+			</div>
+			</center>
+		</td>
+		<td bgcolor=#2E3192 width=15%></td>
+		<td><img src="../../images/topRight.jpg" align=left></td>
+		<!-- <td bgcolor=#2E3192 width=50%></td> -->
+	</tr>
+	
+	<tr>
+		<td colspan=4>
+		
+		<div class="sectionTitleDiv">
+			support</div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td colspan=4>
+		<center>
+		<!--  CONTENT -->
+		
+		
+		<table border=0 width=650><tr><td>
+		
+		<div class="supportStyle">
+		
+		<br>
+		<p>	
+		
+		To get started with NFsim, go the the <a href="../../download/">download</a> page and grab a copy of the program.  Your download
+		will include the user manual, where you'll find a quick start guide for running simulations.  The
+		manual provides detailed documentation of NFsim and is the first place you should turn to for help.  
+		On this page, you will find additional resources, tips, and references for working with the NFsim platform.
+		</p>
+		
+		
+		
+		
+		<br>
+		
+		<b><a name="faq" class="anchor"></a>Frequently Asked Questions</b>
+		<ul>
+			<li><a href="#faq01" class="internal">Why should I use NFsim?</a></li>
+			<li><a href="#faq02" class="internal">How should I cite NFsim?</a></li>
+			<li><a href="#faq03" class="internal">Where can I learn more about the BioNetGen Language?</a></li>
+			<li><a href="#faq04" class="internal">Can NFsim simulate spatial biochemical models?</a></li>
+			<li><a href="#faq05" class="internal">Can I run my SBML model in NFsim?</a></li>
+			<li><a href="#faq06" class="internal">How should I visualize simulation results?</a></li>
+			<li><a href="#faq07" class="internal">How do I perform single molecule tracking?</a></li>
+			<li><a href="#faq08" class="internal">My NFsim results are different than BioNetGen's ODE or SSA!  Why?</a></li>
+		</ul>
+		<br>
+		
+		
+		<b><a name="discrepancies" class="anchor"></a>Known Discrepancies with BioNetGen</b><br><br>
+		NFsim uses the BioNetGen Language for specifying models, but because NFsim is inherently different than standard simulation
+		methods, there are differences in how some rules are interpreted by NFsim as compared to BioNetGen.  This difference is because
+		NFsim applies rules directly onto molecule objects, whereas BioNetGen applies rules onto every chemical species. Here is a list of known
+		cases where NFsim interprets molecule patterns differently that BioNetGen's ODE and SSA solvers.<br>
+		
+		<ul>
+			<li><a href="#dis05" class="internal">Reactant connectivity enforcement</a></li>
+			<li><a href="#dis06" class="internal">Product connectivity enforcement</a></li>
+			<li><a href="#dis01" class="internal">Reaction centers vs. context in molecule observables</a></li>
+			<li><a href="#dis02" class="internal">MatchOnce and DeleteMolecules keywords</a></li>
+			<li><a href="#dis03" class="internal">Symmetry in "palindrome" rules</a></li>
+			<li><a href="#dis04" class="internal">Hidden symmetry in dimerization reactions</a></li>
+			<li><a href="#dis07" class="internal">Symmetry in unbinding reactions</a></li>
+		</ul>
+		
+		
+		
+		<br><br><br><br>
+		
+		
+		<a name="faq01" class="anchor"></a><br><br><hr /><br><br>
+		<b>Why should I use NFsim?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		You should use NFsim if you want to simulate any kind of biochemical reaction system that has large molecular complex formation,
+		molecular aggregation, polymerization, molecules with multiple post-translational modification sites, or cooperative signaling
+		complexes. In all of these cases, NFsim will allow you to quickly construct your model and simulate it faster than ODE or other
+		stochastic approaches.  For more details on the performance of NFsim see the <a href="../features.html">features</a> page, or take
+		a look at the example models the demonstrate NFsim's capabilities on the <a href="../models/models.html">models</a> page.
+		<br><br>
+		<i>Note to Agent-Based modelers</i>: Although NFsim uses an agent-based representation of molecules and in many cases uses an agent-based
+		design philosophy, it is not a general purpose agent-based simulator.  Indeed, you can construct agent-based simulations where
+		structured objects stochastically interact through labeled interaction sites, where those objects represent entities other
+		than biomolecules.  However, keep in mind that NFsim is designed primarily for bio-molecular interactions so that default interaction
+		rates follow biochemical kinetics.
+		
+		<br><br><br><br>
+		
+		<a name="faq02" class="anchor"></a><br><br><hr /><br><br>
+		<b>How should I cite NFsim?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		If you used or extended NFsim to model and simulate a biological system, please let us know and cite
+		NFsim as:<br><br>
+		
+		Sneddon MW, Faeder JR and Emonet T.  <i>Efficient modeling, simulation and coarse-graining of
+		biological complexity with NFsim</i>.  <b>Nature Methods</b> (2011) 8(2):177-83.
+		
+		
+		<br><br><br><br>
+		
+		
+		<!-- a name="faq02" class="anchor"></a><br><br><hr /><br><br>
+		<b>Where can I find existing rule-based models of my system?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		The best place to start looking is at the GetBonnie.  Virtual Cell also has a small collection of rule-based BNGL models.  Finally,
+		check out our model
+		
+		Then again, it may be easier, and more useful to your research, to construct your own NFsim model.  That way, you will completely
+		understand all of your model assumptions and places where your model can improve at every step of the way.  If you do construct an
+		amazing model in NFsim, we want to hear about it!  Let us know, <a href="../feedback.php">here</a>.
+		
+		<br><br><br><br -->
+		
+		
+		
+		<a name="faq03" class="anchor"></a><br><br><hr /><br><br>
+		<b>Where can I learn more about the BioNetGen Language?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		First, we recommend that you take a look at <a href="http://bionetgen.org/">BioNetGen's website </a> which has a number of materials 
+		on both BioNetGen Language and rule-based modeling in general.   For a comprehensive and complete guide to the language, see:  <br><br>
+		Faeder, JR, Blinov, ML, Hlavacek, WS. (2009) <b>Rule-based Modeling of Biochemical Systems with BioNetGen</b>.<i> in Methods in Molecular
+		Biology, Systems Biology</i> vol. 500.
+		(<a href="http://www.springerlink.com/content/nn1v343vw2kmj00w/">html</a>)
+		<br><br>
+		
+		<br><br>  Remember that some of the BNGL syntax is interpreted slightly differently in NFsim.  You can browse the list 
+		of differences <a href="#discrepancies" class="internal">here</a>.
+		Finally, for more general guides and introductions to rule-based modeling, see the following papers :<br><br>
+		Hlavacek, WS,  Faeder, JR,  Blinov, ML, Posner, RG, Hucka, M and Fontana, W. (2006) 
+		<b>Rules for modeling signal-transduction systems. </b><i>Sci. STKE.</i> 344, re6
+		(<a href="http://stke.sciencemag.org/cgi/content/abstract/2006/344/re6">html</a>)
+		<br><br>
+		Hlavacek, WS, Faeder, JR, Blinov, ML, Perelson, AS, and Goldstein, B. (2003) 
+		<b>The complexity of complexes in signal transduction</b>. <i>Biotechnol. Bioeng.</i>, 84, 783-794
+		(<a href="http://www3.interscience.wiley.com/journal/106577978/abstract?CRETRY=1&SRETRY=0">html</a>)
+		<br><br><br><br>
+		
+		
+		
+		
+		<a name="faq04" class="anchor"></a><br><br><hr /><br><br>
+		<b>Can NFsim simulate spatial biochemical models?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		No.  Like standard ODE and stochastic biochemical simulators, NFsim can only currently simulate well-mixed volumes.  However, 
+		keep in mind that in some systems, such as in the actin example	model, the spatial structure of the molecules can be inferred 
+		from the connectivity of the molecules.  Still, we recognize the need for introducing spatial aspects into models.
+		Therefore we are hard at work developing spatial capabilities in NFsim, both
+		to simulate multiple compartments (such as the nucleus, cytoplasm, etc) based on compartmental BNGL, and spatially resolved
+		simulations using a reaction-diffusion approach similar to <a href="http://mesord.sourceforge.net/">MesoRD</a>.  Together
+		with collaborators, we are also extending the BioNetGen Language to support spatial constraints.
+		
+		<br><br><br><br>
+		
+		
+		
+		<a name="faq05" class="anchor"></a><br><br><hr /><br><br>
+		<b>Can I run my SBML model in NFsim?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		The short answer is no.  SBML is an XML based model specification file for biochemical reaction networks.  Currently,
+		in SBML you have to explicitly write out every possible chemical species and reaction, and there is no support
+		for defining rules that define how types of molecules interact.  That said, we strongly believe in a standard file
+		format for model exchange in systems biology and will build support for SBML as soon as it can handle NFsim style
+		models.
+		
+		<br><br><br><br>
+		
+		
+		
+		<a name="faq06" class="anchor"></a><br><br><hr /><br><br>
+		<b>How should I visualize simulation results?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		Standard simulation output is sent to a text file with the ".gdat" extension.  This file is just a table of Observable
+		counts at each time point, so you can plot the results in many different programs.  NFsim comes with a simple Java based
+		plotting program called PhiBPlot that reads "gdat" files.  We also highly recommend using Matlab, where you can read in the file
+		with the command: <br>
+		
+		<div class="codeDiv">
+		[data,headers] = tblread(['filename']);  
+		</div>
+		
+		This will read the file and store the results in a matrix named
+		data allowing you to use Matlab's powerful plotting tools.  Of course, you can always import the file into Excel or write
+		your own custom program as well.
+		<br><br>
+		NFsim also supports more complex output in the form of a complete system dump.  The system dump allows you to get the entire
+		state of the system at any specified time.  Details on setting up a system dump is provided in the user manual.  NFsim comes
+		with a set of Matlab tools for automatically reading the output that are also described in the user manual.
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		
+		
+		<a name="faq07" class="anchor"></a><br><br><hr /><br><br>
+		<b>How do I perform single molecule tracking?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		To perform single molecule tracking, you will have to use NFsim's complete system dump option.  This will output the
+		entire state of the system at every specified time point.  Molecules in NFsim have a unique ID number, so when you process
+		the output files, you can identify particular molecules and follow their trajectories over the course of a simulation or
+		the lifetime of that molecule.  For details on setting up system dumps and processing the output, consult the user manual.
+		
+		<br><br><br><br>
+		
+		
+		
+		<a name="faq08" class="anchor"></a><br><br><hr /><br><br>
+		<b>My NFsim results are different than BioNetGen's ODE or SSA!  Why?</b> &nbsp&nbsp&nbsp<a href="#faq" class="backTo">back to faq</a><br><br>
+		
+		NFsim uses the BioNetGen Language for specifying models, so for model files that do not use NFsim's functional rate laws, you can run
+		simulations using BioNetGen's ODE or SSA solver as well.  In nearly all cases where ODEs and SSA methods can be used, ODEs and SSA solvers
+		will produce the exact same results as NFsim.
+		<br><br>
+		However, NFsim operates with a completely different underlying algorithm that acts on individual
+		molecule objects instead of on every chemical species.  Therefore, in certain situations, rules are interpreted differently in NFsim
+		as compared to the SSA or ODEs because they are applied directly onto molecules.  These are not necessarily bugs, but are rather differences
+		in how patterns are interpreted.
+		
+		<br><br>
+		You can see a listing and description of the known cases where NFsim will produce 
+		different results than BioNetGen's SSA or ODE solvers <a href="#discrepancies" class="internal">here</a>.
+		
+		<br><br>
+		Of course, if you find a discrepancy between NFsim and the ODEs or SSA that cannot be explained by one of the known cases, please let us know.
+		It might be a discrepancy we aren't aware of or a possible bug in either NFsim or BioNetGen.
+		
+		<br><br><br><br>
+		
+	
+		
+		
+		<br><br><br><br><br>
+		<!--  DISCREPANCY LIST -->
+		
+		<a name="dis05" class="anchor"></a><br><br><hr /><br><br>
+		<b>Reactant connectivity enforcement</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		This is the most common discrepancy that you might encounter.  In BioNetGen, the default behavior enforces
+		the connectivity of bi-molecular reactions.  For instance, in the simple binding rule,
+		
+		<div class="codeDiv">A(b) + B(a) -> A(b!1).B(a!1) kOn</div>
+		
+		BioNetGen will only allow a reaction to occur if molecules 'A' and 'B' are part of separate complexes.  For instance, if your system has a
+		molecular species such as
+		
+		<div class="codeDiv">A(a,x!1).X(y!1,y!2).B(a,x!2)</div>
+		
+		then BioNetGen will never allow the binding rule above to connect this molecule 'A' to molecule 'B'.  In NFsim, the default behavior is different
+		because NFsim operates directly on molecules.  NFsim doesn't care about the molecule 'X' at all, but will notice that the 'A' and
+		'B' molecules have open binding sites and  so will allow them to interact.  This is actually useful in many systems where you want two molecules
+		to interact regardless of whether or not they are connected to the same complex.  Another reason for making this the default behavior in NFsim is 
+		because it allows NFsim	to run more efficiently, and most of the time you don't need to check the connectivity of molecules.
+		<br><br>
+		However, if you do need to enforce the condition that two molecules are not connected, NFsim has a complex / aggregate bookkeeping option that allows you 
+		to do so.  It should be noted that this bookkeeping system will make your simulations slower, particularly when large complexes form, because
+		whenever unbinding reactions occur, the connectivity map of the individual molecules must be updated.  To turn on the complex bookkeeping option,
+		run NFsim with the argument "-cb".  See the user manual for more details on complex and aggregate bookkeeping.
+		
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		<a name="dis06" class="anchor"></a><br><br><hr /><br><br>
+		<b>Product connectivity enforcement</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		BioNetGen does not allow certain reactions to occur if they break the connectivity pattern of the product.  For instance, 
+		consider the rule:
+		
+		<div class="codeDiv">A(a!1).B(b!1) -> A(a).B(b) kUnbind</div>
+		
+		For this rule, BioNetGen will only allow the unbinding reaction to occur if the reaction does not break the larger molecular complex.  For NFsim,
+		this constraint is difficult to enforce because it would require checking the entire complex every time an unbinding reaction takes place.  Therefore,
+		by default NFsim does not enforce this constraint.  Now consider the rule,
+		
+		
+		<div class="codeDiv">A(a!1).B(b!1) -> A(a) + B(b) kOff</div>
+		
+		Again, BioNetGen will enforce the condition that the reactant complex must be broken when the bond between 'A' and 'B' is removed, whereas NFsim will 
+		allow the reaction to occur regardless of what products are generated.  Again, this saves NFsim from having to check, for ever unbinding reaction,
+		the connectivity of the products.  In NFsim, then, specifying either of the rules above will allow the unbinding reaction regardless of whether
+		or not the product connectivity constraint is satisfied.  In NFsim molecules are treated as the primary objects (not molecular species, as in BioNetGen),
+		so this interpretation of rules makes sense.  The constraint on the reactant molecules should be declared in the reactant pattern, not in the product
+		pattern.  This is actually very useful in many models where you want two molecules to unbind regardless of how the products are connected.  
+		<br><br>
+		Although NFsim has a complex bookkeeping option, it is not currently set up to enforce product connectivity.  In most cases, however, if the standard 
+		BioNetGen behavior is needed, it can be added to the reactant pattern.  For instance, if we know that, aside from the bond between components 'a' and
+		'b', molecules 'A' and 'B' can only be connected through the component site 'x' on 'A', as in:
+		<div class="codeDiv">A(a,x!1).X(y!1,y!2).B(a,x!2)</div>
+		then we can enforce whatever connectivity on the products we like by defining the reaction as:
+		
+		<div class="codeDiv">>A(a!1,x!+).B(b!1) -> A(a,x!+).B(b) kUnbind<br>
+		 &nbsp &nbsp &nbsp &nbsp ---or---<br>
+		 A(a!1,x).B(b!1) -> A(a,x) + B(b) kOff</div>
+		
+		In either cases, you can enforce the same constraint as in BioNetGen. The difference is that these rules will operate much faster in NFsim as compared
+		to the extra work that would be required to check connectivity of the products that form.
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		<a name="dis01" class="anchor"></a><br><br><hr /><br><br>
+		<b>Reaction centers vs. context in molecule observables</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		In BNGL, you can define long-range interactions using the "connected-to" syntax.  This syntax allows you to specify that
+		two molecules are connected, but with out directly specifying how they are connected. For example, in BNGL, you will write
+		<div class="codeDiv">A(b!1).B(a!1)</div>
+		to identify that 'A' is connected to 'B' with a bond from component site 'b' on 'A' to component site 'a' on 'B'.  However, you can also write
+		<div class="codeDiv">A().B()</div>
+		This pattern will match all situations where 'A' is connected to 'B'. Notice, however, that this behavior can be dangerous.  For instance,
+		if you have a phospho-transfer rule such as
+		<div class="codeDiv">A(p~PHOS).B(p~UNPHOS) -> A(p~UNPHOS).B(p~PHOS) kPhos</div>
+		and you have complex in your system that looks like this:
+		<div class="codeDiv">A(p~PHOS,a!1,b!2).B(p~UNPHOS,a!2).A(p~PHOS,a!1,b!3).B(p~UNPHOS,a!3)</div>
+		Then you might expect the next phospho-transfer rule to occur with a propensity 2*kPhos because there are two A's.  You would be wrong.
+		The propensity of the rule for this particular species will be 4*kPhos because there are 4 ways the reaction can take place.  Each A can
+		phosphorylate each of the two B's.  Both BioNetGen and NFsim, therefore, will set the propensity to be 4*kPhos.  Now consider an
+		auto-dephosphorylation rule,
+		<div class="codeDiv">A(p~PHOS).B() -> A(p~UNPHOS).B() kAutoDePhos</div>
+		We still have the condition that 'A' must be connected to 'B', but no actual transformation takes place on molecule 'B'.  Again consider
+		the complex that we had before with two 'A's and two 'B's.  You might guess, based on the discussion of the phospho-transfer rule that the
+		propensity will be 4*kAutoDePhos.  That is also wrong.  The rule is interpreted, by both BioNetGen and NFsim as: 'A' can be dephosphorylated if
+		it is connected to a 'B' molecule.  There are only two A molecules, so regardless of how many 'B's they are connected-to, the rule can
+		only be mapped twice.  Thus, we have the propensity of 2*kAutoDePhos.<br><br>
+		The difference is the BNGL distinguishes between reaction centers (the sites that are modified) and reaction context (the condition that must be met
+		for the rule to occur).  Pairs of reaction centers match every possible combintation, but reaction context only has to be matched once.
+		<br><br>
+		You can be confident that both NFsim and BioNetGen reproduces this behavior.  A difference arises, however, in matching Observable
+		patterns.  In NFsim Molecule Observables, the first molecule of the pattern is always identified (essentially treated as the reaction center)
+		 and the rest of the pattern is treated as context.  This means that the observable pattern
+		<div class="codeDiv">A().B()</div>might not return the same value as <div class="codeDiv">B().A()</div>
+		In BioNetGen, this behavior is different and 'A().B()' will return the same result as 'B().A()'.  Namely, BioNetGen will match all possible
+		mappings of the pattern onto each molecular species, as if both molecules are reaction centers.  NFsim, instead, will 
+		find all 'A's that have a connected 'B' or all 'B's that have a connected 'A'.	The reason for this behavior is efficiency.  
+		Because NFsim looks at each molecule individually when matching patterns, it would have to match the 'A' first, then look for
+		all possible 'B's, making your simulation slower.
+		<br><br>		
+		An alternative to this behavior is to specify the bond explicitly or use Species observables, defined as:
+		<div class="codeDiv">begin observables<br>  Species  AB  A().B()<br> end observables</div>
+		This will count the number of complexes that have an 'A' and 'B' and will give the same results in BioNetGen and NFsim.  
+		Species Observables run slower in NFsim because you now have to
+		keep track of all molecular aggregates or complexes in addition to individual molecules.  Thus, to run a Species observable, you
+		have to turn on aggregate bookkeeping with the command-line flag '-cb'.  If you have large complexes, this will
+		make your code run much slower.  
+		
+		
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		
+		<a name="dis02" class="anchor"></a><br><br><hr /><br><br>
+		<b>MatchOnce and DeleteMolecules keywords</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		Currently, NFsim does not interpret the 'MatchOnce' keyword in BioNetGen.  The reason is that NFsim operates on individual molecules, whereas
+		the "MatchOnce" keyword implicitly tries to match entire species.  Therefore, the option to "MatchOnce" is simply ignored and should not be
+		used in NFsim models.
+		<br><br>
+		Second, molecule degradation in special cases has a slightly different behavior in NFsim.  In BioNetGen, for historical reasons, if you have a rule:
+		
+		<div class="codeDiv">A(b!1).B(a!1) -> A(b) kDeg</div>
+		
+		where the 'B' molecule is degraded, BioNetGen will only allow this reaction to take place if the resulting product is connected.  In other words,
+		if you have a molecular complex such as:
+		<div class="codeDiv">A(b!1).B(a!1,c!2).C(b!2)</div>
+		then removing molecule 'B' will produce two molecular species,
+		<div class="codeDiv">A(b)  and  C(b)</div>
+		This behavior is again a result of the fact that BioNetGen interprets rules as selectors of connected molecular species, whereas NFsim interprets rules as
+		applying directly onto molecules.  In BioNetGen, you can override this default behavior by using the 'DeleteMolecules' keyword, as in:
+		<div class="codeDiv">A(b!1).B(a!1) -> A(b) kDeg &nbsp  DeleteMolecules</div>
+		Then, the reaction will be allowed even if it creates two new product species.  Because NFsim looks at molecules directly, this distinction in products
+		does not make sense.  Therefore, in an attempt to conform to BNGL standard, NFsim will not run for such rules unless the 'DeleteMolecules' keyword
+		is used.
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		
+		<a name="dis03" class="anchor"></a><br><br><hr /><br><br>
+		<b>Symmetry in "palindrome" reactant patterns</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		
+		In some cases, NFsim will fail to identify symmetry in a pattern that BioNetGen will detect.  For instance, consider the double phosphorylation
+		rule,
+		<div class="codeDiv">A(p~U,b!1).B(a!1,a!2).A(p~U,b!2) ->  <br> &nbsp &nbsp  A(p~P,b!1).B(a!1,a!2).A(p~P,b!2) kDoublePhos</div>
+		
+		In NFsim, the pattern can be read the same forwards as well as backwards.  If this is the case, then it will set the apparent rate for this
+		rule to be double that of BioNetGen.  It does this because NFsim matches patterns to molecules directly instead of to entire species as BioNetGen
+		does.  In this rule, for instance, NFsim looks for 'A' molecules that satisfy the condition starting at the beginning of the pattern.  Notice, 
+		however, that an 'A' that satisfies the condition 
+		will be counted twice because the exact same molecule can match from the front or the back  This behavior is very subtle, but can lead to different
+		results between NFsim and BioNetGen.
+		<br><br>
+		Note that this symmetry arises very rarely, so you will probably never encounter it.  For example, if we defined the same rule as before, except 
+		with a 'B' molecule that does not have identical sites, as in:
+		<div class="codeDiv">A(p~U,b!1).B(a1!1,a2!2).A(p~U,b!2) ->  <br> &nbsp &nbsp A(p~P,b!1).B(a1!1,a2!2).A(p~P,b!2) kDoublePhos</div>
+		then you cannot match the pattern the same way from either 'A' molecule in the pattern.  Therefore, you will get the same results as BioNetGen.  In
+		general, this type of "palindrome" symmetry will never arise in rules where only one component state is changed (because you can only match the
+		pattern with the molecule that is being updated once), and will also never arise in cases where the the initial state or other rule constraint
+		is different for the updated molecules.  For instance, the cross-phosphorylation rule below will work the same in BioNetGen and NFsim because a given
+		'A' molecule will only match one of the 'A's in the reactant pattern. 
+		
+		<div class="codeDiv">A(p~P,b!1).B(a!1,a!2).A(p~U,b!2) ->  <br> &nbsp &nbsp A(p~U,b!1).B(a!1,a!2).A(p~P,b!2) kTransPhos</div>
+		
+		
+		
+		<br><br><br><br>
+		
+		
+		
+		
+		
+		<a name="dis04" class="anchor"></a><br><br><hr /><br><br>
+		<b>Hidden symmetry in dimerization reactions</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		Dimerization reactions generally take the form,
+		
+		<div class="codeDiv">A(dd) + A(dd) -> A(dd!1).A(dd!1) kDimer</div>
+		
+		In such a rule, a molecule 'A' with an open component 'dd' can bind to another molecule 'A'.  Because a molecule or molecular species will match 
+		either of the two 'A' reactants in the rule, BioNetGen will effectively count every combination of interactions between two 'A' molecules twice.
+		To account for this, both BioNetGen and NFsim will divide the given reaction rate, kDimer, by a factor two when calculating the propensity of
+		the reaction to occur in order to produce the correct dimerization kinetics.
+		<br><br>
+		In some rules, however, there is a hidden symmetry that NFsim does not detect because NFsim applies rules to molecules directly.  For instance,
+		consider the rule,
+		<div class="codeDiv">A(dd,p~P) + A(dd) -> A(dd!1,p~P).A(dd!1) kDimer</div>
+		In this rule, although the reactant patterns for the interacting 'A's are different, there is a hidden symmetry.  Some 'A' molecules will match
+		both patterns, such as this 'A' molecule:
+		<div class="codeDiv">A(dd,p~P)</div>
+		but other 'A' molecules will only match the second pattern, such as an unphosphorylated 'A':
+		<div class="codeDiv">A(dd,p~U)</div>
+		BioNetGen applies rules to molecular species and generates all the possible reactions needed by the SSA or ODEs.  Therefore, BioNetGen can
+		detect the symmetry and add the dimerization factor for the molecular species combination:
+		<div class="codeDiv">A(dd,p~P) + A(dd,p~P)</div>
+		but does not have to add the dimerization factor for the molecular species combination:
+		<div class="codeDiv">A(dd,p~P) + A(dd,p~U)</div>
+		NFsim, however, only has the patterns to work with, so currently will not detect this hidden symmetry.  Because the first reactant pattern 
+		represents a subset of the second reactant pattern, some molecules in the system will match both reactants, but others will not.  NFsim only
+		has one rate for the rule, so NFsim currently does not account for the hidden symmetry and will assume the reaction does not follow
+		dimerization kinetics.
+		<br><br>
+		Due to this behavior, we recommend that users avoid dimerization rules where one of the reactant patterns represents a subset of the
+		other reactant pattern.  For all other dimerization rules, where the patterns are identical, NFsim will indeed detect the symmetry and 
+		produce the same results as BioNetGen.
+		
+		
+		
+		
+		
+		
+		<br><br><br><br>
+		
+		<a name="dis07" class="anchor"></a><br><br><hr /><br><br>
+		<b>Symmetry in unbinding reactions</b> &nbsp&nbsp&nbsp<a href="#discrepancies" class="backTo">back to discrepancy list</a><br><br>
+		
+		Similar to dimerization reactions, unbinding reations can exhibit symmetry that should be corrected for in reaction rates.  In standard
+		BioNetGen, the symmetry of unbinding reactions depends on the products that are generated by the rule.  For instance, the following
+		unbinding rule is symmetric
+		
+		<div class="codeDiv">A(dd!1).A(dd!1) -> A(dd) + A(dd) kUnbind</div>
+		
+		NFsim and BioNetGen will handle this basic case.  However, if another transformation of the reactants were to occur in the same rule,
+		and that transformation was not symmetric, for instance:
+		
+		<div class="codeDiv">A(dd!1,p~P).A(dd!1,p~P) -> A(dd,p~U) + A(dd,p~P) kUnbind</div>
+		
+		Then BioNetGen will determine that this reaction is not symmetric based on the products.  NFsim, however, is agnostic to the state of
+		the products.  NFsim simply applies every transformation defined at the time the reaction is executed- it never even looks at the cumulative
+		set of transformations before then, so it never "knows" what products a rule will generate.  This is important in handling combinatorial complexity,
+		because in many cases it is impossible to enumerate the set of possible product molecular species.  However, this means that the reaction
+		above will be treated as a symmetric reaction (because symmetry was identified in the reactant unbinding transformation), and so will
+		produce different results than BioNetGen.  Therefore, we suggest that you break up such a rule into two elementary steps, for instance, by
+		simulating the phosphorylation step first and the unbinding step second.
+		
+		<br><br>
+		
+		
+		
+		<br><br><br><br>
+		
+		
+		<br><br><hr /><br><br>
+		
+		
+		
+		
+		</div>
+		
+		</td></tr>
+		</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<br><br><br><br><br><br>
+		
+		</table>
+		
+
+		
+		<br><br><br><br><br><br><br><br>
+		
+		
+	</td>
+	</tr>
+
+	
+	
+	
+
+</table>
+</center>
+
+</body>
+</html>
