@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by BioNetGen 2.1.5+  -->
+<!-- Created by BioNetGen 2.2.6  -->
 <sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
   <model id="simple_system">
     <ListOfParameters>
@@ -60,7 +60,7 @@
       </Species>
     </ListOfSpecies>
     <ListOfReactionRules>
-      <ReactionRule id="RR1" name="Rule1">
+      <ReactionRule id="RR1" name="_R1" symmetry_factor="1">
         <ListOfReactantPatterns>
           <ReactantPattern id="RR1_RP1">
             <ListOfMolecules>
@@ -102,7 +102,7 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR1_RateLaw" type="Ele">
+        <RateLaw id="RR1_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="kon"/>
           </ListOfRateConstants>
@@ -118,7 +118,7 @@
           <AddBond site1="RR1_RP1_M1_C1" site2="RR1_RP2_M1_C1"/>
         </ListOfOperations>
       </ReactionRule>
-      <ReactionRule id="RR2" name="Rule2">
+      <ReactionRule id="RR2" name="_R2" symmetry_factor="1">
         <ListOfReactantPatterns>
           <ReactantPattern id="RR2_RP1">
             <ListOfMolecules>
@@ -160,7 +160,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR2_RateLaw" type="Ele">
+        <RateLaw id="RR2_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="koff"/>
           </ListOfRateConstants>
@@ -176,7 +176,7 @@
           <DeleteBond site1="RR2_RP1_M1_C1" site2="RR2_RP1_M2_C1"/>
         </ListOfOperations>
       </ReactionRule>
-      <ReactionRule id="RR3" name="Rule3">
+      <ReactionRule id="RR3" name="_R3" symmetry_factor="1">
         <ListOfReactantPatterns>
           <ReactantPattern id="RR3_RP1">
             <ListOfMolecules>
@@ -218,7 +218,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR3_RateLaw" type="Ele">
+        <RateLaw id="RR3_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="kcat"/>
           </ListOfRateConstants>
@@ -235,7 +235,7 @@
           <DeleteBond site1="RR3_RP1_M1_C1" site2="RR3_RP1_M2_C1"/>
         </ListOfOperations>
       </ReactionRule>
-      <ReactionRule id="RR4" name="Rule4">
+      <ReactionRule id="RR4" name="_R4" symmetry_factor="1">
         <ListOfReactantPatterns>
           <ReactantPattern id="RR4_RP1">
             <ListOfMolecules>
@@ -258,7 +258,7 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR4_RateLaw" type="Ele">
+        <RateLaw id="RR4_RateLaw" type="Ele" totalrate="0">
           <ListOfRateConstants>
             <RateConstant value="dephos"/>
           </ListOfRateConstants>
