@@ -1,5 +1,3 @@
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                   %
 %     @@    @  @@@@@                %
@@ -44,9 +42,8 @@ coarse-graining of biological complexity with NFsim.  Nature Methods,(2011) 8(2)
 
 ################################################################################
 
-NFsim is released under the GNU General Public License.  See LICENSE.txt for
-more details about redistribution restrictions.  The git repository is now hosted
-on github at: https://github.com/msneddon/nfsim
+NFsim is released under the MIT License.  See LICENSE.txt for more details.  The git 
+repository is hosted on github at: https://github.com/msneddon/nfsim
   
 For help with running NFsim, see the user manual, NFsim_manual_[version].pdf,
 and open the example model "simple_system.bngl".
