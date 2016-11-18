@@ -102,7 +102,7 @@ DORRxnClass::DORRxnClass(
 			if((unsigned)transform->getType()==TransformationFactory::LOCAL_FUNCTION_REFERENCE) {
 				LocalFunctionReference *lfr = static_cast<LocalFunctionReference*>(transform);
 				if(lfr->getPointerName()==lfArgumentPointerNameList.at(i)) {
-//					cout<<"Found a match here!"<<endl;
+					//cout<<"Found a match here!"<<endl;
 					//cout<<"found scope should be: "<<lfr->getFunctionScope()<<endl;
 					//If we got here, we found a match, so remember the index of the transformation
 					//so we can quickly get the value of the function for any mapping object we try
@@ -277,10 +277,15 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 			
 			if(DEBUG_MESSAGE)cout<<"was in the tree, so checking if we should remove"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
+
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,&symmetricMappingSet);
 
 			if(!comparisonResult) {
 				reactantTree->removeMappingSet(ms->getId());
+				//JJT: removes any symmetric mapping sets that might have been added since we are not using them
+				for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+					reactantTree->removeMappingSet((*it)->getId());
+				}
 			} else {
 				//JJT: checking if the mapping set we found is new 
 				if (symmetricMappingSet.size() >0){
@@ -296,6 +301,7 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 						else{
 							//JJT: new mapping and we are keeping it, so evaluate the function and confirm the push
 							double localFunctionValue = this->evaluateLocalFunctions(*it);
+
 							if(DEBUG_MESSAGE)cout<<"local function value is: "<<localFunctionValue<<endl;
 							reactantTree->confirmPush((*it)->getId(),localFunctionValue);
 							m->setRxnListMappingId(rxnIndex,(*it)->getId());
@@ -348,6 +354,9 @@ bool DORRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos) {
 		} else {
 			if(DEBUG_MESSAGE)cout<<"wasn't in the tree, so trying to push and compare"<<endl;
 			ms=reactantTree->pushNextAvailableMappingSet();
+			if(DEBUG_MESSAGE)cout<<"calling comparsion method"<<endl;
+			if(DEBUG_MESSAGE)m->printDetails();
+
 			comparisonResult = reactantTemplates[reactantPos]->compare(m,reactantTree,ms,false,&symmetricMappingSet);
 			if(!comparisonResult) {
 				if(DEBUG_MESSAGE)cout<<"shouldn't be in the tree, so we pop"<<endl;
@@ -492,7 +501,40 @@ int DORRxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
 			 : reactantLists[reactantIndex]->size();
 }
 
+/*
+JJT: this function is called if the default mappingset information is sending the wrong parameter to the local function when using a species
+scope label. for now the solution is to try every molecule referenced by the mapping set. This may be inefficient but it will only be as long
+as the length of a pattern defined by the user (usually 5-6 mt long) multiplied by the lenght of the observable referenced by the local function,
+so O(nm) with n, m <~ 6.
+*/
+double DORRxnClass::pickLocalFunctionParameter(MappingSet* ms, int index, vector <MoleculeType *>* type1_Mol, int* reactantCounts)
+{
+		for(unsigned int r=0; r<ms->getNumOfMappings(); r++)
+		{
+			for (auto it: *(type1_Mol)){
+				if(it == ms->get(r)->getMolecule()->getMoleculeType()){
+					try{
+						this->argMappedMolecule[index] = ms->get(r)->getMolecule();
+						return this->cf->evaluateOn(this->argMappedMolecule,this->argScope, reactantCounts, this->n_reactants);
+						
+					}
+					catch(LocalFunctionException &lfe){
+						if(lfe.getIndex() == index){
+							continue;
+						}
+						else{
+							return this->pickLocalFunctionParameter(ms, lfe.getIndex(), lfe.getType1_Mol(), reactantCounts);
+						}
+						
+					}
+				}
+			}
+		}
+		// there is truly no possible mapping. User mistake prob, the error message could use somem improvement
+		cout<<"Internal error in LocalFunction::evaluateOn()! Trying to evaluate a function with unknown scope."<<endl;
+		exit(1);
 
+}
 //This function takes a given mappingset and looks up the value of its local
 //functions based on the local functions that were defined
 double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
@@ -503,6 +545,9 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 	//cout<<"dor is reevaluating its function."<<endl;
 
 	//Grab the molecules needed for the local function to evaluate
+	//default initialization
+
+
 	for(int i=0; i<this->n_argMolecules; i++) {
 		//cout<<"here."<<endl;
 		//cout<<"\t\t\t\t\t"<<i<<": argMappedMolecule="<<argMappedMolecule[i]<<" argIndexIntoMappingSet="<<argIndexIntoMappingSet[i]<<endl;
@@ -521,8 +566,16 @@ double DORRxnClass::evaluateLocalFunctions(MappingSet *ms)
 			reactantCounts[r]=reactantLists[r]->size();
 		}
 	}
-
-	double value = this->cf->evaluateOn(argMappedMolecule,argScope, reactantCounts, n_reactants);
+	double value;
+	try{
+		value = this->cf->evaluateOn(argMappedMolecule,argScope, reactantCounts, n_reactants);
+	}
+	catch(LocalFunctionException &lfe){
+		//the parameter sent in argMappedMolecule cannot be mapped to an observable in the local function
+		//solution here: just try everything taht we reference in ms for the parameter in question
+		value = this->pickLocalFunctionParameter(ms, lfe.getIndex(), lfe.getType1_Mol(), reactantCounts);
+	}
+	endloop:
 	delete [] reactantCounts;
 	//cout<<"\t\t\t\t\t"<<"composite function value="<<value<<endl;
 

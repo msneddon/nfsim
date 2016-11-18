@@ -239,6 +239,21 @@ void BasicRxnClass::prepareForSimulation()
 }
 
 
+int BasicRxnClass::checkForEquality(Molecule *m, MappingSet* ms, int rxnIndex, ReactantList* reactantList){
+	/*
+	Check if mapping set clashes with any of the mapping sets already in reactantList
+	*/
+	set<int> tempSet = m->getRxnListMappingSet(rxnIndex);
+	for(set<int>::iterator it= tempSet.begin();it!= tempSet.end(); ++it){
+		MappingSet* ms2 = reactantList->getMappingSet(*it);
+		if(MappingSet::checkForEquality(ms,ms2)){
+			return *it;
+		}
+	}
+	return -1;
+
+
+}
 
 bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
@@ -311,6 +326,10 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		//we must remove, if we did not match.  This will also remove
 		//everything that was cloned off of the mapping set
 		rl->removeMappingSet(ms->getId());
+		//JJT: removes any symmetric mapping sets that might have been added since we are not using them
+		for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
+			rl->removeMappingSet((*it)->getId());
+		}
 	} else {
 		//cout << "should be in normal reaction, confirm push"<<endl;
 		//ms->printDetails();
@@ -322,7 +341,14 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		if (symmetricMappingSet.size() > 0){
             rl->removeMappingSet(ms->getId());
 			for(vector<MappingSet *>::iterator it=symmetricMappingSet.begin();it!=symmetricMappingSet.end();++it){
-					m->setRxnListMappingId(rxnIndex,(*it)->getId());
+					//XXX: JJT this is a band-aid, symmetricMappingSet should not have repeated elements in the first place
+					int mapIndex = checkForEquality(m,*it,rxnIndex,rl);
+					if(mapIndex >= 0){
+						rl->removeMappingSet((*it)->getId());
+					}
+					else{
+						m->setRxnListMappingId(rxnIndex,(*it)->getId());
+					}
             }
 		}
 		else{

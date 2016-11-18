@@ -8,10 +8,11 @@
 %                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NFsim - the network free stochastic simulator, v1.11
+NFsim - the network free stochastic simulator, v1.12.1
 
 michael w. sneddon
 justin s. hogg
+jose-juan tapia
 james r. faeder
 thierry emonet
 
@@ -63,6 +64,32 @@ Enjoy your new network-free world!
 
 Release Notes
 
+v1.12.1 Aug, 2016
+        (a) Bugfix release. Addresses an error dealing with local function and species labels.
+        The error dealt with the way mappingSets where created and passed to the localFunction evaluation.
+        A test case (v19.bngl) was added that addresses this case.
+
+v1.12   Dec, 2015
+        (a) Changes to how molecule instances are mapped to BasicRxn's 
+        (BasicRxnClass::tryToAdd()). It was possible for certain kinds of rules 
+        that the mappingSets were not updated correctly because the head molecule 
+        matched a reactant pattern before and after a reaction event BUT the 
+        mapping was different after the firing. In such cases, the mappingSet 
+        was not updated properly. The logic was changed to fix this problem. 
+        (b) Further changes to how molecule instances are mapped to a ReactionClass 
+        object (BasicRxn and DORReactions). In particular it is often the case 
+        that graph symmetry leads to a complex being able to map to a 
+        ReactionClass multiple times. Symmetry considerations were being made 
+        on the reaction center but not on the context components which led to an 
+        undercounting of the number of times a pattern agent could match a rule 
+        instance in some edge cases (see v17.bngl in the validation suite). This 
+        led to incorrect results or even NFSim crashes. NOTE: the changes made in 
+        points (a) and (b) may cause some models to execute less efficiently.
+        (c) Fixed index bound checking in MoleculeType::getComponentStateName().
+        (d) Updated the validation models to reflect current BNGL formatting standards. 
+        Added a few new validation models that address the bugfixes included in this 
+        version. This update also includes a Python version of the validation script.
+
 v1.11   Oct, 2012
         (a) Molecules without components may be treated as population variables
         rather than individual agents. This feature is useful for reducing memory
@@ -106,7 +133,6 @@ v1.10   Aug, 2011
         but you can make executables for older Macs by recompiling the code on your
         own machine.  See the manual for instructions.
 
-
 v1.09   Apr, 2011
         (a) NFsim now allows the mixing of integers and strings as component
         labels, although if numbers and strings are mixed, all labels are parsed
@@ -132,7 +158,6 @@ v1.09   Apr, 2011
         header line is not comma delimited.  (f)  nfsim now supports intra-molecular
         binding.  Previously these events were rejected as null events.
 
-
 v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
         specify whether or not to use the microscopic (default) interpretation
         or macroscopic (TotalRate) interpretation of rate laws.  Now, NFsim
@@ -148,7 +173,6 @@ v1.08   Dec, 2010 - With the new TotalRate keyword, users are now able to
         in some circumstances, using the flag "-csv".  Additionally, a bug in
         the parameter scanning script was fixed that caused the script to
         crash when scanning a model that includes the local function syntax. 
-
 
 v1.07   Nov, 2010 - A series of updates to the code were made in this
         release.  (1) RNF files that are not found produce an error message.
@@ -167,7 +191,6 @@ v1.07   Nov, 2010 - A series of updates to the code were made in this
         for instance, users to track the fates of single particles exactly
         without using the comprehensive molecule output feature.  (6) The above
         changes are documented in an updated user manual.
-
 
 v1.06   Sept 28, 2010 - added scripts for running NFsim from Matlab, parameter
         scanning, and basic parameter estimation.  The manual is also updated

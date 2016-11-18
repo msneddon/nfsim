@@ -1,0 +1,62 @@
+begin model
+
+begin parameters
+
+
+kmod 1
+
+end parameters
+
+begin molecule types
+
+X(a,a)
+Y(b,c,d~0~1)
+
+A(a,a)
+B(b,c,d~0~1)
+
+end molecule types
+
+begin seed species
+X(a!1,a!2).Y(b!1,c,d~0).Y(b!2,c,d~0) 100
+A(a!1,a!2).B(b!1,c,d~0).B(b!2,c,d~0) 100
+
+end seed species
+
+begin observables
+
+Molecules Ytot Y()
+Molecules Yzero Y(d~0)
+
+Molecules Btot B()
+Molecules Bzero B(d~0)
+
+end observables
+
+begin functions
+factor(x) if(Ytot(x)>0,1,0)
+factor2(x) if(Btot(x)>0,1,0)
+
+end functions
+
+begin reaction rules
+
+%z:X(a!1,a!+).Y(b!1,d~0)-> %z:X(a!1,a!+).Y(b!1,d~1) factor(z)*kmod # factor(z) should evaluate to 1
+%z:B(b!1,d~0).A(a!1,a!+)->%z:B(b!1,d~1).A(a!1,a!+) factor2(z)*kmod # factor(z) should evaluate to 1
+
+
+end reaction rules
+
+end model
+
+
+generate_network({overwrite=>1})
+simulate({suffix=>"ode",method=>"ode",t_start=>0,t_end=>10,n_steps=>100})
+resetConcentrations()
+simulate({suffix=>"ssa",method=>"ssa",t_start=>0,t_end=>10,n_steps=>100})
+resetConcentrations()
+writeXML()
+
+#simulate({method=>"nf",gml=>2000000,complex=>1,get_final_state=>0,print_functions=>1,\
+          t_start=>0,t_end=>30,n_steps=>300})
+          

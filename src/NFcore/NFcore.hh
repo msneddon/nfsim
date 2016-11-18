@@ -100,6 +100,39 @@ namespace NFcore
 	class ReactionSelector;
 
 
+	//exception for the handling of local functions and mapping sets
+	class LocalFunctionException: public exception
+	{
+	public:
+		void setType1_Mol(vector <MoleculeType *>* type1_Mol){
+			this->type1_Mol = type1_Mol;
+		}
+
+		vector<MoleculeType*>* getType1_Mol() const{
+			return type1_Mol;
+		}
+
+		void setIndex(const int index){
+			this->index = index;
+		}
+
+		int getIndex() const{
+			return index;
+		}
+
+		virtual const char* what() const throw()
+  		{
+    		return "Species scope parameter exception";
+  		}
+
+  	private:
+		vector<MoleculeType*>* type1_Mol;
+		int index;
+
+
+
+
+	};
 
 	//!  Container to organize all system complexes.
 	/*!

@@ -215,6 +215,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 	this->refLfRefNames = new string[n_refLfs];
 	this->refLfScopes = new int[n_refLfs];
 	this->refLfValues = new double[n_refLfs];
+
 	for(unsigned int i=0; i<lfIndexValues.size(); i++) {
 		this->refLfInds[i]=lfIndexValues.at(i);
 		this->refLfRefNames[i]=lfReferenceName.at(i);
@@ -425,6 +426,7 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	//cout << "n_lfs=" << n_lfs << endl;
 	//cout << "scope[0]=" << scope[0] << endl;
 	//cout << "molList[0]" << molList[0]->getMoleculeTypeName() << endl;
+	
 	if(n_lfs>0) {
 
 		//cout<<"evaluating composite function with local dependencies."<<endl;
@@ -433,7 +435,14 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 			//cout << "n_refLfs=" << n_refLfs << endl;
 			for(int i=0; i<n_refLfs; i++) {
 				//cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
-				this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
+				try{
+					this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
+				}
+				catch (LocalFunctionException &lfe){
+					//the parameter that we sent in is incorrect
+					lfe.setIndex(i);
+					throw lfe;
+				}
 				//cout<<"answer: "<<this->refLfValues[i]<<endl;
 			}
 
