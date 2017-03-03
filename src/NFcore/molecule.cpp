@@ -34,7 +34,7 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	this->indexOfBond = new int [numOfComponents];
 	this->hasVisitedBond = new bool [numOfComponents];
 	for(int b=0; b<numOfComponents; b++) {
-		bond[b]=0; indexOfBond[b]=NOBOND;
+		bond[b]=NOBOND; indexOfBond[b]=0;
 		hasVisitedBond[b] = false;
 	}
 

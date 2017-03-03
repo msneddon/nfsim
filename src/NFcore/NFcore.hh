@@ -902,7 +902,7 @@ namespace NFcore
 
 
 			static const int NOSTATE = -1;
-			static const int NOBOND = 0;
+			static constexpr nullptr_t NOBOND = nullptr;
 			static const int NOINDEX = -1;
 
 
