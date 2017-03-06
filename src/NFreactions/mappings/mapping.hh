@@ -1,12 +1,9 @@
-
-
-
-
-
 #ifndef MAPPING_HH_
 #define MAPPING_HH_
 
+
 #include "../NFreactions.hh"
+
 
 namespace NFcore
 {
@@ -25,7 +22,6 @@ namespace NFcore
 	class Mapping
 	{
 		public:
-
 			/*!
 			 	Creates a new Mapping object with the specified "type" (as defined by the
 			 	types in the Transformation class) and a specified "index" which is the
@@ -41,13 +37,6 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			~Mapping();
-
-			/*!
-			 	Returns the type of mapping this is.  See Transformation for the possible
-			 	types that can be assigned.
-			    @author Michael Sneddon
-			 */
-			unsigned int getType() const;
 
 			/*!
 			 	Returns the index into either the binding site or state of the Molecule
@@ -79,16 +68,12 @@ namespace NFcore
 			 */
 			bool setMolecule(Molecule *m);
 
-
 			static void clone(Mapping *original, Mapping *newClone);
-
 
 			void printDetails() const;
 			void printDetails(ostream &o) const;
 
-
 		protected:
-
 			/*!
 				The "type" of mapping this is, taken from the same list of types in
 				the Transformation class.
@@ -107,27 +92,12 @@ namespace NFcore
 			Molecule * m;
 	};
 
-
-
 	inline
 	Molecule * NFcore::Mapping::getMolecule() const
 	{
-		//Make sure the Molecule points somewhere.  For effeciency, this check
-		//can be removed.
-	//	if(m==NULL) {
-	//		cout<<"Trying to get a molecule from a null mapping (in class Mapping)!! Quitting!"<<endl;
-	//		exit(1);
-	//	}
 		return m;
 	}
 }
-
-
-
-
-
-
-
 
 
 #endif /*MAPPING_HH_*/

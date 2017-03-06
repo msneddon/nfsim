@@ -1,11 +1,5 @@
-/*
-
-
-
- */
-
-
 #include "reactantTree.hh"
+
 #define DEBUG_MESSAGE 0
 #include <math.h>
 
@@ -18,9 +12,6 @@ ReactantTree::ReactantTree(
 		TransformationSet *ts,
 		unsigned int init_capacity)
 {
-	//cout<<"Creating reactant tree... "<<endl;
-	//cout<<"  Initial Capacity: "<< init_capacity <<" molecules, ";
-
 	//First set basic properties of the tree
 	this->reactantIndex=reactantIndex;
 	this->ts=ts;
@@ -60,8 +51,6 @@ ReactantTree::ReactantTree(
 	for(int i=0; i<maxElementCount; i++)
 		mappingSets[i] = ts->generateBlankMappingSet(this->reactantIndex,i);
 
-
-
 	msPositionMap = new int [this->maxElementCount];
 	for(int i=0; i<maxElementCount; i++)
 		msPositionMap[i]=i;  //we start with each element in its rightful position
@@ -74,14 +63,7 @@ ReactantTree::ReactantTree(
 	for(int i=0; i<maxElementCount; i++)
 		reverseMsTreePositionMap[i]=-1;  //-1 signifies that this position in the tree is empty
 
-
-
 	this->n_mappingSets = 0;
-
-	//cout<<"so setting a limit of " << this->maxElementCount <<" molecules. "<<endl;
-	//cout<<"  The depth of the tree will be "<< treeDepth << " and contain ";
-	//cout<<numOfNodes<<" nodes."<<endl;
-	//cout<<"  The first molecule can be found at tree index "<< firstMappingTreeIndex <<"."<<endl;
 }
 
 
@@ -225,18 +207,13 @@ void ReactantTree::expandTree(int newCapacity)
 	this->reverseMsTreePositionMap = xx_reverseMsTreePositionMap;
 	this->n_mappingSets=xx_n_mappingSets;
 	this->firstMappingTreeIndex = xx_firstMappingTreeIndex;
-
 }
-
-
-
 
 
 MappingSet * ReactantTree::pushNextAvailableMappingSet()
 {
 	//Check that we didn't go over the max - if we did we have to expand our tree...
 	if(n_mappingSets >= maxElementCount) {
-		//cout<<"-------------\nIn ReactantTree!!!  Adding more than I can take, so I'm expanding! "<<endl;
 		expandTree(maxElementCount*2);
 	}
 
@@ -247,7 +224,6 @@ MappingSet * ReactantTree::pushNextAvailableMappingSet()
 
 void ReactantTree::confirmPush(int mappingSetId, double rateFactor)
 {
-
 	//Here we have to check that we didn't already put this guy into the tree
 	//somewhere.  A mappingset can get into a tree, if something is pushed, then
 	//the tree expanded (which automatically puts all pushed mappingsets on the tree)
@@ -259,7 +235,6 @@ void ReactantTree::confirmPush(int mappingSetId, double rateFactor)
 	if(duplicate_msTreeArrayPosition>=0) {
 		this->removeFromTreeOnly(duplicate_msTreeArrayPosition,mappingSetId);
 	}
-
 
 	unsigned int cn = 1; // index of current node
 
@@ -332,12 +307,10 @@ void ReactantTree::popLastMappingSet() {
 }
 
 
-
 void ReactantTree::removeFromTreeOnly(int msTreeArrayPosition, unsigned int mappingSetId)
 {
 	//Go to that position in the tree, and work up and out
 	unsigned int cn = msTreeArrayPosition + firstMappingTreeIndex;
-	//if(DEBUG_MESSAGE)cout<<"Removing tree index: "<<cn<<endl;
 
 	//Get the rate factor from the bottom of the tree and set it to zero
 	double rateFactor = leftRateFactorSum[cn];
@@ -390,11 +363,9 @@ void ReactantTree::removeMappingSet(unsigned int mappingSetId)
 		removeFromTreeOnly(msTreeArrayPosition,mappingSetId);
 	}
 
-
 	//At this point, the tree is up to date, but we still have to get rid of the empty mappingSet
 	//by swapping it with the end of the list...  This will allow us to reuse the mappingSet without
 	//destroying it and creating it again later...
-
 
 	//So first, get the position of the mappingSet we need to remove
 	int pos = msPositionMap[mappingSetId];
@@ -488,16 +459,7 @@ void ReactantTree::pickReactantFromValue(MappingSet *&ms, double value, double b
 
 	//Finally, given this postion, we can retrieve the mappingSet
 	ms = mappingSets[pos];
-
-
-	//Error check again to ensure things are still ok...
-	//if(reactants[molArrayIndex]==0)
-	//{
-	//	cerr<<"!!! in ReactantTree !!!  could not find a molecule from a given value!"<<endl;
-	//	cerr<<"I have: " << n_mappingSets << " mappingSets! "<<endl;
-	//}
 }
-
 
 
 void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
@@ -514,16 +476,11 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 	}
 	unsigned int cn = treeIndex + this->maxElementCount;
 
-	//Do an error check here
-	//if(reactants[rxnListIndex]!=m)
-	//	cout<<"we've got problems in update"<<endl;
-
 	//Get the rate factor from the bottom of the tree and set it to the new rate factor
 	double oldRateFactor = leftRateFactorSum[cn];
 
 	//Make sure there is something to change!  If not, just get out of here!
 	if(oldRateFactor==newRateFactor) return;
-	//cout<<"Updating value from: "<<oldRateFactor<<" to "<< newRateFactor<<endl;
 
 	leftRateFactorSum[cn] = newRateFactor;
 	leftRateFactorSum[0] -= oldRateFactor;
@@ -549,7 +506,6 @@ void ReactantTree::updateValue(unsigned int mappingSetId, double newRateFactor)
 		updateValue(mappingSets[msPositionMap[mappingSetId]]->getClonedMapping(),newRateFactor);
 	}
 
-
 	//Ok, we are up to date.  Nothing else changes here...
 }
 
@@ -561,7 +517,6 @@ MappingSet * ReactantTree::getMappingSet(unsigned int mappingSetId) const
 
 
 void ReactantTree::printDetails() const {
-
 	cout<<endl<<endl<<"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<<endl;
 	cout<<"Printing ReactantTree: size="<<size()<<endl<<endl;
 	cout<<"MS Array: [ ";
@@ -602,9 +557,4 @@ void ReactantTree::printDetails() const {
 	for(int i=0; i<=numOfNodes; i++)
 		cout<<"\t"<<rightElementCount[i];
 	cout<<endl;
-
 }
-
-
-
-

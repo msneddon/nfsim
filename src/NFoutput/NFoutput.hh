@@ -1,11 +1,10 @@
-
 #ifndef NFOUTPUT_HH_
 #define NFOUTPUT_HH_
 
 
-
 #include "../NFcore/NFcore.hh"
 #include "../NFutil/NFutil.hh"
+
 
 namespace NFcore
 {
@@ -25,7 +24,6 @@ namespace NFcore
 			System *s;
 			ofstream outputFileStream;
 	};
-
 
 
 	//! Class for outputting the state of the system.
@@ -60,7 +58,6 @@ namespace NFcore
 
 	 */
 	class DumpSystem {
-
 		public:
 			//! The only constructor of DumpSystem objects
 			/*!
@@ -101,19 +98,8 @@ namespace NFcore
 			vector <double> dumpTimes; /*!< the list of the times to dump */
 			string pathToFolder; /*!< gives the path to the output directory */
 			bool verbose; /*!< flag that tells us if we should output all sorts of things */
-
 	};
-
-
-
-
 }
-
-
-
-
-
-
 
 
 #endif /* NFOUTPUT_HH_ */

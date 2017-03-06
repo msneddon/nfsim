@@ -5,9 +5,9 @@
 
 #include "NFcore.hh"
 
+
 namespace NFcore
 {
-
 	class MoleculeType;
 	class MapGenerator;
 	class Molecule;
@@ -123,13 +123,9 @@ namespace NFcore
 
 
 		string getPatternString();
-		void printPattern();
 		void printPattern(ostream &o);
 
-
-
 	protected:
-
 		static int TotalTemplateMoleculeCount;
 
 		MoleculeType *moleculeType;
@@ -211,9 +207,7 @@ namespace NFcore
 		static queue <int> d;
 		static vector <TemplateMolecule *>::iterator tmVecIter;
 		static list <TemplateMolecule *>::iterator tmIter;
-
 	};
-
 }
 
 

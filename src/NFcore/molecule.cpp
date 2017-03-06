@@ -6,15 +6,10 @@
 using namespace std;
 using namespace NFcore;
 
+
 int Molecule::uniqueIdCount = 0;
 
 
-
-
-
-// Molecule Constructor
-//
-//
 Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 {
 	if(DEBUG) cout<<"-creating molecule instance of type " << parentMoleculeType->getName() << endl;
@@ -38,7 +33,6 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 		hasVisitedBond[b] = false;
 	}
 
-
 	hasVisitedMolecule = false;
 	hasEvaluatedMolecule = false;
 	isMatchedTo=0;
@@ -48,7 +42,6 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	isPrepared = false;
 	isObservable = 0;
 	localFunctionValues=0;
-	//isDead = true;
 
 	//register this molecule with moleculeType and get some ID values
 	ID_complex = this->parentMoleculeType->createComplex(this);
@@ -58,16 +51,13 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	isAliveInSim = false;
 }
 
-// Molecule Deconstructor
-//
-//
+
 Molecule::~Molecule()
 {
 	if(DEBUG) cout <<"   -destroying molecule instance of type " << parentMoleculeType->getName() << endl;
 	delete [] bond;
 
 	parentMoleculeType = 0;
-
 
 	delete [] isObservable;
 	delete [] component;
@@ -93,13 +83,7 @@ void Molecule::prepareForSimulation()
 	for(int o=0;o<parentMoleculeType->getNumOfMolObs(); o++) {
 		isObservable[o]=0;
 	}
-
-
 }
-
-
-
-
 
 
 void Molecule::setUpLocalFunctionList()
@@ -114,7 +98,6 @@ void Molecule::setUpLocalFunctionList()
 }
 
 
-
 //Used so that this molecule can remember what its local function was
 //evaluated to.  Only TypeI local functions are set up in this way
 void Molecule::setLocalFunctionValue(double newValue,int localFunctionIndex) {
@@ -123,15 +106,6 @@ void Molecule::setLocalFunctionValue(double newValue,int localFunctionIndex) {
 		cout<<"index provided was out of bounds!  I shall quit now."<<endl;
 		exit(1);
 	}
-	//cout<<"here, mol: "<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
-	//cout<<"localfunctionIndex given: "<< localFunctionIndex<<endl;
-	//cout<<"n_localfunctionValue given: "<< localFunctionIndex<<endl;
-
-	//cout<<"localFunctionValues="<<endl;
-	//for(int k=0; k<parentMoleculeType->getNumOfTypeIFunctions(); k++) {
-	//	cout<<"  "<<localFunctionValues[k]<<endl;
-	//}
-	//cout<<"done."<<endl;
 
 	localFunctionValues[localFunctionIndex] = newValue;
 }
@@ -157,38 +131,19 @@ LocalFunction * Molecule::getLocalFunction(int localFunctionIndex) {
 }
 
 
-
 void Molecule::updateRxnMembership()
 {
 	parentMoleculeType->updateRxnMembership(this);
 }
 
-void Molecule::updateTypeIIFunctions()
-{
-	for (int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
-		parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn(this, LocalFunction::SPECIES);
-	}
-}
-
-void Molecule::updateTypeIIFunctions( vector <Complex *> & productComplexes )
-{
-	for (int i=0; i<parentMoleculeType->getNumOfTypeIIFunctions(); i++) {
-		vector <Complex *>::iterator complexIter;
-		for ( complexIter = productComplexes.begin(); complexIter != productComplexes.end(); ++complexIter ) {
-			parentMoleculeType->getTypeIILocalFunction(i)->evaluateOn( (*complexIter)->getFirstMolecule(), LocalFunction::SPECIES);
-		}
-	}
-}
 
 void Molecule::updateDORRxnValues()
 {
 	ReactionClass *rxn=0; int rxnIndex=-1, rxnPos=-1;
-	//cout<<"Looping over :"<<parentMoleculeType->getNumOfDORrxns()<<" dor rxns "<<endl;
 	for(int i=0; i<parentMoleculeType->getNumOfDORrxns(); i++) {
 		rxn=parentMoleculeType->getDORrxn(i);
 		rxnIndex=parentMoleculeType->getDORrxnIndex(i);
 		rxnPos=parentMoleculeType->getDORrxnPosition(i);
-		//cout<<"\t\ti="<<i<<" rxn="<<rxn->getName()<<" rxnIndex="<<rxnIndex<<" rxnPos="<<rxnPos<<endl;
 
 		if(isPrepared) {
 			//If we are in this reaction, then we have to update our value...
@@ -209,68 +164,19 @@ void Molecule::updateDORRxnValues()
 	}
 }
 
-///////////////
-//  MOLECULE_DEPENDENT_UPDATE_ADDITION
-//void Molecule::addDependentUpdateMolecule(Molecule *m) {
-//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
-//		if((*molIter)->getUniqueID()==m->getUniqueID())
-//			return;
-//	dependentUpdateMolecules.push_back(m);
-//}
-//void Molecule::removeDependentUpdateMolecule(Molecule *m) {
-//	for(molIter=dependentUpdateMolecules.begin();molIter!=dependentUpdateMolecules.end();molIter++)
-//		if((*molIter)->getUniqueID()==m->getUniqueID()) {
-//			dependentUpdateMolecules.erase(molIter);
-//		}
-//}
-////////////////
-
-
-
-//void Molecule::updateDORs()
-//{
-//
-//	for(int r=0; r<parentMoleculeType->getDORrxnCount(); r++)
-//	{
-//
-//		ReactionClass * DORrxn = parentMoleculeType->getDORrxn(r);
-//		int dorRxnIndex = parentMoleculeType->getDORreactantIndex(r);
-//		int dorRxnPos = parentMoleculeType->getDORreactantPosition(r);
-//
-//	//	cout<<" identified DOR RXN index: "<<dorRxnIndex<<endl;
-//	//	cout<<" identified DOR RXN pos: "<<dorRxnPos<<endl;
-//		DORrxn->notifyRateFactorChange(this, dorRxnPos, rxnListMappingId[dorRxnIndex]);
-//	}
-//
-//}
-
-//double Molecule::getDORvalueFromGroup(string groupName, int valueIndex)
-//{
-////	for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-////	{
-////		if(groupName==(*listenerIter)->getGroupName())
-////			return (*listenerIter)->getValue(valueIndex);
-////	}
-//
-//	cerr<<"Error!! trying to get DOR value for a group, but no name match!"<<endl;
-//	cerr<<"    Looking for group: "<<groupName<<" from molecule ";
-//	cerr<<this->getMoleculeTypeName()<<"_"<<this->getUniqueID()<<endl;
-//	exit(1);
-//}
-
-
 
 void Molecule::removeFromObservables()
 {
 	parentMoleculeType->removeFromObservables(this);
 }
+
+
 void Molecule::addToObservables()
 {
 	parentMoleculeType->addToObservables(this);
 }
 
 
-// set population
 bool Molecule::setPopulation( int count )
 {
 	if ( isPopulationType()  &&  (count >= 0) )
@@ -281,13 +187,13 @@ bool Molecule::setPopulation( int count )
 	else return false;
 }
 
-// get popualtion
+
 int Molecule::getPopulation() const
 {
 	return population_count;
 }
 
-// increase population by one
+
 bool Molecule::incrementPopulation()
 {
 	if ( isPopulationType() )
@@ -298,7 +204,7 @@ bool Molecule::incrementPopulation()
 	else return false;
 }
 
-// decrease population by one
+
 bool Molecule::decrementPopulation()
 {
 	if ( isPopulationType()  &&  (population_count > 0) )
@@ -317,12 +223,9 @@ void Molecule::setComponentState(int cIndex, int newValue)
 	if (useComplex)
 		// Need to manually unset canonical flag since we're not calling a Complex method
 		getComplex()->unsetCanonical();
-
-	//if(listeners.size()>0) cout<<"Molecule State has changed..."<<endl;
-	//Let all the listeners know that the state of a molecule has changed...
-	//for(listenerIter = listeners.begin(); listenerIter != listeners.end(); listenerIter++ )
-	//	(*listenerIter)->notify(this,stateIndex);
 }
+
+
 void Molecule::setComponentState(string cName, int newValue) {
 	this->component[this->parentMoleculeType->getCompIndexFromName(cName)]=newValue;
 
@@ -336,6 +239,8 @@ void Molecule::setComponentState(string cName, int newValue) {
 void Molecule::printDetails() {
 	this->printDetails(cout);
 }
+
+
 void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
@@ -368,7 +273,6 @@ void Molecule::printDetails(ostream &o)
 	}
 }
 
-//Get the number of molecules this molecule is bonded to
 int Molecule::getDegree()
 {
 	int degree = 0;
@@ -376,6 +280,7 @@ int Molecule::getDegree()
 		if(bond[c]!=NOBOND) degree++;
 	return degree;
 }
+
 
 // Get a label for this molecule or one of it's components (labels are not unique)
 //   cIndex==-1  =>  get label for molecule, "m:typename"
@@ -404,16 +309,19 @@ bool Molecule::isBindingSiteOpen(int cIndex) const
 	return false;
 }
 
+
 bool Molecule::isBindingSiteBonded(int cIndex) const
 {
 	if(bond[cIndex]==NOBOND) return false;
 	return true;
 }
 
+
 Molecule * Molecule::getBondedMolecule(int cIndex) const
 {
 	return bond[cIndex];
 }
+
 
 // given the component index, look up what we are bonded to.  Then
 // in the molecule we are bonded to, look at what site we are bonded to
@@ -429,7 +337,6 @@ int Molecule::getBondedMoleculeBindingSiteIndex(int cIndex) const
 {
 	return indexOfBond[cIndex];
 }
-
 
 
 void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
@@ -469,6 +376,7 @@ void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 	}
 }
 
+
 void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compName2)
 {
 	int cIndex1 = m1->getMoleculeType()->getCompIndexFromName(compName1);
@@ -480,7 +388,6 @@ void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compNam
 void Molecule::unbind(Molecule *m1, int cIndex)
 {
 	//get the other molecule bound to this site
-	//cout<<"I am here. "<<bSiteIndex<<endl;
 	Molecule *m2 = m1->bond[cIndex];
 	if(m2==NULL)
 	{
@@ -497,9 +404,8 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 
 	int cIndex2 = m1->indexOfBond[cIndex];
 
-	//break the bond (older compilers don't let you assign NOBOND to type molecule)
-	m1->bond[cIndex] = 0; //NOBOND;
-	m2->bond[cIndex2] = 0; //NOBOND;
+	m1->bond[cIndex] = 0;
+	m2->bond[cIndex2] = 0;
 
 	m1->indexOfBond[cIndex] = NOINDEX;
 	m2->indexOfBond[cIndex2] = NOINDEX;
@@ -510,27 +416,13 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 		// NOTE: mergeWithList will handle canonical flags
 		m1->getComplex()->updateComplexMembership(m1);
 	}
-
-	//cout<<" UnBinding!  mol1 complex: ";
-	//m1->getComplex()->printDetails();
 }
-
-void Molecule::unbind(Molecule *m1, char * compName)
-{
-	int cIndex = m1->getMoleculeType()->getCompIndexFromName(compName);
-	Molecule::unbind(m1,cIndex);
-}
-
-
-
-
-
-
 
 
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
+
 
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
@@ -541,13 +433,7 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 		exit(3);
 	}
 
-	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
-	//queue <Molecule *> q;
-	//queue <int> d;
 	int currentDepth = 0;
-
-	//cout<<"traversing on:"<<endl;
-	//m->printDetails();
 
 	//First add this molecule
 	q.push(m);
@@ -575,20 +461,17 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 			if(cM->isBindingSiteBonded(c))
 			{
 				Molecule *neighbor = cM->getBondedMolecule(c);
-				//cout<<"looking at neighbor: "<<endl;
-				//neighbor->printDetails();
+
 				if(!neighbor->hasVisitedMolecule)
 				{
 					neighbor->hasVisitedMolecule=true;
 					members.push_back(neighbor);
 					q.push(neighbor);
 					d.push(currentDepth+1);
-					//cout<<"adding... to traversal list."<<endl;
 				}
 			}
 		}
 	}
-
 
 	//clear the has visitedMolecule values
 	for( molIter = members.begin(); molIter != members.end(); molIter++ )
@@ -596,64 +479,7 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 }
 
 
-
-
-
-//
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
-	//always call breadth first search, it is a bit faster
-	//if(traversalLimit>=0)
-		Molecule::breadthFirstSearch(members, this, traversalLimit);
-	//else
-	//	this->depthFirstSearch(members);
+	Molecule::breadthFirstSearch(members, this, traversalLimit);
 }
-
-
-//Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
-//because it is depth first
-void Molecule::depthFirstSearch(list <Molecule *> &members)
-{
-	if(this->hasVisitedMolecule==true) {
-		return;
-	}
-
-	this->hasVisitedMolecule=true;
-	members.push_back(this);
-
-	int cMax = this->numOfComponents;
-	for(int c=0; c<cMax; c++)
-	{
-		if(hasVisitedBond[c]==true) continue;
-		if(this->isBindingSiteBonded(c))
-		{
-			Molecule *neighbor = this->getBondedMolecule(c);
-			neighbor->hasVisitedBond[indexOfBond[c]]=true;
-			hasVisitedBond[c]=true;
-			neighbor->depthFirstSearch(members);
-		}
-	}
-
-	//clear things out
-	hasVisitedMolecule = false;
-	for(int c=0; c<numOfComponents; c++)
-		hasVisitedBond[c] = false;
-}
-
-
-
-void Molecule::printMoleculeList(list <Molecule *> &members)
-{
-	cout<<"List of molecules contains: "<<endl;
-	list <Molecule *>::iterator molIter;
-	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
-		cout<<"   -"<<(*molIter)->getMoleculeTypeName();
-		cout<<"_u"<<(*molIter)->getUniqueID()<<endl;
-	}
-}
-
-
-
-
-
-

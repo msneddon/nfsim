@@ -7,7 +7,9 @@
 
 #include "moleculeCreator.hh"
 
+
 using namespace NFcore;
+
 
 MoleculeCreator::MoleculeCreator(
 		TemplateMolecule           * _template_molecule,
@@ -27,9 +29,7 @@ MoleculeCreator::MoleculeCreator(
 		// try to find this molecule among those initiatize in seed species block:
 		molecule_object = map_molecule();
 	}
-
 }
-
 
 
 MoleculeCreator::~MoleculeCreator()
@@ -93,6 +93,7 @@ MoleculeCreator::create_molecule()
 	return molecule_object;
 }
 
+
 Molecule *
 MoleculeCreator::get_population_pointer() const
 {
@@ -105,6 +106,7 @@ MoleculeCreator::get_population_pointer() const
 		return NULL;
 	}
 }
+
 
 Molecule *
 MoleculeCreator::map_molecule()

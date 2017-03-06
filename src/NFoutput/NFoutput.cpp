@@ -3,21 +3,22 @@
 #include <queue>
 #include <list>
 
+
 using namespace NFcore;
+
 
 Outputter::Outputter(string filename, System *s) {
 	this->filename = filename;
 	this->s = s;
 }
+
+
 Outputter::~Outputter() {
 	if(outputFileStream.is_open()) {
 		outputFileStream.flush();
 		outputFileStream.close();
 	}
 }
-
-
-
 
 
 //! Careful!  potentially dangerous function.  use with care.
@@ -33,10 +34,6 @@ void clearMoleculeComplexIds(System *s) {
 }
 
 
-
-
-
-
 DumpSystem::DumpSystem(System *s, vector <double> dumpTimes, string pathToFolder, bool verbose)
 {
 	this->s=s;
@@ -47,7 +44,10 @@ DumpSystem::DumpSystem(System *s, vector <double> dumpTimes, string pathToFolder
 	this->verbose = verbose;
 	this->pathToFolder=pathToFolder;
 }
+
+
 DumpSystem::~DumpSystem() {};
+
 
 void DumpSystem::tryToDump(double simTime)
 {
@@ -70,16 +70,8 @@ void DumpSystem::tryToDump(double simTime)
 }
 
 
-
-
-
-
-
-
 void DumpSystem::dumpHeaderFile(double dumpTime) {
 	string dumpFileName = pathToFolder + s->getName()+"_nf."+NFutil::toString(dumpTime)+".dump.head";
-
-	//cout<<"writing file: "<<dumpFileName<<endl;;
 
 	ofstream ofs;
 	//ios_base::out -- Set for output only, instead of for input/output
@@ -132,6 +124,8 @@ void DumpSystem::dumpHeaderFile(double dumpTime) {
 	ofs.flush();
 	ofs.close();
 }
+
+
 void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 
 	double complexCount = 0;
@@ -155,11 +149,9 @@ void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 			return;
 		}
 
-
 		double NOBOND = -1;
 		list <Molecule *> molList; list <Molecule *>::iterator molIter;
 		for(int j=0; j<mt->getMoleculeCount(); j++) {
-
 			//First, write out this molecules unique ID
 			Molecule *m=mt->getMolecule(j);
 			double uId = (double)m->getUniqueID();
@@ -185,8 +177,6 @@ void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 				ofs.write((char *)&complexCount,sizeof(double));
 			}
 
-
-
 			//Now export all the components, marking its state and
 			//binding partner if any
 			for(int k=0; k<mt->getNumOfComponents(); k++) {
@@ -207,17 +197,11 @@ void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 				double localValue = lf->evaluateOn(m,LocalFunction::MOLECULE);
 				ofs.write((char *)&val,sizeof(double));
 				ofs.write((char *)&localValue,sizeof(double));
-			//		ofs<<"\t"<<i<<"\t"<<k<<"\t"<<mt->getTypeIILocalFunction(k)->getName()<<"\n";
 			}
-
-
-
 		}
-
 
 		ofs.flush();
 		ofs.close();
 
 	}
 }
-

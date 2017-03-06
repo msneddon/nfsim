@@ -3,9 +3,9 @@
 
 using namespace NFcore;
 
+
 ReactantList::ReactantList(unsigned int reactantIndex, TransformationSet *ts, unsigned int init_capacity=50)
 {
-
 	this->n_mappingSets = 0;
 	this->capacity = init_capacity;
 	this->reactantIndex = reactantIndex;
@@ -18,6 +18,7 @@ ReactantList::ReactantList(unsigned int reactantIndex, TransformationSet *ts, un
 		msPositionMap[i]=i;
 	}
 }
+
 
 ReactantList::~ReactantList()
 {
@@ -42,26 +43,6 @@ void ReactantList::pickRandom(MappingSet *&ms)
 
 void ReactantList::pickRandomFromPopulation(MappingSet *&ms)
 {
-	/*
-	unsigned int rand = NFutil::RANDOM_INT(0,getPopulation());
-
-	unsigned int cum = 0;
-	unsigned int ii = 0;
-	while ( ii < n_mappingSets )
-	{
-		cum += mappingSets[ii]->getPopulation();
-		if ( cum >= rand ) break;
-		++ii;
-	}
-	// A bit of error checking
-	if ( ii == n_mappingSets)
-	{
-		cerr<<"!! Some problem picking population-weighted mappingSets from ReactionList!" << endl;
-		exit(1);
-	}
-	ms = mappingSets[ii];
-	*/
-
 	// for now, assume there's only one thing in a population reactantList.  --Justin
 	ms = mappingSets[0];
 }
@@ -69,15 +50,6 @@ void ReactantList::pickRandomFromPopulation(MappingSet *&ms)
 
 int ReactantList::getPopulation() const
 {
-	/*
-	int pop = 0;
-	for ( unsigned int ii=0;  ii < n_mappingSets;  ++ii )
-	{
-		pop += mappingSets[ii]->getPopulation();
-	}
-	return pop;
-	*/
-
 	// for now, assume there's only one thing in a population reactantList.  --Justin
 	return (n_mappingSets > 0) ? mappingSets[0]->getPopulation() : 0;
 }
@@ -118,10 +90,6 @@ MappingSet * ReactantList::pushNextAvailableMappingSet()
 	//Increase the number of reactants, and return the activated mappingSet
 	n_mappingSets++;
 
-
-	//cout<<"pushing onto list."<<endl;
-	//this->printDetails();
-
 	return mappingSets[n_mappingSets-1];
 }
 
@@ -146,9 +114,7 @@ void ReactantList::popLastMappingSet()
 }
 
 
-
 MappingSet * ReactantList::getMappingSet(unsigned int mappingSetId) const {
-
 	//Get the mappingSet position
 	int pos = msPositionMap[mappingSetId];
 
@@ -156,8 +122,8 @@ MappingSet * ReactantList::getMappingSet(unsigned int mappingSetId) const {
 
 	//give the mapping set back
 	return mappingSets[pos];
-
 }
+
 
 void ReactantList::removeMappingSet(unsigned int mappingSetId)
 {
@@ -206,8 +172,6 @@ void ReactantList::removeMappingSet(unsigned int mappingSetId)
 	unsigned int clone = tempMappingSet->getClonedMapping();
 	tempMappingSet->clear();
 
-
-
 	//Now, IF this mapping set had a clone, we have to remove it as well
 	if(clone!=MappingSet::NO_CLONE) {
 		this->removeMappingSet(clone);
@@ -225,10 +189,7 @@ void ReactantList::printDetails() const
 		if(i<10) cout<<" ";
 		cout<<"["<<i<<"]: "<<msPositionMap[i];
 		if(i<(n_mappingSets)) {
-			//cout<<"\t\tpos="<<i<<"(mol=";
-			//if(mappingSets[i]->get(0)!=NULL) {
-				cout<<"\t\tpos="<<i<<"(mol="<<mappingSets[i]->get(0)->getMolecule()->getUniqueID()<<") ";
-			//}
+			cout<<"\t\tpos="<<i<<"(mol="<<mappingSets[i]->get(0)->getMolecule()->getUniqueID()<<") ";
 		}
 
 		if(i==n_mappingSets-1) cout<<"  _"<<endl;

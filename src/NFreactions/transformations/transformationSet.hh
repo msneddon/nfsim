@@ -65,9 +65,6 @@ namespace NFcore
 			*/
 			~TransformationSet();
 
-			// this duplicates getNreactants below. Can we remove?  --Justin
-			int getNumOfReactants()   const { return n_reactants; };
-
 			/*!
 				Adds a state change transformation on the given TemplateMolecule (that must have been included
 				in the original vector of TemplateMolecules) along with the stateName and final value
@@ -111,16 +108,6 @@ namespace NFcore
 				@author Michael Sneddon
 			*/
 			bool addNewMoleculeBindingTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2);
-
-
-			/*!
-				Adds a binding reaction between the two given TemplateMolecules at the specified
-				binding sites with the constraint that the two molecules are not connected.  Note: This only stops
-				the binding transform!  It does not prevent the entire reaction!  That is not programmed in yet!
-				@author Michael Sneddon
-			*/
-			bool addBindingSeparateComplexTransform(TemplateMolecule *t1, string bSiteName1, TemplateMolecule *t2, string bSiteName2);
-
 
 
 			/*!
@@ -281,12 +268,12 @@ namespace NFcore
 			*/
 			Transformation *getTransformation(int reactantIndex, int index) const { return transformations[reactantIndex].at(index); };
 
-			/*
+			/*!
 			 * Query the number of of addMoleculeTransforms in this set
 			 */
 			int getNumOfAddMoleculeTransforms() const { return addMoleculeTransformations.size(); };
 
-			/*
+			/*!
 			 * If AddMolecule is a population, returns a pointer to the population object,
 			 *  otherwise returns null.  --Justin
 			 */
@@ -298,7 +285,6 @@ namespace NFcore
 			void   setSymmetryFactor(double val) { symmetryFactor = val; useSymmetryFactor = true; };
 
 		protected:
-
 			/*!
 				Used for error checking when setting up a TransformationSet.  This finds a TemplateMolecule
 				in the TemplateMolecule vector given in the constructor and finds the reactant index under
@@ -339,10 +325,6 @@ namespace NFcore
 			/*!	List to keep track of the molecules that we are going to delete when a transformation is applied	*/
 			static list <Molecule *> deleteList;
 
-			/*!	List to keep track of the molecules that we have to update as a result of a deletion	*/
-			static list <Molecule *> updateAfterDeleteList;
-
-
 			/*!	iterator for the deleteList and updateAfterDeleteList	*/
 			static list <Molecule *>::iterator it;
 
@@ -367,18 +349,7 @@ namespace NFcore
 
 			vector< pair <int,int> >::iterator  collision_pair_iter;
 	};
-
 }
-
-
-
-
-
-
-
-
-
-
 
 
 #endif /*TRANSFORMATIONSET_HH_*/

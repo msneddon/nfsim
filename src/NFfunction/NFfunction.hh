@@ -73,7 +73,6 @@ namespace NFcore {
 	*/
 	class FuncFactory {
 		public:
-
 			/*!
 			    Use this function to create a new function parser that can operate on the given
 			    variables.  The vectors should contain (in the same order) the variable names
@@ -107,8 +106,6 @@ namespace NFcore {
 
 	};
 
-
-
 	//! Defines functions to be used globally in a simulation.
 	/*!
 	    This small class is a small wrapper for the mu parser that allows the System
@@ -117,7 +114,6 @@ namespace NFcore {
 	    when recomputing the rate of some reaction.
 	 */
 	class GlobalFunction {
-
 		public:
 			/*!
 				Creates a GlobalFunction with the given variables (which should be Observable objects
@@ -143,8 +139,6 @@ namespace NFcore {
 			void prepareForSimulation(System *s);
 
 			void updateParameters(System *s);
-
-
 
 			/*!
 				Simply gives the name of the function nicely (meaning something like func1()) for debugging / outputing.
@@ -187,7 +181,6 @@ namespace NFcore {
 			mu::Parser *p;
 
 		protected:
-
 			string name;
 			string funcExpression;
 
@@ -198,7 +191,6 @@ namespace NFcore {
 			unsigned int n_params;
 			string *paramNames;
 	};
-
 
 
 	class FunctionReference
@@ -219,8 +211,6 @@ namespace NFcore {
 	};
 
 
-
-
 	class StateCounter {
 		public:
 			StateCounter(string name, MoleculeType *mt, string stateName);
@@ -238,17 +228,8 @@ namespace NFcore {
 	};
 
 
-
-
-
-
-
-
-
 	class LocalFunction {
-
 		public:
-
 			LocalFunction(System *s,
 								string name,
 								string originalExpression,
@@ -261,20 +242,14 @@ namespace NFcore {
 								vector <string> paramNames);
 			~LocalFunction();
 
-
 			string getName() const;
 			string getNiceName() const;
-			string getExpression() const;
-			string getParsedExpression() const;
 
-			// set/get whether this evaluates on complex complex
-			bool getEvaluateComplexScope() const;
 			void setEvaluateComplexScope( bool val );
 
 			void printDetails(System *s);
 
 			void prepareForSimulation(System *s);
-
 
 			double getValue(Molecule *m, int scope);
 			double evaluateOn(Molecule *m, int scope);
@@ -289,8 +264,8 @@ namespace NFcore {
 			static const int MOLECULE = 1;
 
 			mu::Parser *p;
-		protected:
 
+		protected:
 			// this variable defaults to false. If we detect that a rule requires
 			// this function to evaluate on a species scope at any time, this is set
 			// to true.  Otherwise, this allows us to just say zero if a typeII local
@@ -334,12 +309,8 @@ namespace NFcore {
 			vector <int> typeI_localFunctionIndex;
 			int n_typeIImolecules;
 			MoleculeType ** typeII_mol;
-			//vector <MoleculeType *> typeII_mol;
 			vector <int> typeII_localFunctionIndex;
-
-
 	};
-
 
 
 	class CompositeFunction {
@@ -350,8 +321,8 @@ namespace NFcore {
 						vector <string> &functions,
 						vector <string> & argNames,
 						vector <string> &paramNames);
-				~CompositeFunction();
 
+				~CompositeFunction();
 
 				string getName() const {return name;};
 
@@ -369,21 +340,17 @@ namespace NFcore {
 				void printDetails(System *s);
 
 				int getNumOfArgs() const;
-				string getArgName(int aIndex) const;
 
 				void addTypeIMoleculeDependency(MoleculeType *mt);
 
 
 			protected:
-
 				string name;
 				string originalExpression;
 				string parsedExpression;
 
-
 				unsigned int n_allFuncs;
 				string * allFuncNames;
-
 
 				unsigned int n_args;
 				string * argNames;
@@ -415,24 +382,7 @@ namespace NFcore {
 
 				mu::Parser *p;
 		};
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif /*NFFUNCTION_HH_*/

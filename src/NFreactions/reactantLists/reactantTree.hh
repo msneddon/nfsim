@@ -13,7 +13,6 @@ namespace NFcore
 	class MappingSet;
 	class ReactantContainer;
 
-
 	//!  Maintains a tree of MappingSets needed by Distribution of Rates Reactions
 	/*!
 	 *  This is one of the more complex classes in NFsim.  It is written in order to handle
@@ -29,8 +28,6 @@ namespace NFcore
 	 *
 	 */
 	class ReactantTree : public ReactantContainer {
-
-
 		public:
 
 			/*!
@@ -179,7 +176,6 @@ namespace NFcore
 			//which we can use to get our mappingSet out of the mappingSets array
 			int * reverseMsTreePositionMap;
 
-
 			//The number of mappingSets currently set
 			int n_mappingSets;
 
@@ -187,11 +183,6 @@ namespace NFcore
 			unsigned int firstMappingTreeIndex;
 	};
 }
-
-
-
-
-
 
 
 #endif /* REACTANTTREE_HH_ */

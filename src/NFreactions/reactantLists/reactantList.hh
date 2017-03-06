@@ -2,16 +2,14 @@
 #define REACTANTLIST_HH_
 
 
-
-
 #include "../NFreactions.hh"
+
 
 namespace NFcore
 {
 	//Forward Declarations
 	class TransformationSet;
 	class MappingSet;
-
 
 	//!  Maintains a list of MappingSets needed by ReactionClass
 	/*!
@@ -34,7 +32,6 @@ namespace NFcore
 	class ReactantList : public ReactantContainer
 	{
 		public:
-
 			/*!
 				Creates a new empty ReactantList with the given initial capacity (default is 50).  This capacity
 				should roughly be set to the number of mappings you expect this list to have.  A reactantList must
@@ -59,7 +56,6 @@ namespace NFcore
 				Returns the sum population of all mappingSets that have been added to this list
 			 */
 			virtual int getPopulation() const;
-
 
 			/*!
 				Adds a new MappingSet to this list and returns a pointer to the new mapping set for you
@@ -92,14 +88,12 @@ namespace NFcore
 
 			virtual MappingSet * getMappingSet(unsigned int mappingSetId) const;
 
-
 			/*!
 				Outputs basic details about this list - used only for debugging.
 			 */
 			virtual void printDetails() const;
 
 		protected:
-
 			/*! Maintains the number of mappingSets on this list */
 			int n_mappingSets;
 
@@ -120,20 +114,6 @@ namespace NFcore
 			MappingSet **mappingSets;
 	};
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif /*REACTANTLIST_HH_*/

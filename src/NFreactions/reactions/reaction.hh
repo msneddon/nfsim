@@ -5,8 +5,6 @@
 #include "../NFreactions.hh"
 
 
-
-
 using namespace std;
 
 namespace NFcore
@@ -25,8 +23,6 @@ namespace NFcore
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex);
 			virtual int getReactantCount(unsigned int reactantIndex) const;
 			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;
-
-			virtual void printFullDetails() const;
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const;
@@ -98,12 +94,7 @@ namespace NFcore
 			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;
 
 			virtual void printDetails() const;
-			virtual void printFullDetails() const {};
 
-			void directAddForDebugging(Molecule *m);
-			void printTreeForDebugging();
-
-			static void test1(System *s);
 
 		protected:
 
@@ -126,16 +117,6 @@ namespace NFcore
 			int * argIndexIntoMappingSet;
 			Molecule ** argMappedMolecule;
 			int * argScope;
-
-
-			//vector <int> argIndexIntoMappingSet;
-
-
-
-			//vector <LocalFunction *> lfList;
-			//vector <int> indexIntoMappingSet;
-			//vector <double> localFunctionValue;
-
 	};
 
 	/* A reaction class with DOR calculations on two reactants.
@@ -169,15 +150,8 @@ namespace NFcore
 			virtual int getCorrectedReactantCount(unsigned int reactantIndex) const;
 
 			virtual void printDetails() const;
-			virtual void printFullDetails() const {};
-
-			void directAddForDebugging(Molecule *m);
-			void printTreeForDebugging();
-
-			static void test1(System *s);
 
 		protected:
-
 			virtual double evaluateLocalFunctions1(MappingSet *ms);
 			virtual double evaluateLocalFunctions2(MappingSet *ms);
 
@@ -205,15 +179,8 @@ namespace NFcore
 			Molecule ** argMappedMolecule2;
 			int * argScope1;
 			int * argScope2;
-
 	};
-
 }
-
-
-
-
-
 
 
 #endif /*BASICREACTIONS_HH_*/

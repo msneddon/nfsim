@@ -1,14 +1,8 @@
-
-
-
-
 #include "reaction.hh"
 
 
 using namespace std;
 using namespace NFcore;
-
-
 
 
 FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, TransformationSet *transformationSet, System *s) :
@@ -29,6 +23,7 @@ FunctionalRxnClass::FunctionalRxnClass(string name, GlobalFunction *gf, Transfor
 	}
 }
 
+
 FunctionalRxnClass::FunctionalRxnClass(string name, CompositeFunction *cf, TransformationSet *transformationSet, System *s) :
 	BasicRxnClass(name,1, "", transformationSet,s)
 {
@@ -40,8 +35,8 @@ FunctionalRxnClass::FunctionalRxnClass(string name, CompositeFunction *cf, Trans
 
 FunctionalRxnClass::~FunctionalRxnClass() {};
 
+
 double FunctionalRxnClass::update_a() {
-	//cout<<"udpating a"<<endl;
 	if(this->onTheFlyObservables==false) {
 		cerr<<"Warning!!  You have on the fly observables turned off, but you are using functional\n";
 		cerr<<"reactions which depend on observables.  Therefore, you cannot turn off onTheFlyObservables!\n";
@@ -49,11 +44,7 @@ double FunctionalRxnClass::update_a() {
 		exit(1);
 	}
 
-
-
-	//	cout<<"here"<<endl;
 	if(gf!=0) {
-	//	cout<<"in here"<<endl;
 		a=FuncFactory::Eval(gf->p);
 	} else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
@@ -62,7 +53,6 @@ double FunctionalRxnClass::update_a() {
 		}
 		a=cf->evaluateOn(0,0, reactantCounts, n_reactants);
 		delete [] reactantCounts;
-	//	cout<<"and here"<<endl;
 	} else {
 		cout<<"Error!  Functional rxn is not properly initialized, but is being used!"<<endl;
 		exit(1);
@@ -79,7 +69,6 @@ double FunctionalRxnClass::update_a() {
 		exit(1);
 	}
 
-
 	// check here for the total rate flag - if this is set to true, then
 	// use the rate exactly as given by the function, but if it is false,
 	// then we have to multiply here by the reactant counts
@@ -94,17 +83,13 @@ double FunctionalRxnClass::update_a() {
 			if(getCorrectedReactantCount(i)==0) {
 				a=0.0;
 				break;
-				//cout<<"Warning!  Function evaluates to positive rate for a reaction, but"<<endl;
-				//cout<<"one of the reactant lists is empty!"<<endl;
-				//this->printDetails();
-				//cf->printDetails(reactantTemplates[0]->getMoleculeType()->getSystem());
-				//exit(1);
 			}
 		}
 	}
 	
 	return a;
 }
+
 
 void FunctionalRxnClass::printDetails() const {
 
@@ -134,13 +119,6 @@ void FunctionalRxnClass::printDetails() const {
 }
 
 
-
-
-
-
-
-
-
 MMRxnClass::MMRxnClass(string name, double kcat, double Km, TransformationSet *transformationSet,System *s) :
 	BasicRxnClass(name,1,"",transformationSet,s)
 {
@@ -155,7 +133,10 @@ MMRxnClass::MMRxnClass(string name, double kcat, double Km, TransformationSet *t
 		exit(1);
 	}
 }
+
+
 MMRxnClass::~MMRxnClass() {};
+
 
 double MMRxnClass::update_a()
 {
@@ -165,6 +146,7 @@ double MMRxnClass::update_a()
 	a=kcat*sFree*E/(Km+sFree);
 	return a;
 }
+
 
 void MMRxnClass::printDetails() const {
 	cout<<"ReactionClass: " << name <<"  ( Km="<<Km<<", kcat="<<kcat<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
@@ -176,13 +158,6 @@ void MMRxnClass::printDetails() const {
 	if(n_reactants==0)
 		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
 }
-
-
-
-
-
-
-
 
 
 BasicRxnClass::BasicRxnClass(string name, double baseRate, string baseRateName, TransformationSet *transformationSet, System *s) :
@@ -198,31 +173,15 @@ BasicRxnClass::BasicRxnClass(string name, double baseRate, string baseRateName, 
 
 BasicRxnClass::~BasicRxnClass()
 {
-    //cout<<"  -------------------------------\n  ----------------------------\n";
-	//cout<<"Reaction: "<<name<<endl;
-	//this->reactantLists[0]->printDetails();
-
-	//this->reactantLists[0]->removeMappingSet(0);
-	//this->reactantLists[0]->removeMappingSet(3);
-	//this->reactantLists[0]->removeMappingSet(6);
-	//this->reactantLists[0]->removeMappingSet(9);
-
-	//cout<<endl<<endl<<endl;
-	//this->reactantLists[0]->printDetails();
-
-
-
-
 	if(DEBUG) cout<<"Destroying rxn: "<<name<<endl;
 
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
-		//delete reactantTemplates[r]; DO NOT DELETE HERE (MoleculeType has responsibility of
-		//deleting all template molecules of its type now.
 		delete reactantLists[r];
 	}
 	delete [] reactantLists;
 }
+
 
 void BasicRxnClass::init()
 {
@@ -239,26 +198,13 @@ void BasicRxnClass::prepareForSimulation()
 }
 
 
-
 bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
-	//First a bit of error checking, that you should skip unless we are debugging...
-	//	if(reactantPos<0 || reactantPos>=n_reactants || m==NULL)
-	//	{
-	//		cout<<"Error adding molecule to reaction!!  Invalid molecule or reactant position given.  Quitting."<<endl;
-	//		exit(1);
-	//	}
-
 	//Get the specified reactantList
 	rl = reactantLists[reactantPos];
 
 	//Check if the molecule is in this list
 	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
-	//cout<<" got mappingSetId: " << m->getRxnListMappingId(rxnIndex)<<" size: " <<rl->size()<<endl;
-	//cout<< " testing whether to add molecule ";
-	//m->printDetails();
-	//cout<<" ... as a mormal reaction "<<this->name<<endl;
-
 
 	//If this reaction has multiple instances, we always remove them all!
 	// then we remap because other mappings may have changed.  Yes, this may
@@ -267,32 +213,8 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		while(m->getRxnListMappingId(rxnIndex)>=0) {
 			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
 			m->deleteRxnListMappingId(rxnIndex,m->getRxnListMappingId(rxnIndex));
-			//m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
 	}
-
-	/*
-	//Here we get the standard update...
-	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
-	{
-		if(!reactantTemplates[reactantPos]->compare(m)) {
-			//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-		}
-
-	} else {
-		//Try to map it!
-		ms = rl->pushNextAvailableMappingSet();
-		if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
-			//we must remove, if we did not match.  This will also remove
-			//everything that was cloned off of the mapping set
-			rl->removeMappingSet(ms->getId());
-		} else {
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-	}
-	*/
 
 	//Here we get the standard update...
 	while(m->getRxnListMappingId(rxnIndex)>=0) {
@@ -301,20 +223,15 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		//m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 	}
 
-
 	//Try to map it!
 	ms = rl->pushNextAvailableMappingSet();
 	symmetricMappingSet.clear();
 	comparisonResult = reactantTemplates[reactantPos]->compare(m,rl,ms,false,&symmetricMappingSet);
 	if(!comparisonResult) {
-		//cout << "no mapping in normal reaction, remove"<<endl;
 		//we must remove, if we did not match.  This will also remove
 		//everything that was cloned off of the mapping set
 		rl->removeMappingSet(ms->getId());
 	} else {
-		//cout << "should be in normal reaction, confirm push"<<endl;
-		//ms->printDetails();
-		
 		//TODO: it is necessary to remove elements that are not used anymore from the rl as well as from the m
 		//for that
 		//m->setRxnListMappingId(rxnIndex,-1);
@@ -328,17 +245,14 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		else{
 			m->setRxnListMappingId(rxnIndex,ms->getId());
 		}
-		
 	}
 
 	return true;
 }
 
 
-
 void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 {
-
 	//First a bit of error checking...
 	if(reactantPos<0 || reactantPos>=n_reactants || m==NULL)
 	{
@@ -346,14 +260,12 @@ void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 		exit(1);
 	}
 
-
 	//Get the specified reactantList
 	ReactantList *rl = reactantLists[reactantPos];
 
 	//Check if the molecule is in this list
 	int rxnIndex = m->getMoleculeType()->getRxnIndex(this,reactantPos);
 	bool isInRxn = (m->getRxnListMappingId(rxnIndex)>=0);
-
 
 	if(isInRxn)
 	{
@@ -363,14 +275,13 @@ void BasicRxnClass::remove(Molecule *m, unsigned int reactantPos)
 }
 
 
-
-
 void BasicRxnClass::notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex)
 {
 	cerr<<"You are trying to notify a Basic Reaction of a rate Factor Change!!! You should only use this"<<endl;
 	cerr<<"function for DORrxnClass rules!  For this offense, I must abort now."<<endl;
 	exit(1);
 }
+
 
 double BasicRxnClass::update_a()
 {
@@ -402,30 +313,10 @@ int BasicRxnClass::getReactantCount(unsigned int reactantIndex) const
 
 int BasicRxnClass::getCorrectedReactantCount(unsigned int reactantIndex) const
 {
-	/*cerr << "  getCorrectedReactantCount rindex: " << reactantIndex << "  isPop? " << isPopulationType[reactantIndex] << endl;
-	if ( isPopulationType[reactantIndex] )
-	{
-		cerr << "  corr:  " << identicalPopCountCorrection[reactantIndex];
-		cerr << "  pop:   " << reactantLists[reactantIndex]->getPopulation() << endl;
-		cerr << "  final: " << std::max( reactantLists[reactantIndex]->getPopulation()
-	             - identicalPopCountCorrection[reactantIndex], 0 ) << endl;
-	}
-	else
-	{
-		cerr << "  count: " << reactantLists[reactantIndex]->size() << endl;
-	}
-	*/
 	return isPopulationType[reactantIndex] ?
 			   std::max( reactantLists[reactantIndex]->getPopulation()
 			             - identicalPopCountCorrection[reactantIndex], 0 )
 			 : reactantLists[reactantIndex]->size();
-}
-
-void BasicRxnClass::printFullDetails() const
-{
-	cout<<"BasicRxnClass: "<<name<<endl;
-	for(unsigned int i=0; i<n_reactants; i++)
-		reactantLists[i]->printDetails();
 }
 
 
@@ -444,7 +335,3 @@ void BasicRxnClass::pickMappingSets(double random_A_number) const
 		}
 	}
 }
-
-
-
-

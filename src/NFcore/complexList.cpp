@@ -8,9 +8,7 @@
 
 #include "NFcore.hh"
 #include <math.h>
-//#include <fstream>
-//#include "../NFscheduler/NFstream.h"
-//#include "../NFscheduler/Scheduler.h"
+
 
 using namespace std;
 using namespace NFcore;
@@ -42,7 +40,6 @@ ComplexList::~ComplexList()
 //   createComplex
 //   getNextAvailableComplex
 //   notifyThatComplexIsAvailable
-
 int ComplexList::createComplex(Molecule * m)
 {
 	if (!useComplex) return -1;  //Only create complexes if we intend on using them...
@@ -65,28 +62,10 @@ Complex * ComplexList::getNextAvailableComplex()
 }
 
 
-
 void ComplexList::notifyThatComplexIsAvailable(int ID_complex)
 {
 	nextAvailableComplex.push(ID_complex);
 }
-
-
-
-
-
-
-void ComplexList::purgeAndPrintAvailableComplexList()
-{
-	cout << "AvailableComplexes:";
-	while(	!nextAvailableComplex.empty() )
-	{
-		cout << " -> " << nextAvailableComplex.front();
-		nextAvailableComplex.pop();
-	}
-	cout << endl;
-}
-
 
 
 void ComplexList::printAllComplexes()
@@ -97,21 +76,6 @@ void ComplexList::printAllComplexes()
 		(*complexIter)->printDetailsLong();
 	cout<<endl;
 }
-
-
-
-void ComplexList::outputComplexSizes(double cSampleTime)
-{
-	int size = 0;
-	(sys->getOutputFileStream())<<"\t"<<cSampleTime;
-	for( complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-	{
-		size = (*complexIter)->getComplexSize();
-		if (size!=0) (sys->getOutputFileStream())<<"\t"<<size;
-	}
-	(sys->getOutputFileStream())<<endl;
-}
-
 
 
 double ComplexList::outputMeanCount(MoleculeType *m)
@@ -129,7 +93,7 @@ double ComplexList::outputMeanCount(MoleculeType *m)
 		if(size>=1) { allSum += size; allCount++; }
 
 	}
-	//cout<<sum<<"/"<<count<<"   "<<allSum<<"/"<<allCount<<endl;
+
 	if(count!=0)
 	{
 		(sys->getOutputFileStream())<<"\t"<<((double)sum/(double)count)<<endl;
@@ -143,7 +107,6 @@ double ComplexList::outputMeanCount(MoleculeType *m)
 
 	return ((double)sum/(double)count);
 }
-
 
 
 double ComplexList::calculateMeanCount(MoleculeType *m)
@@ -164,7 +127,6 @@ double ComplexList::calculateMeanCount(MoleculeType *m)
 }
 
 
-
 void ComplexList::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 {
 	int size = 0;
@@ -180,9 +142,6 @@ void ComplexList::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 }
 
 
-
-// TODO: figure out how friend functions work!!
-// friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value)
 {
@@ -193,4 +152,3 @@ NFstream& operator<<(NFstream& nfstream, const T& value)
 
     return nfstream;
 }
-

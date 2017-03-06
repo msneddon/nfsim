@@ -14,7 +14,6 @@ namespace NFcore
 	class AddMoleculeTransform;
 	class AddSpeciesTransform;
 
-
 	/*!
 	 	Static object that generates transformations with the given sites.
 	    @author Michael Sneddon
@@ -42,11 +41,6 @@ namespace NFcore
 			    @author Michael Sneddon
 			*/
 			static Transformation * genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
-
-
-			// deprecated
-			//static Transformation * genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
-
 
 
 			/*!
@@ -105,12 +99,6 @@ namespace NFcore
 			*/
 			static Transformation * genDecrementStateTransform(unsigned int cIndex);
 
-			/*!
-			 	Generates an IncrementPopulation transformation.
-			    @author Justin Hogg
-			*/
-			//static Transformation * genIncrementPopulationTransform();
-
 
 			/*!
 			 	Generates an DecrementPopulation transformation.
@@ -127,11 +115,6 @@ namespace NFcore
 
 			/*! Delete only pointed-to molecules, only if deleting it creates only one remaining species*/
 			static const int DELETE_MOLECULES_NO_KEYWORD = 2;
-
-
-
-
-
 
 			/*!	Indicates a state change transformation or mapping onto a state	*/
 			static const unsigned int STATE_CHANGE = 0;
@@ -262,16 +245,6 @@ namespace NFcore
 				virtual bool checkForNullCondition(Mapping *m, MappingSet **ms);
 	};
 
-	/*! Deprecated!!!  molecularity is now checked at a more basic level with checkForNullCondition!! */
-//	class BindingSeparateComplexTransform : public BindingTransform {
-//			public:
-//				BindingSeparateComplexTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
-//					BindingTransform(cIndex, otherReactantIndex, otherMappingIndex) {};
-//				virtual ~BindingSeparateComplexTransform() {};
-//				virtual void apply(Mapping *m, MappingSet **ms);
-//				virtual int getComponentIndex() const {return cIndex;};
-//	};
-
 	class UnbindingTransform : public Transformation {
 		public:
 			UnbindingTransform(int cIndex);
@@ -360,15 +333,7 @@ namespace NFcore
 		protected:
 			int cIndex;
 	};
-
-
-
 }
-
-
-
-
-
 
 
 #endif /*TRANSFORMATION_HH_*/

@@ -1,12 +1,8 @@
 #include "NFinput.hh"
 
 
-
-
-
 using namespace NFinput;
 using namespace std;
-
 
 
 bool createLocalFunction(string name,
@@ -20,6 +16,7 @@ bool createLocalFunction(string name,
 			map<string,int> &allowedStates,
 			bool verbose);
 
+
 bool createCompositeFunction(string name,
 			string expression,
 			vector <string> &argNames,
@@ -28,8 +25,6 @@ bool createCompositeFunction(string name,
 			vector <string> &paramNames,
 			System *s,
 			bool verbose);
-
-
 
 
 bool createFunction(string name,
@@ -51,7 +46,6 @@ bool createFunction(string name,
 	vector <string> paramNames;
 	int otherFuncRefCounter=0;
 
-
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Function") {
 			otherFuncRefCounter++;
@@ -65,19 +59,15 @@ bool createFunction(string name,
 		}
 	}
 
-
 	if(otherFuncRefCounter!=0) {
 
 		//Must be a composite function, so parse as such
-		//cout<<"creating composite function\n";
 		createCompositeFunction(name, expression, argNames, refNames, refTypes, paramNames, s, verbose);
 		return true;
-		//	exit(1);
 	}
 	else if(argNames.size()==0) //&& otherFuncRefCounter==0)
 	{
 		//must be a global function, as we have no arguments, so just create it
-		//cout<<"creating global function\n";
 		GlobalFunction *gf = new GlobalFunction(name, expression,
 												varRefNames, varRefTypes, paramNames, s);
 		if(!s->addGlobalFunction(gf)) {
@@ -88,20 +78,10 @@ bool createFunction(string name,
 		return true;
 	}
 
-
-//	if(expression.size()==0) {
-//		cerr<<"!!!Error:  Local function named '"<<name<<"' has no Expression!\n";
-//		return false;
-//	}
-	// else if(argNames.size()>0 && otherFuncRefCounter==0)
-	//if we got here, we are creating a local function, so call the create local function function.
-	//cout<<"creating local function"<<endl;
 	return createLocalFunction(name, expression,
 			argNames, refNames, refTypes,
 			s, parameter, pListOfObservables, allowedStates, verbose);
 }
-
-
 
 
 bool createCompositeFunction(string name,
@@ -113,8 +93,6 @@ bool createCompositeFunction(string name,
 			System *s,
 			bool verbose)
 {
-//	cout<<"must be a composite function..."<<endl;
-
 	for(unsigned int rn=0; rn<refNames.size(); rn++) {
 		if(refTypes.at(rn)=="Observable") {
 			cerr<<"Composite Functions (functions that call other functions) cannot have"<<endl;
@@ -138,10 +116,6 @@ bool createCompositeFunction(string name,
 }
 
 
-
-
-
-
 bool createLocalFunction(string name,
 			string expression,
 			vector <string> &argNames,
@@ -156,8 +130,6 @@ bool createLocalFunction(string name,
 
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
-
-//	cout<<"must be a local function..."<<endl;
 
 	//Remember the original expression (useful for outputting)
 	string originalExpression = expression;
@@ -186,7 +158,6 @@ bool createLocalFunction(string name,
 		cerr<<"!!!Error:  Functions can reference at most one other function!  Quitting."<<endl;
 		return false;
 	}
-
 
 	//some vectors to store results
 	vector <string> obsUsedName;
@@ -239,7 +210,6 @@ bool createLocalFunction(string name,
 			}//end for loop over sPos
 		}
 	} //end loop over the possible references
-
 
 	//as an optimization, certain observables may be used in more than one position
     //with the same scope.  The loops above uniquely identified each instance of each
@@ -305,83 +275,6 @@ bool createLocalFunction(string name,
 		}
 	}
 
-//  DEPRECATED - original version for matching up observables, now handled by cloning existing ones
-//	//now from the list of observable names, we have to go back and
-//	//actually create observables for these things.  So we'll do that here
-//	try {
-//		TiXmlElement *pObs;
-//		for ( pObs = pListOfObservables->FirstChildElement("Observable");
-//			pObs != 0; pObs = pObs->NextSiblingElement("Observable")) {
-//
-//			string observableId="", observableName="", observableType="";
-//			if(!pObs->Attribute("id") || !pObs->Attribute("name") || !pObs->Attribute("type")) {
-//				cerr<<"Observable tag without a valid 'id' attribute.  Quiting"<<endl;
-//				return false;
-//			} else {
-//				observableId = pObs->Attribute("id");
-//				observableName = pObs->Attribute("name");
-//				observableType = pObs->Attribute("type");
-//			}
-//
-//			for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
-//				if(observableName==finalObsUsedName.at(i)) {
-//					if(finalObsUsedScope.at(i)!=-1) {
-//
-//						Observable *systemObs=s->getObservableByName(observableName);
-//						if(systemObs==0) {
-//							cerr<<"Observable in local function "<<name<<" was not found."<<endl;
-//							return false;
-//						}
-//
-//						finalLocalObservables.at(i) = systemObs->clone();
-////						if(observableType.compare("Molecules")==0) {
-////							cout<<"In local function!!!  Creating an observable!!"<<endl;
-////							vector <TemplateMolecule *> tmList;
-////							readObservableForTemplateMolecules(pObs,observableName,tmList,
-////									s,parameter,allowedStates,false);
-////						} else if()
-////
-//
-////						TemplateMolecule *tempmol = 0;
-////						if(!readObservable(pObs,observableName,tempmol,
-////								s,parameter, allowedStates,false)) {
-////							return false;
-////						}
-////						if(tempmol!=0) {
-////							Observable *o  = new Observable(observableName.c_str(),tempmol);
-////							finalLocalObservables.at(i)=o;
-////							// WE DO NOT ADD THIS OBSERVABLE TO THE MOLECULE HERE!!
-////						}
-//					}
-//					break;
-//				}
-//			}
-//		}
-//
-//	} catch (...) {
-//		//oh no, what happened this time?
-//		cout<<"Caught an unexpected error when creating observables for this local function."<<endl;
-//		return false;
-//	}
-//
-//
-//	//make sure everything went as planned
-//	for(unsigned int i=0; i<finalObsUsedExpressionRef.size(); i++) {
-//		if(finalObsUsedScope.at(i)!=-1) {
-//			if(finalLocalObservables.at(i)==0) {
-//				cout<<"Error!! unable to create local function because the reference to\n";
-//				cout<<"observable named: '"<<finalObsUsedName.at(i)<<"' was not found."<<endl;
-//				return false;
-//			}
-//		}
-//	}
-//  END DEPRECATED CODE
-
-
-
-
-
-
 	//Ah.  and so we get here.  We now have:
 	// 1) original functional expression (originalExpression)
 	// 2) new revised functional expression with scope notation removed (expression)
@@ -399,22 +292,8 @@ bool createLocalFunction(string name,
 						finalObsUsedExpressionRef,finalObsUsedName,finalLocalObservables,finalObsUsedScope,
 						paramNames);
 	s->addLocalFunction(lf);
-	//cout<<"was added fine."<<endl;
 	return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ////  New Function Parser
@@ -446,7 +325,6 @@ bool NFinput::initFunctions(
 			//Read in the Function Name
 			string funcName = pFunction->Attribute("id");
 			if(verbose) cout<<"\t\tReading Function: "+funcName+"(";
-
 
 			//Get the list of arguments for this function
 			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArguments");
@@ -518,7 +396,6 @@ bool NFinput::initFunctions(
 				}
 			}
 
-
 			// simple sort to order the elements, so that overlapping names do not
 			// get parsed wrong when interpreting the functions.
 			while(refNames.size()>0)
@@ -549,8 +426,6 @@ bool NFinput::initFunctions(
 				refTypesSorted.push_back(maxType);
 			}
 
-
-
 			//Here we actually generate the function or the function generator
 			if(!createFunction(funcName,
 					funcExpression,
@@ -573,12 +448,9 @@ bool NFinput::initFunctions(
 			refTypesSorted.clear();
 		}
 
-
-
 		//Once we've read in all the functions, we should take care of finalizing
 		//the composite functions so they properly reference the other functions
 		system->finalizeCompositeFunctions();
-	//	cout<<"done reading functions!"<<endl;
 
 		//Getting here means we read everything we could successfully
 		return true;
@@ -589,133 +461,3 @@ bool NFinput::initFunctions(
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-//////  Original Function Parser
-//bool NFinput::initGlobalFunctions(
-//	TiXmlElement * pListOfFunctions,
-//	System * system,
-//	map <string,double> &parameter,
-//	bool verbose)
-//{
-//	try {
-//		vector <string> argNames;
-//		vector <string> argTypes;
-//		vector <string> paramNames;
-//		vector <double> paramValues;
-//
-//		//Loop through the Function tags...
-//		TiXmlElement *pFunction;
-//		for ( pFunction = pListOfFunctions->FirstChildElement("Function"); pFunction != 0; pFunction = pFunction->NextSiblingElement("Function"))
-//		{
-//			//Check if MoleculeType tag has a name...
-//			if(!pFunction->Attribute("id")) {
-//				cerr<<"!!!Error:  Function tag must contain the id attribute.  Quitting."<<endl;
-//				return false;
-//			}
-//
-//			//Read in the Function Name
-//			string funcName = pFunction->Attribute("id");
-//			if(verbose) cout<<"\t\tReading and Creating Function: "+funcName+"(";
-//
-//
-//			//Get the list of arguments for this function
-//			TiXmlElement *pListOfArgs = pFunction->FirstChildElement("ListOfArgs");
-//			if(pListOfArgs) {
-//				//Loop through each arguement
-//				TiXmlElement *pArg; bool firstArg = true;
-//				for ( pArg = pListOfArgs->FirstChildElement("Arg"); pArg != 0; pArg = pArg->NextSiblingElement("Arg"))
-//				{
-//					if(verbose && !firstArg) cout<<", ";
-//					firstArg=false;
-//					//Check again for errors by making sure the argument has a name
-//					string argName, argType;
-//					if(!pArg->Attribute("id") || !pArg->Attribute("name") || !pArg->Attribute("type")) {
-//						if(verbose) cout<<" ?? ...\n";
-//						cerr<<"!!!Error:  Arg tag in Function: '" + funcName + "' must contain the all attributes including id, name, and type.  Quitting."<<endl;
-//						return false;
-//					}
-//
-//					argName = pArg->Attribute("name");
-//					argType = pArg->Attribute("type");
-//					argNames.push_back(argName);
-//					argTypes.push_back(argType);
-//
-//					if(verbose) cout<<argName;
-//				}
-//			}
-//			if(verbose) cout<<")"<<endl;
-//
-//
-//			//Get the list of Parameter Constants for this function
-//			TiXmlElement *pListOfParamConst = pFunction->FirstChildElement("ListOfParameterConstants");
-//			if(pListOfParamConst) {
-//
-//				//Loop through each arguement
-//				TiXmlElement *pParamConst;
-//				for ( pParamConst = pListOfParamConst->FirstChildElement("ParameterConstant"); pParamConst != 0; pParamConst = pParamConst->NextSiblingElement("ParameterConstant"))
-//				{
-//					//Check again for errors by making sure the parameter has a name
-//					if(!pParamConst->Attribute("id")) {
-//						cerr<<"!!!Error:  ParameterConstant tag in Function: '" + funcName + "' must contain a proper id.  Quitting."<<endl;
-//						return false;
-//					}
-//
-//					string paramName = pParamConst->Attribute("id");
-//					if(parameter.find(paramName)==parameter.end()) {
-//						cerr<<"Could not find parameter constant: "<<paramName<<" when creating function "<<funcName<<". Quitting"<<endl;
-//						return false;
-//					}
-//					paramNames.push_back(paramName);
-//					paramValues.push_back(parameter.find(paramName)->second);
-//				}
-//			}
-//
-//
-//			//Read in the actual function definition
-//			TiXmlElement *pDefinition = pFunction->FirstChildElement("Definition");
-//			if(pDefinition) {
-//				if(!pDefinition->GetText()) {
-//					cerr<<"!!!Error:  Definition tag must actually contain a string for the function.  Quitting."<<endl;
-//										return false;
-//				}
-//				string functionDefintion = pDefinition->GetText();
-//				GlobalFunction *gf = new GlobalFunction(funcName, functionDefintion, argNames, argTypes, paramNames, paramValues);
-//				if(!system->addGlobalFunction(gf)) {
-//					cerr<<"!!!Error:  Function name '"<<funcName<<"' has already been used.  You can't have two\n";
-//					cerr<<"functions with the same name, so I'll just stop now."<<endl;
-//					return false;
-//				}
-//				if(verbose) cout<<"\t\t\t= "<<functionDefintion<<endl;
-//			} else {
-//				cerr<<"!!!Error:  Definition tag for a function must exist!  Quitting."<<endl;
-//				return false;
-//			}
-//
-//			argNames.clear();
-//			argTypes.clear();
-//			paramNames.clear();
-//			paramValues.clear();
-//		}
-//
-//
-//
-//		cout<<"done reading functions!"<<endl;
-//		exit(0);
-//		//Getting here means we read everything we could successfully
-//		return true;
-//	} catch (...) {
-//		//Uh oh! we got some unknown exception thrown, so we must abort!
-//		cerr<<"I caught some unknown error when I was trying to parse out a Global Function.\n";
-//		cerr<<"I'm at a loss for words right now, so you're on you're own."<<endl;
-//		return false;
-//	}
-//}

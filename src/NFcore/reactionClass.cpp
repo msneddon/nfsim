@@ -1,6 +1,3 @@
-
-
-
 #include "NFcore.hh"
 
 
@@ -11,7 +8,6 @@ using namespace NFcore;
 
 ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s)
 {
-	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
 	this-> tagged = false;
 
@@ -25,7 +21,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->a = 0;
 	this->traversalLimit = ReactionClass::NO_LIMIT;
 	this->transformationSet = transformationSet;
-
 
 	//Set up the template molecules from the transformationSet
 	this->n_reactants   = transformationSet->getNreactants();
@@ -43,9 +38,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 
 		//First, single out all the templates that have at least one map generator
 		for(unsigned int i=0; i<tmList.size(); i++) {
-			//cout<<"looking at:"<<endl;
-			//tmList.at(i)->printDetails();
-
 			if(tmList.at(i)->getN_mapGenerators()>0) {
 				hasMapGenerator.push_back(i);
 			}
@@ -65,8 +57,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	}
 	mappingSet = new MappingSet *[n_mappingsets];
 
-
-
 	/* create blank mappingSets for the added molecules. These will be used
 	 * to hold mappings to added molecules, which is useful for rules that create
 	 *  molecules and then perform other transformations.  --Justin, 1Mar2011
@@ -75,8 +65,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	{
 		mappingSet[r] = transformationSet->generateBlankMappingSet(r,0);
 	}
-
-
 
 	//Here, if we identify that there are disjoint sets in this pattern, from
 	//the connected-to syntax, then we have to flag the ones that we actually
@@ -108,18 +96,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 			int n_maps = numMapGenerators.at(uniqueSetId.at(t));
 			numMapGenerators.at(uniqueSetId.at(t)) = n_maps+tmList.at(t)->getN_mapGenerators();
 		}
-
-		// Debug output
-		//cout<<"found "<<setCount<<" unique sets."<<endl;
-		//cout<<"found that reactant molecule head is in set: "<<curTemplateSetId<<endl;
-		//for(int s=0; s<setCount; s++) {
-		//	cout<<"set: "<<s<<" has "<<numMapGenerators.at(s)<<" map generators."<<endl;
-		//}
-		//for(unsigned int i=0; i<tmList.size(); i++) {
-		//	cout<<"looking at:"<<endl;
-		//	tmList.at(i)->printDetails();
-		//}
-
 
 		//Lets rearrange the connected-to elements so that the one head is listed as
 		//connected to all other molecules.  This will better suit our needs.
@@ -163,19 +139,11 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 			exit(1);
 		}
 
-
-		//cout<<"++++++++++++++++"<<endl;
-		//for(unsigned int i=0; i<tmList.size(); i++) {
-		//	tmList.at(i)->printDetails();
-		//}
-
-
 		//Finally, clear out the data structures.
 		for(unsigned int i=0; i<sets.size(); i++) sets.at(i).clear();
 		sets.clear(); uniqueSetId.clear();
 		numMapGenerators.clear();
 	}
-
 
 	//Check here to see if we have molecule types that are the same across different reactants
 	//Because if so, we will give a warning
@@ -225,9 +193,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		}
 	}
 
-
 	onTheFlyObservables=true;
-
 
 	// check for population type reactants
 	isPopulationType = new bool[n_reactants];
@@ -235,7 +201,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	{
 		isPopulationType[i] = reactantTemplates[i]->getMoleculeType()->isPopulationType();
 	}
-
 
 	// calculate discrete count corrections for symmetric population reactants
 	//  e.g. number of reactant pairs = A*(A-1)/2.  Note that the factor of two
@@ -257,7 +222,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 		}
 	}
 }
-
 
 
 ReactionClass::~ReactionClass()
@@ -304,15 +268,12 @@ void ReactionClass::resetBaseRateFromSystemParamter() {
 }
 
 
-
 void ReactionClass::printDetails() const {
 	cout<< name <<"  (id="<<this->rxnId<<", baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
 		cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
-		//cout<<"head: "<<endl; this->reactantTemplates[r]->printDetails(cout);
-		//reactantTemplates[r]->printDetails();
 	}
 	if(n_reactants==0)
 		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
@@ -321,13 +282,10 @@ void ReactionClass::printDetails() const {
 
 
 void ReactionClass::fire(double random_A_number) {
-	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
-
 
 	// First randomly pick the reactants to fire by selecting the MappingSets
 	this->pickMappingSets(random_A_number);
-
 
 	// Check reactants for correct molecularity:
 	if ( ! transformationSet->checkMolecularity(mappingSet) ) {
@@ -335,7 +293,6 @@ void ReactionClass::fire(double random_A_number) {
 		++(System::NULL_EVENT_COUNTER);
 		return;
 	}
-
 
 	// output something if the reaction was tagged
 	if(tagged) {
@@ -351,19 +308,9 @@ void ReactionClass::fire(double random_A_number) {
 		cout<<endl;
 	}
 
-
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
-
-
-	// display product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	//	(*molIter)->printDetails();
-	//	cout<<"<<"<<endl;
-	//}
-
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {
@@ -413,16 +360,13 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
 	this->transformationSet->transform(this->mappingSet);
 
-
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
-
 
 	// if complex bookkeeping is on, find all product complexes
 	// (this is useful for updating Species Observables and TypeII functions, so keep the info handy).
@@ -440,10 +384,8 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// If we're handling observables on the fly, tell each molecule to add itself to observables.
 	if (onTheFlyObservables) {
-
 		// molecule observables..
 		for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 			// skip dead molecules
@@ -530,15 +472,6 @@ void ReactionClass::fire(double random_A_number) {
 			}
 		}
 	} // done updating complex-scoped local functions
-
-
-	// display final product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	// 	(*molIter)->printDetails();
-	//  	cout<<"<<"<<endl;
-	//}
-
 
 	//Tidy up
 	products.clear();

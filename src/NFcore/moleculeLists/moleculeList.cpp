@@ -3,10 +3,10 @@
 
 using namespace NFcore;
 
+
 MoleculeList::MoleculeList(MoleculeType *mt, int init_capacity, int finalCapacity)
 {
 	this->n_molecules = 0;
-	this->lastAllocated = 0;
 	this->capacity = init_capacity;
 	this->finalCapacity=finalCapacity;
 	this->mt = mt;
@@ -20,6 +20,7 @@ MoleculeList::MoleculeList(MoleculeType *mt, int init_capacity, int finalCapacit
 		molPos[i]=i;
 	}
 }
+
 
 MoleculeList::~MoleculeList()
 {
@@ -39,6 +40,7 @@ Molecule *MoleculeList::at(int index) const
 {
 	return mArray[index];
 }
+
 
 int MoleculeList::size() const
 {
@@ -93,21 +95,12 @@ int MoleculeList::create(Molecule *&m)
 	n_molecules++;
 	m = mArray[n_molecules-1];
 
-	//cout<<"ADDING!!!"<<endl;
-	//printDetails();
 	return m->getMolListId();
 }
 
 
 void MoleculeList::remove(int listId, Molecule *m)
 {
-	// I think this is redundant (see below).  --Justin
-	//Make sure this mappingSet is not empty
-	//if(n_molecules==0) {
-	//	cerr<<"Trying to remove from an empty MoleculeList!!"<<endl;
-	//	exit(1);
-	//}
-
 	//First, get the position of the mappingSet we need to remove
 	int pos = molPos[listId];
 
@@ -119,9 +112,6 @@ void MoleculeList::remove(int listId, Molecule *m)
 		     << "   with delete transforms match the same complex. Enable complex bookkeeping (-cb)\n"
 		     << "   and see if this message disappears.\n"
 		     << "   (trying to remove: " << listId << " in pos " << pos <<" but size is: " << size() << endl;
-		//cout<<"Error in MoleculeList:  you can't remove a molecule that is not in the simulation! (trying to remove: "<< listId << " in pos " << pos <<" but size is: "<<size()<<endl;
-		//m->printDetails();
-		//exit(1);
 		return;
 	}
 
@@ -141,14 +131,10 @@ void MoleculeList::remove(int listId, Molecule *m)
 	molPos[listId] = n_molecules-1;
 	molPos[mArray[pos]->getMolListId()] = pos;
 
-
 	//Remember to remove
 	n_molecules--;
-
-
-	//cout<<"REMOVING!!! "<< listId<<" at pos: "<<pos<<endl;
-	//printDetails();
 }
+
 
 void MoleculeList::removeLast()
 {
@@ -161,10 +147,8 @@ void MoleculeList::removeLast()
 }
 
 
-
 void MoleculeList::printDetails()
 {
-	//Used for debuggin'...
 	cout<<"ReactantList that contains: "<<size()<<" MappingSets and has a capacity for "<<capacity<<" total sets."<<endl;
 
 	for(int i=0; i<capacity; i++)

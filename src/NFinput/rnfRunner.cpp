@@ -1,16 +1,8 @@
-
-
-
 #include "NFinput.hh"
-
-
-
 
 
 using namespace NFinput;
 using namespace std;
-
-
 
 
 // reads in the RNF file, and overwrites any argument it finds
@@ -28,10 +20,8 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 
 			//If the file is open, start reading in the details...
 			if (rnfFile.is_open()) {
-
 				//Loop over the lines
 				while (! rnfFile.eof() ) {
-
 					//First, grab the line
 					lineCounter++;
 					getline(rnfFile,line);
@@ -71,8 +61,6 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 						continue;
 					}
 
-
-
 					//Make sure that we have an argument
 					pos = line.find_first_of("-");
 					if(pos==string::npos || pos!=0) {
@@ -89,15 +77,11 @@ bool NFinput::readRNFfile(map<string,string> &argMap, vector<string> &commands, 
 					if(firstWhiteSpace==string::npos) {
 						argName = line.substr(1,line.size()-1);
 						argValue = "";
-					//	cout<<"got argname: '"<<argName<<"'"<<endl;
 					} else {
 						argName = line.substr(1,firstWhiteSpace-1);
 						argValue = line.substr(firstWhiteSpace,line.size()-1);
 						NFutil::trim(argValue);
-					//	cout<<"got argname: '"<<argName<<"'"<<endl;
-					//	cout<<"got argvalue: '"<<argValue<<"'"<<endl;
 					}
-
 
 					//Throw out some warnings if we are setting arguments in an improper way
 					//that don't do anything
@@ -239,6 +223,7 @@ void simulate(string command,System *s, bool verbose)
 	cout<<"\n"<<endl;
 }
 
+
 void equilibrate(string command,System *s)
 {
 	int id1=command.find("eq");
@@ -311,15 +296,12 @@ void setParameter(string command, System *s) {
 }
 
 
-
 bool NFinput::runRNFcommands(System *s, map<string,string> &argMap, vector<string> &commands, bool verbose)
 {
 	cout<<"\n\nrunning RNF commands\n-----------------"<<endl;
 	string com = "";
 	for(int c=0; c<(int)commands.size(); c++) {
 		com = commands.at(c);
-	//	cout<<"Parsing command: "<<com<<endl;
-
 
 		if(com.find("echo")!=string::npos) {
 			echo(com,s);
@@ -343,35 +325,7 @@ bool NFinput::runRNFcommands(System *s, map<string,string> &argMap, vector<strin
 			cout<<"could not figure out what you wanted to do for command:\n";
 			cout<<com<<endl;
 		}
-
 	}
-
 
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,7 +8,6 @@
 #include "NFfunction.hh"
 
 
-
 using namespace std;
 using namespace NFcore;
 using namespace mu;
@@ -22,11 +21,9 @@ CompositeFunction::CompositeFunction(System *s,
 					vector <string> &paramNames)
 {
 
-	//cout<<"creating composite function"<<endl;
 	this->name = name;
 	this->originalExpression=expression;
 	this->parsedExpression="";
-
 
 	this->n_params=paramNames.size();
 	this->paramNames = new string[n_params];
@@ -40,7 +37,6 @@ CompositeFunction::CompositeFunction(System *s,
 		this->argNames[i]=argNames.at(i);
 	}
 
-
 	this->n_allFuncs=functions.size();
 	allFuncNames = new string[n_allFuncs];
 	for(unsigned int i=0; i<n_allFuncs; i++) {
@@ -49,6 +45,8 @@ CompositeFunction::CompositeFunction(System *s,
 
 	p=0;
 }
+
+
 CompositeFunction::~CompositeFunction()
 {
 	delete [] allFuncNames;
@@ -71,7 +69,6 @@ CompositeFunction::~CompositeFunction()
 	delete [] reactantCount;
 
 	if(p!=NULL) delete p;
-
 }
 
 
@@ -115,7 +112,6 @@ void CompositeFunction::finalizeInitialization(System *s)
 		gfs[i] = gf_tempVector.at(i);
 	}
 
-
 	//now the local functions...
 	vector <LocalFunction *> lf_tempVector;
 	for(unsigned int i=0; i<n_allFuncs; i++) {
@@ -130,11 +126,6 @@ void CompositeFunction::finalizeInitialization(System *s)
 		lfNames[i] = lf_tempVector.at(i)->getName();
 		lfs[i] = lf_tempVector.at(i);
 	}
-
-
-
-
-
 
 	//Now we have to do the dirty work of parsing out the function expression
 	//so that we can properly get at the variables and functions we need
@@ -160,15 +151,11 @@ void CompositeFunction::finalizeInitialization(System *s)
 		}
 	}
 
-//	cout<<"now the expression is: "<<parsedExpression<<endl;
-
-
 	///////// do the same for local functions here (can be a bit tricky, because different
 	///////// composite functions will have different numbers of arguments
 	vector <int> lfIndexValues;
 	vector <string> lfReferenceName;
 	vector <int> lfScope;
-
 
 	for(int f=0; f<n_lfs; f++) {
 		string::size_type sPos=parsedExpression.find(lfs[f]->getName());
@@ -208,8 +195,6 @@ void CompositeFunction::finalizeInitialization(System *s)
 		}
 	}
 
-
-
 	this->n_refLfs=lfIndexValues.size();
 	this->refLfInds = new int[n_refLfs];
 	this->refLfRefNames = new string[n_refLfs];
@@ -222,11 +207,7 @@ void CompositeFunction::finalizeInitialization(System *s)
 		this->refLfValues[i]=0;
 	}
 
-
-
 	// Parse out the ability to get reactant counts in composite reactions
-
-
 	int maxReactantIndex = 0;
 	string::size_type sPos=parsedExpression.find("reactant_");
 	for( ; sPos!=string::npos; sPos=parsedExpression.find("reactant_",sPos+1)) {
@@ -246,8 +227,6 @@ void CompositeFunction::finalizeInitialization(System *s)
 		string numTwoDigits = parsedExpression.substr(sPos+9,2);
 		NFutil::trim(numTwoDigits);
 
-
-
 		int iOneDigit;
 		try {
 			iOneDigit = NFutil::convertToInt(numOneDigit);
@@ -261,7 +240,6 @@ void CompositeFunction::finalizeInitialization(System *s)
 		if(numTwoDigits.size()<2) {
 			isTwoDigitNumber = false;
 		} else {
-			//cout<<endl<<numTwoDigits<<endl;
 			try {
 				NFutil::convertToInt(numTwoDigits);
 			} catch (std::runtime_error e) {
@@ -277,37 +255,26 @@ void CompositeFunction::finalizeInitialization(System *s)
 		if(iOneDigit>maxReactantIndex) maxReactantIndex = iOneDigit;
 	}
 
-
-	//cout<<"now the expression is finally: "<<parsedExpression<<endl;
-	//cout<<" max reactant index: "<<maxReactantIndex<<endl;
-
-
 	this->n_reactantCounts = maxReactantIndex;
 	reactantCount = new double[n_reactantCounts];
 	for(int r=0; r<n_reactantCounts; r++) {
 		reactantCount[r]=0;
 	}
-
-	//cout<<"prepared: "<<this->name<<endl;
-	//cout<<"expression= "<<this->parsedExpression<<endl;
 }
+
 
 int CompositeFunction::getNumOfArgs() const {
 	return this->n_args;
 }
-string CompositeFunction::getArgName(int aIndex) const {
-	return this->argNames[aIndex];
-}
-
 
 
 void CompositeFunction::updateParameters(System *s)
 {
-	//cout<<"Updating parameters for function: "<<name<<endl;
 	for(unsigned int i=0; i<n_params; i++) {
 		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 	}
 }
+
 
 void CompositeFunction::prepareForSimulation(System *s)
 {
@@ -340,15 +307,10 @@ void CompositeFunction::prepareForSimulation(System *s)
 		cout<<"Quitting."<<endl;
 		exit(1);
 	}
-
-
-	//cout<<"preparing composite function.."<<this->name<<endl;
-//	exit(0);
 }
 
 
 void CompositeFunction::printDetails(System *s) {
-
 	cout<<"Composite Function: '"<< this->name << "()'"<<endl;
 	cout<<" = "<<this->originalExpression<<endl;
 	cout<<" parsed expression = "<<this->parsedExpression<<endl;
@@ -362,7 +324,6 @@ void CompositeFunction::printDetails(System *s) {
 	for(int f=0; f<n_lfs; f++) {
 		cout<<"         local function: "<<lfs[f]->getNiceName()<<endl;
 	}
-
 
 	if(n_args>0) {
 		cout<<"   -Arguments:"<<endl;
@@ -379,23 +340,7 @@ void CompositeFunction::printDetails(System *s) {
 
 	if(p!=0)
 		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
-
-
-
-//	cout<<"trying something new..."<<endl;
-//	Molecule ** molList = new Molecule *[2];
-//	molList[0] = s->getMoleculeTypeByName("Receptor")->getMolecule(0);
-//	molList[1] = s->getMoleculeTypeByName("Receptor")->getMolecule(1);
-//	int *scope = new int[1];
-//	scope[0]=0;
-//	scope[1]=1;
-//
-//	double x = this->evaluateOn(molList,scope);
-//	cout<<"got final value: "<<x<<endl;
-//
-//	exit(1);
 }
-
 
 
 void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
@@ -413,44 +358,24 @@ void CompositeFunction::addTypeIMoleculeDependency(MoleculeType *mt) {
 
 
 double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curReactantCounts, int n_reactants) {
-	//cout << "CompositeFunction::evaluateOn()" << endl;
-
 	//1 evaluate all global functions
-	//cout << "n_gfs=" << n_gfs << endl;
 	for(int f=0; f<n_gfs; f++) {
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 	}
 
 	//2 evaluate all local functions
-	//cout << "n_lfs=" << n_lfs << endl;
-	//cout << "scope[0]=" << scope[0] << endl;
-	//cout << "molList[0]" << molList[0]->getMoleculeTypeName() << endl;
 	if(n_lfs>0) {
-
-		//cout<<"evaluating composite function with local dependencies."<<endl;
 		if(molList!=0 && scope!=0) {
-
-			//cout << "n_refLfs=" << n_refLfs << endl;
 			for(int i=0; i<n_refLfs; i++) {
-				//cout<<"--- evaluating: "<<lfs[refLfInds[i]]->getNiceName()<<" with scope: "<<scope[refLfScopes[i]]<<endl;
 				this->refLfValues[i] = this->lfs[refLfInds[i]]->getValue(molList[refLfScopes[i]],scope[refLfScopes[i]]);
-				//cout<<"answer: "<<this->refLfValues[i]<<endl;
 			}
-
-			//for (n_refLfs)  set the value by calling the correct local function to evaluate on the specified scope
-			//which we reference through the given molList.
-			//this->refLfValues[i] = this->lfs[refLfInds[i]]->evaluateOn(molList[refLfScopes[i]],scope[refLfScopes[i]]);
-
 		} else {
-
 			cout<<"Error evaluating composite function: "<<name<<endl;
 			cout<<"This function depends on local functions, but you gave no molecules"<<endl;
 			cout<<"or scope when calling this function.  Time to quit."<<endl;
 			exit(1);
 		}
-
 	}
-
 
 	//3 update reactant counts as need be
 	if(n_reactants<this->n_reactantCounts) {
@@ -459,9 +384,6 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	for(int r=0; r<n_reactantCounts; r++) {
 		reactantCount[r]=curReactantCounts[r];
 	}
-
-
-
 
 	//evaluate this function
 	return FuncFactory::Eval(p);

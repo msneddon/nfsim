@@ -1,9 +1,7 @@
-
-
 #include "transformation.hh"
 
-using namespace NFcore;
 
+using namespace NFcore;
 
 
 ///////////////////////////////////////////////////////////////
@@ -14,6 +12,8 @@ StateChangeTransform::StateChangeTransform(int cIndex, int newValue) :
 	this->cIndex = cIndex;
 	this->newValue = newValue;
 }
+
+
 void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
@@ -28,6 +28,8 @@ IncrementStateTransform::IncrementStateTransform(unsigned int cIndex) :
 {
 	this->cIndex = cIndex;
 }
+
+
 void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
@@ -42,6 +44,8 @@ DecrementStateTransform::DecrementStateTransform(unsigned int cIndex) :
 {
 	this->cIndex = cIndex;
 }
+
+
 void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
@@ -49,14 +53,12 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 }
 
 
-
-
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-
 NewMoleculeBindingTransform::NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
 		BindingTransform(cIndex, otherReactantIndex, otherMappingIndex)
 { }
+
 
 bool NewMoleculeBindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
 {
@@ -76,22 +78,15 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 	this->otherMappingIndex=otherMappingIndex;
 }
 
+
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
 {
-	//cout<<" cIndex: "<<cIndex;
-	//cout<<" otherReactantIndex: "<<otherReactantIndex;
-	//cout<<" otherMappingIndex: "<<otherMappingIndex;
-
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
 
 	//Currently, this is set to block all binding events that happen internally to a single
 	//molecule.  I think this is reasonable to do...
 	// (Intra-molecular binding is probably ok. BNGL supports it. --Justin.)
 	// (this is commented out, and so nfsim now supports internal binding events --michael)
-	//
-	//if(m->getMolecule()->getUniqueID()==m2->getMolecule()->getUniqueID()) { // && m->getIndex() == m2->getIndex()) {
-	//	System::NULL_EVENT_COUNTER++;
-	//} else {
 	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 }
 
@@ -110,35 +105,15 @@ bool BindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-
-// deprecated
-//
-//void BindingSeparateComplexTransform::apply(Mapping *m, MappingSet **ms)
-//{
-//	cerr<<"Using BindingSeparateComplexTransform!!  This transformation is deprecated in v1.09+!"<<endl;
-//	exit(1);
-//
-//	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
-//	//cout<<"complex ID: "<<m->getMolecule()->getComplexID()<<" "<<m2->getMolecule()->getComplexID()<<endl;
-//
-//	if(m->getMolecule()->getComplexID()!=m2->getMolecule()->getComplexID()) {
-//		Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
-//	} else {
-//		System::NULL_EVENT_COUNTER++;
-//	}
-//
-//}
-
-
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
 UnbindingTransform::UnbindingTransform(int cIndex) :
 	Transformation(TransformationFactory::UNBINDING)
 {
 	this->cIndex=cIndex;
 }
+
+
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
-{   //cout<<"unbinding.."<<endl;
+{
 	Molecule::unbind(m->getMolecule(),m->getIndex());
 }
 
@@ -249,48 +224,56 @@ LocalFunctionReference::LocalFunctionReference(string PointerName, int scope, Te
 }
 
 
-
-
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 NFcore::Transformation * TransformationFactory::genEmptyTransform()
 {
 	return new EmptyTransform();
 }
+
+
 NFcore::Transformation * TransformationFactory::genStateChangeTransform(unsigned int stateIndex, int newStateValue)
 {
 	return new StateChangeTransform(stateIndex, newStateValue);
 }
+
+
 NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 {
 	return new BindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
 }
+
+
 NFcore::Transformation * TransformationFactory::genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
 {
 	return new NewMoleculeBindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
 }
 
-//NFcore::Transformation * TransformationFactory::genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
-//{
-//	return new BindingSeparateComplexTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
-//}
 
 NFcore::Transformation * TransformationFactory::genBindingTransform2(unsigned int bSiteIndex)
 {
 	return new EmptyTransform(bSiteIndex);
 }
+
+
 NFcore::Transformation * TransformationFactory::genUnbindingTransform(unsigned int bSiteIndex)
 {
 	return new UnbindingTransform(bSiteIndex);
 }
+
+
 NFcore::AddSpeciesTransform * TransformationFactory::genAddSpeciesTransform(SpeciesCreator *sc)
 {
 	return new AddSpeciesTransform(sc);
 }
+
+
 NFcore::AddMoleculeTransform * TransformationFactory::genAddMoleculeTransform(MoleculeCreator *mc)
 {
 	return new AddMoleculeTransform(mc);
 }
+
+
 NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform(int removalType)
 {
 	return new RemoveMoleculeTransform(removalType);
@@ -301,10 +284,13 @@ NFcore::Transformation * TransformationFactory::genIncrementStateTransform(unsig
 {
 	return new IncrementStateTransform(cIndex);
 }
+
+
 NFcore::Transformation * TransformationFactory::genDecrementStateTransform(unsigned int cIndex)
 {
 	return new DecrementStateTransform(cIndex);
 }
+
 
 NFcore::Transformation * TransformationFactory::genDecrementPopulationTransform()
 {
@@ -316,15 +302,3 @@ Transformation * TransformationFactory::genLocalFunctionReference(string Pointer
 {
 	return new LocalFunctionReference(PointerName, type, tm);
 }
-
-
-
-
-
-
-
-
-
-
-
-

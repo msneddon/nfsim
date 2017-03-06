@@ -2,12 +2,11 @@
 #define MAPPINGSET_HH_
 
 
-
-
-
 #include "../NFreactions.hh"
 
+
 using namespace std;
+
 
 namespace NFcore
 {
@@ -25,7 +24,6 @@ namespace NFcore
 	class MappingSet
 	{
 		public:
-
 			/*!
 			 	Creates a new MappingSet.  This MappingSet constructor will take care
 			 	of populating itself with Mapping objects based on the list of
@@ -69,14 +67,7 @@ namespace NFcore
 			 	of these functions.
 			    @author Michael Sneddon
 			 */
-			void clear(); /*{
-				this->clonedMappingSet=NO_CLONE;
-				for(unsigned int t=0; t<n_mappings; t++) {
-					mappings[t]->clear();
-				}
-
-			};*/
-
+			void clear();
 
 			/*!
 			 	Gets the population
@@ -123,13 +114,11 @@ namespace NFcore
 			static bool checkForEquality( MappingSet * ms1, MappingSet * ms2 );
 
 		protected:
-
 			/*!
 				The Id of this MappingSet assigned by the ReactantList or ReactantTree in which
 				this MappingSet lives.
 			*/
 			unsigned int id;
-
 
 			/*!
 				Keeps track of the number of Mapping objects contained in this MappingSet.
@@ -141,9 +130,7 @@ namespace NFcore
 			*/
 			Mapping ** mappings;
 
-
 			bool isSpeciesDeletion;
-
 
 			/*!
 
@@ -152,14 +139,9 @@ namespace NFcore
 			unsigned int clonedMappingSet;
 
 		private:
-
 			static vector <Molecule *>           molList;
 			static vector <Molecule *>::iterator molIter;
 	};
-
 }
-
-
-
 
 #endif /*MAPPINGSET_HH_*/

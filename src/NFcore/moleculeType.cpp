@@ -6,8 +6,6 @@ using namespace std;
 using namespace NFcore;
 
 
-
-
 MoleculeType::MoleculeType(
 	string name,
 	vector <string> &compName,
@@ -27,6 +25,7 @@ MoleculeType::MoleculeType(
 
 }
 
+
 MoleculeType::MoleculeType(
 	string name,
 	vector <string> &compName,
@@ -45,11 +44,6 @@ MoleculeType::MoleculeType(
 }
 
 
-
-
-
-
-
 MoleculeType::MoleculeType(
 		string name,
 		vector <string> &compName,
@@ -64,6 +58,7 @@ MoleculeType::MoleculeType(
 	}
 	init(name, compName, defaultCompState, possibleCompStates, isIntegerComponent, system);
 }
+
 
 MoleculeType::MoleculeType(
 		string name,
@@ -101,6 +96,7 @@ string MoleculeType::getComponentName(int cIndex) const {
 	}
 	return this->compName[cIndex];
 }
+
 
 void MoleculeType::init(
 	string name,
@@ -143,19 +139,13 @@ void MoleculeType::init(
 		this->possibleCompStates.push_back(p);
 	}
 
-
 	//Register myself with the system, and get an ID number
 	this->system = system;
 	this->type_id = this->system->addMoleculeType(this);
 
-
 	mList = new MoleculeList(this,2,system->getGlobalMoleculeLimit());
 	n_eqComp = 0;
 }
-
-
-
-
 
 
 MoleculeType::~MoleculeType()
@@ -177,9 +167,6 @@ MoleculeType::~MoleculeType()
 	delete [] eqCompIndex;
 	delete [] eqCompOriginalName;
 
-
-
-
 	//Delete all template molecules of this type that exist
 	TemplateMolecule *t;
 	while(allTemplates.size()>0)
@@ -189,11 +176,9 @@ MoleculeType::~MoleculeType()
 		delete t;
 	}
 
-
-
-
 	delete mList;
 }
+
 
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
 {
@@ -229,16 +214,6 @@ bool MoleculeType::isIntegerComponent(string cName) const {
 	this->printDetails();
 	exit(1);
 }
-bool MoleculeType::isIntegerComponent(int cIndex) const {
-	if(cIndex>=0 && cIndex<numOfComponents) {
-		return this->isIntegerCompState[cIndex];
-	} else {
-		cerr<<"!!! error !!! "<< cIndex << " is not a valid component index in MoleculeType: "<<name;
-		cerr<<"in function isIntegerComponent(int cIndex).  "<<endl;
-		this->printDetails();
-		exit(1);
-	}
-}
 
 
 bool MoleculeType::isEquivalentComponent(string cName) const {
@@ -249,6 +224,8 @@ bool MoleculeType::isEquivalentComponent(string cName) const {
 	}
 	return false;
 }
+
+
 bool MoleculeType::isEquivalentComponent(int cIndex) const {
 	for(int i=0; i<n_eqComp; i++) {
 		for(int k=0; k<eqCompSizes[i]; k++) {
@@ -258,6 +235,7 @@ bool MoleculeType::isEquivalentComponent(int cIndex) const {
 	}
 	return false;
 }
+
 
 int MoleculeType::getEquivalenceClassNumber(int cIndex) const {
 	for(int i=0; i<n_eqComp; i++) {
@@ -269,6 +247,7 @@ int MoleculeType::getEquivalenceClassNumber(int cIndex) const {
 	}
 	return -1;
 }
+
 
 string MoleculeType::getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const {
 	for(int i=0; i<n_eqComp; i++) {
@@ -282,6 +261,7 @@ string MoleculeType::getEquivalenceClassComponentNameFromComponentIndex(int cInd
 	exit(1);
 }
 
+
 void MoleculeType::getEquivalencyClass(int *&components, int &n_components, string cName) const {
 	for(int i=0; i<n_eqComp; i++) {
 		if(eqCompOriginalName[i].compare(cName)==0) {
@@ -291,6 +271,8 @@ void MoleculeType::getEquivalencyClass(int *&components, int &n_components, stri
 		}
 	}
 }
+
+
 int MoleculeType::getEquivalencyClassNumber(string cName) const {
 	for(int i=0; i<n_eqComp; i++) {
 		if(eqCompOriginalName[i].compare(cName)==0) {
@@ -300,8 +282,6 @@ int MoleculeType::getEquivalencyClassNumber(string cName) const {
 	cerr<<"Could not find equivalency class number for component named: "<<cName<<"!!!"<<endl;
 	exit(1);
 }
-
-
 
 
 string MoleculeType::getComponentStateName(int cIndex, int cValue) {
@@ -318,14 +298,11 @@ string MoleculeType::getComponentStateName(int cIndex, int cValue) {
 }
 
 
-
-
 Molecule *MoleculeType::genDefaultMolecule()
 {
 	Molecule *m;
 	mList->create(m);
 	m->setAlive(true);
-	//cout<<"adding molecule: "<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<endl;
 
 	return m;
 }
@@ -333,7 +310,6 @@ Molecule *MoleculeType::genDefaultMolecule()
 
 void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 {
-	//cout<<"adding molecule: "<<mol->getMoleculeTypeName()<<"_"<<mol->getUniqueID()<<endl;
 	//First prepare the molecule for simulation
 	mol->setUpLocalFunctionList();
 	mol->prepareForSimulation();
@@ -347,7 +323,6 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 void MoleculeType::addMoleculeToRunningSystemButDontUpdate(Molecule *&mol)
 {
 	//First prepare the molecule for simulation
-
 	mol->setUpLocalFunctionList();
 	mol->prepareForSimulation();
 	mol->setAlive(true);
@@ -375,26 +350,6 @@ void MoleculeType::removeMoleculeFromRunningSystem(Molecule *&m)
 			Molecule::unbind(m,c);
 		}
 	}
-
-	m->setAlive(false);
-
-}
-
-
-void MoleculeType::removeMoleculeFromRunningSystemButDontUpdate(Molecule *&m)
-{
-	//Remove this guy from the list, the observables list, and from all rxns
-	mList->remove(m->getMolListId(), m);
-	//removeFromObservables(m);
-	//removeFromRxns(m);
-
-	//We also have to remove all bonds
-	for(int c=0; c<getNumOfComponents(); c++) {
-		if(m->isBindingSiteBonded(c)) {
-			Molecule::unbind(m,c);
-		}
-	}
-
 	m->setAlive(false);
 }
 
@@ -402,6 +357,8 @@ void MoleculeType::removeMoleculeFromRunningSystemButDontUpdate(Molecule *&m)
 Molecule * MoleculeType::getMolecule(int ID_molecule) const {
 	return mList->at(ID_molecule);
 }
+
+
 int MoleculeType::getMoleculeCount() const {
 	return mList->size();
 }
@@ -415,15 +372,6 @@ void MoleculeType::addTemplateMolecule(TemplateMolecule *t)
 		cout<<"!!!!Error: trying to add molecule of type " << t->getMoleculeTypeName() << " to MoleculeType " << name << endl;
 }
 
-string MoleculeType::getMolObsName(int obsIndex) const {
-	return molObs.at(obsIndex)->getName();
-}
-
-int MoleculeType::getMolObsCount(int obsIndex) const {
-	return molObs.at(obsIndex)->getCount();
-}
-
-
 
 int MoleculeType::getCompIndexFromName(string cName) const
 {
@@ -433,6 +381,7 @@ int MoleculeType::getCompIndexFromName(string cName) const
 	this->printDetails();
 	exit(1);
 }
+
 
 int MoleculeType::getStateValueFromName(int cIndex, string stateName) const
 {
@@ -446,8 +395,6 @@ int MoleculeType::getStateValueFromName(int cIndex, string stateName) const
 	printDetails();
 	exit(1);
 }
-
-
 
 
 void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
@@ -473,25 +420,17 @@ void MoleculeType::addReactionClass(ReactionClass * r, int rPosition)
 }
 
 
-
 void MoleculeType::populateWithDefaultMolecules(int moleculeCount)
 {
 	if(DEBUG) cout<< " Populating "<< this->name << " with " << moleculeCount << " molecule(s)";
 	if(DEBUG) cout<< " for a total of " << mList->size()+moleculeCount << " molecule(s)."<<endl;
-	//mInstances.reserve(mInstances.size()+moleculeCount);
+
 	for(int m=0; m<moleculeCount; m++)
 	{
 		if(DEBUG) cout<<" ("<<m+1<<") ";
-
-		//Create the molecule (which knows how many components to make)
 		this->genDefaultMolecule();
-		//new Molecule(this);
-
-		//Add the molecule to the list of molecules so we save it (does this automatically now!!!! )
-		//mInstances.push_back(mol);
 	}
 }
-
 
 
 void MoleculeType::setUpLocalFunctionListForMolecules()
@@ -504,16 +443,15 @@ void MoleculeType::setUpLocalFunctionListForMolecules()
 	}
 }
 
+
 void MoleculeType::prepareForSimulation()
 {
-	//cout<<"Preparing: "<<name<<endl;
 	//Check each reaction and add this molecule as a reactant if we have to
 	int r=0;
 	for(rxnIter = reactions.begin(), r=0; rxnIter != reactions.end(); rxnIter++, r++ )
 	{
 		system->registerRxnIndex((*rxnIter)->getRxnId(), reactionPositions.at(r),r);
   	}
-
 
 	//Our iterators that we will use to loop through every molecule
 	Molecule *mol;
@@ -533,6 +471,7 @@ void MoleculeType::prepareForSimulation()
   		}
 	}
 }
+
 
 void MoleculeType::updateRxnMembership(Molecule * m)
 {
@@ -563,20 +502,12 @@ int MoleculeType::getRxnIndex(ReactionClass * rxn, int rxnPosition)
 }
 
 
-
-
 void MoleculeType::removeFromObservables(Molecule *m)
 {
-	//cout<<"removing from observables:"<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<endl;
-	//m->printDetails();
-
 	//Check each observable and see if this molecule was counted, and if so, remove
 	int ind=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
   	{
-  		//Only subtract if m happened to be an observable... this saves us a compare call
-  		//int matches = (*molObsIter)->isObservable(m);
-
   		// How many times does this observable match the molecule?
   		int matches = m->isObs(ind);
   		// subtract matches from observable
@@ -587,6 +518,7 @@ void MoleculeType::removeFromObservables(Molecule *m)
   		ind++;
 	}
 }
+
 
 void MoleculeType::removeFromRxns(Molecule * m)
 {
@@ -600,8 +532,6 @@ void MoleculeType::removeFromRxns(Molecule * m)
 }
 
 
-
-
 //TypeI local function: this molecule type depends on the value of this
 //evaluated function
 int MoleculeType::addLocalFunc_TypeI(LocalFunction *lf) {
@@ -609,6 +539,7 @@ int MoleculeType::addLocalFunc_TypeI(LocalFunction *lf) {
 	return locFuncs_typeI.size()-1;
 
 }
+
 
 //TypeII local function: this molecule type, when updated, changes the
 //value of this function
@@ -619,47 +550,24 @@ int MoleculeType::addLocalFunc_TypeII(LocalFunction *lf) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void MoleculeType::addAllToObservables()
 {
 	/////  WARNING:: when calling this function, be sure to clear all observables
 	/////  first, because this function will not clear observables.
-
-//	cout<<"+++++++++ "<<this->getName()<<endl;
-
 	//Check each observable and see if this molecule should be counted
 	Molecule *mol;  int o=0;  int matches=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
   	{
-  		//cout<<"comparing to obs: "<<(*molObsIter)->getName()<<endl;
-
   		for( int m=0; m<mList->size(); m++ )
   		{
   			mol = mList->at(m);
   			matches = (*molObsIter)->isObservable(mol);
   			(*molObsIter)->add(matches);
   			mol->setIsObs(o,matches);
-  			//cout<<"matches:"<<matches<<endl;
   		}
   		o++;
 	}
-
 }
-
-
 
 
 void MoleculeType::addToObservables(Molecule *m)
@@ -668,41 +576,12 @@ void MoleculeType::addToObservables(Molecule *m)
 	int o=0;
   	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
   	{
-		//cout<<"Comparing(in add: ";
-		//cout<<m->getUniqueID()<<")"<<endl;
-
 		int matches = (*molObsIter)->isObservable(m);
 		m->setIsObs(o,matches);
 
 		(*molObsIter)->add(matches);
 		o++;
 	}
-	
-}
-
-
-void MoleculeType::outputMolObsNames(NFstream &fout)
-{
-	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
-		fout<<"\t"<<(*molObsIter)->getName();
-}
-
-void MoleculeType::outputMolObsCounts(NFstream &fout)
-{
-	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
-		fout<<"\t"<<(*molObsIter)->getCount();
-}
-
-void MoleculeType::printMolObsNames()
-{
-	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++)
-		cout<<"\t"<<(*molObsIter)->getName();
-}
-
-void MoleculeType::printMolObsCounts()
-{
-	for(molObsIter = molObs.begin(); molObsIter != molObs.end(); molObsIter++ )
-		cout<<"\t"<<(*molObsIter)->getCount();
 }
 
 
@@ -749,12 +628,10 @@ void MoleculeType::printDetails() const
 
 	cout<<"   -has "<< mList->size() <<" molecules."<<endl;
 	cout<<"   -has "<< reactions.size() <<" reactions"<<endl;
-//	cout<<"        of which "<< indexOfDORrxns.size() <<" are DOR rxns. "<<endl;
 	cout<<"   -has "<< molObs.size() <<" molecules observables " <<endl;
 }
 
 
-// friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value)
 {
@@ -765,6 +642,3 @@ NFstream& operator<<(NFstream& nfstream, const T& value)
 
     return nfstream;
 }
-
-
-
