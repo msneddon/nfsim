@@ -6,13 +6,11 @@
  */
 
 
-
 #include "reactionSelector.hh"
+
 
 using namespace std;
 using namespace NFcore;
-
-
 
 
 DirectSelector::DirectSelector(vector <ReactionClass *> &rxns) :
@@ -28,13 +26,13 @@ DirectSelector::DirectSelector(vector <ReactionClass *> &rxns) :
 }
 
 
-
 DirectSelector::~DirectSelector()
 {
 	Atot = 0;
 	n_reactions = 0;
 	delete [] reactionClassList;
 }
+
 
 double DirectSelector::refactorPropensities()
 {
@@ -52,7 +50,6 @@ double DirectSelector::update(ReactionClass *r,double oldA, double newA)
 	Atot+=newA;
 	return Atot;
 }
-
 
 
 double DirectSelector::getNextReactionClass(ReactionClass *&rc)
@@ -76,10 +73,6 @@ double DirectSelector::getNextReactionClass(ReactionClass *&rc)
 
 	this->refactorPropensities();
 	return getNextReactionClass(rc);
-
-	//cerr<<"Error in Direct Reaction Selector: randNum exceeds a_sum!!!"<<endl;
-	//cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<" running a_tot:"<<Atot<<endl;
-	//return -1;
 }
 
 
@@ -87,4 +80,3 @@ double DirectSelector::getAtot()
 {
 	return Atot;
 }
-

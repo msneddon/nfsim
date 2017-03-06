@@ -4,6 +4,7 @@
 
 #include "../NFcore.hh"
 
+
 namespace NFcore
 {
 	class MoleculeType;
@@ -74,12 +75,8 @@ namespace NFcore
 			static const int NO_LIMIT = -1;
 
 		protected:
-
 			/*! The number of Molecule objects currently on the list */
 			int n_molecules;
-
-			/*! The number of Molecule objects currently on the list */
-			int lastAllocated;
 
 			/*! The maximum number of Molecules that can be added before the list resizes itself */
 			int capacity;
@@ -96,12 +93,6 @@ namespace NFcore
 			/*! Allows the list to map index values of Molecules to the index values in the list array  */
 			int *molPos;
 	};
-
-
 }
-
-
-
-
 
 #endif /*MOLECULELISTS_HH_*/

@@ -6,13 +6,11 @@
  */
 
 
-
 #include "reactionSelector.hh"
+
 
 using namespace std;
 using namespace NFcore;
-
-
 
 
 LogClassSelector::LogClassSelector(vector <ReactionClass *> &rxns) :
@@ -58,13 +56,10 @@ LogClassSelector::LogClassSelector(vector <ReactionClass *> &rxns) :
 	this->mapRxnIdToLogClass = new int [n_reactions];
 	this->mapRxnIdToLogClassPosition = new int [n_reactions];
 
-
 	activeLogClasses = new int [totalLogClassCount];
 	for(int i=0; i<totalLogClassCount; i++) {
 		activeLogClasses[i]=0;
 	}
-
-
 
 	cout<<"totalLength = "<<totalLogClassCount<<endl;
 	int startingClassCapacity=(int)n_reactions/10;
@@ -92,7 +87,6 @@ LogClassSelector::LogClassSelector(vector <ReactionClass *> &rxns) :
 		place(rxns.at(r),currentClass,current_a);
 	}
 
-
 	//Print debug message
 	cout<<endl<<endl<<endl;
 	for(int i=-(totalLogClassCount-1)/2; i<=(totalLogClassCount-1)/2; i++) {
@@ -110,7 +104,6 @@ LogClassSelector::LogClassSelector(vector <ReactionClass *> &rxns) :
 		cout<<" / "<<logClassCapacity[i]<<"  atot= "<<logClassPropensity[i];
 		cout<<" is active: "<<isLogClassActive[i]<<endl;
 	}
-
 }
 
 
@@ -182,7 +175,6 @@ void LogClassSelector::place(ReactionClass *r,int logClass,double a)
 }
 
 
-
 LogClassSelector::~LogClassSelector()
 {
 	//Print debug message
@@ -192,11 +184,8 @@ LogClassSelector::~LogClassSelector()
 		cout<<" / "<<logClassCapacity[i]<<"  atot= "<<logClassPropensity[i];
 		cout<<" is active: "<<isLogClassActive[i]<<endl;
 	}
-
-//	Atot = 0;
-//	n_reactions = 0;
-//	delete [] reactionClassList;
 }
+
 
 double LogClassSelector::refactorPropensities()
 {
@@ -215,7 +204,6 @@ double LogClassSelector::refactorPropensities()
 		logClassSize[i]=0;
 		logClassPropensity[i]=0;
 	}
-
 
 	//Then we can reinsert the reactions into their classes
 	int currentClass = 0; double current_a=0;
@@ -271,12 +259,10 @@ double LogClassSelector::update(ReactionClass *r,double oldA, double newA)
 		this->place(r,newClass,newA);
 	}
 
-
 	Atot-=oldA;
 	Atot+=newA;
 	return Atot;
 }
-
 
 
 double LogClassSelector::getNextReactionClass(ReactionClass *&rc)
@@ -295,56 +281,22 @@ double LogClassSelector::getNextReactionClass(ReactionClass *&rc)
 		if(randNum <= a_sum)
 		{
 			selectedClass = c;
-			//cout<<"selected class propensity: "<<logClassPropensity[c]<<" and the a_sum: "<<a_sum<<endl;
-			//cout<<" and the randNum: "<<randNum<<endl;
 			break;
 		}
 	}
-
-
-	//cout<<"Selected class: "<<selectedClass<<endl;
 
 	//Then, we use a rejection method to select the next rule
 	 int randRule=0; double randRule_A=0; double weight;
 	 do {
 		 randRule = NFutil::RANDOM_INT(0,logClassSize[selectedClass]);
-		 //cout<<" ** "<<logClassSize[selectedClass]<<"  and the selected rule: "<<randRule<<endl;
 		 randRule_A = logClassList[selectedClass][randRule]->get_a();
 		 weight = pow(2,(float)(selectedClass+1))*NFutil::RANDOM(1);
 	 } while (weight > randRule_A);
 
-
 	 //we have our rule
 	 rc=logClassList[selectedClass][randRule];
 
-	// rc->printDetails();
 	 return -1;
-
-
-
-
-
-
-
-
-
-
-	//WARNING - DO NOT USE THE DEFAULT C++ RANDOM NUMBER GENERATOR FOR THIS STEP
-	// - IT INTRODUCES SMALL NUMERICAL ERRORS CAUSING THE ORDER OF RXNS TO
-	//   AFFECT SIMULATION RESULTS
-//	for(int c=0; r<n_reactions; r++) {
-//		a_sum += reactionClassList[r]->get_a();
-//		if(randNum <= a_sum)
-//		{
-//			rc = reactionClassList[r];
-//			return (randNum-last_a_sum);
-//		}
-//		last_a_sum = a_sum;
-//	}
-//
-//	cerr<<"Error in Direct Reaction Selector: randNum exceeds a_sum!!!"<<endl;
-//	cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<" running a_tot:"<<Atot<<endl;
-//	return -1;
 }
 
 
@@ -387,229 +339,5 @@ int LogClassSelector::calculateClass(double a) {
 	if(logClass>maxClassLimit) logClass = maxClassLimit;
 	else if(logClass<-minClassLimit) logClass = minClassLimit;
 
-
 	return logClass;
-
-
-	//       double totalPropensity = sv->getTotalPropensity();
-	//       int lclass = 0;
-	//       if (totalPropensity == 0) {
-	//               lclass = numeric_limits<int>::min();
-	//       } else if (totalPropensity > 1) {
-	//               int e = (int)totalPropensity;
-	//               while (e>1) {
-	//                       e = e >> 1;
-	//                       i+=1;
-	//               }
-	//               lclass = i;
-	//       } else if (totalPropensity < 1) {
-	//               double d = totalPropensity;
-	//               while (d < 1) {
-	//                       d *= 2;
-	//                       i-= 1;
-	//               }
-	//               lclass = i;
-	//       } else if (totalPropensity == 1)
-	//               lclass = 0;
-	//
-	//       return lclass;
-
 }
-
-
-
-
-
-
-//
-//void System::singleSpatialStep() {
-//       double v = 0;
-//       double weight = 0;
-//       int chosen_class;
-//       int chosen;
-//       int size;
-//       map<int, double>::iterator iter, end;
-//       // this is the new simulation step
-//       current_time -= (1./a_tot)*(1.-NR::ran2(idum));
-//
-//       cerr << "here 0: " << a_tot << endl;
-//
-//       // choose a logarithmic class
-//       v = a_tot*NR::ran2(idum);
-//       for (iter = lweimap.begin(); iter != lweimap.end(); iter++)
-//               cerr << iter->first << " " << iter->second << endl;
-//       iter = lweimap.begin();
-//       weight = iter->second;
-//       while (weight <= v) {
-//               iter++;
-//               weight += iter->second;
-////              if (iter == lweimap.end()) {
-//       //              cerr << "fuck something is wrong" << endl;
-//       //              for (iter = lweimap.begin(); iter != lweimap.end(); iter++)
-//                               //cerr << iter->first << " " << iter->second << endl;
-//       //              exit(1);
-//               //}
-//
-//       }
-//       chosen_class = iter->first;
-//       // choose a subvolume
-//       cerr << "here1 chose class " << iter->first <<  endl;
-//       size = numberOfSubvolumesInLClass[chosen_class];
-//       cerr << "here2 " << size << endl;
-//       Subvolume *sv;
-//       do {
-//               chosen = (int)(size*NR::ran2(idum));
-//               sv = lsubmap[chosen_class][chosen];
-//               weight = pow(2,chosen_class+1)*NR::ran2(idum);
-//       } while (sv->getTotalPropensity() < weight);
-//
-//       cerr << "here3 chose " << sv->getIndex() << endl;
-//
-//       // remember the propensity of the chosen subvolume
-//       double oldProp = sv->getTotalPropensity();
-//
-//       // vector for passing to pickReaction to obtain relevant information
-//       // vec[0] tells me how many compartments are affected by firing a reaction
-//       // vec[1] returns the index of the first affected subvolume
-//       // vec[2] returns the index of the second affected subvolume
-//       // vec[3] returns the propensity of the second affected subvolume before the
-//reaction fired
-//       vector<double> vec(4);
-//       sv->pickReaction(vec);
-//       cerr << "hier4" << endl;
-//       // update the membership of the subvolume(s) in the logarithmic classes
-//       updateSubvolume(sv, chosen_class, oldProp);
-//       // was the reaction a diffusion reaction ?
-//       if (vec[0] == 2) {
-////              cerr << "updating second" << endl;
-//               updateSubvolume((*subvolumes)[vec[2]], subvolumesLClasses[vec[2]], vec[3]);
-//       } else if (vec[0] != 1 || vec[0] != 2) {
-//               cerr << "something went seriously wrong in the singleSpatialStep of the
-//logarithmic classes algorithm ... leaving ... "
-//                        << endl;
-//               exit(1);
-//       }
-//}
-//
-//void System::updateSubvolume(Subvolume *sv, int oldClass, double oldProp) {
-//       cerr << "in updateSubvolume old " << oldClass <<  " " << oldProp;
-//       // calculate new logarithmic class
-//
-//       sv->updatePropensities();
-//       int newClass = calcLClass(sv);
-//       cerr << " new class and prop: " <<  newClass << " " << sv->getTotalPropensity()
-//<< " " << sv->getIndex() << endl;
-//
-//       // change propensities in logarithmic class
-//       // note that the total propensity of the system is updated by
-//updateRxnMembership of the molecule class
-//       // as well as removeFromSubvolume if the molecule class. hence we do not need
-//to do that here
-//       lweimap[oldClass] -= oldProp;
-//       lweimap[newClass] += sv->getTotalPropensity();
-//
-//       // only do something if subvolume is in a new subvolume
-//       if (newClass != oldClass) {
-//               // get the number of elements that can be stored in the old lclass
-//               int oldMax = lsubmap[oldClass].size();
-//               // get the number of element currently stored in the old lclass
-//               int oldEnd = numberOfSubvolumesInLClass[oldClass];
-//               // remember position of subvolume in vector ...
-//               int oldPos = subvolumesLClassesPositions[sv->getIndex()];
-//
-//               // get the number of elements that can be stored in the new lclass
-//               int newMax = lsubmap[newClass].size();
-//               // get the number of elements currently stored in the new lclass
-//               int newEnd = numberOfSubvolumesInLClass[newClass];
-//
-//               // change logarithmic class of this subvolume in subvolumesLClasses vector
-//               subvolumesLClasses[sv->getIndex()] = newClass;
-//
-//               // remove subvolume from current class
-//               if (oldPos == oldEnd-1)
-//                       numberOfSubvolumesInLClass[oldClass] -= 1;
-//               else {
-//                       // index of subvolume that has to be moved to the now vacant position
-//                       int movedSubvolumeIndex = lsubmap[oldClass].at(oldEnd-1)->getIndex();
-//                       lsubmap[oldClass].at(oldPos) = (*subvolumes)[movedSubvolumeIndex];
-//                       subvolumesLClassesPositions[movedSubvolumeIndex] = oldPos;
-//                       numberOfSubvolumesInLClass[oldClass] -= 1;
-//               }
-//
-//               // insert subvolume into new class
-//               if (newEnd == newMax)
-//                       lsubmap[newClass].push_back(sv);
-//               else
-//                       lsubmap[newClass].at(newEnd) = sv;
-//               subvolumesLClassesPositions[sv->getIndex()] = newEnd;
-//               numberOfSubvolumesInLClass[newClass]+=1;
-//       }
-//       lweimap[numeric_limits<int>::min()] = 0;
-//}
-//
-//void System::prepareForLogarithmicClasses() {
-//       // initialise the logarithmic classes of the system
-//       int lclass = 0;
-//       for (svit = subvolumes->begin(); svit != subvolumes->end(); ++svit) {
-//               lclass = calcLClass(*svit);
-//               lsubmap[lclass].push_back(*svit);
-//               lweimap[lclass] += (*svit)->getTotalPropensity();
-//               subvolumesLClasses.push_back(lclass);
-//               subvolumesLClassesPositions.push_back(numberOfSubvolumesInLClass[lclass]++);
-//       }
-//       // calculate the total propensity
-//       a_tot = 0;
-//       map<int, double>::iterator mit;
-//       for (mit = lweimap.begin(); mit != lweimap.end(); ++mit) {
-//               a_tot += mit->second;
-//       }
-////      cerr << "a tot" << a_tot << endl;
-//       lweimap[numeric_limits<int>::min()] = 0;
-//}
-//
-//// sollte das hier nicht ins system ... ein subvolumen sollte nicht wissen zur
-//welchen logarithmischen klasse es gehoert.
-//// in der ueberarbeitung musst du den scheiss hier rausschmeissen.
-//int System::calcLClass(Subvolume *sv) {
-//       int i=0;
-//       double totalPropensity = sv->getTotalPropensity();
-//       int lclass = 0;
-//       if (totalPropensity == 0) {
-//               lclass = numeric_limits<int>::min();
-//       } else if (totalPropensity > 1) {
-//               int e = (int)totalPropensity;
-//               while (e>1) {
-//                       e = e >> 1;
-//                       i+=1;
-//               }
-//               lclass = i;
-//       } else if (totalPropensity < 1) {
-//               double d = totalPropensity;
-//               while (d < 1) {
-//                       d *= 2;
-//                       i-= 1;
-//               }
-//               lclass = i;
-//       } else if (totalPropensity == 1)
-//               lclass = 0;
-//
-//       return lclass;
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

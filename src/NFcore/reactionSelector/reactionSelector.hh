@@ -9,9 +9,7 @@
 #define REACTIONSELECTOR_HH_
 
 
-
 #include "../NFcore.hh"
-//#include <vector>
 
 
 using namespace std;
@@ -22,18 +20,14 @@ namespace NFcore
 	//Forward Declarations
 	class ReactionClass;
 
-
 	// Abstract Interface Class for the Reaction Selection Algorithm
 	class ReactionSelector {
-
 		public:
-
 			//Initializations and basic functionality
 			ReactionSelector() {};
 			virtual ~ReactionSelector() {};
 
 			virtual double refactorPropensities() = 0;
-
 
 			virtual double update(ReactionClass *r,double oldA, double newA) = 0;
 			virtual double getNextReactionClass(ReactionClass *&rc) = 0;
@@ -41,16 +35,13 @@ namespace NFcore
 
 	};
 
-
 	class DirectSelector : public ReactionSelector {
-
 		public:
 			//Initializations and basic functionality
 			DirectSelector(vector <ReactionClass *> &rxns);
 			virtual ~DirectSelector();
 
 			virtual double refactorPropensities();
-
 
 			virtual double update(ReactionClass *r,double oldA, double newA);
 			virtual double getNextReactionClass(ReactionClass *&rc);
@@ -66,7 +57,6 @@ namespace NFcore
 
 
 	class LogClassSelector : public ReactionSelector {
-
 		public:
 			//Initializations and basic functionality
 			LogClassSelector(vector <ReactionClass *> &rxns);
@@ -79,9 +69,7 @@ namespace NFcore
 			virtual double getNextReactionClass(ReactionClass *&rc);
 			virtual double getAtot();
 
-
 		protected:
-
 			int calculateClass(double a);
 
 			void place(ReactionClass *r,int logClass,double a);
@@ -113,34 +101,17 @@ namespace NFcore
 			bool *isLogClassActive;
 			int n_activeLogClasses;
 
-
-
 			// A 1d array of the propensity sum of the logClass
 			double *logClassPropensity;
-
-
 
 			int *mapRxnIdToLogClass;
 			int *mapRxnIdToLogClassPosition;
 
-
-
-
 			double Atot;
 			int n_reactions;
 			ReactionClass ** reactionClassList;
-
 	};
-
-
-
 }
-
-
-
-
-
-
 
 
 #endif /* REACTIONSELECTOR_HH_ */

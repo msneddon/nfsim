@@ -4,16 +4,14 @@
 
 
 #include "NFcore.hh"
-
-#include <math.h>
-#include <fstream>
-#include "../NFscheduler/NFstream.h"
 #include "../NFscheduler/Scheduler.h"
 
 #define ATOT_TOLERANCE 1e-9
 
+
 using namespace std;
 using namespace NFcore;
+
 
 int System::NULL_EVENT_COUNTER = 0;
 
@@ -24,8 +22,7 @@ System::System(string name)
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = false;     // NETGEN -- is this needed?
-	// NETGEN
+	this->useComplex = false;
 	allComplexes.setSystem( this );
 	allComplexes.setUseComplex( false );
 
@@ -50,8 +47,7 @@ System::System(string name, bool useComplex)
 	current_time = 0;
 	nextReaction = 0;
 
-	this->useComplex = useComplex;    // NETGEN -- is this needed?
-	// NETGEN
+	this->useComplex = useComplex;
 	allComplexes.setSystem( this );
 	allComplexes.setUseComplex( useComplex );
 
@@ -69,14 +65,14 @@ System::System(string name, bool useComplex)
 	csvFormat = false;
 }
 
+
 System::System(string name, bool useComplex, int globalMoleculeLimit)
 {
 	this->name = name;
 	this->a_tot = 0;
 	current_time = 0;
 	nextReaction = 0;
-	this->useComplex = useComplex;  // NETGEN -- is this needed?
-	// NETGEN
+	this->useComplex = useComplex;
 	allComplexes.setSystem( this );
 	allComplexes.setUseComplex( useComplex );
 
@@ -93,7 +89,6 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	selector = 0;
 	csvFormat = false;
 }
-
 
 
 System::~System()
@@ -137,18 +132,6 @@ System::~System()
 		delete s;
 	}
 
-	// NETGEN -- not needed, complexList managed in its own class
-	/*
-	//Delete all the complexes
-	Complex *c;
-	while(allComplexes.size()>0)
-	{
-		c = allComplexes.back();
-		allComplexes.pop_back();
-		delete c;
-	}
-    */
-
 	GlobalFunction *gf;
 	while(this->globalFunctions.size()>0)
 	{
@@ -173,9 +156,7 @@ System::~System()
 		delete cf;
 	}
 
-
 	nextReaction = 0;
-
 
 	//Need to delete reactions
 	Outputter *op;
@@ -188,7 +169,6 @@ System::~System()
 
 	//Close our connections to output files
 	outputFileStream.close();
-
 	propensityDumpStream.close();
 }
 
@@ -208,15 +188,19 @@ void System::setOutputToBinary()
 	}
 }
 
+
 void System::turnOff_OnTheFlyObs() {
 	this->onTheFlyObservables=false;
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->turnOff_OnTheFlyObs();
 }
 
+
 int System::getNumOfSpeciesObs() const {
 	return (int)speciesObservables.size();
 }
+
+
 Observable * System::getSpeciesObs(int index) const
 {
 	return speciesObservables.at(index);
@@ -260,7 +244,6 @@ void System::registerOutputFileLocation(string filename)
 		headerFile<<endl;
 		for(int t=0; t<tabCount; t++) headerFile<<"\t";
 		headerFile.close();
-
 	} else {
 		outputFileStream.open(filename.c_str());
 
@@ -273,22 +256,17 @@ void System::registerOutputFileLocation(string filename)
 		outputFileStream.setf(ios::scientific);
 		outputFileStream.precision(8);
 	}
-
 }
 
 
-
 void System::tagReaction(int rID) {
-
-	if(rID<0 || rID>=this->allReactions.size() ) {
-		cerr<<"!!! Error when trying to tag reaction with reaction ID "<<rID<<endl;
-		cerr<<"!!! Reaction with that ID does not exist."<<endl;
-		cerr<<"!!! quitting now."<<endl;
+	if (rID < 0 || rID >= this->allReactions.size()) {
+		cerr << "!!! Error when trying to tag reaction with reaction ID " << rID << endl;
+		cerr << "!!! Reaction with that ID does not exist." << endl;
+		cerr << "!!! quitting now." << endl;
 		exit(1);
 	}
 	allReactions.at(rID)->tag();
-
-
 }
 
 
@@ -315,12 +293,6 @@ void System::addReaction(ReactionClass *reaction)
 	allReactions.push_back(reaction);
 }
 
-void System::addNecessaryUpdateReaction(ReactionClass *reaction)
-{
-	reaction->init();
-	allReactions.push_back(reaction);
-	necessaryUpdateRxns.push_back(reaction);
-}
 
 void System::setUniversalTraversalLimit(int utl) {
 	this->universalTraversalLimit = utl;
@@ -330,26 +302,15 @@ void System::setUniversalTraversalLimit(int utl) {
 }
 
 
-
-void System::addOutputter(Outputter *op) {
-	this->allOutputters.push_back(op);
-	op->outputHeader();
-}
-void System::dumpOutputters() {
-	for(unsigned int i=0; i<allOutputters.size(); i++) {
-		allOutputters.at(i)->output();
-	}
-}
-
-
 void System::setDumpOutputter(DumpSystem *ds) {
 	this->ds=ds;
 }
+
+
 void System::tryToDump() {
 	if(ds!=0)
 		ds->tryToDump(this->current_time);
 }
-
 
 
 bool System::addGlobalFunction(GlobalFunction *gf)
@@ -361,13 +322,10 @@ bool System::addGlobalFunction(GlobalFunction *gf)
 }
 
 
-
-
 MoleculeType * System::getMoleculeTypeByName(string mName)
 {
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
-		//(*molTypeIter)->printDetails(); //<<endl;
 		if((*molTypeIter)->getName()==mName)
 		{
 			return (*molTypeIter);
@@ -383,7 +341,6 @@ Molecule * System::getMoleculeByUid(int uid)
 {
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
-		//(*molTypeIter)->printDetails(); //<<endl;
 		for(int m=0; m<(*molTypeIter)->getMoleculeCount(); m++)
 		{
 				if( (*molTypeIter)->getMolecule(m)->getUniqueID() == uid)
@@ -393,25 +350,6 @@ Molecule * System::getMoleculeByUid(int uid)
 	cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
 	return 0;
 }
-
-int System::getNumOfMolecules()
-{
-	int sum=0;
-	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-		sum+=(*molTypeIter)->getMoleculeCount();
-	return sum;
-}
-
-
-
-int System::getMolObsCount(int moleculeTypeIndex, int observableIndex) const
-{
-	return allMoleculeTypes.at(moleculeTypeIndex)->getMolObsCount(observableIndex);
-}
-
-
-
-
 
 
 //When you are ready to run the simulation (meaning that all moleculeTypes
@@ -426,28 +364,15 @@ void System::prepareForSimulation()
 	//Note!!  : the order of preparing the system matters!  You have to prepare
 	//some things before others, because certain things require other
 
-	//First, set the observables up correctly, so when functions evaluate, they get the
-	//correct values
-	//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-	//	(*molTypeIter)->addAllToObservables();
-	//}
-
   	//First, we have to prep all the functions...
   	for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
   		(*functionIter)->prepareForSimulation(this);
 
-  	//cout<<"here 1..."<<endl;
-
   	for( int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
 
-  	//cout<<"here 2..."<<endl;
-
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
-
-  	//cout<<"here 3..."<<endl;
-    //this->printAllFunctions();
 
   	// now we prepare all reactions
 	rxnIndexMap = new int * [allReactions.size()];
@@ -457,13 +382,9 @@ void System::prepareForSimulation()
   		allReactions.at(r)->setRxnId(r);
   	}
 
-  	//cout<<"here 4..."<<endl;
-
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
 	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
 		(*rxnIter)->prepareForSimulation();
-
-	//cout<<"here 5..."<<endl;
 
 	//If there are local functions to be had, make sure we set up those local function lists in the molecules
 	//before we try to add molecules to reactant lists
@@ -472,29 +393,15 @@ void System::prepareForSimulation()
 	  		(*molTypeIter)->setUpLocalFunctionListForMolecules();
 	}
 
-	//cout<<"here 6..."<<endl;
-
-
   	//prep each molecule type for the simulation
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
   		(*molTypeIter)->prepareForSimulation();
-
-  	//cout<<"here 7..."<<endl;
-
-  	//add all the molecules to the appropriate observables
-  	//NOT NECESSARY - molecules are added to observables when they are prepared
-  	//for(obsIter=obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
-  	//	(*obsIter)->clear();
-  	//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
-  	//	(*molTypeIter)->addAllToObservables();
-  	//}
 
   	//Add the complexes to Species observables
   	int match = 0;
   	for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++)
   	  	(*obsIter)->clear();
 
-  	// NETGEN -- this bit replaces the commented block below
   	Complex * complex;
   	allComplexes.resetComplexIter();
   	while(  (complex = allComplexes.nextComplex()) )
@@ -508,60 +415,15 @@ void System::prepareForSimulation()
   			}
   		}
   	}
-  	/*
-  	for(complexIter = allComplexes.allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
-  		if((*complexIter)->isAlive()) {
-  			for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
-  				match = (*obsIter)->isObservable((*complexIter));
-  				for(int k=0; k<match; k++) (*obsIter)->straightAdd();
-  			}
-  		}
-  	}
-  	*/
-
-
-  	//cout<<"here 8..."<<endl;
-
-
-
-
-	//cout<<"here 9..."<<endl;
-
-
-
-
-
-  	//if(BASIC_MESSAGE) cout<<"preparing the system...\n";
-  	//printIndexAndNames();
-
-
-//  if(go!=NULL)
-// 	{
-//  		go->writeGroupKeyFile();
-// 		go->writeOutputFileHeader();
-// 	}
-
-
-
-	//finally, create the next reaction selector
-
-	//this->selector = new LogClassSelector(allReactions);
 
 	this->evaluateAllLocalFunctions();
-
   	recompute_A_tot();
-
-
 }
 
 
 void System::update_A_tot(ReactionClass *r, double old_a, double new_a)
 {
 	a_tot = selector->update(r,old_a,new_a);
-
-	//BUILT IN DIRECT SEARCH
-	//a_tot-=old_a;
-	//a_tot+=new_a;
 }
 
 
@@ -569,22 +431,7 @@ double System::recompute_A_tot()
 {
 	a_tot = selector->refactorPropensities();
 	return a_tot;
-
-
-//  BUILT IN DIRECT SEARCH
-//	//Loop through the reactions and add up the rates
-//	a_tot = 0;
-//	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
-//	{
-//		a_tot += (*rxnIter)->update_a();
-//		if(DEBUG) (*rxnIter)->printDetails();
-//	}
-//	return a_tot;
 }
-
-
-
-
 
 
 /* select the next reaction, given a_tot has been calculated */
@@ -597,31 +444,6 @@ double System::getNextRxn()
 		exit(1);
 	}
 	return selector->getNextReactionClass(nextReaction);
-
-
-//  BUILT IN DIRECT SEARCH
-//	double randNum = NFutil::RANDOM(a_tot);
-//
-//	double a_sum=0, last_a_sum=0;
-//	nextReaction = 0;
-//
-//	//WARNING - DO NOT USE THE DEFAULT C++ RANDOM NUMBER GENERATOR FOR THIS STEP
-//	// - IT INTRODUCES SMALL NUMERICAL ERRORS CAUSING THE ORDER OF RXNS TO
-//	//   AFFECT SIMULATION RESULTS
-//	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++)
-//	{
-//		a_sum += (*rxnIter)->get_a();
-//		if (randNum <= a_sum && nextReaction==0)
-//		{
-//			nextReaction = (* rxnIter);
-//			//cout<<"rNum: "<<randNum<<" last_a: "<<last_a_sum<<" a_sum "<<a_sum<<endl;
-//			return (randNum-last_a_sum);
-//		}
-//		last_a_sum = a_sum;
-//	}
-//	cerr<<"Error: randNum exceeds a_sum!!!"<<endl;
-//	cerr<<"randNum: "<<randNum<<"  a_sum: "<< a_sum<<" running a_tot:"<<a_tot<<endl;
-//	return -1;
 }
 
 
@@ -640,17 +462,11 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	cout<<"simulating system for: "<<duration<<" second(s)."<<endl;
 	if(verbose) cout<<"\n";
 
-	//First, output the header for the output of this simulation
-	//outputAllObservableNames();
-	//this->printAllReactions();
-
-
 	//////////////////////////////
 	clock_t start,finish;
 	double time;
 	start = clock();
 	//////////////////////////////
-
 
 	//Determine when to sample and print out initial setup
 	double dSampleTime = duration / sampleTimes;
@@ -665,12 +481,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 	while(current_time<end_time)
 	{
-		//this->printAllObservableCounts(current_time);
-		//2: Recompute a_tot for this time
-		//cout<<" a_tot was : " << a_tot<<endl;
-		//recompute_A_tot();
-		//cout<<" a_tot (after recomputing) is : " << a_tot<<endl;
-
 		//3: Select next reaction time (making sure we have something that can react)
 		//   dt = -ln(rand) / a_tot;
 		//Choose a random number on the OPEN interval (0,1) so that we never
@@ -678,7 +488,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		if(a_tot>ATOT_TOLERANCE) delta_t = -log(NFutil::RANDOM_OPEN()) / a_tot;
 		else { delta_t=0; current_time=end_time; }
 		if(DEBUG) cout<<"   Determine dt : " << delta_t << endl;
-
 
 		//Report everything up until the next step if we have to
 		if(DEBUG) cout<<"  Current Sample Time: "<<curSampleTime<<endl;
@@ -688,7 +497,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			{
 				if(curSampleTime>end_time) break;
 				outputAllObservableCounts(curSampleTime,globalEventCounter);
-				//outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
 			if(verbose) {
@@ -700,24 +508,13 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			recompute_A_tot();
 		}
 
-		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;
 		//Make sure we can react...
 		if(delta_t==0) break;
 
 		//4: Select next reaction class based on smallest j,
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
-		//cout<<endl<<endl<<endl<<"-----------------------------------------------"<<endl;
 
-		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
-		//Output selected reaction for debugging
-		//cout<<"\nFiring: "<< endl;
-		//nextReaction->printFullDetails();
-		//cout<<endl<<endl;
-
-		//this->printAllReactions();
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n";
 		//Increment time
 		iteration++;
 		stepIteration++;
@@ -726,26 +523,12 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n---"<<endl;
-
 		tryToDump();
-		//	outputAllPropensities(current_time, nextReaction->getRxnId());
-
-		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//if(nextReaction->getName()=="Rule7") {
-		//	cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//	printAllReactions();
-		//	exit(1);
-		//}
-
-		// TODO: debug!
-		//this->getAllComplexes().printAllComplexes();
 	}
+
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
-
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -760,15 +543,12 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	return current_time;
 }
 
+
 double System::stepTo(double stoppingTime)
 {
 	double delta_t = 0;
 	while(current_time<stoppingTime)
 	{
-		//2: Recompute a_tot for this time (this is not done here anymore!  reactions must
-		//   be updated with the system as soon as a change to the propensity is made!
-		//recompute_A_tot();
-
 		//3: Select next reaction time (making sure we have something that can react)
 		//   dt = -ln(rand) / a_tot;
 		//Choose a random number on the closed interval (0,1) so that we never
@@ -783,7 +563,6 @@ double System::stepTo(double stoppingTime)
 			break;
 		}
 
-
 		//Report everything up until the next step if we have to
 		if((current_time+delta_t)>=stoppingTime)
 		{
@@ -795,20 +574,16 @@ double System::stepTo(double stoppingTime)
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
 
-
 		//Increment time
 		current_time+=delta_t;
-
 		globalEventCounter++;
-
-		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);
 	}
-	//cout<<"a_tot="<<a_tot;
 	return current_time;
 }
+
 
 void System::singleStep()
 {
@@ -842,12 +617,14 @@ void System::singleStep()
 	globalEventCounter++;
 }
 
+
 void System::equilibrate(double duration)
 {
 	double startTime = current_time;
 	stepTo(duration);
 	current_time = startTime;
 }
+
 
 void System::equilibrate(double duration, int statusReports)
 {
@@ -867,6 +644,7 @@ void System::equilibrate(double duration, int statusReports)
 
 }
 
+
 void System::outputAllObservableNames()
 {
 
@@ -876,9 +654,6 @@ void System::outputAllObservableNames()
 	if(!useBinaryOutput) {
 		if(!csvFormat) {
 			outputFileStream<<"#          time";
-			//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
-			//	(*molTypeIter)->outputObservableNames(outputFileStream);
-
 			int totalSpaces = 16;
 
 			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
@@ -947,11 +722,11 @@ void System::outputAllObservableCounts()
 	outputAllObservableCounts(this->current_time,globalEventCounter);
 }
 
+
 void System::outputAllObservableCounts(double time)
 {
 	outputAllObservableCounts(time,globalEventCounter);
 }
-
 
 
 void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
@@ -966,7 +741,6 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 
 		int match = 0;
 
-	  	// NETGEN -- this bit replaces the commented block below
 	  	Complex * complex;
 	  	allComplexes.resetComplexIter();
 	  	while(  (complex = allComplexes.nextComplex()) )
@@ -980,18 +754,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 	  			}
 	  		}
 	  	}
-		/*
-		for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
-			if((*complexIter)->isAlive()) {
-				for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
-					match = (*obsIter)->isObservable((*complexIter));
-					for(int k=0; k<match; k++) (*obsIter)->straightAdd();
-				}
-			}
-		}
-		*/
 	}
-
 
 	if(useBinaryOutput) {
 		double count=0.0; int oTot=0;
@@ -1043,20 +806,14 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 			outputFileStream<<endl;
 		}
 	}
-
-
-
 }
 
-void System::printAllObservableCounts()
-{
-	printAllObservableCounts(current_time,globalEventCounter);
-}
 
 void System::printAllObservableCounts(double cSampleTime)
 {
 	printAllObservableCounts(cSampleTime,globalEventCounter);
 }
+
 
 void System::printAllObservableCounts(double cSampleTime,int eventCounter)
 {
@@ -1083,18 +840,6 @@ void System::printAllObservableCounts(double cSampleTime,int eventCounter)
 	}
 	cout<<endl;
 }
-
-
-// NETGEN  moved to ComplexList
-/*
-void System::printAllComplexes()
-{
-	cout<<"All System Complexes:"<<endl;
-	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-		(*complexIter)->printDetails();
-	cout<<endl;
-}
-*/
 
 
 bool System::saveSpecies(string filename)
@@ -1133,8 +878,6 @@ bool System::saveSpecies(string filename)
 				continue;
 			}
 
-
-
 			//otherwise, we have not visited this particular species before, so loop over the molecules
 			//that make up the species
 			string speciesString = "";
@@ -1171,7 +914,6 @@ bool System::saveSpecies(string filename)
 					if(m->getComponentState(s)>=0) {
 						speciesString += "~" + m->getMoleculeType()->getComponentStateName(s,m->getComponentState(s));
 					}
-
 
 					// check if the component is bound, if so we have to output a bond
 					// we will label the bond incrementally, but we have to check to make
@@ -1214,10 +956,7 @@ bool System::saveSpecies(string filename)
 						}
 						speciesString += "!" + NFutil::toString(thisBondNumber);
 					}
-
 				}
-
-
 				speciesString += ")";
 			}
 
@@ -1226,9 +965,6 @@ bool System::saveSpecies(string filename)
 			} else {
 				reportedSpecies.insert(pair <string,int> (speciesString, mt->getMolecule(j)->getPopulation()));
 			}
-
-			//speciesString += "  1";
-			//cout<<speciesString<<endl;
 
 			if(debugOut) cout<<endl<<endl;
 
@@ -1243,7 +979,6 @@ bool System::saveSpecies(string filename)
 
 		}
 	}
-
 
 	speciesFile<<"# nfsim generated species list for system: '"<< this->name <<"'\n";
 	speciesFile<<"# warning! this feature is not yet fully tested! \n";
@@ -1278,83 +1013,6 @@ void System::printAllMoleculeTypes()
 }
 
 
-// NETGEN  moved to ComplexList
-/*
-void System::outputComplexSizes(double cSampleTime)
-{
-	int size = 0;
-	outputFileStream<<"\t"<<cSampleTime;
-	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-	{
-		size = (*complexIter)->getComplexSize();
-		if(size!=0) outputFileStream<<"\t"<<size;
-	}
-	outputFileStream<<endl;
-}
-
-
-double System::outputMeanCount(MoleculeType *m)
-{
-	int count = 0;
-	int sum = 0;
-	int allSum = 0;
-	int allCount=0;
-	int size=0;
-	outputFileStream<<"\t"<<current_time;
-	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-	{
-		size = (*complexIter)->getMoleculeCountOfType(m);
-		if(size>=2) { count++; sum+=size;}
-		if(size>=1) { allSum+=size; allCount++; }
-
-	}
-	//cout<<sum<<"/"<<count<<"   "<<allSum<<"/"<<allCount<<endl;
-	if(count!=0) {
-		outputFileStream<<"\t"<<((double)sum/(double)count)<<endl;
-		return ((double)sum/(double)count);
-	}
-	else
-	{
-		outputFileStream<<"\t"<<0.0<<endl;
-		return 0.0;
-	}
-
-	return ((double)sum/(double)count);
-}
-
-
-double System::calculateMeanCount(MoleculeType *m)
-{
-	int count = 0;
-	int sum = 0;
-	int allSum = 0;
-	int allCount=0;
-	int size=0;
-
-	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-	{
-		size = (*complexIter)->getMoleculeCountOfType(m);
-		if(size>=2) { count++; sum+=size; }
-		if(size>=1) { allSum+=size; allCount++; }
-	}
-	return ((double)sum/(double)count);
-}
-
-void System::outputMoleculeTypeCountPerComplex(MoleculeType *m)
-{
-	int size = 0;
-	outputFileStream<<"\t"<<current_time;
-	for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++ )
-	{
-		size = (*complexIter)->getMoleculeCountOfType(m);
-
-		if(size>=1) outputFileStream<<"\t"<<size;
-	}
-	outputFileStream<<endl;
-
-}
-*/
-
 void System::printIndexAndNames()
 {
 	cout<<"All System Molecules:"<<endl;
@@ -1373,14 +1031,12 @@ void System::printIndexAndNames()
 }
 
 
-
 void System::addLocalFunction(LocalFunction *lf) {
 	localFunctions.push_back(lf);
 }
 
 
 void System::evaluateAllLocalFunctions() {
-
 	//Don't do all the work if we don't actually have to...
 	if(localFunctions.size()==0) return;
 
@@ -1402,9 +1058,7 @@ void System::evaluateAllLocalFunctions() {
 
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
-						//cout<<"--------------Evaluating local function on species..."<<endl;
-						double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
-						//cout<<"     value of function: "<<val<<endl;
+					double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
 
 				}
 
@@ -1438,23 +1092,9 @@ GlobalFunction * System::getGlobalFunctionByName(string fName) {
 			return (*functionIter);
 		}
 
-	//If it's not there, look up the global function reference that matches, then look up
-	//the referenced function.
-//	for(int i=0; i<(int)compositeFunctions.size(); i++) {
-//
-//	}
-//
-//	for( int i=0; i<(int)functionReferences.size(); i++) {
-//		if(functionReferences.at(i)->name==fName) {
-//			return getGlobalFunctionByName(functionReferences.at(i)->referencedFuncName);
-//		}
-//	}
-
-
-	//cout<<"!!Warning, the system could not identify the global function: "<<fName<<".\n";
-	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
+
 
 CompositeFunction * System::getCompositeFunctionByName(string fName)
 {
@@ -1463,8 +1103,6 @@ CompositeFunction * System::getCompositeFunctionByName(string fName)
 			return compositeFunctions.at(i);
 		}
 	}
-	//cout<<"!!Warning, the system could not identify the composite function: "<<fName<<".\n";
-	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 }
 
@@ -1483,8 +1121,6 @@ LocalFunction * System::getLocalFunctionByName(string fName)
 			return localFunctions.at(i);
 		}
 	}
-	//cout<<"!!Warning, the system could not identify the local function: "<<fName<<".\n";
-	//cout<<"The calling function might catch this, or your program might crash now."<<endl;
 	return 0;
 
 }
@@ -1494,8 +1130,6 @@ bool System::addCompositeFunction(CompositeFunction *cf) {
 	this->compositeFunctions.push_back(cf);
 	return true;
 }
-
-
 
 
 Observable * System::getObservableByName(string obsName)
@@ -1513,13 +1147,16 @@ Observable * System::getObservableByName(string obsName)
 }
 
 
-
 void System::addParameter(string name,double value) {
 	this->paramMap[name]=value;
 }
+
+
 double System::getParameter(string name) {
 	return this->paramMap.find(name)->second;
 }
+
+
 void System::setParameter(string name, double value) {
 	if(paramMap.find(name)==paramMap.end()) {
 		cout<<"Warning! System parameter: '"<<name<<"' does not exist and will not be updated."<<endl;
@@ -1527,6 +1164,8 @@ void System::setParameter(string name, double value) {
 	}
 	this->paramMap[name]=value;
 }
+
+
 void System::updateSystemWithNewParameters() {
 
 	//Update all global functions
@@ -1555,8 +1194,9 @@ void System::updateSystemWithNewParameters() {
 
 	//Update Atot (the total propensity of the system)
 	this->recompute_A_tot();
-
 }
+
+
 void System::printAllParameters() {
 	if(paramMap.size()==0) cout<<"no system parameters to print."<<endl;
 	else cout<<"List of all system parameters:"<<endl;
@@ -1565,6 +1205,7 @@ void System::printAllParameters() {
 		cout << "\t" << iter->first << " = " << iter->second << endl;
 	}
 }
+
 
 void System::printAllFunctions() {
 	cout<<"System Global Functions: "<<endl;
@@ -1583,48 +1224,6 @@ void System::printAllFunctions() {
 	}
 }
 
-void System::outputAllPropensities(double time, int rxnFired)
-{
-	if(!propensityDumpStream.is_open()) {
-
-		string filename = this->name+"_propensity.txt";
-		propensityDumpStream.open(filename.c_str());
-
-
-		if(!outputFileStream.is_open()) {
-				cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
-				cerr<<"quitting."<<endl;
-				exit(1);
-		}
-
-		propensityDumpStream<<"time rxn";
-		for(unsigned int r=0; r<allReactions.size(); r++) {
-			propensityDumpStream<<" ";
-			propensityDumpStream<<allReactions[r]->getName();
-			for(int rl=0; rl<allReactions[r]->getNumOfReactants(); rl++) {
-				propensityDumpStream<<" rL"<<NFutil::toString(rl);
-			}
-		}
-		propensityDumpStream<<endl;
-	}
-
-	propensityDumpStream<<time<<" "<<allReactions.at(rxnFired)->getName();
-	for(unsigned int r=0; r<allReactions.size(); r++) {
-		propensityDumpStream<<" ";
-			propensityDumpStream<<allReactions[r]->get_a();
-			for(int rl=0; rl<allReactions[r]->getNumOfReactants(); rl++) {
-				propensityDumpStream<<" "<<NFutil::toString((int)allReactions[r]->getReactantCount(rl));
-		}
-	}
-	propensityDumpStream<<endl;
-
-
-}
-
-
-
-
-
 
 NFstream& System::getOutputFileStream()
 {
@@ -1632,7 +1231,6 @@ NFstream& System::getOutputFileStream()
 }
 
 
-// friend functions
 template<class T>
 NFstream& operator<<(NFstream& nfstream, const T& value)
 {
