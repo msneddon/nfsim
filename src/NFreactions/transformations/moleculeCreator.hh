@@ -11,11 +11,12 @@
 
 #include "../NFreactions.hh"
 
+
 using namespace std;
+
 
 namespace NFcore
 {
-
 	class MoleculeType;
 	class TemplateMolecule;
 
@@ -67,6 +68,7 @@ namespace NFcore
 		private:
 			vector < pair<int,int> >::iterator   comp_iter;
 	};
-
 }
+
+
 #endif /* MOLECULECREATOR_HH_ */

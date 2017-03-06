@@ -2,9 +2,8 @@
 #define REACTANTCONTAINER_HH_
 
 
-
-
 #include "../NFreactions.hh"
+
 
 namespace NFcore
 {
@@ -12,7 +11,6 @@ namespace NFcore
 	class TransformationSet;
 	class MappingSet;
 	class ReactantContainer;
-
 
 	//!  Interface for all containers of Reactants (MappingSets) needed by ReactionClasses
 	/*!

@@ -1,7 +1,5 @@
-
-
-
 #include "mapping.hh"
+
 
 using namespace NFcore;
 
@@ -12,6 +10,8 @@ NFcore::Mapping::Mapping(unsigned int type, int index)
 	this->index = index;
 	this->m=NULL;
 }
+
+
 NFcore::Mapping::~Mapping()
 {
 	index=0;
@@ -19,10 +19,6 @@ NFcore::Mapping::~Mapping()
 }
 
 
-unsigned int NFcore::Mapping::getType() const
-{
-	return this->type;
-}
 int NFcore::Mapping::getIndex() const
 {
 	return this->index;
@@ -34,6 +30,8 @@ void NFcore::Mapping::clear()
 	//Clearing the Mapping only requires us to set the molecule to null
 	this->m=NULL;
 }
+
+
 bool NFcore::Mapping::setMolecule(Molecule *m)
 {
 	this->m = m;
@@ -41,11 +39,14 @@ bool NFcore::Mapping::setMolecule(Molecule *m)
 }
 
 
-void NFcore::Mapping::printDetails() const { printDetails(cout); }
+void NFcore::Mapping::printDetails() const {
+	printDetails(cout);
+}
+
+
 void NFcore::Mapping::printDetails(ostream &o) const
 {
 	o<<"M("<<index<<","<<type<<"): mapped to: ";
-	//cout<<"here"<<endl;
 	if(m!=NULL) {
 		o<<m->getMoleculeTypeName()<<"_"<<m->getUniqueID()<<"  ";
 		m->printDetails();
@@ -69,5 +70,3 @@ void NFcore::Mapping::clone(Mapping *original, Mapping *newClone)
 	//Assign properly the molecule
 	newClone->m=original->m;
 }
-
-

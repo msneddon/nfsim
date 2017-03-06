@@ -29,7 +29,6 @@ namespace NFcore
 			MoleculeType ** moleculeTypes;
 			
 			Molecule **newMoleculeCreations;
-			
 
 			//Save the configuration of states we have to set
 			//nd prefix stands for non-default 
@@ -46,33 +45,7 @@ namespace NFcore
 			int *bSite1;
 			int *bSite2;
 	};
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif /*SPECIESCREATOR_HH_*/

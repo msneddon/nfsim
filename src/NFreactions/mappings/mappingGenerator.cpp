@@ -1,5 +1,3 @@
-
-
 #include "mappingGenerator.hh"
 
 
@@ -10,6 +8,7 @@ MapGenerator::MapGenerator(unsigned int mappingIndex)
 {
 	this->mappingIndex = mappingIndex;
 }
+
 
 bool MapGenerator::map(MappingSet *mappingSet, Molecule *molecule)
 {

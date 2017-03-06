@@ -22,29 +22,4 @@
 #include "mappings/mappingGenerator.hh"
 
 
-
-using namespace std;
-
-namespace NFcore
-{
-
-	/*!
-	 	Function used for initial testing of the entire "mapping" construct including MappingSets,
-	 	TransformationSets, ReactantLists, etc.
-	    @author Michael Sneddon
-	 */
-	void test();
-
-	/*!
-	 	Some very simple initial testing and debugging of ReactantLists and the rest of the
-	 	mapping functions unter NFreactions
-	    @author Michael Sneddon
-	 */
-	void test_simple();
-
-
-
-	void test_tree();
-}
-
 #endif /*NFREACTIONS_HH_*/

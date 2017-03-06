@@ -2,17 +2,11 @@
 #define MAPPINGGENERATOR_HH_
 
 
-
-
-
-
-	
 #include "../NFreactions.hh"
+
 
 namespace NFcore
 {
-	
-
 	//!  Knows how to assign mappings in a MappingSet to a particular Molecule
 	/*!
 	   MapGenerators are simple objects given to TemplateMolecules (so are maintained and
@@ -61,11 +55,6 @@ namespace NFcore
 	};
 
 }
-
-
-
-
-
 
 
 #endif /*MAPPINGGENERATOR_HH_*/
