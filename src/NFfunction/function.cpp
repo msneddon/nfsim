@@ -1,7 +1,6 @@
 #include "NFfunction.hh"
 
 
-
 using namespace std;
 using namespace NFcore;
 using namespace mu;
@@ -40,7 +39,6 @@ GlobalFunction::GlobalFunction(string name,
 }
 
 
-
 GlobalFunction::~GlobalFunction()
 {
 	delete [] varRefNames;
@@ -48,8 +46,6 @@ GlobalFunction::~GlobalFunction()
 	delete [] paramNames;
 	if(p!=NULL) delete p;
 }
-
-
 
 
 void GlobalFunction::prepareForSimulation(System *s)
@@ -91,26 +87,12 @@ void GlobalFunction::prepareForSimulation(System *s)
 	}
 }
 
+
 void GlobalFunction::updateParameters(System *s) {
-	//cout<<"Updating parameters for function: "<<name<<endl;
 	for(unsigned int i=0; i<n_params; i++) {
 		p->DefineConst(paramNames[i],s->getParameter(paramNames[i]));
 	}
-
 }
-
-
-
-
-void GlobalFunction::attatchRxn(ReactionClass *r)
-{
-	//unsigned int n_rxns;
-	//ReactionClass *rxns;
-
-}
-
-
-
 
 
 void GlobalFunction::printDetails()
@@ -126,25 +108,11 @@ void GlobalFunction::printDetails()
 		cout<<"         "<<paramNames[i]<<endl;
 	}
 
-
-
-
-
-//	// Get the map with the variables
-//	mu::Parser::varmap_type variables = p->GetVar();
-//	cout << (int)variables.size() << " variables."<<endl;
-//	mu::Parser::varmap_type::const_iterator item = variables.begin();
-//	// Query the variables
-//	for (; item!=variables.end(); ++item)
-//	{
-//	  cout << "  Name: " << item->first << " Address: [0x" << item->second << "]  Value: "<< *(item->second)<<"\n";
-//	}
-
-
 	if(p!=0)
 		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 
 }
+
 
 void GlobalFunction::printDetails(System *s)
 {
@@ -165,9 +133,6 @@ void GlobalFunction::printDetails(System *s)
 }
 
 
-
-
-
 StateCounter::StateCounter(string name, MoleculeType *mt, string stateName) {
 	this->name=name;
 	this->mt = mt;
@@ -184,30 +149,15 @@ StateCounter::StateCounter(string name, MoleculeType *mt, string stateName) {
 		exit(1);
 	}
 }
+
+
 StateCounter::~StateCounter() {
 	mt=0;
 }
 
+
 void StateCounter::add(Molecule *m) {
 	if(m->getMoleculeType()==mt) {
-
-	//	cout<<"matched moleculeType"<<endl;
 		value+=m->getComponentState(stateIndex);
-	//	cout<<"found component state: "<<m->getComponentState(stateIndex)<<endl;
-	//	cout<<"updating v`alue to: "<< value<<endl;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

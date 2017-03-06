@@ -1,11 +1,8 @@
 #include "NFfunction.hh"
 
-#include <math.h>
 
 using namespace NFcore;
 using namespace mu;
-
-
 
 
 Parser * FuncFactory::create(string functionString, vector <string> & variableNames, vector <double *> & variablePtrs)
@@ -46,6 +43,7 @@ Parser * FuncFactory::create(string functionString, vector <string> & variableNa
 	return p;
 }
 
+
 Parser * FuncFactory::create()
 {
 	double PI = 3.14159265358979323846;
@@ -69,8 +67,6 @@ Parser * FuncFactory::create()
 }
 
 
-
-
 double FuncFactory::Eval(mu::Parser *p)
 {
 	if(p==NULL) {
@@ -90,7 +86,6 @@ double FuncFactory::Eval(mu::Parser *p)
 		cout<<"Terminating your simulation. Better luck next time."<<endl;
 		exit(1);
 	}
-	return 0;
 }
 
 
@@ -145,7 +140,6 @@ void FuncFactory::test()
 	else
 		cout<<"fail! p->Eval() = "<<funcResult<<"  but should be: "<<result<<endl;
 
-
 	//Test 2b: check that variables are working properly
 	cout<<" 2b) another check of the variables: ";
 	d1 = 50.1;
@@ -163,4 +157,3 @@ void FuncFactory::test()
 	//Thats all the test I can think of!
 	cout<<endl<<"Testing complete."<<endl;
 }
-
