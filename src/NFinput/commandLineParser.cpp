@@ -8,9 +8,6 @@
 #include "NFinput.hh"
 
 
-
-
-
 using namespace NFinput;
 using namespace std;
 
@@ -40,7 +37,6 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 				return false;
 			}
 
-
 			//See if the flag has some other input value that follows
 			string sVal;
 			if((a+1)<argc) {
@@ -52,7 +48,6 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 				a++;
 			}
 
-			//cout<<"found:  '"<<sFlag<<"' with arg: '"<<sVal<<"' "<<endl;
 			if(argMap.find(sFlag)!=argMap.end()) {
 				cout<<"Found two values for the same command line flag: '"<<sFlag<<"' so I am stopping"<<endl;
 				return false;
@@ -69,7 +64,6 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 	}
 	return true;
 }
-
 
 
 int NFinput::parseAsInt(map<string,string> &argMap,string argName,int defaultValue)
@@ -115,6 +109,7 @@ void NFinput::parseAsCommaSeparatedSequence(map<string,string> &argMap,string ar
 	}
 }
 
+
 double NFinput::parseAsDouble(map<string,string> &argMap,string argName,double defaultValue)
 {
 	if(argMap.find(argName)!=argMap.end()) {
@@ -129,7 +124,6 @@ double NFinput::parseAsDouble(map<string,string> &argMap,string argName,double d
 	}
 	return defaultValue;
 }
-
 
 
 bool NFinput::parseSequence(string numString, vector <double> &outputTimes)
@@ -178,8 +172,6 @@ bool NFinput::parseSequence(string numString, vector <double> &outputTimes)
 }
 
 
-
-
 bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
 {
 	if(verbose) cout<<"Parsing system dump flag: "<<paramStr<<"\n";
@@ -208,7 +200,6 @@ bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
 			return true;
 		}
 	}
-
 
 	//Create a vector storing the output times
 	string numString=""; vector <double> outputTimes;
@@ -272,13 +263,8 @@ bool NFinput::createSystemDumper(string paramStr, System *s, bool verbose)
 		cout<<endl;
 	}
 
-
-
-
 	//Here is where we actually create the system dumper
 	DumpSystem *ds = new DumpSystem(s, outputTimes, pathToFolder, verbose);
 	s->setDumpOutputter(ds);
 	return true;
-
 }
-

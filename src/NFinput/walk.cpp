@@ -3,12 +3,10 @@
 #include <iostream>
 
 
-
 using namespace std;
 using namespace NFcore;
 
 
-//function declarations
 int enterMainMenuLoop(System *s);
 void enterStepLoop(System *s);
 
@@ -32,8 +30,6 @@ void NFinput::walk(System *s)
 }
 
 
-
-
 void printMainMenu()
 {
 	cout<<"---------------------------"<<endl;
@@ -44,6 +40,7 @@ void printMainMenu()
 	cout<<" (4) print stuff"<<endl;
 	cout<<" (5) exit"<<endl;
 }
+
 
 int enterMainMenuLoop(System *s)
 {
@@ -91,8 +88,6 @@ int enterMainMenuLoop(System *s)
 }
 
 
-
-
 void printStepMenu()
 {
 	cout<<"---------------------------"<<endl;
@@ -104,6 +99,7 @@ void printStepMenu()
 	cout<<"(5) output observables to file"<<endl;
 	cout<<"(6) return"<<endl;
 }
+
 
 void enterStepLoop(System *s)
 {
@@ -152,9 +148,6 @@ void enterStepLoop(System *s)
 }
 
 
-
-
-
 void printSpecificMolecule(System *s)
 {
 	while(true)
@@ -176,6 +169,8 @@ void printSpecificMolecule(System *s)
 		}
 	}
 }
+
+
 void printSpecificMoleculeByUid(System *s)
 {
 	while(true)
@@ -189,6 +184,7 @@ void printSpecificMoleculeByUid(System *s)
 		if(mol!=0) mol->printDetails();
 	}
 }
+
 
 void getPrintout(System *s)
 {
@@ -240,12 +236,6 @@ void getPrintout(System *s)
 }
 
 
-
-
-
-
-
-
 int getInput(int min, int max)
 {
 	bool validInput = false;
@@ -266,6 +256,7 @@ int getInput(int min, int max)
 	return intVal;
 }
 
+
 double getInput(double min)
 {
 	bool validInput = false;
@@ -285,7 +276,3 @@ double getInput(double min)
 	}
 	return doubVal;
 }
-
-
-
-
