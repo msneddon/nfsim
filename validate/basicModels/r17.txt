@@ -1,0 +1,2 @@
+Testing for multiple assignments per rule per molecule agent.
+-sim 5 -oSteps 50

@@ -120,6 +120,7 @@ namespace NFcore
 
 			// check if two mappingsets point to any common molecules
 			static bool checkForCollisions( MappingSet * ms1, MappingSet * ms2 );
+			static bool checkForEquality( MappingSet * ms1, MappingSet * ms2 );
 
 		protected:
 
