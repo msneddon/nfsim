@@ -27,7 +27,7 @@ notifications:
        - "Build: <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>)  %{result} in %{duration}"
        - "Author: %{author}   Repository@Branch: %{repository}@%{branch}"
        - "To package NFsim, please make a small modification to BioNetGen:"
-       - "https://github.com/RuleWorld/bionetgen"
+       - "Web: https://github.com/RuleWorld/bionetgen"
        - "Build details:  %{build_url} "
 
 
