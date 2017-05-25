@@ -12,6 +12,7 @@ addons:
     - ubuntu-toolchain-r-test
     - kalakris-cmake
     packages:
+    - perl
     - gcc-4.8
     - g++-4.8
     - python-dev
@@ -55,7 +56,8 @@ script:
   - cd ..
   
 before_deploy:
-  - cd dist; python changeFilename.py; cd ..
+  - perl make_tar.pl --platform $TRAVIS_OS_NAME
+#  - cd dist; python changeFilename.py; cd ..
   
 after_success:
   - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
