@@ -42,8 +42,9 @@ script:
   - cd validate;tar xfj bionetgen-2.2.6.tar.bz2
   - python validate.py
   - cd ..
+  
 before_deploy:
-- cd dist; python changeFilename.py; cd ..
+  - cd dist; python changeFilename.py; cd ..
 
 #deploy:
 #  provider: s3
