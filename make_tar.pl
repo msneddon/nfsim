@@ -42,11 +42,15 @@ my $zip_type  = '';
 my $travis_os = '';
 if ($platform eq "linux") {
   $zip_type = ".tar.gz";  $travis_os = "Linux";
-  my $ofile_name = "NFsim-source-".$platform.$zip_type;
+  my $archive_file = "./dist/NFsim-source-".$platform.$zip_type;
 
   print " pwd = \n";
   system("pwd");
-  system("ls dist");
+  
+  print "\nCreating distribution archive:\n";
+#  print "tar cvzf ${archive_file} ${dist_dir}\n";
+  system("tar cvzf ${archive_file}  bin doc models src test tools validate CMakeLists.txt LICENSE.txt README.txt makefile NFsim-manual_v1.12.pdf ");
+  system("ls -lt dist");
 
 } else {
   if ($platform eq "osx") {
