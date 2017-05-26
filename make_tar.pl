@@ -46,6 +46,7 @@ if ($platform eq "linux") {
 
   print " pwd = \n";
   system("pwd");
+  system("ls dist");
 
 } else {
   if ($platform eq "osx") {
