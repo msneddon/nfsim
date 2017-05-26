@@ -49,7 +49,7 @@ if ($platform eq "linux") {
   
   print "\nCreating distribution archive:\n";
 #  print "tar cvzf ${archive_file} ${dist_dir}\n";
-  system("tar cvzf ${archive_file}  bin doc models src test tools validate CMakeLists.txt LICENSE.txt README.txt makefile NFsim-manual_v1.12.pdf ");
+  system("tar cvzf ${archive_file}  bin doc models src test tools validate CMakeLists.txt LICENSE.txt README.txt makefile NFsim_manual_v1.12.pdf ");
   system("ls -lt dist");
 
 } else {
