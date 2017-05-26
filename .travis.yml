@@ -52,14 +52,14 @@ install:
 script: 
   - mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist; cp NFsim ../dist/NFsim-$TRAVIS_OS_NAME ;cd ..; 
   - cd validate;tar xfj bionetgen-2.2.6.tar.bz2
-  - python validate.py
+#  - python validate.py
   - cd ..
   
-before_deploy:
-  - perl make_tar.pl --platform $TRAVIS_OS_NAME
+#before_deploy:
 #  - cd dist; python changeFilename.py; cd ..
   
 after_success:
+  - perl make_tar.pl --platform $TRAVIS_OS_NAME
   - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
 
 #deploy:
