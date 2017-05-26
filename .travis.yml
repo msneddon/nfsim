@@ -1,6 +1,6 @@
 os:
-  - linux
-#  - osx
+#  - linux
+  - osx
 
 compiler:
   - clang
@@ -55,12 +55,10 @@ script:
 #  - python validate.py
   - cd ..
   
-#before_deploy:
-#  - cd dist;   python changeFilename.py; cd ..
-  
 after_success:
   - perl make_tar.pl --platform $TRAVIS_OS_NAME
-  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
+  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
+  - "curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
 
 #deploy:
 #  provider: s3
