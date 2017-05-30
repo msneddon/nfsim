@@ -111,8 +111,9 @@ open(FNEW,">$ofile_name");
   print FNEW "<a href=\"NFsim-".$travis_os."\">\n";
   print FNEW "Time Stamp: ".$date_stamp."</a>\n";
   print FNEW "</center>\n";
+  print FNEW "<br>\n";
   print FNEW "<center> Dont forget that after doing the download, you will need to do: \n";
-  print FNEW "<font color=\"red\"> chmod +x NFsim".$travis_os."</center>";
+  print FNEW "<font color=\"red\"> chmod +x NFsim-".$travis_os."</center>";
   print FNEW "<br>\n";
   print FNEW "<br>\n";
 
