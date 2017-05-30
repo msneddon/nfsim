@@ -33,8 +33,8 @@ notifications:
     rooms:
       - secure: Rxjp4bNLl/kx9dbQxpXtHi2KEl7M25/gJcG874IlF40B9tnPwRmGm+w8m3smQW7gRNLyZ6VfoBcmuGet+GMBTCCa44dCcm9qkx+OZJkOBv/C5TLEO4dBtAMFDhRRmpr2LhZfxvbC0R0CRP3wzGIea4RWFJBcvF/oAtGxYSfISpEE745DDY/W9yNRk3AchFDvb9T3f6ip3JDJnamdBh5xMUD1Ou6HiTUjXm4qrwwG89Lf9MrzmN3LOuP/+wE/w+wz4MeEYuPWMfQIYGdI0Bhz7zglmRpBPX4F6FSN9LyBrTORZz09erXLwcz7kyP+LfA3cXrvoMSD4eR8mSyRxV20o7p5+phHNdYkpohmoOwOPO7cT/yfSSjQIzCN4NYeIxTTXed4AyAfDFCVrB8o5sqs2QC1O7MuNOgKw1DDvUMNRLd+8x41xpdr0dZC1OxgJ0glURaHq1e7C2GqjzKgd0wm1bYhnOWWLMwe4S9mrxo8/bKG6JQ0TchXkr5PHo02QT+HTiDysDgsa+etyM4zIMbNpp3aYQsNMxu3IOgzINUgcnoVreyXlht1QGEu8I6WIWNWYnBmdjx+aK7V2dKeEx5LLqJ/RO5+CWaXyYIdg7EYQn/WIx9Z5ifCs4s8m7ZqKYd6D+1KpfrrhMtnZ/uTJ/HVHkLwyW7DX/caRn7kpnQU5Xc=
     template:
-      - "Build: <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) Author: %{author}"      
       - "NFsim build: %{result} in %{duration}"
+      - "Build: <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) Author: %{author}"      
       - "To package NFsim, please make a small modification to BioNetGen:"
       - "Goto: https://github.com/RuleWorld/bionetgen"
       - "Build details:  %{build_url} "
