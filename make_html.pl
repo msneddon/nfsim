@@ -34,7 +34,7 @@ my $path_to_version_file = '.';
 GetOptions( 'help|h'        => sub { display_help(); exit(0); },
             'platform=s'    => \$platform);
 
-    print "version: $version     platform: $platform\n";
+    print "platform: $platform\n";
     &write_html($platform,$version);
 
 exit;
