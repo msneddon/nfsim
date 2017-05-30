@@ -1,6 +1,6 @@
 os:
   - linux
-  - osx
+#  - osx
 
 compiler:
   - clang
@@ -36,7 +36,7 @@ notifications:
       - "NFsim build: %{result} in %{duration}"
       - "Build: <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) Author: %{author}"   
       - "To download the NFsim executable, "
-      - "Goto: https://www.midcapsignals.com/midcap/junk/NFsim-$TRAVIS_OS_NAME.html"
+      - "Goto: https://www.midcapsignals.com/midcap/junk/NFsim-"$TRAVIS_OS_NAME".html"
       - "To package NFsim, please make a small modification to BioNetGen:"
       - "Goto: https://github.com/RuleWorld/bionetgen"
       - "Build details:  %{build_url} "
