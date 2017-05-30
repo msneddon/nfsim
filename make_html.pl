@@ -63,7 +63,7 @@ sub write_html {
     }
   }
   
-  my $ofile_name = "NFsim-".$travis_os.".html";
+  my $ofile_name = "./dist/NFsim-".$travis_os.".html";
 
 
 my $date_stamp; my $sec; my $min; my $hour; my $mday; my $mon; my $year; my $wday; my $yday; my $isdst;
