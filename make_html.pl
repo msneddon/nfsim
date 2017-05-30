@@ -47,7 +47,6 @@ sub write_html {
 
 
   my $zip_type  = '';
-  my $travis_os = '';
   if ($travis_os eq "linux") {
     $zip_type = ".tar.gz";  $platform = "Linux";
   } else {
