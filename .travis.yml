@@ -53,8 +53,10 @@ script:
   - cd ..
   
 after_success:
-  - perl make_tar.pl --platform $TRAVIS_OS_NAME
+  - perl make_html.pl --platform $TRAVIS_OS_NAME
+  - perl make_tar.pl  --platform $TRAVIS_OS_NAME
   - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
+  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME.html          -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
   - "curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.midcapsignals.com/midcap/junk/"  
 
 #deploy:
