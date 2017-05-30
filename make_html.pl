@@ -43,21 +43,21 @@ exit;
 #      WRITE HTML
 # ########################################################################
 sub write_html {
-  my $platform   = $_[0];
+  my $travis_os   = $_[0];
 
 
   my $zip_type  = '';
   my $travis_os = '';
-  if ($platform eq "linux") {
-    $zip_type = ".tar.gz";  $travis_os = "linux";
+  if ($travis_os eq "linux") {
+    $zip_type = ".tar.gz";  $platform = "Linux";
   } else {
-    if ($platform eq "osx") {
-    $zip_type = ".tar.gz";  $travis_os = "osx";
+    if ($travis_os eq "osx") {
+    $zip_type = ".tar.gz";  $platform = "MacOSX";
     } else {
-      if ($platform eq "windows") {
-        $zip_type = ".zip";  $travis_os = "windows";
+      if ($travis_os eq "windows") {
+        $zip_type = ".zip";  $platform = "Windows";
       } else {
-        print "Invalid platform: ".$platform."\n";
+        print "Invalid platform: ".$travis_os."\n";
         exit;
       }
     }
