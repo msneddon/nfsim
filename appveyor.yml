@@ -36,15 +36,16 @@ notifications:
     channel: build-results
 
 deploy:
-
-    # Amazon S3 deployment provider settings
-  - provider: S3
-    access_key_id:
-      secure: gyxTxeHww7ldSGxRSqjkAA1qa2JodkLDtmZeVrdmPfA=
-    secret_access_key:
-      secure: qbD+jQk8IRRrHhucUlL6D17o4DffrAObRzBlo1ll8NzHG09o2kCGskQzd828WLJD
-    bucket: nfsim
-    folder: 1.12.1
-    artifact: nfsim
-    set_public: true
+  - "curl -T .\build\NFsim       -u roberthclark:P1ttsburgh ftp://ftp.midcapsignals.com/midcap/junk/NFsim-win64" 
+#deploy:
+#    # Amazon S3 deployment provider settings
+#  - provider: S3
+#    access_key_id:
+#      secure: gyxTxeHww7ldSGxRSqjkAA1qa2JodkLDtmZeVrdmPfA=
+#    secret_access_key:
+#      secure: qbD+jQk8IRRrHhucUlL6D17o4DffrAObRzBlo1ll8NzHG09o2kCGskQzd828WLJD
+#    bucket: nfsim
+#    folder: 1.12.1
+#    artifact: nfsim
+#    set_public: true
 
