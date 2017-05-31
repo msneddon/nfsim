@@ -43,8 +43,7 @@ deploy:
   password: P1ttsburgh
     secure: AABBBCCCCddd123==
   folder: midcap/junk
-  artifacts: 
-    - path: /NFsim.exe/      
+  artifact: /NFsim.exe/      
 
 #deploy:
 #    # Amazon S3 deployment provider settings
