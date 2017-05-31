@@ -35,16 +35,16 @@ notifications:
       secure: jN4Fas2b8/Z1yNInrC6yWZf1sHzA5M7M/wANf+O4nRQLRqNqLsmNFGMNusaS+adFyS0kz3TfGBtLjAEKeh84jw==
     channel: build-results
 
-#deploy:
-#  provider: FTP
-#  protocol: ftp
-#  host: ftp.midcapsignals.com
-#  username: roberthclark
-#  password: P1ttsburgh
-#    secure: AABBBCCCCddd123==
-#  folder: midcap/junk
-#  artifacts: 
-#    - path: .\build\NFsim      
+deploy:
+  provider: FTP
+  protocol: ftp
+  host: ftp.midcapsignals.com
+  username: roberthclark
+  password: P1ttsburgh
+    secure: AABBBCCCCddd123==
+  folder: midcap/junk
+  artifacts: 
+    - path: /NFsim.exe/      
 
 #deploy:
 #    # Amazon S3 deployment provider settings
