@@ -41,7 +41,7 @@ deploy:
   host: ftp.midcapsignals.com
   username: roberthclark
   password: P1ttsburgh
-    secure: AABBBCCCCddd123==
+#    secure: AABBBCCCCddd123==
   folder: midcap/junk
   artifact: /NFsim.exe/      
 
