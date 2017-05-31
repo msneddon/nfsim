@@ -25,9 +25,9 @@ build_script:
   - cmake -G "Ninja" ..
   - ninja
 
-artifacts:
- - path: build\NFsim.exe
-   name: NFsim
+#artifacts:
+# - path: build\NFsim.exe
+#   name: NFsim
 
 notifications:
   - provider: Slack
@@ -43,7 +43,7 @@ deploy:
   password: P1ttsburgh
 #    secure: AABBBCCCCddd123==
   folder: midcap/junk
-  artifact: 
+  artifacts: 
     - path: .\build\NFsim      
 
 #deploy:
