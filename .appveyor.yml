@@ -55,4 +55,4 @@ deploy:
   username: roberthclark
   password:
     secure: K22E4pSAup6/htlGmoSBMw==
-artifact: NFsim 
+  artifact: NFsim 
