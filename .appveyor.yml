@@ -1,0 +1,58 @@
+environment:
+  CTEST_OUTPUT_ON_FAILURE: 1
+  matrix:
+    - platform: x86
+      fast_finish: true
+    
+    - platform: x64
+      fast_finish: true
+      generator: "Ninja"
+
+             
+install:
+  - choco install -r -y mingw
+  - choco install -r -y ninja
+#  - type C:\ProgramData\chocolatey\logs\chocolatey.log
+#  - "SET PATH=C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%"
+
+branches:
+  # whitelist
+  only:
+    - master
+     
+
+build_script:
+  - cmd: echo Running cmake ...
+  - mkdir build
+  - cd bin
+  - pwd
+#  - cmake --version
+  - if "%platform%"=="x86" ( SET "PATH=C:\\MinGW\\bin;%PATH%" )
+  - if "%platform%"=="x86" ( SET "PATH=C:\\MinGW\\mingw32\\bin;%PATH%" )
+  - if "%platform%"=="x86" ( mingw32-make   NFsim )
+  - if "%platform%"=="x86" ( mv NFsim.exe  NFsim.win32.exe )
+  
+  - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
+  - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
+  - if "%platform%"=="x64" ( ninja )
+  - if "%platform%"=="x64" ( mv NFsim.exe  NFsim.win64.exe )
+  - if "%platform%"=="x64" ( perl .make_html.pl --platform x64 )
+  - dir
+#  - dir  C:\MinGW\bin
+#  - dir  C:\MinGW\mingw32
+#  - mingw32-make   NFsim
+
+#  - mingw32-make --version  
+  
+artifacts:
+  - path: 'bin\NFsim.Win*.exe'
+    name: NFsim
+  
+deploy:
+  provider: FTP
+  protocol: ftp
+  host: ftp.midcapsignals.com/midcap/d_appveyor
+  username: roberthclark
+  password:
+    secure: K22E4pSAup6/htlGmoSBMw==
+artifact: NFsim 
