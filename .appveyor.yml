@@ -11,7 +11,7 @@ environment:
              
 install:
   - choco install -r -y mingw
-  - choco install -r -y ninja
+#  - choco install -r -y ninja
 
 branches:
   # whitelist
@@ -25,7 +25,7 @@ build_script:
   - pwd
 #  - cmake --version
   - if "%platform%"=="x86" ( SET "PATH=C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%" )
-  - if "%platform%"=="x86" ( cmake )
+  - if "%platform%"=="x86" ( cmake --version )
   - if "%platform%"=="x86" ( mingw32-make   NFsim )
   - if "%platform%"=="x86" ( mv NFsim.exe  NFsim.win32.exe )
   
