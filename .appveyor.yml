@@ -7,7 +7,7 @@ install:
   - choco install -r -y mingw
   - choco install -r -y ninja
   #- "SET PATH=C:\\tools\\mingw32\\bin;%PATH%"
-  - "SET PATH=C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%
+  - "SET PATH=C:\\tools\\mingw32\\bin;C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%
 
 branches:
   # whitelist
