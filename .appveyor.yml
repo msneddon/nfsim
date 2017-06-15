@@ -14,7 +14,7 @@ install:
   - choco install -r -y ninja
 
 branches:
-  # whitelist
+  # white list
   only:
     - master
      
