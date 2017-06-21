@@ -37,7 +37,6 @@ GetOptions( 'help|h'        => sub { display_help(); exit(0); },
 
 print "Platform: $platform\n";
 
-
 my $zip_type  = '';
 my $travis_os = '';
 if ($platform eq "linux") {
@@ -56,11 +55,27 @@ if ($platform eq "linux") {
   system("ls -lt dist");
 
   } else {
-    if ($platform eq "windows") {
-      $zip_type = ".zip";  $travis_os = "Windows";
+  
+    print " In perl  platform = ".$platform."\n";
+  
+    if ($platform eq "Win32") {
+      $zip_type = ".zip";  $travis_os = "Win32";
+      system('copy  .\build\NFsim.exe  .\build\NFsim-Win32.exe');
+      my $archive_file = "build/NFsim-source-Win32".$zip_type;
+      print "\nCreating NFsim".$platform.".exe source archive:\n";
+      system("7z a  ${archive_file} doc models src test tools validate CMakeLists.txt LICENSE.txt README.txt makefile NFsim_manual_v1.12.pdf ");
+      system("dir ${archive_file}");
     } else {
-      print "Invalid platform: ".$platform."\n";
-      exit;
+      if ($platform eq "Win64") {
+        $zip_type = ".zip";  $travis_os = "Win64";
+        system('copy  .\build\NFsim.exe  .\build\NFsim-Win64.exe');
+        my $archive_file = "./build/NFsim-source-Win64".$zip_type;
+        print "\nCreating NFsim".$platform.".exe source archive:\n";
+        system("7z a  ${archive_file} doc models src test tools validate CMakeLists.txt LICENSE.txt README.txt makefile NFsim_manual_v1.12.pdf ");
+      } else {
+        print "Invalid platform: ".$platform."\n";
+        exit;
+      }
     }
   }
 }

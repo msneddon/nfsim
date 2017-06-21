@@ -1,0 +1,74 @@
+environment:
+  CTEST_OUTPUT_ON_FAILURE: 1
+  matrix:
+    - platform: x86
+      fast_finish: true
+      generator: "Ninja"
+    
+    - platform: x64
+      fast_finish: true
+      generator: "Ninja"
+
+install:
+  - choco install -r -y mingw
+  - choco install -r -y ninja
+
+branches:
+  only:
+    - master
+    - release     
+
+build_script:
+  - cmd: echo Running cmake ...
+  - cmd: mkdir build
+
+  - if "%platform%"=="x86" ( SET "PATH=C:\\tools\\mingw32\\bin;C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%")  
+  - if "%platform%"=="x86" ( move CMakeLists.txt      CMakeLists.x64.txt )
+  - if "%platform%"=="x86" ( move CMakeLists.x86.txt  CMakeLists.txt )
+  - if "%platform%"=="x86" ( cd build )
+  - if "%platform%"=="x86" ( cmake -G "Ninja" .. )
+  - if "%platform%"=="x86" ( ninja )
+  - if "%platform%"=="x86" ( cd .. )
+  - if "%platform%"=="x86" ( perl .make_tar.pl   --platform Win32 )
+  - if "%platform%"=="x86" ( perl .make_html.pl  --platform Win32 )
+  
+  - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
+  - if "%platform%"=="x64" ( cd build )
+  - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
+  - if "%platform%"=="x64" ( ninja )
+  - if "%platform%"=="x64" ( cd .. )
+  - if "%platform%"=="x64" ( perl .make_tar.pl   --platform Win64 )
+  - if "%platform%"=="x64" ( perl .make_html.pl  --platform Win64 )
+
+
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: Ee9fFcoV1ABKmTKowaok5sUiOlRSGzCpWtwNIBFC0PpauqK+/mEt9KjeUXWsb7J7uFcAb1CKo7y/FFhHEJH6pWGMn5oV283uVnqZAB8Chac=
+    template: 
+       "<{{buildUrl}}|{{projectName}} build {{status}}> on {{commitDate}}:_{{commitMessage}}_\n
+        Build: {{buildVersion}} (<{{commitUrl}}|{{commitId}}>)   Author: {{commitAuthor}}\n         
+        Download Executable Here:\n
+        <https://rawgit.com/rhclark/nfsim-rhclark/master/.NFsim_Beta.html|https://rawgit.com/rhclark/nfsim-rhclark/master/.NFsim_Beta.html>\n
+        Build Details:\n
+        <{{buildUrl}}|{{buildUrl}}>"
+
+  
+artifacts:
+  - path: './build/NFsim-Win*.exe'
+    name: NFsim
+  
+  - path: './build/NFsim-source-Win*.zip'
+    name: NFsource
+  
+  - path: './build/NFsim-Win*.html'
+    name: NFhtml
+  
+deploy:
+  provider: FTP
+  protocol: ftp
+  host: ftp.midcapsignals.com/midcap/d_appveyor
+  username: roberthclark
+  password:
+    secure: K22E4pSAup6/htlGmoSBMw==
+#  artifact: NFsim NFsource
