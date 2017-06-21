@@ -47,18 +47,23 @@ sub write_html {
 
   print " OS passed in by Travis/Appveyor ".$travis_os."\n";
 
-  my $zip_type  = '';
+  my $zip_type   = '';
+  my $ofile_name = '';
   if ($travis_os eq "linux") {
     $zip_type = ".tar.gz";  $platform = "Linux";
+    $ofile_name = "./dist/NFsim-".$travis_os.".html";
   } else {
     if ($travis_os eq "osx") {
-    $zip_type = ".tar.gz";  $platform = "MacOSX";
+      $zip_type = ".tar.gz";  $platform = "MacOSX";
+      $ofile_name = "./dist/NFsim-".$travis_os.".html";
     } else {
       if ($travis_os eq "Win32") {
         $zip_type = ".zip";  $platform = "Win32";
+        $ofile_name = "./build/NFsim-".$travis_os.".html";
       } else {
         if ($travis_os eq "Win64") {
           $zip_type = ".zip";  $platform = "Win64";
+          $ofile_name = "./build/NFsim-".$travis_os.".html";
         } else {
           print "Invalid platform: ".$travis_os."\n";
           exit;
@@ -67,7 +72,6 @@ sub write_html {
     }
   }
   
-  my $ofile_name = "./build/NFsim-".$travis_os.".html";
 
 
 my $date_stamp; my $sec; my $min; my $hour; my $mday; my $mon; my $year; my $wday; my $yday; my $isdst;
