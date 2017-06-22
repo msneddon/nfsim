@@ -47,6 +47,7 @@ sub write_html {
 
   print " OS passed in by Travis/Appveyor ".$travis_os."\n";
 
+  my $x_exe      = '';
   my $zip_type   = '';
   my $ofile_name = '';
   if ($travis_os eq "linux") {
@@ -58,11 +59,11 @@ sub write_html {
       $ofile_name = "./dist/NFsim-".$travis_os.".html";
     } else {
       if ($travis_os eq "Win32") {
-        $zip_type = ".zip";  $platform = "Win32";
+        $zip_type = ".zip";  $platform = "Win32";  $x_exe = '.exe';
         $ofile_name = "./build/NFsim-".$travis_os.".html";
       } else {
         if ($travis_os eq "Win64") {
-          $zip_type = ".zip";  $platform = "Win64";
+          $zip_type = ".zip";  $platform = "Win64";  $x_exe = '.exe';
           $ofile_name = "./build/NFsim-".$travis_os.".html";
         } else {
           print "Invalid platform: ".$travis_os."\n";
@@ -112,11 +113,11 @@ open(FNEW,">$ofile_name");
   print FNEW "If you are an NFsim developer, and you wish to get \n";
   print FNEW "access to the latest build for ".$platform.", please click here: <br>\n";
   print FNEW "<center><h1>\n";
-  print FNEW "<a href=\"NFsim-".$travis_os.".exe\">\n";
-  print FNEW           "NFsim-".$travis_os.".exe</a>\n";
+  print FNEW "<a href=\"NFsim-".$travis_os.$x_exe."\">\n";
+  print FNEW           "NFsim-".$travis_os.$x_exe."</a>\n";
   print FNEW "</h1></center>\n";
   print FNEW "<center>\n";
-  print FNEW "<a href=\"NFsim-".$travis_os.".exe\">\n";
+  print FNEW "<a href=\"NFsim-".$travis_os.$x_exe."\">\n";
   print FNEW "Time Stamp: ".$date_stamp."</a>\n";
   print FNEW "</center>\n";
   if (($travis_os eq "linux") or ($travis_os eq "osx")) {
