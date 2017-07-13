@@ -1,44 +1,59 @@
+os: unstable
+
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
   matrix:
     - platform: x86
       fast_finish: true
       generator: "Ninja"
-    
+      builder: cygwin
+             
     - platform: x64
       fast_finish: true
       generator: "Ninja"
+#      builder: cygwin 
 
-install:
-  - choco install -r -y mingw
-  - choco install -r -y ninja
+
 
 branches:
   only:
     - master
     - release     
 
+install:
+  - if "%platform%"=="x86"  ( C:\cygwin\setup-x86.exe      -qnNdO -R C:/cygwin   -s http://cygwin.mirror.constant.com -l C:/cygwin/var/cache/setup   -P openssl-devel -P libiodbc-devel -P libiodbc2 -P odbc-mysql -P odbc-pgsql -P odbc-sqlite3 -P libmysqlclient-devel -P libsqlite3-devel -P libcrypt-devel -P zip)
+  - if "%platform%"=="x86"  ( set "PATH=C:\cygwin\bin;%PATH%"   ; set "TRAVIS_OS_NAME=Win32" )
+#  - if "%platform%"=="x64"  ( C:\cygwin64\setup-x86_64.exe -qnNdO -R C:/cygwin64 -s http://cygwin.mirror.constant.com -l C:/cygwin64/var/cache/setup -P openssl-devel -P libiodbc-devel -P libiodbc2 -P odbc-mysql -P odbc-pgsql -P odbc-sqlite3 -P libmysqlclient-devel -P libsqlite3-devel -P libcrypt-devel -P zip)
+#  - if "%platform%"=="x64"  ( set "PATH=C:\cygwin64\bin;%PATH%" ; set "TRAVIS_OS_NAME=Win64" )
+#  - if "%platform%"=="x86" ( choco install -r -y mingw --x86 )
+  - if "%platform%"=="x64" ( choco install -r -y mingw )
+  - choco install -r -y ninja
+
+
 build_script:
   - cmd: echo Running cmake ...
   - cmd: mkdir build
 
-  - if "%platform%"=="x86" ( SET "PATH=C:\\tools\\mingw32\\bin;C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%")  
+# Build the 32bit executable with Cygwin
+#  - if "%platform%"=="x86" ( SET "PATH=C:\\tools\\mingw32\\bin;C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%" )  
   - if "%platform%"=="x86" ( move CMakeLists.txt      CMakeLists.x64.txt )
-  - if "%platform%"=="x86" ( move CMakeLists.x86.txt  CMakeLists.txt )
+  - if "%platform%"=="x86" ( copy CMakeLists.x86.txt  .\CMakeLists.txt )
   - if "%platform%"=="x86" ( cd build )
+  - if "%platform%"=="x86" ( copy C:\cygwin\bin\gcc.exe C:\cygwin\bin\cc.exe )
   - if "%platform%"=="x86" ( cmake -G "Ninja" .. )
   - if "%platform%"=="x86" ( ninja )
   - if "%platform%"=="x86" ( cd .. )
   - if "%platform%"=="x86" ( perl .make_tar.pl   --platform Win32 )
-  - if "%platform%"=="x86" ( perl .make_html.pl  --platform Win32 )
   
+  
+# Build the 64bit executable with ordinary MinGW
   - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
   - if "%platform%"=="x64" ( cd build )
+#  - if "%platform%"=="x86" ( copy C:\cygwin\bin\gcc.exe C:\cygwin\bin\cc.exe )
   - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
   - if "%platform%"=="x64" ( ninja )
   - if "%platform%"=="x64" ( cd .. )
   - if "%platform%"=="x64" ( perl .make_tar.pl   --platform Win64 )
-  - if "%platform%"=="x64" ( perl .make_html.pl  --platform Win64 )
 
 
 notifications:
@@ -49,7 +64,7 @@ notifications:
        "<{{buildUrl}}|{{projectName}} build {{status}}> on {{commitDate}}:_{{commitMessage}}_\n
         Build: {{buildVersion}} (<{{commitUrl}}|{{commitId}}>)   Author: {{commitAuthor}}\n         
         Download Executable Here:\n
-        <https://rawgit.com/RuleWorld/nfsim/master/.NFsim_Beta.html|https://rawgit.com/RuleWorld/nfsim/master/.NFsim_Beta.html>\n
+        <https://rawgit.com/rhclark/nfsim-rhclark/master/.NFsim_Beta.html|https://rawgit.com/rhclark/nfsim-rhclark/master/.NFsim_Beta.html>\n
         Build Details:\n
         <{{buildUrl}}|{{buildUrl}}>"
 
@@ -57,18 +72,14 @@ notifications:
 artifacts:
   - path: './build/NFsim-Win*.exe'
     name: NFsim
-  
   - path: './build/NFsim-source-Win*.zip'
     name: NFsource
-  
-  - path: './build/NFsim-Win*.html'
-    name: NFhtml
   
 deploy:
   provider: FTP
   protocol: ftp
-  host: ftp.midcapsignals.com/midcap/d_appveyor
-  username: roberthclark
+  host: ftp.drivehq.com/d_data/d_appveyor
+  username: 15260
   password:
-    secure: K22E4pSAup6/htlGmoSBMw==
-#  artifact: NFsim NFsource
+    secure: aeh68ucxtH3lcVxawmcx8g==
+
