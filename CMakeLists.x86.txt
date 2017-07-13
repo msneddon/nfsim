@@ -4,6 +4,9 @@ project(NFsim)
 
 #find_package(XMLRPC REQUIRED abyss-server c++2)
 
+SET(CMAKE_C_COMPILER   C:/cygwin/bin/gcc.exe)
+SET(CMAKE_CXX_COMPILER C:/cygwin/bin/g++.exe)
+
 
 #if (NOT XMLRPC_FOUND) 
 #  message (FATAL_ERROR "XMLRPC-C not found") 
@@ -37,17 +40,8 @@ set(SUB_DIRS
     src/NFcore/moleculeLists 
 )
 add_definitions("-Wno-deprecated-declarations")
-set_source_files_properties( src/NFinput/TinyXML/tinyxml.h             PROPERTIES  COMPILE_FLAGS  -DTIXML_USE_STL )
-set_source_files_properties( src/NFinput/TinyXML/tinyxml.cpp           PROPERTIES  COMPILE_FLAGS  -DTIXML_USE_STL )
-set_source_files_properties( src/NFinput/TinyXML/tinyxmlparser.cpp     PROPERTIES  COMPILE_FLAGS  -DTIXML_USE_STL )
-set_source_files_properties( src/NFreactions/reactions/DORreaction.cpp PROPERTIES  COMPILE_FLAGS  -std=c++11 )
-set_source_files_properties( src/NFcore/molecule.cpp                   PROPERTIES  COMPILE_FLAGS  -std=c++11 )
-set_source_files_properties( src/NFcore/templateMolecule.cpp           PROPERTIES  COMPILE_FLAGS  -std=c++11 )
-set_source_files_properties( src/NFinput/NFinput.cpp                   PROPERTIES  COMPILE_FLAGS  -std=c++11 )
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11    -DTIXML_USE_STL  ")
 
-
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${XMLRPC_INCLUDE_DIRS} ${SUB_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} include ${SUB_DIRS})
 
 
@@ -59,9 +53,6 @@ set(SRC_FILES
     ${src_files} 
     ${c_src_files} 
 )
-if(CMAKE_SYSTEM_NAME  MATCHES "Windows")
-    SET(STATIC_FLAGS "-static -static-libgcc -static-libstdc++")
-endif(CMAKE_SYSTEM_NAME  MATCHES "Windows")
 
-SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${STATIC_FLAGS}")
+
 add_executable(${PROJECT_NAME} ${SRC_FILES} )
