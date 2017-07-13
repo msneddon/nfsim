@@ -83,3 +83,12 @@ deploy:
   password:
     secure: aeh68ucxtH3lcVxawmcx8g==
 
+#  To encrypt the password for FTP, do the following:
+#  1) Log on to Appveyor 
+#  2) In the upper right hand corner of any page, click on the down arrow next to your username to get a list of options.
+#  3) Select "Encrypt data"
+#  4) Enter the password under "Value to encrypt" and click "Encrypt".
+#  5) You should now see a string similar to the one next to "secure" above.
+#  6) This password can now be copied and pasted to replace the encrypted password above.
+
+
