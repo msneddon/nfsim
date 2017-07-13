@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 2.8.9)
 project(NFsim)
 
 #find_package(XMLRPC REQUIRED abyss-server c++2)
-
-
 #if (NOT XMLRPC_FOUND) 
 #  message (FATAL_ERROR "XMLRPC-C not found") 
 #endif (NOT XMLRPC_FOUND) 
