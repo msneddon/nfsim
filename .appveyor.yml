@@ -42,6 +42,7 @@ build_script:
   - if "%platform%"=="x86" ( copy C:\cygwin\bin\gcc.exe C:\cygwin\bin\cc.exe )
   - if "%platform%"=="x86" ( cmake -G "Ninja" .. )
   - if "%platform%"=="x86" ( ninja )
+  - if "%platform%"=="x86" ( copy NFsim.exe  NFsim-Win32.exe )
   - if "%platform%"=="x86" ( cd .. )
   - if "%platform%"=="x86" ( perl .make_tar.pl   --platform Win32 )
   
@@ -52,6 +53,7 @@ build_script:
 #  - if "%platform%"=="x86" ( copy C:\cygwin\bin\gcc.exe C:\cygwin\bin\cc.exe )
   - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
   - if "%platform%"=="x64" ( ninja )
+  - if "%platform%"=="x64" ( copy NFsim.exe  NFsim-Win64.exe )
   - if "%platform%"=="x64" ( cd .. )
   - if "%platform%"=="x64" ( perl .make_tar.pl   --platform Win64 )
 
