@@ -56,8 +56,8 @@ script:
   
 after_success:
   - perl .make_tar.pl  --platform $TRAVIS_OS_NAME
-  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER:$FTP_PASSWORD ftp://ftp.driverhq.com/d_data/d_travis/"  
-  - "curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.driverhq.com/d_data/d_travis/"  
+  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/"  
+  - "curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/"  
 
 #    The FTP_USER and FTP_PASSWORD strings are actually defined in the env: global: -secure: strings above.  Those strings
 #  Were generated using a program that may be installed on Linux.  Documentation can be found at: https://docs.travis-ci.com/user/encryption-keys/
