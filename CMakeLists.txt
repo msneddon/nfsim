@@ -48,6 +48,7 @@ ELSE(CMAKE_SYSTEM_NAME  MATCHES "Windows")
    set_source_files_properties( src/NFreactions/reactions/DORreaction.cpp PROPERTIES  COMPILE_FLAGS  -std=c++11 )
    set_source_files_properties( src/NFcore/molecule.cpp                   PROPERTIES  COMPILE_FLAGS  -std=c++11 ) 
    set_source_files_properties( src/NFcore/templateMolecule.cpp           PROPERTIES  COMPILE_FLAGS  -std=c++11 ) 
+   set_source_files_properties( src/NFinput/NFinput.cpp                   PROPERTIES  COMPILE_FLAGS  -std=c++11 ) 
 ENDIF(CMAKE_SYSTEM_NAME  MATCHES "Windows")
 
 
