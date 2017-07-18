@@ -46,6 +46,7 @@ IF(CMAKE_SYSTEM_NAME  MATCHES "Windows")
    SET(CMAKE_EXE_LINKER_FLAGS "-static")
 ELSE(CMAKE_SYSTEM_NAME  MATCHES "Windows")
    set_source_files_properties( src/NFreactions/reactions/DORreaction.cpp PROPERTIES  COMPILE_FLAGS  -std=c++11 )
+   set_source_files_properties( src/NFcore/molecule.cpp                   PROPERTIES  COMPILE_FLAGS  -std=c++11 ) 
 ENDIF(CMAKE_SYSTEM_NAME  MATCHES "Windows")
 
 
