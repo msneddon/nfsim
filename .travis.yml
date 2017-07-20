@@ -24,8 +24,12 @@ addons:
 
 env:
   global:  
-    - secure: "YKhOFHBZMh9+B1F0H7/sDwPJ0fCeEr4sprT6oFjSQo80xp/j50GBiCvyLvyuBVQfHhwMAcfiBmTf2sC7nataT/AmQcxzOSa7swoVAGuk4SKYIDhrDLkw0aCkJf5lTzNH222uXKfPR/Qr6Wl+NqWausresI8lXMo7aSYFb1JAKlHPCVmyBK4t+7xlTVC6hNVURGGxZxi2A/DoC/QN8D24JXmjQv2KMF9M1eTc7z4181CKY3r9L33KrcJdrMJkNK+1GaikBgiqSAlKBnr8q9YtHqiyDRidOFrLrjUVER0q1mWyJG3Ak+5NFBzLDnz7GRi8nJPh8rK6kobisXsYrFhzeezwyF8NOz1b9dXgkOiBZ6ZvCwQmfwHXGBS6zn72I/WHLH6BgPD/zO5q8N3WVjV9DQRAZkrsVg/oloPY0UGC6sMNrLh0VS4IhUCqraZjuh/CD0R8jbPzrzqhLPOKaZPJXq9L7y6XuQwZndKPYous6nQwr+bkR+FwyUdfoUcbdBRLX+zjz0ChIYv+T/CmiINCTj/o4mpUgBebddPcIqiiU4KyDRAI4lz+3a0YnIfHLRclYEbpLtyCk0R6Kyvqy1WCxdmEjiGqF/soo2sH+GJLQ2vv6fxcJOGLzjcyWsvPqce0U3ztlDDDqlLzLcXMSxPIVJ/QwGyt3jnhAE2rnUYllfc="
-    - secure: "MiaDVX4ExhuCXHKi4FoAEwzeBPco7s971A45h3EHfwNfuWU0RLydeLjzB05MZljMJ+jy5hgwjAAfQcNkFB9YAy8gbFUJO6h8jEg6FAoO6JK6cRYDEqbnPmEAyJfl169WH6BSydmQFTEsF8xcIJxsQ55EFZ7a8L3nR/lvrPHqBNxUB2jyyhuHbLdwXTGWHfjhUW671Zakgzx7wmZW3k4RrmkKMny+FAW6ZqLwvORsSaIBC6Gqh4h/0M3aIuliMt80Bd38fjV7CnssahKD/37TLGryXsS20191qjG1b8UUFWpecTAsb+WmMTXEc2Zo3nWFkQQ4NytFo3EHSv9CqPNX+zphUDPzxNZSZQCmoop6tgE+cJOhmS3Wrkx2EDQ5w0OrEN4C9vWwvSIB8tdWPoQxCsIBEYxj//wVR4NF7YnJ8+c8SJQAkLwZwicV8UWjvALiE71lmeYMdT/Lcr56PyyO0X+CwBwHzulCTtOp/S3187pm6YkU3AKKKIErU3WiX6DNPgkiZ9MiRj2hHzU5q9ze1lMUbrPnCW8MCUVi2WXUoQh8tys6Og7AwZ1675LIFiwi3jCX78zKwiXSMykDIKL//sgol7k4bFQ6UX3urRQS/UwcRpG7/NT5wlDBa+OpUVeQZBVtixNWHIFJK/0ruLvH7HSIetS7E7aVRtLtWLRuRBU="
+#             FTP_USER_0  
+    - secure: "J0U21DPZPtNu2d0Q3w+u159C3h7/T1FvNX2vhn56txLKeKSENyY1fLWEUdPkfiH+2NiacoKsTcvIjzWZsfA/zmXtu2S89VvWF322WHksI/fFS5mWDrmXSTaN0SqXOIlbvS09r2wp2dhD0OljWaHBft/FghJGduyP0CVuzJ4W3mCNxZ1l8UrO5g7yTwawntMmUvWc6FhIFZOW3+JmGjrGog8CJ/w+2Vf6fU5WGXcRJZJs34qIH0vY8GTkAki+sIEU6ghvpnh0LtTHFAFlCu9x33ekun/3MC2ri7OBvHr2Ls15e52u/nHgPF8pftpi4ImCl/buhgZVU0JfLWThpN7ITA7yYDmrdQoRY2hrJPRBkUnk28Dku8mLr0X6c8cM/bLW4b1vmiMkzLuP9h5jYVr2fJV+4TKB25Ra5JuGSX609921lxB1j1Cd59ZPI0Hznrx1YgTPzBRA9CXp6bFatmukzvF9I4lan5WeKUGDMPDCywxuZMbtj9mMTOf0yd5loNjMB57m+MdULKkb/TM3kECsCtXCqDAZlEvysMdeeNYdpafRuHNkWsZTz8j+DKLXyGGeDn8IkColZbguD7APjW2ME7rTgwd5rsdkjFOxVuhNB22C+3erzqAc5kqJpLT8288GxGhlZq5+kDkwp6OQ0K97V0zEK77xR6pzuEVsXNTkmBU="
+#             FTP_USER_1
+    - secure: "ooMM0x9v8IBWXCGA6kIfESGI0jpv5FeT3RFxrqNS8pbjJssTj4hTIkWt6yDeuO0OML7SrYvBLwsDwwy0+AKeSJFBNEr5fsuGm9QAUAgD6P3fn49dSUT/essAGMRl5SwIx+6boL0Z27q2ueeL815bWQZpZxec23LA6pR5mZ/lNATxfM8X4vBQg8UV2yhBdwpvfcCivRUw1wSHYHyQyMNJSest0NN/Zs76oCmtURPH3MAqp6h8MdHPzPpH9bpV9NQHJCooKnaYoLe5GfouBemGBV939lwNe9uChVBHjIAnHmtxGEnkC9lVbxjIGa7Or+R/Hpmr8s9LCfCa9o2Psj7SIp7yBUcEPLHP8KN2YUeHzssuHKDp860dFbR2z9kwoPgPWtPrd8l8NbGjtXSjbcaMw5au/AVHfwExKNnFMMBdmFzKc8oMx85d7a0UAaI75scPYGLUboYpOHLxe9ACDryKAfkISrblKHbJY+L6CvSyj9hzB0ntJEe/80Vy9HTOz7KBM4x1sV1m2/7YgpByYgGke9EzcoLiqtlKQvRpQq3tVhSNnjCpQKpJSg1m8lV/FqOpRd9vPNyLYg4TuwIlRymu0qWGXacte6nzxW7tK10peBBfIaChOvE+SU1AWIX745XntKmuW3m6kS98cIJWtGoMaPMKNfQHOzsLUxPtH1TXFok="
+#             FTP_PASSWORD
+    - secure: "Jv9jf7xqsymzopfKsu5yoAkbJbHlE8X6FkDebVjBUXjQ33jfgKHEHLRe+MuV+7ZTcUMBdpkwmaPq1+PC3ikehuOHBGTNv8WAVBSibX8qxr1ItrnreZP3bxxTlhMGj7t6GcaFEqOsK1tJtw43UG3lnDMSceavN7aAiQ1xKQeDhg9reiGNnrDINFcJ03Uw17Xf8BRhGVW9tFElNmxZqQDVG7YuoszczvrM4ieDRtxr1AcK3x3HRU+9R9/pbUQLxwbvUDUFK4t1ozuWDqd6Gf4HdPMCZsnJh5DgYXt4JkD2OuOAOGwUnZoL/XOZlohW5aN6Y00ABBI2+LNPvZHK637K5mE/BTm7WXSioqFkNSKwJDXh2rwPzGAzAqrTvoyv0/Z7pL4veS6m8sWpAr7Q3Zy4mr3Xx/JNHCImSFNBNkP0K7RMRkFNrnZkF8P+C9+/P8fEjpn2pwGRfU/E4tLArEj6SKRceZKTjOBAb2Ij5izWwzQiZsG13l3UH9+5iLtbLuO6h/TArQBpKcwp1Nk6UJoQl/xgCKGk45nRHHEYykR4mHxI9EQqe20B9o2VxhRxfjtq7L/91Ax3EbFvEK5jKwUwZOzjH7XR5YYNfVP/ny1Xdc/k5EKjvxqzebHGF4yiSUxpG5pRa9wPTDb4cgLVPdvoRPwxMNCCLHJyHYD07eoFk7k="
 
 
 notifications:
@@ -56,16 +60,4 @@ script:
   
 after_success:
   - perl .make_tar.pl  --platform $TRAVIS_OS_NAME
-  - "curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/"  
-  - "curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/"  
-
-#    The FTP_USER and FTP_PASSWORD strings are actually defined in the env: global: -secure: strings above.  Those strings
-#  Were generated using a program that may be installed on Linux.  Documentation can be found at: https://docs.travis-ci.com/user/encryption-keys/
-#  To make a long story short, the program may be installed on Linux with:      gem install travis
-#  the command to generate the FTP_PASSWORD string is
-#
-#              travis encrypt  FTP_USER="password" --skip-version-check -r RuleWorld/nfsim
-#
-#  The password should be surroundedd by double quotes, and the -r parameter indicates the repository for which the password
-#  will be used.
-#
+  - source curl_ftp.sh
