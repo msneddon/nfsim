@@ -7,10 +7,12 @@ environment:
       fast_finish: true
       generator: "Ninja"
       builder: cygwin
+      ftp_user: 15262      
              
     - platform: x64
       fast_finish: true
       generator: "Ninja"
+      ftp_user: 15263      
 #      builder: cygwin 
 
 
@@ -44,7 +46,7 @@ build_script:
   - if "%platform%"=="x86" ( ninja )
   - if "%platform%"=="x86" ( copy NFsim.exe  NFsim-Win32.exe )
   - if "%platform%"=="x86" ( cd .. )
-  - if "%platform%"=="x86" ( perl .make_tar.pl   --platform Win32 )
+#  - if "%platform%"=="x86" ( perl .make_tar.pl   --platform Win32 )
   
   
 # Build the 64bit executable with ordinary MinGW
@@ -55,7 +57,7 @@ build_script:
   - if "%platform%"=="x64" ( ninja )
   - if "%platform%"=="x64" ( copy NFsim.exe  NFsim-Win64.exe )
   - if "%platform%"=="x64" ( cd .. )
-  - if "%platform%"=="x64" ( perl .make_tar.pl   --platform Win64 )
+#  - if "%platform%"=="x64" ( perl .make_tar.pl   --platform Win64 )
 
 
 notifications:
@@ -74,14 +76,14 @@ notifications:
 artifacts:
   - path: './build/NFsim-Win*.exe'
     name: NFsim
-  - path: './build/NFsim-source-Win*.zip'
-    name: NFsource
+#  - path: './build/NFsim-source-Win*.zip'
+#    name: NFsource
   
 deploy:
   provider: FTP
   protocol: ftp
   host: ftp.drivehq.com/d_data/d_appveyor
-  username: 15260
+  username: %ftp_user%
   password:
     secure: aeh68ucxtH3lcVxawmcx8g==
 
