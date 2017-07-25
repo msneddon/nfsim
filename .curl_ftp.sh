@@ -1,6 +1,6 @@
 if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
 
-curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER_0:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/  
+curl -T ./dist/NFsim-$TRAVIS_OS_NAME               -u $FTP_USER_4:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/  
 #curl -T ./dist/NFsim-source-$TRAVIS_OS_NAME.tar.gz -u $FTP_USER:$FTP_PASSWORD ftp://ftp.drivehq.com/d_data/d_travis/
 
 else
