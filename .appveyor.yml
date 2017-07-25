@@ -83,7 +83,7 @@ deploy:
   provider: FTP
   protocol: ftp
   host: ftp.drivehq.com/d_data/d_appveyor
-  username: %ftp_user%
+  username: "%ftp_user%"
   password:
     secure: aeh68ucxtH3lcVxawmcx8g==
 
