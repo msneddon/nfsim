@@ -26,19 +26,33 @@ version of BioNetGen, please visit:
 Please enter the commonly used name of the
 CSB Conference Room (one word, lower case). 
 <br>
-ftp://15260:password@ftp.drivehq.com/d_data/d_appveyor/build
+
 
 
 <br><br>
-<input type="password" id="field1" value="CSB Conference Room" style="font-size:+1"><br>
+(To download for Win32)
+<br>
+<input type="password" id="field2" value="CSB Conference Room" style="font-size:+1"><br>
+<button onclick="myFunction2()">Access NFsim FTP Site</button>
 
-<button onclick="myFunction()">Access NFsim FTP Site</button>
+   
+<br><br>
+(To download for Win64)
+<br>
+<input type="password" id="field3" value="CSB Conference Room" style="font-size:+1"><br>
+<button onclick="myFunction2()">Access NFsim FTP Site</button>
+
 </center>
 
 
 <script>
-function myFunction() {
-    var href = "ftp://15260:" + document.getElementById("field1").value + 
+function myFunction2() {
+    var href = "ftp://15262:" + document.getElementById("field2").value + 
+    "@ftp.drivehq.com/d_data/d_appveyor/build";
+    window.location = href;
+}
+function myFunction3() {
+    var href = "ftp://15263:" + document.getElementById("field3").value + 
     "@ftp.drivehq.com/d_data/d_appveyor/build";
     window.location = href;
 }
