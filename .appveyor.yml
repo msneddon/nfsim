@@ -48,7 +48,7 @@ build_script:
   
   
 # Build the 64bit executable with ordinary MinGW
-  - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
+#  - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
   - if "%platform%"=="x64" ( cd build )
   - if "%platform%"=="x64" ( copy C:\cygwin64\bin\gcc.exe C:\cygwin64\bin\cc.exe )
   - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
