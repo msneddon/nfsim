@@ -7,13 +7,11 @@ environment:
       fast_finish: true
       generator: "Ninja"
       builder: cygwin
-      ftp_user: roc60@pitt.edu   
              
     - platform: x64
       fast_finish: true
       generator: "Ninja"
       builder: cygwin 
-      ftp_user: roc60@pitt.edu  
 
 
 branches:
@@ -78,7 +76,7 @@ deploy:
   provider: FTP
   protocol: ftps
   host: ftp.box.com/BioNetGen_Beta/d_data/d_appveyor
-  username: "%ftp_user%"
+  username: roc60@pitt.edu
   password:
     secure: Pkm2pZETP0TuR6288x+1Ww==
 
