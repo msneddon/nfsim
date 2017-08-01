@@ -75,7 +75,7 @@ artifacts:
 deploy:
   provider: FTP
   protocol: ftps
-  host: ftp.box.com/BioNetGen_Beta/d_data/d_appveyor
+  host: ftp.box.com/BioNetGen_Beta/d_data/d_appveyor/
   username: roc60@pitt.edu
   password:
     secure: Pkm2pZETP0TuR6288x+1Ww==
