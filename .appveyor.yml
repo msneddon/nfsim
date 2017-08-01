@@ -69,7 +69,7 @@ notifications:
 
   
 artifacts:
-  - path: './build/NFsim-Win*.exe'
+  - path: '.\build\NFsim-Win*.exe'
     name: NFsim
   
 deploy:
