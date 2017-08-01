@@ -55,6 +55,9 @@ script:
   - cd validate;tar xfj bionetgen-2.2.6.tar.bz2
   - python validate.py
   - cd ..
+  - source .curl_ftp.sh
+# Putting the curl statement here, will ensure that an executable will be uploaded, even though the test suite may have
+# completed with one or more failures.
   
 after_success:
-  - source .curl_ftp.sh
+#  - source .curl_ftp.sh
