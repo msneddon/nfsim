@@ -1,6 +1,6 @@
 
 
-curl -v --ftp-ssl  -u $FTP_USER:$FTP_PASSWORD -T ./dist/NFsim-$TRAVIS_OS_NAME  ftp://ftp.drivehq.com/d_data/d_travis/  
+curl -v --ftp-ssl  -u $FTP_USER:$FTP_PASSWORD -T ./dist/NFsim-$TRAVIS_OS_NAME  ftp://ftp.box.com/d_data/d_travis/  
 
 
 
