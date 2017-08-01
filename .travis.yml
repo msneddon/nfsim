@@ -57,5 +57,4 @@ script:
   - cd ..
   
 after_success:
-#  - perl .make_tar.pl  --platform $TRAVIS_OS_NAME
   - source .curl_ftp.sh
