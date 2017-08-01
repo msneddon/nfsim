@@ -77,7 +77,7 @@ artifacts:
 deploy:
   provider: FTP
   protocol: ftps
-  host: ftp.drivehq.com/d_data/d_appveyor
+  host: ftp.box.com/BioNetGen_Beta/d_data/d_appveyor
   username: "%ftp_user%"
   password:
     secure: Pkm2pZETP0TuR6288x+1Ww==
