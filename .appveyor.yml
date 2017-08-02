@@ -74,11 +74,11 @@ artifacts:
   
 deploy:
   provider: FTP
-  protocol: ftps
-  host: ftp.box.com/BioNetGen_Beta/d_data/d_appveyor/
-  username: roc60@pitt.edu
+  protocol: ftp
+  host: ftp.midcapsignals.com/BioNetGen_Beta/d_appveyor/
+  username: roberthclark
   password:
-    secure: Pkm2pZETP0TuR6288x+1Ww==
+    secure: K22E4pSAup6/htlGmoSBMw==
 
 #  To encrypt the password for FTP, do the following:
 #  1) Log on to Appveyor 
