@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # SYNOPSIS:
-#   make_html.pl [OPTS] 
+#   make_html.pl  [OPTS] 
 #
 # DESCRIPTION:
 #   Create an html page that provides a link to the latest generated
