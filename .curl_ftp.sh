@@ -9,7 +9,7 @@ curl -v --ftp-ssl  -u $FTP_USER:$FTP_PASSWORD -T ./dist/NFsim-$TRAVIS_OS_NAME  f
 #  To make a long story short, the program may be installed on Linux with:      gem install travis
 #  the command to generate the FTP_PASSWORD string is
 #
-#              travis encrypt  FTP_USER="password" --skip-version-check -r RuleWorld/nfsim
+#               travis encrypt  FTP_USER="password" --skip-version-check -r RuleWorld/nfsim
 #
 #  The password should be surroundedd by double quotes, and the -r parameter indicates the repository for which the password
 #  will be used.
