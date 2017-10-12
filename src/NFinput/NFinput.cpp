@@ -51,7 +51,7 @@ System * NFinput::initializeFromXML(
 		int &suggestedTraversalLimit,
 		bool evaluateComplexScopedLocalFunctions )
 {
-	if(!verbose) cout<<"reading xml file ("+filename+")  \n\t[";
+	if(!verbose) cout<<"reading xml file ("+filename+")  \n";
 	if(verbose) cout<<"\tTrying to read xml model specification file: \t\n'"<<filename<<"'"<<endl;
 
 
@@ -104,8 +104,8 @@ System * NFinput::initializeFromXML(
 
 		//Now retrieve the parameters, so they are easy to look up in the future
 		//and save the parameters in a map we call parameter
-		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading parameter list..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else cout<<"\n\tReading parameter list..."<<endl;
 		map<string, double> parameter;
 		if(!initParameters(pListOfParameters, s, parameter, verbose))
 		{
@@ -114,8 +114,8 @@ System * NFinput::initializeFromXML(
 			return NULL;
 		}
 
-		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of MoleculeTypes..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else cout<<"\n\tReading list of MoleculeTypes..."<<endl;
 		map<string,int> allowedStates;
 		if(!initMoleculeTypes(pListOfMoleculeTypes, s, allowedStates, verbose))
 		{
@@ -125,8 +125,8 @@ System * NFinput::initializeFromXML(
 		}
 
 
-		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of Species..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else cout<<"\n\tReading list of Species..."<<endl;
 		if(!initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose))
 		{
 			cout<<"\n\nI failed at parsing your species.  Check standard error for a report."<<endl;
@@ -135,8 +135,8 @@ System * NFinput::initializeFromXML(
 		}
 
 
-		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of Observables..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else cout<<"\n\tReading list of Observables..."<<endl;
 		if(!initObservables(pListOfObservables, s, parameter, allowedStates, verbose, suggestedTraversalLimit))
 		{
 			cout<<"\n\nI failed at parsing your observables.  Check standard error for a report."<<endl;
@@ -146,8 +146,8 @@ System * NFinput::initializeFromXML(
 
 
 
-		if(!verbose) cout<<"-";
-		else if(pListOfFunctions) cout<<"\n\tReading list of Functions..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else if(pListOfFunctions) cout<<"\n\tReading list of Functions..."<<endl;
 		if(pListOfFunctions)
 		{
 			if(!initFunctions(pListOfFunctions, s, parameter, pListOfObservables,allowedStates,verbose)) {
@@ -161,8 +161,8 @@ System * NFinput::initializeFromXML(
 
 		//We have to read reactionRules AFTER observables because sometimes reactions
 		//might depend on some observable...
-		if(!verbose) cout<<"-";
-		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
+//		if(!verbose) cout<<"-";
+//		else cout<<"\n\tReading list of Reaction Rules..."<<endl;
 
 		if(!initReactionRules(pListOfReactionRules, s, parameter, allowedStates, blockSameComplexBinding, verbose, suggestedTraversalLimit))
 		{
@@ -175,7 +175,7 @@ System * NFinput::initializeFromXML(
 		// Parse is finally over!  Now we just have to take care of some final details.
 
 		//Finish up the output message
-		if(!verbose) cout<<"-]\n";
+//		if(!verbose) cout<<"-]\n";
 
 		//We no longer prepare the simulation here!  You have to do it yourself
 

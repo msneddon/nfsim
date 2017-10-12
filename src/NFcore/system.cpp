@@ -711,18 +711,18 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 		//Output selected reaction for debugging
-		//cout<<"\nFiring: "<< endl;
-		//nextReaction->printFullDetails();
-		//cout<<endl<<endl;
+//		cout<<"\nFiring: "<< endl;
+//		nextReaction->printDetails();
+//		cout<<endl<<endl;
 
-		//this->printAllReactions();
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n";
 		//Increment time
 		iteration++;
 		stepIteration++;
 		globalEventCounter++;
 		current_time+=delta_t;
+//		this->printAllReactions();
+//		cout << "Current reaction: " << "\n";
+//		nextReaction->printDetails();
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
 		nextReaction->fire(randElement);

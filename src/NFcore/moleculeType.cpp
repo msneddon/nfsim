@@ -123,23 +123,24 @@ void MoleculeType::init(
 	}
 
 	//Now we can get on with initializing the MoleculeType information
-	this->compName=new string [numOfComponents];
-	this->defaultCompState = new int [numOfComponents];
-	this->isIntegerCompState = new bool [numOfComponents];
+//	this->compName=new string [numOfComponents];
+//	this->defaultCompState = new int [numOfComponents];
+//	this->isIntegerCompState = new bool [numOfComponents];
 
+	int nostate = Molecule::NOSTATE;
 	for(int c=0; c<numOfComponents; c++) {
-		this->compName[c]=compName.at(c);
-		this->isIntegerCompState[c]=isIntegerComponent.at(c);
+		this->compName.push_back(compName.at(c));
+		this->isIntegerCompState.push_back(isIntegerComponent.at(c));
 
 		bool foundDefaultState=false;
 		vector <string> p;
 		for(unsigned int i=0; i<possibleCompStates.at(c).size(); i++) {
 			p.push_back(possibleCompStates.at(c).at(i));
 			if(possibleCompStates.at(c).at(i) == defaultCompState.at(c)) {
-				this->defaultCompState[c]=i; foundDefaultState=true;
+				this->defaultCompState.push_back(i); foundDefaultState=true;
 			}
 		}
-		if(!foundDefaultState) this->defaultCompState[c]=Molecule::NOSTATE;
+		if(!foundDefaultState) this->defaultCompState.push_back(nostate);
 		this->possibleCompStates.push_back(p);
 	}
 
@@ -162,10 +163,10 @@ MoleculeType::~MoleculeType()
 {
 	if(DEBUG) cout << "Destroying MoleculeType " << name << endl;
 
-	//Delete freestore component information
-	delete [] compName;
-	delete [] defaultCompState;
-	delete [] isIntegerCompState;
+//	//Delete freestore component information
+//	delete [] compName;
+//	delete [] defaultCompState;
+//	delete [] isIntegerCompState;
 
 	//Delete details about equivalent components
 	delete [] eqCompSizes;

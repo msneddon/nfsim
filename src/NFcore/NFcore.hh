@@ -695,10 +695,10 @@ namespace NFcore
 
 			//keeps track of the key information about a MoleculeType - the component
 			int numOfComponents;
-			string *compName;
+			vector < string > compName;
 			vector < vector < string > > possibleCompStates;
-			int *defaultCompState;
-			bool *isIntegerCompState;
+			vector < int > defaultCompState;
+			vector < bool > isIntegerCompState;
 			const bool population_type;
 
 

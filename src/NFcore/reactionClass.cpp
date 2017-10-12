@@ -306,17 +306,27 @@ void ReactionClass::resetBaseRateFromSystemParamter() {
 
 
 void ReactionClass::printDetails() const {
-	cout<< name <<"  (id="<<this->rxnId<<", baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	// added by rasi to look at only nonzero mapping reactions
+	int n_mappings = 0;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
-		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
-		cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+		n_mappings += this->getReactantCount(r);
+	}
+	if (n_mappings == 0) return;
+
+	cout << name << "  (id=" << this->rxnId << ", baseRate=" << baseRate
+			<< ",  a=" << a << ", fired=" << fireCounter << " times )" << endl;
+	for (unsigned int r = 0; r < n_reactants; r++) {
+		cout << "      -|" << this->getReactantCount(r) << " mappings|\t";
+		cout << this->reactantTemplates[r]->getPatternString() << "\n";
 		//cout<<"head: "<<endl; this->reactantTemplates[r]->printDetails(cout);
 		//reactantTemplates[r]->printDetails();
 	}
-	if(n_reactants==0)
-		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
-	cout<<"\n";
+	if (n_reactants == 0)
+		cout
+				<< "      >No Reactants: so this rule either creates new species or does nothing."
+				<< endl;
+	cout << "\n";
 }
 
 
