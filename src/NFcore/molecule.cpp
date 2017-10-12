@@ -159,9 +159,14 @@ LocalFunction * Molecule::getLocalFunction(int localFunctionIndex) {
 
 
 
-void Molecule::updateRxnMembership()
+void Molecule::updateRxnMembership(ReactionClass * r, bool useConnectivity)
 {
-	parentMoleculeType->updateRxnMembership(this);
+	if (useConnectivity) {
+		parentMoleculeType->updateConnectedRxnMembership(this, r);
+	}
+	else {
+		parentMoleculeType->updateRxnMembership(this);
+	}
 }
 
 void Molecule::updateTypeIIFunctions()
@@ -335,10 +340,13 @@ void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
 	o<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId=" << ID_complex <<", degree="<<degree<<")"<<endl;
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
+		// Do not print non-bonded states so that mRNA representations are compact
+		// Arvind Rasi Subramaniam
+		if (bond[c]==NOBOND) continue;
 		if(c!=0)o<<"                  ";
 		o<< parentMoleculeType->getComponentName(c) <<"=";
 		o<<parentMoleculeType->getComponentStateName(c,component[c]);
@@ -361,6 +369,72 @@ void Molecule::printDetails(ostream &o)
 			o<<"="<<localFunctionValues[lf]<<"\n";
 		}
 	}
+}
+
+/**
+ * Prints to screen, see printDetails(ostram )
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails() {
+	this->printBondDetails(cout);
+}
+
+/**
+ * Print all bonded states and their details to output stream
+ *
+ * Iterates through all components of a molecule type and prints
+ * only those components with a bond including the binding partner
+ * and the site of attachment.
+ *
+ * Same function written separately for printing to cout and NFStream
+ * @param o - Stream to write to
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(ostream &o) {
+	int degree = 0;
+	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
+//	o<<"\t";
+//	for(int c=0; c<numOfComponents; c++)
+//	{
+//		if(bond[c]==NOBOND) {continue;}
+//		else {
+//			o<<"\t";
+//			o<< parentMoleculeType->getComponentName(c) <<"=";
+//			o<<parentMoleculeType->getComponentStateName(c,component[c]);
+//			o<<",bond=";
+//			o<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+//			o<<"("<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c])<<")";
+//		}
+//	}
+	o.flush();
+}
+
+/**
+ * Same as printBondDetails(ostream )
+ * but writes to NFStream file instead of ostream
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(NFstream &o)
+{
+	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
+	if (this->getMoleculeType()->getSystem()->getTrackConnected()) {
+		o<<"\t";
+		for(int c=0; c<numOfComponents; c++)
+		{
+			if(bond[c]==NOBOND) {continue;}
+			else {
+				o<<"||";
+				o << parentMoleculeType->getComponentName(c);
+				if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
+					o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+				}
+				o<<":";
+				o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
+				o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+			}
+		}
+	}
+	o.flush();
 }
 
 //Get the number of molecules this molecule is bonded to
@@ -516,18 +590,11 @@ void Molecule::unbind(Molecule *m1, char * compName)
 	Molecule::unbind(m1,cIndex);
 }
 
-
-
-
-
-
-
-
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
-list <Molecule *>::iterator Molecule::molIter;
+vector <Molecule *>::iterator Molecule::molIter;
 
-void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
+void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
 		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
@@ -591,11 +658,8 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 }
 
 
-
-
-
 //
-void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
+void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
 	//if(traversalLimit>=0)
@@ -607,7 +671,7 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
-void Molecule::depthFirstSearch(list <Molecule *> &members)
+void Molecule::depthFirstSearch(vector <Molecule *> &members)
 {
 	if(this->hasVisitedMolecule==true) {
 		return;
@@ -637,10 +701,10 @@ void Molecule::depthFirstSearch(list <Molecule *> &members)
 
 
 
-void Molecule::printMoleculeList(list <Molecule *> &members)
+void Molecule::printMoleculeList(vector <Molecule *> &members)
 {
 	cout<<"List of molecules contains: "<<endl;
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		cout<<"   -"<<(*molIter)->getMoleculeTypeName();
 		cout<<"_u"<<(*molIter)->getUniqueID()<<endl;

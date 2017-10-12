@@ -19,8 +19,8 @@ using namespace mu;
 
 
 
-list <Molecule *> LocalFunction::molList;
-list <Molecule *>::iterator LocalFunction::molIter;
+vector <Molecule *> LocalFunction::molList;
+vector <Molecule *>::iterator LocalFunction::molIter;
 
 
 string LocalFunction::getName() const {

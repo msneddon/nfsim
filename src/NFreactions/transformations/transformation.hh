@@ -27,6 +27,7 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genStateChangeTransform(unsigned int cIndex, int newValue);
+			static Transformation * genStateChangeTransform(unsigned int cIndex, int newValue, TemplateMolecule * tm);
 
 			/*!
 			 	Generates a binding transformation for one of the two binding sites in the binding Transform.  You will
@@ -34,6 +35,7 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+			static Transformation * genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex, TemplateMolecule * tm);
 
 			/*!
 			 	Generates a binding transformation for one of the two binding sites in the binding Transform, where at least
@@ -42,6 +44,7 @@ namespace NFcore
 			    @author Michael Sneddon
 			*/
 			static Transformation * genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex);
+			static Transformation * genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex, TemplateMolecule * tm);
 
 
 			// deprecated
@@ -55,6 +58,7 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genBindingTransform2(unsigned int bSiteIndex);
+			static Transformation * genBindingTransform2(unsigned int bSiteIndex, TemplateMolecule * tm);
 
 			/*!
 			 	Generates an unbinding transformation for a particular binding site.  Only
@@ -63,6 +67,10 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genUnbindingTransform(unsigned int bSiteIndex);
+			static Transformation * genUnbindingTransform(unsigned int bSiteIndex, TemplateMolecule* tm);
+			// added by Arvind Rasi Subramaniam for inferring reaction connectivity
+			static Transformation * genUnbindingTransform2(unsigned int bSiteIndex, TemplateMolecule * tm);
+
 
 			/*!
 			 	Generates an Add Molecule transformation.
@@ -75,7 +83,9 @@ namespace NFcore
 			    call the method "create_and_map" which is specifc to AddMoleculeTransform.
 			 */
 			static AddSpeciesTransform  * genAddSpeciesTransform(  SpeciesCreator  * sc );
-			static AddMoleculeTransform * genAddMoleculeTransform( MoleculeCreator * mc );
+			static AddSpeciesTransform  * genAddSpeciesTransform(  SpeciesCreator  * sc, TemplateMolecule * tm);
+			static AddMoleculeTransform * genAddMoleculeTransform( MoleculeCreator * mc);
+			static AddMoleculeTransform * genAddMoleculeTransform( MoleculeCreator * mc, TemplateMolecule * tm);
 
 
 			/*!
@@ -85,6 +95,7 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genRemoveMoleculeTransform(int removalType);
+			static Transformation * genRemoveMoleculeTransform(int removalType, TemplateMolecule * tm);
 			/*!
 			 	Generates an empty transformation.  This is used in cases where there is
 			 	a reactant that is not transformed in a reaction, but that still needs
@@ -98,12 +109,14 @@ namespace NFcore
 			    @author Michael Sneddon
 			 */
 			static Transformation * genIncrementStateTransform(unsigned int cIndex);
+			static Transformation * genIncrementStateTransform(unsigned int cIndex, TemplateMolecule * tm);
 
 			/*!
 			 	Generates an DecrementState transformation.
 			    @author Michael Sneddon
 			*/
 			static Transformation * genDecrementStateTransform(unsigned int cIndex);
+			static Transformation * genDecrementStateTransform(unsigned int cIndex, TemplateMolecule * tm);
 
 			/*!
 			 	Generates an IncrementPopulation transformation.
@@ -117,6 +130,7 @@ namespace NFcore
 			    @author Justin Hogg
 			*/
 			static Transformation * genDecrementPopulationTransform();
+			static Transformation * genDecrementPopulationTransform(TemplateMolecule * tm);
 
 
 			/*! Indicates that a delete transform deletes the entire connected species */
@@ -185,13 +199,14 @@ namespace NFcore
 		public:
 			Transformation(int type) {this->type=type;};
 			virtual ~Transformation() {};
-			int getType() const { return type; }
+			int getType() const { return type; };
 			virtual void apply(Mapping *m, MappingSet **ms) = 0;
 			virtual int getComponentIndex() const = 0;
 			virtual int getRemovalType() { return -1; };
 			// returns false if it does not meet a null condition, true if the reaction
 			// should be rejected do to a null condition
 			virtual bool checkForNullCondition(Mapping *m, MappingSet **ms) { return false; };
+			virtual TemplateMolecule * getTemplateMolecule() const = 0;
 		protected:
 			int type;
 	};
@@ -205,6 +220,7 @@ namespace NFcore
 			virtual int getComponentIndex() const { return -1; };
 
 			TemplateMolecule *getTemplateObject() const {return tm;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 			string getPointerName() const { return PointerName; };
 			int getFunctionScope() const {return scope; };
 
@@ -220,44 +236,54 @@ namespace NFcore
 
 	class EmptyTransform : public Transformation {
 		public:
-			EmptyTransform() : Transformation(TransformationFactory::EMPTY){ this->cIndex=-1; };
-			EmptyTransform(int cIndex) : Transformation(TransformationFactory::EMPTY){ this->cIndex=cIndex; };
+			EmptyTransform();
+			EmptyTransform(int cIndex);
+			EmptyTransform(int cIndex, TemplateMolecule * tm);
 			virtual ~EmptyTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms) {};
 			virtual int getComponentIndex() const { return cIndex; };
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
+			TemplateMolecule * tm;
 	};
 
 
 	class StateChangeTransform : public Transformation {
 		public:
 			StateChangeTransform(int cIndex, int newValue);
+			StateChangeTransform(int cIndex, int newValue, TemplateMolecule * tm);
 			virtual ~StateChangeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
 			int newValue;
+			TemplateMolecule * tm;
 	};
 
 	class BindingTransform : public Transformation {
 		public:
 			BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex);
+			BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex, TemplateMolecule * tm);
 			virtual ~BindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
 
 			virtual bool checkForNullCondition(Mapping *m, MappingSet **ms);
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
 			int otherReactantIndex;
 			int otherMappingIndex;
+			TemplateMolecule * tm;
 	};
 
 	class NewMoleculeBindingTransform : public BindingTransform {
 			public:
 				NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex);
+				NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex, TemplateMolecule * tm);
 				virtual ~NewMoleculeBindingTransform() {};
 				virtual bool checkForNullCondition(Mapping *m, MappingSet **ms);
 	};
@@ -275,23 +301,29 @@ namespace NFcore
 	class UnbindingTransform : public Transformation {
 		public:
 			UnbindingTransform(int cIndex);
+			UnbindingTransform(int cIndex, TemplateMolecule * tm);
 			virtual ~UnbindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
+			TemplateMolecule * tm;
 	};
 
 
 	class AddSpeciesTransform : public Transformation {
 		public:
 			AddSpeciesTransform( SpeciesCreator * sc );
+			AddSpeciesTransform( SpeciesCreator * sc , TemplateMolecule * tm);
 			virtual ~AddSpeciesTransform();
 			virtual void apply( Mapping *m, MappingSet **ms );
 			virtual int getComponentIndex() const {cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 
 		protected:
 			SpeciesCreator * sc;
+			TemplateMolecule * tm;
 	};
 
 
@@ -299,6 +331,7 @@ namespace NFcore
 	{
 		public:
 			AddMoleculeTransform( MoleculeCreator * _mc );
+			AddMoleculeTransform( MoleculeCreator * _mc , TemplateMolecule * tm);
 			virtual ~AddMoleculeTransform();
 			virtual void apply( Mapping * m, MappingSet ** ms ) { cerr<<"apply method should not be called from an AddMoleculeTranform!!"<<endl;};
 			virtual int getComponentIndex() const { cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
@@ -309,22 +342,27 @@ namespace NFcore
 			bool isPopulationType() const;
 			// get pointer to population molecule
 			Molecule * get_population_pointer() const;
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 
 		protected:
 			MoleculeCreator * mc;
 			Molecule *        new_molecule;
+			TemplateMolecule * tm;
 	};
 
 	class RemoveMoleculeTransform : public Transformation {
 		public:
 			RemoveMoleculeTransform(int removalType);
+			RemoveMoleculeTransform(int removalType, TemplateMolecule * tm);
 			virtual ~RemoveMoleculeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {cout<<"You should not get a component index from a RemoveMoleculeTransform!!"<<endl; exit(1); return -1;};
 			virtual int getRemovalType() { return removalType; };
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 
 		protected:
 			int removalType;
+			TemplateMolecule * tm;
 
 	};
 
@@ -333,32 +371,42 @@ namespace NFcore
 	{
 		public:
 			DecrementPopulationTransform();
+			DecrementPopulationTransform(TemplateMolecule * tm);
 			virtual ~DecrementPopulationTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const { return cIndex; };
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
+
 		protected:
 			int cIndex;
+			TemplateMolecule * tm;
 	};
 
 
 	class IncrementStateTransform : public Transformation {
 		public:
 			IncrementStateTransform(unsigned int stateIndex);
+			IncrementStateTransform(unsigned int stateIndex, TemplateMolecule * tm);
 			virtual ~IncrementStateTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
+			TemplateMolecule * tm;
 	};
 
 	class DecrementStateTransform : public Transformation {
 		public:
 			DecrementStateTransform(unsigned int stateIndex);
+			DecrementStateTransform(unsigned int stateIndex, TemplateMolecule * tm);
 			virtual ~DecrementStateTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
 			virtual int getComponentIndex() const {return cIndex;};
+			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
 		protected:
 			int cIndex;
+			TemplateMolecule * tm;
 	};
 
 

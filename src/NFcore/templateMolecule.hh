@@ -108,6 +108,13 @@ namespace NFcore
 				Molecule *mappedFrom, string mappedFromComponent);
 		bool isSymMapValid();
 
+		/* Function to test whether two Template molecules match or compatible with each other.
+		 * This is useful for testing if the reactants and products of a fired reaction will affect
+		 * the reactants for another reaction
+		 * @author: Arvind Rasi Subramaniam
+		 */
+		bool isTemplateCompatible(TemplateMolecule* tm);
+
 
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		//returns false if they are not symmetric, or true if they are
@@ -126,7 +133,12 @@ namespace NFcore
 		void printPattern();
 		void printPattern(ostream &o);
 
+		// To get and set mapped reactant or product templatemolecule
+		// Arvind Rasi Subramaniam
+		void setMappedPartner(TemplateMolecule * tm) {mappedTm = tm;};
+		TemplateMolecule * getMappedPartner() {return mappedTm;};
 
+		bool isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
 
 	protected:
 
@@ -149,31 +161,31 @@ namespace NFcore
 
 		// Which of the unique components must be empty (no bonds)
 		int n_emptyComps;
-		int *emptyComps;
+		vector <int> emptyComps;
 
 		// Which of the unique components must be occupied (bonded to something, something
 		// that is not specified)
 		int n_occupiedComps;
-		int *occupiedComps;
+		vector <int> occupiedComps;
 
 		// State value constraints
 		int n_compStateConstraint;
-		int *compStateConstraint_Comp; //index of the constrained component
-		int *compStateConstraint_Constraint; //the constrained value
+		vector <int> compStateConstraint_Comp;
+		vector <int> compStateConstraint_Constraint;
 
 		// State value exclusions (state != exclusion)
 		int n_compStateExclusion;
-		int *compStateExclusion_Comp;
-		int *compStateExclusion_Exclusion;
+		vector <int> compStateExclusion_Comp;
+		vector <int> compStateExclusion_Exclusion;
 
 		// The set of connections that a particular site is connected to
 		int n_bonds;
-		int *bondComp;
-		string *bondCompName;
-		TemplateMolecule **bondPartner;
-		string *bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
-		int *bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
-		bool *hasVisitedBond;
+		vector <int> bondComp;
+		vector <string> bondCompName;
+		vector <TemplateMolecule *> bondPartner;
+		vector <string> bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
+		vector <int> bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
+		vector <bool> hasVisitedBond;
 
 
 		//This stores disjoint sets, in other words, this Template is
@@ -210,7 +222,11 @@ namespace NFcore
 		static queue <TemplateMolecule *> q;
 		static queue <int> d;
 		static vector <TemplateMolecule *>::iterator tmVecIter;
-		static list <TemplateMolecule *>::iterator tmIter;
+		static vector <TemplateMolecule *>::iterator tmIter;
+
+		// For tracking the reactant or product that this TemplateMolecule is
+		// transformed into
+		TemplateMolecule * mappedTm;
 
 	};
 

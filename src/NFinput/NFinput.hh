@@ -65,7 +65,8 @@ namespace NFinput {
 			int globalMoleculeLimit,
 			bool verbose,
 			int &suggestedTraversalLimit,
-			bool evaluateComplexScopedLocalFunctions=false );
+			bool evaluateComplexScopedLocalFunctions=false,
+			bool connectivityFlag=false);
 
 	//! Reads the parameter XML block and puts them in the parameter map.
 	/*!
@@ -196,20 +197,22 @@ namespace NFinput {
 			bool verbose,
 			int &suggestedTraversalLimit);
 
-	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.
-	/*!
-    	@author Michael Sneddon
+	//! Reads a pattern XML block for identifying product patterns
+	/*! Introduced to get a list of all reactant and product patterns for each reaction
+	 *
+	 * @return 1 for no error and 0 with errors
+	 * @author Arvind Rasi Subramaniam
 	 */
-
-		bool readProductPattern(
+	int readTemplatePattern(
 			TiXmlElement * pListOfMol,
-			System * s, map <string,double> &parameter,
-			map<string,int> &allowedStates,
+			System * s,
+			map <string,int> &allowedStates,
 			string patternName,
-			vector <MoleculeType *> &productMoleculeTypes,
-			vector < vector <int> > &stateInformation,
-			vector < vector <int> > &bindingSiteInformation,
+			map <string , TemplateMolecule *> &templates,
+			map <string, component> &comps,
+			map <string, component> &symMap,
 			bool verbose);
+
 
 	//! Reads a product molecule XML block and returns a TemplateMolecule objects.
 	/*!

@@ -53,6 +53,7 @@ namespace NFcore
 	//Forward declarations to deal with cyclic dependencies
 	class MapGenerator;
 	class MappingSet;
+	class Mapping;
 	class ReactantList;
 	class TransformationSet;
 	class MoleculeList;
@@ -210,6 +211,8 @@ namespace NFcore
 			double getAverageGroupValue(string groupName, int valIndex);
 
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
+			vector <ReactionClass *> getAllReactions () { return allReactions; };
+			ReactionClass * getReactionByName(string name);
 
 			MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
 			MoleculeType * getMoleculeTypeByName(string name);
@@ -255,6 +258,10 @@ namespace NFcore
 			/* tell the system where to ouptut results*/
 			void setOutputToBinary();
 			void registerOutputFileLocation(string filename);
+			/* reaction firings are output to this file
+			 * if any reaction has tag flag set to 1 */
+			void registerReactionFileLocation(string filename);
+			void registerConnectedRxnFileLocation(string filename);
 
 
 			void setDumpOutputter(DumpSystem *ds);
@@ -264,7 +271,7 @@ namespace NFcore
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
 			/* once all elements are added, we need to prepare and initialize for simulations */
-			void tagReaction(int rID);
+			void tagReaction(unsigned int rID);
 
 
 
@@ -277,6 +284,7 @@ namespace NFcore
 			void outputAllObservableCounts();
 			void outputAllObservableCounts(double cSampleTime);
 			void outputAllObservableCounts(double cSampleTime,int eventCounter);
+
 			int getNumOfSpeciesObs() const;
 			Observable * getSpeciesObs(int index) const;
 
@@ -286,7 +294,6 @@ namespace NFcore
 			void printAllReactions();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
-
 			void printAllObservableCounts();
 			void printAllObservableCounts(double cSampleTime);
 			void printAllObservableCounts(double cSampleTime,int eventCounter);
@@ -345,6 +352,7 @@ namespace NFcore
 
 			void turnOff_OnTheFlyObs();
 			void turnOnOutputEventCounter() { outputEventCounter=true; };
+			int getGlobalEventCounter() { return globalEventCounter; };
 
 			void addParameter(string name,double value);
 			double getParameter(string name);
@@ -353,6 +361,8 @@ namespace NFcore
 			void printAllParameters();
 
 	        NFstream& getOutputFileStream();
+	        NFstream& getReactionFileStream();
+	        NFstream& getConnectedRxnFileStream();
 
 	        // NETGEN -- method to access allComplexes
 	        ComplexList & getAllComplexes( )  {  return allComplexes;  };
@@ -367,6 +377,34 @@ namespace NFcore
 				file is generated.
 			*/
 			void turnOnCSVformat() { this->csvFormat = true; };
+			/*
+			 * turn tagged reaction flag on for output if any reactions are tagged
+			 * Arvind Rasi Subramaniam
+			 */
+			void turnOnTagRxnOutput() { this->anyRxnTagged = true; };
+			bool getAnyRxnTagged() { return anyRxnTagged; };
+
+			/*
+			 * track connected reactions after each reaction firing for
+			 * debugging.
+			 * Arvind Rasi Subramaniam Nov 21, 2018
+			 */
+			void setTrackConnected() { this->trackConnected = true; };
+			bool getTrackConnected() { return this->trackConnected; };
+
+			/* Turn on infernence and use of connectivity
+			 * Arvind Rasi Subramaniam
+			 */
+			void useConnectivityFlag(bool connectivityFlag) {this->connectivityFlag = connectivityFlag;};
+			bool getConnectivityFlag() {return connectivityFlag;};
+
+			void setMaxCpuTime(double time) { max_cpu_time = time; };
+
+			clock_t start,finish;
+			double current_cpu_time = 0;
+
+			void setConnectedReactions(int rxn1, int rxn2) {connectedReactions[rxn1][rxn2] = true;};
+			bool areReactionsConnected(int rxn1, int rxn2) {return connectedReactions[rxn1][rxn2];};
 
 		protected:
 
@@ -383,6 +421,9 @@ namespace NFcore
 		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */
 		    int globalMoleculeLimit; /*< total number of any particular molecule that can be created, default=100,000 */
 		    bool outputEventCounter; /*< set to true to output the cumulative number of events at each output step */
+		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
+		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
+		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
 
 		    int globalEventCounter;
 
@@ -390,6 +431,10 @@ namespace NFcore
 			// The container objects that maintain the core system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /*!< container of all MoleculeTypes in the simulation */
 			vector <ReactionClass *> allReactions;    /*!< container of all Reactions in the simulation */
+			/* created by rasi to see if the reaction connectivity can be inferred at the beginning
+			 * to avoid the time-intensive search during each simulation run.
+			 */
+			vector <TemplateMolecule *> allTemplateMolecules;    /*!< container of all Reactions in the simulation */
             // NETGEN
 			//vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
 			//queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
@@ -418,20 +463,24 @@ namespace NFcore
 			double a_tot;        /*< the sum of all a's (propensities) of all reactions */
 			double current_time; /*< keeps track of the simulation time */
 			ReactionClass * nextReaction;  /*< keeps track of the next reaction to fire */
+			// max CPU time for simulation
+			double max_cpu_time;
 
 			///////////////////////////////////////////////////////////////////////////
 			// protected functions needed only by the system while running a simulation
 			double get_A_tot() const { return a_tot; };
 			double recompute_A_tot();
 			double getNextRxn();
+			double getMaxCpuTime() const { return max_cpu_time; };
 
 
 			///////////////////////////////////////////////////////////////////////////
 			// Neccessary variables and methods for outputting
 			//ofstream outputFileStream; /* the stream to a file to write out the results */
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream reactionOutputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream connectedRxnFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			void outputGroupDataHeader();
-
 
 			void outputAllPropensities(double time, int rxnFired);
 			ofstream propensityDumpStream;
@@ -441,7 +490,7 @@ namespace NFcore
 
 			///////////////////////////////////////////////////////////////////////////
 			//random data structures and variables used for optimization....
-			int **rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
+			vector <vector <int>> rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
 			                        quickly lookup a reaction */
 
 
@@ -452,10 +501,14 @@ namespace NFcore
 			//Data structure that performs the selection of the next reaction class
 			ReactionSelector * selector;
 
+			// To look up connected reactions quickly
+
+			vector <vector <bool>> connectedReactions;
+
 
 		private:
-			list <Molecule *> molList;
-			list <Molecule *>::iterator molListIter;
+			vector <Molecule *> molList;
+			vector <Molecule *>::iterator molListIter;
 
 			///////////////////////////////////////////////////////////////////////////
 			//Iterators that allow fast traversal of the object containers
@@ -538,8 +591,6 @@ namespace NFcore
 			int getStateValueFromName(int cIndex, string stateName) const;
 
 
-
-
 			// set of functions that deal with equivalent (aka symmetric) components
 		    // Here is how this works:
 			// Every set of sites with an equivalent name is termed an "equivalency class".  For instance,
@@ -561,10 +612,6 @@ namespace NFcore
 
 			// given a component index, return the generic component name
 			string getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const;
-
-
-
-
 
 			// query or set population type
 			bool isPopulationType() const { return population_type; };
@@ -627,6 +674,11 @@ namespace NFcore
 
 			/* updates a molecules membership (assumes molecule is of type this) */
 			void updateRxnMembership(Molecule * m);
+			/* Updates only molecule membership in connected reactions.
+			 * The connected reactions are inferred at the simulation start.
+			 * Arvind Rasi Subramaniam
+			 */
+			void updateConnectedRxnMembership(Molecule * m, ReactionClass * r);
 
 			/* auto populate with default molecules */
 			void populateWithDefaultMolecules(int moleculeCount);
@@ -695,10 +747,10 @@ namespace NFcore
 
 			//keeps track of the key information about a MoleculeType - the component
 			int numOfComponents;
-			string *compName;
+			vector < string > compName;
 			vector < vector < string > > possibleCompStates;
-			int *defaultCompState;
-			bool *isIntegerCompState;
+			vector < int > defaultCompState;
+			vector < bool > isIntegerCompState;
 			const bool population_type;
 
 
@@ -779,6 +831,17 @@ namespace NFcore
 			bool incrementPopulation();
 			bool decrementPopulation();
 
+			// Not sure why these functions were not there, but I made the visitation variables protected
+			// I left the remaining public for now
+			// Arvind Rasi Subramaniam
+			bool getVisitedMolecule() const { return hasVisitedMolecule; }
+			void setVisitedMolecule(bool visit) { hasVisitedMolecule = visit; }
+			bool * hasVisitedBond;
+			TemplateMolecule *isMatchedTo;
+
+			/* used when reevaluating local functions */
+			bool hasEvaluatedMolecule;
+
 			///////////////////////////////////////////////////////////////////////
 			int getComponentState(int cIndex) const { return component[cIndex]; };
 			int getComponentIndexOfBond(int cIndex) const { return indexOfBond[cIndex]; };
@@ -821,9 +884,9 @@ namespace NFcore
 
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
-			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
-			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
-			void depthFirstSearch(list <Molecule *> &members);
+			void traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit);
+			static void breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth);
+			void depthFirstSearch(vector <Molecule *> &members);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
@@ -831,7 +894,7 @@ namespace NFcore
 
 			/* function that tells this molecule that it changed states or bonds
 			 * and it should update its reaction membership */
-			void updateRxnMembership();
+			void updateRxnMembership(ReactionClass * r, bool useConnectivity);
 			void removeFromObservables();
 			void addToObservables();
 			//void updateDORs();
@@ -858,7 +921,13 @@ namespace NFcore
 			/* print functions for debugging */
 			void printDetails();
 			void printDetails(ostream &o);
-			static void printMoleculeList(list <Molecule *> &members);
+
+			/* print bond details for debugging and tracking state changes */
+			void printBondDetails();
+			void printBondDetails(NFstream &o);
+			void printBondDetails(ostream &o);
+
+			static void printMoleculeList(vector <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };
 			static const int NOT_IN_RXN = -1;
@@ -868,34 +937,17 @@ namespace NFcore
 			void setIsObs(int oIndex, int isObs) { isObservable[oIndex]=isObs; };
 
 
-			/* used for traversing a molecule complex */
-			bool hasVisitedMolecule;
-			bool * hasVisitedBond;
-			TemplateMolecule *isMatchedTo;
-
-			/* used when reevaluating local functions */
-			bool hasEvaluatedMolecule;
-
-
 			static const int NOSTATE = -1;
 			static const int NOBOND = 0;
 			static const int NOINDEX = -1;
 
 
-			//void addDependentUpdateMolecule(Molecule *m);
-			//void removeDependentUpdateMolecule(Molecule *m);
-			//void traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit);
-
-
-			//Unnecessary functions now that were once used to
-			//mark a molecule that is not in the simulation
-			//bool isMolAlive() const { return !isDead; };
-			//bool isMolDead() const { return isDead; };
-			//void kill() { isDead = true; };
-			//void create() { isDead = false; };
-
 
 		protected:
+			/* used for traversing a molecule complex */
+			bool hasVisitedMolecule;
+
+
 
 
 			bool isPrepared;
@@ -927,7 +979,6 @@ namespace NFcore
 			Molecule **bond;
 			int *indexOfBond; /* gives the index of the component that is bonded to this molecule */
 
-
 			//////////// keep track of local function values
 			double *localFunctionValues;
 
@@ -952,7 +1003,7 @@ namespace NFcore
 
 			static queue <Molecule *> q;
 			static queue <int> d;
-			static list <Molecule *>::iterator molIter;
+			static vector <Molecule *>::iterator molIter;
 			//static list <Molecule *>::iterator molIter2;
 
 	};
@@ -1006,12 +1057,17 @@ namespace NFcore
 			ReactionClass(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
+			//! To get all reactant and product templates for inferring connectivity between reactions
+			//! @author Arvind Rasi Subramaniam
+			void setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
+					map <string,TemplateMolecule *> products);
+
 			int getNumOfReactants() const { return n_reactants; };
 
 			string getName() const { return name; };
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
-
+			MoleculeType *getMoleculeTypeOfReactantTemplate(int pos) const;
 			void setBaseRate(double newBaseRate,string newBaseRateName);
 			void resetBaseRateFromSystemParamter();
 
@@ -1056,11 +1112,33 @@ namespace NFcore
 
 
 			void setTotalRateFlag(bool totalRate) { totalRateFlag = totalRate; };
+			/* Whether to use reaction connecitivity for updating molecule
+			 * membership
+			 * Arvind Rasi Subramaniam
+			 */
+			void setConnectivityFlag(bool flag) { useConnectivity = flag; };
 
 
 			// _NETGEN_
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
+
+			// Use by Arvind Rasi Subramaniam to speed up simulations
+			// by inferring connectivity beforehand
+			void appendConnectedRxn(ReactionClass * rxn);
+			void appendPreConnectedRxn(ReactionClass * rxn);
+			bool isReactionConnected(ReactionClass * rxn);
+			int getNumConnectedRxns() {return connectedReactions.size();};
+			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
+
+			// Methods to identify connected reactions within NFsim
+			// Gateway method
+			void identifyConnectedReactions();
+
+			// Called from within Transformation Set to check connectivity
+			bool areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
+			bool isTemplateCompatible(TemplateMolecule * t);
+
 
 
 		protected:
@@ -1085,19 +1163,30 @@ namespace NFcore
 
 			unsigned int traversalLimit;
 
-			TemplateMolecule **reactantTemplates;
+			/* Used for scanning all reactants and products to infer connectivity
+			 * Arvind Rasi Subramaniam
+			 */
+			vector <TemplateMolecule *> allReactantTemplates;
+			vector <TemplateMolecule *> allProductTemplates;
+			/* Maintain a list of connected reactions whose reactant numbers
+			 * might change upon firing this reaction.
+			 * Arvind Rasi Subramaniam
+			 */
+			vector <ReactionClass *> connectedReactions;
+
+			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;
 			MappingSet **mappingSet;
 
 			bool onTheFlyObservables;
 			bool isDimerStyle;
 
-			list <Molecule *> products;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> products;
+			vector <Molecule *>::iterator molIter;
 
 			// remember the molecule type of each product molecule a with typeII dependencies
-			list <MoleculeType *> typeII_products;
-			list <MoleculeType *>::iterator typeII_iter;
+			vector <MoleculeType *> typeII_products;
+			vector <MoleculeType *>::iterator typeII_iter;
 
 			//Used by the reaction class to make sure that it only updates
 			//each complex once (for observables, and matchOnce reactants)
@@ -1118,6 +1207,12 @@ namespace NFcore
 			 * count correction for calculating the ratelaw
 			 */
 			int *identicalPopCountCorrection;
+
+			/* whether to use reaction connectivity for updating molecule
+			 * membership
+			 * Arvind Rasi Subramaniam
+			 */
+			bool useConnectivity;
 	};
 
 
@@ -1183,8 +1278,8 @@ namespace NFcore
 			void unsetCanonical ( ) { is_canonical = false; };
 
 			//This is public so that anybody can access the molecules quickly
-			list <Molecule *> complexMembers;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> complexMembers;
+			vector <Molecule *>::iterator molIter;
 
 
 

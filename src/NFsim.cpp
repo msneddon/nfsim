@@ -76,6 +76,13 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
+ *  -connect - infer network connectivity before starting simulation. (default: no).
+ *             Does not require any modification to BioNetGen or PySB.
+ *             @author Arvind Rasi Subramaniam
+ *
+*   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+*                 @author Arvind Rasi Subramaniam
+ *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
  *  -nocslf = disable evaluation of Complex-Scoped Local Functions
@@ -190,7 +197,7 @@ int main(int argc, char *argv[])
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
 	string versionNumber = "1.11";
-	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
+	cout<<"# starting NFsim v"+versionNumber+"..."<<endl;
 	clock_t start,finish;
 	double time;
 	start = clock();
@@ -210,7 +217,7 @@ int main(int argc, char *argv[])
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
-			cout<<"Seeding random number generator with: "<<seed<<endl;
+			cout<<"# seeding random number generator with: "<<seed<<endl;
 		}
 
 
@@ -312,7 +319,7 @@ int main(int argc, char *argv[])
 	// Finish and check the run time;
     finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
-    cout<<endl<<"done.  Total CPU time: "<< time << "s"<<endl<<endl;
+    cout<<"# done.  Total CPU time: "<< time << "s"<<endl<<endl;
     return 0;
 }
 
@@ -378,12 +385,19 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				globalMoleculeLimit = NFinput::parseAsInt(argMap,"gml",globalMoleculeLimit);
 			}
 
+			bool connectivityFlag = false;
+			if (argMap.find("connect")!=argMap.end()) {
+				connectivityFlag = true;
+			}
+
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
-													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
+													suggestedTraveralLimit,
+													evaluateComplexScopedLocalFunctions,
+													connectivityFlag);
 
 
 			if(s!=NULL)
@@ -478,6 +492,29 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 				}
 
+				if (s->getAnyRxnTagged()) {
+					if (argMap.find("rxnlog") != argMap.end()) {
+						string rxnLogFileName = argMap.find("rxnlog")->second;
+						s->registerReactionFileLocation(rxnLogFileName);
+						// track the reactions whose rates change upon each each reaction
+						// firing. This is useful for debugging to make sure that all the
+						// right reactions are updated after each firing.
+						// Arvind Rasi Subramaniam Nov 21, 2018
+						if (argMap.find("trackconnected") != argMap.end()) {
+							s->registerConnectedRxnFileLocation(
+									rxnLogFileName.replace(
+											rxnLogFileName.end()-4,
+											rxnLogFileName.end(),
+											"_connected.tsv"));
+							s->setTrackConnected();
+						}
+					} else {
+						s->registerReactionFileLocation(
+								s->getName() + "_rxns.dat");
+					}
+				}
+
+
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();
@@ -512,10 +549,17 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double eqTime = 0;
 	double sTime = 10;
 	int oSteps = 10;
+	double maxCpuTime = 1000;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+
+	if (argMap.find("maxcputime") != argMap.end()) {
+		maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	}
+	s->setMaxCpuTime(maxCpuTime);
+
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
 	//Prepare the system for simulation!!
@@ -539,7 +583,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	}
 	else {
 		// Do the run
-		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+		cout<< "# equilibrating for :"<<eqTime<<"s."<<endl;
 		s->equilibrate(eqTime);
 		s->sim(sTime,oSteps);
 	}

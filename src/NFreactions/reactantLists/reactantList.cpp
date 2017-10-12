@@ -159,6 +159,18 @@ MappingSet * ReactantList::getMappingSet(unsigned int mappingSetId) const {
 
 }
 
+MappingSet * ReactantList::getWriteableMappingSet(unsigned int mappingSetId) {
+
+	//Get the mappingSet position
+	int pos = msPositionMap[mappingSetId];
+
+	//might want to do some error checking here to be safe, but oh well.
+
+	//give the mapping set back
+	return mappingSets[pos];
+
+}
+
 void ReactantList::removeMappingSet(unsigned int mappingSetId)
 {
 	//Make sure this mappingSet is not empty

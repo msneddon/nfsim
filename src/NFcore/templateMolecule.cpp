@@ -10,7 +10,7 @@ using namespace NFcore;
 queue <TemplateMolecule *> TemplateMolecule::q;
 queue <int> TemplateMolecule::d;
 vector <TemplateMolecule *>::iterator TemplateMolecule::tmVecIter;
-list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
+vector <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
 int TemplateMolecule::TotalTemplateMoleculeCount=0;
 
@@ -26,24 +26,11 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//Start everything off with no constraints, then we will reinitialize
 	//every time we add some type of constraint
 	this->n_emptyComps=0;
-	this->emptyComps=new int[0];
 	this->n_occupiedComps=0;
-	this->occupiedComps=new int[0];
 	this->n_compStateConstraint=0;
-	this->compStateConstraint_Comp=new int[0];
-	this->compStateConstraint_Constraint=new int[0];
 	this->n_compStateExclusion=0;
-	this->compStateExclusion_Comp=new int[0];
-	this->compStateExclusion_Exclusion=new int[0];
 
 	this->n_bonds=0;
-	this->bondComp=new int[0];
-	this->bondCompName=new string[0];
-	this->bondPartner=new TemplateMolecule * [0];
-	this->bondPartnerCompName=new string[0];
-	this->bondPartnerCompIndex=new int[0];
-	this->hasVisitedBond=new bool[0];
-
 	this->n_connectedTo=0;
 	this->connectedTo=new TemplateMolecule*[n_connectedTo];
 	this->hasTraversedDownConnectedTo=new bool[n_connectedTo];
@@ -81,6 +68,8 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//finally, we have to register this template molecule with the molecule
 	//type so that we can easily destroy them at the end.
 	this->moleculeType->addTemplateMolecule(this);
+
+	this->mappedTm = NULL;
 }
 
 
@@ -92,20 +81,20 @@ TemplateMolecule::~TemplateMolecule() {
 	}
 	delete [] mapGenerators;
 
-	delete [] emptyComps;
-	delete [] occupiedComps;
-	delete [] compStateConstraint_Comp;
-	delete [] compStateConstraint_Constraint;
-	delete [] compStateExclusion_Comp;
-	delete [] compStateExclusion_Exclusion;
+	emptyComps.clear();
+	occupiedComps.clear();
+	compStateConstraint_Comp.clear();
+	compStateConstraint_Constraint.clear();
+	compStateExclusion_Comp.clear();
+	compStateExclusion_Exclusion.clear();
 	delete [] symCompUniqueId;
 
-	delete [] bondComp;
-	delete [] bondCompName;
-	delete [] bondPartner;
-	delete [] bondPartnerCompName;
-	delete [] bondPartnerCompIndex;
-	delete [] hasVisitedBond;
+	bondComp.clear();
+	bondCompName.clear();
+	bondPartner.clear();
+	bondPartnerCompName.clear();
+	bondPartnerCompIndex.clear();
+	hasVisitedBond.clear();
 
 	delete [] connectedTo;
 	delete [] hasTraversedDownConnectedTo;
@@ -161,29 +150,21 @@ void TemplateMolecule::addEmptyComponent(string cName) {
 		printErrorAndExit("Cannot add empty binding site of a symmetric component with addEmptyComponent() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	int *newEmptyCompArray=new int[n_emptyComps+1];
-	for(int i=0; i<n_emptyComps; i++)
-		newEmptyCompArray[i]=this->emptyComps[i];
-	newEmptyCompArray[n_emptyComps]=compIndex;
-	delete [] emptyComps;
-	emptyComps=newEmptyCompArray;
+	emptyComps.push_back(compIndex);
 	n_emptyComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
+
 void TemplateMolecule::addBoundComponent(string cName) {
 	if(moleculeType->isEquivalentComponent(cName)) {
 		printErrorAndExit("Cannot add bound binding site of a symmetric component with addBoundComponent() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	int *newOccupiedCompArray=new int[n_occupiedComps+1];
-	for(int i=0; i<n_occupiedComps; i++)
-		newOccupiedCompArray[i]=this->occupiedComps[i];
-	newOccupiedCompArray[n_occupiedComps]=compIndex;
-	delete [] occupiedComps;
-	occupiedComps=newOccupiedCompArray;
+	occupiedComps.push_back(compIndex);
 	n_occupiedComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
+
 void TemplateMolecule::addComponentConstraint(string cName, string stateName) {
 	if(moleculeType->isEquivalentComponent(cName)) {
 		printErrorAndExit("Cannot add component constraint of a symmetric component with addComponentConstraint() function.");
@@ -193,27 +174,18 @@ void TemplateMolecule::addComponentConstraint(string cName, string stateName) {
 	addComponentConstraint(cName,stateValue);
 
 }
+
 void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 	if(moleculeType->isEquivalentComponent(cName)) {
 		printErrorAndExit("Cannot add component constraint of a symmetric component with addComponentConstraint() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-
-	int *newConstraint_Comp=new int[n_compStateConstraint+1];
-	int *newConstraint_Constraint=new int[n_compStateConstraint+1];
-	for(int i=0; i<n_compStateConstraint; i++) {
-		newConstraint_Comp[i]=compStateConstraint_Comp[i];
-		newConstraint_Constraint[i]=compStateConstraint_Constraint[i];
-	}
-	newConstraint_Comp[n_compStateConstraint]=compIndex;
-	newConstraint_Constraint[n_compStateConstraint]=stateValue;
-	delete [] compStateConstraint_Comp;
-	delete [] compStateConstraint_Constraint;
-	compStateConstraint_Comp=newConstraint_Comp;
-	compStateConstraint_Constraint=newConstraint_Constraint;
+	compStateConstraint_Comp.push_back(compIndex);
+	compStateConstraint_Constraint.push_back(stateValue);
 	n_compStateConstraint++;
 	compIsAlwaysMapped[compIndex]=true;
 }
+
 void TemplateMolecule::addComponentExclusion(string cName, string stateName) {
 	if(moleculeType->isEquivalentComponent(cName)) {
 		printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
@@ -222,24 +194,14 @@ void TemplateMolecule::addComponentExclusion(string cName, string stateName) {
 	int stateValue=moleculeType->getStateValueFromName(compIndex,stateName);
 	addComponentExclusion(cName,stateValue);
 }
+
 void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	if(moleculeType->isEquivalentComponent(cName)) {
 		printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-
-	int *newExclusion_Comp=new int[n_compStateExclusion+1];
-	int *newExclusion_Exclusion=new int[n_compStateExclusion+1];
-	for(int i=0; i<n_compStateExclusion; i++) {
-		newExclusion_Comp[i]=compStateExclusion_Comp[i];
-		newExclusion_Exclusion[i]=compStateExclusion_Exclusion[i];
-	}
-	newExclusion_Comp[n_compStateExclusion]=compIndex;
-	newExclusion_Exclusion[n_compStateExclusion]=stateValue;
-	delete [] compStateExclusion_Comp;
-	delete [] compStateExclusion_Exclusion;
-	compStateExclusion_Comp=newExclusion_Comp;
-	compStateExclusion_Exclusion=newExclusion_Exclusion;
+	compStateExclusion_Comp.push_back(compIndex);
+	compStateExclusion_Exclusion.push_back(stateValue);
 	n_compStateExclusion++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -342,7 +304,7 @@ void TemplateMolecule::printDetails(ostream &o) {
 	if(n_bonds==0)o<<"none";
 	for(int i=0;i<n_bonds; i++) {
 		o<<moleculeType->getComponentName(bondComp[i])<<"(index="<<bondComp[i]<<"):";
-		o<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<")";
+		o<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<") | ";
 	}
 
 	o<<"\n  Symmetric Constraints:               ";
@@ -372,6 +334,11 @@ void TemplateMolecule::printDetails(ostream &o) {
 	o<<"\n  Map Generators:                      ";
 	o<<n_mapGenerators<<" generators.";
 
+	o<<"\n  Pattern:                             ";
+	o<<this->getPatternString();
+
+	o<<"\n  Transformed Pattern:                 ";
+	o<<mappedTm->getPatternString();
 	o<<endl;
 	o<<endl;
 
@@ -482,54 +449,20 @@ void TemplateMolecule::addBond(string thisBsiteName,
 		TemplateMolecule *t2, string bSiteName2)
 {
 	//If we called this, then we are adding a bond to a nonsymmetric site
-
-	//First, initialize the new arrays
-	int *newBondComp = new int[n_bonds+1];
-	string *newBondCompName = new string[n_bonds+1];
-	TemplateMolecule **newBondPartner = new TemplateMolecule *[n_bonds+1];
-	string *newBondPartnerCompName = new string[n_bonds+1];
-	int *newBondPartnerCompIndex = new int[n_bonds+1];
-	bool *newHasVisitedBond = new bool[n_bonds+1];
-
-	//Copy over original the information to the new arrays
-	for(int k=0; k<n_bonds; k++) {
-		newBondComp[k] = bondComp[k];
-		newBondCompName[k] = bondCompName[k];
-		newBondPartner[k] = bondPartner[k];
-		newBondPartnerCompName[k] = bondPartnerCompName[k];
-		newBondPartnerCompIndex[k] = bondPartnerCompIndex[k];
-		newHasVisitedBond[k] = false; //this should always be false here!
-	}
+	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 
 	//Insert the new information
-	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
-	newBondComp[n_bonds] = compIndex;
-	newBondCompName[n_bonds] = thisBsiteName;
-	newBondPartner[n_bonds] = t2;
-	newBondPartnerCompName[n_bonds] = bSiteName2;
+	bondComp.push_back(compIndex);
+	bondCompName.push_back(thisBsiteName);
+	bondPartner.push_back(t2);
+	bondPartnerCompName.push_back(bSiteName2);
 	if(t2->moleculeType->isEquivalentComponent(bSiteName2)) {
-		newBondPartnerCompIndex[n_bonds] = -1;
+		bondPartnerCompIndex.push_back(-1);
 	} else {
-		newBondPartnerCompIndex[n_bonds]=t2->moleculeType->getCompIndexFromName(bSiteName2);
+		bondPartnerCompIndex.push_back(t2->moleculeType->getCompIndexFromName(bSiteName2));
 	}
-	newHasVisitedBond[n_bonds] = false;
+	hasVisitedBond.push_back(false);
 
-
-	//Delete the duplicated information
-	delete [] bondComp;
-	delete [] bondCompName;
-	delete [] bondPartner;
-	delete [] bondPartnerCompName;
-	delete [] bondPartnerCompIndex;
-	delete [] hasVisitedBond;
-
-	//Reassign the new information
-	bondComp = newBondComp;
-	bondCompName = newBondCompName;
-	bondPartner=newBondPartner;
-	bondPartnerCompName=newBondPartnerCompName;
-	bondPartnerCompIndex=newBondPartnerCompIndex;
-	hasVisitedBond=newHasVisitedBond;
 	n_bonds++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -562,7 +495,7 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 	//the queues and lists should be static for efficiency
 	//queue Q, depth queue D, and list T
 	//queue <TemplateMolecule *> q;
-	list <TemplateMolecule *> t;
+	vector <TemplateMolecule *> t;
 	//queue <int> d;
 
 	int currentDepth = 0;
@@ -1346,8 +1279,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		vector <MappingSet *> lastMappingSets;
 		lastMappingSets.push_back(ms);
 
-		list <Molecule *> molList;
-		list <Molecule *>::iterator molIter;
+		vector <Molecule *> molList;
+		vector <Molecule *>::iterator molIter;
 		bool hasTraversed = false;
 
 		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
@@ -1417,8 +1350,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			if(!canMatch) {
 				if(head) {
 					// clear out anything that is dangling
-					list <Molecule *> molList;
-					list <Molecule *>::iterator molIter;
+					vector <Molecule *> molList;
+					vector <Molecule *>::iterator molIter;
 					m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 					for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 						(*molIter)->isMatchedTo=0;
@@ -1450,8 +1383,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	if(holdMolClearToEnd) {
 		if(head) {
 			// clear out anything that is dangling
-			list <Molecule *> molList;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> molList;
+			vector <Molecule *>::iterator molIter;
 			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 			for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 				(*molIter)->isMatchedTo=0;
@@ -1468,7 +1401,144 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	return true;
 }
 
+/** To match two template molecules
+ * I will closely follow the 'compare' function above for
+ * comparing a TemplateMolecule and a Molecule.
+ * @author Arvind Rasi Subramaniam
+ * @param tm - Template molecule to match against
+ * @return true or false
+ */
+bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
+	// Make sure the TMs are of the same type
+	if(tm->getMoleculeType() != getMoleculeType()) {
+		return false;
+	}
 
+
+	// If there is no overlap between the components of the two TemplateMolecules,
+	// then they are compatible
+	vector <int> allComps;
+	vector <int> allComps_tm;
+	for (int i : emptyComps) allComps.push_back(i);
+	for (int i : occupiedComps) allComps.push_back(i);
+	for (int i : bondComp) allComps.push_back(i);
+	for (int i : tm->emptyComps) allComps_tm.push_back(i);
+	for (int i : tm->occupiedComps) allComps_tm.push_back(i);
+	for (int i : tm->bondComp) allComps_tm.push_back(i);
+
+	// Check each component of one TM against all components of other TM
+	bool compOverlap = false;
+	for (int i : allComps) {
+		if (find(allComps_tm.begin(), allComps_tm.end(), i) != allComps_tm.end()) {
+			compOverlap = true;
+			break;
+		}
+	}
+	// Still no overlap, so return
+	if (compOverlap == false) return true;
+
+
+
+	vector <int>::iterator it;
+	// Check that sites that are occupied in one TemplateMolecule
+	// are not specified to be empty in the other TemplateMolecule
+	for (int i=0; i < n_occupiedComps; ++i) {
+		it = find(tm->emptyComps.begin(),
+				tm->emptyComps.end(),
+				occupiedComps[i]);
+		if (it != tm->emptyComps.end()) return false;
+	}
+	// Check that sites that are empty in one TemplateMolecule
+	// are not specified to be occupied in the other TemplateMolecule
+	for (int i=0; i < n_emptyComps; ++i) {
+		it = find(tm->occupiedComps.begin(),
+				tm->occupiedComps.end(),
+				emptyComps[i]);
+		if (it != tm->occupiedComps.end()) return false;
+	}
+	// Check that sites that are empty in one TemplateMolecule
+	// are not bonded in the other TemplateMolecule
+	for (int i=0; i < n_emptyComps; ++i) {
+		it = find(tm->bondComp.begin(),
+				tm->bondComp.end(),
+				emptyComps[i]);
+		if (it != tm->bondComp.end()) return false;
+	}
+
+	// If a state is constrained, make sure that it is either not
+	// constrained or excluded in the target tm, or if it is,
+	// that the constraint or exclusion are not incompatible between
+	// the two templatemolecules
+	for (int i=0; i < n_compStateConstraint; ++i) {
+		it = find(tm->compStateConstraint_Comp.begin(),
+				tm->compStateConstraint_Comp.end(),
+				compStateConstraint_Comp[i]);
+		if (it != tm->compStateConstraint_Comp.end()) {
+			ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
+			if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc])
+				return false;
+		}
+		it = find(tm->compStateExclusion_Comp.begin(),
+				tm->compStateExclusion_Comp.end(),
+				compStateConstraint_Comp[i]);
+		if (it != tm->compStateExclusion_Comp.end()) {
+			ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
+			if (compStateConstraint_Constraint[i] == tm->compStateExclusion_Exclusion[loc])
+				return false;
+		}
+	}
+
+	//  Repeat the above but now for all excluded states in the
+	// current TemplateMolecule
+	for (int i=0; i < n_compStateExclusion; ++i) {
+		it = find(tm->compStateConstraint_Comp.begin(),
+				tm->compStateConstraint_Comp.end(),
+				compStateExclusion_Comp[i]);
+		if (it != tm->compStateConstraint_Comp.end()) {
+			ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
+			if (compStateExclusion_Exclusion[i] == tm->compStateConstraint_Constraint[loc])
+				return false;
+		}
+		it = find(tm->compStateExclusion_Comp.begin(),
+				tm->compStateExclusion_Comp.end(),
+				compStateExclusion_Comp[i]);
+		if (it != tm->compStateExclusion_Comp.end()) {
+			ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
+			if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc])
+				return false;
+		}
+	}
+
+	// Make sure that components are bonded to the same partner at the same componentindex if
+	// the bonds are specified in both TemplateMolecules
+	for(int b=0; b<n_bonds; b++) {
+
+		//The binding site must not be be among the empty components on the other template molecule
+		if(find(tm->emptyComps.begin(), tm->emptyComps.end(), bondComp[b]) != tm->emptyComps.end()) {
+			return false;
+		}
+
+		//Check if this component is among the bondComps in the target TemplateMolecule
+		it = find(tm->bondComp.begin(), tm->bondComp.end(), bondComp[b]);
+		//If it is not, you don't have to check that the bonds match
+		if(it != tm->bondComp.end()) {
+			// find the bond number in the target molecule that matches bond Component
+			ptrdiff_t tm_b = distance(tm->bondComp.begin(), it);
+
+			// If the two bonding partners are not same molecule type, then return false.
+			// Assuming here that the second Template has a bond partner since it is
+			// the comp is in the list of bondComps.
+			if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
+
+			// If the two bonding partners are not bonded on the same site, then return false
+			if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
+
+		}
+	}
+
+	// We got this far, so all matches above did not raise any red flag
+	return true;
+}
 
 
 string addStateConstraint(string original, string compName, string newConstraint)
@@ -1955,7 +2025,16 @@ bool TemplateMolecule::checkSymmetryAroundBond(TemplateMolecule *tm1, TemplateMo
 
 
 
+bool TemplateMolecule::isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
+	if (this->getMoleculeType() != mt) return false;
 
+	// First make a joint vector of components specified in the TemplateMolecule
+	if (find(emptyComps.begin(), emptyComps.end(), cIndex) != emptyComps.end()) return true;
+	if (find(occupiedComps.begin(), occupiedComps.end(), cIndex) != occupiedComps.end()) return true;
+	if (find(bondComp.begin(), bondComp.end(), cIndex) != bondComp.end()) return true;
+
+	return false;
+}
 
 
 

@@ -1,16 +1,14 @@
-
 #include "transformationSet.hh"
+#include "transformation.hh"
 
 using namespace NFcore;
 
 
+vector <Molecule *> TransformationSet::deleteList;
+vector <Molecule *> TransformationSet::updateAfterDeleteList;
+vector <Molecule *>::iterator TransformationSet::it;
 
-
-list <Molecule *> TransformationSet::deleteList;
-list <Molecule *> TransformationSet::updateAfterDeleteList;
-list <Molecule *>::iterator TransformationSet::it;
-
-TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
+TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates) // @suppress("Class members should be properly initialized")
 {
 	this->hasSymUnbinding=false;
 	this->hasSymBinding = false;
@@ -42,7 +40,7 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 }
 
 
-TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates,
+TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates, 
 		                             vector <TemplateMolecule *> addMoleculeTemplates )
 {
 	this->hasSymUnbinding = false;
@@ -113,8 +111,7 @@ TransformationSet::~TransformationSet()
 }
 
 
-TemplateMolecule *
-TransformationSet::getTemplateMolecule( unsigned int reactantIndex ) const
+TemplateMolecule * TransformationSet::getTemplateMolecule( unsigned int reactantIndex ) const
 {
 	if ( reactantIndex < n_reactants )
 	{
@@ -144,7 +141,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	// 2) Create a Transformation object to remember the information
 	//cout<<"Adding state change transform to value: "<<finalStateValue<<endl;
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue);
+	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -190,7 +187,7 @@ bool TransformationSet::addIncrementStateTransform(TemplateMolecule *t, string c
 
 	// 2) Create a Transformation object to remember the information
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genIncrementStateTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genIncrementStateTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -215,7 +212,7 @@ bool TransformationSet::addDecrementStateTransform(TemplateMolecule *t, string c
 
 	// 2) Create a Transformation object to remember the information
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genDecrementStateTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genDecrementStateTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -266,11 +263,11 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1, t1);
 	else
-		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size(), t1);
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2, t2);
 
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -315,11 +312,11 @@ bool TransformationSet::addNewMoleculeBindingTransform(TemplateMolecule *t1, str
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1, t1);
 	else
-		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size(), t1);
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2, t2);
 
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -425,14 +422,25 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 
 	// 2) Create a Transformation object to remember the information
 	unsigned int cIndex = tToTransform->getMoleculeType()->getCompIndexFromName(bSiteName);
-	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
 
-	// 3) Create a MapGenerator object and add it to the templateMolecule
+	// 4) Create a MapGenerator object and add it to the templateMolecule
 	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
 	tToTransform->addMapGenerator(mg);
+
+	// 4) Create an empty transformation for the binding partner so that
+	// connectivity can be inferred. Arvind Rasi Subramaniam
+	if (t2 != 0) {
+		unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
+		Transformation *transformation2 = TransformationFactory::genUnbindingTransform2(cIndex2, t2);
+		transformations[reactantIndex].push_back(transformation2);
+		MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+		t2->addMapGenerator(mg);
+	}
+
 
 	return true;
 }
@@ -455,7 +463,7 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t, int deletionType)
 		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
 		return false;
 	}
-	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform(deletionType);
+	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform(deletionType, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -482,7 +490,7 @@ bool TransformationSet::addDecrementPopulation(TemplateMolecule *t)
 		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
 		return false;
 	}
-	Transformation *transformation = TransformationFactory::genDecrementPopulationTransform();
+	Transformation *transformation = TransformationFactory::genDecrementPopulationTransform(t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -517,7 +525,7 @@ bool TransformationSet::addAddMolecule( MoleculeCreator *mc )
 	// We don't need a polymorphic transform because AddTransforms are handled separately!
 	//  But we do need to call some methods specific to AddMoleculeTransform.
 	//  So we're modified TransformationFactory to return the specific object type  --JUstin
-	AddMoleculeTransform * transformation = TransformationFactory::genAddMoleculeTransform( mc );
+	AddMoleculeTransform * transformation = TransformationFactory::genAddMoleculeTransform( mc, mc->getTemplateMolecule() );
 
 	// 3) Add the transformation object to the TransformationSet
 	addMoleculeTransformations.push_back( transformation );
@@ -674,11 +682,12 @@ bool TransformationSet::checkMolecularity( MappingSet ** mappingSets )
 }
 
 
-bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit)
+bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
+		vector <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		// if we are deleting the entire complex, we don't have to track molecules in this complex
@@ -703,7 +712,6 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 			// all cases where you would use the connected-to syntax.  I think so, but
 			// someone should test it.  --michael 9Mar2011
 			Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
-
 			// is this molecule already on the product list?
 			if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
 			{	// Traverse neighbor and add molecules to list
@@ -747,12 +755,12 @@ Molecule * TransformationSet::getPopulationPointer( unsigned int r ) const
 }
 
 
-bool TransformationSet::getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit)
+bool TransformationSet::getListOfAddedMolecules(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
 	// Add new molecules (particle type) to the list of products
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for (unsigned int r=n_reactants; r<getNmappingSets(); r++)
 	{
 		//For each of the molecules that we possibly affect, traverse the neighborhood
@@ -856,4 +864,66 @@ void TransformationSet::finalize()
 	}
 
 	finalized = true;
+}
+
+bool TransformationSet::checkConnection(ReactionClass * rxn) {
+	TemplateMolecule * t1;
+	MoleculeType * mt1;
+	Transformation * transfn;
+	int c1;
+	for(unsigned int r=0; r<n_reactants; r++) {
+		for (unsigned int i=0; i<transformations[r].size(); i++) {
+			transfn = transformations[r].at(i);
+			t1 = transfn->getTemplateMolecule();
+			if (!t1) continue;
+			mt1 = t1->getMoleculeType();
+			c1 = transfn->getComponentIndex();
+			// If the moleculetype or component is not present in the other reaction,
+			// it is not connected
+			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+
+			// If the TemplateMolecule is 'incompatible' with any of the reactants
+			// or products, then the reaction is not connected
+			if (!rxn->isTemplateCompatible(t1)) continue;
+			// Both checks passed for one op so return true
+			return true;
+		}
+	}
+	// Do the same as above but now for the transformed product templates
+	for(unsigned int r=0; r<n_reactants; r++) {
+		for (unsigned int i=0; i<transformations[r].size(); i++) {
+			transfn = transformations[r].at(i);
+			// Use the transformed product here
+			t1 = transfn->getTemplateMolecule();
+			if (!t1) continue;
+			t1 = t1->getMappedPartner();
+			if (!t1) continue;
+			mt1 = t1->getMoleculeType();
+			c1 = transfn->getComponentIndex();
+			// If the moleculetype or component is present in the other reaction,
+			// it is not connected
+			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+
+			// If the TemplateMolecule is 'incompatible' with any of the reactants
+			// or products, then the reaction is not connected
+			if (!rxn->isTemplateCompatible(t1)) continue;
+			// Both checks passed for one op so return true
+			return true;
+		}
+	}
+	// Now consider the newly added molecules where components don't matter, but
+	// compatibility
+	for (unsigned int i=0; i<addMoleculeTransformations.size(); i++) {
+		transfn = addMoleculeTransformations.at(i);
+		// Use the transformed product here
+		t1 = transfn->getTemplateMolecule();
+		if (!t1) continue;
+		// If the TemplateMolecule is 'incompatible' with any of the reactants
+		// or products, then the reaction is not connected
+		if (!rxn->isTemplateCompatible(t1)) continue;
+		// Both checks passed for one op so return true
+		return true;
+	}
+	// Both checks did not pass for any reactant or product template, so not connected
+	return false;
 }

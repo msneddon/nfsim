@@ -178,19 +178,3 @@ void ComplexList::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 	(sys->getOutputFileStream())<<endl;
 
 }
-
-
-
-// TODO: figure out how friend functions work!!
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
-
