@@ -2171,8 +2171,14 @@ bool NFinput::initReactionRules(
 				if(r==0) {
 					cout<<"\n!! Warning!! Unable to create a reaction for some reason!!\n\n"<<endl;
 				} else {
-					//Finally, add the completed rxn rule to the system
-					s->addReaction(r);
+					//Finally, add the completed rxn rule to the system only
+					//base rate is non-zero.
+					if (r->getBaseRate() > 0) {
+						s->addReaction(r);
+					} else {
+						cout << "\n!! Warning !! Rate Law " << r->getName() <<
+								" not simulated due to zero base rate!!\n" << endl;
+					}
 					r->setTotalRateFlag(totalRateFlag);
 					comps.clear();
 				}

@@ -628,12 +628,24 @@ double System::getNextRxn()
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes)
 {
-	return sim(duration,sampleTimes,true);
+	return sim(duration,sampleTimes,true, "", -1);
+}
+
+double System::sim(double duration, long int sampleTimes, bool verbose)
+{
+	return sim(duration,sampleTimes,true, "", -1);
+}
+
+double System::sim(double duration, long int sampleTimes,
+		string stopObservable, long int stopObservableCount)
+{
+	return sim(duration,sampleTimes,true, stopObservable, stopObservableCount);
 }
 
 
 /* main simulation loop */
-double System::sim(double duration, long int sampleTimes, bool verbose)
+double System::sim(double duration, long int sampleTimes, bool verbose,
+		string stopObservable, long int stopObservableCount)
 {
 	System::NULL_EVENT_COUNTER=0;
 	cout.setf(ios::scientific);
@@ -680,6 +692,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		if(DEBUG) cout<<"   Determine dt : " << delta_t << endl;
 
 
+
 		//Report everything up until the next step if we have to
 		if(DEBUG) cout<<"  Current Sample Time: "<<curSampleTime<<endl;
 		if((current_time+delta_t)>=curSampleTime)
@@ -702,8 +715,10 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;
 		//Make sure we can react...
-		if(delta_t==0) break;
+		if (delta_t == 0)
+			break;
 
+		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
 		//4: Select next reaction class based on smallest j,
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();

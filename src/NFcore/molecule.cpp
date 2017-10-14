@@ -335,7 +335,7 @@ void Molecule::printDetails(ostream &o)
 {
 	int degree = 0;
 	o<<"++ Molecule instance of type: " << parentMoleculeType->getName();
-	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId" << ID_complex<<", degree="<<degree<<")"<<endl;
+	o<< " (uId="<<ID_unique << ", tId=" << ID_type << ", cId=" << ID_complex <<", degree="<<degree<<")"<<endl;
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{

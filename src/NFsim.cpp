@@ -512,11 +512,24 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double eqTime = 0;
 	double sTime = 10;
 	int oSteps = 10;
+	// optionally an observable count can be used to stop the simulation
+	// when the count hits this value
+	string stopObservable = "";
+	int stopObservableCount = -1;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
+
+	if (argMap.find("stopobs") != argMap.end()) {
+		stopObservable = argMap.find("stopobs")->second;
+		if (argMap.find("stopn") == argMap.end()) {
+			cout << "Stop observable given, but stop count not specified." << endl;
+			return 0;
+		}
+		stopObservableCount = NFinput::parseAsInt(argMap,"stopn",(int)stopObservableCount);
+	}
 
 	//Prepare the system for simulation!!
 	s->prepareForSimulation();
@@ -541,7 +554,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		// Do the run
 		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
 		s->equilibrate(eqTime);
-		s->sim(sTime,oSteps);
+		s->sim(sTime,oSteps, stopObservable, stopObservableCount);
 	}
 
 	// save the final list of species, if requested...

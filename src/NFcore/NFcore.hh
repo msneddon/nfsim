@@ -319,11 +319,16 @@ namespace NFcore
 			//void notifyThatComplexIsAvailable(int ID_complex);
 
 			double sim(double time, long int sampleTimes);
+			double sim(double time, long int sampleTimes, bool verbose);
+
+			double sim(double time, long int sampleTimes,
+					   string stopObservable, long int stopObservableCount);
 
 			/* run the simulation for a given length of time, output all results to the registered
 			 * file.  The number of sample times is the number of times the function will output to
 			 * a file divided equally throughout the elapsed time  */
-			double sim(double time, long int sampleTimes, bool verbose);
+			double sim(double time, long int sampleTimes, bool verbose,
+					   string stopObservable, long int stopObservableCount);
 
 			/* run the simulation up until the stopping time (but not exceding the stopping time. This
 			 * will not output anything to file (so must be done manually) and returns the current time
