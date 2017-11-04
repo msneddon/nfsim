@@ -255,6 +255,9 @@ namespace NFcore
 			/* tell the system where to ouptut results*/
 			void setOutputToBinary();
 			void registerOutputFileLocation(string filename);
+			/* reaction firings are output to this file
+			 * if any reaction has tag flag set to 1 */
+			void registerReactionFileLocation(string filename);
 
 
 			void setDumpOutputter(DumpSystem *ds);
@@ -277,6 +280,7 @@ namespace NFcore
 			void outputAllObservableCounts();
 			void outputAllObservableCounts(double cSampleTime);
 			void outputAllObservableCounts(double cSampleTime,int eventCounter);
+
 			int getNumOfSpeciesObs() const;
 			Observable * getSpeciesObs(int index) const;
 
@@ -358,6 +362,7 @@ namespace NFcore
 			void printAllParameters();
 
 	        NFstream& getOutputFileStream();
+	        NFstream& getReactionFileStream();
 
 	        // NETGEN -- method to access allComplexes
 	        ComplexList & getAllComplexes( )  {  return allComplexes;  };
@@ -372,6 +377,11 @@ namespace NFcore
 				file is generated.
 			*/
 			void turnOnCSVformat() { this->csvFormat = true; };
+			/*
+			 * turn tagged reaction flag on for output if any reactions are tagged
+			 */
+			void turnOnTagRxnOutput() { this->anyRxnTagged = true; };
+			bool getAnyRxnTagged() { return anyRxnTagged; };
 
 		protected:
 
@@ -388,6 +398,7 @@ namespace NFcore
 		    bool outputGlobalFunctionValues; /*< set to true to output the value of all global functions at each output step */
 		    int globalMoleculeLimit; /*< total number of any particular molecule that can be created, default=100,000 */
 		    bool outputEventCounter; /*< set to true to output the cumulative number of events at each output step */
+		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
 
 		    int globalEventCounter;
 
@@ -435,8 +446,8 @@ namespace NFcore
 			// Neccessary variables and methods for outputting
 			//ofstream outputFileStream; /* the stream to a file to write out the results */
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream reactionOutputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			void outputGroupDataHeader();
-
 
 			void outputAllPropensities(double time, int rxnFired);
 			ofstream propensityDumpStream;

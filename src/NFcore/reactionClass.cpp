@@ -312,7 +312,7 @@ void ReactionClass::printDetails() const {
 	{
 		n_mappings += this->getReactantCount(r);
 	}
-	if (n_mappings == 0) return;
+//	if (n_mappings == 0) return;
 
 	cout << name << "  (id=" << this->rxnId << ", baseRate=" << baseRate
 			<< ",  a=" << a << ", fired=" << fireCounter << " times )" << endl;
@@ -344,21 +344,6 @@ void ReactionClass::fire(double random_A_number) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
 		return;
-	}
-
-
-	// output something if the reaction was tagged
-	if(tagged) {
-		cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
-		for(unsigned int k=0; k<n_reactants; k++) {
-			cout<<" [";
-			for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
-				Molecule *mForTag = mappingSet[k]->get(p)->getMolecule();
-				cout<<" "<<mForTag->getMoleculeTypeName()<<mForTag->getUniqueID();
-			}
-			cout<<" ]";
-		}
-		cout<<endl;
 	}
 
 
@@ -541,13 +526,16 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	} // done updating complex-scoped local functions
 
+	// output if the reaction was tagged
+	if (tagged) {
+	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		this->system->getReactionFileStream() << this->system->getCurrentTime() << "\t" <<
+				this->getRxnId() << "\t" <<
+				(*molIter)->getMoleculeType()->getTypeID() << "\t" <<
+				(*molIter)->getUniqueID() << endl;
+		}
+	}
 
-	// display final product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	// 	(*molIter)->printDetails();
-	//  	cout<<"<<"<<endl;
-	//}
 
 
 	//Tidy up

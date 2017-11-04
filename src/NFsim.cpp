@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 	//if (!schedulerInterpreter(&argc, &argv)) return 0;
 
 	string versionNumber = "1.11";
-	cout<<"starting NFsim v"+versionNumber+"..."<<endl<<endl;
+	cout<<"# starting NFsim v"+versionNumber+"..."<<endl;
 	clock_t start,finish;
 	double time;
 	start = clock();
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
-			cout<<"Seeding random number generator with: "<<seed<<endl;
+			cout<<"# seeding random number generator with: "<<seed<<endl;
 		}
 
 
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
 	// Finish and check the run time;
     finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
-    cout<<endl<<"done.  Total CPU time: "<< time << "s"<<endl<<endl;
+    cout<<"# done.  Total CPU time: "<< time << "s"<<endl<<endl;
     return 0;
 }
 
@@ -478,6 +478,15 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 				}
 
+				if (s->getAnyRxnTagged()) {
+					if (argMap.find("rxnlog")!=argMap.end()) {
+						string rxnLogFileName = argMap.find("rxnlog")->second;
+						s->registerReactionFileLocation(rxnLogFileName);
+					}
+					else {
+						s->registerReactionFileLocation(s->getName()+"_rxns.dat");
+					}
+				}
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();
@@ -552,9 +561,11 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	}
 	else {
 		// Do the run
-		cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+		if(verbose) {
+			cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
+		}
 		s->equilibrate(eqTime);
-		s->sim(sTime,oSteps, stopObservable, stopObservableCount);
+		s->sim(sTime,oSteps, verbose, stopObservable, stopObservableCount);
 	}
 
 	// save the final list of species, if requested...

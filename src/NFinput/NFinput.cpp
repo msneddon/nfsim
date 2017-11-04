@@ -41,8 +41,6 @@ component::~component()
 	mt=0;
 }
 
-
-
 System * NFinput::initializeFromXML(
 		string filename,
 		bool blockSameComplexBinding,
@@ -51,7 +49,7 @@ System * NFinput::initializeFromXML(
 		int &suggestedTraversalLimit,
 		bool evaluateComplexScopedLocalFunctions )
 {
-	if(!verbose) cout<<"reading xml file ("+filename+")  \n";
+	if(!verbose) cout<<"# reading xml file ("+filename+")" << endl;
 	if(verbose) cout<<"\tTrying to read xml model specification file: \t\n'"<<filename<<"'"<<endl;
 
 
@@ -1739,6 +1737,7 @@ bool NFinput::initReactionRules(
 				//ts->finalize();
 				ReactionClass *r = 0;
 				bool totalRateFlag=false;
+				bool tagFlag=false;
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//  Read in the rate law for this reaction
@@ -1759,6 +1758,21 @@ bool NFinput::initReactionRules(
 					} catch (std::runtime_error &e1) {
 						//cerr<<e1.what()<<endl;
 						cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+						exit(1);
+					}
+				}
+
+				if( !pRateLaw->Attribute("tag") ) {
+					cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
+					cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
+				} else {
+					try {
+						int rf = NFutil::convertToInt(pRateLaw->Attribute("tag"));
+						if(rf>0) tagFlag=true;
+						if(verbose) cout<<"\t\t\t= "<<tagFlag<<endl;
+					} catch (std::runtime_error &e1) {
+						//cerr<<e1.what()<<endl;
+						cerr<<"Error!! tag flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
 						exit(1);
 					}
 				}
@@ -2176,10 +2190,16 @@ bool NFinput::initReactionRules(
 					if (r->getBaseRate() > 0) {
 						s->addReaction(r);
 					} else {
-						cout << "\n!! Warning !! Rate Law " << r->getName() <<
-								" not simulated due to zero base rate!!\n" << endl;
+						if (verbose) {
+							cout << "\n!! Warning !! Rate Law " << r->getName() <<
+									" not simulated due to zero base rate!!\n" << endl;
+						}
 					}
 					r->setTotalRateFlag(totalRateFlag);
+					if (tagFlag) {
+						r->tag();
+						s->turnOnTagRxnOutput();
+					}
 					comps.clear();
 				}
 

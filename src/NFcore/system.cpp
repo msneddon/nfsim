@@ -276,6 +276,32 @@ void System::registerOutputFileLocation(string filename)
 
 }
 
+/*
+ * Print reaction info if -rlog flag is given
+ * Note reactions have to be tagged in BioNetGen or PySB
+ * @author: Rasi Subramaniam
+ */
+void System::registerReactionFileLocation(string filename)
+{
+	if (reactionOutputFileStream.is_open()) { reactionOutputFileStream.close(); }
+	reactionOutputFileStream.open(filename.c_str());
+
+	if(!reactionOutputFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	reactionOutputFileStream.setf(ios::scientific);
+	reactionOutputFileStream.precision(8);
+	// print header for file
+	reactionOutputFileStream <<
+			"time" << "\t" <<
+			"rxn" << "\t" <<
+			"mol" << "\t" <<
+			"mol_id" << endl;
+}
+
 
 
 void System::tagReaction(int rID) {
@@ -422,7 +448,7 @@ void System::prepareForSimulation()
 {
 	this->selector = new DirectSelector(allReactions);
 
-	cout<<"preparing simulation..."<<endl;
+	cout<<"# preparing simulation..."<<endl;
 	//Note!!  : the order of preparing the system matters!  You have to prepare
 	//some things before others, because certain things require other
 
@@ -636,20 +662,13 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	return sim(duration,sampleTimes,true, "", -1);
 }
 
-double System::sim(double duration, long int sampleTimes,
-		string stopObservable, long int stopObservableCount)
-{
-	return sim(duration,sampleTimes,true, stopObservable, stopObservableCount);
-}
-
-
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes, bool verbose,
 		string stopObservable, long int stopObservableCount)
 {
 	System::NULL_EVENT_COUNTER=0;
 	cout.setf(ios::scientific);
-	cout<<"simulating system for: "<<duration<<" second(s)."<<endl;
+	cout<<"# simulating system for: "<<duration<<" second(s)."<<endl;
 	if(verbose) cout<<"\n";
 
 	//First, output the header for the output of this simulation
@@ -704,7 +723,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 				//outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
-			if(verbose) {
+			if (verbose) {
+				cout << "verbose";
 				cout << "Sim time: "           << (curSampleTime-dSampleTime);
 				cout << "\tCPU time (total): " << ((double)(clock() - start)/(double)CLOCKS_PER_SEC) << "s";
 				cout << "\t events (step): "   << stepIteration<<endl;
@@ -738,24 +758,12 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 //		this->printAllReactions();
 //		cout << "Current reaction: " << "\n";
 //		nextReaction->printDetails();
-
-		//5: Fire Reaction! (takes care of updates to lists and observables)
+//		this->getMoleculeType(2)->getMolecule(0)->printDetails();
+//
 		nextReaction->fire(randElement);
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n---"<<endl;
 
 		tryToDump();
-		//	outputAllPropensities(current_time, nextReaction->getRxnId());
 
-		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//if(nextReaction->getName()=="Rule7") {
-		//	cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//	printAllReactions();
-		//	exit(1);
-		//}
-
-		// TODO: debug!
-		//this->getAllComplexes().printAllComplexes();
 	}
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
@@ -765,11 +773,11 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
     if(verbose) cout<<"\n";
-    cout<<"   You just simulated "<< iteration <<" reactions in "<< time << "s\n";
-    cout<<"   ( "<<((double)iteration)/time<<" reactions/sec, ";
-    cout<<(time/((double)iteration))<<" CPU seconds/event )"<< endl;
-    cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
-    cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
+    cout<<"# simulated "<< iteration <<" reactions in "<< time << "s\n";
+    cout<<"# " << ((double)iteration)/time << " reactions/sec, ";
+    cout<<(time/((double)iteration))<<" CPU seconds/event"<< endl;
+    cout<<"# null events: "<< System::NULL_EVENT_COUNTER;
+    cout<<" "<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event"<< endl;
 
 	cout.unsetf(ios::scientific);
 	return current_time;
@@ -1058,9 +1066,6 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 			outputFileStream<<endl;
 		}
 	}
-
-
-
 }
 
 void System::printAllObservableCounts()
@@ -1636,10 +1641,10 @@ void System::outputAllPropensities(double time, int rxnFired)
 
 }
 
-
-
-
-
+NFstream& System::getReactionFileStream()
+{
+    return reactionOutputFileStream;
+}
 
 NFstream& System::getOutputFileStream()
 {
