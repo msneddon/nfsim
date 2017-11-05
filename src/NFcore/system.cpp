@@ -723,12 +723,11 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 				//outputGroupData(curSampleTime);
 				curSampleTime+=dSampleTime;
 			}
-			if (verbose) {
-				cout << "verbose";
-				cout << "Sim time: "           << (curSampleTime-dSampleTime);
-				cout << "\tCPU time (total): " << ((double)(clock() - start)/(double)CLOCKS_PER_SEC) << "s";
-				cout << "\t events (step): "   << stepIteration<<endl;
-			}
+			cout << "Sim time: " << (curSampleTime - dSampleTime);
+			cout << "\tCPU time (total): "
+					<< ((double) (clock() - start) / (double) CLOCKS_PER_SEC)
+					<< "s";
+			cout << "\t events (step): " << stepIteration << endl;
 			stepIteration=0;
 			recompute_A_tot();
 		}
@@ -898,7 +897,7 @@ void System::outputAllObservableNames()
 
 	if(!useBinaryOutput) {
 		if(!csvFormat) {
-			outputFileStream<<"#          time";
+			outputFileStream<<"time";
 			//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 			//	(*molTypeIter)->outputObservableNames(outputFileStream);
 
@@ -1037,16 +1036,16 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 	}
 	else {
 		if(!csvFormat) {
-			outputFileStream<<" "<<cSampleTime;
+			outputFileStream<<cSampleTime;
 			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
-				outputFileStream<<"  "<<((double)(*obsIter)->getCount());
+				outputFileStream<<"\t"<<((double)(*obsIter)->getCount());
 			}
 
 			if(outputGlobalFunctionValues)
 				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-					outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+					outputFileStream<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 			if(outputEventCounter) {
-				outputFileStream<<"  "<<eventCounter;
+				outputFileStream<<"\t"<<eventCounter;
 			}
 
 			outputFileStream<<endl;

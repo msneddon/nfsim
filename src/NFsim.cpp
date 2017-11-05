@@ -561,9 +561,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	}
 	else {
 		// Do the run
-		if(verbose) {
-			cout<<endl<<endl<<endl<<"Equilibrating for :"<<eqTime<<"s.  Please wait."<<endl<<endl;
-		}
+		cout<< "# equilibrating for :"<<eqTime<<"s."<<endl;
 		s->equilibrate(eqTime);
 		s->sim(sTime,oSteps, verbose, stopObservable, stopObservableCount);
 	}
