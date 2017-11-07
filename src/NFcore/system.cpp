@@ -40,6 +40,8 @@ System::System(string name)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 0;
 }
 
 
@@ -67,6 +69,8 @@ System::System(string name, bool useComplex)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 0;
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -92,6 +96,8 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 0;
 }
 
 
@@ -304,7 +310,7 @@ void System::registerReactionFileLocation(string filename)
 
 
 
-void System::tagReaction(int rID) {
+void System::tagReaction(unsigned int rID) {
 
 	if(rID<0 || rID>=this->allReactions.size() ) {
 		cerr<<"!!! Error when trying to tag reaction with reaction ID "<<rID<<endl;
@@ -680,6 +686,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 	clock_t start,finish;
 	double time;
 	start = clock();
+	double current_cpu_time = 0;
 	//////////////////////////////
 
 
@@ -724,12 +731,16 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 				curSampleTime+=dSampleTime;
 			}
 			cout << "Sim time: " << (curSampleTime - dSampleTime);
+			current_cpu_time = ((double) (clock() - start) / (double) CLOCKS_PER_SEC);
 			cout << "\tCPU time (total): "
-					<< ((double) (clock() - start) / (double) CLOCKS_PER_SEC)
+					<< current_cpu_time
 					<< "s";
 			cout << "\t events (step): " << stepIteration << endl;
 			stepIteration=0;
 			recompute_A_tot();
+			if (current_cpu_time > max_cpu_time) {
+				break;
+			}
 		}
 
 		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;

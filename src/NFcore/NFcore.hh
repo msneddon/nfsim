@@ -267,7 +267,7 @@ namespace NFcore
 			void turnOffGlobalFuncOut() { this->outputGlobalFunctionValues=false; };
 
 			/* once all elements are added, we need to prepare and initialize for simulations */
-			void tagReaction(int rID);
+			void tagReaction(unsigned int rID);
 
 
 
@@ -383,6 +383,7 @@ namespace NFcore
 			void turnOnTagRxnOutput() { this->anyRxnTagged = true; };
 			bool getAnyRxnTagged() { return anyRxnTagged; };
 
+			void setMaxCpuTime(double time) { max_cpu_time = time; };
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -434,12 +435,15 @@ namespace NFcore
 			double a_tot;        /*< the sum of all a's (propensities) of all reactions */
 			double current_time; /*< keeps track of the simulation time */
 			ReactionClass * nextReaction;  /*< keeps track of the next reaction to fire */
+			// max CPU time for simulation
+			double max_cpu_time;
 
 			///////////////////////////////////////////////////////////////////////////
 			// protected functions needed only by the system while running a simulation
 			double get_A_tot() const { return a_tot; };
 			double recompute_A_tot();
 			double getNextRxn();
+			double getMaxCpuTime() const { return max_cpu_time; };
 
 
 			///////////////////////////////////////////////////////////////////////////
