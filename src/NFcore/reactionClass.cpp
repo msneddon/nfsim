@@ -530,8 +530,8 @@ void ReactionClass::fire(double random_A_number) {
 	if (tagged) {
 	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 		this->system->getReactionFileStream() << this->system->getCurrentTime() << "\t" <<
-				this->getRxnId() << "\t" <<
-				(*molIter)->getMoleculeType()->getTypeID() << "\t" <<
+				this->getName() << "\t" <<
+				(*molIter)->getMoleculeType()->getName() << "\t" <<
 				(*molIter)->getUniqueID() << endl;
 		}
 	}
