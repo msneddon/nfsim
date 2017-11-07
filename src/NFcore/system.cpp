@@ -912,15 +912,9 @@ void System::outputAllObservableNames()
 			//for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 			//	(*molTypeIter)->outputObservableNames(outputFileStream);
 
-			int totalSpaces = 16;
-
 			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
 				string nm = (*obsIter)->getName();
-				int spaces = totalSpaces-nm.length();
-				if(spaces<1) { spaces = 1; }
-				for(int k=0; k<spaces; k++) {
-					outputFileStream<<" ";
-				}
+				outputFileStream<<"\t";
 				outputFileStream<<nm;;
 			}
 
@@ -928,23 +922,14 @@ void System::outputAllObservableNames()
 				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
 				{
 					string nm = (*functionIter)->getNiceName();
-					int spaces = totalSpaces-nm.length();
-					if(spaces<1) { spaces = 1; }
-					for(int k=0; k<spaces; k++) {
-						outputFileStream<<" ";
-					}
+					outputFileStream<<"\t";
 					outputFileStream<<nm;;
 				}
 			if(outputEventCounter) {
 				string nm = "EventCount";
-				int spaces = totalSpaces-nm.length();
-				if(spaces<1) { spaces = 1; }
-				for(int k=0; k<spaces; k++) {
-					outputFileStream<<" ";
-				}
+				outputFileStream<<"\t";
 				outputFileStream<<nm;;
 			}
-
 			outputFileStream<<endl;
 		} else {
 
