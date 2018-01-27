@@ -2,15 +2,15 @@
 
 [![Build Status](https://travis-ci.org/RuleWorld/nfsim.svg?branch=master)](https://travis-ci.org/RuleWorld/nfsim)
 
-michael w. sneddon
-justin s. hogg
-jose-juan tapia
-james r. faeder
-thierry emonet
+- michael w. sneddon
+- justin s. hogg
+- jose-juan tapia
+- james r. faeder
+- thierry emonet
 
-Yale University
-University of Pittsburgh
-funded by the National Science Foundation
+Yale University  
+University of Pittsburgh  
+funded by the National Science Foundation  
 
 -------------------------------------------------------------------------------
 
