@@ -21,15 +21,6 @@ addons:
     - libboost-all-dev
     - cmake
 
-
-env:
-  global:  
-#             FTP_USER 
-    - secure: "C0mR7nU9wTGtrGtRdgfbBJQehaTD+coItsg9iQMQzHT3tUGJ3VJ0wZ6qEp4waNBcCNSk5jIpoqkJIZXRXny1G+iNHA2o115Zg7D0Ekk04zaf3V4J4TGAEgyWDgncPvfnbewjOOorCi0XhPNgJMJQ052HDtqA6ndWUr4eiOGt9fAdJ9srhwO512vu+rIFBJLuLENL0D/x0u5/vzBBW+9wHzQGjjfYM8/EQrpCTbtd59oP3GF6csH/t1KPrR5XiyhLzsU8dv7Fi7ch+tDwiNTw9/XqZhGixBwC+lDiuqemHUObqmoGIqgdAGClPZydLZebg8Ld0sd2GJokocStTI2oz7hzSPN/LmQwkceWDyI+rr56sD57gzh6fuYww5bRAAYiDXJSJx6bqtoZZA/tPAMOO/6gT8MaFImXOygiB4R4Fzh89pBibe9XupXvooKhGucPJtLMB5w4+pJKonAqcXZbsUp2uuRq9amr2N26CKd2BKPLwOK72jzHh9Dcwqj7MRcjvGAa73c9rJjfYCIlwYxTlxfeXrJOHZIG6k5upkZdQD/f6U+REiO9crz9kV+gQAk5vGd3xBD/FnPm2OCMuuVPioyngQLdZ+NbylOPF0pIQQn2HVx3T1QcxBkQGKJP81gf7vETjKBQFOmHnW0BWRyliM7+1EFUNbfVAzjNnykui0w="
-#             FTP_PASSWORD
-    - secure: "sVq5/odFNeKbOvXgPvXkUEuIfSA58DjESOZBj/gELPd+TL4M+eK8TuSsQOuIyiKNCvxMf+QRPnPqfcWMUpl2ns2pvR1JJcx7uUzfOPbQtWiUuiy1WZw/Xk+xEyspr22TfMJK6atV5PPxJWv54d2c16S5Pp+oUHpvURW7Q0V0kan7O6ndL+KFwTVFVJ3Exhn6KVdbr2MpbRkBmJIM9v+jF59T5rfxTgSrp5spKGJeRS/BsDl7Su13f+fMnnK7zOtN4TLwo/SjPwHfLEMhPrWSSH/Qlr8mzsuloiP4VQdnmGHOldBVQ5LaABZspkVDeusGPVeK2RWh2JT1Pt1w/bAPckLFzVOyQvuqhQ7r0OtulcwZcWhfziVzoJgGotvkKUnoPBM+tUCUh59iGTpWyDW09hQaozxrc2V/6PkuTZsYS2dZfUjiiF0lG/aeL0JJaNiiySUbVFgmU9GxT2D3i96cmKIJNxGTrio2wD8QV+cvvL49UOMTy1WiAkdwcCB0i22UKUrkv+Hqrikher6Sy4qUK5IikxrkBHLeVQHvY/IKbd8T72pN4ck+fpLDt2acvExEZUjhEPw+WYZQcxKxfq/FscuuQXsurVHJxQSJia7Ssqp923qbZf4Ex2bQf8fjsC7J6/pDQrHWjQ0AozZBLwR+ZYRyyRBCbrfVQwd8ibpQHIQ="
-
-
 notifications:
   slack:
     rooms:
@@ -55,9 +46,3 @@ script:
   - cd validate;tar xfj bionetgen-2.2.6.tar.bz2
   - python validate.py
   - cd ..
-  - source .curl_ftp.sh
-# Putting the curl statement here, will ensure that an executable will be uploaded, even though the test suite may have
-# completed with one or more failures.
-  
-after_success:
-#  - source .curl_ftp.sh

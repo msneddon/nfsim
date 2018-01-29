@@ -7,5 +7,6 @@ else
     brew tap homebrew/science
     brew install libxml2
     brew link --overwrite python
-    /usr/local/bin/pip install numpy
+    brew unlink python && brew link python
+    pip install numpy
 fi
