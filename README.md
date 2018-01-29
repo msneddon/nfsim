@@ -1,6 +1,7 @@
 # NFsim - the network free stochastic simulator, v1.12.1
 
 [![Build Status](https://travis-ci.org/RuleWorld/nfsim.svg?branch=master)](https://travis-ci.org/RuleWorld/nfsim)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/ruleworld/nfsim?branch=master&svg=true)](https://ci.appveyor.com/project/jczech/nfsim/branch/master)
 
 - michael w. sneddon
 - justin s. hogg
