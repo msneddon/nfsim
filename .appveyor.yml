@@ -56,7 +56,7 @@ build_script:
 
 artifacts:
   - path: '.\build\NFsim-Win*.exe'
-    name: NFsim
+    name: nfsim
 
 deploy:
   - provider: BinTray
@@ -66,9 +66,9 @@ deploy:
       # api key from https://bintray.com/profile/edit
       # encrypted in https://ci.appveyor.com/tools/encrypt
       secure: XzrXGPWsRRrx8DZTJSNJpLkMZrxlXF2vdeao4CCBiXUtKBuxR7Nj2CQIBy3L3bSB
-    repo: NFsim
-    package: NFsim
+    repo: nfsim
+    package: nfsim
     version: 1.0
-    artifact: NFsim
+    artifact: nfsim
     publish: true
     override: true
