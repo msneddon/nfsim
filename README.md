@@ -71,7 +71,16 @@ a suite of helpful analysis and other modeling tools can be found in the
 
 Enjoy your new network-free world!
 
--------------------------------------------------------------------------------
+## Download Latest Test Builds
+
+These builds are the from the head of master and are not guaranteed to be
+stable. Use at your own risk.
+
+* [Linux](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-linux)
+* [OSX](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-osx)
+* [Windows x64](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Win64.exe) 
+* [Windows x86](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Win32.exe)
+
 
 ## Release Notes
 
