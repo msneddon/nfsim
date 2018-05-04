@@ -1,0 +1,30 @@
+{
+    "package": {
+        "name": "nfsim",
+        "repo": "nfsim",
+        "subject": "jczech",
+        "desc": "I was pushed completely automatically",
+        "website_url": "www.bionetgen.org",
+        "issue_tracker_url": "https://github.com/ruleworld/nfsim/issues",
+        "licenses": ["MIT"],
+        "vcs_url": "https://github.com/ruleworld/nfsim.git",
+        "public_download_numbers": false,
+        "public_stats": false
+    },
+
+    "version": {
+      "name": "1.0",
+      "desc": "The latest release of nfsim",
+      "gpgSign": false
+    },
+
+    "files":
+        [
+        {"includePattern": "dist/(NFsim-.*)", "uploadPattern": "/$1",
+        "matrixParams": {
+            "override": 1 }
+        }
+    ],
+
+    "publish": true
+}

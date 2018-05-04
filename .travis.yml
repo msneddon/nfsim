@@ -4,22 +4,24 @@ os:
 
 compiler:
   - clang
+
 language: c++
 sudo: false
+
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
-    - kalakris-cmake
+      - ubuntu-toolchain-r-test
+      - kalakris-cmake
     packages:
-    - perl
-    - gcc-4.8
-    - g++-4.8
-    - python-dev
-    - python-numpy
-    - libxml2-dev
-    - libboost-all-dev
-    - cmake
+      - perl
+      - gcc-4.8
+      - g++-4.8
+      - python-dev
+      - python-numpy
+      - libxml2-dev
+      - libboost-all-dev
+      - cmake
 
 notifications:
   slack:
@@ -36,13 +38,26 @@ notifications:
 
 
 before_install:
-- source osx_install.sh
+  - source osx_install.sh
 
 install:
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 script: 
   - mkdir -p build; mkdir -p dist; cd build; cmake ..; make; cp NFsim ../dist; cp NFsim ../dist/NFsim-$TRAVIS_OS_NAME ;cd ..; 
   - cd validate;tar xfj bionetgen-2.2.6.tar.bz2
   - python validate.py
   - cd ..
+
+deploy:
+  provider: bintray
+  file: "./bintray.json"
+  user: jczech
+  key:
+    # If you need to regenrate this for some reason, here's what you do:
+    # travis encrypt <YOUR BINTRAY API KEY> --add deploy.key
+    # Get BINTRAY API KEY from https://bintray.com/profile/edit under "API Key" section
+    secure: blvEmR1iGkwD8AMj8Uqi1cWQaI/1JGMTWrxj1EGV8rF7jNhLdIDXdUsBWampZOTsySvU94feuJsjrQz6F9QselaSnEAROb3nmwtS8ta7cXPpouPOAL+ZuT0zQpRXPiY2gOeHXLd9gtW+plTlC8srsl1BuHlHAnIeY3fm+CRQ8fAg9KSBL6Gp6AcxAadPr6YcB5D18NqclByeKRiN0mUA7g2CRYsJ5oR14ZREjEL4QdyIxOP2JhRDgG2PPNP7Iws/t26TDnYAb4YMtcCfKsTQR13EGmmsYNaXfcTEcwaQE2WRFI4DzZ1hifYcZqkq+SQjMaq9C1xxuuxYg305q8dY6teIjBpijZuHEdsP4fJDP8WYXZupEy97p5duTnPhnLNkWabUNhj7RDzg0bsLujAYtdoACcM9pM7hRb2KsyVSLhVngWHibBVT4BkhyrceX4Lof9WLN++t3VigrX+iusJPbedoJVnJJpH+MWutwPnrW73CXrE+GNkLVDI7IcvN2xMxvWgjgMADnyxj7k1ZMoAO+CvFp0zwDkaTKLKIsDFiNFIZb3DHuH+d4Aeacua5xM3ZTmLFgFqPHAci+7JqCSeVdxHMP8PnEMowz3TAF9IVtiEzTYeFyfO11QbtMcHjYPaAtZq746X2LJv0fa2UCog+q6zyHVwJiKBEVMj/rOZZjG4=
+  skip_cleanup: true
+  on:
+    all_branches: true
