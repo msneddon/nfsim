@@ -54,20 +54,21 @@ build_script:
   - if "%platform%"=="x64" ( copy NFsim.exe  NFsim-Win64.exe )
   - if "%platform%"=="x64" ( cd .. )
 
-
-#notifications:
-#  - provider: Slack
-#    incoming_webhook:
-#      secure: Ee9fFcoV1ABKmTKowaok5sUiOlRSGzCpWtwNIBFC0PpauqK+/mEt9KjeUXWsb7J7uFcAb1CKo7y/FFhHEJH6pWGMn5oV283uVnqZAB8Chac=
-#    template: 
-#       "<{{buildUrl}}|{{projectName}} build {{status}}> on {{commitDate}}:_{{commitMessage}}_\n
-#        Build: {{buildVersion}} (<{{commitUrl}}|{{commitId}}>)   Author: {{commitAuthor}}\n         
-#        Download Executable Here:\n
-#        <https://rawgit.com/ruleworld/nfsim/master/.NFsim_Beta.html|https://rawgit.com/ruleworld/nfsim/master/.NFsim_Beta.html>\n
-#        Build Details:\n
-#        <{{buildUrl}}|{{buildUrl}}>"
-
-  
 artifacts:
   - path: '.\build\NFsim-Win*.exe'
     name: NFsim
+
+deploy:
+  - provider: BinTray
+    username: jczech
+    subject: jczech
+    api_key:
+      # api key from https://bintray.com/profile/edit
+      # encrypted in https://ci.appveyor.com/tools/encrypt
+      secure: XzrXGPWsRRrx8DZTJSNJpLkMZrxlXF2vdeao4CCBiXUtKBuxR7Nj2CQIBy3L3bSB
+    repo: NFsim
+    package: NFsim
+    version: 1.0
+    artifact: NFsim
+    publish: true
+    override: true
