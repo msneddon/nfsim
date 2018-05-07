@@ -33,26 +33,22 @@ build_script:
   - cmd: echo Running cmake ...
   - cmd: mkdir build
 
-# Build the 32bit executable with Cygwin
-#  - if "%platform%"=="x86" ( SET "PATH=C:\\tools\\mingw32\\bin;C:\\MinGW\\mingw32\\bin;C:\\MinGW\\bin;%PATH%" )  
+  # Build the 32bit executable
   - if "%platform%"=="x86" ( move CMakeLists.txt      CMakeLists.x64.txt )
   - if "%platform%"=="x86" ( copy CMakeLists.x86.txt  .\CMakeLists.txt )
   - if "%platform%"=="x86" ( cd build )
   - if "%platform%"=="x86" ( copy C:\cygwin\bin\gcc.exe C:\cygwin\bin\cc.exe )
-  - if "%platform%"=="x86" ( cmake -G "Ninja" .. )
-  - if "%platform%"=="x86" ( ninja )
-  - if "%platform%"=="x86" ( copy NFsim.exe  NFsim-Win32.exe )
-  - if "%platform%"=="x86" ( cd .. )
   
-  
-# Build the 64bit executable with ordinary MinGW
-#  - if "%platform%"=="x64" ( SET  "PATH=C:\\tools\\mingw64\\bin;%PATH%" )
+  # Build the 64bit executable
   - if "%platform%"=="x64" ( cd build )
   - if "%platform%"=="x64" ( copy C:\cygwin64\bin\gcc.exe C:\cygwin64\bin\cc.exe )
-  - if "%platform%"=="x64" ( cmake -G "Ninja" .. )
-  - if "%platform%"=="x64" ( ninja )
-  - if "%platform%"=="x64" ( copy NFsim.exe  NFsim-Win64.exe )
-  - if "%platform%"=="x64" ( cd .. )
+
+  - cmake -G "Ninja" ..
+  - ninja
+  # Test running the binary
+  - .\NFsim.exe
+  - "cp NFsim.exe  NFsim-%TRAVIS_OS_NAME%.exe"
+  - cd ..
 
 artifacts:
   - path: '.\build\NFsim-Win*.exe'
