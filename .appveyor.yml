@@ -50,20 +50,18 @@ build_script:
   - "mkdir NFsim-Win%platform%"
   - "cp NFsim.exe  NFsim-Win%platform%"
 
-  - cd C:\cygwin64\bin
-  - ls
-  #- if "%platform%"=="x86" (cp C:\cygwin\bin\cygwin*dll NFsim-Win%platform%)
+  - if "%platform%"=="x86" (cp C:\cygwin\bin\cygwin1.dll NFsim-Win%platform%)
   #- if "%platform%"=="x86" (cp C:\cygwin\bin\cygstdc*dll NFsim-Win%platform%)
-  #- if "%platform%"=="x86" (cp C:\cygwin\bin\cygz*dll NFsim-Win%platform%)
+  - if "%platform%"=="x86" (cp C:\cygwin\bin\cygz.dll NFsim-Win%platform%)
   #- if "%platform%"=="x86" (cp C:\cygwin\bin\cyggcc*dll NFsim-Win%platform%)
 
-  #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cygwin*dll NFsim-Win%platform%)
+  - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygwin1.dll NFsim-Win%platform%)
   #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cygstdc*dll NFsim-Win%platform%)
-  #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cygz*dll NFsim-Win%platform%)
+  - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygz.dll NFsim-Win%platform%)
   #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cyggcc*dll NFsim-Win%platform%)
 
-  #- "7z a NFsim-Win%platform%.zip NFsim-Win%platform%"
-  #- cd ..
+  - "7z a NFsim-Win%platform%.zip NFsim-Win%platform%"
+  - cd ..
 
 artifacts:
   - path: '.\build\NFsim-*.zip'
