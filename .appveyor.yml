@@ -51,14 +51,16 @@ build_script:
   - "cp NFsim.exe  NFsim-Win%platform%"
 
   - if "%platform%"=="x86" (cp C:\cygwin\bin\cygwin1.dll NFsim-Win%platform%)
-  #- if "%platform%"=="x86" (cp C:\cygwin\bin\cygstdc*dll NFsim-Win%platform%)
+  - if "%platform%"=="x86" (cp C:\cygwin\bin\cygstdc++-6.dll NFsim-Win%platform%)
   - if "%platform%"=="x86" (cp C:\cygwin\bin\cygz.dll NFsim-Win%platform%)
-  #- if "%platform%"=="x86" (cp C:\cygwin\bin\cyggcc*dll NFsim-Win%platform%)
+  - if "%platform%"=="x86" (cp C:\cygwin\bin\cyggccpp-1.dll NFsim-Win%platform%)
+  - if "%platform%"=="x86" (cp C:\cygwin\bin\cyggcc_s-1.dll NFsim-Win%platform%)
 
   - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygwin1.dll NFsim-Win%platform%)
-  #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cygstdc*dll NFsim-Win%platform%)
+  - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygstdc++-6.dll NFsim-Win%platform%)
   - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygz.dll NFsim-Win%platform%)
-  #- if "%platform%"=="x64" (cp C:\cygwin64\bin\cyggcc*dll NFsim-Win%platform%)
+  - if "%platform%"=="x64" (cp C:\cygwin64\bin\cyggccpp-1.dll NFsim-Win%platform%)
+  - if "%platform%"=="x64" (cp C:\cygwin64\bin\cyggcc_s-1.dll NFsim-Win%platform%)
 
   - "7z a NFsim-Win%platform%.zip NFsim-Win%platform%"
   - cd ..
