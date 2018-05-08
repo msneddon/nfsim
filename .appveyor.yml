@@ -47,12 +47,14 @@ build_script:
   - ninja
   # Test running the binary
   - .\NFsim.exe
-  - "cp NFsim.exe  NFsim-%platform%.exe"
+  - "cp NFsim.exe  NFsim-Win%platform%.exe"
+  - "7z a NFsim-Win%platform%.zip NFsim-Win%platform%.exe"
   - cd ..
 
 artifacts:
-  - path: '.\build\NFsim-*.exe'
+  - path: '.\build\NFsim-*.zip'
     name: nfsim
+    type: zip
 
 deploy:
   - provider: BinTray
