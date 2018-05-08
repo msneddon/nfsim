@@ -47,11 +47,11 @@ build_script:
   - ninja
   # Test running the binary
   - .\NFsim.exe
-  - "cp NFsim.exe  NFsim-%TRAVIS_OS_NAME%.exe"
+  - "cp NFsim.exe  NFsim-%platform%.exe"
   - cd ..
 
 artifacts:
-  - path: '.\build\NFsim-Win*.exe'
+  - path: '.\build\NFsim-*.exe'
     name: nfsim
 
 deploy:
