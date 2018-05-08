@@ -53,7 +53,6 @@ build_script:
   - if "%platform%"=="x86" (cp C:\cygwin\bin\cygwin1.dll NFsim-Win%platform%)
   - if "%platform%"=="x86" (cp C:\cygwin\bin\cygstdc++-6.dll NFsim-Win%platform%)
   - if "%platform%"=="x86" (cp C:\cygwin\bin\cygz.dll NFsim-Win%platform%)
-  - if "%platform%"=="x86" (cp C:\cygwin\bin\cyggcc_s-seh-1.dll NFsim-Win%platform%)
 
   - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygwin1.dll NFsim-Win%platform%)
   - if "%platform%"=="x64" (cp C:\cygwin64\bin\cygstdc++-6.dll NFsim-Win%platform%)
