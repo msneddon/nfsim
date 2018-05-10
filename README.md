@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/RuleWorld/nfsim.svg?branch=master)](https://travis-ci.org/RuleWorld/nfsim)
 [![Build status](https://ci.appveyor.com/api/projects/status/423rdsbq0dak9gtt?svg=true)](https://ci.appveyor.com/project/jczech/nfsim)
+<a href="https://scan.coverity.com/projects/nfsim">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/15734/badge.svg"/>
+</a>
 
 - michael w. sneddon
 - justin s. hogg
@@ -78,8 +82,8 @@ stable. Use at your own risk.
 
 * [Linux](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-linux)
 * [OSX](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-osx)
-* [Windows x64](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Win64.exe) 
-* [Windows x86](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Win32.exe)
+* [Windows x64](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Win64.zip) 
+* [Windows x86](https://bintray.com/jczech/nfsim/download_file?file_path=NFsim-Winx86.zip)
 
 
 ## Release Notes
