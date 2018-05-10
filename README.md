@@ -17,7 +17,7 @@ Yale University
 University of Pittsburgh  
 funded by the National Science Foundation  
 
--------------------------------------------------------------------------------
+## Overview
 
 NFsim is a free, open-source, biochemical reaction simulator designed to handle
 systems that have a large or even infinite number of possible molecular
@@ -39,41 +39,49 @@ If you use NFsim for your research or work, please cite NFsim as: Sneddon MW,
 Faeder JR & Emonet T. Efficient modeling, simulation and coarse-graining of
 biological complexity with NFsim. Nature Methods,(2011) 8(2):177-83.
 
--------------------------------------------------------------------------------
+## Repository Contents
 
-NFsim is released under the GNU General Public License. See LICENSE.txt for
-more details about redistribution restrictions. The git repository is now
-hosted on github at: https://github.com/msneddon/nfsim
+NFsim is released under the MIT License. See LICENSE.txt for more details about
+redistribution restrictions.
   
 For help with running NFsim, see the user manual, NFsim\_manual\_[version].pdf,
 and open the example model "simple\_system.bngl".
 
-Executable files for Windows, Mac and Linux are in the "bin" directory. Source
-code and makefiles for NFsim are in the NFcode directory. Example models are in
-the "models" directory, with README files. BioNetGen and the ODE and SSA
-solvers used by BioNetGen are in the BNG and Network2 directories. Finally, a
-suite of helpful analysis and other modeling tools can be found in the
-"NFtools" directory.
+Source code is in the "src" directory. Example models are in the "models"
+directory, with README files. BioNetGen and the ODE and SSA solvers used by
+BioNetGen are in the BNG and Network2 directories.
 
 Enjoy your new network-free world!
 
--------------------------------------------------------------------------------
+## Building NFsim
 
-NFsim is released under the GNU General Public License. See LICENSE.txt for
-more details about redistribution restrictions. The git repository is now hosted
-on github at: https://github.com/msneddon/nfsim
-  
-For help with running NFsim, see the user manual, NFsim\_manual\_[version].pdf,
-and open the example model "simple\_system.bngl".
+### Linux and OSX
 
-Executable files for Windows, Mac and Linux are in the "bin" directory. Source
-code and makefiles for NFsim are in the NFcode directory. Example models are
-in the "models" directory, with README files. BioNetGen and the ODE and SSA
-solvers used by BioNetGen are in the BNG and Network2 directories. Finally,
-a suite of helpful analysis and other modeling tools can be found in the
-"NFtools" directory.
+Make sure you have a recent version of CMake installed and run the following at
+a terminal:
 
-Enjoy your new network-free world!
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+### Windows
+
+Make sure you have a recent version of CMake, Cygwin (or MinGW), and Ninja
+installed. Then run the following at a terminal:
+
+    mkdir build
+    cd build
+    cmake -G "Ninja"
+    ninja
+
+If you've built it with Cygwin and you want to move or package up the
+executable, you'll need to copy the the following DLLs along with it:
+
+* cygwin1.dll
+* cygstdc++-6.dll
+* cygz.dll
+* cyggcc_s-seh-1.dll.
 
 ## Download Latest Test Builds
 
