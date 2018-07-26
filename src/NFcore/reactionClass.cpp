@@ -533,7 +533,13 @@ void ReactionClass::fire(double random_A_number) {
 				this->getName() << "\t" <<
 				(*molIter)->getMoleculeType()->getName() << "\t" <<
 				(*molIter)->getUniqueID() << endl;
+		// add by rasi for printing reactions of specific molecules
+		if ((*molIter)->getUniqueID() == 284 & this->getName() == "initiation") {
+			cout << (*molIter)->getUniqueID() << endl;
+			this->printDetails();
+			}
 		}
+
 	}
 
 
