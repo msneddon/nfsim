@@ -557,7 +557,10 @@ namespace NFcore
 			string getComponentStateName(int cIndex, int cValue);
 			int getStateValueFromName(int cIndex, string stateName) const;
 
-
+			// Set values for polymer related properties; everything set to -1 if not a polymer
+			// Arvind Rasi Subramaniam
+			void setPolymerInformation(bool isPolymer, vector <int> polymerType,
+					vector <int> polymerLocation, vector <int> polymerInteractionDistance);
 
 
 			// set of functions that deal with equivalent (aka symmetric) components
@@ -720,13 +723,39 @@ namespace NFcore
 			vector < int > defaultCompState;
 			vector < bool > isIntegerCompState;
 			const bool population_type;
-//			// add polymer type to constrain spatial search for bonded neighbors.
-//			const bool polymer_type;
-//			// keep track of the location along the polymer if the state is polymeric
-//			// if it is not polymeric, set the polymer_location to be -1
-//			vector < int > polymer_location;
-//			// add distance over which any spatial search is conducted for this type of molecule
-//			int interactionDistance;
+
+			/**
+			 * Check if the molecule is a polymer.
+			 * If set to true, will trigger searching for bonded molecules
+			 * in TransformationSet::getListOfProducts.
+			 * @author Arvind Rasi Subramaniam
+			 */
+			bool isPolymer;
+
+			/**
+			 * Keeps track of what kind of polymer state is
+			 * each state.
+			 * If not a polymer state, set this to -1.
+			 * @author Arvind Rasi Subramaniam
+			 */
+			vector < int > polymerType;
+
+			/**
+			 * Set the location within the polymer.
+			 * Use for calculating whether this state is within
+			 * the inteaction distance.
+			 * @author Arvind Rasi Subramaniam
+			 */
+			vector < int > polymerLocation;
+
+			/**
+			 * Set the interactino distance from this state
+			 * to another polymer state.
+			 * Used for identifying bonded molecules at nearby states
+			 * that might have changed near this state.
+			 * @author Arvind Rasi Subramaniam
+			 */
+			vector < int > polymerInteractionDistance;
 
 
 			//set of variables to keep track of equivalent (aka symmetric) components

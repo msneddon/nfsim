@@ -284,6 +284,15 @@ bool NFinput::initMoleculeTypes(
 		vector <int> firstSymSiteToAppend;  //If we find a symmetric component, we should go
 		                                    //back and name append a '1' to the name.
 
+
+		// reads in polymer related variables if they are supplied
+		// used for mRNA simulations
+		// Arvind Rasi Subramaniam
+		bool isPolymer = false;
+		vector < int > polymerType;
+		vector < int > polymerLocation;
+		vector < int > polymerInteractionDistance;
+
 		//Loop through the MoleculeType tags...
 		TiXmlElement *pMoTypeEl;
 		for ( pMoTypeEl = pListOfMoleculeTypes->FirstChildElement("MoleculeType"); pMoTypeEl != 0; pMoTypeEl = pMoTypeEl->NextSiblingElement("MoleculeType"))
@@ -319,6 +328,7 @@ bool NFinput::initMoleculeTypes(
 					if(verbose) cout << "\t\tTreating molecule type '" << typeName << "' as a population" << endl;
 				}
 			}
+
 
 			//Get the list of components in the moleculeType
 			TiXmlElement *pListOfComp = pMoTypeEl->FirstChildElement("ListOfComponentTypes");
@@ -393,6 +403,30 @@ bool NFinput::initMoleculeTypes(
 
 
 					compLabels.push_back(compName);
+
+
+					// Examine the polymer-related info for each component and store it for future
+					// assignment to MoleculeType
+					// If MoleculeType is not polymer, assign -1 to all these vectors
+					// Arvind Rasi Subramaniam
+					if (pComp->FirstChildElement("PolymerType")) {
+						if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
+						isPolymer = true;
+						polymerType.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerType")->Attribute("id")));
+						polymerLocation.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerLocation")->Attribute("id")));
+						polymerInteractionDistance.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
+					} else {
+						polymerType.push_back(-1);
+						polymerLocation.push_back(-1);
+						polymerInteractionDistance.push_back(-1);
+					}
+
 
 					bool isIntegerState=false;
 
@@ -548,7 +582,7 @@ bool NFinput::initMoleculeTypes(
 						//cout<<"Found!! :"<<mappedKey.substr(0,oldKeyStart.size())<<endl;
 						allowedStates[typeName+"_"+originalCompLabel+"1_"+mappedKey.substr(oldKeyStart.size())] = (*it).second;
 						//cout<<mappedKey.substr(oldKeyStart.size())<<endl;
-					}
+}
 				}
 			}
 
@@ -558,7 +592,15 @@ bool NFinput::initMoleculeTypes(
 			MoleculeType *mt = new MoleculeType(typeName,compLabels,defaultCompState,possibleComponentStates,isIntegerComponent,isPopulation,s);
 			mt->addEquivalentComponents(identicalComponents);
 
+			// Set the polymer-related information for the molecule
+			// Arvind Rasi Subramaniam
+			mt->setPolymerInformation(isPolymer, polymerType, polymerLocation, polymerInteractionDistance);
+
 			//Finally, clear the states and binding site labels that we read in
+			isPolymer = false;
+			polymerType.clear();
+			polymerLocation.clear();
+			polymerInteractionDistance.clear();
 			compLabels.clear();
 			defaultCompState.clear();
 			possibleComponentStates.clear();

@@ -196,6 +196,23 @@ MoleculeType::~MoleculeType()
 	delete mList;
 }
 
+/**
+ * Set the polymer related information for the molecule
+ * This is done at be beginning of the simulation in NFInput.
+ * @param isPolymer - true if the polymer flag is set
+ * @param polymerType - polymer type for each component, for eg. 0 for coding region, 1 for polyA etc
+ * @param polymerLocation - locations within the polymer for each component
+ * @param polymerInteractionDistance - distances to look around each component location
+ * @author Arvind Rasi Subramaniam
+ */
+void MoleculeType::setPolymerInformation(bool isPolymer, vector <int> polymerType,
+					vector <int> polymerLocation, vector <int> polymerInteractionDistance) {
+	this->isPolymer = isPolymer;
+	this->polymerType = polymerType;
+	this->polymerLocation = polymerLocation;
+	this->polymerInteractionDistance = polymerInteractionDistance;
+}
+
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
 {
 	this->n_eqComp = identicalComponents.size();
