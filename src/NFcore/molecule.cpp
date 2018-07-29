@@ -363,6 +363,69 @@ void Molecule::printDetails(ostream &o)
 	}
 }
 
+/**
+ * Prints to screen, see printDetails(ostram )
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails() {
+	this->printBondDetails(cout);
+}
+
+/**
+ * Print all bonded states and their details to output stream
+ *
+ * Iterates through all components of a molecule type and prints
+ * only those components with a bond including the binding partner
+ * and the site of attachment.
+ *
+ * Same function written separately for printing to cout and NFStream
+ * @param o - Stream to write to
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(ostream &o) {
+	int degree = 0;
+	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
+	for(int c=0; c<numOfComponents; c++)
+	{
+		if(bond[c]==NOBOND) {continue;}
+		else {
+			o<<"\t";
+			o<< parentMoleculeType->getComponentName(c) <<"=";
+			o<<parentMoleculeType->getComponentStateName(c,component[c]);
+			o<<",bond=";
+			o<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+			o<<"("<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c])<<")";
+		}
+	}
+	o.flush();
+}
+
+/**
+ * Same as printBondDetails(ostream )
+ * but writes to NFStream file instead of ostream
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(NFstream &o)
+{
+	int degree = 0;
+	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
+	for(int c=0; c<numOfComponents; c++)
+	{
+		if(bond[c]==NOBOND) {continue;}
+		else {
+			o<<"\t";
+			o << parentMoleculeType->getComponentName(c);
+			if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
+				o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+			}
+			o<<":";
+			o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
+			o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+		}
+	}
+	o.flush();
+}
+
 //Get the number of molecules this molecule is bonded to
 int Molecule::getDegree()
 {

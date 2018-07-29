@@ -702,13 +702,18 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 			// all standard reactions.  I'm wondering now, though, if it is enough in
 			// all cases where you would use the connected-to syntax.  I think so, but
 			// someone should test it.  --michael 9Mar2011
-			Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
 
-			// is this molecule already on the product list?
-			if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
-			{	// Traverse neighbor and add molecules to list
-				molecule->traverseBondedNeighborhood(products,traversalLimit);
-				//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
+			// modified by rasi to skip traversing bonds
+			// these require high traversal limit that slows down the simulation
+			// instead add all the molecules in the mapping set
+			for (int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
+				Molecule * molecule = mappingSets[r]->get(i)->getMolecule();
+				// is this molecule already on the product list?
+				if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+				{	// Traverse neighbor and add molecules to list
+					products.push_back(molecule);
+//					molecule->traverseBondedNeighborhood(products,traversalLimit);
+				}
 			}
 		}
 	}

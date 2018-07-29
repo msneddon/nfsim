@@ -9,7 +9,7 @@ using namespace NFcore;
 
 
 
-ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s)
+ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s) // @suppress("Class members should be properly initialized")
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
@@ -333,8 +333,6 @@ void ReactionClass::printDetails() const {
 void ReactionClass::fire(double random_A_number) {
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
-
-
 	// First randomly pick the reactants to fire by selecting the MappingSets
 	this->pickMappingSets(random_A_number);
 
@@ -408,11 +406,31 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
+	// Use for debugging specific reactions; rasi
+//	if (name == "collision_19") {
+//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+//			cout << name << "\t";
+//			(*molIter)->printBondDetails();
+//			cout << endl;
+//		}
+//		cout <<"<<<<<<<<<<<<<<<<"<<endl;
+//	}
 
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
 	this->transformationSet->transform(this->mappingSet);
+
+	// see how the product bonds changed after transform
+	// use for debugging; rasi
+//	if (name == "collision_19") {
+//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+//			cout << name << "\t";
+//			(*molIter)->printBondDetails();
+//			cout << endl;
+//		}
+//		cout <<"<<<<<<<<<<<<<<<<"<<endl;
+//	}
 
 
 	// Add newly created molecules to the list of products
@@ -529,17 +547,12 @@ void ReactionClass::fire(double random_A_number) {
 	// output if the reaction was tagged
 	if (tagged) {
 	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-		this->system->getReactionFileStream() << this->system->getCurrentTime() << "\t" <<
-				this->getName() << "\t" <<
-				(*molIter)->getMoleculeType()->getName() << "\t" <<
-				(*molIter)->getUniqueID() << endl;
-		// add by rasi for printing reactions of specific molecules
-		if ((*molIter)->getUniqueID() == 284 & this->getName() == "initiation") {
-			cout << (*molIter)->getUniqueID() << endl;
-			this->printDetails();
-			}
+		// print the time and reaction name
+		this->system->getReactionFileStream() << this->system->getCurrentTime() << "\t" << name << "\t";
+		// print the molecule type and its bonded states (exclude non-bonded states)
+		(*molIter)->printBondDetails(this->system->getReactionFileStream());
+		this->system->getReactionFileStream() << endl;
 		}
-
 	}
 
 

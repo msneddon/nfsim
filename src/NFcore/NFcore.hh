@@ -720,6 +720,13 @@ namespace NFcore
 			vector < int > defaultCompState;
 			vector < bool > isIntegerCompState;
 			const bool population_type;
+//			// add polymer type to constrain spatial search for bonded neighbors.
+//			const bool polymer_type;
+//			// keep track of the location along the polymer if the state is polymeric
+//			// if it is not polymeric, set the polymer_location to be -1
+//			vector < int > polymer_location;
+//			// add distance over which any spatial search is conducted for this type of molecule
+//			int interactionDistance;
 
 
 			//set of variables to keep track of equivalent (aka symmetric) components
@@ -878,6 +885,12 @@ namespace NFcore
 			/* print functions for debugging */
 			void printDetails();
 			void printDetails(ostream &o);
+
+			/* print bond details for debugging and tracking state changes */
+			void printBondDetails();
+			void printBondDetails(NFstream &o);
+			void printBondDetails(ostream &o);
+
 			static void printMoleculeList(list <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };
