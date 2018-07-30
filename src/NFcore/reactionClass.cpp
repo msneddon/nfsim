@@ -30,7 +30,9 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	//Set up the template molecules from the transformationSet
 	this->n_reactants   = transformationSet->getNreactants();
 	this->n_mappingsets = transformationSet->getNmappingSets();
-	this->reactantTemplates = new TemplateMolecule *[n_reactants];
+//	cout<<"n_reactants "<< this->n_reactants << endl;
+//	cout<<"n_mappingsets "<< this->n_mappingsets << endl;
+	this->reactantTemplates = vector <TemplateMolecule *>(n_reactants);
 	vector <TemplateMolecule*> tmList;
 	vector <int> hasMapGenerator;
 	for(unsigned int r=0; r<n_reactants; r++)
@@ -262,7 +264,6 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 
 ReactionClass::~ReactionClass()
 {
-	delete [] reactantTemplates;
 	delete transformationSet;
 	for ( unsigned int r = n_reactants; r < n_mappingsets; ++r )
 	{
@@ -344,7 +345,7 @@ void ReactionClass::fire(double random_A_number) {
 		return;
 	}
 
-	if (name == "elongation_with_hit5_29") {
+	if (name == "elongation_with_hit5_80") {
 		cout << name << "\n";
 	}
 

@@ -342,7 +342,7 @@ void TemplateMolecule::printDetails(ostream &o) {
 	if(n_bonds==0)o<<"none";
 	for(int i=0;i<n_bonds; i++) {
 		o<<moleculeType->getComponentName(bondComp[i])<<"(index="<<bondComp[i]<<"):";
-		o<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<")";
+		o<<bondPartner[i]->getMoleculeTypeName()<<"("<<bondPartnerCompName[i]<<") | ";
 	}
 
 	o<<"\n  Symmetric Constraints:               ";

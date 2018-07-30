@@ -31,7 +31,6 @@ System::System(string name)
 
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
-	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
 	globalEventCounter=0;
@@ -60,7 +59,6 @@ System::System(string name, bool useComplex)
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 
-	rxnIndexMap=0;
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
 	outputEventCounter=false;
@@ -87,7 +85,6 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	this->globalMoleculeLimit=globalMoleculeLimit;
 	this->outputGlobalFunctionValues=false;
 
-	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
 	globalEventCounter=0;
@@ -109,11 +106,7 @@ System::~System()
 	if(selector!=0) delete selector;
 
 	//Delete the rxnIndexMap array
-	if(rxnIndexMap!=NULL) {
-		for(unsigned int r=0; r<allReactions.size(); r++)
-			if(rxnIndexMap[r]!=NULL) { delete [] rxnIndexMap[r]; }
-		delete [] rxnIndexMap;
-	}
+	rxnIndexMap.clear();
 
 	//Need to delete reactions
 	ReactionClass *r;
@@ -393,6 +386,21 @@ bool System::addGlobalFunction(GlobalFunction *gf)
 }
 
 
+ReactionClass * System::getReactionByName(string rName)
+{
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		//(*molTypeIter)->printDetails(); //<<endl;
+		if((*rxnIter)->getName()==rName)
+		{
+			return (*rxnIter);
+		}
+	}
+	cerr<<"!!! warning !!! cannot find reaction type name '"<< rName << "' in System: '"<<this->name<<"'"<<endl;
+	exit(1);
+	return 0;
+}
+
 
 
 MoleculeType * System::getMoleculeTypeByName(string mName)
@@ -482,10 +490,10 @@ void System::prepareForSimulation()
     //this->printAllFunctions();
 
   	// now we prepare all reactions
-	rxnIndexMap = new int * [allReactions.size()];
+	rxnIndexMap = vector <vector <int>>(allReactions.size());
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
-  		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
+  		rxnIndexMap[r] = vector <int>(allReactions.at(r)->getNumOfReactants());
   		allReactions.at(r)->setRxnId(r);
   	}
 

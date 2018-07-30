@@ -1,0 +1,14 @@
+#+TITLE: Notes for Rasi's modification to the program
+
+
+[2018-07-30 Mon]
+
+- I have implemented the search for product molecules so that all molecules that undergo changes are included.
+- However this has not yet worked. Here are lessons learned in the process:
+  1. The matching of products to reactantTemplates is not guaranteed. This is because the reactant template seems to include only one connnected component. If the product is not this connected component, then the product does not trigger a change in reaction rates.
+  2. More generally, whenever you introduce or simulate a new reaction, make sure that the updates are occurring as expected by looking at the product list and reactions around the time when the new reaction first occurs.
+
+[2018-07-28 Sat]
+To improve breadth only search for ribosome motion on mRNAs, to get a list of possible products for a reaction:
+- designate the mRNA as a polymer molecule.
+- if you hit a polymer molecule during a breadthonlysearch, do not look for bonded neighbors beyond a distance specified at the start of the simulation. This will keep the number of products from blowing up for longer mRNAs.

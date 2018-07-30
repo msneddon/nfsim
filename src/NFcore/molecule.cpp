@@ -339,6 +339,9 @@ void Molecule::printDetails(ostream &o)
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
+		// Do not print non-bonded states so that mRNA representations are compact
+		// Arvind Rasi Subramaniam
+		if (bond[c]==NOBOND) continue;
 		if(c!=0)o<<"                  ";
 		o<< parentMoleculeType->getComponentName(c) <<"=";
 		o<<parentMoleculeType->getComponentStateName(c,component[c]);

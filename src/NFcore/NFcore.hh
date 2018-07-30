@@ -211,6 +211,7 @@ namespace NFcore
 			double getAverageGroupValue(string groupName, int valIndex);
 
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
+			ReactionClass * getReactionByName(string name);
 
 			MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
 			MoleculeType * getMoleculeTypeByName(string name);
@@ -462,7 +463,7 @@ namespace NFcore
 
 			///////////////////////////////////////////////////////////////////////////
 			//random data structures and variables used for optimization....
-			int **rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
+			vector <vector <int>> rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
 			                        quickly lookup a reaction */
 
 
@@ -1167,7 +1168,7 @@ namespace NFcore
 
 			unsigned int traversalLimit;
 
-			TemplateMolecule **reactantTemplates;
+			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;
 			MappingSet **mappingSet;
 
