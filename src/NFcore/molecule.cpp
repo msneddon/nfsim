@@ -711,7 +711,68 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
 }
 
 
+/**
+ * Note that if two polymer molecules are bound, this will traverse only those
+ * neighborhoods around sites that are in the mapping set for each molecule.
+ * @param members
+ * @param mapping
+ */
+void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping) {
 
+	// if already visited this molecule, don't add it again
+	if (this->hasVisitedMolecule == false) {
+		// Add this molecule
+		members.push_back(this);
+		// This molecule is now visited
+		this->hasVisitedMolecule = true;
+	}
 
+	int cIndex;
+	int nearbycIndex;
+	int polymerType;
+	int polymerLocation;
+	int polymerInteractionDistance;
 
+	cIndex = mapping->getIndex();
+	Molecule * mol = this;
+	MoleculeType * mt =  this->getMoleculeType();
+	// if molecule is not a polymer, check the binding partner
+	if (mt->checkIfPolymer() == false) {
+		// return if there is no binding partner
+		if (this->isBindingSiteOpen(cIndex)) return;
+		// set the binding partner to be the focus molecule
+		mol = this->getBondedMolecule(cIndex);
+		mt = mol->getMoleculeType();
+		// return if binding partner is also not a polymer
+		if (mt->checkIfPolymer() == false)  return;
+		// if we got this far, set the cIndex to be the binding partner cIndex
+		cIndex = this->getBondedMoleculeBindingSiteIndex(cIndex);
+	}
 
+	polymerType =  mt->getPolymerType(cIndex);
+
+	// The comp being changed is not a polymer component
+	if (polymerType < 0) return;
+
+	polymerLocation = mt->getPolymerLocation(cIndex);
+	polymerInteractionDistance = mt->getPolymerInteractionDistance(cIndex);
+
+	for (int loc = polymerLocation - polymerInteractionDistance;
+			loc <= polymerLocation + polymerInteractionDistance;
+			loc++) {
+		nearbycIndex = mt->getPolymerGridComp(polymerType, loc);
+		// the polymerlocation was beyond the edge, so returned -1
+		if (nearbycIndex < 0) continue;
+
+		// there was no binding partner at the nearby location
+		if (mol->isBindingSiteOpen(nearbycIndex)) continue;
+
+		// if there is a binding partner and it was not visited before,
+		// add it now
+		Molecule * neighbor = mol->getBondedMolecule(nearbycIndex);
+		if (neighbor->hasVisitedMolecule == false) {
+			neighbor->hasVisitedMolecule = true;
+			members.push_back(neighbor);
+		}
+	}
+}

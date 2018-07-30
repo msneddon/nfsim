@@ -344,18 +344,13 @@ void ReactionClass::fire(double random_A_number) {
 		return;
 	}
 
+	if (name == "elongation_with_hit5_29") {
+		cout << name << "\n";
+	}
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
-
-
-	// display product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	//	(*molIter)->printDetails();
-	//	cout<<"<<"<<endl;
-	//}
 
 
 	// Loop through the products (excluding added molecules) and remove from observables
@@ -407,14 +402,14 @@ void ReactionClass::fire(double random_A_number) {
 	}
 
 	// Use for debugging specific reactions; rasi
-//	if (name == "collision_19") {
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-//			cout << name << "\t";
-//			(*molIter)->printBondDetails();
-//			cout << endl;
-//		}
-//		cout <<"<<<<<<<<<<<<<<<<"<<endl;
-//	}
+	if (name == "elongation_with_hit5_29") {
+		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+			cout << name << "\t";
+			(*molIter)->printBondDetails();
+			cout << endl;
+		}
+		cout <<"<<<<<<<<<<<<<<<<"<<endl;
+	}
 
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,

@@ -211,6 +211,30 @@ void MoleculeType::setPolymerInformation(bool isPolymer, vector <int> polymerTyp
 	this->polymerType = polymerType;
 	this->polymerLocation = polymerLocation;
 	this->polymerInteractionDistance = polymerInteractionDistance;
+	if (!isPolymer) return;
+	// resize polymerGrid based on to accommodate the number of polymer types and locations
+	// and initialize all values to -1 (initialization critical for neighborhood traversal.
+	max_polymer_types = *max_element(polymerType.begin(), polymerType.end()) + 1;
+	max_polymer_locations = *max_element(polymerLocation.begin(), polymerLocation.end()) + 1;
+	this->polymerGrid.resize(max_polymer_types, vector <int>(max_polymer_locations, -1));
+	for (int i=0; i<polymerType.size(); i++) {
+		if (polymerType[i] < 0) continue;
+		this->polymerGrid[polymerType[i]][polymerLocation[i]] = i;
+	}
+}
+
+/**
+ * Get the cIndex at a specific location (col) of a specific polymer type (row)
+ * @param row - polymer type index
+ * @param col - polymer location index
+ * @return - component index or -1 if row/col out of bounds
+ * @author Arvind Rasi Subramaniam
+ */
+int MoleculeType::getPolymerGridComp(int row, int col) const {
+	if (row < 0 | col < 0 |
+			row >= this->max_polymer_types |
+			col >= this->max_polymer_locations) return -1;
+	return this->polymerGrid[row][col];
 }
 
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)

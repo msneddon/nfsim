@@ -708,15 +708,21 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 			// instead add all the molecules in the mapping set
 			for (int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
 				Molecule * molecule = mappingSets[r]->get(i)->getMolecule();
-				// is this molecule already on the product list?
-				if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
-				{	// Traverse neighbor and add molecules to list
-					products.push_back(molecule);
+				// Search for bonds within interaction distance
+				// of sites that are being changed by the MappingSet
+				// Add molecules bonded within this distance.
+				// This is done to prevent searching across the full molecule, which is very
+				// inefficient for simulating translation on an mRNA
+				// Arvind Rasi Subramaniam
+				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i));
 //					molecule->traverseBondedNeighborhood(products,traversalLimit);
-				}
 			}
 		}
 	}
+
+	// reset visitation of molecules in products for next round
+	for( molIter = products.begin(); molIter != products.end(); molIter++ )
+  		(*molIter)->hasVisitedMolecule=false;
 
 	// Next, find added molecules that are treated as populations.
 	//  Populations molecules have to be removed from observables, then incremented,

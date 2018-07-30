@@ -53,6 +53,7 @@ namespace NFcore
 	//Forward declarations to deal with cyclic dependencies
 	class MapGenerator;
 	class MappingSet;
+	class Mapping;
 	class ReactantList;
 	class TransformationSet;
 	class MoleculeList;
@@ -557,11 +558,19 @@ namespace NFcore
 			string getComponentStateName(int cIndex, int cValue);
 			int getStateValueFromName(int cIndex, string stateName) const;
 
-			// Set values for polymer related properties; everything set to -1 if not a polymer
+			// Functions to deail with polymer related properties; everything set to -1 if not a polymer
 			// Arvind Rasi Subramaniam
+			// used at beginning of simulation to set values
 			void setPolymerInformation(bool isPolymer, vector <int> polymerType,
 					vector <int> polymerLocation, vector <int> polymerInteractionDistance);
-
+			// Use to decide whether to traverse polymer neighborhood
+			bool checkIfPolymer() const {return this->isPolymer; };
+			// Use to traverse polymer neighborhood
+			int getPolymerType(int cIndex) const {return this->polymerType[cIndex]; };
+			int getPolymerLocation(int cIndex) const {return this->polymerLocation[cIndex]; };
+			int getPolymerInteractionDistance(int cIndex) const {return this->polymerInteractionDistance[cIndex]; };
+			// Get the component index that is nearby on the polymer
+			int getPolymerGridComp(int row, int col) const;
 
 			// set of functions that deal with equivalent (aka symmetric) components
 		    // Here is how this works:
@@ -584,10 +593,6 @@ namespace NFcore
 
 			// given a component index, return the generic component name
 			string getEquivalenceClassComponentNameFromComponentIndex(int cIndex) const;
-
-
-
-
 
 			// query or set population type
 			bool isPopulationType() const { return population_type; };
@@ -757,6 +762,16 @@ namespace NFcore
 			 */
 			vector < int > polymerInteractionDistance;
 
+			/**
+			 * Grid to store the component indices for each polymer type
+			 * in the molecule
+			 * @author Arvind Rasi Subramaniam
+			 */
+			vector <vector <int>> polymerGrid;
+			// n_row and n_col for the above grid assigned during grid initialization
+			int max_polymer_types;
+			int max_polymer_locations;
+
 
 			//set of variables to keep track of equivalent (aka symmetric) components
 			int n_eqComp;
@@ -881,6 +896,12 @@ namespace NFcore
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
 			void depthFirstSearch(list <Molecule *> &members);
 
+			/* functions for searching a polymer molecule within the interaction distance
+			 * of the site where they  will undergo a change
+			 * Arvind Rasi Subramaniam
+			 */
+			void traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping);
+
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
 			void prepareForSimulation();
@@ -988,7 +1009,6 @@ namespace NFcore
 			int numOfComponents;
 			Molecule **bond;
 			int *indexOfBond; /* gives the index of the component that is bonded to this molecule */
-
 
 			//////////// keep track of local function values
 			double *localFunctionValues;
