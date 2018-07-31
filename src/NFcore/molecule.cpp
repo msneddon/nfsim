@@ -582,13 +582,6 @@ void Molecule::unbind(Molecule *m1, char * compName)
 	Molecule::unbind(m1,cIndex);
 }
 
-
-
-
-
-
-
-
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
@@ -636,6 +629,10 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 			if(cM->isBindingSiteBonded(c))
 			{
 				Molecule *neighbor = cM->getBondedMolecule(c);
+				// skip polymer neighbors
+				// these are treated separately
+				// Arvind Rasi Subramaniam
+				if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
 				//cout<<"looking at neighbor: "<<endl;
 				//neighbor->printDetails();
 				if(!neighbor->hasVisitedMolecule)
@@ -651,13 +648,91 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 	}
 
 
-	//clear the has visitedMolecule values
+//	clear the has visitedMolecule values
 	for( molIter = members.begin(); molIter != members.end(); molIter++ )
   		(*molIter)->hasVisitedMolecule=false;
 }
 
 
+/**
+ * Same as breadthFirstSearch except for two key differences
+ * 1. Polymeric molecules are ignored
+ * 2. hasVisitedMolecule is not reset
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::getBondedProductsForNonpolymers(list <Molecule *> &members, int depth)
+{
+	Molecule * m = this;
+	if(m==0) {
+		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
+		cerr<<"Likely an internal error where a MappingSet is on a list and\n";
+		cerr<<"is not actually mapped to any molecule!";
+		exit(3);
+	}
 
+	// polymer molecules are treated separately
+	// Arvind Rasi Subramaniam
+	if (m->getMoleculeType()->checkIfPolymer()) return;
+
+	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
+	//queue <Molecule *> q;
+	//queue <int> d;
+	int currentDepth = 0;
+
+	//cout<<"traversing on:"<<endl;
+	//m->printDetails();
+
+	//First add this molecule
+	q.push(m);
+	members.push_back(m);
+	d.push(currentDepth+1);
+	m->hasVisitedMolecule=true;
+
+	//Look at children until the queue is empty
+	while(!q.empty())
+	{
+		//Get the next parent to look at (currentMolecule)
+		Molecule *cM = q.front();
+		currentDepth = d.front();
+		q.pop();
+		d.pop();
+
+		//Make sure the depth does not exceed the limit we want to search
+		if((depth!=ReactionClass::NO_LIMIT) && (currentDepth>=depth)) continue;
+
+		//Loop through the bonds
+		int cMax = cM->numOfComponents;
+		for(int c=0; c<cMax; c++)
+		{
+			//cM->getComp
+			if(cM->isBindingSiteBonded(c))
+			{
+				Molecule *neighbor = cM->getBondedMolecule(c);
+				// skip polymer neighbors
+				// these are treated separately
+				// Arvind Rasi Subramaniam
+				if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
+				//cout<<"looking at neighbor: "<<endl;
+				//neighbor->printDetails();
+				if(!neighbor->hasVisitedMolecule)
+				{
+					neighbor->hasVisitedMolecule=true;
+					members.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+					//cout<<"adding... to traversal list."<<endl;
+				}
+			}
+		}
+	}
+
+
+	// waiting to do this clearing after polymerNeighborhoodSearch
+	// Arvind Rasi Subramaniam
+	//clear the has visitedMolecule values
+//	for( molIter = members.begin(); molIter != members.end(); molIter++ )
+//  		(*molIter)->hasVisitedMolecule=false;
+}
 
 
 //
@@ -722,14 +797,6 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
  */
 void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping) {
 
-	// if already visited this molecule, don't add it again
-	if (this->hasVisitedMolecule == false) {
-		// Add this molecule
-		members.push_back(this);
-		// This molecule is now visited
-		this->hasVisitedMolecule = true;
-	}
-
 	int cIndex;
 	int nearbycIndex;
 	int polymerType;
@@ -740,6 +807,7 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 	Molecule * mol = this;
 	MoleculeType * mt =  this->getMoleculeType();
 	// if molecule is not a polymer, check the binding partner
+	// i fthe binding partner is a polymer proceed as usual
 	if (mt->checkIfPolymer() == false) {
 		// return if there is no binding partner
 		if (this->isBindingSiteOpen(cIndex)) return;
@@ -752,6 +820,15 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 		cIndex = this->getBondedMoleculeBindingSiteIndex(cIndex);
 	}
 
+	// if already visited this molecule, don't add it again
+	if (mol->hasVisitedMolecule == false) {
+		// Add this molecule
+		members.push_back(mol);
+		// This molecule is now visited
+		mol->hasVisitedMolecule = true;
+	}
+
+
 	polymerType =  mt->getPolymerType(cIndex);
 
 	// The comp being changed is not a polymer component
@@ -760,6 +837,8 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 	polymerLocation = mt->getPolymerLocation(cIndex);
 	polymerInteractionDistance = mt->getPolymerInteractionDistance(cIndex);
 
+	// This loop looks for neighbors that are bonded through the polymer,
+	// but might be missed by the breadthFirstSearch that skips polymers.
 	for (int loc = polymerLocation - polymerInteractionDistance;
 			loc <= polymerLocation + polymerInteractionDistance;
 			loc++) {

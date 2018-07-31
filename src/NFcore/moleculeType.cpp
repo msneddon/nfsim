@@ -581,7 +581,7 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 	for( unsigned int r=0; r<reactions.size(); r++ )
 	{
 		ReactionClass * rxn=reactions.at(r);
-		if (rxn->getName() == "elongation_with_hit5_70") {
+		if (rxn->getName() == "elongation_with_hit5_73") {
 			cout << name << "\n";
 		}
 		double oldA = rxn->get_a();

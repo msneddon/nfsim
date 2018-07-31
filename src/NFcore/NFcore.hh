@@ -851,6 +851,17 @@ namespace NFcore
 			bool incrementPopulation();
 			bool decrementPopulation();
 
+			// Not sure why these functions were not there, but I made the visitation variables protected
+			// I left the remaining public for now
+			// Arvind Rasi Subramaniam
+			bool getVisitedMolecule() const { return hasVisitedMolecule; }
+			void setVisitedMolecule(bool visit) { hasVisitedMolecule = visit; }
+			bool * hasVisitedBond;
+			TemplateMolecule *isMatchedTo;
+
+			/* used when reevaluating local functions */
+			bool hasEvaluatedMolecule;
+
 			///////////////////////////////////////////////////////////////////////
 			int getComponentState(int cIndex) const { return component[cIndex]; };
 			int getComponentIndexOfBond(int cIndex) const { return indexOfBond[cIndex]; };
@@ -902,6 +913,11 @@ namespace NFcore
 			 * Arvind Rasi Subramaniam
 			 */
 			void traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping);
+			/* This function is essentially same as breadthFirstSearch but adapted for
+			 * product retrieval of non-polymer molecules.
+			 * Arvind Rasi Subramaniam
+			 */
+			void getBondedProductsForNonpolymers(list <Molecule *> &members, int depth);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
@@ -952,15 +968,6 @@ namespace NFcore
 			void setIsObs(int oIndex, int isObs) { isObservable[oIndex]=isObs; };
 
 
-			/* used for traversing a molecule complex */
-			bool hasVisitedMolecule;
-			bool * hasVisitedBond;
-			TemplateMolecule *isMatchedTo;
-
-			/* used when reevaluating local functions */
-			bool hasEvaluatedMolecule;
-
-
 			static const int NOSTATE = -1;
 			static const int NOBOND = 0;
 			static const int NOINDEX = -1;
@@ -980,6 +987,10 @@ namespace NFcore
 
 
 		protected:
+			/* used for traversing a molecule complex */
+			bool hasVisitedMolecule;
+
+
 
 
 			bool isPrepared;

@@ -708,21 +708,32 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 			// instead add all the molecules in the mapping set
 			for (int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
 				Molecule * molecule = mappingSets[r]->get(i)->getMolecule();
+
+				// This is for non-polymeric molecules like ribosomes
+				if (molecule->getVisitedMolecule() == false &&
+						molecule->getMoleculeType()->checkIfPolymer() == false) {
+					molecule->getBondedProductsForNonpolymers(products,traversalLimit);
+				}
 				// Search for bonds within interaction distance
 				// of sites that are being changed by the MappingSet
 				// Add molecules bonded within this distance.
 				// This is done to prevent searching across the full molecule, which is very
 				// inefficient for simulating translation on an mRNA
+
+				// Note that both polymer molecules that are mapped as well as non-polymeric
+				// molecules that are bonded to polymers are searched. This is because the
+				// all state changes of polymeric molecules are not present in the mappingSet.
+				// If not, you can accidentally miss searching within the interaction distance
+				// of all sit echanges.
 				// Arvind Rasi Subramaniam
 				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i));
-//					molecule->traverseBondedNeighborhood(products,traversalLimit);
 			}
 		}
 	}
 
 	// reset visitation of molecules in products for next round
 	for( molIter = products.begin(); molIter != products.end(); molIter++ )
-  		(*molIter)->hasVisitedMolecule=false;
+  		(*molIter)->setVisitedMolecule(false);
 
 	// Next, find added molecules that are treated as populations.
 	//  Populations molecules have to be removed from observables, then incremented,
