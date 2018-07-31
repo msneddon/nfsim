@@ -269,7 +269,6 @@ ReactionClass::~ReactionClass()
 	{
 		delete mappingSet[r];
 	}
-
 	delete [] mappingSet;
 	delete [] isPopulationType;
 	delete [] identicalPopCountCorrection;
@@ -345,9 +344,9 @@ void ReactionClass::fire(double random_A_number) {
 		return;
 	}
 
-	if (name == "elongation_83") {
-		cout << name << "\n";
-	}
+//	if (name == "elongation_83") {
+//		cout << name << "\n";
+//	}
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)

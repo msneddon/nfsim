@@ -298,7 +298,9 @@ void System::registerReactionFileLocation(string filename)
 			"time" << "\t" <<
 			"rxn" << "\t" <<
 			"mol" << "\t" <<
-			"mol_id" << endl;
+			"mol_id" << "\t" <<
+			"bonded_states" <<
+			endl;
 }
 
 
