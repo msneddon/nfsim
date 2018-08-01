@@ -1,5 +1,17 @@
 #+TITLE: Notes for Rasi's modification to the program
 
+[2018-08-01 Wed]
+- I successfully implemented the change to examine only a small neighborhood of each mRNA. 
+- However, this does not speed up the simulation appreciably since the other main bottleneck seems to be in identifying how molecule transformations affect reaction rates.
+- This update step scans over all reactions that a molecule can participate in and identifies whether a particular molecule matches the template of the reaction.
+- I take a huge hit in efficiency since the current NFsim method does this by brute force scanning of all bonds and reactions for each molecule.
+- Both the ribosome and mRNA participate in a large number of reactions (>1000), but typically only 1-5 reaction rates need to be updated.
+- I need to refactor the code significantly to optimize this further.
+- For example, I could identify all the template reactants for each reaction class, and also identify all reactions that each template participates in.
+- Then I can do a lookup rather than a full search, which will significantly speed up the reaction.
+
+[2018-07-31 Tue]
+- The simulation with polymer neighborhood search is working as expected.
 
 [2018-07-30 Mon]
 

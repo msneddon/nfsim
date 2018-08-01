@@ -804,9 +804,11 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 	int polymerLocation;
 	int polymerInteractionDistance;
 
-	cIndex = mapping->getIndex();
 	Molecule * mol = this;
 	MoleculeType * mt =  this->getMoleculeType();
+	cIndex = mapping->getIndex();
+	// The molecule has no bonds to check, for eg. dna in rasi's translation model
+	if (mol->numOfComponents == 0 | cIndex == -1) return;
 	// if molecule is not a polymer, check the binding partner
 	// i fthe binding partner is a polymer proceed as usual
 	if (mt->checkIfPolymer() == false) {
