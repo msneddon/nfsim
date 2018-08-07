@@ -32,9 +32,8 @@ notifications:
       - "Build: <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) Author: %{author}"   
       - "Build details:  %{build_url} "
 
-
 before_install:
-  - source osx_install.sh
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
