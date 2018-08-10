@@ -409,6 +409,10 @@ namespace NFcore
 			// The container objects that maintain the core system configuration
 			vector <MoleculeType *> allMoleculeTypes;  /*!< container of all MoleculeTypes in the simulation */
 			vector <ReactionClass *> allReactions;    /*!< container of all Reactions in the simulation */
+			/* created by rasi to see if the reaction connectivity can be inferred at the beginning
+			 * to avoid the time-intensive search during each simulation run.
+			 */
+			vector <TemplateMolecule *> allTemplateMolecules;    /*!< container of all Reactions in the simulation */
             // NETGEN
 			//vector <Complex * > allComplexes;         /*!< container of all complexes in the simulation */
 			//queue <int> nextAvailableComplex;         /*!< queue tells us which complexes can be used next */
@@ -1100,6 +1104,13 @@ namespace NFcore
 			ReactionClass(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
+			//! To get all reactant and product templates for inferring connectivity between reactions
+			//! @author Arvind Rasi Subramaniam
+			void setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
+					map <string,TemplateMolecule *> products);
+
+
+
 			int getNumOfReactants() const { return n_reactants; };
 
 			string getName() const { return name; };
@@ -1178,6 +1189,10 @@ namespace NFcore
 			unsigned int fireCounter;
 
 			unsigned int traversalLimit;
+
+			/* Used for scanning all reactants and products - rasi */
+			vector <TemplateMolecule *> allReactantTemplates;
+			vector <TemplateMolecule *> allProductTemplates;
 
 			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;

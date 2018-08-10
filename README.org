@@ -1,9 +1,15 @@
 #+TITLE: Notes for Rasi's modification to the program
 
+[2018-08-09 Thu]
+
+
 [2018-08-08 Wed]
 - I am going to take a crack at speeding up the simulation by removing searches during each simulation step altogether.
 - For the current mRNA simulations, I need to update only the reactants that are specified for the reaction. I can do this by identifying all components in each connected molecule at the beginning of the simulation.
 - Then I can figure out given that a certain reaction fires, what other reaction rate to update. I can do this again by having a double-sided dictionary between template molecules and reactions. Then whenever I am updating a given template molecule, I need to update only the reaction rates that it is known to change.
+- Connect reactions if:
+  1. Product of a reaction shares at least one specified component with that of the reactants of another reaction.
+  2. Any shared component that is bonded must be between the same pair of components and molecule types in both the reactants and products.
 
 [2018-08-01 Wed]
 - I successfully implemented the change to examine only a small neighborhood of each mRNA. 
