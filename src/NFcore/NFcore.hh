@@ -211,6 +211,7 @@ namespace NFcore
 			double getAverageGroupValue(string groupName, int valIndex);
 
 			ReactionClass *getReaction(int rIndex) { return allReactions.at(rIndex); };
+			vector <ReactionClass *> getAllReactions () { return allReactions; };
 			ReactionClass * getReactionByName(string name);
 
 			MoleculeType * getMoleculeType(int mtIndex) { return allMoleculeTypes.at(mtIndex); };
@@ -1109,6 +1110,12 @@ namespace NFcore
 			void setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
 					map <string,TemplateMolecule *> products);
 
+			//! Identify connected reactions whose reactant numbers
+			//! might change upon firing this reaction.
+			//! @author Arvind Rasi Subramaniam
+			void identifyConnectedReactions();
+			int getNumConnectedReactions() const {return connectedReactions.size(); };
+
 
 
 			int getNumOfReactants() const { return n_reactants; };
@@ -1193,6 +1200,11 @@ namespace NFcore
 			/* Used for scanning all reactants and products - rasi */
 			vector <TemplateMolecule *> allReactantTemplates;
 			vector <TemplateMolecule *> allProductTemplates;
+			/* Maintain a list of connected reactions whose reactant numbers
+			 * might change upon firing this reaction.
+			 * Arvind Rasi Subramaniam
+			 */
+			vector <ReactionClass *> connectedReactions;
 
 			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;

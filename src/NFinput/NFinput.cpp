@@ -2280,6 +2280,14 @@ bool NFinput::initReactionRules(
 
 		} //end loop through all reaction rules
 
+		// Once all the reactions have been read, now identify the connected reactions
+		// for each reaction
+		// Arvind Rasi Subramaniam
+		for (ReactionClass * rxn : s->getAllReactions()) {
+			rxn->identifyConnectedReactions();
+//			cout << rxn->getName() << ": " << rxn->getNumConnectedReactions() << endl;
+		}
+
 		//If we got here, then by golly, I think we have a new reaction rule
 		return true;
 

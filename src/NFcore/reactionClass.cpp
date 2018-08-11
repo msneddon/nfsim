@@ -289,6 +289,30 @@ void ReactionClass::setAllReactantAndProductTemplates(map <string,TemplateMolecu
 		this->allProductTemplates.push_back(it->second);
 }
 
+/** Identify connected reactions
+ * @author Arvind Rasi Subramaniam
+ */
+void ReactionClass::identifyConnectedReactions() {
+	// Iterate through all the reactant and product patterns for this reaction
+	vector <TemplateMolecule *> jointVector;
+	for (TemplateMolecule * tm : allReactantTemplates) jointVector.push_back(tm);
+	for (TemplateMolecule * tm : allProductTemplates) jointVector.push_back(tm);
+
+	for (TemplateMolecule * tm1 : jointVector) {
+		// Iterate through all reactions in the simulation
+		for (ReactionClass * rxn : system->getAllReactions()) {
+			// Iterate through the reactant patterns for each reaction
+			for (TemplateMolecule * tm2 : rxn->allReactantTemplates) {
+				if (tm1->match(tm2)) {
+					if (find(connectedReactions.begin(), connectedReactions.end(), rxn)  == connectedReactions.end()) {
+						connectedReactions.push_back(rxn);
+					}
+				}
+			}
+		}
+	}
+}
+
 
 void ReactionClass::setBaseRate(double newBaseRate,string newBaseRateName) {
 	if ( this->transformationSet->usingSymmetryFactor() )
@@ -366,11 +390,6 @@ void ReactionClass::fire(double random_A_number) {
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
-
-	if (this->allReactantTemplates.size() > 1) {
-		cout << this->allReactantTemplates[1]->match(this->allReactantTemplates[1]) << "\n";
-	}
-
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {

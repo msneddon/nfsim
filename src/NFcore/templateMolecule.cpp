@@ -1402,12 +1402,38 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
  * @return true or false
  */
 bool TemplateMolecule::match(TemplateMolecule * tm) {
-	//Make sure the TMs are of the same type
+	// Make sure the TMs are of the same type
 	if(tm->getMoleculeType() != getMoleculeType()) {
-		clear(); return false;
+		return false;
 	}
-	vector <int>::iterator it;
 
+
+	// If there is no overlap between the components of the two TemplateMolecules,
+	// then these are not connected
+	// First make a joint vector of components specified in each TemplateMolecule
+	vector <int> allComps;
+	vector <int> allComps_tm;
+	for (int i : emptyComps) allComps.push_back(i);
+	for (int i : occupiedComps) allComps.push_back(i);
+	for (int i : bondComp) allComps.push_back(i);
+	for (int i : tm->emptyComps) allComps_tm.push_back(i);
+	for (int i : tm->occupiedComps) allComps_tm.push_back(i);
+	for (int i : tm->bondComp) allComps_tm.push_back(i);
+
+	// Check each component of one TM against all components of other TM
+	bool compOverlap = false;
+	for (int i : allComps) {
+		if (find(allComps_tm.begin(), allComps_tm.end(), i) != allComps_tm.end()) {
+			compOverlap = true;
+			break;
+		}
+	}
+	// Still no overlap, so return
+	if (compOverlap == false) return false;
+
+
+
+	vector <int>::iterator it;
 	// Check that sites that are occupied in one TemplateMolecule
 	// are not specified to be empty in the other TemplateMolecule
 	for (int i=0; i < n_occupiedComps; ++i) {
@@ -1416,11 +1442,21 @@ bool TemplateMolecule::match(TemplateMolecule * tm) {
 				occupiedComps[i]);
 		if (it != tm->emptyComps.end()) return false;
 	}
+	// Check that sites that are empty in one TemplateMolecule
+	// are not specified to be occupied in the other TemplateMolecule
 	for (int i=0; i < n_emptyComps; ++i) {
 		it = find(tm->occupiedComps.begin(),
 				tm->occupiedComps.end(),
 				emptyComps[i]);
 		if (it != tm->occupiedComps.end()) return false;
+	}
+	// Check that sites that are empty in one TemplateMolecule
+	// are not bonded in the other TemplateMolecule
+	for (int i=0; i < n_emptyComps; ++i) {
+		it = find(tm->bondComp.begin(),
+				tm->bondComp.end(),
+				emptyComps[i]);
+		if (it != tm->bondComp.end()) return false;
 	}
 
 	// If a state is constrained, make sure that it is either not
@@ -1473,7 +1509,7 @@ bool TemplateMolecule::match(TemplateMolecule * tm) {
 
 		//The binding site must not be be among the empty components on the other template molecule
 		if(find(tm->emptyComps.begin(), tm->emptyComps.end(), bondComp[b]) != tm->emptyComps.end()) {
-			clear(); return false;
+			return false;
 		}
 
 		//Check if this component is among the bondComps in the target TemplateMolecule
