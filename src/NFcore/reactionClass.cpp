@@ -367,6 +367,10 @@ void ReactionClass::fire(double random_A_number) {
 	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
+	if (this->allReactantTemplates.size() > 1) {
+		cout << this->allReactantTemplates[1]->match(this->allReactantTemplates[1]) << "\n";
+	}
+
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {
