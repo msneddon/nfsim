@@ -584,9 +584,9 @@ void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReacti
 		// If the reaction is not connected, no need to check
 		// Hopefully this saves time!
 		// Arvind Rasi Subramaniam
-//		if (!firedReaction->isReactionConnected(rxn)) {
-//			continue;
-//		}
+		if (!firedReaction->isReactionConnected(rxn)) {
+			continue;
+		}
 
 		double oldA = rxn->get_a();
 		rxn->tryToAdd(m, reactionPositions.at(r));

@@ -1,5 +1,24 @@
 #+TITLE: Notes for Rasi's modification to the program
 
+[2018-08-16 Thu]
+Network connectivity inference from the =NFSim= input =xml= file is working now. Look at [[https://github.com/rasilab/sc_translation_model]] repo from today. The inferred connectivity is a superset of the true connectivity: I have 20-50 reactions connected to most reactions. With further optimization, I could probably cut this to 10 or so reactions, but I don't want to accidentally lose a true connected reaction. So I will work with my generous connectivity constraints.
+
+[2018-08-16 Thu 19:34]
+I found out that the optimization does take 3 fold less time for 200 codons, but I found the reaction order is not quite the same. Specifically, when I ran with 50 codons, I found that at a point when ribosomes could elongation on either of two mRNAs present in the cell, the simulations differed in which ones got picked. I need to figure out whether this is a bug.
+
+[2018-08-15 Wed]
+I am inferring the network connectivity specifically for my TASEP models using my =python= script, =infer_network_connectivity.py=.
+I notice that a few reactions such as decapping and endonucleolytic cleavage are connected to a large number of other reactions negatively. One easy optimization while using these connectivities in =NFSim= is to check whether the connected reaction has non-zero rate (i.e. non-zero number of reactants). If not, you don't need to check for whether the reaction propensity changes.
+
+I fixed all reactions but collisions and realized that I cannot connect this reaction to others unless I take the ribosome state into account. 
+
+One possibility to look at all reactants instead of just mRNA, and exclude reactions as connected if their mRNAs don't share at least one common component.
+
+[2018-08-11 Sat]
+I am wondering if I can use the existing =TemplateMolecule::compare()= function to achieve the functionality that I outlined yesterday for shortlisting reactions up front for iterating over later.
+Each =TemplateMolecule= comes attached to a =Molecule= that could be supplied to =compare=.
+Can the =MappingSet= passed to =compare= be used for checking if the state changes?
+
 [2018-08-10 Fri]
 I implemented the two conditions below from Wednesday for narrowing the list of searched reactions.
 This turns out to be not enough.
