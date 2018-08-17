@@ -660,7 +660,7 @@ namespace NFcore
 
 
 			/* updates a molecules membership (assumes molecule is of type this) */
-			void updateRxnMembership(Molecule * m);
+			void updateRxnMembership(Molecule * m, ReactionClass * r);
 
 			/* auto populate with default molecules */
 			void populateWithDefaultMolecules(int moleculeCount);
@@ -930,7 +930,7 @@ namespace NFcore
 
 			/* function that tells this molecule that it changed states or bonds
 			 * and it should update its reaction membership */
-			void updateRxnMembership();
+			void updateRxnMembership(ReactionClass * r);
 			void removeFromObservables();
 			void addToObservables();
 			//void updateDORs();
@@ -1161,7 +1161,10 @@ namespace NFcore
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
 
+			// Use by Arvind Rasi Subramaniam to speed up simulations
+			// by inferring connectivity beforehand
 			void appendConnectedRxnByName(const char * rxnName);
+			bool isReactionConnected(ReactionClass * rxn);
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

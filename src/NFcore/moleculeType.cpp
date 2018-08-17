@@ -382,7 +382,7 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 	mol->setAlive(true);
 
 	mol->addToObservables();
-	this->updateRxnMembership(mol);
+	this->updateRxnMembership(mol, 0);
 }
 
 
@@ -576,14 +576,18 @@ void MoleculeType::prepareForSimulation()
 	}
 }
 
-void MoleculeType::updateRxnMembership(Molecule * m)
+void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReaction)
 {
 	for( unsigned int r=0; r<reactions.size(); r++ )
 	{
 		ReactionClass * rxn=reactions.at(r);
-//		if (rxn->getName() == "elongation_with_hit5_73") {
-//			cout << name << "\n";
+		// If the reaction is not connected, no need to check
+		// Hopefully this saves time!
+		// Arvind Rasi Subramaniam
+//		if (!firedReaction->isReactionConnected(rxn)) {
+//			continue;
 //		}
+
 		double oldA = rxn->get_a();
 		rxn->tryToAdd(m, reactionPositions.at(r));
 		this->system->update_A_tot(rxn,oldA,rxn->update_a());

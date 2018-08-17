@@ -159,9 +159,9 @@ LocalFunction * Molecule::getLocalFunction(int localFunctionIndex) {
 
 
 
-void Molecule::updateRxnMembership()
+void Molecule::updateRxnMembership(ReactionClass * r)
 {
-	parentMoleculeType->updateRxnMembership(this);
+	parentMoleculeType->updateRxnMembership(this, r);
 }
 
 void Molecule::updateTypeIIFunctions()

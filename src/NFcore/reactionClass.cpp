@@ -269,6 +269,21 @@ void ReactionClass::appendConnectedRxnByName(const char * rxnName) {
 	}
 }
 
+
+bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
+	vector <ReactionClass *>::iterator it;
+	it = find(connectedReactions.begin(), connectedReactions.end(), rxn);
+	if (it != connectedReactions.end()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+
+
+}
+
 ReactionClass::~ReactionClass()
 {
 	delete transformationSet;
@@ -506,7 +521,7 @@ void ReactionClass::fire(double random_A_number) {
 		//  NOTE: as a side-effect, DORreactions that depend on molecule-scoped local functions
 		//   (typeI relationship) will be updated as long as UTL is set appropriately.
 		if ( mol->isAlive() )
-			mol->updateRxnMembership();
+			mol->updateRxnMembership(this);
 	}
 
 
