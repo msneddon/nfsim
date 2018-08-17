@@ -261,6 +261,13 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 }
 
 
+void ReactionClass::appendConnectedRxnByName(const char * rxnName) {
+	ReactionClass * rxn;
+	rxn = this->system->getReactionByName(rxnName);
+	if (rxn) {
+		this->connectedReactions.push_back(rxn);
+	}
+}
 
 ReactionClass::~ReactionClass()
 {
@@ -272,45 +279,7 @@ ReactionClass::~ReactionClass()
 	delete [] mappingSet;
 	delete [] isPopulationType;
 	delete [] identicalPopCountCorrection;
-}
-
-
-/** Fill the reactant and product templates for inferring reaction connectivity matrix
- * @author Arvind Rasi Subramaniam
- */
-void ReactionClass::setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
-					map <string,TemplateMolecule *> products) {
-	map <string, TemplateMolecule *>::iterator it;
-	// Fill the reactant template pattern
-	for (it = reactants.begin(); it != reactants.end(); ++it)
-		this->allReactantTemplates.push_back(it->second);
-	// Fill the product template pattern
-	for (it = products.begin(); it != products.end(); ++it)
-		this->allProductTemplates.push_back(it->second);
-}
-
-/** Identify connected reactions
- * @author Arvind Rasi Subramaniam
- */
-void ReactionClass::identifyConnectedReactions() {
-	// Iterate through all the reactant and product patterns for this reaction
-	vector <TemplateMolecule *> jointVector;
-	for (TemplateMolecule * tm : allReactantTemplates) jointVector.push_back(tm);
-	for (TemplateMolecule * tm : allProductTemplates) jointVector.push_back(tm);
-
-	for (TemplateMolecule * tm1 : jointVector) {
-		// Iterate through all reactions in the simulation
-		for (ReactionClass * rxn : system->getAllReactions()) {
-			// Iterate through the reactant patterns for each reaction
-			for (TemplateMolecule * tm2 : rxn->allReactantTemplates) {
-				if (tm1->match(tm2)) {
-					if (find(connectedReactions.begin(), connectedReactions.end(), rxn)  == connectedReactions.end()) {
-						connectedReactions.push_back(rxn);
-					}
-				}
-			}
-		}
-	}
+	connectedReactions.clear();
 }
 
 

@@ -1105,19 +1105,6 @@ namespace NFcore
 			ReactionClass(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
-			//! To get all reactant and product templates for inferring connectivity between reactions
-			//! @author Arvind Rasi Subramaniam
-			void setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
-					map <string,TemplateMolecule *> products);
-
-			//! Identify connected reactions whose reactant numbers
-			//! might change upon firing this reaction.
-			//! @author Arvind Rasi Subramaniam
-			void identifyConnectedReactions();
-			int getNumConnectedReactions() const {return connectedReactions.size(); };
-
-
-
 			int getNumOfReactants() const { return n_reactants; };
 
 			string getName() const { return name; };
@@ -1174,6 +1161,7 @@ namespace NFcore
 			void set_match( vector <MappingSet *> & match_set );
 			void apply( vector <Molecule *> & product_molecules );
 
+			void appendConnectedRxnByName(const char * rxnName);
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;
@@ -1197,9 +1185,6 @@ namespace NFcore
 
 			unsigned int traversalLimit;
 
-			/* Used for scanning all reactants and products - rasi */
-			vector <TemplateMolecule *> allReactantTemplates;
-			vector <TemplateMolecule *> allProductTemplates;
 			/* Maintain a list of connected reactions whose reactant numbers
 			 * might change upon firing this reaction.
 			 * Arvind Rasi Subramaniam

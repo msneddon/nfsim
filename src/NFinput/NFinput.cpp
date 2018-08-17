@@ -2266,8 +2266,6 @@ bool NFinput::initReactionRules(
 									" not simulated due to zero base rate!!\n" << endl;
 						}
 					}
-					// Add the reactant and product templates to the reaction class
-					r->setAllReactantAndProductTemplates(reactants, products);
 					r->setTotalRateFlag(totalRateFlag);
 					if (tagFlag) {
 						r->tag();
@@ -2280,12 +2278,25 @@ bool NFinput::initReactionRules(
 
 		} //end loop through all reaction rules
 
-		// Once all the reactions have been read, now identify the connected reactions
-		// for each reaction
+		// Once all the reactions have been read, now parse the
+		// connected reactions for each reaction
 		// Arvind Rasi Subramaniam
-		for (ReactionClass * rxn : s->getAllReactions()) {
-			rxn->identifyConnectedReactions();
-//			cout << rxn->getName() << ": " << rxn->getNumConnectedReactions() << endl;
+		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule"))
+		{
+			const char *rxnName = pRxnRule->Attribute("name");
+			ReactionClass *r = s->getReactionByName(rxnName);
+
+			TiXmlElement *pListOfConnectedRxns = pRxnRule->FirstChildElement("ListOfConnectedReactionRules");
+			TiXmlElement *pConnectedRxn;
+			for ( pConnectedRxn = pListOfConnectedRxns->FirstChildElement("ReactionRule");
+					pConnectedRxn != 0; pConnectedRxn = pConnectedRxn->NextSiblingElement("ReactionRule"))
+			{
+				const char *connectedRxnName = pConnectedRxn->Attribute("name");
+				//  appends only if the reaction exists in the system
+				// if not silently ignores
+				// Arvind Rasi Subramaniam
+				r->appendConnectedRxnByName(connectedRxnName);
+			}
 		}
 
 		//If we got here, then by golly, I think we have a new reaction rule

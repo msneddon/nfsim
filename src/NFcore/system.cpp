@@ -398,9 +398,9 @@ ReactionClass * System::getReactionByName(string rName)
 			return (*rxnIter);
 		}
 	}
+	return 0;
 	cerr<<"!!! warning !!! cannot find reaction type name '"<< rName << "' in System: '"<<this->name<<"'"<<endl;
 	exit(1);
-	return 0;
 }
 
 
