@@ -261,14 +261,9 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 }
 
 
-void ReactionClass::appendConnectedRxnByName(const char * rxnName) {
-	ReactionClass * rxn;
-	rxn = this->system->getReactionByName(rxnName);
-	if (rxn) {
-		this->connectedReactions.push_back(rxn);
-	}
+void ReactionClass::appendConnectedRxn(ReactionClass * rxn) {
+	this->connectedReactions.push_back(rxn);
 }
-
 
 bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
 	vector <ReactionClass *>::iterator it;
@@ -367,9 +362,9 @@ void ReactionClass::fire(double random_A_number) {
 		return;
 	}
 
-//	if (name == "elongation_83") {
+	if (this->system->getGlobalEventCounter() == 1451) {
 //		cout << name << "\n";
-//	}
+	}
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
@@ -564,8 +559,13 @@ void ReactionClass::fire(double random_A_number) {
 	// output if the reaction was tagged
 	if (tagged) {
 	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		if  ((*molIter)->getMoleculeType()->getName() != "mrna") continue;
+
+		this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
 		// print the time and reaction name
-		this->system->getReactionFileStream() << this->system->getCurrentTime() << "\t" << name << "\t";
+		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
+				this->system->current_cpu_time << "\t" <<
+				this->system->getCurrentTime() << "\t" << name << "\t";
 		// print the molecule type and its bonded states (exclude non-bonded states)
 		(*molIter)->printBondDetails(this->system->getReactionFileStream());
 		this->system->getReactionFileStream() << endl;

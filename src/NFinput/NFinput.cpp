@@ -1057,6 +1057,9 @@ bool NFinput::initReactionRules(
 
 		//First, loop through all the rules
 		TiXmlElement *pRxnRule;
+		// Use for quick lookup of reaction id for each name
+		map <string, int> reaction_name_id_map;
+		int reaction_count = 0;
 		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule"))
 		{
 
@@ -2260,6 +2263,8 @@ bool NFinput::initReactionRules(
 					//base rate is non-zero.
 					if (r->getBaseRate() > 0) {
 						s->addReaction(r);
+						reaction_name_id_map[rxnName] = reaction_count;
+						reaction_count++;
 					} else {
 						if (verbose) {
 							cout << "\n!! Warning !! Rate Law " << r->getName() <<
@@ -2291,11 +2296,12 @@ bool NFinput::initReactionRules(
 			for ( pConnectedRxn = pListOfConnectedRxns->FirstChildElement("ReactionRule");
 					pConnectedRxn != 0; pConnectedRxn = pConnectedRxn->NextSiblingElement("ReactionRule"))
 			{
-				const char *connectedRxnName = pConnectedRxn->Attribute("name");
+				const string connectedRxnName = pConnectedRxn->Attribute("name");
 				//  appends only if the reaction exists in the system
 				// if not silently ignores
 				// Arvind Rasi Subramaniam
-				r->appendConnectedRxnByName(connectedRxnName);
+				int rxnId = reaction_name_id_map[connectedRxnName];
+				r->appendConnectedRxn(s->getReaction(rxnId));
 			}
 		}
 

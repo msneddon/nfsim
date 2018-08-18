@@ -357,6 +357,7 @@ namespace NFcore
 
 			void turnOff_OnTheFlyObs();
 			void turnOnOutputEventCounter() { outputEventCounter=true; };
+			int getGlobalEventCounter() { return globalEventCounter; };
 
 			void addParameter(string name,double value);
 			double getParameter(string name);
@@ -387,6 +388,12 @@ namespace NFcore
 			bool getAnyRxnTagged() { return anyRxnTagged; };
 
 			void setMaxCpuTime(double time) { max_cpu_time = time; };
+
+			clock_t start,finish;
+			double current_cpu_time = 0;
+
+			void setConnectedReactions(int rxn1, int rxn2) {connectedReactions[rxn1][rxn2] = true;};
+			bool areReactionsConnected(int rxn1, int rxn2) {return connectedReactions[rxn1][rxn2];};
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -478,6 +485,10 @@ namespace NFcore
 
 			//Data structure that performs the selection of the next reaction class
 			ReactionSelector * selector;
+
+			// To look up connected reactions quickly
+
+			vector <vector <bool>> connectedReactions;
 
 
 		private:
@@ -1163,8 +1174,10 @@ namespace NFcore
 
 			// Use by Arvind Rasi Subramaniam to speed up simulations
 			// by inferring connectivity beforehand
-			void appendConnectedRxnByName(const char * rxnName);
+			void appendConnectedRxn(ReactionClass * rxn);
 			bool isReactionConnected(ReactionClass * rxn);
+			int getNumConnectedRxns() {return connectedReactions.size();};
+			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

@@ -578,13 +578,14 @@ void MoleculeType::prepareForSimulation()
 
 void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReaction)
 {
+	int firedRxnId =  firedReaction->getRxnId();
 	for( unsigned int r=0; r<reactions.size(); r++ )
 	{
 		ReactionClass * rxn=reactions.at(r);
 		// If the reaction is not connected, no need to check
 		// Hopefully this saves time!
 		// Arvind Rasi Subramaniam
-		if (!firedReaction->isReactionConnected(rxn)) {
+		if (!system->areReactionsConnected(firedRxnId, rxn->getRxnId())) {
 			continue;
 		}
 

@@ -10,7 +10,7 @@ list <Molecule *> TransformationSet::deleteList;
 list <Molecule *> TransformationSet::updateAfterDeleteList;
 list <Molecule *>::iterator TransformationSet::it;
 
-TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
+TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates) // @suppress("Class members should be properly initialized")
 {
 	this->hasSymUnbinding=false;
 	this->hasSymBinding = false;
@@ -42,7 +42,7 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 }
 
 
-TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates,
+TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates, // @suppress("Class members should be properly initialized")
 		                             vector <TemplateMolecule *> addMoleculeTemplates )
 {
 	this->hasSymUnbinding = false;

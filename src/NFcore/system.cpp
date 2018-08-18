@@ -295,6 +295,8 @@ void System::registerReactionFileLocation(string filename)
 	reactionOutputFileStream.precision(8);
 	// print header for file
 	reactionOutputFileStream <<
+			"line" << "\t" <<
+			"cputime" << "\t" <<
 			"time" << "\t" <<
 			"rxn" << "\t" <<
 			"mol" << "\t" <<
@@ -499,6 +501,19 @@ void System::prepareForSimulation()
   		allReactions.at(r)->setRxnId(r);
   	}
 
+	// resize connected reactions map and intialize to false
+ 	connectedReactions = vector <vector <bool>> (allReactions.size(),
+			vector <bool> (allReactions.size(), false));
+  	for(unsigned int r=0; r<allReactions.size(); r++)
+  	{
+  		// prepare the connected reaction map for quick lookup
+  		for (unsigned int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
+  			int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
+  			connectedReactions[r][rxn2_id] = true;
+  		}
+  	}
+
+
   	//cout<<"here 4..."<<endl;
 
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
@@ -693,10 +708,8 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 
 
 	//////////////////////////////
-	clock_t start,finish;
 	double time;
 	start = clock();
-	double current_cpu_time = 0;
 	//////////////////////////////
 
 
