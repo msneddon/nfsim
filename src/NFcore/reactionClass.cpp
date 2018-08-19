@@ -350,9 +350,9 @@ void ReactionClass::printDetails() const {
 
 void ReactionClass::fire(double random_A_number) {
 
-	if (this->system->getGlobalEventCounter() == 4124) {
-		cout << name << "\n";
-	}
+//	if (this->system->getGlobalEventCounter() == 4306) {
+////		cout << name << "\n";
+//	}
 
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
