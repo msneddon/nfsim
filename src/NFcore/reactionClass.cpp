@@ -349,6 +349,11 @@ void ReactionClass::printDetails() const {
 
 
 void ReactionClass::fire(double random_A_number) {
+
+	if (this->system->getGlobalEventCounter() == 4124) {
+		cout << name << "\n";
+	}
+
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
 	// First randomly pick the reactants to fire by selecting the MappingSets
@@ -360,10 +365,6 @@ void ReactionClass::fire(double random_A_number) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
 		return;
-	}
-
-	if (this->system->getGlobalEventCounter() == 1451) {
-//		cout << name << "\n";
 	}
 
 	// Generate the set of possible products that we need to update
@@ -518,7 +519,6 @@ void ReactionClass::fire(double random_A_number) {
 		if ( mol->isAlive() )
 			mol->updateRxnMembership(this);
 	}
-
 
 	// update complex-scoped local functions for typeII dependencies
 	// NOTE: as a side-effect, dependent DOR reactions (via typeI molecule dependencies) will be updated
