@@ -1121,7 +1121,7 @@ namespace NFcore
 			string getName() const { return name; };
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
-
+			MoleculeType *getMoleculeTypeOfReactantTemplate(int pos) const;
 			void setBaseRate(double newBaseRate,string newBaseRateName);
 			void resetBaseRateFromSystemParamter();
 

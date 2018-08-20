@@ -724,7 +724,7 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 				// molecules that are bonded to polymers are searched. This is because the
 				// all state changes of polymeric molecules are not present in the mappingSet.
 				// If not, you can accidentally miss searching within the interaction distance
-				// of all sit echanges.
+				// of all site changes.
 				// Arvind Rasi Subramaniam
 				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i));
 			}

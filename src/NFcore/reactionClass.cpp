@@ -322,6 +322,13 @@ void ReactionClass::resetBaseRateFromSystemParamter() {
 }
 
 
+/** For use in MoleculeTye::updateRxnMembership
+ * @author Arvind Rasi Subramaniam
+ */
+MoleculeType *ReactionClass::getMoleculeTypeOfReactantTemplate(int pos) const {
+	return reactantTemplates.at(pos)->getMoleculeType();
+}
+
 
 void ReactionClass::printDetails() const {
 	// added by rasi to look at only nonzero mapping reactions

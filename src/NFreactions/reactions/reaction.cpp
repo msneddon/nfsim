@@ -239,6 +239,25 @@ void BasicRxnClass::prepareForSimulation()
 }
 
 
+/**
+ * Updates a molecule's reaction membership and a reaction's reactant list
+ *
+ * If a molecule matches the TemplateMolecule of a reaction, then it gets added.
+ * Note that NFsim has a single arbitrary TemplateMolecule for each reactant
+ * complex for a reaction. So it assumes that you will always check the molecule
+ * that matches the designated TemplateMolecule of a reaction for updates. So if
+ * I modify the identification of reactant molecules in
+ * TransformationSet::getListOfProducts(), I need to make sure that every molecule
+ * that is part of a reaction whose propensity might change is included in the
+ * listOfProducts.
+ *
+ * This is the gateway function to TemplateMolecule::compare().
+ * @author Arvind Rasi Subramaniam
+ * @param m - molecule that is being compared against the TemplateMolecule of a reaction
+ * @param reactantPos - the reactant number among the reaction's reacant complexes
+ * (note that every connected complex gets only one reactant number.)
+ * @return true if there are no errors.
+ */
 bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
 	//First a bit of error checking, that you should skip unless we are debugging...
@@ -265,29 +284,6 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
 	}
-
-	/*
-	//Here we get the standard update...
-	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
-	{
-		if(!reactantTemplates[reactantPos]->compare(m)) {
-			//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
-			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
-		}
-
-	} else {
-		//Try to map it!
-		ms = rl->pushNextAvailableMappingSet();
-		if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
-			//we must remove, if we did not match.  This will also remove
-			//everything that was cloned off of the mapping set
-			rl->removeMappingSet(ms->getId());
-		} else {
-			m->setRxnListMappingId(rxnIndex,ms->getId());
-		}
-	}
-	*/
 
 	// Arvind Rasi Subramaniam: I am modifying this so that the mappingSet does
 	// not change its position if the molecule still matches with the template.

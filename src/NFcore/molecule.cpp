@@ -791,11 +791,16 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
 }
 
 
-/**
+/** Searches the polymer neighborhood of the changed component in a molecule.
+ *
+ * If the molecule itself is not a polymer, it will look at the bonded partner
+ * of the component that is changing.
+ *
  * Note that if two polymer molecules are bound, this will traverse only those
  * neighborhoods around sites that are in the mapping set for each molecule.
- * @param members
- * @param mapping
+ * @param members - list of molecules that gets updated
+ * @param mapping - contains the molecule component that changed.
+ * @author Arvind Rasi Subramaniam
  */
 void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping) {
 

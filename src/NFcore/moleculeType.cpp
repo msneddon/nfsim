@@ -579,19 +579,34 @@ void MoleculeType::prepareForSimulation()
 void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReaction)
 {
 	int firedRxnId =  firedReaction->getRxnId();
-	for( unsigned int r=0; r<reactions.size(); r++ )
-	{
-		ReactionClass * rxn=reactions.at(r);
-		// If the reaction is not connected, no need to check
-		// Hopefully this saves time!
-		// Arvind Rasi Subramaniam
+//	for( unsigned int r=0; r<reactions.size(); r++ )
+//	{
+//		ReactionClass * rxn=reactions.at(r);
+//		// If the reaction is not connected, no need to check
+//		// Hopefully this saves time!
+//		// Arvind Rasi Subramaniam
 //		if (!system->areReactionsConnected(firedRxnId, rxn->getRxnId())) {
 //			continue;
 //		}
+//
+//		double oldA = rxn->get_a();
+//		rxn->tryToAdd(m, reactionPositions.at(r));
+//		this->system->update_A_tot(rxn,oldA,rxn->update_a());
+//  	}
 
-		double oldA = rxn->get_a();
-		rxn->tryToAdd(m, reactionPositions.at(r));
-		this->system->update_A_tot(rxn,oldA,rxn->update_a());
+	// Replace the iteration over all reactions for the MoleculeType by all
+	// connectedReactions for the fired Reaction. This is a much smaller loop
+	// and skips moleculetypes that are not the TemplateMolecule of the reactant
+	// in the connected reaction right away.
+	// Arvind Rasi Subramaniam
+	for (unsigned int r=0; r<firedReaction->getNumConnectedRxns(); r++) {
+		rxn = firedReaction->getconnectedRxn(r);
+		for (unsigned int pos=0; pos<rxn->getNumOfReactants(); pos++) {
+			if (rxn->getMoleculeTypeOfReactantTemplate(pos) != this) continue;
+			double oldA = rxn->get_a();
+			rxn->tryToAdd(m, pos);
+			this->system->update_A_tot(rxn,oldA,rxn->update_a());
+		}
   	}
 }
 
