@@ -241,12 +241,12 @@ void System::registerOutputFileLocation(string filename)
 		//Also, output a header file to keep track of the number
 		NFstream headerFile;
 		int tabCount=0;
-		headerFile.open((filename+".head").c_str());
+		headerFile.open((filename+".head").c_str()); // @suppress("Ambiguous problem")
 		headerFile<<"#\tTime"; tabCount++;
 		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
 			int oTot = (*molTypeIter)->getNumOfMolObs();
 			for(int o=0; o<oTot; o++) {
-				headerFile<<"\t"<<(*molTypeIter)->getMolObs(o)->getName();
+				headerFile<<"\t"<<(*molTypeIter)->getMolObs(o)->getName(); // @suppress("Method cannot be resolved")
 				tabCount++;
 			}
 		}
@@ -259,7 +259,6 @@ void System::registerOutputFileLocation(string filename)
 		headerFile<<endl;
 		for(int t=0; t<tabCount; t++) headerFile<<"\t";
 		headerFile.close();
-
 	} else {
 		outputFileStream.open(filename.c_str());
 
@@ -1022,6 +1021,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 	  		}
 	  	}
 		/*
+		 *
 		for(complexIter = allComplexes.begin(); complexIter != allComplexes.end(); complexIter++) {
 			if((*complexIter)->isAlive()) {
 				for(obsIter = speciesObservables.begin(); obsIter != speciesObservables.end(); obsIter++) {
