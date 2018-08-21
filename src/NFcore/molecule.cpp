@@ -848,7 +848,7 @@ void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, Mapping
 
 	// This loop looks for neighbors that are bonded through the polymer,
 	// but might be missed by the breadthFirstSearch that skips polymers.
-	for (unsigned int loc = polymerLocation - 2 * polymerInteractionDistance;
+	for (int loc = polymerLocation - 2 * polymerInteractionDistance;
 			loc <= polymerLocation + 2 * polymerInteractionDistance;
 			loc++) {
 		nearbycIndex = mt->getPolymerGridComp(polymerType, loc);
