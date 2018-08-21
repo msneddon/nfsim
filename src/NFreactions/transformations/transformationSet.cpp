@@ -4,11 +4,9 @@
 using namespace NFcore;
 
 
-
-
-list <Molecule *> TransformationSet::deleteList;
-list <Molecule *> TransformationSet::updateAfterDeleteList;
-list <Molecule *>::iterator TransformationSet::it;
+vector <Molecule *> TransformationSet::deleteList;
+vector <Molecule *> TransformationSet::updateAfterDeleteList;
+vector <Molecule *>::iterator TransformationSet::it;
 
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates) // @suppress("Class members should be properly initialized")
 {
@@ -673,11 +671,11 @@ bool TransformationSet::checkMolecularity( MappingSet ** mappingSets )
 }
 
 
-bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit)
+bool TransformationSet::getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
 		// if we are deleting the entire complex, we don't have to track molecules in this complex
@@ -705,7 +703,7 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, list <Molecu
 			// modified by rasi to skip traversing bonds
 			// these require high traversal limit that slows down the simulation
 			// instead add all the molecules in the mapping set
-			for (int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
+			for (unsigned int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
 				Molecule * molecule = mappingSets[r]->get(i)->getMolecule();
 
 				// This is for non-polymeric molecules like ribosomes
@@ -768,12 +766,12 @@ Molecule * TransformationSet::getPopulationPointer( unsigned int r ) const
 }
 
 
-bool TransformationSet::getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit)
+bool TransformationSet::getListOfAddedMolecules(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
 	// Add new molecules (particle type) to the list of products
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for (unsigned int r=n_reactants; r<getNmappingSets(); r++)
 	{
 		//For each of the molecules that we possibly affect, traverse the neighborhood

@@ -357,9 +357,9 @@ void ReactionClass::printDetails() const {
 
 void ReactionClass::fire(double random_A_number) {
 
-//	if (this->system->getGlobalEventCounter() == 4306) {
-////		cout << name << "\n";
-//	}
+	if (this->system->getGlobalEventCounter() == 218) {
+		cout << name << "\n";
+	}
 
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
@@ -544,7 +544,7 @@ void ReactionClass::fire(double random_A_number) {
 		else {
 			// this is the hard way: find a representative molecule from each connected set
 			//  and evaluate TypeII functions on that representative.
-			list <Molecule *> allMols;
+			vector <Molecule *> allMols;
 			Molecule * mol;
 			for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 				mol = *molIter;

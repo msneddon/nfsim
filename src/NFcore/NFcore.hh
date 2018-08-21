@@ -492,8 +492,8 @@ namespace NFcore
 
 
 		private:
-			list <Molecule *> molList;
-			list <Molecule *>::iterator molListIter;
+			vector <Molecule *> molList;
+			vector <Molecule *>::iterator molListIter;
 
 			///////////////////////////////////////////////////////////////////////////
 			//Iterators that allow fast traversal of the object containers
@@ -920,20 +920,20 @@ namespace NFcore
 
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
-			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
-			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
-			void depthFirstSearch(list <Molecule *> &members);
+			void traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit);
+			static void breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth);
+			void depthFirstSearch(vector <Molecule *> &members);
 
 			/* functions for searching a polymer molecule within the interaction distance
 			 * of the site where they  will undergo a change
 			 * Arvind Rasi Subramaniam
 			 */
-			void traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping);
+			void traversePolymerNeighborhood(vector <Molecule *> &members, Mapping * mapping);
 			/* This function is essentially same as breadthFirstSearch but adapted for
 			 * product retrieval of non-polymer molecules.
 			 * Arvind Rasi Subramaniam
 			 */
-			void getBondedProductsForNonpolymers(list <Molecule *> &members, int depth);
+			void getBondedProductsForNonpolymers(vector <Molecule *> &members, int depth);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
@@ -974,7 +974,7 @@ namespace NFcore
 			void printBondDetails(NFstream &o);
 			void printBondDetails(ostream &o);
 
-			static void printMoleculeList(list <Molecule *> &members);
+			static void printMoleculeList(vector <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };
 			static const int NOT_IN_RXN = -1;
@@ -988,18 +988,6 @@ namespace NFcore
 			static const int NOBOND = 0;
 			static const int NOINDEX = -1;
 
-
-			//void addDependentUpdateMolecule(Molecule *m);
-			//void removeDependentUpdateMolecule(Molecule *m);
-			//void traverseBondedNeighborhoodForUpdate(list <Molecule *> &members, int traversalLimit);
-
-
-			//Unnecessary functions now that were once used to
-			//mark a molecule that is not in the simulation
-			//bool isMolAlive() const { return !isDead; };
-			//bool isMolDead() const { return isDead; };
-			//void kill() { isDead = true; };
-			//void create() { isDead = false; };
 
 
 		protected:
@@ -1062,7 +1050,7 @@ namespace NFcore
 
 			static queue <Molecule *> q;
 			static queue <int> d;
-			static list <Molecule *>::iterator molIter;
+			static vector <Molecule *>::iterator molIter;
 			//static list <Molecule *>::iterator molIter2;
 
 	};
@@ -1214,12 +1202,12 @@ namespace NFcore
 			bool onTheFlyObservables;
 			bool isDimerStyle;
 
-			list <Molecule *> products;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> products;
+			vector <Molecule *>::iterator molIter;
 
 			// remember the molecule type of each product molecule a with typeII dependencies
-			list <MoleculeType *> typeII_products;
-			list <MoleculeType *>::iterator typeII_iter;
+			vector <MoleculeType *> typeII_products;
+			vector <MoleculeType *>::iterator typeII_iter;
 
 			//Used by the reaction class to make sure that it only updates
 			//each complex once (for observables, and matchOnce reactants)
@@ -1305,8 +1293,8 @@ namespace NFcore
 			void unsetCanonical ( ) { is_canonical = false; };
 
 			//This is public so that anybody can access the molecules quickly
-			list <Molecule *> complexMembers;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> complexMembers;
+			vector <Molecule *>::iterator molIter;
 
 
 

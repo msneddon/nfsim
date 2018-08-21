@@ -10,7 +10,7 @@ using namespace NFcore;
 queue <TemplateMolecule *> TemplateMolecule::q;
 queue <int> TemplateMolecule::d;
 vector <TemplateMolecule *>::iterator TemplateMolecule::tmVecIter;
-list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
+vector <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
 int TemplateMolecule::TotalTemplateMoleculeCount=0;
 
@@ -488,7 +488,7 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 	//the queues and lists should be static for efficiency
 	//queue Q, depth queue D, and list T
 	//queue <TemplateMolecule *> q;
-	list <TemplateMolecule *> t;
+	vector <TemplateMolecule *> t;
 	//queue <int> d;
 
 	int currentDepth = 0;
@@ -1272,8 +1272,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		vector <MappingSet *> lastMappingSets;
 		lastMappingSets.push_back(ms);
 
-		list <Molecule *> molList;
-		list <Molecule *>::iterator molIter;
+		vector <Molecule *> molList;
+		vector <Molecule *>::iterator molIter;
 		bool hasTraversed = false;
 
 		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
@@ -1343,8 +1343,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			if(!canMatch) {
 				if(head) {
 					// clear out anything that is dangling
-					list <Molecule *> molList;
-					list <Molecule *>::iterator molIter;
+					vector <Molecule *> molList;
+					vector <Molecule *>::iterator molIter;
 					m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 					for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 						(*molIter)->isMatchedTo=0;
@@ -1376,8 +1376,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	if(holdMolClearToEnd) {
 		if(head) {
 			// clear out anything that is dangling
-			list <Molecule *> molList;
-			list <Molecule *>::iterator molIter;
+			vector <Molecule *> molList;
+			vector <Molecule *>::iterator molIter;
 			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 			for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 				(*molIter)->isMatchedTo=0;

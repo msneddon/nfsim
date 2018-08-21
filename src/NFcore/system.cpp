@@ -1151,8 +1151,8 @@ bool System::saveSpecies(string filename)
 	cout<<"\n\nsaving list of final molecular species..."<<endl;
 
 	// create a couple data structures to store results as we go
-	list <Molecule *> molecules;
-	list <Molecule *>::iterator iter;
+	vector <Molecule *> molecules;
+	vector <Molecule *>::iterator iter;
 	map <int,bool> reportedMolecules;
     map <string,int> reportedSpecies;
 

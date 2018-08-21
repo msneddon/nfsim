@@ -586,9 +586,9 @@ void Molecule::unbind(Molecule *m1, char * compName)
 
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
-list <Molecule *>::iterator Molecule::molIter;
+vector <Molecule *>::iterator Molecule::molIter;
 
-void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
+void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
 		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
@@ -662,7 +662,7 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
  * 2. hasVisitedMolecule is not reset
  * @author Arvind Rasi Subramaniam
  */
-void Molecule::getBondedProductsForNonpolymers(list <Molecule *> &members, int depth)
+void Molecule::getBondedProductsForNonpolymers(vector <Molecule *> &members, int depth)
 {
 	Molecule * m = this;
 	if(m==0) {
@@ -738,7 +738,7 @@ void Molecule::getBondedProductsForNonpolymers(list <Molecule *> &members, int d
 
 
 //
-void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
+void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
 	//if(traversalLimit>=0)
@@ -750,7 +750,7 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
-void Molecule::depthFirstSearch(list <Molecule *> &members)
+void Molecule::depthFirstSearch(vector <Molecule *> &members)
 {
 	if(this->hasVisitedMolecule==true) {
 		return;
@@ -780,10 +780,10 @@ void Molecule::depthFirstSearch(list <Molecule *> &members)
 
 
 
-void Molecule::printMoleculeList(list <Molecule *> &members)
+void Molecule::printMoleculeList(vector <Molecule *> &members)
 {
 	cout<<"List of molecules contains: "<<endl;
-	list <Molecule *>::iterator molIter;
+	vector <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		cout<<"   -"<<(*molIter)->getMoleculeTypeName();
 		cout<<"_u"<<(*molIter)->getUniqueID()<<endl;
@@ -802,7 +802,7 @@ void Molecule::printMoleculeList(list <Molecule *> &members)
  * @param mapping - contains the molecule component that changed.
  * @author Arvind Rasi Subramaniam
  */
-void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping * mapping) {
+void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, Mapping * mapping) {
 
 	int cIndex;
 	int nearbycIndex;

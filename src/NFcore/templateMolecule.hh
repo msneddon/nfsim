@@ -217,7 +217,7 @@ namespace NFcore
 		static queue <TemplateMolecule *> q;
 		static queue <int> d;
 		static vector <TemplateMolecule *>::iterator tmVecIter;
-		static list <TemplateMolecule *>::iterator tmIter;
+		static vector <TemplateMolecule *>::iterator tmIter;
 
 	};
 

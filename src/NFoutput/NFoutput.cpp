@@ -157,7 +157,7 @@ void DumpSystem::dumpMoleculeTypeFiles(double dumpTime) {
 
 
 		double NOBOND = -1;
-		list <Molecule *> molList; list <Molecule *>::iterator molIter;
+		vector <Molecule *> molList; vector <Molecule *>::iterator molIter;
 		for(int j=0; j<mt->getMoleculeCount(); j++) {
 
 			//First, write out this molecules unique ID
