@@ -113,8 +113,7 @@ TransformationSet::~TransformationSet()
 }
 
 
-TemplateMolecule *
-TransformationSet::getTemplateMolecule( unsigned int reactantIndex ) const
+TemplateMolecule * TransformationSet::getTemplateMolecule( unsigned int reactantIndex ) const
 {
 	if ( reactantIndex < n_reactants )
 	{
