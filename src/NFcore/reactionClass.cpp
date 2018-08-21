@@ -585,14 +585,3 @@ void ReactionClass::fire(double random_A_number) {
 	products.clear();
 	productComplexes.clear();
 }
-
-
-
-
-
-
-
-
-
-
-
