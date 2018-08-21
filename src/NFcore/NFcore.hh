@@ -1170,6 +1170,10 @@ namespace NFcore
 			int getNumConnectedRxns() {return connectedReactions.size();};
 			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
 
+			// Methods to identify connected reactions within NFsim
+			// gateway
+			void identifyConnectedReactions();
+
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;
 

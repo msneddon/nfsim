@@ -409,23 +409,23 @@ bool NFinput::initMoleculeTypes(
 					// assignment to MoleculeType
 					// If MoleculeType is not polymer, assign -1 to all these vectors
 					// Arvind Rasi Subramaniam
-//					if (pComp->FirstChildElement("PolymerType")) {
-//						if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
-//						isPolymer = true;
-//						polymerType.push_back(
-//								NFutil::convertToInt(
-//										pComp->FirstChildElement("PolymerType")->Attribute("id")));
-//						polymerLocation.push_back(
-//								NFutil::convertToInt(
-//										pComp->FirstChildElement("PolymerLocation")->Attribute("id")));
-//						polymerInteractionDistance.push_back(
-//								NFutil::convertToInt(
-//										pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
-//					} else {
-//						polymerType.push_back(-1);
-//						polymerLocation.push_back(-1);
-//						polymerInteractionDistance.push_back(-1);
-//					}
+					if (pComp->FirstChildElement("PolymerType")) {
+						if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
+						isPolymer = true;
+						polymerType.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerType")->Attribute("id")));
+						polymerLocation.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerLocation")->Attribute("id")));
+						polymerInteractionDistance.push_back(
+								NFutil::convertToInt(
+										pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
+					} else {
+						polymerType.push_back(-1);
+						polymerLocation.push_back(-1);
+						polymerInteractionDistance.push_back(-1);
+					}
 
 
 					bool isIntegerState=false;
