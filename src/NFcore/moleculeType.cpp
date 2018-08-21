@@ -217,7 +217,7 @@ void MoleculeType::setPolymerInformation(bool isPolymer, vector <int> polymerTyp
 	max_polymer_types = *max_element(polymerType.begin(), polymerType.end()) + 1;
 	max_polymer_locations = *max_element(polymerLocation.begin(), polymerLocation.end()) + 1;
 	this->polymerGrid.resize(max_polymer_types, vector <int>(max_polymer_locations, -1));
-	for (int i=0; i<polymerType.size(); i++) {
+	for (unsigned int i=0; i<polymerType.size(); i++) {
 		if (polymerType[i] < 0) continue;
 		this->polymerGrid[polymerType[i]][polymerLocation[i]] = i;
 	}
@@ -231,9 +231,9 @@ void MoleculeType::setPolymerInformation(bool isPolymer, vector <int> polymerTyp
  * @author Arvind Rasi Subramaniam
  */
 int MoleculeType::getPolymerGridComp(int row, int col) const {
-	if (row < 0 | col < 0 |
-			row >= this->max_polymer_types |
-			col >= this->max_polymer_locations) return -1;
+	if ((row < 0) | (col < 0) | (row >= this->max_polymer_types)
+			| (col >= this->max_polymer_locations))
+		return -1;
 	return this->polymerGrid[row][col];
 }
 
@@ -578,7 +578,7 @@ void MoleculeType::prepareForSimulation()
 
 void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReaction)
 {
-	int firedRxnId =  firedReaction->getRxnId();
+//	int firedRxnId =  firedReaction->getRxnId();
 //	for( unsigned int r=0; r<reactions.size(); r++ )
 //	{
 //		ReactionClass * rxn=reactions.at(r);
@@ -599,9 +599,9 @@ void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReacti
 	// and skips moleculetypes that are not the TemplateMolecule of the reactant
 	// in the connected reaction right away.
 	// Arvind Rasi Subramaniam
-	for (unsigned int r=0; r<firedReaction->getNumConnectedRxns(); r++) {
+	for (int r=0; r<firedReaction->getNumConnectedRxns(); r++) {
 		rxn = firedReaction->getconnectedRxn(r);
-		for (unsigned int pos=0; pos<rxn->getNumOfReactants(); pos++) {
+		for (int pos=0; pos<rxn->getNumOfReactants(); pos++) {
 			if (rxn->getMoleculeTypeOfReactantTemplate(pos) != this) continue;
 			double oldA = rxn->get_a();
 			rxn->tryToAdd(m, pos);
@@ -817,19 +817,3 @@ void MoleculeType::printDetails() const
 //	cout<<"        of which "<< indexOfDORrxns.size() <<" are DOR rxns. "<<endl;
 	cout<<"   -has "<< molObs.size() <<" molecules observables " <<endl;
 }
-
-
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
-
-
-

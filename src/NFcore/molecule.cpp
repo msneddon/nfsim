@@ -848,7 +848,7 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 
 	// This loop looks for neighbors that are bonded through the polymer,
 	// but might be missed by the breadthFirstSearch that skips polymers.
-	for (int loc = polymerLocation - 2 * polymerInteractionDistance;
+	for (unsigned int loc = polymerLocation - 2 * polymerInteractionDistance;
 			loc <= polymerLocation + 2 * polymerInteractionDistance;
 			loc++) {
 		nearbycIndex = mt->getPolymerGridComp(polymerType, loc);
@@ -867,17 +867,3 @@ void Molecule::traversePolymerNeighborhood(list <Molecule *> &members, Mapping *
 		}
 	}
 }
-
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
-
-

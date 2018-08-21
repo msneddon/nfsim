@@ -144,25 +144,13 @@ NFstream& NFstream::operator<<(NFstream& (*func)(NFstream &))
     return ((*func))(*this);
 }
 
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value) 
-{
-    if (nfstream.useFile_) 
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
-
-NFstream& endl(NFstream& nfstream) 
+NFstream& endl(NFstream& nfstream)
 {
     if (nfstream.useFile_)
 	nfstream.file_ << endl;
     else
 	nfstream.str_ << endl;
-   
+
     return nfstream;
 }
 

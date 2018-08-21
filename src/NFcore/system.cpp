@@ -481,12 +481,12 @@ void System::prepareForSimulation()
 
   	//cout<<"here 1..."<<endl;
 
-  	for( int f=0; f<localFunctions.size(); f++)
+  	for(unsigned int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
 
   	//cout<<"here 2..."<<endl;
 
-  	for( int f=0; f<compositeFunctions.size(); f++)
+  	for(unsigned int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
   	//cout<<"here 3..."<<endl;
@@ -506,7 +506,7 @@ void System::prepareForSimulation()
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
   		// prepare the connected reaction map for quick lookup
-  		for (unsigned int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
+  		for (int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
   			int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
   			connectedReactions[r][rxn2_id] = true;
   		}
@@ -1035,7 +1035,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 
 
 	if(useBinaryOutput) {
-		double count=0.0; int oTot=0;
+		double count=0.0;
 
 		outputFileStream.write((char *)&cSampleTime, sizeof(double));
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
@@ -1441,7 +1441,7 @@ void System::evaluateAllLocalFunctions() {
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
 						//cout<<"--------------Evaluating local function on species..."<<endl;
-						double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
+						localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
 						//cout<<"     value of function: "<<val<<endl;
 
 				}
@@ -1670,15 +1670,15 @@ NFstream& System::getOutputFileStream()
 }
 
 
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
-
+//// friend functions
+//template<class T>
+//NFstream& operator<<(NFstream& nfstream, const T& value)
+//{
+//    if (nfstream.useFile_)
+//	nfstream.file_ << value;
+//    else
+//	nfstream.str_ << value;
+//
+//    return nfstream;
+//}
+//
