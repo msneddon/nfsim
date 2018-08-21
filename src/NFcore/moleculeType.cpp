@@ -606,6 +606,16 @@ void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReacti
 			double oldA = rxn->get_a();
 			rxn->tryToAdd(m, pos);
 			this->system->update_A_tot(rxn,oldA,rxn->update_a());
+			double newA =  rxn->get_a();
+			if (oldA != newA) {
+				this->system->getConnectedRxnFileStream() <<
+				this->system->getGlobalEventCounter() << "\t" <<
+				firedReaction->getName() << "\t" <<
+						m->getMoleculeTypeName() << "\t" <<
+						m->getUniqueID() << "\t" <<
+						rxn->getName() << "\t" <<
+						oldA << "\t" << newA << endl;
+			}
 		}
   	}
 }

@@ -305,6 +305,32 @@ void System::registerReactionFileLocation(string filename)
 }
 
 
+void System::registerConnectedRxnFileLocation(string filename)
+{
+	if (connectedRxnFileStream.is_open()) { connectedRxnFileStream.close(); }
+	connectedRxnFileStream.open(filename.c_str());
+
+	if(!connectedRxnFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	connectedRxnFileStream.setf(ios::scientific);
+	connectedRxnFileStream.precision(8);
+	// print header for file
+	connectedRxnFileStream <<
+			"line" << "\t" <<
+			"rxn" << "\t" <<
+			"mol" << "\t" <<
+			"mol_id" << "\t" <<
+			"con_rxn" << "\t" <<
+			"old_a" << "\t" <<
+			"new_a" <<
+			endl;
+}
+
+
 
 void System::tagReaction(unsigned int rID) {
 
@@ -1657,6 +1683,11 @@ void System::outputAllPropensities(double time, int rxnFired)
 	propensityDumpStream<<endl;
 
 
+}
+
+NFstream& System::getConnectedRxnFileStream()
+{
+    return connectedRxnFileStream;
 }
 
 NFstream& System::getReactionFileStream()

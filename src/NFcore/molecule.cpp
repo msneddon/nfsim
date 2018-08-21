@@ -710,16 +710,17 @@ void Molecule::getBondedProductsForNonpolymers(vector <Molecule *> &members, int
 			if(cM->isBindingSiteBonded(c))
 			{
 				Molecule *neighbor = cM->getBondedMolecule(c);
-				// skip polymer neighbors
-				// these are treated separately
-				// Arvind Rasi Subramaniam
-				if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
 				//cout<<"looking at neighbor: "<<endl;
 				//neighbor->printDetails();
 				if(!neighbor->hasVisitedMolecule)
 				{
 					neighbor->hasVisitedMolecule=true;
 					members.push_back(neighbor);
+					// skip going through bonds of polymer neighbors, but add them (to account
+					// for cases such as ribosome collisions when the polymer itself
+					// does not get modified and hence there is no checking of neighborhood.
+					// Arvind Rasi Subramaniam
+					if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
 					q.push(neighbor);
 					d.push(currentDepth+1);
 					//cout<<"adding... to traversal list."<<endl;

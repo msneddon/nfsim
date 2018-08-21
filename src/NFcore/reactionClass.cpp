@@ -526,6 +526,7 @@ void ReactionClass::fire(double random_A_number) {
 		if ( mol->isAlive() )
 			mol->updateRxnMembership(this);
 	}
+//	cout << "------------------------------------------------" << endl;
 
 	// update complex-scoped local functions for typeII dependencies
 	// NOTE: as a side-effect, dependent DOR reactions (via typeI molecule dependencies) will be updated

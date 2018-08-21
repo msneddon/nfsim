@@ -482,6 +482,11 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					if (argMap.find("rxnlog")!=argMap.end()) {
 						string rxnLogFileName = argMap.find("rxnlog")->second;
 						s->registerReactionFileLocation(rxnLogFileName);
+						s->registerConnectedRxnFileLocation(
+								rxnLogFileName.replace(
+										rxnLogFileName.end()-3,
+										rxnLogFileName.end(),
+										"connected.tsv"));
 					}
 					else {
 						s->registerReactionFileLocation(s->getName()+"_rxns.dat");

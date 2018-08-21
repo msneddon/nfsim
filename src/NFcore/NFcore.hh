@@ -261,6 +261,7 @@ namespace NFcore
 			/* reaction firings are output to this file
 			 * if any reaction has tag flag set to 1 */
 			void registerReactionFileLocation(string filename);
+			void registerConnectedRxnFileLocation(string filename);
 
 
 			void setDumpOutputter(DumpSystem *ds);
@@ -367,6 +368,7 @@ namespace NFcore
 
 	        NFstream& getOutputFileStream();
 	        NFstream& getReactionFileStream();
+	        NFstream& getConnectedRxnFileStream();
 
 	        // NETGEN -- method to access allComplexes
 	        ComplexList & getAllComplexes( )  {  return allComplexes;  };
@@ -465,6 +467,7 @@ namespace NFcore
 			//ofstream outputFileStream; /* the stream to a file to write out the results */
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream reactionOutputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream connectedRxnFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			void outputGroupDataHeader();
 
 			void outputAllPropensities(double time, int rxnFired);
