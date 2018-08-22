@@ -1130,10 +1130,6 @@ bool NFinput::initReactionRules(
 				map <string,TemplateMolecule *> products;
 				// maps component ids to component objects
 				map <string, component> comps;
-				// maps reactant and product comps by name
-				// this is parsed from the input XML file
-				// Arvind Rasi Subramaniam
-				map <string, string> reactantProductMap;
 				// points to TemplateMolecules for Reactants
 				vector <TemplateMolecule *> templates;
 				// points to TemplateMolecules for AddMoleculeTransforms
@@ -1208,15 +1204,24 @@ bool NFinput::initReactionRules(
 				}
 
 				TiXmlElement *pMap;
-				for ( pMap = pListOfMaps->FirstChildElement("Map"); pMap != 0; pMap = pMap->NextSiblingElement("Map"))
+				string reactantId, productId;
+				for ( pMap = pListOfMaps->FirstChildElement("MapItem"); pMap != 0; pMap = pMap->NextSiblingElement("MapItem"))
 				{
-					const string reactantId = pProduct->Attribute("sourceID");
-					const string productId = pProduct->Attribute("targetID");
-					if (reactantId.size() == 0 |productId.size() == 0) {
+					reactantId = pMap->Attribute("sourceID");
+					productId = pMap->Attribute("targetID");
+					if ((reactantId.size() == 0) | (productId.size() == 0)) {
 						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
 						return false;
 					}
-					reactantProductMap[reactantId] = productId;
+					// Assign reactant and product template molecules to each
+					// other if they exist. Arvind Rasi Subramaniam
+					auto reactantIt = reactants.find(reactantId);
+					auto productIt = products.find(productId);
+					if ((reactantIt != reactants.end()) &
+							(productIt != products.end())) {
+						reactantIt->second->setMappedPartner(productIt->second);
+						productIt->second->setMappedPartner(reactantIt->second);
+					}
 				}
 
 

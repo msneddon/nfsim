@@ -68,6 +68,8 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//finally, we have to register this template molecule with the molecule
 	//type so that we can easily destroy them at the end.
 	this->moleculeType->addTemplateMolecule(this);
+
+	this->mappedTm = NULL;
 }
 
 
@@ -332,6 +334,11 @@ void TemplateMolecule::printDetails(ostream &o) {
 	o<<"\n  Map Generators:                      ";
 	o<<n_mapGenerators<<" generators.";
 
+	o<<"\n  Pattern:                             ";
+	o<<this->getPatternString();
+
+	o<<"\n  Transformed Pattern:                 ";
+	o<<mappedTm->getPatternString();
 	o<<endl;
 	o<<endl;
 

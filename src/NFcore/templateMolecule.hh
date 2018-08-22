@@ -133,7 +133,10 @@ namespace NFcore
 		void printPattern();
 		void printPattern(ostream &o);
 
-
+		// To get and set mapped reactant or product templatemolecule
+		// Arvind Rasi Subramaniam
+		void setMappedPartner(TemplateMolecule * tm) {mappedTm = tm;};
+		TemplateMolecule * getMappedPartner() {return mappedTm;};
 
 	protected:
 
@@ -218,6 +221,10 @@ namespace NFcore
 		static queue <int> d;
 		static vector <TemplateMolecule *>::iterator tmVecIter;
 		static vector <TemplateMolecule *>::iterator tmIter;
+
+		// For tracking the reactant or product that this TemplateMolecule is
+		// transformed into
+		TemplateMolecule * mappedTm;
 
 	};
 
