@@ -1107,6 +1107,11 @@ namespace NFcore
 			ReactionClass(string name, double rate, string baseRateParameterName, TransformationSet *transformationSet, System *s);
 			virtual ~ReactionClass();
 
+			//! To get all reactant and product templates for inferring connectivity between reactions
+			//! @author Arvind Rasi Subramaniam
+			void setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
+					map <string,TemplateMolecule *> products);
+
 			int getNumOfReactants() const { return n_reactants; };
 
 			string getName() const { return name; };
@@ -1196,6 +1201,11 @@ namespace NFcore
 
 			unsigned int traversalLimit;
 
+			/* Used for scanning all reactants and products to infer connectivity
+			 * Arvind Rasi Subramaniam
+			 */
+			vector <TemplateMolecule *> allReactantTemplates;
+			vector <TemplateMolecule *> allProductTemplates;
 			/* Maintain a list of connected reactions whose reactant numbers
 			 * might change upon firing this reaction.
 			 * Arvind Rasi Subramaniam

@@ -213,21 +213,6 @@ namespace NFinput {
 			bool verbose);
 
 
-	//! Reads a pattern XML block and returns the set of new TemplateMolecule objects.
-	/*!
-    	@author Michael Sneddon
-	 */
-
-		bool readProductPattern(
-			TiXmlElement * pListOfMol,
-			System * s, map <string,double> &parameter,
-			map<string,int> &allowedStates,
-			string patternName,
-			vector <MoleculeType *> &productMoleculeTypes,
-			vector < vector <int> > &stateInformation,
-			vector < vector <int> > &bindingSiteInformation,
-			bool verbose);
-
 	//! Reads a product molecule XML block and returns a TemplateMolecule objects.
 	/*!
 	 *  As a side-effect, this also creates components for the product molecule

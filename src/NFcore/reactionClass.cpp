@@ -292,6 +292,20 @@ ReactionClass::~ReactionClass()
 	connectedReactions.clear();
 }
 
+/** Fill the reactant and product templates for inferring reaction connectivity matrix
+ * @author Arvind Rasi Subramaniam
+ */
+void ReactionClass::setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
+					map <string,TemplateMolecule *> products) {
+	map <string, TemplateMolecule *>::iterator it;
+	// Fill the reactant template pattern
+	for (it = reactants.begin(); it != reactants.end(); ++it)
+		this->allReactantTemplates.push_back(it->second);
+	// Fill the product template pattern
+	for (it = products.begin(); it != products.end(); ++it)
+		this->allProductTemplates.push_back(it->second);
+}
+
 
 void ReactionClass::setBaseRate(double newBaseRate,string newBaseRateName) {
 	if ( this->transformationSet->usingSymmetryFactor() )
