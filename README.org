@@ -1,7 +1,8 @@
 #+TITLE: Notes for Rasi's modification to the program
 
 [2018-08-22 Wed]
-Added back parsing of all reactant and product =TemplateMolecule= for each reaction.
+- Added back parsing of all reactant and product =TemplateMolecule= for each reaction.
+- Create a map of reactant and product molecules based on parsing the =<Map/>= tag of each =ReactionRule=.
 
 [2018-08-16 Thu]
 Network connectivity inference from the =NFSim= input =xml= file is working now. Look at [[https://github.com/rasilab/sc_translation_model]] repo from today. The inferred connectivity is a superset of the true connectivity: I have 20-50 reactions connected to most reactions. With further optimization, I could probably cut this to 10 or so reactions, but I don't want to accidentally lose a true connected reaction. So I will work with my generous connectivity constraints.

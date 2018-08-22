@@ -1130,6 +1130,10 @@ bool NFinput::initReactionRules(
 				map <string,TemplateMolecule *> products;
 				// maps component ids to component objects
 				map <string, component> comps;
+				// maps reactant and product comps by name
+				// this is parsed from the input XML file
+				// Arvind Rasi Subramaniam
+				map <string, string> reactantProductMap;
 				// points to TemplateMolecules for Reactants
 				vector <TemplateMolecule *> templates;
 				// points to TemplateMolecules for AddMoleculeTransforms
@@ -1195,10 +1199,25 @@ bool NFinput::initReactionRules(
 					}
 				}
 
-				//Outputting all the templates for debugging purposes
-				//map<const char*, TemplateMolecule *, strCmp>::iterator it;
-				//	for ( it=reactants.begin() ; it != reactants.end(); it++ )
-				//		cout << (*it).first << " => " << (*it).second->getMoleculeType()->getName() << endl;
+				// Read in the reactant-product maps for this rule
+				// Arvind Rasi Subramaniam
+				TiXmlElement *pListOfMaps = pRxnRule->FirstChildElement("Map");
+				if(!pListOfMaps) {
+					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant-product maps!"<<endl;
+					continue;
+				}
+
+				TiXmlElement *pMap;
+				for ( pMap = pListOfMaps->FirstChildElement("Map"); pMap != 0; pMap = pMap->NextSiblingElement("Map"))
+				{
+					const string reactantId = pProduct->Attribute("sourceID");
+					const string productId = pProduct->Attribute("targetID");
+					if ((!reactantId)|(!productId)) {
+						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
+						return false;
+					}
+					reactantProductMap[reactantId] = productId
+				}
 
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
