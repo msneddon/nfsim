@@ -4,7 +4,24 @@
 
 using namespace NFcore;
 
-
+EmptyTransform::EmptyTransform() :
+		Transformation(TransformationFactory::EMPTY)
+{
+	this->cIndex=-1;
+	this->tm = nullptr;
+}
+EmptyTransform::EmptyTransform(int cIndex) :
+		Transformation(TransformationFactory::EMPTY)
+{
+	this->cIndex=cIndex;
+	this->tm = nullptr;
+}
+EmptyTransform::EmptyTransform(int cIndex, TemplateMolecule * tm) :
+		Transformation(TransformationFactory::EMPTY)
+{
+	this->cIndex=cIndex;
+	this->tm = tm;
+}
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -13,6 +30,14 @@ StateChangeTransform::StateChangeTransform(int cIndex, int newValue) :
 {
 	this->cIndex = cIndex;
 	this->newValue = newValue;
+	this->tm = NULL;
+}
+StateChangeTransform::StateChangeTransform(int cIndex, int newValue, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::STATE_CHANGE)
+{
+	this->cIndex = cIndex;
+	this->newValue = newValue;
+	this->tm = tm;
 }
 void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
@@ -27,6 +52,13 @@ IncrementStateTransform::IncrementStateTransform(unsigned int cIndex) :
 	Transformation(TransformationFactory::INCREMENT_STATE)
 {
 	this->cIndex = cIndex;
+	this->tm = NULL;
+}
+IncrementStateTransform::IncrementStateTransform(unsigned int cIndex, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::INCREMENT_STATE)
+{
+	this->cIndex = cIndex;
+	this->tm = tm;
 }
 void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
@@ -41,6 +73,13 @@ DecrementStateTransform::DecrementStateTransform(unsigned int cIndex) :
 	Transformation(TransformationFactory::DECREMENT_STATE)
 {
 	this->cIndex = cIndex;
+	this->tm = NULL;
+}
+DecrementStateTransform::DecrementStateTransform(unsigned int cIndex, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::DECREMENT_STATE)
+{
+	this->cIndex = cIndex;
+	this->tm = tm;
 }
 void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
@@ -56,6 +95,10 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 
 NewMoleculeBindingTransform::NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex) :
 		BindingTransform(cIndex, otherReactantIndex, otherMappingIndex)
+{ }
+
+NewMoleculeBindingTransform::NewMoleculeBindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex, TemplateMolecule * tm) :
+		BindingTransform(cIndex, otherReactantIndex, otherMappingIndex, tm)
 { }
 
 bool NewMoleculeBindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
@@ -74,6 +117,15 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 	this->cIndex=cIndex;
 	this->otherReactantIndex=otherReactantIndex;
 	this->otherMappingIndex=otherMappingIndex;
+	this->tm = NULL;
+}
+BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::BINDING)
+{
+	this->cIndex=cIndex;
+	this->otherReactantIndex=otherReactantIndex;
+	this->otherMappingIndex=otherMappingIndex;
+	this->tm = tm;
 }
 
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
@@ -136,6 +188,13 @@ UnbindingTransform::UnbindingTransform(int cIndex) :
 	Transformation(TransformationFactory::UNBINDING)
 {
 	this->cIndex=cIndex;
+	this->tm = NULL;
+}
+UnbindingTransform::UnbindingTransform(int cIndex, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::UNBINDING)
+{
+	this->cIndex=cIndex;
+	this->tm = tm;
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 {   //cout<<"unbinding.."<<endl;
@@ -148,8 +207,15 @@ AddSpeciesTransform::AddSpeciesTransform(SpeciesCreator *sc) :
 	Transformation(TransformationFactory::ADD)
 {
 	this->sc=sc;
+	this->tm = NULL;
 }
 
+AddSpeciesTransform::AddSpeciesTransform(SpeciesCreator *sc, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::ADD)
+{
+	this->sc=sc;
+	this->tm = tm;
+}
 
 AddSpeciesTransform::~AddSpeciesTransform()
 {
@@ -170,6 +236,15 @@ AddMoleculeTransform::AddMoleculeTransform( MoleculeCreator * _mc )
 {
 	this->mc = _mc;
 	new_molecule = NULL;
+	this->tm = NULL;
+}
+
+AddMoleculeTransform::AddMoleculeTransform( MoleculeCreator * _mc, TemplateMolecule * tm)
+ : Transformation( TransformationFactory::ADD )
+{
+	this->mc = _mc;
+	new_molecule = NULL;
+	this->tm = tm;
 }
 
 
@@ -214,8 +289,14 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 RemoveMoleculeTransform::RemoveMoleculeTransform(int removalType) :
 	Transformation(TransformationFactory::REMOVE) {
 	this->removalType=removalType;
+	this->tm = NULL;
 }
 
+RemoveMoleculeTransform::RemoveMoleculeTransform(int removalType, TemplateMolecule * tm) :
+	Transformation(TransformationFactory::REMOVE) {
+	this->removalType=removalType;
+	this->tm = tm;
+}
 
 void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 {
@@ -230,6 +311,13 @@ DecrementPopulationTransform::DecrementPopulationTransform() :
 	Transformation(TransformationFactory::DECREMENT_POPULATION)
 {
 	this->cIndex = -1;
+	this->tm = NULL;
+}
+DecrementPopulationTransform::DecrementPopulationTransform(TemplateMolecule * tm) :
+	Transformation(TransformationFactory::DECREMENT_POPULATION)
+{
+	this->cIndex = -1;
+	this->tm = tm;
 }
 void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms)
 {
@@ -269,12 +357,6 @@ NFcore::Transformation * TransformationFactory::genNewMoleculeBindingTransform1(
 {
 	return new NewMoleculeBindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
 }
-
-//NFcore::Transformation * TransformationFactory::genBindingSeparateComplexTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex)
-//{
-//	return new BindingSeparateComplexTransform(bSiteIndex, otherReactantIndex, otherMappingIndex);
-//}
-
 NFcore::Transformation * TransformationFactory::genBindingTransform2(unsigned int bSiteIndex)
 {
 	return new EmptyTransform(bSiteIndex);
@@ -319,6 +401,53 @@ Transformation * TransformationFactory::genLocalFunctionReference(string Pointer
 
 
 
+NFcore::Transformation * TransformationFactory::genStateChangeTransform(unsigned int stateIndex, int newStateValue, TemplateMolecule * tm)
+{
+	return new StateChangeTransform(stateIndex, newStateValue, tm);
+}
+NFcore::Transformation * TransformationFactory::genBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex, TemplateMolecule * tm)
+{
+	return new BindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex, tm);
+}
+NFcore::Transformation * TransformationFactory::genNewMoleculeBindingTransform1(unsigned int bSiteIndex, unsigned int otherReactantIndex, unsigned int otherMappingIndex, TemplateMolecule * tm)
+{
+	return new NewMoleculeBindingTransform(bSiteIndex, otherReactantIndex, otherMappingIndex, tm);
+}
+NFcore::Transformation * TransformationFactory::genBindingTransform2(unsigned int bSiteIndex, TemplateMolecule * tm)
+{
+	return new EmptyTransform(bSiteIndex, tm);
+}
+NFcore::Transformation * TransformationFactory::genUnbindingTransform(unsigned int bSiteIndex, TemplateMolecule * tm)
+{
+	return new UnbindingTransform(bSiteIndex, tm);
+}
+NFcore::AddSpeciesTransform * TransformationFactory::genAddSpeciesTransform(SpeciesCreator *sc, TemplateMolecule * tm)
+{
+	return new AddSpeciesTransform(sc, tm);
+}
+NFcore::AddMoleculeTransform * TransformationFactory::genAddMoleculeTransform(MoleculeCreator *mc, TemplateMolecule * tm)
+{
+	return new AddMoleculeTransform(mc, tm);
+}
+NFcore::Transformation * TransformationFactory::genRemoveMoleculeTransform(int removalType, TemplateMolecule * tm)
+{
+	return new RemoveMoleculeTransform(removalType, tm);
+}
+
+
+NFcore::Transformation * TransformationFactory::genIncrementStateTransform(unsigned int cIndex, TemplateMolecule * tm)
+{
+	return new IncrementStateTransform(cIndex, tm);
+}
+NFcore::Transformation * TransformationFactory::genDecrementStateTransform(unsigned int cIndex, TemplateMolecule * tm)
+{
+	return new DecrementStateTransform(cIndex, tm);
+}
+
+NFcore::Transformation * TransformationFactory::genDecrementPopulationTransform(TemplateMolecule * tm)
+{
+	return new DecrementPopulationTransform(tm);
+}
 
 
 

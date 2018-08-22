@@ -141,7 +141,7 @@ bool TransformationSet::addStateChangeTransform(TemplateMolecule *t, string cNam
 	// 2) Create a Transformation object to remember the information
 	//cout<<"Adding state change transform to value: "<<finalStateValue<<endl;
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue);
+	Transformation *transformation = TransformationFactory::genStateChangeTransform(cIndex, finalStateValue, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -187,7 +187,7 @@ bool TransformationSet::addIncrementStateTransform(TemplateMolecule *t, string c
 
 	// 2) Create a Transformation object to remember the information
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genIncrementStateTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genIncrementStateTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -212,7 +212,7 @@ bool TransformationSet::addDecrementStateTransform(TemplateMolecule *t, string c
 
 	// 2) Create a Transformation object to remember the information
 	int cIndex = t->getMoleculeType()->getCompIndexFromName(cName);
-	Transformation *transformation = TransformationFactory::genDecrementStateTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genDecrementStateTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -263,11 +263,11 @@ bool TransformationSet::addBindingTransform(TemplateMolecule *t1, string bSiteNa
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1, t1);
 	else
-		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size(), t1);
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2, t2);
 
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -312,11 +312,11 @@ bool TransformationSet::addNewMoleculeBindingTransform(TemplateMolecule *t1, str
 	//equal to the size.
 	Transformation *transformation1;
 	if(reactantIndex1==reactantIndex2)
-		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1);
+		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size()+1, t1);
 	else
-		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size());
+		transformation1 = TransformationFactory::genNewMoleculeBindingTransform1(cIndex1, reactantIndex2, transformations[reactantIndex2].size(), t1);
 
-	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2);
+	Transformation *transformation2 = TransformationFactory::genBindingTransform2(cIndex2, t2);
 
 	transformations[reactantIndex1].push_back(transformation1);
 	MapGenerator *mg1 = new MapGenerator(transformations[reactantIndex1].size()-1);
@@ -422,7 +422,7 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 
 	// 2) Create a Transformation object to remember the information
 	unsigned int cIndex = tToTransform->getMoleculeType()->getCompIndexFromName(bSiteName);
-	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex);
+	Transformation *transformation = TransformationFactory::genUnbindingTransform(cIndex, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -452,7 +452,7 @@ bool TransformationSet::addDeleteMolecule(TemplateMolecule *t, int deletionType)
 		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
 		return false;
 	}
-	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform(deletionType);
+	Transformation *transformation = TransformationFactory::genRemoveMoleculeTransform(deletionType, t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -479,7 +479,7 @@ bool TransformationSet::addDecrementPopulation(TemplateMolecule *t)
 		cerr<<" A(b).B(a),( instead of, say, A(b!1).B(a!1) ) you will get this error."<<endl;
 		return false;
 	}
-	Transformation *transformation = TransformationFactory::genDecrementPopulationTransform();
+	Transformation *transformation = TransformationFactory::genDecrementPopulationTransform(t);
 
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
@@ -514,7 +514,7 @@ bool TransformationSet::addAddMolecule( MoleculeCreator *mc )
 	// We don't need a polymorphic transform because AddTransforms are handled separately!
 	//  But we do need to call some methods specific to AddMoleculeTransform.
 	//  So we're modified TransformationFactory to return the specific object type  --JUstin
-	AddMoleculeTransform * transformation = TransformationFactory::genAddMoleculeTransform( mc );
+	AddMoleculeTransform * transformation = TransformationFactory::genAddMoleculeTransform( mc, mc->getTemplateMolecule() );
 
 	// 3) Add the transformation object to the TransformationSet
 	addMoleculeTransformations.push_back( transformation );
