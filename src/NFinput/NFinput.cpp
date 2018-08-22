@@ -1212,11 +1212,11 @@ bool NFinput::initReactionRules(
 				{
 					const string reactantId = pProduct->Attribute("sourceID");
 					const string productId = pProduct->Attribute("targetID");
-					if ((!reactantId)|(!productId)) {
+					if (reactantId.size() == 0 |productId.size() == 0) {
 						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
 						return false;
 					}
-					reactantProductMap[reactantId] = productId
+					reactantProductMap[reactantId] = productId;
 				}
 
 
