@@ -244,7 +244,7 @@ namespace NFcore
 				will explore down one level of bonds, and so on.
 				@author Michael Sneddon
 			*/
-			bool getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
+			bool getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit, bool polymerFlag=false);
 
 			/*!
 				This is a companion to getListOfProducts. This is called after applying transformations and

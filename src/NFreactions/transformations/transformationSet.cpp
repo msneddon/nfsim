@@ -682,7 +682,8 @@ bool TransformationSet::checkMolecularity( MappingSet ** mappingSets )
 }
 
 
-bool TransformationSet::getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit)
+bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
+		vector <Molecule *> &products, int traversalLimit, bool polymerFlag)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
@@ -710,6 +711,16 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets, vector <Mole
 			// all standard reactions.  I'm wondering now, though, if it is enough in
 			// all cases where you would use the connected-to syntax.  I think so, but
 			// someone should test it.  --michael 9Mar2011
+			if (!polymerFlag) {
+				Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
+				// is this molecule already on the product list?
+				if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+				{	// Traverse neighbor and add molecules to list
+					molecule->traverseBondedNeighborhood(products,traversalLimit);
+					//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
+				}
+				continue;
+			}
 
 			// modified by rasi to skip traversing bonds
 			// these require high traversal limit that slows down the simulation

@@ -416,9 +416,7 @@ bool NFinput::initMoleculeTypes(
 					// assignment to MoleculeType
 					// If MoleculeType is not polymer, assign -1 to all these vectors
 					// Arvind Rasi Subramaniam
-
-					if (pComp->FirstChildElement("PolymerType")) {
-						if (s->getPolymerFlag()) {
+						if (pComp->FirstChildElement("PolymerType")) {
 							if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
 							isPolymer = true;
 							polymerType.push_back(
@@ -430,12 +428,11 @@ bool NFinput::initMoleculeTypes(
 							polymerInteractionDistance.push_back(
 									NFutil::convertToInt(
 											pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
+						} else {
+							polymerType.push_back(-1);
+							polymerLocation.push_back(-1);
+							polymerInteractionDistance.push_back(-1);
 						}
-					} else {
-						polymerType.push_back(-1);
-						polymerLocation.push_back(-1);
-						polymerInteractionDistance.push_back(-1);
-					}
 
 
 					bool isIntegerState=false;

@@ -76,9 +76,16 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
- *  -polymer = use polymer property of molecules if given, see manual
+ *  -polymer = use polymer property of molecules for speeding simulation if given.
+ *             If the flag is set but none of the molecules in XML have PolymerType,
+ *             then the flag is ignored.
+ *             Requires modified BioNetGen and PySB for producing input files with
+ *             PolymerType.
+ *             @author Arvind Rasi Subramaniam
  *
- *  -connect - infer network connectivity before starting simulation, see manual
+ *  -connect - infer network connectivity before starting simulation.
+ *             Does not require any modification to BioNetGen or PySB.
+ *             @author Arvind Rasi Subramaniam
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *

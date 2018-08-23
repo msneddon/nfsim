@@ -1148,7 +1148,7 @@ namespace NFcore
 
 			double get_a() const { return a; };
 			virtual void printDetails() const;
-			void fire(double random_A_number);
+			void fire(double random_A_number, bool polymerFlag);
 
 			//For DOR reactions
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;

@@ -636,10 +636,6 @@ void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int
 			if(cM->isBindingSiteBonded(c))
 			{
 				Molecule *neighbor = cM->getBondedMolecule(c);
-				// skip polymer neighbors
-				// these are treated separately
-				// Arvind Rasi Subramaniam
-				if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
 				//cout<<"looking at neighbor: "<<endl;
 				//neighbor->printDetails();
 				if(!neighbor->hasVisitedMolecule)

@@ -365,7 +365,7 @@ void ReactionClass::printDetails() const {
 }
 
 
-void ReactionClass::fire(double random_A_number) {
+void ReactionClass::fire(double random_A_number, bool polymerFlag) {
 
 //	if (this->system->getGlobalEventCounter() == 218) {
 //		cout << name << "\n";
@@ -386,7 +386,7 @@ void ReactionClass::fire(double random_A_number) {
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
-	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
+	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit, polymerFlag);
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {

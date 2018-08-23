@@ -578,8 +578,14 @@ void System::prepareForSimulation()
 
 
   	//prep each molecule type for the simulation
-  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	bool isAnyMoleculePolymer = false;
+  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
+		if ((*molTypeIter)->checkIfPolymer()) isAnyMoleculePolymer = true;
+  	}
+	// override the polymer flag if none of the molecule types are polymers
+  	// Arvind Rasi Subramaniam
+  	if (getPolymerFlag() & !isAnyMoleculePolymer) usePolymerFlag(false);
 
   	//cout<<"here 7..."<<endl;
 
@@ -838,7 +844,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
 //
-		nextReaction->fire(randElement);
+		nextReaction->fire(randElement, getPolymerFlag());
 
 		tryToDump();
 
@@ -905,7 +911,7 @@ double System::stepTo(double stoppingTime)
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
-		nextReaction->fire(randElement);
+		nextReaction->fire(randElement, getPolymerFlag());
 	}
 	//cout<<"a_tot="<<a_tot;
 	return current_time;
@@ -937,7 +943,7 @@ void System::singleStep()
 	nextReaction->printDetails();;
 
 	//5: Fire Reaction! (takes care of updates to lists and observables)
-	nextReaction->fire(randElement);
+	nextReaction->fire(randElement, getPolymerFlag());
 	cout<<"  -System time is now at time: "<<current_time<<endl;
 
 	globalEventCounter++;
