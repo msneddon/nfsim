@@ -113,7 +113,7 @@ namespace NFcore
 		 * the reactants for another reaction
 		 * @author: Arvind Rasi Subramaniam
 		 */
-		bool match(TemplateMolecule* tm);
+		bool isTemplateCompatible(TemplateMolecule* tm);
 
 
 		//////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +137,8 @@ namespace NFcore
 		// Arvind Rasi Subramaniam
 		void setMappedPartner(TemplateMolecule * tm) {mappedTm = tm;};
 		TemplateMolecule * getMappedPartner() {return mappedTm;};
+
+		bool isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
 
 	protected:
 

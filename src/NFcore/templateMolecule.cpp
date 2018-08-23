@@ -1408,7 +1408,7 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
  * @param tm - Template molecule to match against
  * @return true or false
  */
-bool TemplateMolecule::match(TemplateMolecule * tm) {
+bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// Make sure the TMs are of the same type
 	if(tm->getMoleculeType() != getMoleculeType()) {
 		return false;
@@ -1416,8 +1416,7 @@ bool TemplateMolecule::match(TemplateMolecule * tm) {
 
 
 	// If there is no overlap between the components of the two TemplateMolecules,
-	// then these are not connected
-	// First make a joint vector of components specified in each TemplateMolecule
+	// then they are compatible
 	vector <int> allComps;
 	vector <int> allComps_tm;
 	for (int i : emptyComps) allComps.push_back(i);
@@ -1436,7 +1435,7 @@ bool TemplateMolecule::match(TemplateMolecule * tm) {
 		}
 	}
 	// Still no overlap, so return
-	if (compOverlap == false) return false;
+	if (compOverlap == false) return true;
 
 
 
@@ -2026,7 +2025,16 @@ bool TemplateMolecule::checkSymmetryAroundBond(TemplateMolecule *tm1, TemplateMo
 
 
 
+bool TemplateMolecule::isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
+	if (this->getMoleculeType() != mt) return false;
 
+	// First make a joint vector of components specified in the TemplateMolecule
+	if (find(emptyComps.begin(), emptyComps.end(), cIndex) != emptyComps.end()) return true;
+	if (find(occupiedComps.begin(), occupiedComps.end(), cIndex) != occupiedComps.end()) return true;
+	if (find(bondComp.begin(), bondComp.end(), cIndex) != bondComp.end()) return true;
+
+	return false;
+}
 
 
 

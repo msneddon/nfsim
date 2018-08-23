@@ -396,6 +396,7 @@ namespace NFcore
 
 			void setConnectedReactions(int rxn1, int rxn2) {connectedReactions[rxn1][rxn2] = true;};
 			bool areReactionsConnected(int rxn1, int rxn2) {return connectedReactions[rxn1][rxn2];};
+
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -1176,8 +1177,14 @@ namespace NFcore
 			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
 
 			// Methods to identify connected reactions within NFsim
-			// gateway
+			// Gateway method
 			void identifyConnectedReactions();
+
+			// Called from within Transformation Set to check connectivity
+			bool areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
+			bool isTemplateCompatible(TemplateMolecule * t);
+
+
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

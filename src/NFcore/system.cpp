@@ -1699,17 +1699,3 @@ NFstream& System::getOutputFileStream()
 {
     return outputFileStream;
 }
-
-
-//// friend functions
-//template<class T>
-//NFstream& operator<<(NFstream& nfstream, const T& value)
-//{
-//    if (nfstream.useFile_)
-//	nfstream.file_ << value;
-//    else
-//	nfstream.str_ << value;
-//
-//    return nfstream;
-//}
-//

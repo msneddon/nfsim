@@ -1,4 +1,3 @@
-
 #include "transformationSet.hh"
 
 using namespace NFcore;
@@ -875,4 +874,30 @@ void TransformationSet::finalize()
 	}
 
 	finalized = true;
+}
+
+bool TransformationSet::checkConnection(ReactionClass * rxn) {
+	TemplateMolecule * t1;
+	MoleculeType * mt1;
+	Transformation * transfn;
+	int c1;
+	for(unsigned int r=0; r<n_reactants; r++) {
+		for (unsigned int i=0; i<transformations[r].size(); i++) {
+			transfn = transformations[r].at(i);
+			t1 = transfn->getTemplateMolecule();
+			mt1 = t1->getMoleculeType();
+			c1 = transfn->getComponentIndex();
+			// If the moleculetype or component is present in the other reaction,
+			// it is not connected
+			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+
+			// If the TemplateMolecule is 'incompatible' with any of the reactants
+			// or products, then the reaction is not connected
+			if (!rxn->isTemplateCompatible(t1)) continue;
+			// Both checks passed for one op so return true
+			return true;
+		}
+	}
+	// Both checks did not pass for any reactant's template, so not connected
+	return false;
 }

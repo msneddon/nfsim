@@ -266,17 +266,9 @@ void ReactionClass::appendConnectedRxn(ReactionClass * rxn) {
 }
 
 bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
-	vector <ReactionClass *>::iterator it;
-	it = find(connectedReactions.begin(), connectedReactions.end(), rxn);
-	if (it != connectedReactions.end()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-
-
-
+	// First check if any of the operations share MoleculeType and components with
+	// one of the reactant templates of rxn.
+	return this->transformationSet->checkConnection(rxn);
 }
 
 ReactionClass::~ReactionClass()
@@ -602,5 +594,31 @@ void ReactionClass::fire(double random_A_number) {
 }
 
 void ReactionClass::identifyConnectedReactions() {
+	ReactionClass * rxn;
+	vector <ReactionClass *> allReactions;
+	allReactions = system->getAllReactions();
+	for (unsigned int r=0; r < allReactions.size(); r++) {
+		rxn = allReactions.at(r);
+		if (this->isReactionConnected(rxn)) this->appendConnectedRxn(rxn);
+	}
+}
 
+bool ReactionClass::areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
+	TemplateMolecule * t2;
+	for (unsigned int i=0; i<allReactantTemplates.size(); i++) {
+		t2 = allReactantTemplates[i];
+		if (t2->isMoleculeTypeAndComponentPresent(mt, cIndex)) return true;
+	}
+
+	return false;
+}
+
+bool ReactionClass::isTemplateCompatible(TemplateMolecule * t) {
+	TemplateMolecule * t2;
+	for (unsigned int i=0; i<allReactantTemplates.size(); i++) {
+		t2 = allReactantTemplates[i];
+		if (t->isTemplateCompatible(t2)) return true;
+	}
+
+	return false;
 }
