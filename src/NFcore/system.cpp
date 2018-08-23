@@ -542,7 +542,12 @@ void System::prepareForSimulation()
   			int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
   			connectedReactions[r][rxn2_id] = true;
   		}
-//		printConnectedReactions(allReactions.at(r)->getName());
+//  		if (allReactions[r]->getNumConnectedRxns() != allReactions[r]->getNumPreConnectedRxns()) {
+//  			cout << "mismatch!" << endl;
+//			printConnectedReactions(allReactions.at(r)->getName());
+//			exit(1);
+//  		}
+
   	}
 
 
@@ -1718,5 +1723,12 @@ void System::printConnectedReactions(string rxnName) {
 	}
 	cout << rxn->getName() << ": " << rxn->getNumConnectedRxns() <<
 			" connected reactions." << endl;
+	cout << "=========================" << endl;
+	for (int i=0; i<rxn->getNumPreConnectedRxns(); i++) {
+		connectedRxn = rxn->getPreConnectedRxn(i);
+		cout << connectedRxn->getName() << endl;
+	}
+	cout << rxn->getName() << ": " << rxn->getNumPreConnectedRxns() <<
+			" preconnected reactions." << endl;
 	cout << "=========================" << endl;
 }

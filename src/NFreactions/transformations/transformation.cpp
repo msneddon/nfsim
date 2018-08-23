@@ -421,6 +421,10 @@ NFcore::Transformation * TransformationFactory::genUnbindingTransform(unsigned i
 {
 	return new UnbindingTransform(bSiteIndex, tm);
 }
+NFcore::Transformation * TransformationFactory::genUnbindingTransform2(unsigned int bSiteIndex, TemplateMolecule * tm)
+{
+	return new EmptyTransform(bSiteIndex, tm);
+}
 NFcore::AddSpeciesTransform * TransformationFactory::genAddSpeciesTransform(SpeciesCreator *sc, TemplateMolecule * tm)
 {
 	return new AddSpeciesTransform(sc, tm);

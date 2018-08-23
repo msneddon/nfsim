@@ -1175,9 +1175,12 @@ namespace NFcore
 			// Use by Arvind Rasi Subramaniam to speed up simulations
 			// by inferring connectivity beforehand
 			void appendConnectedRxn(ReactionClass * rxn);
+			void appendPreConnectedRxn(ReactionClass * rxn);
 			bool isReactionConnected(ReactionClass * rxn);
 			int getNumConnectedRxns() {return connectedReactions.size();};
 			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
+			int getNumPreConnectedRxns() {return preConnectedReactions.size();};
+			ReactionClass * getPreConnectedRxn(int rxn2_id) {return preConnectedReactions.at(rxn2_id);};
 
 			// Methods to identify connected reactions within NFsim
 			// Gateway method
@@ -1221,6 +1224,8 @@ namespace NFcore
 			 * Arvind Rasi Subramaniam
 			 */
 			vector <ReactionClass *> connectedReactions;
+			// used for checking if connection in Python matches what we see here
+			vector <ReactionClass *> preConnectedReactions;
 
 			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;

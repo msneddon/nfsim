@@ -1,4 +1,5 @@
 #include "transformationSet.hh"
+#include "transformation.hh"
 
 using namespace NFcore;
 
@@ -426,9 +427,20 @@ bool TransformationSet::addUnbindingTransform(TemplateMolecule *t, string bSiteN
 	// 3) Add the transformation object to the TransformationSet
 	transformations[reactantIndex].push_back(transformation);
 
-	// 3) Create a MapGenerator object and add it to the templateMolecule
+	// 4) Create a MapGenerator object and add it to the templateMolecule
 	MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
 	tToTransform->addMapGenerator(mg);
+
+	// 4) Create an empty transformation for the binding partner so that
+	// connectivity can be inferred. Arvind Rasi Subramaniam
+	if (t2 != 0) {
+		unsigned int cIndex2 = t2->getMoleculeType()->getCompIndexFromName(bSiteName2);
+		Transformation *transformation2 = TransformationFactory::genUnbindingTransform2(cIndex2, t2);
+		transformations[reactantIndex].push_back(transformation2);
+		MapGenerator *mg = new MapGenerator(transformations[reactantIndex].size()-1);
+		t2->addMapGenerator(mg);
+	}
+
 
 	return true;
 }

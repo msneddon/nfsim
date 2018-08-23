@@ -1550,6 +1550,9 @@ bool NFinput::initReactionRules(
 
 					//Even though we had to make sure both ends exist, and we really only need one transformation
 					//we give both templates so we can check for symmetric unbinding
+					// Arvind Rasi Subramaniam: Modified the method below to create
+					// an extra empty transformation for the binding partner
+					// for inferring connectivity later on.
 					if(!ts->addUnbindingTransform(c1->t, c1->symPermutationName, c2->t, c2->symPermutationName)) return false;
 					if(verbose) {
 						cout<<"\t\t\t***Identified unbinding of site: "+c1->t->getMoleculeTypeName()+"("+c1->symPermutationName + ")";
@@ -2327,7 +2330,7 @@ bool NFinput::initReactionRules(
 //				// if not silently ignores
 //				// Arvind Rasi Subramaniam
 //				int rxnId = reaction_name_id_map[connectedRxnName];
-//				r->appendConnectedRxn(s->getReaction(rxnId));
+//				r->appendPreConnectedRxn(s->getReaction(rxnId));
 //			}
 //		}
 

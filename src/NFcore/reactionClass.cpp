@@ -265,6 +265,10 @@ void ReactionClass::appendConnectedRxn(ReactionClass * rxn) {
 	this->connectedReactions.push_back(rxn);
 }
 
+void ReactionClass::appendPreConnectedRxn(ReactionClass * rxn) {
+	this->preConnectedReactions.push_back(rxn);
+}
+
 bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
 	// First check if any of the operations share MoleculeType and components with
 	// one of the reactant templates of rxn.

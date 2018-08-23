@@ -68,6 +68,9 @@ namespace NFcore
 			 */
 			static Transformation * genUnbindingTransform(unsigned int bSiteIndex);
 			static Transformation * genUnbindingTransform(unsigned int bSiteIndex, TemplateMolecule* tm);
+			// added by Arvind Rasi Subramaniam for inferring reaction connectivity
+			static Transformation * genUnbindingTransform2(unsigned int bSiteIndex, TemplateMolecule * tm);
+
 
 			/*!
 			 	Generates an Add Molecule transformation.
