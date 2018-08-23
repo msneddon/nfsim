@@ -144,7 +144,6 @@ void MoleculeType::init(
 		this->possibleCompStates.push_back(p);
 	}
 
-
 	//Register myself with the system, and get an ID number
 	this->system = system;
 	this->type_id = this->system->addMoleculeType(this);
@@ -178,9 +177,6 @@ MoleculeType::~MoleculeType()
 	delete [] eqCompIndex;
 	delete [] eqCompOriginalName;
 
-
-
-
 	//Delete all template molecules of this type that exist
 	TemplateMolecule *t;
 	while(allTemplates.size()>0)
@@ -189,9 +185,6 @@ MoleculeType::~MoleculeType()
 		allTemplates.pop_back();
 		delete t;
 	}
-
-
-
 
 	delete mList;
 }
@@ -382,7 +375,7 @@ void MoleculeType::addMoleculeToRunningSystem(Molecule *&mol)
 	mol->setAlive(true);
 
 	mol->addToObservables();
-	this->updateRxnMembership(mol, 0);
+	this->updateRxnMembership(mol);
 }
 
 
@@ -576,25 +569,22 @@ void MoleculeType::prepareForSimulation()
 	}
 }
 
-void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReaction)
+void MoleculeType::updateRxnMembership(Molecule * m)
 {
-//	int firedRxnId =  firedReaction->getRxnId();
-//	for( unsigned int r=0; r<reactions.size(); r++ )
-//	{
-//		ReactionClass * rxn=reactions.at(r);
-//		// If the reaction is not connected, no need to check
-//		// Hopefully this saves time!
-//		// Arvind Rasi Subramaniam
-//		if (!system->areReactionsConnected(firedRxnId, rxn->getRxnId())) {
-//			continue;
-//		}
-//
-//		double oldA = rxn->get_a();
-//		rxn->tryToAdd(m, reactionPositions.at(r));
-//		this->system->update_A_tot(rxn,oldA,rxn->update_a());
-//  	}
+	for( unsigned int r=0; r<reactions.size(); r++ )
+	{
+		ReactionClass * rxn=reactions.at(r);
+		double oldA = rxn->get_a();
+		rxn->tryToAdd(m, reactionPositions.at(r));
+		this->system->update_A_tot(rxn,oldA,rxn->update_a());
+  	}
 
-	// Replace the iteration over all reactions for the MoleculeType by all
+}
+
+void MoleculeType::updateConnectedRxnMembership(Molecule * m, ReactionClass * firedReaction)
+{
+	// Replace the iteration over all reactions for the MoleculeType in
+	// MoleculeType::updateRxnMembership by only the
 	// connectedReactions for the fired Reaction. This is a much smaller loop
 	// and skips moleculetypes that are not the TemplateMolecule of the reactant
 	// in the connected reaction right away.
@@ -606,6 +596,8 @@ void MoleculeType::updateRxnMembership(Molecule * m, ReactionClass * firedReacti
 			double oldA = rxn->get_a();
 			rxn->tryToAdd(m, pos);
 			this->system->update_A_tot(rxn,oldA,rxn->update_a());
+			// Used for debugging to see which reaction rates changed
+			// upon updating molecule membership
 //			double newA =  rxn->get_a();
 //			if (oldA != newA) {
 //				this->system->getConnectedRxnFileStream() <<

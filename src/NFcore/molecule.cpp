@@ -159,9 +159,14 @@ LocalFunction * Molecule::getLocalFunction(int localFunctionIndex) {
 
 
 
-void Molecule::updateRxnMembership(ReactionClass * r)
+void Molecule::updateRxnMembership(ReactionClass * r, bool useConnectivity)
 {
-	parentMoleculeType->updateRxnMembership(this, r);
+	if (useConnectivity) {
+		parentMoleculeType->updateConnectedRxnMembership(this, r);
+	}
+	else {
+		parentMoleculeType->updateRxnMembership(this);
+	}
 }
 
 void Molecule::updateTypeIIFunctions()

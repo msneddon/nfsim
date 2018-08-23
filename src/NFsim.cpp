@@ -76,6 +76,10 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
+ *  -polymer = use polymer property of molecules if given, see manual
+ *
+ *  -connect - infer network connectivity before starting simulation, see manual
+ *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
  *  -nocslf = disable evaluation of Complex-Scoped Local Functions
@@ -378,12 +382,23 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				globalMoleculeLimit = NFinput::parseAsInt(argMap,"gml",globalMoleculeLimit);
 			}
 
+			bool connectivityFlag = false;
+			if (argMap.find("connect")!=argMap.end())
+				connectivityFlag = true;
+
+			bool polymerFlag = false;
+			if (argMap.find("polymer")!=argMap.end())
+				polymerFlag = true;
+
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
-													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
+													suggestedTraveralLimit,
+													evaluateComplexScopedLocalFunctions,
+													connectivityFlag,
+													polymerFlag);
 
 
 			if(s!=NULL)

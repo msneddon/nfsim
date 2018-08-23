@@ -65,7 +65,9 @@ namespace NFinput {
 			int globalMoleculeLimit,
 			bool verbose,
 			int &suggestedTraversalLimit,
-			bool evaluateComplexScopedLocalFunctions=false );
+			bool evaluateComplexScopedLocalFunctions=false,
+			bool connectivityFlag=false,
+			bool polymerFlag=false);
 
 	//! Reads the parameter XML block and puts them in the parameter map.
 	/*!

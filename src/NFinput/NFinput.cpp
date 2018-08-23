@@ -47,7 +47,9 @@ System * NFinput::initializeFromXML(
 		int globalMoleculeLimit,
 		bool verbose,
 		int &suggestedTraversalLimit,
-		bool evaluateComplexScopedLocalFunctions )
+		bool evaluateComplexScopedLocalFunctions,
+		bool connectivityFlag,
+		bool polymerFlag)
 {
 	if(!verbose) cout<<"# reading xml file ("+filename+")" << endl;
 	if(verbose) cout<<"\tTrying to read xml model specification file: \t\n'"<<filename<<"'"<<endl;
@@ -84,6 +86,11 @@ System * NFinput::initializeFromXML(
 
 		// set evaluation of complex-scoped local functions (true or false)
 		s->setEvaluateComplexScopedLocalFunctions(evaluateComplexScopedLocalFunctions);
+
+
+		// set inferring and using reaction connectivity flag
+		s->useConnectivityFlag(connectivityFlag);
+		s->usePolymerFlag(polymerFlag);
 
 		//Read the key lists needed for the simulation and make sure they exist...
 		TiXmlElement *pListOfParameters = pModel->FirstChildElement("ListOfParameters");
@@ -409,18 +416,21 @@ bool NFinput::initMoleculeTypes(
 					// assignment to MoleculeType
 					// If MoleculeType is not polymer, assign -1 to all these vectors
 					// Arvind Rasi Subramaniam
+
 					if (pComp->FirstChildElement("PolymerType")) {
-						if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
-						isPolymer = true;
-						polymerType.push_back(
-								NFutil::convertToInt(
-										pComp->FirstChildElement("PolymerType")->Attribute("id")));
-						polymerLocation.push_back(
-								NFutil::convertToInt(
-										pComp->FirstChildElement("PolymerLocation")->Attribute("id")));
-						polymerInteractionDistance.push_back(
-								NFutil::convertToInt(
-										pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
+						if (s->getPolymerFlag()) {
+							if(verbose && !isPolymer) cout << "\t\tTreating molecule type '" << typeName << "' as a polymer" << endl;
+							isPolymer = true;
+							polymerType.push_back(
+									NFutil::convertToInt(
+											pComp->FirstChildElement("PolymerType")->Attribute("id")));
+							polymerLocation.push_back(
+									NFutil::convertToInt(
+											pComp->FirstChildElement("PolymerLocation")->Attribute("id")));
+							polymerInteractionDistance.push_back(
+									NFutil::convertToInt(
+											pComp->FirstChildElement("PolymerInteractionDistance")->Attribute("id")));
+						}
 					} else {
 						polymerType.push_back(-1);
 						polymerLocation.push_back(-1);
@@ -2305,6 +2315,9 @@ bool NFinput::initReactionRules(
 						r->tag();
 						s->turnOnTagRxnOutput();
 					}
+					// Use reaction connectivity flag
+					// Set to true if given on the command line
+					r->setConnectivityFlag(s->getConnectivityFlag());
 					comps.clear();
 				}
 
@@ -2315,6 +2328,8 @@ bool NFinput::initReactionRules(
 		// Once all the reactions have been read, now parse the
 		// connected reactions for each reaction
 		// Arvind Rasi Subramaniam
+		// Not used anymore since we infer connectivity within the program
+		// Kept for interactive debugging
 //		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule"))
 //		{
 //			const char *rxnName = pRxnRule->Attribute("name");

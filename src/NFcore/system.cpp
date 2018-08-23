@@ -526,28 +526,36 @@ void System::prepareForSimulation()
   		allReactions.at(r)->setRxnId(r);
   	}
 
-	// resize connected reactions map and intialize to false
- 	connectedReactions = vector <vector <bool>> (allReactions.size(),
-			vector <bool> (allReactions.size(), false));
-  	for(unsigned int r=0; r<allReactions.size(); r++)
-  	{
-  		// this might take a lot of time!
-  		// Arvind Rasi Subramaniam
-  		allReactions.at(r)->identifyConnectedReactions();
-  		if ((r + 1) % 1000 == 0) {
-  			cout << "Connectivity inferred for " << r + 1 << " reactions." << endl;
-  		}
-  		// prepare the connected reaction map for quick lookup
-  		for (int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
-  			int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
-  			connectedReactions[r][rxn2_id] = true;
-  		}
-//  		if (allReactions[r]->getNumConnectedRxns() != allReactions[r]->getNumPreConnectedRxns()) {
-//  			cout << "mismatch!" << endl;
-//			printConnectedReactions(allReactions.at(r)->getName());
-//			exit(1);
-//  		}
+  	// Infer connected reactions if asked to do so from command line
+  	// Arvind Rasi Subramaniam
+  	if (connectivityFlag) {
+		// resize connected reactions map and intialize to false
+		 connectedReactions = vector <vector <bool>> (allReactions.size(),
+				vector <bool> (allReactions.size(), false));
+		  for(unsigned int r=0; r<allReactions.size(); r++)
+		  {
+			  // this might take a lot of time!
+			  // Arvind Rasi Subramaniam
+			  allReactions.at(r)->identifyConnectedReactions();
+			  if ((r + 1) % 1000 == 0) {
+				  cout << "Connectivity inferred for " << r + 1 << " reactions." << endl;
+			  }
+			  // prepare the connected reaction map for quick lookup
+			  for (int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
+				  int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
+				  connectedReactions[r][rxn2_id] = true;
+			  }
+			  // Used for debugging
+			  // comparing inferred connectivity with input connectivity
+			  // The input connectivity was originally inferred in a separate
+			  // Python program by parsing the XML file
+	//  		if (allReactions[r]->getNumConnectedRxns() != allReactions[r]->getNumPreConnectedRxns()) {
+	//  			cout << "mismatch!" << endl;
+	//			printConnectedReactions(allReactions.at(r)->getName());
+	//			exit(1);
+	//  		}
 
+		  }
   	}
 
 

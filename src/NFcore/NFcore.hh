@@ -388,9 +388,21 @@ namespace NFcore
 			void turnOnCSVformat() { this->csvFormat = true; };
 			/*
 			 * turn tagged reaction flag on for output if any reactions are tagged
+			 * Arvind Rasi Subramaniam
 			 */
 			void turnOnTagRxnOutput() { this->anyRxnTagged = true; };
 			bool getAnyRxnTagged() { return anyRxnTagged; };
+
+			/* Turn on infernence and use of connectivity
+			 * Arvind Rasi Subramaniam
+			 */
+			void useConnectivityFlag(bool connectivityFlag) {this->connectivityFlag = connectivityFlag;};
+			bool getConnectivityFlag() {return connectivityFlag;};
+			/* Turn on parsing and use of polymer flag
+			 * Arvind Rasi Subramaniam
+			 */
+			void usePolymerFlag(bool flag) {this->polymerFlag = flag;};
+			bool getPolymerFlag() {return polymerFlag;};
 
 			void setMaxCpuTime(double time) { max_cpu_time = time; };
 
@@ -416,6 +428,8 @@ namespace NFcore
 		    int globalMoleculeLimit; /*< total number of any particular molecule that can be created, default=100,000 */
 		    bool outputEventCounter; /*< set to true to output the cumulative number of events at each output step */
 		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
+		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
+		    bool polymerFlag; /* Whether to read and use polymer information for molecules*/
 
 		    int globalEventCounter;
 
@@ -678,7 +692,12 @@ namespace NFcore
 
 
 			/* updates a molecules membership (assumes molecule is of type this) */
-			void updateRxnMembership(Molecule * m, ReactionClass * r);
+			void updateRxnMembership(Molecule * m);
+			/* Updates only molecule membership in connected reactions.
+			 * The connected reactions are inferred at the simulation start.
+			 * Arvind Rasi Subramaniam
+			 */
+			void updateConnectedRxnMembership(Molecule * m, ReactionClass * r);
 
 			/* auto populate with default molecules */
 			void populateWithDefaultMolecules(int moleculeCount);
@@ -948,7 +967,7 @@ namespace NFcore
 
 			/* function that tells this molecule that it changed states or bonds
 			 * and it should update its reaction membership */
-			void updateRxnMembership(ReactionClass * r);
+			void updateRxnMembership(ReactionClass * r, bool useConnectivity);
 			void removeFromObservables();
 			void addToObservables();
 			//void updateDORs();
@@ -1166,6 +1185,11 @@ namespace NFcore
 
 
 			void setTotalRateFlag(bool totalRate) { totalRateFlag = totalRate; };
+			/* Whether to use reaction connecitivity for updating molecule
+			 * membership
+			 * Arvind Rasi Subramaniam
+			 */
+			void setConnectivityFlag(bool flag) { useConnectivity = flag; };
 
 
 			// _NETGEN_
@@ -1260,6 +1284,12 @@ namespace NFcore
 			 * count correction for calculating the ratelaw
 			 */
 			int *identicalPopCountCorrection;
+
+			/* whether to use reaction connectivity for updating molecule
+			 * membership
+			 * Arvind Rasi Subramaniam
+			 */
+			bool useConnectivity;
 	};
 
 
