@@ -363,9 +363,9 @@ void ReactionClass::printDetails() const {
 
 void ReactionClass::fire(double random_A_number) {
 
-	if (this->system->getGlobalEventCounter() == 218) {
-		cout << name << "\n";
-	}
+//	if (this->system->getGlobalEventCounter() == 218) {
+//		cout << name << "\n";
+//	}
 
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
@@ -622,3 +622,4 @@ bool ReactionClass::isTemplateCompatible(TemplateMolecule * t) {
 
 	return false;
 }
+

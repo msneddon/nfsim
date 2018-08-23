@@ -294,6 +294,9 @@ namespace NFcore
 			void printAllReactions();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
+			// Used for interative debug checking that the connected reactions
+			// are inferred connectly. Arvind Rasi Subramaniam
+			void printConnectedReactions(string rxnName);
 
 			void printAllObservableCounts();
 			void printAllObservableCounts(double cSampleTime);

@@ -2312,24 +2312,24 @@ bool NFinput::initReactionRules(
 		// Once all the reactions have been read, now parse the
 		// connected reactions for each reaction
 		// Arvind Rasi Subramaniam
-		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule"))
-		{
-			const char *rxnName = pRxnRule->Attribute("name");
-			ReactionClass *r = s->getReactionByName(rxnName);
-
-			TiXmlElement *pListOfConnectedRxns = pRxnRule->FirstChildElement("ListOfConnectedReactionRules");
-			TiXmlElement *pConnectedRxn;
-			for ( pConnectedRxn = pListOfConnectedRxns->FirstChildElement("ReactionRule");
-					pConnectedRxn != 0; pConnectedRxn = pConnectedRxn->NextSiblingElement("ReactionRule"))
-			{
-				const string connectedRxnName = pConnectedRxn->Attribute("name");
-				//  appends only if the reaction exists in the system
-				// if not silently ignores
-				// Arvind Rasi Subramaniam
-				int rxnId = reaction_name_id_map[connectedRxnName];
-				r->appendConnectedRxn(s->getReaction(rxnId));
-			}
-		}
+//		for ( pRxnRule = pListOfReactionRules->FirstChildElement("ReactionRule"); pRxnRule != 0; pRxnRule = pRxnRule->NextSiblingElement("ReactionRule"))
+//		{
+//			const char *rxnName = pRxnRule->Attribute("name");
+//			ReactionClass *r = s->getReactionByName(rxnName);
+//
+//			TiXmlElement *pListOfConnectedRxns = pRxnRule->FirstChildElement("ListOfConnectedReactionRules");
+//			TiXmlElement *pConnectedRxn;
+//			for ( pConnectedRxn = pListOfConnectedRxns->FirstChildElement("ReactionRule");
+//					pConnectedRxn != 0; pConnectedRxn = pConnectedRxn->NextSiblingElement("ReactionRule"))
+//			{
+//				const string connectedRxnName = pConnectedRxn->Attribute("name");
+//				//  appends only if the reaction exists in the system
+//				// if not silently ignores
+//				// Arvind Rasi Subramaniam
+//				int rxnId = reaction_name_id_map[connectedRxnName];
+//				r->appendConnectedRxn(s->getReaction(rxnId));
+//			}
+//		}
 
 		//If we got here, then by golly, I think we have a new reaction rule
 		return true;

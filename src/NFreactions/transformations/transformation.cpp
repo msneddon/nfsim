@@ -8,13 +8,13 @@ EmptyTransform::EmptyTransform() :
 		Transformation(TransformationFactory::EMPTY)
 {
 	this->cIndex=-1;
-	this->tm = nullptr;
+	this->tm = NULL;
 }
 EmptyTransform::EmptyTransform(int cIndex) :
 		Transformation(TransformationFactory::EMPTY)
 {
 	this->cIndex=cIndex;
-	this->tm = nullptr;
+	this->tm = NULL;
 }
 EmptyTransform::EmptyTransform(int cIndex, TemplateMolecule * tm) :
 		Transformation(TransformationFactory::EMPTY)

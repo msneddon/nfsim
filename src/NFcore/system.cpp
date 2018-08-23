@@ -531,11 +531,18 @@ void System::prepareForSimulation()
 			vector <bool> (allReactions.size(), false));
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
+  		// this might take a lot of time!
+  		// Arvind Rasi Subramaniam
+  		allReactions.at(r)->identifyConnectedReactions();
+  		if ((r + 1) % 1000 == 0) {
+  			cout << "Connectivity inferred for " << r + 1 << " reactions." << endl;
+  		}
   		// prepare the connected reaction map for quick lookup
   		for (int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
   			int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
   			connectedReactions[r][rxn2_id] = true;
   		}
+//		printConnectedReactions(allReactions.at(r)->getName());
   	}
 
 
@@ -1698,4 +1705,18 @@ NFstream& System::getReactionFileStream()
 NFstream& System::getOutputFileStream()
 {
     return outputFileStream;
+}
+
+void System::printConnectedReactions(string rxnName) {
+	ReactionClass * rxn;
+	ReactionClass * connectedRxn;
+	rxn = this->getReactionByName(rxnName);
+	cout << "=========================" << endl;
+	for (int i=0; i<rxn->getNumConnectedRxns(); i++) {
+		connectedRxn = rxn->getconnectedRxn(i);
+		cout << connectedRxn->getName() << endl;
+	}
+	cout << rxn->getName() << ": " << rxn->getNumConnectedRxns() <<
+			" connected reactions." << endl;
+	cout << "=========================" << endl;
 }

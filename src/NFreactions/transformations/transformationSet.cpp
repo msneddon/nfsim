@@ -885,6 +885,7 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 		for (unsigned int i=0; i<transformations[r].size(); i++) {
 			transfn = transformations[r].at(i);
 			t1 = transfn->getTemplateMolecule();
+			if (!t1) continue;
 			mt1 = t1->getMoleculeType();
 			c1 = transfn->getComponentIndex();
 			// If the moleculetype or component is present in the other reaction,
@@ -898,6 +899,41 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 			return true;
 		}
 	}
-	// Both checks did not pass for any reactant's template, so not connected
+	// Do the same as above but now for the transformed product templates
+	for(unsigned int r=0; r<n_reactants; r++) {
+		for (unsigned int i=0; i<transformations[r].size(); i++) {
+			transfn = transformations[r].at(i);
+			// Use the transformed product here
+			t1 = transfn->getTemplateMolecule();
+			if (!t1) continue;
+			t1 = t1->getMappedPartner();
+			if (!t1) continue;
+			mt1 = t1->getMoleculeType();
+			c1 = transfn->getComponentIndex();
+			// If the moleculetype or component is present in the other reaction,
+			// it is not connected
+			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+
+			// If the TemplateMolecule is 'incompatible' with any of the reactants
+			// or products, then the reaction is not connected
+			if (!rxn->isTemplateCompatible(t1)) continue;
+			// Both checks passed for one op so return true
+			return true;
+		}
+	}
+	// Now consider the newly added molecules where components don't matter, but
+	// compatibility
+	for (unsigned int i=0; i<addMoleculeTransformations.size(); i++) {
+		transfn = addMoleculeTransformations.at(i);
+		// Use the transformed product here
+		t1 = transfn->getTemplateMolecule();
+		if (!t1) continue;
+		// If the TemplateMolecule is 'incompatible' with any of the reactants
+		// or products, then the reaction is not connected
+		if (!rxn->isTemplateCompatible(t1)) continue;
+		// Both checks passed for one op so return true
+		return true;
+	}
+	// Both checks did not pass for any reactant or product template, so not connected
 	return false;
 }
