@@ -76,16 +76,19 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
- *  -polymer = use polymer property of molecules for speeding simulation if given.
+ *  -polymer = use polymer property of molecules for speeding simulation if given (default: no).
  *             If the flag is set but none of the molecules in XML have PolymerType,
  *             then the flag is ignored.
  *             Requires modified BioNetGen and PySB for producing input files with
  *             PolymerType.
  *             @author Arvind Rasi Subramaniam
  *
- *  -connect - infer network connectivity before starting simulation.
+ *  -connect - infer network connectivity before starting simulation. (default: no).
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
+ *
+*   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+*                 @author Arvind Rasi Subramaniam
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
@@ -558,8 +561,11 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 
-	maxCpuTime = NFinput::parseAsDouble(argMap,"cputime",maxCpuTime);
+	if (argMap.find("maxcputime") != argMap.end()) {
+		maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	}
 	s->setMaxCpuTime(maxCpuTime);
+
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
 	if (argMap.find("stopobs") != argMap.end()) {

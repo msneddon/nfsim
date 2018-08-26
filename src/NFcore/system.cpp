@@ -40,7 +40,7 @@ System::System(string name)
 	selector = 0;
 	csvFormat = false;
 	anyRxnTagged = false;
-	max_cpu_time = 0;
+	max_cpu_time = 1000;
 }
 
 
@@ -68,7 +68,7 @@ System::System(string name, bool useComplex)
 	selector = 0;
 	csvFormat = false;
 	anyRxnTagged = false;
-	max_cpu_time = 0;
+	max_cpu_time = 1000;
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -94,7 +94,7 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	selector = 0;
 	csvFormat = false;
 	anyRxnTagged = false;
-	max_cpu_time = 0;
+	max_cpu_time = 1000;
 }
 
 
@@ -775,7 +775,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 	double end_time = current_time+duration;
 	tryToDump();
 
-	while(current_time<end_time)
+	while(current_time<end_time & current_cpu_time < max_cpu_time)
 	{
 		//this->printAllObservableCounts(current_time);
 		//2: Recompute a_tot for this time
