@@ -437,7 +437,7 @@ void ReactionClass::fire(double random_A_number, bool polymerFlag) {
 	}
 
 //	// Use for debugging specific reactions; rasi
-//	if (name == "elongation_with_hit5_29") {
+//	if (name == "deadenylation_59") {
 //		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 //			cout << name << "\t";
 //			(*molIter)->printBondDetails();
@@ -587,8 +587,8 @@ void ReactionClass::fire(double random_A_number, bool polymerFlag) {
 		// Used for debugging, too detailed and big output
 		// Arvind Rasi Subramaniam
 //		// print the molecule type and its bonded states (exclude non-bonded states)
-//		this->system->getReactionFileStream() << "\t";
-//		(*molIter)->printBondDetails(this->system->getReactionFileStream());
+		this->system->getReactionFileStream() << "\t";
+		(*molIter)->printBondDetails(this->system->getReactionFileStream());
 		this->system->getReactionFileStream() << endl;
 		}
 	}

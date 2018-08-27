@@ -534,7 +534,6 @@ void System::prepareForSimulation()
 				vector <bool> (allReactions.size(), false));
 		  for(unsigned int r=0; r<allReactions.size(); r++)
 		  {
-			  // this might take a lot of time!
 			  // Arvind Rasi Subramaniam
 			  allReactions.at(r)->identifyConnectedReactions();
 			  if ((r + 1) % 1000 == 0) {
