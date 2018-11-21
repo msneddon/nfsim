@@ -504,19 +504,25 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				}
 
 				if (s->getAnyRxnTagged()) {
-					if (argMap.find("rxnlog")!=argMap.end()) {
+					if (argMap.find("rxnlog") != argMap.end()) {
 						string rxnLogFileName = argMap.find("rxnlog")->second;
 						s->registerReactionFileLocation(rxnLogFileName);
-//						s->registerConnectedRxnFileLocation(
-//								rxnLogFileName.replace(
-//										rxnLogFileName.end()-3,
-//										rxnLogFileName.end(),
-//										"connected.tsv"));
-					}
-					else {
-						s->registerReactionFileLocation(s->getName()+"_rxns.dat");
+					} else {
+						s->registerReactionFileLocation(
+								s->getName() + "_rxns.dat");
 					}
 				}
+
+				// track the reactions whose rates change upon each each reaction
+				// firing. This is useful for debugging to make sure that all the
+				// right reactions are updated after each firing.
+				// Arvind Rasi Subramaniam Nov 21, 2018
+				if (argMap.find("trackconnected") != argMap.end()) {
+					s->registerConnectedRxnFileLocation(
+									s->getName() + "rxns_connected.tsv");
+					s->setTrackConnected();
+				}
+
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
 					s->turnOff_OnTheFlyObs();

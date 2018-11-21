@@ -911,7 +911,7 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 			if (!t1) continue;
 			mt1 = t1->getMoleculeType();
 			c1 = transfn->getComponentIndex();
-			// If the moleculetype or component is present in the other reaction,
+			// If the moleculetype or component is not present in the other reaction,
 			// it is not connected
 			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
 

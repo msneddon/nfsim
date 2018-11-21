@@ -393,6 +393,14 @@ namespace NFcore
 			void turnOnTagRxnOutput() { this->anyRxnTagged = true; };
 			bool getAnyRxnTagged() { return anyRxnTagged; };
 
+			/*
+			 * track connected reactions after each reaction firing for
+			 * debugging.
+			 * Arvind Rasi Subramaniam Nov 21, 2018
+			 */
+			void setTrackConnected() { this->trackConnected = true; };
+			bool getTrackConnected() { return this->trackConnected; };
+
 			/* Turn on infernence and use of connectivity
 			 * Arvind Rasi Subramaniam
 			 */
@@ -430,6 +438,7 @@ namespace NFcore
 		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
 		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
 		    bool polymerFlag; /* Whether to read and use polymer information for molecules*/
+		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
 
 		    int globalEventCounter;
 

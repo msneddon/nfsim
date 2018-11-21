@@ -589,6 +589,7 @@ void MoleculeType::updateConnectedRxnMembership(Molecule * m, ReactionClass * fi
 	// and skips moleculetypes that are not the TemplateMolecule of the reactant
 	// in the connected reaction right away.
 	// Arvind Rasi Subramaniam
+	//
 	for (int r=0; r<firedReaction->getNumConnectedRxns(); r++) {
 		rxn = firedReaction->getconnectedRxn(r);
 		for (int pos=0; pos<rxn->getNumOfReactants(); pos++) {
@@ -598,16 +599,18 @@ void MoleculeType::updateConnectedRxnMembership(Molecule * m, ReactionClass * fi
 			this->system->update_A_tot(rxn,oldA,rxn->update_a());
 			// Used for debugging to see which reaction rates changed
 			// upon updating molecule membership
-//			double newA =  rxn->get_a();
-//			if (oldA != newA) {
-//				this->system->getConnectedRxnFileStream() <<
-//				this->system->getGlobalEventCounter() << "\t" <<
-//				firedReaction->getName() << "\t" <<
-//						m->getMoleculeTypeName() << "\t" <<
-//						m->getUniqueID() << "\t" <<
-//						rxn->getName() << "\t" <<
-//						oldA << "\t" << newA << endl;
-//			}
+			// Arvind Rasi Subramaniam Nov 21, 2018
+			if (!this->system->getTrackConnected()) continue;
+			double newA =  rxn->get_a();
+			if (oldA != newA) {
+				this->system->getConnectedRxnFileStream() <<
+				this->system->getGlobalEventCounter() << "\t" <<
+				firedReaction->getName() << "\t" <<
+						m->getMoleculeTypeName() << "\t" <<
+						m->getUniqueID() << "\t" <<
+						rxn->getName() << "\t" <<
+						oldA << "\t" << newA << endl;
+			}
 		}
   	}
 }

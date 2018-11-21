@@ -3088,6 +3088,15 @@ TemplateMolecule *NFinput::readPattern(
 			return false;
 		}
 		TemplateMolecule *finalTemplate = tMolecules.at(0);
+		// If one of the template molecules is a polymer, pick that.
+		// This ensures that not all connected reactions are updated even if
+		// the connected molecules themselves don't need to be updated.
+		// Arvind Rasi Subramaniam Nov 21, 2018
+		for (int i=0;i<tMolecules.size();i++) {
+			if (tMolecules.at(i)->getMoleculeType()->checkIfPolymer()) {
+				finalTemplate = tMolecules.at(i);
+			}
+		}
 
 		tMolecules.clear();
 		bSiteMolMapping.clear();
