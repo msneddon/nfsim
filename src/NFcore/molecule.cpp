@@ -418,21 +418,21 @@ void Molecule::printBondDetails(NFstream &o)
 {
 	int degree = 0;
 	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
-//	o<<"\t";
-//	for(int c=0; c<numOfComponents; c++)
-//	{
-//		if(bond[c]==NOBOND) {continue;}
-//		else {
-//			o<<"||";
-//			o << parentMoleculeType->getComponentName(c);
-//			if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
-//				o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
-//			}
-//			o<<":";
-//			o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
-//			o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
-//		}
-//	}
+	o<<"\t";
+	for(int c=0; c<numOfComponents; c++)
+	{
+		if(bond[c]==NOBOND) {continue;}
+		else {
+			o<<"||";
+			o << parentMoleculeType->getComponentName(c);
+			if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
+				o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+			}
+			o<<":";
+			o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
+			o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+		}
+	}
 	o.flush();
 }
 
