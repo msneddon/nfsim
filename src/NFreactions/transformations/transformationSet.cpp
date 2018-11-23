@@ -758,8 +758,6 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
 				TemplateMolecule * tm = transformations[r].at(i)->getTemplateMolecule();
 				// If there are no templatemolecules associated with the transformation
 				if (!tm) continue;
-				// Need to check neighborhood of only polymer molecules
-				if (!tm->getMoleculeType()->checkIfPolymer()) continue;
 				for (int cIndex : tm->getAllSpecifiedComps()) {
 					molecule->traversePolymerNeighborhood(products, cIndex);
 				}
