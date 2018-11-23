@@ -416,21 +416,22 @@ void Molecule::printBondDetails(ostream &o) {
  */
 void Molecule::printBondDetails(NFstream &o)
 {
-	int degree = 0;
 	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
-	o<<"\t";
-	for(int c=0; c<numOfComponents; c++)
-	{
-		if(bond[c]==NOBOND) {continue;}
-		else {
-			o<<"||";
-			o << parentMoleculeType->getComponentName(c);
-			if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
-				o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+	if (this->getMoleculeType()->getSystem()->getTrackConnected()) {
+		o<<"\t";
+		for(int c=0; c<numOfComponents; c++)
+		{
+			if(bond[c]==NOBOND) {continue;}
+			else {
+				o<<"||";
+				o << parentMoleculeType->getComponentName(c);
+				if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
+					o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+				}
+				o<<":";
+				o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
+				o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
 			}
-			o<<":";
-			o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
-			o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
 		}
 	}
 	o.flush();
@@ -804,9 +805,8 @@ void Molecule::printMoleculeList(vector <Molecule *> &members)
  * @param mapping - contains the molecule component that changed.
  * @author Arvind Rasi Subramaniam
  */
-void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, Mapping * mapping) {
+void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, int cIndex) {
 
-	int cIndex;
 	int nearbycIndex;
 	int polymerType;
 	int polymerLocation;
@@ -814,7 +814,6 @@ void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, Mapping
 
 	Molecule * mol = this;
 	MoleculeType * mt =  this->getMoleculeType();
-	cIndex = mapping->getIndex();
 	// The molecule has no bonds to check, for eg. dna in rasi's translation model
 	if (mol->numOfComponents == 0 | cIndex == -1) return;
 	// if molecule is not a polymer, check the binding partner

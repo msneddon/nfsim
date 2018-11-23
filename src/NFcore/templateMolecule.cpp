@@ -451,6 +451,10 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	//If we called this, then we are adding a bond to a nonsymmetric site
 	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 
+	// Add only polymeric components for getting bonded neighbors during
+	// polymeric search
+	// Arvind Rasi Subramaniam Nov 24, 2018
+	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	//Insert the new information
 	bondComp.push_back(compIndex);
 	bondCompName.push_back(thisBsiteName);

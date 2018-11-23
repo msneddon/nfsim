@@ -1,5 +1,9 @@
 #+TITLE: Notes for Rasi's modification to the program
 
+[2018-11-23 Fri]
+- For my polymer neighborhood search, I was previously looking at only the molecule components that got changed by a transformation. This results in searching of only polymer neighborhoods of the changed component, but not other unchanged components which might nevertheless be constrained by the reaction rule.
+- So I now look at all molecule components that are constrained as well. This is done by looking at the template molecule corresponding to the transformation reactant.
+
 [2018-08-23 Thu]
 - NFsim is working robustly now with or without polymer and network connectivity options.
 - As far as I can tell, both these modules are working as expected.

@@ -960,10 +960,10 @@ namespace NFcore
 			void depthFirstSearch(vector <Molecule *> &members);
 
 			/* functions for searching a polymer molecule within the interaction distance
-			 * of the site where they  will undergo a change
+			 * of the site that is specified or changed
 			 * Arvind Rasi Subramaniam
 			 */
-			void traversePolymerNeighborhood(vector <Molecule *> &members, Mapping * mapping);
+			void traversePolymerNeighborhood(vector <Molecule *> &members, int cIndex);
 			/* This function is essentially same as breadthFirstSearch but adapted for
 			 * product retrieval of non-polymer molecules.
 			 * Arvind Rasi Subramaniam

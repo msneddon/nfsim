@@ -745,7 +745,26 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
 				// If not, you can accidentally miss searching within the interaction distance
 				// of all site changes.
 				// Arvind Rasi Subramaniam
-				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i));
+				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i)->getIndex());
+
+				// Iterate over all constrained components of the corresponding TemplateMolecule
+				// even if these components are not changed by the transformation.
+				// This helps in the case of rxns such as endocleave_3_hit to update
+				// ribosomes that are bound but 3' to the cut site.
+				// In that case, the cut site and the ribosome binding site are on
+				// different polymers, and the ribosome binding site does not change,
+				// but it is constrained.
+				// Arvind Rasi Subramaniam Nov 23, 2018
+				TemplateMolecule * tm = transformations[r].at(i)->getTemplateMolecule();
+				// If there are no templatemolecules associated with the transformation
+				if (!tm) continue;
+				// Need to check neighborhood of only polymer molecules
+				if (!tm->getMoleculeType()->checkIfPolymer()) continue;
+				for (int cIndex : tm->getAllSpecifiedComps()) {
+					molecule->traversePolymerNeighborhood(products, cIndex);
+				}
+
+
 			}
 		}
 	}
