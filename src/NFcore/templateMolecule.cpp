@@ -151,7 +151,9 @@ void TemplateMolecule::addEmptyComponent(string cName) {
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	emptyComps.push_back(compIndex);
-	specifiedComps.push_back(compIndex);
+	// Add only polymeric components for checking
+	// Arvind Rasi Subramaniam Nov 24, 2018
+	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	n_emptyComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -162,7 +164,9 @@ void TemplateMolecule::addBoundComponent(string cName) {
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	occupiedComps.push_back(compIndex);
-	specifiedComps.push_back(compIndex);
+	// Add only polymeric components for checking
+	// Arvind Rasi Subramaniam Nov 24, 2018
+	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	n_occupiedComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -183,7 +187,9 @@ void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	compStateConstraint_Comp.push_back(compIndex);
-	specifiedComps.push_back(compIndex);
+	// Add only polymeric components for checking
+	// Arvind Rasi Subramaniam Nov 24, 2018
+	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	compStateConstraint_Constraint.push_back(stateValue);
 	n_compStateConstraint++;
 	compIsAlwaysMapped[compIndex]=true;
@@ -204,7 +210,9 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	compStateExclusion_Comp.push_back(compIndex);
-	specifiedComps.push_back(compIndex);
+	// Add only polymeric components for checking
+	// Arvind Rasi Subramaniam Nov 24, 2018
+	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	compStateExclusion_Exclusion.push_back(stateValue);
 	n_compStateExclusion++;
 	compIsAlwaysMapped[compIndex]=true;
@@ -461,7 +469,6 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	if (moleculeType->getPolymerType(compIndex) > 0) specifiedComps.push_back(compIndex);
 	//Insert the new information
 	bondComp.push_back(compIndex);
-	specifiedComps.push_back(compIndex);
 	bondCompName.push_back(thisBsiteName);
 	bondPartner.push_back(t2);
 	bondPartnerCompName.push_back(bSiteName2);
