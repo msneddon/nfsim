@@ -76,13 +76,6 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
- *  -polymer = use polymer property of molecules for speeding simulation if given (default: no).
- *             If the flag is set but none of the molecules in XML have PolymerType,
- *             then the flag is ignored.
- *             Requires modified BioNetGen and PySB for producing input files with
- *             PolymerType.
- *             @author Arvind Rasi Subramaniam
- *
  *  -connect - infer network connectivity before starting simulation. (default: no).
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
@@ -396,19 +389,12 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			if (argMap.find("connect")!=argMap.end())
 				connectivityFlag = true;
 
-			bool polymerFlag = false;
-			if (argMap.find("polymer")!=argMap.end())
-				polymerFlag = true;
-
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
-													suggestedTraveralLimit,
-													evaluateComplexScopedLocalFunctions,
-													connectivityFlag,
-													polymerFlag);
+													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
 
 
 			if(s!=NULL)
@@ -561,10 +547,6 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double sTime = 10;
 	int oSteps = 10;
 	double maxCpuTime = 1000;
-	// optionally an observable count can be used to stop the simulation
-	// when the count hits this value
-	string stopObservable = "";
-	int stopObservableCount = -1;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
@@ -576,15 +558,6 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	s->setMaxCpuTime(maxCpuTime);
 
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
-
-	if (argMap.find("stopobs") != argMap.end()) {
-		stopObservable = argMap.find("stopobs")->second;
-		if (argMap.find("stopn") == argMap.end()) {
-			cout << "Stop observable given, but stop count not specified." << endl;
-			return 0;
-		}
-		stopObservableCount = NFinput::parseAsInt(argMap,"stopn",(int)stopObservableCount);
-	}
 
 	//Prepare the system for simulation!!
 	s->prepareForSimulation();
@@ -609,7 +582,7 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 		// Do the run
 		cout<< "# equilibrating for :"<<eqTime<<"s."<<endl;
 		s->equilibrate(eqTime);
-		s->sim(sTime,oSteps, verbose, stopObservable, stopObservableCount);
+		s->sim(sTime,oSteps);
 	}
 
 	// save the final list of species, if requested...
