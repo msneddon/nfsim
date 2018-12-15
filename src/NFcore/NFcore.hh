@@ -294,10 +294,6 @@ namespace NFcore
 			void printAllReactions();
 			void printIndexAndNames();
 			void printAllMoleculeTypes();
-			// Used for interative debug checking that the connected reactions
-			// are inferred connectly. Arvind Rasi Subramaniam
-			void printConnectedReactions(string rxnName);
-
 			void printAllObservableCounts();
 			void printAllObservableCounts(double cSampleTime);
 			void printAllObservableCounts(double cSampleTime,int eventCounter);
@@ -1134,8 +1130,6 @@ namespace NFcore
 			bool isReactionConnected(ReactionClass * rxn);
 			int getNumConnectedRxns() {return connectedReactions.size();};
 			ReactionClass * getconnectedRxn(int rxn2_id) {return connectedReactions.at(rxn2_id);};
-			int getNumPreConnectedRxns() {return preConnectedReactions.size();};
-			ReactionClass * getPreConnectedRxn(int rxn2_id) {return preConnectedReactions.at(rxn2_id);};
 
 			// Methods to identify connected reactions within NFsim
 			// Gateway method

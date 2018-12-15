@@ -594,17 +594,7 @@ queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 vector <Molecule *>::iterator Molecule::molIter;
 
-
-
-
-
-
-
-queue <Molecule *> Molecule::q;
-queue <int> Molecule::d;
-list <Molecule *>::iterator Molecule::molIter;
-
-void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
+void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
 		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";

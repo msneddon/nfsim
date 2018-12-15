@@ -718,8 +718,6 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
 				molecule->traverseBondedNeighborhood(products,traversalLimit);
 				//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
 			}
-
-			}
 		}
 	}
 

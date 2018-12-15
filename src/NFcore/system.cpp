@@ -569,6 +569,7 @@ void System::prepareForSimulation()
   	//prep each molecule type for the simulation
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
+  	}
 
   	//cout<<"here 7..."<<endl;
 
@@ -1702,25 +1703,4 @@ NFstream& System::getReactionFileStream()
 NFstream& System::getOutputFileStream()
 {
     return outputFileStream;
-}
-
-void System::printConnectedReactions(string rxnName) {
-	ReactionClass * rxn;
-	ReactionClass * connectedRxn;
-	rxn = this->getReactionByName(rxnName);
-	cout << "=========================" << endl;
-	for (int i=0; i<rxn->getNumConnectedRxns(); i++) {
-		connectedRxn = rxn->getconnectedRxn(i);
-		cout << connectedRxn->getName() << endl;
-	}
-	cout << rxn->getName() << ": " << rxn->getNumConnectedRxns() <<
-			" connected reactions." << endl;
-	cout << "=========================" << endl;
-	for (int i=0; i<rxn->getNumPreConnectedRxns(); i++) {
-		connectedRxn = rxn->getPreConnectedRxn(i);
-		cout << connectedRxn->getName() << endl;
-	}
-	cout << rxn->getName() << ": " << rxn->getNumPreConnectedRxns() <<
-			" preconnected reactions." << endl;
-	cout << "=========================" << endl;
 }

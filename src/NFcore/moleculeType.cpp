@@ -124,6 +124,7 @@ void MoleculeType::init(
 
 	//Now we can get on with initializing the MoleculeType information
 
+	int nostate = Molecule::NOSTATE;
 	for(int c=0; c<numOfComponents; c++) {
 		this->compName.push_back(compName.at(c));
 		this->isIntegerCompState.push_back(isIntegerComponent.at(c));
@@ -185,10 +186,6 @@ MoleculeType::~MoleculeType()
 	delete mList;
 }
 
-
-
-	delete mList;
-}
 
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
 {

@@ -3291,7 +3291,8 @@ int NFinput::readTemplatePattern(
 		vector <string> emptyBondSite;
 		vector <string> occupiedBondSite;
 
-
+		//An iterator
+		vector <string>::iterator strVecIter;
 
 		// Now loop through the molecules in the list
 		TiXmlElement *pMol;
