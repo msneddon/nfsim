@@ -594,7 +594,17 @@ queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 vector <Molecule *>::iterator Molecule::molIter;
 
-void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
+
+
+
+
+
+
+queue <Molecule *> Molecule::q;
+queue <int> Molecule::d;
+list <Molecule *>::iterator Molecule::molIter;
+
+void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
 		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
@@ -652,91 +662,9 @@ void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int
 	}
 
 
-//	clear the has visitedMolecule values
+	//clear the has visitedMolecule values
 	for( molIter = members.begin(); molIter != members.end(); molIter++ )
   		(*molIter)->hasVisitedMolecule=false;
-}
-
-
-/**
- * Same as breadthFirstSearch except for two key differences
- * 1. Polymeric molecules are ignored
- * 2. hasVisitedMolecule is not reset
- * @author Arvind Rasi Subramaniam
- */
-void Molecule::getBondedProductsForNonpolymers(vector <Molecule *> &members, int depth)
-{
-	Molecule * m = this;
-	if(m==0) {
-		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
-		cerr<<"Likely an internal error where a MappingSet is on a list and\n";
-		cerr<<"is not actually mapped to any molecule!";
-		exit(3);
-	}
-
-	// polymer molecules are treated separately
-	// Arvind Rasi Subramaniam
-	if (m->getMoleculeType()->checkIfPolymer()) return;
-
-	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
-	//queue <Molecule *> q;
-	//queue <int> d;
-	int currentDepth = 0;
-
-	//cout<<"traversing on:"<<endl;
-	//m->printDetails();
-
-	//First add this molecule
-	q.push(m);
-	members.push_back(m);
-	d.push(currentDepth+1);
-	m->hasVisitedMolecule=true;
-
-	//Look at children until the queue is empty
-	while(!q.empty())
-	{
-		//Get the next parent to look at (currentMolecule)
-		Molecule *cM = q.front();
-		currentDepth = d.front();
-		q.pop();
-		d.pop();
-
-		//Make sure the depth does not exceed the limit we want to search
-		if((depth!=ReactionClass::NO_LIMIT) && (currentDepth>=depth)) continue;
-
-		//Loop through the bonds
-		int cMax = cM->numOfComponents;
-		for(int c=0; c<cMax; c++)
-		{
-			//cM->getComp
-			if(cM->isBindingSiteBonded(c))
-			{
-				Molecule *neighbor = cM->getBondedMolecule(c);
-				//cout<<"looking at neighbor: "<<endl;
-				//neighbor->printDetails();
-				if(!neighbor->hasVisitedMolecule)
-				{
-					neighbor->hasVisitedMolecule=true;
-					members.push_back(neighbor);
-					// skip going through bonds of polymer neighbors, but add them (to account
-					// for cases such as ribosome collisions when the polymer itself
-					// does not get modified and hence there is no checking of neighborhood.
-					// Arvind Rasi Subramaniam
-					if (neighbor->getMoleculeType()->checkIfPolymer()) continue;
-					q.push(neighbor);
-					d.push(currentDepth+1);
-					//cout<<"adding... to traversal list."<<endl;
-				}
-			}
-		}
-	}
-
-
-	// waiting to do this clearing after polymerNeighborhoodSearch
-	// Arvind Rasi Subramaniam
-	//clear the has visitedMolecule values
-//	for( molIter = members.begin(); molIter != members.end(); molIter++ )
-//  		(*molIter)->hasVisitedMolecule=false;
 }
 
 
@@ -794,77 +722,7 @@ void Molecule::printMoleculeList(vector <Molecule *> &members)
 }
 
 
-/** Searches the polymer neighborhood of the changed component in a molecule.
- *
- * If the molecule itself is not a polymer, it will look at the bonded partner
- * of the component that is changing.
- *
- * Note that if two polymer molecules are bound, this will traverse only those
- * neighborhoods around sites that are in the mapping set for each molecule.
- * @param members - list of molecules that gets updated
- * @param mapping - contains the molecule component that changed.
- * @author Arvind Rasi Subramaniam
- */
-void Molecule::traversePolymerNeighborhood(vector <Molecule *> &members, int cIndex) {
-
-	int nearbycIndex;
-	int polymerType;
-	int polymerLocation;
-	int polymerInteractionDistance;
-
-	Molecule * mol = this;
-	MoleculeType * mt =  this->getMoleculeType();
-	// The molecule has no bonds to check, for eg. dna in rasi's translation model
-	if (mol->numOfComponents == 0 | cIndex == -1) return;
-	// if molecule is not a polymer, check the binding partner
-	// i fthe binding partner is a polymer proceed as usual
-	if (mt->checkIfPolymer() == false) {
-		// return if there is no binding partner
-		if (this->isBindingSiteOpen(cIndex)) return;
-		// set the binding partner to be the focus molecule
-		mol = this->getBondedMolecule(cIndex);
-		mt = mol->getMoleculeType();
-		// return if binding partner is also not a polymer
-		if (mt->checkIfPolymer() == false)  return;
-		// if we got this far, set the cIndex to be the binding partner cIndex
-		cIndex = this->getBondedMoleculeBindingSiteIndex(cIndex);
-	}
-
-	// if already visited this molecule, don't add it again
-	if (mol->hasVisitedMolecule == false) {
-		// Add this molecule
-		members.push_back(mol);
-		// This molecule is now visited
-		mol->hasVisitedMolecule = true;
-	}
 
 
-	polymerType =  mt->getPolymerType(cIndex);
 
-	// The comp being changed is not a polymer component
-	if (polymerType < 0) return;
 
-	polymerLocation = mt->getPolymerLocation(cIndex);
-	polymerInteractionDistance = mt->getPolymerInteractionDistance(cIndex);
-
-	// This loop looks for neighbors that are bonded through the polymer,
-	// but might be missed by the breadthFirstSearch that skips polymers.
-	for (int loc = polymerLocation - 2 * polymerInteractionDistance;
-			loc <= polymerLocation + 2 * polymerInteractionDistance;
-			loc++) {
-		nearbycIndex = mt->getPolymerGridComp(polymerType, loc);
-		// the polymerlocation was beyond the edge, so returned -1
-		if (nearbycIndex < 0) continue;
-
-		// there was no binding partner at the nearby location
-		if (mol->isBindingSiteOpen(nearbycIndex)) continue;
-
-		// if there is a binding partner and it was not visited before,
-		// add it now
-		Molecule * neighbor = mol->getBondedMolecule(nearbycIndex);
-		if (neighbor->hasVisitedMolecule == false) {
-			neighbor->hasVisitedMolecule = true;
-			members.push_back(neighbor);
-		}
-	}
-}
