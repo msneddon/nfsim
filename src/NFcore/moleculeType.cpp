@@ -123,11 +123,7 @@ void MoleculeType::init(
 	}
 
 	//Now we can get on with initializing the MoleculeType information
-//	this->compName=new string [numOfComponents];
-//	this->defaultCompState = new int [numOfComponents];
-//	this->isIntegerCompState = new bool [numOfComponents];
 
-	int nostate = Molecule::NOSTATE;
 	for(int c=0; c<numOfComponents; c++) {
 		this->compName.push_back(compName.at(c));
 		this->isIntegerCompState.push_back(isIntegerComponent.at(c));
@@ -189,45 +185,9 @@ MoleculeType::~MoleculeType()
 	delete mList;
 }
 
-/**
- * Set the polymer related information for the molecule
- * This is done at be beginning of the simulation in NFInput.
- * @param isPolymer - true if the polymer flag is set
- * @param polymerType - polymer type for each component, for eg. 0 for coding region, 1 for polyA etc
- * @param polymerLocation - locations within the polymer for each component
- * @param polymerInteractionDistance - distances to look around each component location
- * @author Arvind Rasi Subramaniam
- */
-void MoleculeType::setPolymerInformation(bool isPolymer, vector <int> polymerType,
-					vector <int> polymerLocation, vector <int> polymerInteractionDistance) {
-	this->isPolymer = isPolymer;
-	this->polymerType = polymerType;
-	this->polymerLocation = polymerLocation;
-	this->polymerInteractionDistance = polymerInteractionDistance;
-	if (!isPolymer) return;
-	// resize polymerGrid based on to accommodate the number of polymer types and locations
-	// and initialize all values to -1 (initialization critical for neighborhood traversal.
-	max_polymer_types = *max_element(polymerType.begin(), polymerType.end()) + 1;
-	max_polymer_locations = *max_element(polymerLocation.begin(), polymerLocation.end()) + 1;
-	this->polymerGrid.resize(max_polymer_types, vector <int>(max_polymer_locations, -1));
-	for (unsigned int i=0; i<polymerType.size(); i++) {
-		if (polymerType[i] < 0) continue;
-		this->polymerGrid[polymerType[i]][polymerLocation[i]] = i;
-	}
-}
 
-/**
- * Get the cIndex at a specific location (col) of a specific polymer type (row)
- * @param row - polymer type index
- * @param col - polymer location index
- * @return - component index or -1 if row/col out of bounds
- * @author Arvind Rasi Subramaniam
- */
-int MoleculeType::getPolymerGridComp(int row, int col) const {
-	if ((row < 0) | (col < 0) | (row >= this->max_polymer_types)
-			| (col >= this->max_polymer_locations))
-		return -1;
-	return this->polymerGrid[row][col];
+
+	delete mList;
 }
 
 void MoleculeType::addEquivalentComponents(vector <vector <string> > &identicalComponents)
