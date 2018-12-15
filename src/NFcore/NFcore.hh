@@ -330,16 +330,11 @@ namespace NFcore
 			//void notifyThatComplexIsAvailable(int ID_complex);
 
 			double sim(double time, long int sampleTimes);
-			double sim(double time, long int sampleTimes, bool verbose);
-
-			double sim(double time, long int sampleTimes,
-					   string stopObservable, long int stopObservableCount);
 
 			/* run the simulation for a given length of time, output all results to the registered
 			 * file.  The number of sample times is the number of times the function will output to
 			 * a file divided equally throughout the elapsed time  */
-			double sim(double time, long int sampleTimes, bool verbose,
-					   string stopObservable, long int stopObservableCount);
+			double sim(double time, long int sampleTimes, bool verbose);
 
 			/* run the simulation up until the stopping time (but not exceding the stopping time. This
 			 * will not output anything to file (so must be done manually) and returns the current time
@@ -406,11 +401,6 @@ namespace NFcore
 			 */
 			void useConnectivityFlag(bool connectivityFlag) {this->connectivityFlag = connectivityFlag;};
 			bool getConnectivityFlag() {return connectivityFlag;};
-			/* Turn on parsing and use of polymer flag
-			 * Arvind Rasi Subramaniam
-			 */
-			void usePolymerFlag(bool flag) {this->polymerFlag = flag;};
-			bool getPolymerFlag() {return polymerFlag;};
 
 			void setMaxCpuTime(double time) { max_cpu_time = time; };
 
@@ -437,7 +427,6 @@ namespace NFcore
 		    bool outputEventCounter; /*< set to true to output the cumulative number of events at each output step */
 		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
 		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
-		    bool polymerFlag; /* Whether to read and use polymer information for molecules*/
 		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
 
 		    int globalEventCounter;
@@ -605,19 +594,6 @@ namespace NFcore
 			string getComponentStateName(int cIndex, int cValue);
 			int getStateValueFromName(int cIndex, string stateName) const;
 
-			// Functions to deail with polymer related properties; everything set to -1 if not a polymer
-			// Arvind Rasi Subramaniam
-			// used at beginning of simulation to set values
-			void setPolymerInformation(bool isPolymer, vector <int> polymerType,
-					vector <int> polymerLocation, vector <int> polymerInteractionDistance);
-			// Use to decide whether to traverse polymer neighborhood
-			bool checkIfPolymer() const {return this->isPolymer; };
-			// Use to traverse polymer neighborhood
-			int getPolymerType(int cIndex) const {return this->polymerType[cIndex]; };
-			int getPolymerLocation(int cIndex) const {return this->polymerLocation[cIndex]; };
-			int getPolymerInteractionDistance(int cIndex) const {return this->polymerInteractionDistance[cIndex]; };
-			// Get the component index that is nearby on the polymer
-			int getPolymerGridComp(int row, int col) const;
 
 			// set of functions that deal with equivalent (aka symmetric) components
 		    // Here is how this works:
@@ -781,49 +757,6 @@ namespace NFcore
 			vector < bool > isIntegerCompState;
 			const bool population_type;
 
-			/**
-			 * Check if the molecule is a polymer.
-			 * If set to true, will trigger searching for bonded molecules
-			 * in TransformationSet::getListOfProducts.
-			 * @author Arvind Rasi Subramaniam
-			 */
-			bool isPolymer;
-
-			/**
-			 * Keeps track of what kind of polymer state is
-			 * each state.
-			 * If not a polymer state, set this to -1.
-			 * @author Arvind Rasi Subramaniam
-			 */
-			vector < int > polymerType;
-
-			/**
-			 * Set the location within the polymer.
-			 * Use for calculating whether this state is within
-			 * the inteaction distance.
-			 * @author Arvind Rasi Subramaniam
-			 */
-			vector < int > polymerLocation;
-
-			/**
-			 * Set the interactino distance from this state
-			 * to another polymer state.
-			 * Used for identifying bonded molecules at nearby states
-			 * that might have changed near this state.
-			 * @author Arvind Rasi Subramaniam
-			 */
-			vector < int > polymerInteractionDistance;
-
-			/**
-			 * Grid to store the component indices for each polymer type
-			 * in the molecule
-			 * @author Arvind Rasi Subramaniam
-			 */
-			vector <vector <int>> polymerGrid;
-			// n_row and n_col for the above grid assigned during grid initialization
-			int max_polymer_types;
-			int max_polymer_locations;
-
 
 			//set of variables to keep track of equivalent (aka symmetric) components
 			int n_eqComp;
@@ -958,17 +891,6 @@ namespace NFcore
 			void traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit);
 			static void breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth);
 			void depthFirstSearch(vector <Molecule *> &members);
-
-			/* functions for searching a polymer molecule within the interaction distance
-			 * of the site that is specified or changed
-			 * Arvind Rasi Subramaniam
-			 */
-			void traversePolymerNeighborhood(vector <Molecule *> &members, int cIndex);
-			/* This function is essentially same as breadthFirstSearch but adapted for
-			 * product retrieval of non-polymer molecules.
-			 * Arvind Rasi Subramaniam
-			 */
-			void getBondedProductsForNonpolymers(vector <Molecule *> &members, int depth);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
 			 * so that this molecule can add itself to all the necessary lists */
@@ -1157,7 +1079,7 @@ namespace NFcore
 
 			double get_a() const { return a; };
 			virtual void printDetails() const;
-			void fire(double random_A_number, bool polymerFlag);
+			void fire(double random_A_number);
 
 			//For DOR reactions
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;
@@ -1257,8 +1179,6 @@ namespace NFcore
 			 * Arvind Rasi Subramaniam
 			 */
 			vector <ReactionClass *> connectedReactions;
-			// used for checking if connection in Python matches what we see here
-			vector <ReactionClass *> preConnectedReactions;
 
 			vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;
