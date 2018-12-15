@@ -241,12 +241,12 @@ void System::registerOutputFileLocation(string filename)
 		//Also, output a header file to keep track of the number
 		NFstream headerFile;
 		int tabCount=0;
-		headerFile.open((filename+".head").c_str()); // @suppress("Ambiguous problem")
+		headerFile.open((filename+".head").c_str());
 		headerFile<<"#\tTime"; tabCount++;
 		for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
 			int oTot = (*molTypeIter)->getNumOfMolObs();
 			for(int o=0; o<oTot; o++) {
-				headerFile<<"\t"<<(*molTypeIter)->getMolObs(o)->getName(); // @suppress("Method cannot be resolved")
+				headerFile<<"\t"<<(*molTypeIter)->getMolObs(o)->getName();
 				tabCount++;
 			}
 		}
@@ -544,16 +544,6 @@ void System::prepareForSimulation()
 				  int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
 				  connectedReactions[r][rxn2_id] = true;
 			  }
-			  // Used for debugging
-			  // comparing inferred connectivity with input connectivity
-			  // The input connectivity was originally inferred in a separate
-			  // Python program by parsing the XML file
-	//  		if (allReactions[r]->getNumConnectedRxns() != allReactions[r]->getNumPreConnectedRxns()) {
-	//  			cout << "mismatch!" << endl;
-	//			printConnectedReactions(allReactions.at(r)->getName());
-	//			exit(1);
-	//  		}
-
 		  }
   	}
 
@@ -577,14 +567,8 @@ void System::prepareForSimulation()
 
 
   	//prep each molecule type for the simulation
-	bool isAnyMoleculePolymer = false;
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
-		if ((*molTypeIter)->checkIfPolymer()) isAnyMoleculePolymer = true;
-  	}
-	// override the polymer flag if none of the molecule types are polymers
-  	// Arvind Rasi Subramaniam
-  	if (getPolymerFlag() & !isAnyMoleculePolymer) usePolymerFlag(false);
 
   	//cout<<"here 7..."<<endl;
 
@@ -735,17 +719,12 @@ double System::getNextRxn()
 /* main simulation loop */
 double System::sim(double duration, long int sampleTimes)
 {
-	return sim(duration,sampleTimes,true, "", -1);
+	return sim(duration,sampleTimes,true);
 }
 
-double System::sim(double duration, long int sampleTimes, bool verbose)
-{
-	return sim(duration,sampleTimes,true, "", -1);
-}
 
 /* main simulation loop */
-double System::sim(double duration, long int sampleTimes, bool verbose,
-		string stopObservable, long int stopObservableCount)
+double System::sim(double duration, long int sampleTimes, bool verbose)
 {
 	System::NULL_EVENT_COUNTER=0;
 	cout.setf(ios::scientific);
@@ -843,7 +822,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose,
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
 //
-		nextReaction->fire(randElement, getPolymerFlag());
+		nextReaction->fire(randElement);
 
 		tryToDump();
 
@@ -910,7 +889,7 @@ double System::stepTo(double stoppingTime)
 		//cout<<"Fire: "<<nextReaction->getName()<<" at time "<< current_time<<endl;
 
 		//5: Fire Reaction! (takes care of updates to lists and observables)
-		nextReaction->fire(randElement, getPolymerFlag());
+		nextReaction->fire(randElement);
 	}
 	//cout<<"a_tot="<<a_tot;
 	return current_time;
@@ -942,7 +921,7 @@ void System::singleStep()
 	nextReaction->printDetails();;
 
 	//5: Fire Reaction! (takes care of updates to lists and observables)
-	nextReaction->fire(randElement, getPolymerFlag());
+	nextReaction->fire(randElement);
 	cout<<"  -System time is now at time: "<<current_time<<endl;
 
 	globalEventCounter++;
