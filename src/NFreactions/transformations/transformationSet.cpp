@@ -40,7 +40,7 @@ TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplat
 }
 
 
-TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates, // @suppress("Class members should be properly initialized")
+TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates, 
 		                             vector <TemplateMolecule *> addMoleculeTemplates )
 {
 	this->hasSymUnbinding = false;
@@ -683,7 +683,7 @@ bool TransformationSet::checkMolecularity( MappingSet ** mappingSets )
 
 
 bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
-		vector <Molecule *> &products, int traversalLimit, bool polymerFlag)
+		vector <Molecule *> &products, int traversalLimit)
 {
 	//if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
@@ -711,67 +711,17 @@ bool TransformationSet::getListOfProducts(MappingSet **mappingSets,
 			// all standard reactions.  I'm wondering now, though, if it is enough in
 			// all cases where you would use the connected-to syntax.  I think so, but
 			// someone should test it.  --michael 9Mar2011
-			if (!polymerFlag) {
-				Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
-				// is this molecule already on the product list?
-				if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
-				{	// Traverse neighbor and add molecules to list
-					molecule->traverseBondedNeighborhood(products,traversalLimit);
-					//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
-				}
-				continue;
+			Molecule * molecule = mappingSets[r]->get(0)->getMolecule();
+			// is this molecule already on the product list?
+			if ( std::find( products.begin(), products.end(), molecule ) == products.end() )
+			{	// Traverse neighbor and add molecules to list
+				molecule->traverseBondedNeighborhood(products,traversalLimit);
+				//molecule->traverseBondedNeighborhoodForUpdate(products,traversalLimit);
 			}
-
-			// modified by rasi to skip traversing bonds
-			// these require high traversal limit that slows down the simulation
-			// instead add all the molecules in the mapping set
-			for (unsigned int i = 0; i < mappingSets[r]->getNumOfMappings(); i++) {
-				Molecule * molecule = mappingSets[r]->get(i)->getMolecule();
-
-				// This is for non-polymeric molecules like ribosomes
-				if (molecule->getVisitedMolecule() == false &&
-						molecule->getMoleculeType()->checkIfPolymer() == false) {
-					molecule->getBondedProductsForNonpolymers(products,traversalLimit);
-				}
-				// Search for bonds within interaction distance
-				// of sites that are being changed by the MappingSet
-				// Add molecules bonded within this distance.
-				// This is done to prevent searching across the full molecule, which is very
-				// inefficient for simulating translation on an mRNA
-
-				// Note that both polymer molecules that are mapped as well as non-polymeric
-				// molecules that are bonded to polymers are searched. This is because the
-				// all state changes of polymeric molecules are not present in the mappingSet.
-				// If not, you can accidentally miss searching within the interaction distance
-				// of all site changes.
-				// Arvind Rasi Subramaniam
-				molecule->traversePolymerNeighborhood(products, mappingSets[r]->get(i)->getIndex());
-
-				// Iterate over all constrained components of the corresponding TemplateMolecule
-				// even if these components are not changed by the transformation.
-				// This helps in the case of rxns such as endocleave_3_hit to update
-				// ribosomes that are bound but 3' to the cut site.
-				// In that case, the cut site and the ribosome binding site are on
-				// different polymers, and the ribosome binding site does not change,
-				// but it is constrained.
-				// Arvind Rasi Subramaniam Nov 23, 2018
-				TemplateMolecule * tm = transformations[r].at(i)->getTemplateMolecule();
-				// If there are no templatemolecules associated with the transformation
-				if (!tm) continue;
-				// Need to check neighborhood of only polymer molecules
-				if (!tm->getMoleculeType()->checkIfPolymer()) continue;
-				for (int cIndex : tm->getAllSpecifiedComps()) {
-					molecule->traversePolymerNeighborhood(products, cIndex);
-				}
-
 
 			}
 		}
 	}
-
-	// reset visitation of molecules in products for next round
-	for( molIter = products.begin(); molIter != products.end(); molIter++ )
-  		(*molIter)->setVisitedMolecule(false);
 
 	// Next, find added molecules that are treated as populations.
 	//  Populations molecules have to be removed from observables, then incremented,
