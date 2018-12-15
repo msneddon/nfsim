@@ -9,7 +9,7 @@ using namespace NFcore;
 
 
 
-ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s) // @suppress("Class members should be properly initialized")
+ReactionClass::ReactionClass(string name, double baseRate, string baseRateParameterName, TransformationSet *transformationSet, System *s) 
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
@@ -265,10 +265,6 @@ void ReactionClass::appendConnectedRxn(ReactionClass * rxn) {
 	this->connectedReactions.push_back(rxn);
 }
 
-void ReactionClass::appendPreConnectedRxn(ReactionClass * rxn) {
-	this->preConnectedReactions.push_back(rxn);
-}
-
 bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
 	// First check if any of the operations share MoleculeType and components with
 	// one of the reactant templates of rxn.
@@ -365,12 +361,7 @@ void ReactionClass::printDetails() const {
 }
 
 
-void ReactionClass::fire(double random_A_number, bool polymerFlag) {
-
-//	if (this->system->getGlobalEventCounter() == 218) {
-//		cout << name << "\n";
-//	}
-
+void ReactionClass::fire(double random_A_number) {
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
 	// First randomly pick the reactants to fire by selecting the MappingSets
@@ -386,7 +377,7 @@ void ReactionClass::fire(double random_A_number, bool polymerFlag) {
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
-	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit, polymerFlag);
+	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {
@@ -436,31 +427,11 @@ void ReactionClass::fire(double random_A_number, bool polymerFlag) {
 		}
 	}
 
-//	// Use for debugging specific reactions; rasi
-//	if (name == "deadenylation_59") {
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-//			cout << name << "\t";
-//			(*molIter)->printBondDetails();
-//			cout << endl;
-//		}
-//		cout <<"<<<<<<<<<<<<<<<<"<<endl;
-//	}
 
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
 	this->transformationSet->transform(this->mappingSet);
-
-	// see how the product bonds changed after transform
-	// use for debugging; rasi
-//	if (name == "collision_19") {
-//		for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-//			cout << name << "\t";
-//			(*molIter)->printBondDetails();
-//			cout << endl;
-//		}
-//		cout <<"<<<<<<<<<<<<<<<<"<<endl;
-//	}
 
 
 	// Add newly created molecules to the list of products
