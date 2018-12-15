@@ -140,10 +140,6 @@ namespace NFcore
 
 		bool isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
 
-		// To get all components that are specified
-		// Includes Bound, Empty, Constrained, Excluded and Bonded Comps
-		vector <int> getAllSpecifiedComps() {return specifiedComps;};
-
 	protected:
 
 		static int TotalTemplateMoleculeCount;
@@ -161,12 +157,6 @@ namespace NFcore
 		////  be handled separately...
 		////  1) unique components
 		////  2) symmetric components
-		///
-
-		// List of all components that are specified in the TemplateMolecule
-		// Includes Bound, Empty, Constrained, Excluded and Bonded Comps
-		// Arvind Rasi Subramaniam Nov 23, 2018
-		vector <int> specifiedComps;
 
 
 		// Which of the unique components must be empty (no bonds)
