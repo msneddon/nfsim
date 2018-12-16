@@ -558,8 +558,8 @@ void ReactionClass::fire(double random_A_number) {
 		// Used for debugging, too detailed and big output
 		// Arvind Rasi Subramaniam
 //		// print the molecule type and its bonded states (exclude non-bonded states)
-		this->system->getReactionFileStream() << "\t";
-		(*molIter)->printBondDetails(this->system->getReactionFileStream());
+//		this->system->getReactionFileStream() << "\t";
+//		(*molIter)->printBondDetails(this->system->getReactionFileStream());
 		this->system->getReactionFileStream() << endl;
 		}
 	}
