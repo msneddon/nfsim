@@ -554,12 +554,9 @@ void ReactionClass::fire(double random_A_number) {
 		// print the time and reaction name
 		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
 				this->system->current_cpu_time << "\t" <<
-				this->system->getCurrentTime() << "\t" << name;
-		// Used for debugging, too detailed and big output
-		// Arvind Rasi Subramaniam
-//		// print the molecule type and its bonded states (exclude non-bonded states)
-//		this->system->getReactionFileStream() << "\t";
-//		(*molIter)->printBondDetails(this->system->getReactionFileStream());
+				this->system->getCurrentTime() << "\t" << name << "\t";
+		// print the molecule type and its bonded states (exclude non-bonded states)
+		(*molIter)->printBondDetails(this->system->getReactionFileStream());
 		this->system->getReactionFileStream() << endl;
 		}
 	}
