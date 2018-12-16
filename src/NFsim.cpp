@@ -386,15 +386,18 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			}
 
 			bool connectivityFlag = false;
-			if (argMap.find("connect")!=argMap.end())
+			if (argMap.find("connect")!=argMap.end()) {
 				connectivityFlag = true;
+			}
 
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
-													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
+													suggestedTraveralLimit,
+													evaluateComplexScopedLocalFunctions,
+													connectivityFlag);
 
 
 			if(s!=NULL)
