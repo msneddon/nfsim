@@ -1,80 +1,24 @@
-#+TITLE: Notes for Rasi's modification to the program
+#+TITLE: =NFsim= – the network free stochastic simulator
 
-[2018-11-23 Fri]
-- For my polymer neighborhood search, I was previously looking at only the molecule components that got changed by a transformation. This results in searching of only polymer neighborhoods of the changed component, but not other unchanged components which might nevertheless be constrained by the reaction rule.
-- So I now look at all molecule components that are constrained as well. This is done by looking at the template molecule corresponding to the transformation reactant.
+This version is forked from https://github.com/msneddon/nfsim, and it compiles using the GNU GCC compiler, v4.8.5 on an Ubuntu 64-bit machine.
+You can check your version of GCC by:
+#+BEGIN_SRC sh
+gcc -v
+#+END_SRC
 
-[2018-08-23 Thu]
-- NFsim is working robustly now with or without polymer and network connectivity options.
-- As far as I can tell, both these modules are working as expected.
-- Inferring the network before simulation speeds up the simulation almost 100-fold.
-- The polymer consideration is not critical. It gives 2x speed up.
+To install, clone this repository to your =~/git= repo:
+#+BEGIN_SRC sh :exports code
+git clone https://github.com/rasilab/nfsim.git
+#+END_SRC
 
-[2018-08-22 Wed]
-- Added back parsing of all reactant and product =TemplateMolecule= for each reaction.
-- Create a map of reactant and product molecules based on parsing the =<Map/>= tag of each =ReactionRule=.
-- =Add= transformations are already connected to the product =TemplateMolecules= that they produce. So no need to add =TemplateMolecule= reactants to these transformations.
+Then compile by:
+#+BEGIN_SRC sh :exports code
+cd ~/git/nfsim
+make
+#+END_SRC
 
-[2018-08-16 Thu]
-Network connectivity inference from the =NFSim= input =xml= file is working now. Look at [[https://github.com/rasilab/sc_translation_model]] repo from today. The inferred connectivity is a superset of the true connectivity: I have 20-50 reactions connected to most reactions. With further optimization, I could probably cut this to 10 or so reactions, but I don't want to accidentally lose a true connected reaction. So I will work with my generous connectivity constraints.
-
-[2018-08-16 Thu 19:34]
-I found out that the optimization does take 3 fold less time for 200 codons, but I found the reaction order is not quite the same. Specifically, when I ran with 50 codons, I found that at a point when ribosomes could elongation on either of two mRNAs present in the cell, the simulations differed in which ones got picked. I need to figure out whether this is a bug.
-
-[2018-08-15 Wed]
-I am inferring the network connectivity specifically for my TASEP models using my =python= script, =infer_network_connectivity.py=.
-I notice that a few reactions such as decapping and endonucleolytic cleavage are connected to a large number of other reactions negatively. One easy optimization while using these connectivities in =NFSim= is to check whether the connected reaction has non-zero rate (i.e. non-zero number of reactants). If not, you don't need to check for whether the reaction propensity changes.
-
-I fixed all reactions but collisions and realized that I cannot connect this reaction to others unless I take the ribosome state into account. 
-
-One possibility to look at all reactants instead of just mRNA, and exclude reactions as connected if their mRNAs don't share at least one common component.
-
-[2018-08-11 Sat]
-I am wondering if I can use the existing =TemplateMolecule::compare()= function to achieve the functionality that I outlined yesterday for shortlisting reactions up front for iterating over later.
-Each =TemplateMolecule= comes attached to a =Molecule= that could be supplied to =compare=.
-Can the =MappingSet= passed to =compare= be used for checking if the state changes?
-
-[2018-08-10 Fri]
-I implemented the two conditions below from Wednesday for narrowing the list of searched reactions.
-This turns out to be not enough.
-For example, I still get that initiation is connected with 400 other reactions (i.e. firing initiation will change the rate of 400 other reactions).
-This is because I do not consider if a state is changed between the reactant and the product template.
-So rather than scanning each TemplateMolecule in reactants and products list seperately, I should scan each reactantTemplate, identify the states that are modified by the transformation set, and then look at other reactions with reactants that share the state either before or after the change.
-I also need to consider new product molecules that are formed. For eg. mRNA that is produced during transcription.
-
-
-[2018-08-08 Wed]
-- I am going to take a crack at speeding up the simulation by removing searches during each simulation step altogether.
-- For the current mRNA simulations, I need to update only the reactants that are specified for the reaction. I can do this by identifying all components in each connected molecule at the beginning of the simulation.
-- Then I can figure out given that a certain reaction fires, what other reaction rate to update. I can do this again by having a double-sided dictionary between template molecules and reactions. Then whenever I am updating a given template molecule, I need to update only the reaction rates that it is known to change.
-- Connect reactions if:
-  1. Reactant and product of a reaction shares at least one specified component with that of the reactants of another reaction.
-     - We should consider both reactants and products because firing of a reaction can remove the reactants for another reaction. For eg. elongation with a ribosome just behind will also remove the substrate for collision of the trailing ribosome, but create a substrate for elongation of the trailing ribosome.
-  2. Any shared component that is bonded must be between the same pair of components and molecule types in both the reactants and products.
-     - This is necessary because a molecule like ribosome will share states with most reactions, but will have different bonds each time.
-
-[2018-08-01 Wed]
-- I successfully implemented the change to examine only a small neighborhood of each mRNA. 
-- However, this does not speed up the simulation appreciably since the other main bottleneck seems to be in identifying how molecule transformations affect reaction rates.
-- This update step scans over all reactions that a molecule can participate in and identifies whether a particular molecule matches the template of the reaction.
-- I take a huge hit in efficiency since the current NFsim method does this by brute force scanning of all bonds and reactions for each molecule.
-- Both the ribosome and mRNA participate in a large number of reactions (>1000), but typically only 1-5 reaction rates need to be updated.
-- I need to refactor the code significantly to optimize this further.
-- For example, I could identify all the template reactants for each reaction class, and also identify all reactions that each template participates in.
-- Then I can do a lookup rather than a full search, which will significantly speed up the reaction.
-
-[2018-07-31 Tue]
-- The simulation with polymer neighborhood search is working as expected.
-
-[2018-07-30 Mon]
-
-- I have implemented the search for product molecules so that all molecules that undergo changes are included.
-- However this has not yet worked. Here are lessons learned in the process:
-  1. The matching of products to reactantTemplates is not guaranteed. This is because the reactant template seems to include only one template per connected component. If the product molecule is not this template, then the product does not trigger a change in reaction rates. This is stated explicitly in [[file:src/NFtest/simple_system/simple_system.cpp][simple_system.cpp]].  
-  2. More generally, whenever you introduce or simulate a new reaction, make sure that the updates are occurring as expected by looking at the product list and reactions around the time when the new reaction first occurs.
-- One idea to solve the above problem is to retain the breadthSearch for non-polymeric molecules, and keep the polymerneighborhood search for only polymeric molecules. Then I can keep the traversalLimit for the non-polymeric molecules high.
-
-[2018-07-28 Sat]
-To improve breadth only search for ribosome motion on mRNAs, to get a list of possible products for a reaction:
-- designate the mRNA as a polymer molecule.
-- if you hit a polymer molecule during a breadthonlysearch, do not look for bonded neighbors beyond a distance specified at the start of the simulation. This will keep the number of products from blowing up for longer mRNAs.
+Once it is compiled, add the binary =NFsim= in the [[bin]] directory to your =PATH=.
+For example, I add the following to my =~/.bashrc= script:
+#+BEGIN_SRC sh :exports code
+export PATH=$PATH":/home/rasi/git/nfsim/bin"
+#+END_SRC
