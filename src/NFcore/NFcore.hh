@@ -389,7 +389,7 @@ namespace NFcore
 			 * debugging.
 			 * Arvind Rasi Subramaniam Nov 21, 2018
 			 */
-			void setTrackConnected() { this->trackConnected = true; };
+			void setTrackConnected(bool value) { this->trackConnected = value; };
 			bool getTrackConnected() { return this->trackConnected; };
 
 			/* Turn on infernence and use of connectivity
