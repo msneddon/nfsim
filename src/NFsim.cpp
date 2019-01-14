@@ -506,7 +506,9 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 											rxnLogFileName.end()-4,
 											rxnLogFileName.end(),
 											"_connected.tsv"));
-							s->setTrackConnected();
+							s->setTrackConnected(true);
+						} else {
+							s->setTrackConnected(false);
 						}
 					} else {
 						s->registerReactionFileLocation(
