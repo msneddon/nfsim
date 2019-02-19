@@ -262,6 +262,9 @@ namespace NFcore
 			 * if any reaction has tag flag set to 1 */
 			void registerReactionFileLocation(string filename);
 			void registerConnectedRxnFileLocation(string filename);
+			/* list of molecule types and reaction firing counts are stored in these files */
+			void registerMoleculeTypeFileLocation(string filename);
+			void registerRxnListFileLocation(string filename);
 
 
 			void setDumpOutputter(DumpSystem *ds);
@@ -284,6 +287,8 @@ namespace NFcore
 			void outputAllObservableCounts();
 			void outputAllObservableCounts(double cSampleTime);
 			void outputAllObservableCounts(double cSampleTime,int eventCounter);
+			void outputAllMoleculeTypes();
+			void outputAllRxnFiringCounts();
 
 			int getNumOfSpeciesObs() const;
 			Observable * getSpeciesObs(int index) const;
@@ -392,7 +397,15 @@ namespace NFcore
 			void setTrackConnected(bool value) { this->trackConnected = value; };
 			bool getTrackConnected() { return this->trackConnected; };
 
-			/* Turn on infernence and use of connectivity
+			/*
+			 * Write reaction and molecule numbers instead of names to reduce file size
+			 * This flag will also output two tsv files of list of molecules and reactions.
+			 * Arvind Rasi Subramaniam Feb 18, 2019
+			 */
+			void setRxnNumberTrack(bool value) { this->trackRxnNumber = value; };
+			bool getRxnNumberTrack() { return this->trackRxnNumber; };
+
+			/* Turn on inference and use of connectivity
 			 * Arvind Rasi Subramaniam
 			 */
 			void useConnectivityFlag(bool connectivityFlag) {this->connectivityFlag = connectivityFlag;};
@@ -424,6 +437,7 @@ namespace NFcore
 		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
 		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
 		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
+		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
 
 		    int globalEventCounter;
 
@@ -480,6 +494,8 @@ namespace NFcore
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream reactionOutputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream connectedRxnFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream moleculeTypeFileStream;
+			NFstream rxnListFileStream;
 			void outputGroupDataHeader();
 
 			void outputAllPropensities(double time, int rxnFired);
@@ -1065,6 +1081,7 @@ namespace NFcore
 			int getNumOfReactants() const { return n_reactants; };
 
 			string getName() const { return name; };
+			int getFireCounter() const { return fireCounter; };
 			double getBaseRate() const { return baseRate; };
 			int getRxnType() const { return reactionType; };
 			MoleculeType *getMoleculeTypeOfReactantTemplate(int pos) const;

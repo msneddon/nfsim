@@ -552,21 +552,22 @@ void MoleculeType::updateConnectedRxnMembership(Molecule * m, ReactionClass * fi
 		for (int pos=0; pos<rxn->getNumOfReactants(); pos++) {
 			if (rxn->getMoleculeTypeOfReactantTemplate(pos) != this) continue;
 			double oldA = rxn->get_a();
+			double oldAwithTotal = rxn->update_a();
 			rxn->tryToAdd(m, pos);
 			this->system->update_A_tot(rxn,oldA,rxn->update_a());
 			// Used for debugging to see which reaction rates changed
 			// upon updating molecule membership
 			// Arvind Rasi Subramaniam Nov 21, 2018
 			if (!this->system->getTrackConnected()) continue;
-			double newA =  rxn->get_a();
-			if (oldA != newA) {
+			double newA =  rxn->update_a();
+			if (oldAwithTotal != newA) {
 				this->system->getConnectedRxnFileStream() <<
 				this->system->getGlobalEventCounter() << "\t" <<
 				firedReaction->getName() << "\t" <<
 						m->getMoleculeTypeName() << "\t" <<
 						m->getUniqueID() << "\t" <<
 						rxn->getName() << "\t" <<
-						oldA << "\t" << newA << endl;
+						oldAwithTotal << "\t" << newA << endl;
 			}
 		}
   	}

@@ -554,14 +554,17 @@ void ReactionClass::fire(double random_A_number) {
 		// print the time and reaction name
 		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
 				this->system->current_cpu_time << "\t" <<
-				this->system->getCurrentTime() << "\t" << name << "\t";
+				this->system->getCurrentTime() << "\t";
+		if (this->system->getRxnNumberTrack()) {
+			this->system->getReactionFileStream() << rxnId << "\t";
+		} else {
+			this->system->getReactionFileStream() << name << "\t";
+		}
 		// print the molecule type and its bonded states (exclude non-bonded states)
 		(*molIter)->printBondDetails(this->system->getReactionFileStream());
 		this->system->getReactionFileStream() << endl;
 		}
 	}
-
-
 
 	//Tidy up
 	products.clear();

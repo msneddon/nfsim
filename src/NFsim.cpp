@@ -80,6 +80,14 @@
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
  *
+ *  -trackconnected - write out the reactions whose rates change after firing of each reaction.
+ *  				  Default: false
+ *  				  @author: Arvind Rasi Subramaniam
+ *
+ *  -trackrxnnum - track reaction number instead of name. this helps to keep the rxn log file small.
+ *  			   Default: false
+ *  			   @author: Arvind Rasi Subramaniam
+ *
 *   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
 *                 @author Arvind Rasi Subramaniam
  *
@@ -480,6 +488,17 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
+					s->registerMoleculeTypeFileLocation(
+									outputFileName.replace(
+											outputFileName.end()-5,
+											outputFileName.end(),
+											".molecule_type_list.tsv"));
+					outputFileName = argMap.find("o")->second;
+					s->registerRxnListFileLocation(
+									outputFileName.replace(
+											outputFileName.end()-5,
+											outputFileName.end(),
+											".rxn_list.tsv"));
 				} else {
 					if(s->isOutputtingBinary()) {
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
@@ -489,6 +508,8 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
 						s->outputAllObservableNames();
 						if(verbose) cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.gdat" <<endl<<endl;
+						s->registerMoleculeTypeFileLocation(s->getName() + "_molecule_type_list.tsv");
+						s->registerRxnListFileLocation(s->getName() + "_rxn_list.tsv");
 					}
 				}
 
@@ -513,6 +534,11 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					} else {
 						s->registerReactionFileLocation(
 								s->getName() + "_rxns.dat");
+					}
+					if (argMap.find("trackrxnnum") != argMap.end()) {
+						s->setRxnNumberTrack(true);
+					} else {
+						s->setRxnNumberTrack(false);
 					}
 				}
 

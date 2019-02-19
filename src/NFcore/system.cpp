@@ -276,7 +276,7 @@ void System::registerOutputFileLocation(string filename)
 
 /*
  * Print reaction info if -rlog flag is given
- * Note reactions have to be tagged in BioNetGen or PySB
+ * Note reactions can be tagged in BioNetGen or PySB or from the command line using the rtag flag
  * @author: Rasi Subramaniam
  */
 void System::registerReactionFileLocation(string filename)
@@ -290,20 +290,61 @@ void System::registerReactionFileLocation(string filename)
 		exit(1);
 	}
 
-	reactionOutputFileStream.setf(ios::scientific);
-	reactionOutputFileStream.precision(8);
+	reactionOutputFileStream.setf(ios::fixed);
+	reactionOutputFileStream.precision(6);
 	// print header for file
 	reactionOutputFileStream <<
 			"line" << "\t" <<
 			"cputime" << "\t" <<
 			"time" << "\t" <<
-			"rxn" << "\t" <<
-			"mol" << "\t" <<
+			"rxn" << "\t";
+	if (this->getRxnNumberTrack()) {
+		reactionOutputFileStream << "mol" << "\t";
+	}
+	reactionOutputFileStream <<
 			"mol_id" <<
-//			"bonded_states" <<
 			endl;
 }
 
+void System::registerMoleculeTypeFileLocation(string filename) {
+	if (moleculeTypeFileStream.is_open()) { moleculeTypeFileStream.close(); }
+	moleculeTypeFileStream.open(filename.c_str());
+
+	if(!moleculeTypeFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	moleculeTypeFileStream.setf(ios::dec);
+	moleculeTypeFileStream.precision(2);
+	// print header for file
+	moleculeTypeFileStream <<
+			"mol_type_id" << "\t" <<
+			"mol_type" << "\t" <<
+			endl;
+
+}
+
+void System::registerRxnListFileLocation(string filename) {
+	if (rxnListFileStream.is_open()) { rxnListFileStream.close(); }
+	rxnListFileStream.open(filename.c_str());
+
+	if(!rxnListFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	rxnListFileStream.setf(ios::dec);
+	rxnListFileStream.precision(2);
+	// print header for file
+	rxnListFileStream <<
+			"rxn" << "\t" <<
+			"n_firings" << "\t" <<
+			"name" << "\t" <<
+			endl;
+}
 
 void System::registerConnectedRxnFileLocation(string filename)
 {
@@ -832,6 +873,9 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
 
+	// Write list of molecule_types and reactions along with reaction firing counts
+	outputAllMoleculeTypes();
+	outputAllRxnFiringCounts();
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -1346,6 +1390,24 @@ void System::printAllMoleculeTypes()
 	cout<<endl;
 }
 
+void System::outputAllMoleculeTypes() {
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		moleculeTypeFileStream <<
+		(*molTypeIter)->getTypeID() << "\t" << (*molTypeIter)->getName() << endl;
+	}
+	moleculeTypeFileStream.close();
+}
+
+void System::outputAllRxnFiringCounts() {
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		rxnListFileStream <<
+		(*rxnIter)->getRxnId() << "\t" <<
+			(*rxnIter)->getFireCounter() << "\t" << (*rxnIter)->getName() << endl;
+	}
+	rxnListFileStream.close();
+}
 
 // NETGEN  moved to ComplexList
 /*

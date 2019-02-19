@@ -416,8 +416,12 @@ void Molecule::printBondDetails(ostream &o) {
  */
 void Molecule::printBondDetails(NFstream &o)
 {
-	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
-	if (this->getMoleculeType()->getSystem()->getTrackConnected()) {
+	if (parentMoleculeType->getSystem()->getRxnNumberTrack()) {
+		o << parentMoleculeType->getTypeID() << "\t" << ID_unique;
+	} else {
+		o << parentMoleculeType->getName() << "\t" << ID_unique;
+	}
+	if (parentMoleculeType->getSystem()->getTrackConnected()) {
 		o<<"\t";
 		for(int c=0; c<numOfComponents; c++)
 		{
