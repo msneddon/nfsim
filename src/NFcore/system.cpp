@@ -1392,6 +1392,7 @@ void System::outputAllMoleculeTypes() {
 		(*molTypeIter)->getTypeID() << "\t" << (*molTypeIter)->getName() << endl;
 	}
 	moleculeTypeFileStream << this->current_time << "\tsimulated_time" << endl;
+	moleculeTypeFileStream << this->current_cpu_time << "\tcpu_time" << endl;
 	moleculeTypeFileStream.close();
 }
 
