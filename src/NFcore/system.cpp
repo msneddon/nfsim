@@ -319,11 +319,7 @@ void System::registerMoleculeTypeFileLocation(string filename) {
 	moleculeTypeFileStream.setf(ios::dec);
 	moleculeTypeFileStream.precision(2);
 	// print header for file
-	moleculeTypeFileStream <<
-			"mol_type_id" << "\t" <<
-			"mol_type" << "\t" <<
-			endl;
-
+	moleculeTypeFileStream << "mol_type_id" << "\t" << "mol_type" << endl;
 }
 
 void System::registerRxnListFileLocation(string filename) {
@@ -342,8 +338,7 @@ void System::registerRxnListFileLocation(string filename) {
 	rxnListFileStream <<
 			"rxn" << "\t" <<
 			"n_firings" << "\t" <<
-			"name" << "\t" <<
-			endl;
+			"name" << endl;
 }
 
 void System::registerConnectedRxnFileLocation(string filename)
