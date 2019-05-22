@@ -298,7 +298,7 @@ void System::registerReactionFileLocation(string filename)
 			"cputime" << "\t" <<
 			"time" << "\t" <<
 			"rxn" << "\t";
-	if (this->getRxnNumberTrack()) {
+	if (!this->getRxnNumberTrack()) {
 		reactionOutputFileStream << "mol" << "\t";
 	}
 	reactionOutputFileStream <<
