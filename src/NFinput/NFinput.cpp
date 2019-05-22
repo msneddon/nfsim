@@ -2660,7 +2660,7 @@ TemplateMolecule *NFinput::readPattern(
 								if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
 									cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
 									cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
-									return false;
+									return NULL;
 								} else {
 									//State is a valid allowed state, so push it onto our list
 									stateConstraint = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
@@ -2688,7 +2688,7 @@ TemplateMolecule *NFinput::readPattern(
 								} catch (std::runtime_error e) {
 									cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
 									cerr<<e.what()<<endl;
-									return false;
+									return NULL;
 								}
 
 								if(numOfBondsInt==0) {
@@ -2700,7 +2700,7 @@ TemplateMolecule *NFinput::readPattern(
 								} else {
 									cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
 									cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
-									return false;
+									return NULL;
 								}
 							}
 						}
@@ -2721,7 +2721,7 @@ TemplateMolecule *NFinput::readPattern(
 								if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
 									cerr<<"You are trying to give a pattern of type '"<<molName<<"', but you gave an "<<endl;
 									cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
-									return false;
+									return NULL;
 								} else {
 									//State is a valid allowed state, so push it onto our list
 									int stateValueInt = allowedStates.find(molName+"_"+compName+"_"+compStateValue)->second;
@@ -2731,7 +2731,7 @@ TemplateMolecule *NFinput::readPattern(
 									if(!lookup(symC, compId, comps, symMap)) {
 										cerr<<"Could not find the symmetric component when creating a component state, but there\n";
 										cerr<<"should have been one!!  I don't know what to do, so I'll quit."<<endl;
-										return false;
+										return NULL;
 									}
 									stateName.push_back(symC->symPermutationName);
 									stateValue.push_back(stateValueInt);
@@ -2763,7 +2763,7 @@ TemplateMolecule *NFinput::readPattern(
 								} catch (std::runtime_error e) {
 									cerr<<"I couldn't parse the numberOfBonds value when creating pattern: "<<patternName<<endl;
 									cerr<<e.what()<<endl;
-									return false;
+									return NULL;
 								}
 							}
 
@@ -2774,7 +2774,7 @@ TemplateMolecule *NFinput::readPattern(
 							if(!lookup(symC, compId, comps, symMap)) {
 								cerr<<"Could not find the symmetric component when creating a binding site, but there\n";
 								cerr<<"should have been one!!  I don't know what to do, so I'll quit."<<endl;
-								return false;
+								return NULL;
 							}
 
 							if(numOfBondsInt==MUST_BE_OCCUPIED) {
@@ -2790,7 +2790,7 @@ TemplateMolecule *NFinput::readPattern(
 							} else {
 								cerr<<"I can only handle a site that has 0 or 1 bonds in pattern: "<<patternName<<endl;
 								cerr<<"You gave me "<<numOfBondsInt<<" instead for component "<<compName<<endl;
-								return false;
+								return NULL;
 							}
 						}
 
@@ -2844,7 +2844,7 @@ TemplateMolecule *NFinput::readPattern(
 				string bondId, bSite1, bSite2;
 				if(!pBond->Attribute("id") || !pBond->Attribute("site1") || !pBond->Attribute("site2")) {
 					cerr<<"!! Invalid Bond tag for pattern: "<<patternName<<".  Quitting."<<endl;
-					return false;
+					return NULL;
 				} else {
 					bondId = pBond->Attribute("id");
 					bSite1 = pBond->Attribute("site1");
@@ -2896,7 +2896,7 @@ TemplateMolecule *NFinput::readPattern(
 						cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
 						cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
 						cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
-						return false;
+						return NULL;
 					}
 				} catch (exception& e) {
 
@@ -2907,7 +2907,7 @@ TemplateMolecule *NFinput::readPattern(
 					cerr<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating pattern '"<<patternName<<"'. "<<endl;
 					cerr<<"This may be caused because you are adding two bonds to one binding site or because you listed"<<endl;
 					cerr<<"a binding site at the end of the pattern that does not exist.  Quitting"<<endl;
-					return false;
+					return NULL;
 				}
 			}
 		}
@@ -2931,7 +2931,7 @@ TemplateMolecule *NFinput::readPattern(
 		} catch (exception& e) {
 			cerr<<"Something went wacky when I was parsing pattern '"<<patternName<<"'."<<endl;
 			cerr<<"It happened as I was trying to add an occupied binding site to a template molecule."<<endl;
-			return false;
+			return NULL;
 		}
 
 
@@ -3017,7 +3017,7 @@ TemplateMolecule *NFinput::readPattern(
 		if(tMolecules.empty()){
 			cerr<<"You have a pattern named "<<patternName<<" that doesn't include any actual patterns!  (Or I just couldn't find any)"<<endl;
 			cerr<<"Therefore, I see no other choice than to quit until you fix the problem."<<endl;
-			return false;
+			return NULL;
 		}
 		TemplateMolecule *finalTemplate = tMolecules.at(0);
 
@@ -3038,7 +3038,7 @@ TemplateMolecule *NFinput::readPattern(
 		return NULL;
 	}
 
-	return false;
+	return NULL;
 }
 
 
