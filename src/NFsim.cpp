@@ -80,6 +80,9 @@
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
  *
+ *  -printconnected - print connectivity of each reaction to an output file. (default: no).
+ *             @author Arvind Rasi Subramaniam
+ *
  *  -trackconnected - write out the reactions whose rates change after firing of each reaction.
  *  				  Default: false
  *  				  @author: Arvind Rasi Subramaniam
@@ -530,6 +533,16 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 							s->setTrackConnected(true);
 						} else {
 							s->setTrackConnected(false);
+						}
+						if (argMap.find("printconnected") != argMap.end()) {
+							s->registerListOfConnectedRxnFileLocation(
+									rxnLogFileName.replace(
+											rxnLogFileName.end()-4,
+											rxnLogFileName.end(),
+											"_connectedlist.tsv"));
+							s->setPrintConnected(true);
+						} else {
+							s->setPrintConnected(false);
 						}
 					} else {
 						s->registerReactionFileLocation(

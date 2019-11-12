@@ -261,7 +261,10 @@ namespace NFcore
 			/* reaction firings are output to this file
 			 * if any reaction has tag flag set to 1 */
 			void registerReactionFileLocation(string filename);
+			/* Connected reactions upon each reaction firing are written to this location */
 			void registerConnectedRxnFileLocation(string filename);
+			/* Connected reactions for each reaction as calculated are written to this location */
+			void registerListOfConnectedRxnFileLocation(string filename);
 			/* list of molecule types and reaction firing counts are stored in these files */
 			void registerMoleculeTypeFileLocation(string filename);
 			void registerRxnListFileLocation(string filename);
@@ -368,6 +371,7 @@ namespace NFcore
 	        NFstream& getOutputFileStream();
 	        NFstream& getReactionFileStream();
 	        NFstream& getConnectedRxnFileStream();
+	        NFstream& getConnectedRxnListFileStream();
 
 	        // NETGEN -- method to access allComplexes
 	        ComplexList & getAllComplexes( )  {  return allComplexes;  };
@@ -396,6 +400,13 @@ namespace NFcore
 			 */
 			void setTrackConnected(bool value) { this->trackConnected = value; };
 			bool getTrackConnected() { return this->trackConnected; };
+			/*
+			 * print connected reactions at the beginning of the simulation for
+			 * checking that we represented our intuition correctly in the model.
+			 * Arvind Rasi Subramaniam Nov 12, 2019
+			 */
+			void setPrintConnected(bool value) { this->printConnected = value; };
+			bool getPrintConnected() { return this->printConnected; };
 
 			/*
 			 * Write reaction and molecule numbers instead of names to reduce file size
@@ -437,6 +448,7 @@ namespace NFcore
 		    bool anyRxnTagged; /*< sets whether any reaction is tagged for output when it fires */
 		    bool connectivityFlag; /* Whether to infer and use reaction connectivity  for updating molecule rxn membership*/
 		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
+		    bool printConnected; /* Whether to print connected reactions at the beginning of the simulation. Useful for debugging */
 		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
 
 		    int globalEventCounter;
@@ -494,6 +506,7 @@ namespace NFcore
 			NFstream outputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream reactionOutputFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream connectedRxnFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
+			NFstream connectedRxnListFileStream; /* NFstream is a smart stream that uses ofstream or stringstream depending on whether NF_MPI is defined */
 			NFstream moleculeTypeFileStream;
 			NFstream rxnListFileStream;
 			void outputGroupDataHeader();

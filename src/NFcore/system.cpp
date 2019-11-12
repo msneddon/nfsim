@@ -366,6 +366,27 @@ void System::registerConnectedRxnFileLocation(string filename)
 			endl;
 }
 
+void System::registerListOfConnectedRxnFileLocation(string filename)
+{
+	if (connectedRxnListFileStream.is_open()) { connectedRxnListFileStream.close(); }
+	connectedRxnListFileStream.open(filename.c_str());
+
+	if(!connectedRxnListFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	connectedRxnListFileStream.setf(ios::scientific);
+	connectedRxnListFileStream.precision(8);
+	// print header for file
+	connectedRxnListFileStream <<
+			"rxn_id" << "\t" <<
+			"rxn_name" << "\t" <<
+			"connected_rxn_id" << "\t" <<
+			"con_rxn_name" <<
+			endl;
+}
 
 
 void System::tagReaction(unsigned int rID) {
@@ -570,16 +591,30 @@ void System::prepareForSimulation()
 				vector <bool> (allReactions.size(), false));
 		  for(unsigned int r=0; r<allReactions.size(); r++)
 		  {
-			  // Arvind Rasi Subramaniam
-			  allReactions.at(r)->identifyConnectedReactions();
-			  if ((r + 1) % 1000 == 0) {
-				  cout << "Connectivity inferred for " << r + 1 << " reactions." << endl;
-			  }
-			  // prepare the connected reaction map for quick lookup
-			  for (int r2=0; r2<allReactions.at(r)->getNumConnectedRxns(); r2++) {
-				  int rxn2_id = allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
-				  connectedReactions[r][rxn2_id] = true;
-			  }
+			// Arvind Rasi Subramaniam
+			allReactions.at(r)->identifyConnectedReactions();
+			if ((r + 1) % 1000 == 0) {
+				cout << "Connectivity inferred for " << r + 1 << " reactions."
+						<< endl;
+			}
+			// prepare the connected reaction map for quick lookup
+			for (int r2 = 0; r2 < allReactions.at(r)->getNumConnectedRxns();
+					r2++) {
+				int rxn2_id =
+						allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
+				connectedReactions[r][rxn2_id] = true;
+			}
+			  // print connected reactions if given the switch
+			if (!this->getPrintConnected()) continue;
+			for (int r2 = 0; r2 < allReactions.at(r)->getNumConnectedRxns();
+					r2++) {
+				this->getConnectedRxnListFileStream() << r << "\t"
+						<< allReactions.at(r)->getName() << "\t" << r << "\t"
+						<< allReactions.at(r)->getconnectedRxn(r2)->getRxnId()
+						<< "\t"
+						<< allReactions.at(r)->getconnectedRxn(r2)->getName()
+						<< endl;
+			}
 		  }
   	}
 
@@ -1754,6 +1789,10 @@ NFstream& System::getConnectedRxnFileStream()
     return connectedRxnFileStream;
 }
 
+NFstream& System::getConnectedRxnListFileStream()
+{
+    return connectedRxnListFileStream;
+}
 NFstream& System::getReactionFileStream()
 {
     return reactionOutputFileStream;
