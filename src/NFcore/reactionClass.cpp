@@ -545,6 +545,12 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	} // done updating complex-scoped local functions
 
+	// update the last reaction firing time
+	// this is written to molecule_type_list.tsv at the end of the simulation
+	// @author: Arvind R. Subramaniam
+	// @date: 13 Nov 2019
+	this->system->setLastRxnTime(this->system->getCurrentTime());
+
 	// output if the reaction was tagged
 	if (tagged) {
 	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {

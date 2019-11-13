@@ -430,6 +430,14 @@ namespace NFcore
 			void setConnectedReactions(int rxn1, int rxn2) {connectedReactions[rxn1][rxn2] = true;};
 			bool areReactionsConnected(int rxn1, int rxn2) {return connectedReactions[rxn1][rxn2];};
 
+			/* Track the last reaction firing time
+			 * This is done to make sure that the reaction runs to completion
+			 * @author: Arvind R. Subramaniam
+			 * @date: 13 Nov 2019
+			 */
+			void setLastRxnTime(double rxnTime) {this->lastRxnTime = rxnTime;};
+			double getLastRxnTime() {return this->lastRxnTime;};
+
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -450,6 +458,7 @@ namespace NFcore
 		    bool trackConnected; /* Whether to track connected reactions after each reaction firing. Useful for debugging */
 		    bool printConnected; /* Whether to print connected reactions at the beginning of the simulation. Useful for debugging */
 		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
+		    double lastRxnTime; /* Time when the last reaction was fired */
 
 		    int globalEventCounter;
 
