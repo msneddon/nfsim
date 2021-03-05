@@ -1597,25 +1597,45 @@ void System::setParamFileMap(string paramFileMapString)
 	// so we do split by "," and then split by ":"
 	string delimiter1 = ",";
 	string delimiter2 = ":";
-
+	// basic variables
 	size_t pos1 = 0;
 	size_t pos2 = 0;
 	string param;
 	string paramFile;
 	string paramPair;
+	// get the first params
 	while ((pos1 = paramFileMapString.find(delimiter1)) != string::npos) {
 		paramPair = paramFileMapString.substr(0, pos1);
 		// parse the pair
 		pos2 = paramPair.find(delimiter2);
 		param = paramPair.substr(0,pos2);
-		paramFile = paramPair.substr(pos2,paramPair.length());
+		paramFile = paramPair.substr(pos2+1,paramPair.length());
 		// add to array
 		this->paramFileMap[param] = paramFile;
-		cout<<"parsed param: "<<param<<endl;
-		cout<<"parsed paramFile: "<<paramFile<<endl;
 		// remove from main string
 		paramFileMapString.erase(0, pos1 + delimiter1.length());
 	};
+	// we are left with one more potentially
+	if (paramFileMapString.length() != 0) {
+		paramPair = paramFileMapString.substr(0, paramFileMapString.length());
+		// parse the pair
+		pos2 = paramPair.find(delimiter2);
+		param = paramPair.substr(0,pos2);
+		paramFile = paramPair.substr(pos2+1,paramPair.length());
+		// add to array
+		this->paramFileMap[param] = paramFile;
+	};
+	this->loadParamFiles();
+	return;
+};
+
+void System::loadParamFiles() 
+{
+	// let's loop over param file map and load each in
+	map<string,string>::iterator iter;
+	for( iter = this->paramFileMap.begin(); iter != this->paramFileMap.end(); iter++ ) {
+		cout << "\t" << iter->first << " = " << iter->second << endl;
+	}
 	return;
 };
 // END: AS-2021, time dependent param changes

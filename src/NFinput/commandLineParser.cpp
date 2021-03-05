@@ -52,10 +52,7 @@ bool NFinput::parseArguments(int argc, const char *argv[], map<string,string> &a
 				a++;
 			}
 
-			// START: AS-2021, time dependent param changes
-			// uncommenting this for debugging
-			cout<<"found:  '"<<sFlag<<"' with arg: '"<<sVal<<"' "<<endl;
-			// END: AS-2021, time dependent param changes
+			// cout<<"found:  '"<<sFlag<<"' with arg: '"<<sVal<<"' "<<endl;
 
 			if(argMap.find(sFlag)!=argMap.end()) {
 				cout<<"Found two values for the same command line flag: '"<<sFlag<<"' so I am stopping"<<endl;

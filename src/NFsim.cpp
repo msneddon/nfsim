@@ -386,7 +386,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
 
 			// START: AS-2021, time dependent param changes
-			// we should check for --params here
+			// we should check for -params here
 			if (argMap.find("params")!=argMap.end()) 
 			{
 				// get the string that gives us parameters 

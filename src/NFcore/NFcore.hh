@@ -404,6 +404,7 @@ namespace NFcore
 
 			// START: AS-2021, time dependent param changes
 			void setParamFileMap(string paramFileMapString);
+			void loadParamFiles();
 			// END: AS-2021, time dependent param changes
 
 		protected:
