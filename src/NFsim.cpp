@@ -385,6 +385,17 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
 													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
 
+			// START: AS-2021, time dependent param changes
+			// we should check for --params here
+			if (argMap.find("params")!=argMap.end()) 
+			{
+				// get the string that gives us parameters 
+				// and associated data files for each
+				string param_string = argMap.find("params")->second;
+				// use system function to set the map
+				s->setParamFileMap(param_string);
+			}
+			// END: AS-2021, time dependent param changes
 
 			if(s!=NULL)
 			{

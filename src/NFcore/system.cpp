@@ -1583,6 +1583,43 @@ void System::printAllFunctions() {
 	}
 }
 
+// START: AS-2021, time dependent param changes
+void System::setParamFileMap(string paramFileMapString) 
+{
+	// AS-2021: Important notes
+	// we need to parse the parameter map string and setup
+	// a map to map parameters to file paths. We can then decide
+	// on when/where to load (potentially here) and then figure
+	// out where to use it
+	
+	// for now the string format will be:
+	// "paramName1:paramFile1,paramName2:paramFile2,..."
+	// so we do split by "," and then split by ":"
+	string delimiter1 = ",";
+	string delimiter2 = ":";
+
+	size_t pos1 = 0;
+	size_t pos2 = 0;
+	string param;
+	string paramFile;
+	string paramPair;
+	while ((pos1 = paramFileMapString.find(delimiter1)) != string::npos) {
+		paramPair = paramFileMapString.substr(0, pos1);
+		// parse the pair
+		pos2 = paramPair.find(delimiter2);
+		param = paramPair.substr(0,pos2);
+		paramFile = paramPair.substr(pos2,paramPair.length());
+		// add to array
+		this->paramFileMap[param] = paramFile;
+		cout<<"parsed param: "<<param<<endl;
+		cout<<"parsed paramFile: "<<paramFile<<endl;
+		// remove from main string
+		paramFileMapString.erase(0, pos1 + delimiter1.length());
+	};
+	return;
+};
+// END: AS-2021, time dependent param changes
+
 void System::outputAllPropensities(double time, int rxnFired)
 {
 	if(!propensityDumpStream.is_open()) {

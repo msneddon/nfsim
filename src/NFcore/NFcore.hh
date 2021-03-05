@@ -402,6 +402,10 @@ namespace NFcore
 			*/
 			void turnOnCSVformat() { this->csvFormat = true; };
 
+			// START: AS-2021, time dependent param changes
+			void setParamFileMap(string paramFileMapString);
+			// END: AS-2021, time dependent param changes
+
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -486,6 +490,9 @@ namespace NFcore
 			//Data structure that performs the selection of the next reaction class
 			ReactionSelector * selector;
 
+			// START: AS-2021, time dependent param changes
+			map <string,string> paramFileMap;
+			// END: AS-2021, time dependent param changes
 
 		private:
 			list <Molecule *> molList;
