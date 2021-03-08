@@ -1586,12 +1586,6 @@ void System::printAllFunctions() {
 // START: AS-2021, time dependent param changes
 void System::setParamFileMap(string paramFileMapString) 
 {
-	// AS-2021: Important notes
-	// we need to parse the parameter map string and setup
-	// a map to map parameters to file paths. We can then decide
-	// on when/where to load (potentially here) and then figure
-	// out where to use it
-	
 	// for now the string format will be:
 	// "paramName1:paramFile1,paramName2:paramFile2,..."
 	// so we do split by "," and then split by ":"
@@ -1631,13 +1625,66 @@ void System::setParamFileMap(string paramFileMapString)
 
 void System::loadParamFiles() 
 {
+	// variables to read the data 
+	// from files as vectors
+	int ctr;
+	vector <vector <double> > data;
+	vector <double> time;
+	vector <double> values;
 	// let's loop over param file map and load each in
 	map<string,string>::iterator iter;
 	for( iter = this->paramFileMap.begin(); iter != this->paramFileMap.end(); iter++ ) {
+		// debug statements
 		cout << "\t" << iter->first << " = " << iter->second << endl;
+		// create a file stream to load the file
+		ifstream file(iter->second.c_str());
+		// make sure our vectors are cleared
+		data.clear();
+		time.clear();
+		values.clear();
+		// strings for looping over the file
+		string line, word, content;
+		// running through the file in a token based 
+		// manner and pushing them into vectors
+		string a,b;
+		while (file >> a >> b) {
+			// convert a to double
+			istringstream aos(a);
+			double d;
+			aos >> d;
+			// add it to time
+			time.push_back(d);
+			// convert b to double
+			istringstream bos(b);
+			bos >> d;
+			// add it to values
+			values.push_back(d);
+		}
+		// put the vectors into data vector
+		data.push_back(time);
+		data.push_back(values);
+		// map the parameter name to data we loaded
+		this->paramValueMap[iter->first] = data;
 	}
 	return;
 };
+
+void System::printParameterValueMap() 
+{
+	map<string, vector<vector <double> > > ::iterator iter;
+	for( iter = this->paramValueMap.begin(); iter != this->paramValueMap.end(); iter++ ) {
+		vector <double> time = iter->second[0];
+		vector <double> values = iter->second[1];
+		cout << "param name: " << iter->first << endl;
+		for (int i = 0;i<time.size();i++) {
+			cout << "time index " << i << " value: " << time[i] << endl;
+		};
+		for (int i = 0;i<values.size();i++) {
+			cout << "value index " << i << " value: " << values[i] << endl;
+		};
+	};
+	return;
+}
 // END: AS-2021, time dependent param changes
 
 void System::outputAllPropensities(double time, int rxnFired)

@@ -405,6 +405,7 @@ namespace NFcore
 			// START: AS-2021, time dependent param changes
 			void setParamFileMap(string paramFileMapString);
 			void loadParamFiles();
+			void printParameterValueMap();
 			// END: AS-2021, time dependent param changes
 
 		protected:
@@ -492,7 +493,8 @@ namespace NFcore
 			ReactionSelector * selector;
 
 			// START: AS-2021, time dependent param changes
-			map <string,string> paramFileMap;
+			map <string, string> paramFileMap;
+			map <string, vector <vector <double> > > paramValueMap;
 			// END: AS-2021, time dependent param changes
 
 		private:
