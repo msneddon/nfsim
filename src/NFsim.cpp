@@ -394,8 +394,6 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				string param_string = argMap.find("params")->second;
 				// use system function to set the map
 				s->setParamFileMap(param_string);
-				cout << "printing value map" << endl;
-				s->printParameterValueMap();
 			}
 			// END: AS-2021, time dependent param changes
 

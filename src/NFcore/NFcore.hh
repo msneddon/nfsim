@@ -494,6 +494,7 @@ namespace NFcore
 
 			// START: AS-2021, time dependent param changes
 			map <string, string> paramFileMap;
+			map <string, string> paramCtrMap;
 			map <string, vector <vector <double> > > paramValueMap;
 			// END: AS-2021, time dependent param changes
 

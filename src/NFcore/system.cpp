@@ -1584,7 +1584,7 @@ void System::printAllFunctions() {
 }
 
 // START: AS-2021, time dependent param changes
-void System::setParamFileMap(string paramFileMapString) 
+void System::setParamFileMap(string paramFileMapString)
 {
 	// for now the string format will be:
 	// "paramName1:paramFile1,paramName2:paramFile2,..."
@@ -1594,30 +1594,39 @@ void System::setParamFileMap(string paramFileMapString)
 	// basic variables
 	size_t pos1 = 0;
 	size_t pos2 = 0;
+	string ctr_obs;
 	string param;
 	string paramFile;
 	string paramPair;
 	// get the first params
 	while ((pos1 = paramFileMapString.find(delimiter1)) != string::npos) {
 		paramPair = paramFileMapString.substr(0, pos1);
-		// parse the pair
+		// parse the triple
 		pos2 = paramPair.find(delimiter2);
-		param = paramPair.substr(0,pos2);
+		ctr_obs = paramPair.substr(0,pos2);
 		paramFile = paramPair.substr(pos2+1,paramPair.length());
-		// add to array
+		pos2 = paramFile.find(delimiter2);
+		param = paramFile.substr(0,pos2);
+		paramFile = paramFile.substr(pos2+1,paramFile.length());
+		// add to maps
 		this->paramFileMap[param] = paramFile;
+		this->paramCtrMap[param] = ctr_obs;
 		// remove from main string
 		paramFileMapString.erase(0, pos1 + delimiter1.length());
 	};
 	// we are left with one more potentially
 	if (paramFileMapString.length() != 0) {
-		paramPair = paramFileMapString.substr(0, paramFileMapString.length());
-		// parse the pair
+		paramPair = paramFileMapString.substr(0, pos1);
+		// parse the triple
 		pos2 = paramPair.find(delimiter2);
-		param = paramPair.substr(0,pos2);
+		ctr_obs = paramPair.substr(0,pos2);
 		paramFile = paramPair.substr(pos2+1,paramPair.length());
-		// add to array
+		pos2 = paramFile.find(delimiter2);
+		param = paramFile.substr(0,pos2);
+		paramFile = paramFile.substr(pos2+1,paramFile.length());
+		// add to maps
 		this->paramFileMap[param] = paramFile;
+		this->paramCtrMap[param] = ctr_obs;
 	};
 	this->loadParamFiles();
 	return;
@@ -1635,7 +1644,7 @@ void System::loadParamFiles()
 	map<string,string>::iterator iter;
 	for( iter = this->paramFileMap.begin(); iter != this->paramFileMap.end(); iter++ ) {
 		// debug statements
-		cout << "\t" << iter->first << " = " << iter->second << endl;
+		// cout << "\t" << iter->first << " = " << iter->second << endl;
 		// create a file stream to load the file
 		ifstream file(iter->second.c_str());
 		// make sure our vectors are cleared
@@ -1671,16 +1680,12 @@ void System::loadParamFiles()
 
 void System::printParameterValueMap() 
 {
+	cout << "printing value map" << endl;
 	map<string, vector<vector <double> > > ::iterator iter;
 	for( iter = this->paramValueMap.begin(); iter != this->paramValueMap.end(); iter++ ) {
-		vector <double> time = iter->second[0];
-		vector <double> values = iter->second[1];
 		cout << "param name: " << iter->first << endl;
-		for (int i = 0;i<time.size();i++) {
-			cout << "time index " << i << " value: " << time[i] << endl;
-		};
-		for (int i = 0;i<values.size();i++) {
-			cout << "value index " << i << " value: " << values[i] << endl;
+		for (int i = 0;i<iter->second[0].size();i++) {
+			cout << "time: " << iter->second[0][i] << " value: " << iter->second[1][i] << endl;
 		};
 	};
 	return;
