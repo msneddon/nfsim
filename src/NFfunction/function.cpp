@@ -200,7 +200,33 @@ void StateCounter::add(Molecule *m) {
 
 
 
+// START: AS-2021
+FileFunction::FileFunction(string paramName,
+					string ctrName,
+					System *s) 
+{
+	this->paramName = paramName;
+	this->ctrName = ctrName;
+	this->sysptr = s;
+}
 
+FileFunction::~FileFunction() 
+{
+	return;
+}
+
+void FileFunction::prepareForSimulation(System *s)
+{
+}
+
+void FileFunction::printDetails()
+{
+	cout << "###### File function details ######" << endl; 
+	cout << "file function for parmameter: " << this->paramName << endl;
+	cout << "relies on couter named: " << this->ctrName << endl;
+	cout << "file is: " << this->sysptr->paramFileMap[this->paramName] << endl;
+}
+// END: AS-2021
 
 
 

@@ -107,7 +107,22 @@ namespace NFcore {
 
 	};
 
-
+	// START: AS-2021
+	class FileFunction {
+		public:
+			FileFunction(string paramName,
+					string ctrName,
+					System *s);
+			~FileFunction();
+			void prepareForSimulation(System *s);
+			void printDetails();
+		
+		protected:
+			string paramName;
+			string ctrName;
+			System *sysptr;
+	};
+	// END: AS-2021
 
 	//! Defines functions to be used globally in a simulation.
 	/*!

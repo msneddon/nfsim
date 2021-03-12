@@ -62,6 +62,9 @@ namespace NFcore
 	class CompositeFunction;
 	//class FunctionReference;
 	class LocalFunction;
+	// START: AS-2021
+	class FileFunction;
+	// END: AS-2021
 
 	class Outputter;
 	class DumpMoleculeType;
@@ -406,6 +409,13 @@ namespace NFcore
 			void setParamFileMap(string paramFileMapString);
 			void loadParamFiles();
 			void printParameterValueMap();
+			void makeFileFunctions();
+			// START: AS-2021, time dependent param changes
+			vector <FileFunction *> fileFunctions;
+			map <string, string> paramFileMap;
+			map <string, string> paramCtrMap;
+			map <string, vector <vector <double> > > paramValueMap;
+			// END: AS-2021, time dependent param changes
 			// END: AS-2021, time dependent param changes
 
 		protected:
@@ -491,12 +501,6 @@ namespace NFcore
 
 			//Data structure that performs the selection of the next reaction class
 			ReactionSelector * selector;
-
-			// START: AS-2021, time dependent param changes
-			map <string, string> paramFileMap;
-			map <string, string> paramCtrMap;
-			map <string, vector <vector <double> > > paramValueMap;
-			// END: AS-2021, time dependent param changes
 
 		private:
 			list <Molecule *> molList;

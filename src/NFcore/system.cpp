@@ -1675,8 +1675,19 @@ void System::loadParamFiles()
 		// map the parameter name to data we loaded
 		this->paramValueMap[iter->first] = data;
 	}
+	this->makeFileFunctions();
 	return;
 };
+
+void System::makeFileFunctions()
+{
+	map<string,string>::iterator iter;
+	for( iter = this->paramFileMap.begin(); iter != this->paramFileMap.end(); iter++ ) {
+		FileFunction *ff = new FileFunction(iter->first,this->paramCtrMap[iter->first],this);
+		ff->printDetails();
+		this->fileFunctions.push_back(ff);
+	}
+}
 
 void System::printParameterValueMap() 
 {
