@@ -446,6 +446,16 @@ void System::prepareForSimulation()
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
+	// START: AS-2021
+	for( int f=0; f<fileFunctions.size(); f++) {
+  		fileFunctions.at(f)->prepareForSimulation(this);
+		cout<<"file function deets: "<<endl;
+		fileFunctions.at(f)->printDetails();
+		cout<<"evaluates to: "<<fileFunctions.at(f)->eval()<<endl;
+	}
+	// END: AS-2021
+
+
   	//cout<<"here 3..."<<endl;
     //this->printAllFunctions();
 
@@ -1581,6 +1591,13 @@ void System::printAllFunctions() {
 	for(unsigned int i=0; i<this->localFunctions.size(); i++) {
 		localFunctions.at(i)->printDetails(this);
 	}
+
+	// START: AS-2021, time dependent param changes
+	cout<<"\nSystem File Functions: "<<endl;
+	for(unsigned int i=0; i<this->fileFunctions.size(); i++) {
+		fileFunctions.at(i)->printDetails();
+	}
+	// END: AS-2021, time dependent param changes
 }
 
 // START: AS-2021, time dependent param changes

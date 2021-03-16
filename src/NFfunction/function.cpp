@@ -215,8 +215,21 @@ FileFunction::~FileFunction()
 	return;
 }
 
+double FileFunction::eval()
+{
+	// for now, assume observable is the index
+	// TODO: Eventually we'll need to find the index of closest value
+	// look into the system and pull our array
+	int ctr_index = floor(*this->counter);
+	double value = this->sysptr->paramValueMap[this->paramName][1][ctr_index];
+	return value;
+}
+
 void FileFunction::prepareForSimulation(System *s)
 {
+	Observable *obs = s->getObservableByName(this->ctrName);
+	obs->addReferenceToFileFunction(this);
+	return;
 }
 
 void FileFunction::printDetails()

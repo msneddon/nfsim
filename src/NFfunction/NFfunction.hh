@@ -116,6 +116,8 @@ namespace NFcore {
 			~FileFunction();
 			void prepareForSimulation(System *s);
 			void printDetails();
+			double eval();
+			double *counter;
 		
 		protected:
 			string paramName;
