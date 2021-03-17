@@ -177,6 +177,14 @@ namespace NFcore {
 				return varRefTypes[varRefIndex];
 			}
 
+			// AS-2021
+			double fileEval();
+			void enableFileDependency(vector <vector <double> > data, System *s);
+			bool fileFunc;
+			vector <vector <double> > data;
+			System *sysptr;
+			// AS-2021
+
 			/*!
 				This is the actual Parser object that keeps track of the function and has references to all of its
 				arguments.  It is publicly visible, so be careful with it!  Use this variable to evaluate the function.

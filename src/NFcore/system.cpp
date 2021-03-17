@@ -1675,6 +1675,7 @@ void System::loadParamFiles()
 		data.push_back(values);
 		// map the parameter name to data we loaded
 		this->paramValueMap[iter->first] = data;
+		this->getGlobalFunctionByName(iter->first)->enableFileDependency(data, this);
 	}
 	return;
 };
