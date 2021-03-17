@@ -1004,7 +1004,14 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 		}
 		if(outputGlobalFunctionValues)
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
-				count=FuncFactory::Eval((*functionIter)->p);
+				// AS-2021
+				if((*functionIter)->fileFunc) {
+					count=(*functionIter)->fileEval();
+				} else {
+					count=FuncFactory::Eval((*functionIter)->p);
+				}
+				// count=FuncFactory::Eval((*functionIter)->p);
+				// AS-2021
 				outputFileStream.write((char *) &count, sizeof(double));
 			}
 
@@ -1022,7 +1029,14 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 
 			if(outputGlobalFunctionValues)
 				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-					outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+					// AS-2021
+					if((*functionIter)->fileFunc) {
+						outputFileStream<<"  "<<(*functionIter)->fileEval();
+					} else {
+						outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+					}
+					// outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+					// AS-2021
 			if(outputEventCounter) {
 				outputFileStream<<"  "<<eventCounter;
 			}
@@ -1036,7 +1050,14 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 
 			if(outputGlobalFunctionValues)
 				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-					outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);
+					// AS-2021
+					if ((*functionIter)->fileFunc) {
+						outputFileStream<<", "<<(*functionIter)->fileEval();
+					} else {
+						outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);
+					}
+					// outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);	
+					// AS-2021
 			if(outputEventCounter) {
 				outputFileStream<<", "<<eventCounter;
 			}
@@ -1078,7 +1099,14 @@ void System::printAllObservableCounts(double cSampleTime,int eventCounter)
 		cout<<"\t"<<(*obsIter)->getCount();
 	if(outputGlobalFunctionValues)
 		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
-			cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+					// AS-2021
+					if ((*functionIter)->fileFunc) {
+						cout<<"\t"<<(*functionIter)->fileEval();
+					} else {
+						cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+					}
+					// cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+					// AS-2021
 	if(outputEventCounter) {
 		cout<<"\t"<<eventCounter;
 	}

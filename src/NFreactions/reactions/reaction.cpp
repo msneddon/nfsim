@@ -54,11 +54,14 @@ double FunctionalRxnClass::update_a() {
 	//	cout<<"here"<<endl;
 	if(gf!=0) {
 	//	cout<<"in here"<<endl;
+		// AS-2021
 		if(gf->fileFunc) {
 			a=gf->fileEval();
 		} else {
 			a=FuncFactory::Eval(gf->p);
 		}
+		// a=FuncFactory::Eval(gf->p);
+		// AS-2021
 	} else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {

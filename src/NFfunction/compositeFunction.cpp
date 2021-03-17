@@ -355,7 +355,14 @@ void CompositeFunction::printDetails(System *s) {
 	cout<<" parsed expression = "<<this->parsedExpression<<endl;
 	cout<<"   -Function References:"<<endl;
 	for(int f=0; f<n_gfs; f++) {
-		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		// AS-2021
+		if (gfs[f]->fileFunc) {
+			gfValues[f]=gfs[f]->fileEval();
+		} else {
+			gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		}
+		// gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		// AS-2021
 		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
 
 		gfs[f]->printDetails(s);
@@ -419,7 +426,14 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	//1 evaluate all global functions
 	//cout << "n_gfs=" << n_gfs << endl;
 	for(int f=0; f<n_gfs; f++) {
-		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		// AS-2021
+		if (gfs[f]->fileFunc) {
+			gfValues[f]=gfs[f]->fileEval();
+		} else {
+			gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		}
+		// gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+		// AS-2021
 	}
 
 	//2 evaluate all local functions

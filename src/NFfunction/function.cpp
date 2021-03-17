@@ -141,9 +141,16 @@ void GlobalFunction::printDetails()
 //	}
 
 
-	if(p!=0)
-		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
-
+	if(p!=0) {
+		// AS-2021
+		if (this->fileFunc) {
+			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
+		} else {
+			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+		}
+		// cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+		// AS-2021
+	}
 }
 
 // AS-2021
@@ -187,9 +194,17 @@ void GlobalFunction::printDetails(System *s)
 		cout<<"         "<<paramNames[i]<<" = " << s->getParameter(paramNames[i])<<endl;
 	}
 
-	if(p!=0)
-		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
-
+	
+	if(p!=0) {
+		// AS-2021
+		if (this->fileFunc) {
+			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
+		} else {
+			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+		}
+		// cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+		// AS-2021
+	}
 }
 
 
