@@ -107,25 +107,6 @@ namespace NFcore {
 
 	};
 
-	// START: AS-2021
-	class FileFunction {
-		public:
-			FileFunction(string paramName,
-					string ctrName,
-					System *s);
-			~FileFunction();
-			void prepareForSimulation(System *s);
-			void printDetails();
-			double eval();
-			double *counter;
-		
-		protected:
-			string paramName;
-			string ctrName;
-			System *sysptr;
-	};
-	// END: AS-2021
-
 	//! Defines functions to be used globally in a simulation.
 	/*!
 	    This small class is a small wrapper for the mu parser that allows the System

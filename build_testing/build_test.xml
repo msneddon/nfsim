@@ -3,9 +3,6 @@
 <sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
   <model id="build_test">
     <ListOfParameters>
-      <Parameter id="k1" type="Constant" value="1" expr="1"/>
-      <Parameter id="k2" type="Constant" value="10" expr="10"/>
-      <Parameter id="k3" type="Constant" value="100" expr="100"/>
       <Parameter id="k_t" type="Constant" value="1" expr="1"/>
     </ListOfParameters>
     <ListOfMoleculeTypes>
@@ -146,10 +143,9 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR2_RateLaw" type="Ele" totalrate="0">
-          <ListOfRateConstants>
-            <RateConstant value="k3"/>
-          </ListOfRateConstants>
+        <RateLaw id="RR2_RateLaw" type="Function" name="k3" totalrate="0">
+          <ListOfArguments>
+          </ListOfArguments>
         </RateLaw>
         <Map>
           <MapItem sourceID="RR2_RP1_M1" targetID="RR2_PP1_M1"/>
@@ -182,10 +178,9 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR3_RateLaw" type="Ele" totalrate="0">
-          <ListOfRateConstants>
-            <RateConstant value="k1"/>
-          </ListOfRateConstants>
+        <RateLaw id="RR3_RateLaw" type="Function" name="k1" totalrate="0">
+          <ListOfArguments>
+          </ListOfArguments>
         </RateLaw>
         <Map>
           <MapItem sourceID="RR3_RP1_M1" targetID="RR3_PP1_M1"/>
@@ -237,9 +232,10 @@
             </ListOfBonds>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR4_RateLaw" type="Function" name="f" totalrate="0">
-          <ListOfArguments>
-          </ListOfArguments>
+        <RateLaw id="RR4_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_t"/>
+          </ListOfRateConstants>
         </RateLaw>
         <Map>
           <MapItem sourceID="RR4_RP1_M1" targetID="RR4_PP1_M1"/>
@@ -294,10 +290,9 @@
             </ListOfMolecules>
           </ProductPattern>
         </ListOfProductPatterns>
-        <RateLaw id="RR5_RateLaw" type="Ele" totalrate="0">
-          <ListOfRateConstants>
-            <RateConstant value="k3"/>
-          </ListOfRateConstants>
+        <RateLaw id="RR5_RateLaw" type="Function" name="k3" totalrate="0">
+          <ListOfArguments>
+          </ListOfArguments>
         </RateLaw>
         <Map>
           <MapItem sourceID="RR5_RP1_M1" targetID="RR5_PP1_M1"/>
@@ -358,7 +353,19 @@
       </Observable>
     </ListOfObservables>
     <ListOfFunctions>
-      <Function id="f">
+      <Function id="k1">
+        <ListOfReferences>
+          <Reference name="tctr" type="Observable"/>
+        </ListOfReferences>
+        <Expression> tctr </Expression>
+      </Function>
+      <Function id="k2">
+        <ListOfReferences>
+          <Reference name="tctr" type="Observable"/>
+        </ListOfReferences>
+        <Expression> tctr </Expression>
+      </Function>
+      <Function id="k3">
         <ListOfReferences>
           <Reference name="tctr" type="Observable"/>
         </ListOfReferences>

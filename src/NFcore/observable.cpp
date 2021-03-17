@@ -136,13 +136,6 @@ void Observable::getTemplateMoleculeList(int &n_templates, TemplateMolecule **&t
 	tmList = this->templateMolecules;
 }
 
-// START: AS-2021
-void Observable::addReferenceToFileFunction(FileFunction *f)
-{
-	f->counter = &count;
-}
-// START: AS-2021
-
 void Observable::addReferenceToMyself(mu::Parser *p)
 {
 	p->DefineVar(obsName,&count);

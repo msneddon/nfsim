@@ -1,12 +1,11 @@
 # Created by BioNetGen 2.5.2
 begin parameters
-    1 k1    1  # Constant
-    2 k2    10  # Constant
-    3 k3    100  # Constant
-    4 k_t   1  # Constant
+    1 k_t   1  # Constant
 end parameters
 begin functions
-    1 f() tctr*min(1,2)
+    1 k1() tctr
+    2 k2() tctr
+    3 k3() tctr
 end functions
 begin species
     1 A(b,p~0) 100
@@ -20,9 +19,9 @@ begin reactions
     1 0 3 k_t #time_ctr
     2 1 4 k3 #Aphos
     3 4 1 k1 #_reverse_Aphos
-    4 4,2 5 f #Abind
+    4 2,4 5 k_t #Abind
     5 5 6 k1 #_reverse_Aphos
-    6 5 2,4 k3 #_reverse_Abind
+    6 5 4,2 k3 #_reverse_Abind
     7 6 5 k3 #Aphos
 end reactions
 begin groups
