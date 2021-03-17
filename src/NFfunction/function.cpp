@@ -147,36 +147,30 @@ void GlobalFunction::printDetails()
 }
 
 // AS-2021
-void GlobalFunction::enableFileDependency(vector <vector <double> > data, System *s) {
+void GlobalFunction::enableFileDependency(System *s) {
 	// this sets it up so that this function is 
 	// pulling it's values from a file instead, when
 	// appropriate
 	this->fileFunc = true;
-	this->data = data;
 	this->sysptr = s;
 }
 
 double GlobalFunction::fileEval() {
-	// if we depend on a file, pull the function 
-	// value out of the system where the file arrays
-	// are stored
-
 	// this finds the ctr index
 	int ctr_ind = 0;
-	for (int i=0;i<this->data[0].size();i++) {
-		if(this->data[0][i]>this->sysptr->getCurrentTime()) {
+	for (int i=0;i<this->sysptr->paramValueMap[this->name][0].size();i++) {
+		if(this->sysptr->paramValueMap[this->name][0][i]>this->sysptr->getCurrentTime()) {
 			break;
 		} else {
 			ctr_ind += 1;
 		}
 	}
-	cout<<"##################"<<endl;
-	cout<<"evaluated file dep"<<endl;
-	cout<<"time was: "<<this->sysptr->getCurrentTime()<<endl;
-	cout<<"ctr value was: "<<this->data[0][ctr_ind]<<endl;
-	cout<<"return value was: "<<this->data[1][ctr_ind]<<endl;
-	cout<<"##################"<<endl;
-	return this->data[1][ctr_ind];
+	// we can't be higher than the array size
+	if (ctr_ind+1>this->sysptr->paramValueMap[this->name][0].size()) {
+		ctr_ind = this->sysptr->paramValueMap[this->name][0].size()-1;
+	}
+	// return value from the value array
+	return this->sysptr->paramValueMap[this->name][1][ctr_ind];
 }
 // AS-2021
 

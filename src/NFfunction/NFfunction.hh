@@ -179,9 +179,8 @@ namespace NFcore {
 
 			// AS-2021
 			double fileEval();
-			void enableFileDependency(vector <vector <double> > data, System *s);
+			void enableFileDependency(System *s);
 			bool fileFunc;
-			vector <vector <double> > data;
 			System *sysptr;
 			// AS-2021
 
