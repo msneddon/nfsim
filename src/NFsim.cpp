@@ -385,6 +385,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
 													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
 
+
 			if(s!=NULL)
 			{
 				if(verbose) {cout<<endl;}

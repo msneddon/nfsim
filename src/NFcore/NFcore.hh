@@ -486,6 +486,7 @@ namespace NFcore
 			//Data structure that performs the selection of the next reaction class
 			ReactionSelector * selector;
 
+
 		private:
 			list <Molecule *> molList;
 			list <Molecule *>::iterator molListIter;

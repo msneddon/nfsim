@@ -107,6 +107,8 @@ namespace NFcore {
 
 	};
 
+
+
 	//! Defines functions to be used globally in a simulation.
 	/*!
 	    This small class is a small wrapper for the mu parser that allows the System
@@ -204,9 +206,11 @@ namespace NFcore {
 			unsigned int n_params;
 			string *paramNames;
 
+			// AS-2021
 			double *counter;
 			vector <vector <double> > data;
 			string filePath;
+			// AS-2021
 	};
 
 

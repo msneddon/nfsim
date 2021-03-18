@@ -446,7 +446,6 @@ void System::prepareForSimulation()
   	for( int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
-
   	//cout<<"here 3..."<<endl;
     //this->printAllFunctions();
 
