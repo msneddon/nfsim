@@ -588,11 +588,9 @@ bool NFinput::initFunctions(
 					}
 					// get file path
 					string filePath = pFunction->Attribute("file");
-					// have system parse the file
-					system->loadParamFile(funcName, filePath);
 					// make function file dependent
 					GlobalFunction *f = system->getGlobalFunctionByName(funcName);
-					f->enableFileDependency(system, filePath);
+					f->enableFileDependency(filePath);
 					// we ensured we have the right type of ref name/type earlier
 					system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
 					// add output to let ppl know

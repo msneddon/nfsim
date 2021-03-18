@@ -154,19 +154,49 @@ void GlobalFunction::printDetails()
 }
 
 // AS-2021
+void GlobalFunction::loadParamFile(string filePath) 
+{
+	// cout<<"######## loading file: "<<filePath<<endl;
+	// cout<<"######## for function: "<<paramName<<endl;
+	// setup our vectors
+	vector <double> time;
+	vector <double> values;
+	// open file for reading
+	ifstream file(filePath.c_str());
+	// strings for looping over the file
+	string line, word, content;
+	string a,b;
+	while (file >> a >> b) {
+		// convert a to double
+		istringstream aos(a);
+		double d;
+		aos >> d;
+		// add it to time
+		time.push_back(d);
+		// convert b to double
+		istringstream bos(b);
+		bos >> d;
+		// add it to values
+		values.push_back(d);
+	}
+	// put the vectors into data vector
+	this->data.push_back(time);
+	this->data.push_back(values);
+	return;
+};
+
 void GlobalFunction::addCounterPointer(double *counter){
 	this->counter = counter;
 }
 
-void GlobalFunction::enableFileDependency(System *s, string filePath) {
+void GlobalFunction::enableFileDependency(string filePath) {
+	// load file
+	this->loadParamFile(filePath);
 	// we just want to keep a record of this
 	this->filePath = filePath;
 	// this sets it up so that this function knows it's supposed
 	// to be pulling values from a file
 	this->fileFunc = true;
-	// we need a pointer to the system to access the data
-	// array as well as the current time
-	this->sysptr = s;
 }
 
 double GlobalFunction::fileEval() {
@@ -180,16 +210,14 @@ double GlobalFunction::fileEval() {
 	// counter val
 	double ctrVal = (*this->counter);
 	// cout<<"counter value was: "<<ctrVal<<endl;
-	// this is the data object that has time/value arrays
-	vector <vector <double> > data = this->sysptr->paramValueMap[this->name];
 	// find the index closest in time
-	for (int i=0;i<data[0].size();i++) {
+	for (int i=0;i<this->data[0].size();i++) {
 		// if it's the first value, calculate and move on
 		if(i==0) {
-			cdist = abs(ctrVal-data[0][i]);
+			cdist = abs(ctrVal-this->data[0][i]);
 		} else {
 			// calculate the new distance
-			ndist = abs(ctrVal-data[0][i]);
+			ndist = abs(ctrVal-this->data[0][i]);
 			// if the distance is increasing, we are done
 			// this relies on the assumption that the original
 			// time series is ordered
@@ -204,13 +232,13 @@ double GlobalFunction::fileEval() {
 		}
 	}
 	// index can't be larger than the array size
-	if (ctrInd>=data[0].size()) {
-		ctrInd = data[0].size()-1;
+	if (ctrInd>=this->data[0].size()) {
+		ctrInd = this->data[0].size()-1;
 	}
 	// cout<<"ctr array result was: "<<data[0][ctrInd]<<endl;
 	// cout<<"value array result was: "<<data[1][ctrInd]<<endl;
 	// return value from the value array
-	return data[1][ctrInd];
+	return this->data[1][ctrInd];
 }
 // AS-2021
 

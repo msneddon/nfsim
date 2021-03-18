@@ -1612,55 +1612,6 @@ void System::printAllFunctions() {
 	}
 }
 
-// START: AS-2021, time dependent param changes
-void System::loadParamFile(string paramName, string filePath) 
-{
-	// cout<<"######## loading file: "<<filePath<<endl;
-	// cout<<"######## for function: "<<paramName<<endl;
-	// setup our vectors
-	vector <vector <double> > data;
-	vector <double> time;
-	vector <double> values;
-	// open file for reading
-	ifstream file(filePath.c_str());
-	// strings for looping over the file
-	string line, word, content;
-	string a,b;
-	while (file >> a >> b) {
-		// convert a to double
-		istringstream aos(a);
-		double d;
-		aos >> d;
-		// add it to time
-		time.push_back(d);
-		// convert b to double
-		istringstream bos(b);
-		bos >> d;
-		// add it to values
-		values.push_back(d);
-	}
-	// put the vectors into data vector
-	data.push_back(time);
-	data.push_back(values);
-	// map the parameter name to data we loaded
-	this->paramValueMap[paramName] = data;
-	return;
-};
-
-void System::printParameterValueMap() 
-{
-	cout << "printing value map" << endl;
-	map<string, vector<vector <double> > > ::iterator iter;
-	for( iter = this->paramValueMap.begin(); iter != this->paramValueMap.end(); iter++ ) {
-		cout << "param name: " << iter->first << endl;
-		for (int i = 0;i<iter->second[0].size();i++) {
-			cout << "time: " << iter->second[0][i] << " value: " << iter->second[1][i] << endl;
-		};
-	};
-	return;
-}
-// END: AS-2021, time dependent param changes
-
 void System::outputAllPropensities(double time, int rxnFired)
 {
 	if(!propensityDumpStream.is_open()) {

@@ -402,12 +402,6 @@ namespace NFcore
 			*/
 			void turnOnCSVformat() { this->csvFormat = true; };
 
-			// START: AS-2021, time dependent param changes
-			void loadParamFile(string paramName, string filePath);
-			void printParameterValueMap();
-			map <string, vector <vector <double> > > paramValueMap;
-			// END: AS-2021, time dependent param changes
-
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////

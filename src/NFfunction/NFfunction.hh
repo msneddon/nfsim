@@ -179,10 +179,12 @@ namespace NFcore {
 
 			// AS-2021
 			double fileEval();
-			void enableFileDependency(System *s, string FilePath);
+			void loadParamFile(string filePath);
+			void enableFileDependency(string FilePath);
 			void addCounterPointer(double *count);
 			bool fileFunc;
 			double *counter;
+			vector <vector <double> > data;
 			string filePath;
 			System *sysptr;
 			// AS-2021
