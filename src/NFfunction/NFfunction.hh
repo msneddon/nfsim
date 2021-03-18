@@ -207,6 +207,7 @@ namespace NFcore {
 			string *paramNames;
 
 			// AS-2021
+			bool maxErrRaised;
 			double *counter;
 			vector <vector <double> > data;
 			string filePath;

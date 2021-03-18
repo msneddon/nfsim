@@ -162,26 +162,35 @@ void GlobalFunction::loadParamFile(string filePath)
 	vector <double> time;
 	vector <double> values;
 	// open file for reading
-	ifstream file(filePath.c_str());
-	// strings for looping over the file
-	string line, word, content;
-	string a,b;
-	while (file >> a >> b) {
-		// convert a to double
-		istringstream aos(a);
-		double d;
-		aos >> d;
-		// add it to time
-		time.push_back(d);
-		// convert b to double
-		istringstream bos(b);
-		bos >> d;
-		// add it to values
-		values.push_back(d);
-	}
-	// put the vectors into data vector
-	this->data.push_back(time);
-	this->data.push_back(values);
+	// TODO: Err out if it doesn't open
+	try {
+		ifstream file(filePath.c_str());
+		// strings for looping over the file
+		string line, word, content;
+		string a,b;
+		// TODO: Err out if the format is wrong
+		while (file >> a >> b) {
+			// convert a to double
+			istringstream aos(a);
+			double d;
+			aos >> d;
+			// add it to time
+			time.push_back(d);
+			// convert b to double
+			istringstream bos(b);
+			bos >> d;
+			// add it to values
+			values.push_back(d);
+		}
+		// put the vectors into data vector
+		this->data.push_back(time);
+		this->data.push_back(values);
+	} catch (exception const & e) {
+		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Failed to either open or read the file."<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	};
 	return;
 };
 
@@ -191,12 +200,21 @@ void GlobalFunction::addCounterPointer(double *counter){
 
 void GlobalFunction::enableFileDependency(string filePath) {
 	// load file
-	this->loadParamFile(filePath);
+	// TODO: Err out if this fails
+	try {
+		this->loadParamFile(filePath);
+	} catch (exception const & e) {
+		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	};
 	// we just want to keep a record of this
 	this->filePath = filePath;
 	// this sets it up so that this function knows it's supposed
 	// to be pulling values from a file
 	this->fileFunc = true;
+	// set this up to give max value error once
+	this->maxErrRaised = false;
 }
 
 double GlobalFunction::fileEval() {
@@ -231,7 +249,15 @@ double GlobalFunction::fileEval() {
 		}
 	}
 	// index can't be larger than the array size
+	// TODO: warn if we get past our given array
 	if (ctrInd>=this->data[0].size()) {
+		if(!this->maxErrRaised) {
+			cerr<<"Warning!! The array provided by the file "<<
+					this->filePath<<"doesn't contain data for counter observable"<<
+					this->varRefNames[0]<<" with value "<<ctrVal<<
+					" using the final value in the array"<<endl;
+			this->maxErrRaised = true;
+		};
 		ctrInd = this->data[0].size()-1;
 	}
 	// debug stuff
