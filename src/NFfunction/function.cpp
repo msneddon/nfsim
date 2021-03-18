@@ -209,7 +209,6 @@ double GlobalFunction::fileEval() {
 	double ndist;
 	// counter val
 	double ctrVal = (*this->counter);
-	// cout<<"counter value was: "<<ctrVal<<endl;
 	// find the index closest in time
 	for (int i=0;i<this->data[0].size();i++) {
 		// if it's the first value, calculate and move on
@@ -235,6 +234,8 @@ double GlobalFunction::fileEval() {
 	if (ctrInd>=this->data[0].size()) {
 		ctrInd = this->data[0].size()-1;
 	}
+	// debug stuff
+	// cout<<"counter value was: "<<ctrVal<<endl;
 	// cout<<"ctr array result was: "<<data[0][ctrInd]<<endl;
 	// cout<<"value array result was: "<<data[1][ctrInd]<<endl;
 	// return value from the value array
