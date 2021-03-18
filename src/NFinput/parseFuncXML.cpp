@@ -592,9 +592,12 @@ bool NFinput::initFunctions(
 					system->loadParamFile(funcName, filePath);
 					// make function file dependent
 					GlobalFunction *f = system->getGlobalFunctionByName(funcName);
-					f->enableFileDependency(system);
+					f->enableFileDependency(system, filePath);
 					// we ensured we have the right type of ref name/type earlier
 					system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+					// add output to let ppl know
+					cout<<"\t\t\tThis function depends on file: "<<filePath<<endl;
+					cout<<"\t\t\tand depends on counter observable: "<<refNamesSorted[0]<<endl;
 				}
 			}
 			// AS-2021

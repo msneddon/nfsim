@@ -179,10 +179,11 @@ namespace NFcore {
 
 			// AS-2021
 			double fileEval();
-			void enableFileDependency(System *s);
+			void enableFileDependency(System *s, string FilePath);
 			void addCounterPointer(double *count);
 			bool fileFunc;
 			double *counter;
+			string filePath;
 			System *sysptr;
 			// AS-2021
 

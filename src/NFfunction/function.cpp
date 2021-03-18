@@ -158,7 +158,9 @@ void GlobalFunction::addCounterPointer(double *counter){
 	this->counter = counter;
 }
 
-void GlobalFunction::enableFileDependency(System *s) {
+void GlobalFunction::enableFileDependency(System *s, string filePath) {
+	// we just want to keep a record of this
+	this->filePath = filePath;
 	// this sets it up so that this function knows it's supposed
 	// to be pulling values from a file
 	this->fileFunc = true;
@@ -171,6 +173,10 @@ double GlobalFunction::fileEval() {
 	// TODO: Error checking and reporting
 	// initialize index
 	int ctrInd = 0;
+	// distance from current value
+	double cdist;
+	// distance from new value to compare to current
+	double ndist;
 	// counter val
 	double ctrVal = (*this->counter);
 	// cout<<"counter value was: "<<ctrVal<<endl;
@@ -178,10 +184,23 @@ double GlobalFunction::fileEval() {
 	vector <vector <double> > data = this->sysptr->paramValueMap[this->name];
 	// find the index closest in time
 	for (int i=0;i<data[0].size();i++) {
-		if(data[0][i]>ctrVal) {
-			break;
+		// if it's the first value, calculate and move on
+		if(i==0) {
+			cdist = abs(ctrVal-data[0][i]);
 		} else {
-			ctrInd += 1;
+			// calculate the new distance
+			ndist = abs(ctrVal-data[0][i]);
+			// if the distance is increasing, we are done
+			// this relies on the assumption that the original
+			// time series is ordered
+			if(ndist>cdist) {
+				break;
+			} else {
+				// we are getting closer to the value we want
+				// so we keep going
+				cdist = ndist;
+				ctrInd += 1;
+			}
 		}
 	}
 	// index can't be larger than the array size
@@ -212,6 +231,7 @@ void GlobalFunction::printDetails(System *s)
 	if(p!=0) {
 		// AS-2021
 		if (this->fileFunc) {
+			cout<<"   Function relies on file: "<<this->filePath<<endl;
 			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
 		} else {
 			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
