@@ -183,10 +183,6 @@ namespace NFcore {
 			void enableFileDependency(string FilePath);
 			void addCounterPointer(double *count);
 			bool fileFunc;
-			double *counter;
-			vector <vector <double> > data;
-			string filePath;
-			System *sysptr;
 			// AS-2021
 
 			/*!
@@ -207,6 +203,10 @@ namespace NFcore {
 
 			unsigned int n_params;
 			string *paramNames;
+
+			double *counter;
+			vector <vector <double> > data;
+			string filePath;
 	};
 
 
