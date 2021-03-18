@@ -154,30 +154,44 @@ void GlobalFunction::printDetails()
 }
 
 // AS-2021
+void GlobalFunction::addCounterPointer(double *counter){
+	this->counter = counter;
+}
+
 void GlobalFunction::enableFileDependency(System *s) {
-	// this sets it up so that this function is 
-	// pulling it's values from a file instead, when
-	// appropriate
+	// this sets it up so that this function knows it's supposed
+	// to be pulling values from a file
 	this->fileFunc = true;
+	// we need a pointer to the system to access the data
+	// array as well as the current time
 	this->sysptr = s;
 }
 
 double GlobalFunction::fileEval() {
-	// this finds the ctr index
-	int ctr_ind = 0;
-	for (int i=0;i<this->sysptr->paramValueMap[this->name][0].size();i++) {
-		if(this->sysptr->paramValueMap[this->name][0][i]>this->sysptr->getCurrentTime()) {
+	// TODO: Error checking and reporting
+	// initialize index
+	int ctrInd = 0;
+	// counter val
+	double ctrVal = (*this->counter);
+	// cout<<"counter value was: "<<ctrVal<<endl;
+	// this is the data object that has time/value arrays
+	vector <vector <double> > data = this->sysptr->paramValueMap[this->name];
+	// find the index closest in time
+	for (int i=0;i<data[0].size();i++) {
+		if(data[0][i]>ctrVal) {
 			break;
 		} else {
-			ctr_ind += 1;
+			ctrInd += 1;
 		}
 	}
-	// we can't be higher than the array size
-	if (ctr_ind+1>this->sysptr->paramValueMap[this->name][0].size()) {
-		ctr_ind = this->sysptr->paramValueMap[this->name][0].size()-1;
+	// index can't be larger than the array size
+	if (ctrInd>=data[0].size()) {
+		ctrInd = data[0].size()-1;
 	}
+	// cout<<"ctr array result was: "<<data[0][ctrInd]<<endl;
+	// cout<<"value array result was: "<<data[1][ctrInd]<<endl;
 	// return value from the value array
-	return this->sysptr->paramValueMap[this->name][1][ctr_ind];
+	return data[1][ctrInd];
 }
 // AS-2021
 

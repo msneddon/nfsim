@@ -565,6 +565,40 @@ bool NFinput::initFunctions(
 				return false;
 			}
 
+			// AS-2021
+			// check to see if it has a type and if yes, if it's of type TFUN
+			if(pFunction->Attribute("type")) {
+				string funcType = pFunction->Attribute("type");
+				if (funcType == "TFUN") {
+					// 
+					if (!pFunction->Attribute("file")) {
+						cerr<<"!!!Error:  TFUN type functions must point to a file.  Quitting."<<endl;
+						return false;
+					}
+					// check references to ensure one and only one reference exists
+					if(pListOfRefs) {
+						if(refNamesSorted.size()>1){
+							cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
+						}
+						if(refTypesSorted[0] != "Observable") {
+							cerr<<"!!!Error:  TFUN type functions must point to an observable.  Quitting."<<endl;
+						}
+					} else {
+						cerr<<"!!!Error:  TFUN type functions must refer to a counter observable.  Quitting."<<endl;
+					}
+					// get file path
+					string filePath = pFunction->Attribute("file");
+					// have system parse the file
+					system->loadParamFile(funcName, filePath);
+					// make function file dependent
+					GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+					f->enableFileDependency(system);
+					// we ensured we have the right type of ref name/type earlier
+					system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+				}
+			}
+			// AS-2021
+
 			//And here we clear our arrays
 			argNames.clear();
 			refNames.clear();

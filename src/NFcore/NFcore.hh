@@ -403,11 +403,8 @@ namespace NFcore
 			void turnOnCSVformat() { this->csvFormat = true; };
 
 			// START: AS-2021, time dependent param changes
-			void setParamFileMap(string paramFileMapString);
-			void loadParamFiles();
+			void loadParamFile(string paramName, string filePath);
 			void printParameterValueMap();
-			map <string, string> paramFileMap;
-			map <string, string> paramCtrMap;
 			map <string, vector <vector <double> > > paramValueMap;
 			// END: AS-2021, time dependent param changes
 

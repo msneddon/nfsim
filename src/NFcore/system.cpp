@@ -1613,98 +1613,37 @@ void System::printAllFunctions() {
 }
 
 // START: AS-2021, time dependent param changes
-void System::setParamFileMap(string paramFileMapString)
+void System::loadParamFile(string paramName, string filePath) 
 {
-	// for now the string format will be:
-	// "paramName1:paramFile1,paramName2:paramFile2,..."
-	// so we do split by "," and then split by ":"
-	string delimiter1 = ",";
-	string delimiter2 = ":";
-	// basic variables
-	size_t pos1 = 0;
-	size_t pos2 = 0;
-	string ctr_obs;
-	string param;
-	string paramFile;
-	string paramPair;
-	// get the first params
-	while ((pos1 = paramFileMapString.find(delimiter1)) != string::npos) {
-		paramPair = paramFileMapString.substr(0, pos1);
-		// parse the triple
-		pos2 = paramPair.find(delimiter2);
-		ctr_obs = paramPair.substr(0,pos2);
-		paramFile = paramPair.substr(pos2+1,paramPair.length());
-		pos2 = paramFile.find(delimiter2);
-		param = paramFile.substr(0,pos2);
-		paramFile = paramFile.substr(pos2+1,paramFile.length());
-		// add to maps
-		this->paramFileMap[param] = paramFile;
-		this->paramCtrMap[param] = ctr_obs;
-		// remove from main string
-		paramFileMapString.erase(0, pos1 + delimiter1.length());
-	};
-	// we are left with one more potentially
-	if (paramFileMapString.length() != 0) {
-		paramPair = paramFileMapString.substr(0, pos1);
-		// parse the triple
-		pos2 = paramPair.find(delimiter2);
-		ctr_obs = paramPair.substr(0,pos2);
-		paramFile = paramPair.substr(pos2+1,paramPair.length());
-		pos2 = paramFile.find(delimiter2);
-		param = paramFile.substr(0,pos2);
-		paramFile = paramFile.substr(pos2+1,paramFile.length());
-		// add to maps
-		this->paramFileMap[param] = paramFile;
-		this->paramCtrMap[param] = ctr_obs;
-	};
-	this->loadParamFiles();
-	return;
-};
-
-void System::loadParamFiles() 
-{
-	// variables to read the data 
-	// from files as vectors
-	int ctr;
+	// cout<<"######## loading file: "<<filePath<<endl;
+	// cout<<"######## for function: "<<paramName<<endl;
+	// setup our vectors
 	vector <vector <double> > data;
 	vector <double> time;
 	vector <double> values;
-	// let's loop over param file map and load each in
-	map<string,string>::iterator iter;
-	for( iter = this->paramFileMap.begin(); iter != this->paramFileMap.end(); iter++ ) {
-		// debug statements
-		// cout << "\t" << iter->first << " = " << iter->second << endl;
-		// create a file stream to load the file
-		ifstream file(iter->second.c_str());
-		// make sure our vectors are cleared
-		data.clear();
-		time.clear();
-		values.clear();
-		// strings for looping over the file
-		string line, word, content;
-		// running through the file in a token based 
-		// manner and pushing them into vectors
-		string a,b;
-		while (file >> a >> b) {
-			// convert a to double
-			istringstream aos(a);
-			double d;
-			aos >> d;
-			// add it to time
-			time.push_back(d);
-			// convert b to double
-			istringstream bos(b);
-			bos >> d;
-			// add it to values
-			values.push_back(d);
-		}
-		// put the vectors into data vector
-		data.push_back(time);
-		data.push_back(values);
-		// map the parameter name to data we loaded
-		this->paramValueMap[iter->first] = data;
-		this->getGlobalFunctionByName(iter->first)->enableFileDependency(this);
+	// open file for reading
+	ifstream file(filePath.c_str());
+	// strings for looping over the file
+	string line, word, content;
+	string a,b;
+	while (file >> a >> b) {
+		// convert a to double
+		istringstream aos(a);
+		double d;
+		aos >> d;
+		// add it to time
+		time.push_back(d);
+		// convert b to double
+		istringstream bos(b);
+		bos >> d;
+		// add it to values
+		values.push_back(d);
 	}
+	// put the vectors into data vector
+	data.push_back(time);
+	data.push_back(values);
+	// map the parameter name to data we loaded
+	this->paramValueMap[paramName] = data;
 	return;
 };
 
