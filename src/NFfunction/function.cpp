@@ -162,9 +162,16 @@ void GlobalFunction::loadParamFile(string filePath)
 	vector <double> time;
 	vector <double> values;
 	// open file for reading
-	// TODO: Err out if it doesn't open
+	ifstream file(filePath.c_str());
+	// Report if file doesn't exist
+	if(!file.good()){
+		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"File doesn't look like it exists"<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	}
+	// TODO: Err out this doesn't work
 	try {
-		ifstream file(filePath.c_str());
 		// strings for looping over the file
 		string line, word, content;
 		string a,b;
@@ -215,57 +222,42 @@ void GlobalFunction::enableFileDependency(string filePath) {
 	this->fileFunc = true;
 	// set this up to give max value error once
 	this->maxErrRaised = false;
+	// initialize internal index
+	this->currInd = 0;
+	// pull data lenght so we can reuse it
+	this->dataLen = data[0].size();
 }
 
 double GlobalFunction::fileEval() {
 	// TODO: Error checking and reporting
-	// initialize index
-	int ctrInd = 0;
 	// counter val
-	double ctrVal = (*this->counter);
+	double ctrVal = (*counter);
 	// basic step function implementation
-	for (int i=0;i<this->data[0].size();i++) {
-		// if it's the first value, calculate and move on
+
+	// return 0 if we don't have data yet
+	if(data[0][0]>ctrVal) {
+		// we haven't gotten to the point where
+		// we can get a value out, return 0
+		// cout<<"not there yet, returning 0"<<endl;
+		return 0;
+	} 
+	// continue if we got past the point where we 
+	// have data to return
+	for (int i=currInd;i<dataLen;i++) {
+		// 
 		if(data[0][i]>ctrVal) {
 			break;
 		} else {
-			ctrInd = i;
+			currInd += 1;
+			// cout<<"currInd is now: "<<currInd<<endl;
 		}
 	}
-
-	// // Closest in time implementation
-	// // distance from current value
-	// double cdist;
-	// // distance from new value to compare to current
-	// double ndist;
-	// // find the index closest in time
-	// for (int i=0;i<this->data[0].size();i++) {
-	// 	// if it's the first value, calculate and move on
-	// 	if(i==0) {
-	// 		cdist = abs(ctrVal-this->data[0][i]);
-	// 	} else {
-	// 		// calculate the new distance
-	// 		ndist = abs(ctrVal-this->data[0][i]);
-	// 		// if the distance is increasing, we are done
-	// 		// this relies on the assumption that the original
-	// 		// time series is ordered
-	// 		if(ndist>cdist) {
-	// 			break;
-	// 		} else {
-	// 			// we are getting closer to the value we want
-	// 			// so we keep going
-	// 			cdist = ndist;
-	// 			ctrInd = i;
-	// 		}
-	// 	}
-	// }
-
 	// // debug stuff
 	// cout<<"counter value was: "<<ctrVal<<endl;
-	// cout<<"ctr array result was: "<<data[0][ctrInd]<<endl;
-	// cout<<"value array result was: "<<data[1][ctrInd]<<endl;
-	// return value from the value array
-	return this->data[1][ctrInd];
+	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;
+	// cout<<"value array result was: "<<data[1][currInd]<<endl;
+	// // return value from the value array
+	return data[1][currInd];
 }
 // AS-2021
 

@@ -208,6 +208,8 @@ namespace NFcore {
 
 			// AS-2021
 			bool maxErrRaised;
+			int currInd;
+			int dataLen;
 			double *counter;
 			vector <vector <double> > data;
 			string filePath;
