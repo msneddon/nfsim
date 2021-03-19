@@ -221,46 +221,46 @@ double GlobalFunction::fileEval() {
 	// TODO: Error checking and reporting
 	// initialize index
 	int ctrInd = 0;
-	// distance from current value
-	double cdist;
-	// distance from new value to compare to current
-	double ndist;
 	// counter val
 	double ctrVal = (*this->counter);
-	// find the index closest in time
+	// basic step function implementation
 	for (int i=0;i<this->data[0].size();i++) {
 		// if it's the first value, calculate and move on
-		if(i==0) {
-			cdist = abs(ctrVal-this->data[0][i]);
+		if(data[0][i]>ctrVal) {
+			break;
 		} else {
-			// calculate the new distance
-			ndist = abs(ctrVal-this->data[0][i]);
-			// if the distance is increasing, we are done
-			// this relies on the assumption that the original
-			// time series is ordered
-			if(ndist>cdist) {
-				break;
-			} else {
-				// we are getting closer to the value we want
-				// so we keep going
-				cdist = ndist;
-				ctrInd += 1;
-			}
+			ctrInd = i;
 		}
 	}
-	// index can't be larger than the array size
-	// TODO: warn if we get past our given array
-	if (ctrInd>=this->data[0].size()) {
-		if(!this->maxErrRaised) {
-			cerr<<"Warning!! The array provided by the file "<<
-					this->filePath<<"doesn't contain data for counter observable"<<
-					this->varRefNames[0]<<" with value "<<ctrVal<<
-					" using the final value in the array"<<endl;
-			this->maxErrRaised = true;
-		};
-		ctrInd = this->data[0].size()-1;
-	}
-	// debug stuff
+
+	// // Closest in time implementation
+	// // distance from current value
+	// double cdist;
+	// // distance from new value to compare to current
+	// double ndist;
+	// // find the index closest in time
+	// for (int i=0;i<this->data[0].size();i++) {
+	// 	// if it's the first value, calculate and move on
+	// 	if(i==0) {
+	// 		cdist = abs(ctrVal-this->data[0][i]);
+	// 	} else {
+	// 		// calculate the new distance
+	// 		ndist = abs(ctrVal-this->data[0][i]);
+	// 		// if the distance is increasing, we are done
+	// 		// this relies on the assumption that the original
+	// 		// time series is ordered
+	// 		if(ndist>cdist) {
+	// 			break;
+	// 		} else {
+	// 			// we are getting closer to the value we want
+	// 			// so we keep going
+	// 			cdist = ndist;
+	// 			ctrInd = i;
+	// 		}
+	// 	}
+	// }
+
+	// // debug stuff
 	// cout<<"counter value was: "<<ctrVal<<endl;
 	// cout<<"ctr array result was: "<<data[0][ctrInd]<<endl;
 	// cout<<"value array result was: "<<data[1][ctrInd]<<endl;
