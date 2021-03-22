@@ -594,8 +594,8 @@ bool NFinput::initFunctions(
 					// we ensured we have the right type of ref name/type earlier
 					system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
 					// add output to let ppl know
-					cout<<"\t\t\tThis function depends on file: "<<filePath<<endl;
-					cout<<"\t\t\tand depends on counter observable: "<<refNamesSorted[0]<<endl;
+					// cout<<"\t\t\tThis function depends on file: "<<filePath<<endl;
+					// cout<<"\t\t\tand depends on counter observable: "<<refNamesSorted[0]<<endl;
 				}
 			}
 			// AS-2021
