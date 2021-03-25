@@ -202,7 +202,13 @@ void GlobalFunction::loadParamFile(string filePath)
 };
 
 void GlobalFunction::addCounterPointer(double *counter){
+	this->ctrType = "observable";
 	this->counter = counter;
+}
+
+void GlobalFunction::addSystemPointer(System *s) {
+	this->ctrType = "system";
+	this->sysPtr = s;
 }
 
 void GlobalFunction::enableFileDependency(string filePath) {
@@ -220,38 +226,87 @@ void GlobalFunction::enableFileDependency(string filePath) {
 	// this sets it up so that this function knows it's supposed
 	// to be pulling values from a file
 	this->fileFunc = true;
-	// set this up to give max value error once
-	this->maxErrRaised = false;
 	// initialize internal index
 	this->currInd = 0;
 	// pull data lenght so we can reuse it
 	this->dataLen = data[0].size();
 }
 
+double GlobalFunction::getCounterValue() {
+	// depending on the type of the observable counter
+	// get the actual value
+	double ctrVal;
+	if (ctrType == "observable") {
+		ctrVal = (*counter);
+	} else {
+		// not sure but this is likely slower
+		ctrVal = this->sysPtr->getCurrentTime();
+	}
+	return ctrVal;
+}
 double GlobalFunction::fileEval() {
 	// TODO: Error checking and reporting
 	// counter val
-	double ctrVal = (*counter);
+	double ctrVal = this->getCounterValue();
+	
 	// basic step function implementation
-
-	// return 0 if we don't have data yet
-	if(data[0][0]>ctrVal) {
-		// we haven't gotten to the point where
-		// we can get a value out, return 0
-		// cout<<"not there yet, returning 0"<<endl;
-		return 0;
-	} 
-	// continue if we got past the point where we 
-	// have data to return
-	for (int i=currInd;i<dataLen;i++) {
-		// 
-		if(data[0][i]>ctrVal) {
-			break;
-		} else {
+	// if we got past the last point, keep returning
+	// the last point
+	if (currInd>=dataLen) {
+		return data[1][currInd];
+	}
+	// a simple way to do interval locating 
+	if (data[0][currInd] < data[0][currInd+1]) {
+		// next point is higher than the current point, we
+		// are waiting for the counter value to be higher 
+		// than our current point
+		
+		// return 0 if we don't have data yet
+		if(data[0][0]>=ctrVal) {
+			// we haven't gotten to the point where
+			// we can get a value out, return 0
+			// cout<<"not there yet, returning 0"<<endl;
+			return 0;
+		} 
+		// go up by one if the counter value got past 
+		// the next value in the array
+		if (ctrVal>=data[0][currInd+1]) {
 			currInd += 1;
-			// cout<<"currInd is now: "<<currInd<<endl;
+		}
+	// note that this makes no sense if they are equal
+	// TODO: Raise error if they are equal. Better yet, parse 
+	// it ahead of time and make sure that doesn't happen
+	} else {
+		// next point is lower than the current point, we
+		// are waiting for the counter value to be lower 
+		// than our current point
+
+		// return 0 if we don't have data yet
+		if(data[0][0]<=ctrVal) {
+			// we haven't gotten to the point where
+			// we can get a value out, return 0
+			// cout<<"not there yet, returning 0"<<endl;
+			return 0;
+		}
+		// go up by one if the counter value got past 
+		// the next value in the array
+		if (ctrVal<=data[0][currInd+1]) {
+			currInd += 1;
 		}
 	}
+
+	// // continue if we got past the point where we 
+	// // have data to return
+	// for (int i=currInd;i<dataLen;i++) {
+	// 	// 
+	// 	if(data[0][i]>ctrVal) {
+	// 		break;
+	// 	} else {
+	// 		currInd += 1;
+	// 		// cout<<"currInd is now: "<<currInd<<endl;
+	// 	}
+	// }
+
 	// // debug stuff
 	// cout<<"counter value was: "<<ctrVal<<endl;
 	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;

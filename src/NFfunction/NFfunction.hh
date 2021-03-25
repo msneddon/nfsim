@@ -181,9 +181,11 @@ namespace NFcore {
 
 			// AS-2021
 			double fileEval();
+			double getCounterValue();
 			void loadParamFile(string filePath);
 			void enableFileDependency(string FilePath);
 			void addCounterPointer(double *count);
+			void addSystemPointer(System *s);
 			bool fileFunc;
 			// AS-2021
 
@@ -207,7 +209,8 @@ namespace NFcore {
 			string *paramNames;
 
 			// AS-2021
-			bool maxErrRaised;
+			string ctrType;
+			System *sysPtr;
 			int currInd;
 			int dataLen;
 			double *counter;

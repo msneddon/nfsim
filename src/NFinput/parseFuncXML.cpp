@@ -569,6 +569,7 @@ bool NFinput::initFunctions(
 			// check to see if it has a type and if yes, if it's of type TFUN
 			if(pFunction->Attribute("type")) {
 				string funcType = pFunction->Attribute("type");
+				string ctrType;
 				if (funcType == "TFUN") {
 					// 
 					if (!pFunction->Attribute("file")) {
@@ -583,8 +584,10 @@ bool NFinput::initFunctions(
 						if(refTypesSorted[0] != "Observable") {
 							cerr<<"!!!Error:  TFUN type functions must point to an observable.  Quitting."<<endl;
 						}
+						ctrType = "observable";
 					} else {
-						cerr<<"!!!Error:  TFUN type functions must refer to a counter observable.  Quitting."<<endl;
+						// we are assuming this means that we use internal time for counter
+						ctrType = "system";
 					}
 					// get file path
 					string filePath = pFunction->Attribute("file");
@@ -592,7 +595,12 @@ bool NFinput::initFunctions(
 					GlobalFunction *f = system->getGlobalFunctionByName(funcName);
 					f->enableFileDependency(filePath);
 					// we ensured we have the right type of ref name/type earlier
-					system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+					if (ctrType=="observable") {
+						system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+					} else {
+						f->addSystemPointer(system);
+					}
+					
 					// add output to let ppl know
 					// cout<<"\t\t\tThis function depends on file: "<<filePath<<endl;
 					// cout<<"\t\t\tand depends on counter observable: "<<refNamesSorted[0]<<endl;
