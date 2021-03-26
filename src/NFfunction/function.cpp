@@ -252,7 +252,10 @@ double GlobalFunction::fileEval() {
 	// basic step function implementation
 	// if we got past the last point, keep returning
 	// the last point
-	if (currInd>=dataLen) {
+	if (currInd>dataLen-1) {
+		currInd = dataLen-1;
+		return data[1][currInd];
+	} else if (currInd==dataLen-1) {
 		return data[1][currInd];
 	}
 	// a simple way to do interval locating 
@@ -294,19 +297,6 @@ double GlobalFunction::fileEval() {
 			currInd += 1;
 		}
 	}
-
-	// // continue if we got past the point where we 
-	// // have data to return
-	// for (int i=currInd;i<dataLen;i++) {
-	// 	// 
-	// 	if(data[0][i]>ctrVal) {
-	// 		break;
-	// 	} else {
-	// 		currInd += 1;
-	// 		// cout<<"currInd is now: "<<currInd<<endl;
-	// 	}
-	// }
-
 	// // debug stuff
 	// cout<<"counter value was: "<<ctrVal<<endl;
 	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;
