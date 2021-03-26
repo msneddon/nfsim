@@ -577,7 +577,7 @@ bool NFinput::initFunctions(
 						return false;
 					}
 					// check references to ensure one and only one reference exists
-					if(pListOfRefs) {
+					if(refNamesSorted.size()>0) {
 						if(refNamesSorted.size()>1){
 							cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
 						}

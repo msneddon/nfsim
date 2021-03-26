@@ -298,9 +298,11 @@ double GlobalFunction::fileEval() {
 		}
 	}
 	// // debug stuff
+	// cout<<"function: "<<name<<endl;
 	// cout<<"counter value was: "<<ctrVal<<endl;
 	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;
 	// cout<<"value array result was: "<<data[1][currInd]<<endl;
+	// cout<<"####"<<name<<endl;
 	// // return value from the value array
 	return data[1][currInd];
 }
