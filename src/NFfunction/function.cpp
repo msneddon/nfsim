@@ -37,6 +37,10 @@ GlobalFunction::GlobalFunction(string name,
 		this->paramNames[i]=paramNames.at(i);
 	}
 	p=0;
+
+	// AS-2021
+	this->fileFunc = false;
+	// AS-2021
 }
 
 
@@ -143,7 +147,7 @@ void GlobalFunction::printDetails()
 
 	if(p!=0) {
 		// AS-2021
-		if (this->fileFunc) {
+		if (this->fileFunc==true) {
 			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
 		} else {
 			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
@@ -156,8 +160,6 @@ void GlobalFunction::printDetails()
 // AS-2021
 void GlobalFunction::loadParamFile(string filePath) 
 {
-	// cout<<"######## loading file: "<<filePath<<endl;
-	// cout<<"######## for function: "<<paramName<<endl;
 	// setup our vectors
 	vector <double> time;
 	vector <double> values;
@@ -165,7 +167,7 @@ void GlobalFunction::loadParamFile(string filePath)
 	ifstream file(filePath.c_str());
 	// Report if file doesn't exist
 	if(!file.good()){
-		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Error preparing function "<<this->name<<" in class GlobalFunction!!"<<endl;
 		cout<<"File doesn't look like it exists"<<endl;
 		cout<<"Quitting."<<endl;
 		exit(1);
@@ -193,7 +195,7 @@ void GlobalFunction::loadParamFile(string filePath)
 		this->data.push_back(time);
 		this->data.push_back(values);
 	} catch (exception const & e) {
-		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Error preparing function "<<this->name<<" in class GlobalFunction!!"<<endl;
 		cout<<"Failed to either open or read the file."<<endl;
 		cout<<"Quitting."<<endl;
 		exit(1);
@@ -202,12 +204,12 @@ void GlobalFunction::loadParamFile(string filePath)
 };
 
 void GlobalFunction::addCounterPointer(double *counter){
-	this->ctrType = "observable";
+	this->ctrType = "Observable";
 	this->counter = counter;
 }
 
 void GlobalFunction::addSystemPointer(System *s) {
-	this->ctrType = "system";
+	this->ctrType = "System";
 	this->sysPtr = s;
 }
 
@@ -236,7 +238,7 @@ double GlobalFunction::getCounterValue() {
 	// depending on the type of the observable counter
 	// get the actual value
 	double ctrVal;
-	if (ctrType == "observable") {
+	if (ctrType == "Observable") {
 		ctrVal = (*counter);
 	} else {
 		// not sure but this is likely slower
@@ -324,7 +326,7 @@ void GlobalFunction::printDetails(System *s)
 	
 	if(p!=0) {
 		// AS-2021
-		if (this->fileFunc) {
+		if (this->fileFunc==true) {
 			cout<<"   Function relies on file: "<<this->filePath<<endl;
 			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
 		} else {

@@ -581,23 +581,31 @@ bool NFinput::initFunctions(
 						if(refNamesSorted.size()>1){
 							cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
 						}
-						if(refTypesSorted[0] != "Observable") {
+						if(refTypesSorted[0] != "Observable" && refTypesSorted[0] != "Function") {
 							cerr<<"!!!Error:  TFUN type functions must point to an observable.  Quitting."<<endl;
 						}
-						ctrType = "observable";
+						ctrType = refTypesSorted[0];
 					} else {
 						// we are assuming this means that we use internal time for counter
 						ctrType = "system";
 					}
 					// get file path
 					string filePath = pFunction->Attribute("file");
-					// make function file dependent
-					GlobalFunction *f = system->getGlobalFunctionByName(funcName);
-					f->enableFileDependency(filePath);
 					// we ensured we have the right type of ref name/type earlier
-					if (ctrType=="observable") {
+					if (ctrType=="Observable") {
+						// make function file dependent
+						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+						f->enableFileDependency(filePath);
 						system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+					} else if (ctrType=="Function") {
+						CompositeFunction *f = system->getCompositeFunctionByName(funcName);
+						f->enableFileDependency(filePath);
+						// GlobalFunction *cfPtr = system->getGlobalFunctionByName(refNamesSorted[0]);
+						f->addFunctionPointer(system->getGlobalFunctionByName(refNamesSorted[0]));
 					} else {
+						// make function file dependent
+						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+						f->enableFileDependency(filePath);
 						f->addSystemPointer(system);
 					}
 					

@@ -393,6 +393,15 @@ namespace NFcore {
 
 				void addTypeIMoleculeDependency(MoleculeType *mt);
 
+				// AS-2021
+				double fileEval();
+				double getCounterValue();
+				void loadParamFile(string filePath);
+				void enableFileDependency(string FilePath);
+				void addFunctionPointer(GlobalFunction *f);
+				bool fileFunc;
+				// AS-2021
+
 
 			protected:
 
@@ -434,6 +443,17 @@ namespace NFcore {
 				double * refLfValues;
 
 				mu::Parser *p;
+
+				// AS-2021
+				string ctrType;
+				System *sysPtr;
+				GlobalFunction *funcPtr;
+				int currInd;
+				int dataLen;
+				double *counter;
+				vector <vector <double> > data;
+				string filePath;
+				// AS-2021
 		};
 
 

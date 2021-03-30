@@ -55,7 +55,7 @@ double FunctionalRxnClass::update_a() {
 	if(gf!=0) {
 	//	cout<<"in here"<<endl;
 		// AS-2021
-		if(gf->fileFunc) {
+		if(gf->fileFunc==true) {
 			a=gf->fileEval();
 		} else {
 			a=FuncFactory::Eval(gf->p);
