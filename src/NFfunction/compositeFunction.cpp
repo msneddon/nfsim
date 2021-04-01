@@ -603,9 +603,11 @@ double CompositeFunction::fileEval() {
 	// the last point
 	if (currInd>dataLen-1) {
 		currInd = dataLen-1;
-		return data[1][currInd];
+		p->DefineConst(ctrName,data[1][currInd]);
+		return FuncFactory::Eval(p);
 	} else if (currInd==dataLen-1) {
-		return data[1][currInd];
+		p->DefineConst(ctrName,data[1][currInd]);
+		return FuncFactory::Eval(p);
 	}
 	// a simple way to do interval locating 
 	if (data[0][currInd] < data[0][currInd+1]) {
