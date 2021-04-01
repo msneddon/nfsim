@@ -208,6 +208,10 @@ void GlobalFunction::addCounterPointer(double *counter){
 	this->counter = counter;
 }
 
+void GlobalFunction::setCtrName(string name) {
+	this->ctrName = name;
+}
+
 void GlobalFunction::addSystemPointer(System *s) {
 	this->ctrType = "System";
 	this->sysPtr = s;
@@ -256,9 +260,11 @@ double GlobalFunction::fileEval() {
 	// the last point
 	if (currInd>dataLen-1) {
 		currInd = dataLen-1;
-		return data[1][currInd];
+		p->DefineConst(ctrName,data[1][currInd]);
+		return FuncFactory::Eval(p);
 	} else if (currInd==dataLen-1) {
-		return data[1][currInd];
+		p->DefineConst(ctrName,data[1][currInd]);
+		return FuncFactory::Eval(p);
 	}
 	// a simple way to do interval locating 
 	if (data[0][currInd] < data[0][currInd+1]) {
@@ -306,7 +312,7 @@ double GlobalFunction::fileEval() {
 	// cout<<"value array result was: "<<data[1][currInd]<<endl;
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
-	p->DefineConst("__COUNTER__",data[1][currInd]);
+	p->DefineConst(ctrName,data[1][currInd]);
 	return FuncFactory::Eval(p);
 	// return data[1][currInd]
 }

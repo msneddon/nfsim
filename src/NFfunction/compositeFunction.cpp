@@ -551,7 +551,12 @@ void CompositeFunction::loadParamFile(string filePath)
 
 void CompositeFunction::addFunctionPointer(GlobalFunction *fPtr) {
 	this->ctrType = "Function";
+	this->setCtrName(fPtr->getName());
 	this->funcPtr = fPtr;
+}
+
+void CompositeFunction::setCtrName(string name) {
+	this->ctrName = name;
 }
 
 void CompositeFunction::enableFileDependency(string filePath) {
@@ -648,7 +653,7 @@ double CompositeFunction::fileEval() {
 	// cout<<"value array result was: "<<data[1][currInd]<<endl;
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
-	p->DefineConst("__COUNTER__",data[1][currInd]);
+	p->DefineConst(ctrName,data[1][currInd]);
 	return FuncFactory::Eval(p);
 	// return data[1][currInd];
 }

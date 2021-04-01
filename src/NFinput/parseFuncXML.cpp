@@ -597,6 +597,7 @@ bool NFinput::initFunctions(
 						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
 						f->enableFileDependency(filePath);
 						system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
+						f->setCtrName(refNamesSorted[0]);
 					} else if (ctrType=="Function") {
 						CompositeFunction *f = system->getCompositeFunctionByName(funcName);
 						f->enableFileDependency(filePath);
@@ -607,6 +608,7 @@ bool NFinput::initFunctions(
 						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
 						f->enableFileDependency(filePath);
 						f->addSystemPointer(system);
+						f->setCtrName("__COUNTER__");
 					}
 					
 					// add output to let ppl know

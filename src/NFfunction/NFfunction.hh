@@ -184,6 +184,7 @@ namespace NFcore {
 			double getCounterValue();
 			void loadParamFile(string filePath);
 			void enableFileDependency(string FilePath);
+			void setCtrName(string name);
 			void addCounterPointer(double *count);
 			void addSystemPointer(System *s);
 			bool fileFunc;
@@ -210,6 +211,7 @@ namespace NFcore {
 
 			// AS-2021
 			string ctrType;
+			string ctrName;
 			System *sysPtr;
 			int currInd;
 			int dataLen;
@@ -398,6 +400,7 @@ namespace NFcore {
 				double getCounterValue();
 				void loadParamFile(string filePath);
 				void enableFileDependency(string FilePath);
+				void setCtrName(string name);
 				void addFunctionPointer(GlobalFunction *f);
 				bool fileFunc;
 				// AS-2021
@@ -446,6 +449,7 @@ namespace NFcore {
 
 				// AS-2021
 				string ctrType;
+				string ctrName;
 				System *sysPtr;
 				GlobalFunction *funcPtr;
 				int currInd;
