@@ -358,6 +358,7 @@ void CompositeFunction::printDetails(System *s) {
 	cout<<" = "<<this->originalExpression<<endl;
 	cout<<" parsed expression = "<<this->parsedExpression<<endl;
 	cout<<"   -Function References:"<<endl;
+	cout<<"looping over funcs, n funcs: "<<n_gfs<<endl;
 	for(int f=0; f<n_gfs; f++) {
 		// AS-2021
 		if (gfs[f]->fileFunc==true) {
@@ -390,7 +391,12 @@ void CompositeFunction::printDetails(System *s) {
 	}
 
 	if(p!=0)
-		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+		if (this->fileFunc==true) {
+			cout<<"   Function last evaluated to: "<<this->fileEval()<<endl;
+		} else {
+			cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+		}
+		
 
 
 
@@ -642,6 +648,8 @@ double CompositeFunction::fileEval() {
 	// cout<<"value array result was: "<<data[1][currInd]<<endl;
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
-	return data[1][currInd];
+	p->DefineConst("__COUNTER__",data[1][currInd]);
+	return FuncFactory::Eval(p);
+	// return data[1][currInd];
 }
 // AS-2021

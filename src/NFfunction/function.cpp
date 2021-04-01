@@ -306,7 +306,9 @@ double GlobalFunction::fileEval() {
 	// cout<<"value array result was: "<<data[1][currInd]<<endl;
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
-	return data[1][currInd];
+	p->DefineConst("__COUNTER__",data[1][currInd]);
+	return FuncFactory::Eval(p);
+	// return data[1][currInd]
 }
 // AS-2021
 

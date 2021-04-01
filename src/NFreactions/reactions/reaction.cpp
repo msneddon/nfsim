@@ -119,7 +119,11 @@ void FunctionalRxnClass::printDetails() const {
 	if(this->totalRateFlag) trate = "on";
 
 	if(gf!=0)
-		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
+		if (gf->fileFunc==true) {
+			cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<gf->fileEval()<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
+		} else {
+			cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
+		}
 	else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {
