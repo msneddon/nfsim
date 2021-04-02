@@ -1001,19 +1001,17 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 			count=((double)(*obsIter)->getCount());
 			outputFileStream.write((char *) &count, sizeof(double));
 		}
-		if(outputGlobalFunctionValues)
+		if(outputGlobalFunctionValues) {
 			for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
 				// AS-2021
-				if((*functionIter)->fileFunc==true) {
-					count=(*functionIter)->fileEval();
-				} else {
-					count=FuncFactory::Eval((*functionIter)->p);
+				if ((*functionIter)->fileFunc==true) {
+					(*functionIter)->fileUpdate();
 				}
-				// count=FuncFactory::Eval((*functionIter)->p);
 				// AS-2021
+				count=FuncFactory::Eval((*functionIter)->p);
 				outputFileStream.write((char *) &count, sizeof(double));
 			}
-
+		}
 		if(outputEventCounter) {
 			count=eventCounter;
 			outputFileStream.write((char *) &count, sizeof(double));
@@ -1026,16 +1024,16 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 				outputFileStream<<"  "<<((double)(*obsIter)->getCount());
 			}
 
-			if(outputGlobalFunctionValues)
-				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			if(outputGlobalFunctionValues) {
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
 					// AS-2021
-					if((*functionIter)->fileFunc==true) {
-						outputFileStream<<"  "<<(*functionIter)->fileEval();
-					} else {
-						outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+					if ((*functionIter)->fileFunc==true) {
+						(*functionIter)->fileUpdate();
 					}
-					// outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
 					// AS-2021
+					outputFileStream<<"  "<<FuncFactory::Eval((*functionIter)->p);
+				}
+			}
 			if(outputEventCounter) {
 				outputFileStream<<"  "<<eventCounter;
 			}
@@ -1047,16 +1045,16 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 				outputFileStream<<", "<<((double)(*obsIter)->getCount());
 			}
 
-			if(outputGlobalFunctionValues)
-				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+			if(outputGlobalFunctionValues) {
+				for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
 					// AS-2021
 					if ((*functionIter)->fileFunc==true) {
-						outputFileStream<<", "<<(*functionIter)->fileEval();
-					} else {
-						outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);
+						(*functionIter)->fileUpdate();
 					}
-					// outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);	
 					// AS-2021
+					outputFileStream<<", "<<FuncFactory::Eval((*functionIter)->p);
+				}
+			}
 			if(outputEventCounter) {
 				outputFileStream<<", "<<eventCounter;
 			}
@@ -1080,7 +1078,7 @@ void System::printAllObservableCounts(double cSampleTime)
 }
 
 void System::printAllObservableCounts(double cSampleTime,int eventCounter)
-{
+{	
 	cout<<"Time";
 	for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
 		cout<<"\t"<<(*obsIter)->getName();
@@ -1096,16 +1094,16 @@ void System::printAllObservableCounts(double cSampleTime,int eventCounter)
   	cout<<cSampleTime;
 	for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++)
 		cout<<"\t"<<(*obsIter)->getCount();
-	if(outputGlobalFunctionValues)
-		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ )
+	if(outputGlobalFunctionValues) {
+		for( functionIter = globalFunctions.begin(); functionIter != globalFunctions.end(); functionIter++ ) {
 					// AS-2021
 					if ((*functionIter)->fileFunc==true) {
-						cout<<"\t"<<(*functionIter)->fileEval();
-					} else {
-						cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
+						(*functionIter)->fileUpdate();
 					}
-					// cout<<"\t"<<FuncFactory::Eval((*functionIter)->p);
 					// AS-2021
+					cout<<"\t"<<FuncFactory::Eval((*functionIter)->p)<<endl;
+		}
+	}
 	if(outputEventCounter) {
 		cout<<"\t"<<eventCounter;
 	}

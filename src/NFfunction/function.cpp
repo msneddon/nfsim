@@ -148,12 +148,10 @@ void GlobalFunction::printDetails()
 	if(p!=0) {
 		// AS-2021
 		if (this->fileFunc==true) {
-			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
-		} else {
-			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+			this->fileUpdate();
 		}
-		// cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 		// AS-2021
+		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 	}
 }
 
@@ -250,7 +248,7 @@ double GlobalFunction::getCounterValue() {
 	}
 	return ctrVal;
 }
-double GlobalFunction::fileEval() {
+void GlobalFunction::fileUpdate() {
 	// TODO: Error checking and reporting
 	// counter val
 	double ctrVal = this->getCounterValue();
@@ -261,10 +259,10 @@ double GlobalFunction::fileEval() {
 	if (currInd>dataLen-1) {
 		currInd = dataLen-1;
 		p->DefineConst(ctrName,data[1][currInd]);
-		return FuncFactory::Eval(p);
+		return;
 	} else if (currInd==dataLen-1) {
 		p->DefineConst(ctrName,data[1][currInd]);
-		return FuncFactory::Eval(p);
+		return;
 	}
 	// a simple way to do interval locating 
 	if (data[0][currInd] < data[0][currInd+1]) {
@@ -277,7 +275,8 @@ double GlobalFunction::fileEval() {
 			// we haven't gotten to the point where
 			// we can get a value out, return 0
 			// cout<<"not there yet, returning 0"<<endl;
-			return 0;
+			p->DefineConst(ctrName,0);
+			return;
 		} 
 		// go up by one if the counter value got past 
 		// the next value in the array
@@ -297,7 +296,8 @@ double GlobalFunction::fileEval() {
 			// we haven't gotten to the point where
 			// we can get a value out, return 0
 			// cout<<"not there yet, returning 0"<<endl;
-			return 0;
+			p->DefineConst(ctrName,0);
+			return;
 		}
 		// go up by one if the counter value got past 
 		// the next value in the array
@@ -313,7 +313,8 @@ double GlobalFunction::fileEval() {
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
 	p->DefineConst(ctrName,data[1][currInd]);
-	return FuncFactory::Eval(p);
+	return;
+	// return FuncFactory::Eval(p);
 	// return data[1][currInd]
 }
 // AS-2021
@@ -336,12 +337,10 @@ void GlobalFunction::printDetails(System *s)
 		// AS-2021
 		if (this->fileFunc==true) {
 			cout<<"   Function relies on file: "<<this->filePath<<endl;
-			cout<<"   Function currently evaluates to: "<<this->fileEval()<<endl;
-		} else {
-			cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
+			this->fileUpdate();
 		}
-		// cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 		// AS-2021
+		cout<<"   Function currently evaluates to: "<<FuncFactory::Eval(p)<<endl;
 	}
 }
 

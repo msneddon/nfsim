@@ -180,7 +180,7 @@ namespace NFcore {
 			}
 
 			// AS-2021
-			double fileEval();
+			void fileUpdate();
 			double getCounterValue();
 			void loadParamFile(string filePath);
 			void enableFileDependency(string FilePath);
@@ -396,7 +396,7 @@ namespace NFcore {
 				void addTypeIMoleculeDependency(MoleculeType *mt);
 
 				// AS-2021
-				double fileEval();
+				void fileUpdate();
 				double getCounterValue();
 				void loadParamFile(string filePath);
 				void enableFileDependency(string FilePath);

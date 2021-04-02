@@ -362,12 +362,10 @@ void CompositeFunction::printDetails(System *s) {
 	for(int f=0; f<n_gfs; f++) {
 		// AS-2021
 		if (gfs[f]->fileFunc==true) {
-			gfValues[f]=gfs[f]->fileEval();
-		} else {
-			gfValues[f]=FuncFactory::Eval(gfs[f]->p);
-		}
-		// gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+			gfs[f]->fileUpdate();
+		} 
 		// AS-2021
+		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
 
 		gfs[f]->printDetails(s);
@@ -390,12 +388,14 @@ void CompositeFunction::printDetails(System *s) {
 		}
 	}
 
-	if(p!=0)
+	if(p!=0) {
+		// AS-2021
 		if (this->fileFunc==true) {
-			cout<<"   Function last evaluated to: "<<this->fileEval()<<endl;
-		} else {
-			cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+			this->fileUpdate();
 		}
+		// AS-2021
+		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+	}
 		
 
 
@@ -438,12 +438,10 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	for(int f=0; f<n_gfs; f++) {
 		// AS-2021
 		if (gfs[f]->fileFunc==true) {
-			gfValues[f]=gfs[f]->fileEval();
-		} else {
-			gfValues[f]=FuncFactory::Eval(gfs[f]->p);
+			gfs[f]->fileUpdate();
 		}
-		// gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 		// AS-2021
+		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 	}
 
 	//2 evaluate all local functions
@@ -495,11 +493,12 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 
 
 	// cout<<"evaluating composite function: "<<name<<endl;
+	// AS-2021
 	if (this->fileFunc==true) {
-		return this->fileEval();
-	} else {
-		return FuncFactory::Eval(p);
-	}
+		this->fileUpdate();
+	} 
+	// AS-2021
+	return FuncFactory::Eval(p);
 	//evaluate this function
 }
 
@@ -594,7 +593,7 @@ double CompositeFunction::getCounterValue() {
 	}
 	return ctrVal;
 }
-double CompositeFunction::fileEval() {
+void CompositeFunction::fileUpdate() {
 	// TODO: Error checking and reporting
 	// counter val
 	double ctrVal = this->getCounterValue();
@@ -604,10 +603,10 @@ double CompositeFunction::fileEval() {
 	if (currInd>dataLen-1) {
 		currInd = dataLen-1;
 		p->DefineConst(ctrName,data[1][currInd]);
-		return FuncFactory::Eval(p);
+		return;
 	} else if (currInd==dataLen-1) {
 		p->DefineConst(ctrName,data[1][currInd]);
-		return FuncFactory::Eval(p);
+		return;
 	}
 	// a simple way to do interval locating 
 	if (data[0][currInd] < data[0][currInd+1]) {
@@ -620,7 +619,8 @@ double CompositeFunction::fileEval() {
 			// we haven't gotten to the point where
 			// we can get a value out, return 0
 			// cout<<"not there yet, returning 0"<<endl;
-			return 0;
+			p->DefineConst(ctrName,0);
+			return;
 		} 
 		// go up by one if the counter value got past 
 		// the next value in the array
@@ -640,7 +640,8 @@ double CompositeFunction::fileEval() {
 			// we haven't gotten to the point where
 			// we can get a value out, return 0
 			// cout<<"not there yet, returning 0"<<endl;
-			return 0;
+			p->DefineConst(ctrName,0);
+			return;
 		}
 		// go up by one if the counter value got past 
 		// the next value in the array
@@ -656,7 +657,8 @@ double CompositeFunction::fileEval() {
 	// cout<<"####"<<name<<endl;
 	// // return value from the value array
 	p->DefineConst(ctrName,data[1][currInd]);
-	return FuncFactory::Eval(p);
+	return;
+	// return FuncFactory::Eval(p);
 	// return data[1][currInd];
 }
 // AS-2021
