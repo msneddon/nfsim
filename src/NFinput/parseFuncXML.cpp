@@ -570,15 +570,18 @@ bool NFinput::initFunctions(
 			if(pFunction->Attribute("type")) {
 				string funcType = pFunction->Attribute("type");
 				string ctrType;
+				string ctrName;
 				if (funcType == "TFUN") {
 					// 
 					if (!pFunction->Attribute("file")) {
-						cerr<<"!!!Error:  TFUN type functions must point to a file.  Quitting."<<endl;
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to a file.  Quitting."<<endl;
 						return false;
 					}
 					if (!pFunction->Attribute("ctrName")) {
-						cerr<<"!!!Error:  Can't find counter name for TFUN functions.  Quitting."<<endl;
+						cerr<<"!!!Error:  Can't find counter name for TFUN function "<<funcName<<".  Quitting."<<endl;
 						return false;
+					} else {
+						ctrName = pFunction->Attribute("ctrName");
 					}
 					// check references to ensure one and only one reference exists
 					if(refNamesSorted.size()>0) {
@@ -586,15 +589,24 @@ bool NFinput::initFunctions(
 						// 	cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
 						// }
 						TiXmlElement *refCheck;
+						string refCheckName;
+						string refCheckType;
 						for ( refCheck = pListOfRefs->FirstChildElement("Reference"); refCheck != 0; refCheck = refCheck->NextSiblingElement("Reference")) {
-							if ( refCheck->Attribute("name") == pFunction->Attribute("ctrName")) {
+							cout<<"reference name: "<<refCheck->Attribute("name")<<" looking for: "<<pFunction->Attribute("ctrName")<<endl;
+							refCheckName = refCheck->Attribute("name");
+							if ( refCheckName == ctrName ) {
 								// we found our counter
-								if (refCheck->Attribute("type") != "Observable" && refCheck->Attribute("type") != "Function") {
-									cerr<<"!!!Error:  TFUN type functions must point to an observable or function.  Quitting."<<endl;
+								refCheckType = refCheck->Attribute("type");
+								if ( refCheckType != "Observable" && refCheckType != "Function") {
+									cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to an observable or function.  Quitting."<<endl;
+									return false;
 								}
-								ctrType = refCheck->Attribute("type");
+								ctrType = refCheckType;
 							}
 						}
+					} else {
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to at least one observable or function.  Quitting."<<endl;
+						return false;
 					}
 					// unhooking system timer option for now
 					// else {
@@ -616,7 +628,8 @@ bool NFinput::initFunctions(
 						// GlobalFunction *cfPtr = system->getGlobalFunctionByName(refNamesSorted[0]);
 						f->addFunctionPointer(system->getGlobalFunctionByName(refNamesSorted[0]));
 					} else {
-						cerr<<"!!!Error:  TFUN type functions must point to an observable or function.  Quitting."<<endl;
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to an observable or function. Type was: "<<ctrType<<".  Quitting."<<endl;
+						return false;
 					}
 					// 	// unhooking system timer option for now
 					// else {
