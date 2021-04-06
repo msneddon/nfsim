@@ -576,19 +576,31 @@ bool NFinput::initFunctions(
 						cerr<<"!!!Error:  TFUN type functions must point to a file.  Quitting."<<endl;
 						return false;
 					}
+					if (!pFunction->Attribute("ctrName")) {
+						cerr<<"!!!Error:  Can't find counter name for TFUN functions.  Quitting."<<endl;
+						return false;
+					}
 					// check references to ensure one and only one reference exists
 					if(refNamesSorted.size()>0) {
-						if(refNamesSorted.size()>1){
-							cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
+						// if(refNamesSorted.size()>1){
+						// 	cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
+						// }
+						TiXmlElement *refCheck;
+						for ( refCheck = pListOfRefs->FirstChildElement("Reference"); refCheck != 0; refCheck = refCheck->NextSiblingElement("Reference")) {
+							if ( refCheck->Attribute("name") == pFunction->Attribute("ctrName")) {
+								// we found our counter
+								if (refCheck->Attribute("type") != "Observable" && refCheck->Attribute("type") != "Function") {
+									cerr<<"!!!Error:  TFUN type functions must point to an observable or function.  Quitting."<<endl;
+								}
+								ctrType = refCheck->Attribute("type");
+							}
 						}
-						if(refTypesSorted[0] != "Observable" && refTypesSorted[0] != "Function") {
-							cerr<<"!!!Error:  TFUN type functions must point to an observable.  Quitting."<<endl;
-						}
-						ctrType = refTypesSorted[0];
-					} else {
-						// we are assuming this means that we use internal time for counter
-						ctrType = "system";
 					}
+					// unhooking system timer option for now
+					// else {
+					// 	// we are assuming this means that we use internal time for counter
+					// 	ctrType = "system";
+					// }
 					// get file path
 					string filePath = pFunction->Attribute("file");
 					// we ensured we have the right type of ref name/type earlier
@@ -604,16 +616,16 @@ bool NFinput::initFunctions(
 						// GlobalFunction *cfPtr = system->getGlobalFunctionByName(refNamesSorted[0]);
 						f->addFunctionPointer(system->getGlobalFunctionByName(refNamesSorted[0]));
 					} else {
-						// make function file dependent
-						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
-						f->enableFileDependency(filePath);
-						f->addSystemPointer(system);
-						f->setCtrName("__COUNTER__");
+						cerr<<"!!!Error:  TFUN type functions must point to an observable or function.  Quitting."<<endl;
 					}
-					
-					// add output to let ppl know
-					// cout<<"\t\t\tThis function depends on file: "<<filePath<<endl;
-					// cout<<"\t\t\tand depends on counter observable: "<<refNamesSorted[0]<<endl;
+					// 	// unhooking system timer option for now
+					// else {
+					// 	// make function file dependent
+					// 	GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+					// 	f->enableFileDependency(filePath);
+					// 	f->addSystemPointer(system);
+					// 	f->setCtrName("__COUNTER__");
+					// }
 				}
 			}
 			// AS-2021

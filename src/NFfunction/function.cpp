@@ -210,10 +210,11 @@ void GlobalFunction::setCtrName(string name) {
 	this->ctrName = name;
 }
 
-void GlobalFunction::addSystemPointer(System *s) {
-	this->ctrType = "System";
-	this->sysPtr = s;
-}
+// unhooking system timer option for now
+// void GlobalFunction::addSystemPointer(System *s) {
+// 	this->ctrType = "System";
+// 	this->sysPtr = s;
+// }
 
 void GlobalFunction::enableFileDependency(string filePath) {
 	// load file
@@ -242,17 +243,20 @@ double GlobalFunction::getCounterValue() {
 	double ctrVal;
 	if (ctrType == "Observable") {
 		ctrVal = (*counter);
-	} else {
-		// not sure but this is likely slower
-		ctrVal = this->sysPtr->getCurrentTime();
-	}
+	} 
+	// unhooking system timer option for now
+	// else {
+	// 	// not sure but this is likely slower
+	// 	ctrVal = this->sysPtr->getCurrentTime();
+	// }
 	return ctrVal;
 }
 void GlobalFunction::fileUpdate() {
 	// TODO: Error checking and reporting
-	// counter val
-	double ctrVal = this->getCounterValue();
 	
+	// get counter val
+	double ctrVal = this->getCounterValue();
+
 	// basic step function implementation
 	// if we got past the last point, keep returning
 	// the last point
@@ -305,17 +309,9 @@ void GlobalFunction::fileUpdate() {
 			currInd += 1;
 		}
 	}
-	// // debug stuff
-	// cout<<"function: "<<name<<endl;
-	// cout<<"counter value was: "<<ctrVal<<endl;
-	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;
-	// cout<<"value array result was: "<<data[1][currInd]<<endl;
-	// cout<<"####"<<name<<endl;
 	// // return value from the value array
 	p->DefineConst(ctrName,data[1][currInd]);
 	return;
-	// return FuncFactory::Eval(p);
-	// return data[1][currInd]
 }
 // AS-2021
 

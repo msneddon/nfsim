@@ -587,16 +587,20 @@ double CompositeFunction::getCounterValue() {
 	double ctrVal;
 	if (ctrType == "Function") {
 		ctrVal = FuncFactory::Eval(this->funcPtr->p);
-	}else {
-		// not sure but this is likely slower
-		ctrVal = this->sysPtr->getCurrentTime();
 	}
+	// unhooking system timer option for now
+	// else {
+	// 	// not sure but this is likely slower
+	// 	ctrVal = this->sysPtr->getCurrentTime();
+	// }
 	return ctrVal;
 }
 void CompositeFunction::fileUpdate() {
 	// TODO: Error checking and reporting
-	// counter val
+	
+	// get counter val
 	double ctrVal = this->getCounterValue();
+
 	// basic step function implementation
 	// if we got past the last point, keep returning
 	// the last point
@@ -649,16 +653,8 @@ void CompositeFunction::fileUpdate() {
 			currInd += 1;
 		}
 	}
-	// // debug stuff
-	// cout<<"function: "<<name<<endl;
-	// cout<<"counter value was: "<<ctrVal<<endl;
-	// cout<<"ctr array result was: "<<data[0][currInd]<<endl;
-	// cout<<"value array result was: "<<data[1][currInd]<<endl;
-	// cout<<"####"<<name<<endl;
 	// // return value from the value array
 	p->DefineConst(ctrName,data[1][currInd]);
 	return;
-	// return FuncFactory::Eval(p);
-	// return data[1][currInd];
 }
 // AS-2021
