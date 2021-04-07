@@ -253,10 +253,8 @@ double GlobalFunction::getCounterValue() {
 }
 void GlobalFunction::fileUpdate() {
 	// TODO: Error checking and reporting
-	
 	// get counter val
 	double ctrVal = this->getCounterValue();
-
 	// basic step function implementation
 	// if we got past the last point, keep returning
 	// the last point

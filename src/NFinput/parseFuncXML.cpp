@@ -583,16 +583,12 @@ bool NFinput::initFunctions(
 					} else {
 						ctrName = pFunction->Attribute("ctrName");
 					}
-					// check references to ensure one and only one reference exists
+					// check references find our counter type
 					if(refNamesSorted.size()>0) {
-						// if(refNamesSorted.size()>1){
-						// 	cerr<<"!!!Error:  TFUN type functions with multiple references is not currently supported.  Quitting."<<endl;
-						// }
 						TiXmlElement *refCheck;
 						string refCheckName;
 						string refCheckType;
 						for ( refCheck = pListOfRefs->FirstChildElement("Reference"); refCheck != 0; refCheck = refCheck->NextSiblingElement("Reference")) {
-							cout<<"reference name: "<<refCheck->Attribute("name")<<" looking for: "<<pFunction->Attribute("ctrName")<<endl;
 							refCheckName = refCheck->Attribute("name");
 							if ( refCheckName == ctrName ) {
 								// we found our counter
@@ -620,13 +616,14 @@ bool NFinput::initFunctions(
 						// make function file dependent
 						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
 						f->enableFileDependency(filePath);
-						system->getObservableByName(refNamesSorted[0])->addReferenceToGlobalFunction(f);
-						f->setCtrName(refNamesSorted[0]);
+						system->getObservableByName(ctrName)->addReferenceToGlobalFunction(f);
+						// f->setCtrName(refNamesSorted[0]);
+						f->setCtrName("__TFUN__VAL__");
 					} else if (ctrType=="Function") {
 						CompositeFunction *f = system->getCompositeFunctionByName(funcName);
 						f->enableFileDependency(filePath);
 						// GlobalFunction *cfPtr = system->getGlobalFunctionByName(refNamesSorted[0]);
-						f->addFunctionPointer(system->getGlobalFunctionByName(refNamesSorted[0]));
+						f->addFunctionPointer(system->getGlobalFunctionByName(ctrName));
 					} else {
 						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to an observable or function. Type was: "<<ctrType<<".  Quitting."<<endl;
 						return false;

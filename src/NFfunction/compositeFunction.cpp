@@ -550,7 +550,8 @@ void CompositeFunction::loadParamFile(string filePath)
 
 void CompositeFunction::addFunctionPointer(GlobalFunction *fPtr) {
 	this->ctrType = "Function";
-	this->setCtrName(fPtr->getName());
+	// this->setCtrName(fPtr->getName());
+	this->setCtrName("__TFUN__VAL__");
 	this->funcPtr = fPtr;
 }
 
