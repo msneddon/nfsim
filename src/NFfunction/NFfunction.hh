@@ -179,6 +179,18 @@ namespace NFcore {
 				return varRefTypes[varRefIndex];
 			}
 
+			// AS-2021
+			void fileUpdate();
+			double getCounterValue();
+			void loadParamFile(string filePath);
+			void enableFileDependency(string FilePath);
+			void setCtrName(string name);
+			void addCounterPointer(double *count);
+			// unhooking system timer option for now
+			// void addSystemPointer(System *s);
+			bool fileFunc;
+			// AS-2021
+
 			/*!
 				This is the actual Parser object that keeps track of the function and has references to all of its
 				arguments.  It is publicly visible, so be careful with it!  Use this variable to evaluate the function.
@@ -197,6 +209,18 @@ namespace NFcore {
 
 			unsigned int n_params;
 			string *paramNames;
+
+			// AS-2021
+			string ctrType;
+			string ctrName;
+			// unhooking system timer option for now
+			// System *sysPtr;
+			int currInd;
+			int dataLen;
+			double *counter;
+			vector <vector <double> > data;
+			string filePath;
+			// AS-2021
 	};
 
 
@@ -373,6 +397,16 @@ namespace NFcore {
 
 				void addTypeIMoleculeDependency(MoleculeType *mt);
 
+				// AS-2021
+				void fileUpdate();
+				double getCounterValue();
+				void loadParamFile(string filePath);
+				void enableFileDependency(string FilePath);
+				void setCtrName(string name);
+				void addFunctionPointer(GlobalFunction *f);
+				bool fileFunc;
+				// AS-2021
+
 
 			protected:
 
@@ -414,6 +448,19 @@ namespace NFcore {
 				double * refLfValues;
 
 				mu::Parser *p;
+
+				// AS-2021
+				string ctrType;
+				string ctrName;
+				// unhooking system timer option for now
+				// System *sysPtr;
+				GlobalFunction *funcPtr;
+				int currInd;
+				int dataLen;
+				double *counter;
+				vector <vector <double> > data;
+				string filePath;
+				// AS-2021
 		};
 
 

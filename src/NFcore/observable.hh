@@ -17,7 +17,9 @@ namespace NFcore
 	class Molecule;
 	class TemplateMolecule;
 	class Complex;
-
+	// AS-2021
+	class GlobalFunction;
+	// AS-2021
 
 	//!  Tracks the counts of predefined observables in the simulation.
 	/*!
@@ -99,6 +101,10 @@ namespace NFcore
 			void addReferenceToMyself(mu::Parser *p);
 			void addReferenceToMyself(string referenceName, mu::Parser *p);
 			void addDependentRxn(ReactionClass *r);
+			
+			// AS-2021
+			void addReferenceToGlobalFunction(GlobalFunction *f);
+			// AS-2021
 
 			virtual int isObservable(Molecule *m) const = 0;
 			virtual int isObservable(Complex *c) const = 0;

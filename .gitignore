@@ -1,1 +1,6 @@
 build
+.vscode
+build_test_files
+validate/basicModels/*.*dat
+validate/basicModels/*.net
+validate/basicModels/*.xml

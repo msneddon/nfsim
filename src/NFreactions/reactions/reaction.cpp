@@ -54,6 +54,11 @@ double FunctionalRxnClass::update_a() {
 	//	cout<<"here"<<endl;
 	if(gf!=0) {
 	//	cout<<"in here"<<endl;
+		// AS-2021
+		if(gf->fileFunc==true) {
+			gf->fileUpdate();
+		}
+		// AS-2021
 		a=FuncFactory::Eval(gf->p);
 	} else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
@@ -111,9 +116,14 @@ void FunctionalRxnClass::printDetails() const {
 	string trate = "off";
 	if(this->totalRateFlag) trate = "on";
 
-	if(gf!=0)
+	if(gf!=0) {
+		// AS-2021
+		if (gf->fileFunc==true) {
+			gf->fileUpdate();
+		}
+		// AS-2021
 		cout<<"ReactionClass: " << name <<"  ( baseFunction="<<gf->getNiceName()<<"="<<FuncFactory::Eval(gf->p)<<",  a="<<a<<", fired="<<fireCounter<<" times, TotalRate="<<trate<<" )"<<endl;
-	else if(cf!=0) {
+	} else if(cf!=0) {
 		int * reactantCounts = new int[this->n_reactants];
 		for(unsigned int r=0; r<n_reactants; r++) {
 			reactantCounts[r]=getReactantCount(r);

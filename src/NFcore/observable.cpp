@@ -135,8 +135,11 @@ void Observable::getTemplateMoleculeList(int &n_templates, TemplateMolecule **&t
 	n_templates = this->n_templates;
 	tmList = this->templateMolecules;
 }
-
-
+// AS-2021
+void Observable::addReferenceToGlobalFunction(GlobalFunction *f) {
+	f->addCounterPointer(&count);
+}
+// AS-2021
 void Observable::addReferenceToMyself(mu::Parser *p)
 {
 	p->DefineVar(obsName,&count);

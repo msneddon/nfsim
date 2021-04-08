@@ -48,6 +48,10 @@ CompositeFunction::CompositeFunction(System *s,
 	}
 
 	p=0;
+
+	// AS-2021
+	this->fileFunc = false;
+	// AS-2021
 }
 CompositeFunction::~CompositeFunction()
 {
@@ -354,7 +358,13 @@ void CompositeFunction::printDetails(System *s) {
 	cout<<" = "<<this->originalExpression<<endl;
 	cout<<" parsed expression = "<<this->parsedExpression<<endl;
 	cout<<"   -Function References:"<<endl;
+	cout<<"looping over funcs, n funcs: "<<n_gfs<<endl;
 	for(int f=0; f<n_gfs; f++) {
+		// AS-2021
+		if (gfs[f]->fileFunc==true) {
+			gfs[f]->fileUpdate();
+		} 
+		// AS-2021
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 		cout<<"         global function: "<<gfNames[f]<<" = "<<gfValues[f]<<endl;
 
@@ -378,8 +388,15 @@ void CompositeFunction::printDetails(System *s) {
 		}
 	}
 
-	if(p!=0)
+	if(p!=0) {
+		// AS-2021
+		if (this->fileFunc==true) {
+			this->fileUpdate();
+		}
+		// AS-2021
 		cout<<"   Function last evaluated to: "<<FuncFactory::Eval(p)<<endl;
+	}
+		
 
 
 
@@ -419,6 +436,11 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	//1 evaluate all global functions
 	//cout << "n_gfs=" << n_gfs << endl;
 	for(int f=0; f<n_gfs; f++) {
+		// AS-2021
+		if (gfs[f]->fileFunc==true) {
+			gfs[f]->fileUpdate();
+		}
+		// AS-2021
 		gfValues[f]=FuncFactory::Eval(gfs[f]->p);
 	}
 
@@ -470,8 +492,170 @@ double CompositeFunction::evaluateOn(Molecule **molList, int *scope, int *curRea
 	}
 
 
-
-
-	//evaluate this function
+	// cout<<"evaluating composite function: "<<name<<endl;
+	// AS-2021
+	if (this->fileFunc==true) {
+		this->fileUpdate();
+	} 
+	// AS-2021
 	return FuncFactory::Eval(p);
+	//evaluate this function
 }
+
+// AS-2021
+void CompositeFunction::loadParamFile(string filePath) 
+{
+	// setup our vectors
+	vector <double> time;
+	vector <double> values;
+	// open file for reading
+	ifstream file(filePath.c_str());
+	// Report if file doesn't exist
+	if(!file.good()){
+		cout<<"Error preparing function "<<this->name<<" in class GlobalFunction!!"<<endl;
+		cout<<"File doesn't look like it exists"<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	}
+	// TODO: Err out this doesn't work
+	try {
+		// strings for looping over the file
+		string line, word, content;
+		string a,b;
+		// TODO: Err out if the format is wrong
+		while (file >> a >> b) {
+			// convert a to double
+			istringstream aos(a);
+			double d;
+			aos >> d;
+			// add it to time
+			time.push_back(d);
+			// convert b to double
+			istringstream bos(b);
+			bos >> d;
+			// add it to values
+			values.push_back(d);
+		}
+		// put the vectors into data vector
+		this->data.push_back(time);
+		this->data.push_back(values);
+	} catch (exception const & e) {
+		cout<<"Error preparing function "<<this->name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Failed to either open or read the file."<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	};
+	return;
+};
+
+void CompositeFunction::addFunctionPointer(GlobalFunction *fPtr) {
+	this->ctrType = "Function";
+	// this->setCtrName(fPtr->getName());
+	this->setCtrName("__TFUN__VAL__");
+	this->funcPtr = fPtr;
+}
+
+void CompositeFunction::setCtrName(string name) {
+	this->ctrName = name;
+}
+
+void CompositeFunction::enableFileDependency(string filePath) {
+	// load file
+	// cout<<"file dependency of function: "<<name<<endl;
+	// cout<<"file: "<<filePath<<endl;
+	// TODO: Err out if this fails
+	try {
+		this->loadParamFile(filePath);
+	} catch (exception const & e) {
+		cout<<"Error preparing function "<<name<<" in class GlobalFunction!!"<<endl;
+		cout<<"Quitting."<<endl;
+		exit(1);
+	};
+	// we just want to keep a record of this
+	this->filePath = filePath;
+	// this sets it up so that this function knows it's supposed
+	// to be pulling values from a file
+	this->fileFunc = true;
+	// initialize internal index
+	this->currInd = 0;
+	// pull data lenght so we can reuse it
+	this->dataLen = data[0].size();
+}
+
+double CompositeFunction::getCounterValue() {
+	// depending on the type of the observable counter
+	// get the actual value
+	double ctrVal;
+	if (ctrType == "Function") {
+		ctrVal = FuncFactory::Eval(this->funcPtr->p);
+	}
+	// unhooking system timer option for now
+	// else {
+	// 	// not sure but this is likely slower
+	// 	ctrVal = this->sysPtr->getCurrentTime();
+	// }
+	return ctrVal;
+}
+void CompositeFunction::fileUpdate() {
+	// TODO: Error checking and reporting
+	
+	// get counter val
+	double ctrVal = this->getCounterValue();
+
+	// basic step function implementation
+	// if we got past the last point, keep returning
+	// the last point
+	if (currInd>dataLen-1) {
+		currInd = dataLen-1;
+		p->DefineConst(ctrName,data[1][currInd]);
+		return;
+	} else if (currInd==dataLen-1) {
+		p->DefineConst(ctrName,data[1][currInd]);
+		return;
+	}
+	// a simple way to do interval locating 
+	if (data[0][currInd] < data[0][currInd+1]) {
+		// next point is higher than the current point, we
+		// are waiting for the counter value to be higher 
+		// than our current point
+		
+		// return 0 if we don't have data yet
+		if(data[0][0]>=ctrVal) {
+			// we haven't gotten to the point where
+			// we can get a value out, return 0
+			// cout<<"not there yet, returning 0"<<endl;
+			p->DefineConst(ctrName,0);
+			return;
+		} 
+		// go up by one if the counter value got past 
+		// the next value in the array
+		if (ctrVal>=data[0][currInd+1]) {
+			currInd += 1;
+		}
+	// note that this makes no sense if they are equal
+	// TODO: Raise error if they are equal. Better yet, parse 
+	// it ahead of time and make sure that doesn't happen
+	} else {
+		// next point is lower than the current point, we
+		// are waiting for the counter value to be lower 
+		// than our current point
+
+		// return 0 if we don't have data yet
+		if(data[0][0]<=ctrVal) {
+			// we haven't gotten to the point where
+			// we can get a value out, return 0
+			// cout<<"not there yet, returning 0"<<endl;
+			p->DefineConst(ctrName,0);
+			return;
+		}
+		// go up by one if the counter value got past 
+		// the next value in the array
+		if (ctrVal<=data[0][currInd+1]) {
+			currInd += 1;
+		}
+	}
+	// // return value from the value array
+	p->DefineConst(ctrName,data[1][currInd]);
+	return;
+}
+// AS-2021

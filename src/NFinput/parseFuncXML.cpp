@@ -565,6 +565,81 @@ bool NFinput::initFunctions(
 				return false;
 			}
 
+			// AS-2021
+			// check to see if it has a type and if yes, if it's of type TFUN
+			if(pFunction->Attribute("type")) {
+				string funcType = pFunction->Attribute("type");
+				string ctrType;
+				string ctrName;
+				if (funcType == "TFUN") {
+					// 
+					if (!pFunction->Attribute("file")) {
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to a file.  Quitting."<<endl;
+						return false;
+					}
+					if (!pFunction->Attribute("ctrName")) {
+						cerr<<"!!!Error:  Can't find counter name for TFUN function "<<funcName<<".  Quitting."<<endl;
+						return false;
+					} else {
+						ctrName = pFunction->Attribute("ctrName");
+					}
+					// check references find our counter type
+					if(refNamesSorted.size()>0) {
+						TiXmlElement *refCheck;
+						string refCheckName;
+						string refCheckType;
+						for ( refCheck = pListOfRefs->FirstChildElement("Reference"); refCheck != 0; refCheck = refCheck->NextSiblingElement("Reference")) {
+							refCheckName = refCheck->Attribute("name");
+							if ( refCheckName == ctrName ) {
+								// we found our counter
+								refCheckType = refCheck->Attribute("type");
+								if ( refCheckType != "Observable" && refCheckType != "Function") {
+									cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to an observable or function.  Quitting."<<endl;
+									return false;
+								}
+								ctrType = refCheckType;
+							}
+						}
+					} else {
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to at least one observable or function.  Quitting."<<endl;
+						return false;
+					}
+					// unhooking system timer option for now
+					// else {
+					// 	// we are assuming this means that we use internal time for counter
+					// 	ctrType = "system";
+					// }
+					// get file path
+					string filePath = pFunction->Attribute("file");
+					// we ensured we have the right type of ref name/type earlier
+					if (ctrType=="Observable") {
+						// make function file dependent
+						GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+						f->enableFileDependency(filePath);
+						system->getObservableByName(ctrName)->addReferenceToGlobalFunction(f);
+						// f->setCtrName(refNamesSorted[0]);
+						f->setCtrName("__TFUN__VAL__");
+					} else if (ctrType=="Function") {
+						CompositeFunction *f = system->getCompositeFunctionByName(funcName);
+						f->enableFileDependency(filePath);
+						// GlobalFunction *cfPtr = system->getGlobalFunctionByName(refNamesSorted[0]);
+						f->addFunctionPointer(system->getGlobalFunctionByName(ctrName));
+					} else {
+						cerr<<"!!!Error:  TFUN type function "<<funcName<<" must point to an observable or function. Type was: "<<ctrType<<".  Quitting."<<endl;
+						return false;
+					}
+					// 	// unhooking system timer option for now
+					// else {
+					// 	// make function file dependent
+					// 	GlobalFunction *f = system->getGlobalFunctionByName(funcName);
+					// 	f->enableFileDependency(filePath);
+					// 	f->addSystemPointer(system);
+					// 	f->setCtrName("__COUNTER__");
+					// }
+				}
+			}
+			// AS-2021
+
 			//And here we clear our arrays
 			argNames.clear();
 			refNames.clear();
