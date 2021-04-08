@@ -6,8 +6,8 @@ import re
 import fnmatch
 import sys
 
-bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
-#bngPath = '/home/proto/workspace/bionetgen/bng2/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
+# bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
+bngPath = '/home/boltzmann/bio_tfun/bionetgen/bng2/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
 nfsimPath = os.path.join('..', 'build', 'NFsim')
 
 
@@ -47,10 +47,10 @@ def loadResults(fileName, split):
                 try:
                     timeCourse.append([float(x) for x in nline])
                 except:
-                    print '++++', nline
+                    print('++++', nline)
         return headers, np.array(timeCourse)
     except IOError:
-        print 'no file'
+        print('no file')
         return [], []
 
 
