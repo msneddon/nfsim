@@ -1,4 +1,5 @@
 /Debug/
 *.d
 *.o
-bin/NFsim
+bin/*
+build/*
