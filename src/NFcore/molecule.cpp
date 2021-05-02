@@ -34,7 +34,8 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	this->indexOfBond = new int [numOfComponents];
 	this->hasVisitedBond = new bool [numOfComponents];
 	for(int b=0; b<numOfComponents; b++) {
-		bond[b]=0; indexOfBond[b]=NOBOND;
+		bond[b] = NULL; 
+		indexOfBond[b]=NOBOND;
 		hasVisitedBond[b] = false;
 	}
 
@@ -346,12 +347,12 @@ void Molecule::printDetails(ostream &o)
 	{
 		// Do not print non-bonded states so that mRNA representations are compact
 		// Arvind Rasi Subramaniam
-		if (bond[c]==NOBOND) continue;
+		if (bond[c] == NULL) continue;
 		if(c!=0)o<<"                  ";
 		o<< parentMoleculeType->getComponentName(c) <<"=";
 		o<<parentMoleculeType->getComponentStateName(c,component[c]);
 		o<<"\tbond=";
-		if(bond[c]==NOBOND) o<<"empty";
+		if(bond[c] == NULL) o<<"empty";
 		else {
 			o<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
 			o<<"("<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c])<<")";
@@ -425,7 +426,7 @@ void Molecule::printBondDetails(NFstream &o)
 		o<<"\t";
 		for(int c=0; c<numOfComponents; c++)
 		{
-			if(bond[c]==NOBOND) {continue;}
+			if(bond[c] == NULL) {continue;}
 			else {
 				o<<"||";
 				o << parentMoleculeType->getComponentName(c);
@@ -446,7 +447,7 @@ int Molecule::getDegree()
 {
 	int degree = 0;
 	for(int c=0; c<numOfComponents; c++)
-		if(bond[c]!=NOBOND) degree++;
+		if(bond[c] != NULL) degree++;
 	return degree;
 }
 
@@ -473,13 +474,13 @@ string Molecule::getLabel ( int cIndex ) const
 
 bool Molecule::isBindingSiteOpen(int cIndex) const
 {
-	if(bond[cIndex]==NOBOND) return true;
+	if(bond[cIndex] == NULL) return true;
 	return false;
 }
 
 bool Molecule::isBindingSiteBonded(int cIndex) const
 {
-	if(bond[cIndex]==NOBOND) return false;
+	if(bond[cIndex] == NULL) return false;
 	return true;
 }
 
@@ -507,7 +508,7 @@ int Molecule::getBondedMoleculeBindingSiteIndex(int cIndex) const
 
 void Molecule::bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2)
 {
-	if(m1->bond[cIndex1]!=NOBOND || m2->bond[cIndex2]!=NOBOND) {
+	if(m1->bond[cIndex1] != NULL || m2->bond[cIndex2] != NULL) {
 		cerr<<endl<<endl<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
 		cerr<<"Your universal traversal limit was probably set too low, so some updates were not correct!\n\n";
 
@@ -571,8 +572,8 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 	int cIndex2 = m1->indexOfBond[cIndex];
 
 	//break the bond (older compilers don't let you assign NOBOND to type molecule)
-	m1->bond[cIndex] = 0; //NOBOND;
-	m2->bond[cIndex2] = 0; //NOBOND;
+	m1->bond[cIndex] = NULL; //NOBOND;
+	m2->bond[cIndex2] = NULL; //NOBOND;
 
 	m1->indexOfBond[cIndex] = NOINDEX;
 	m2->indexOfBond[cIndex2] = NOINDEX;
