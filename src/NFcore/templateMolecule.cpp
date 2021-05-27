@@ -525,12 +525,12 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	// AS-5/27/2021
 	// MERGECHECK - commented out block removed
 	// //First, initialize the new arrays
-	// int *newBondComp = new int[n_bonds+1];
-	// string *newBondCompName = new string[n_bonds+1];
-	// TemplateMolecule **newBondPartner = new TemplateMolecule *[n_bonds+1];
-	// string *newBondPartnerCompName = new string[n_bonds+1];
-	// int *newBondPartnerCompIndex = new int[n_bonds+1];
-	// bool *newHasVisitedBond = new bool[n_bonds+1];
+	int *newBondComp = new int[n_bonds+1];
+	string *newBondCompName = new string[n_bonds+1];
+	TemplateMolecule **newBondPartner = new TemplateMolecule *[n_bonds+1];
+	string *newBondPartnerCompName = new string[n_bonds+1];
+	int *newBondPartnerCompIndex = new int[n_bonds+1];
+	bool *newHasVisitedBond = new bool[n_bonds+1];
 
 	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 
