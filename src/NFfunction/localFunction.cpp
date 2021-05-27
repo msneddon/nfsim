@@ -18,9 +18,12 @@ using namespace NFcore;
 using namespace mu;
 
 
-
-list <Molecule *> LocalFunction::molList;
-list <Molecule *>::iterator LocalFunction::molIter;
+// AS-5/27/2021
+// MERGECHECK - list vs vector
+// list <Molecule *> LocalFunction::molList;
+// list <Molecule *>::iterator LocalFunction::molIter;
+vector <Molecule *> LocalFunction::molList;
+vector <Molecule *>::iterator LocalFunction::molIter;
 
 
 string LocalFunction::getName() const {

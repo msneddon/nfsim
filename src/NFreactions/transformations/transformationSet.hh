@@ -17,6 +17,7 @@ namespace NFcore
 	class Molecule;
 	class SpeciesCreator;
 	class MoleculeCreator;
+	class ReactionClass;
 
 
 	//!  Maintains a set of Transformation objects for a ReactionClass
@@ -243,14 +244,20 @@ namespace NFcore
 				will explore down one level of bonds, and so on.
 				@author Michael Sneddon
 			*/
-			bool getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			// AS-5/27/2021
+			// MERGECHECK - list vs vector
+			// bool getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			bool getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
 
 			/*!
 				This is a companion to getListOfProducts. This is called after applying transformations and
 				gathers all the newly added molecules.
 				@author JustinHogg
 			*/
-			bool getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			// AS-5/27/2021
+			// MERGECHECK - list vs vector
+			// bool getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			bool getListOfAddedMolecules(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
 
 			/*!
 				Called by reaction class to determine if the rate of a rule must be adjusted to
@@ -297,6 +304,9 @@ namespace NFcore
 			double getSymmetryFactor() const { return symmetryFactor; };
 			void   setSymmetryFactor(double val) { symmetryFactor = val; useSymmetryFactor = true; };
 
+			// To get the connected reactions for each transformation
+			bool checkConnection(ReactionClass * rxn);
+
 		protected:
 
 			/*!
@@ -337,14 +347,23 @@ namespace NFcore
 			vector <AddSpeciesTransform *> addSpeciesTransformations;
 
 			/*!	List to keep track of the molecules that we are going to delete when a transformation is applied	*/
-			static list <Molecule *> deleteList;
+			// AS-5/27/2021
+			// MERGECHECK - list vs vector
+			// static list <Molecule *> deleteList;
+			static vector <Molecule *> deleteList;
 
 			/*!	List to keep track of the molecules that we have to update as a result of a deletion	*/
-			static list <Molecule *> updateAfterDeleteList;
+			// AS-5/27/2021
+			// MERGECHECK - list vs vector
+			// static list <Molecule *> updateAfterDeleteList;
+			static vector <Molecule *> updateAfterDeleteList;
 
 
 			/*!	iterator for the deleteList and updateAfterDeleteList	*/
-			static list <Molecule *>::iterator it;
+			// AS-5/27/2021
+			// MERGECHECK - list vs vector
+			// static list <Molecule *>::iterator it;
+			static vector <Molecule *>::iterator it;
 
 
 			/*!	keeps track if this set has a symmetric unbinding reaction	*/

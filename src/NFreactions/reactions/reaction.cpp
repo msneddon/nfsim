@@ -265,6 +265,25 @@ int BasicRxnClass::checkForEquality(Molecule *m, MappingSet* ms, int rxnIndex, R
 
 }
 
+/**
+ * Updates a molecule's reaction membership and a reaction's reactant list
+ *
+ * If a molecule matches the TemplateMolecule of a reaction, then it gets added.
+ * Note that NFsim has a single arbitrary TemplateMolecule for each reactant
+ * complex for a reaction. So it assumes that you will always check the molecule
+ * that matches the designated TemplateMolecule of a reaction for updates. So if
+ * I modify the identification of reactant molecules in
+ * TransformationSet::getListOfProducts(), I need to make sure that every molecule
+ * that is part of a reaction whose propensity might change is included in the
+ * listOfProducts.
+ *
+ * This is the gateway function to TemplateMolecule::compare().
+ * @author Arvind Rasi Subramaniam
+ * @param m - molecule that is being compared against the TemplateMolecule of a reaction
+ * @param reactantPos - the reactant number among the reaction's reacant complexes
+ * (note that every connected complex gets only one reactant number.)
+ * @return true if there are no errors.
+ */
 bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 {
 	//First a bit of error checking, that you should skip unless we are debugging...
@@ -296,18 +315,31 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 		}
 	}
 
-	/*
+	// Arvind Rasi Subramaniam: I am modifying this so that the mappingSet does
+	// not change its position if the molecule still matches with the template.
+	// This will prevent the simulation trajectory being dependent on whether
+	// reaction-molecules pairs with unchanged membership are checked or not.
 	//Here we get the standard update...
-	if(m->getRxnListMappingId(rxnIndex)>=0) //If we are in this reaction...
+	if(m->getRxnListMappingId(rxnIndex)>=0)
 	{
-		if(!reactantTemplates[reactantPos]->compare(m)) {
-			//	cout<<"Removing molecule "<<m->getUniqueID()<<" which was at mappingSet: "<<m->getRxnListMappingId(rxnIndex)<<endl;
-			rl->removeMappingSet(m->getRxnListMappingId(rxnIndex));
+		// Insted of removing the mappingSet
+		// and then getting a different clean one from the reactant list,
+		// get the mapping set corresponding to the molecule
+		ms = rl->getWriteableMappingSet(m->getRxnListMappingId(rxnIndex));
+		// and clear it before use.
+		ms->clear();
+		// If the molecule matches again,
+		// the mappingSet gets updated during the compare routine.
+		// If the molecule does not match anymore, remove the mapping set
+		// and remove the rxn form the molecule's reaction membership.
+		if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
+			rl->removeMappingSet(ms->getId());
 			m->setRxnListMappingId(rxnIndex,Molecule::NOT_IN_RXN);
 		}
-
+		// case when the molecule is not in the reaction
 	} else {
-		//Try to map it!
+		// Get a clean mappingSet from the reactantList
+		// typically from the end: see the code for pusNextAvailableMappingSet()
 		ms = rl->pushNextAvailableMappingSet();
 		if(!reactantTemplates[reactantPos]->compare(m,rl,ms)) {
 			//we must remove, if we did not match.  This will also remove
@@ -317,7 +349,6 @@ bool BasicRxnClass::tryToAdd(Molecule *m, unsigned int reactantPos)
 			m->setRxnListMappingId(rxnIndex,ms->getId());
 		}
 	}
-	*/
 
 	//Here we get the standard update...
 	while(m->getRxnListMappingId(rxnIndex)>=0) {

@@ -53,8 +53,18 @@ private:
     void check_mpi();
 };
 
+// friend function definition in header to avoid separate instantiation
 template<class T>
-NFstream& operator<< (NFstream& nfstream, const T& value);
+NFstream& operator<< (NFstream& nfstream, const T& value)
+{
+    if (nfstream.useFile_)
+	nfstream.file_ << value;
+    else
+	nfstream.str_ << value;
+
+    return nfstream;
+}
+
 
 NFstream& endl (NFstream& nfstream);
 
