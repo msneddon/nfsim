@@ -163,51 +163,51 @@ namespace NFcore
 		int n_emptyComps;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// int *emptyComps; 
-		vector <int> emptyComps;
+		int *emptyComps; 
+		// vector <int> emptyComps;
 
 		// Which of the unique components must be occupied (bonded to something, something
 		// that is not specified)
 		int n_occupiedComps;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// int *occupiedComps;
-		vector <int> occupiedComps;
+		int *occupiedComps;
+		// vector <int> occupiedComps;
 
 		// State value constraints
 		int n_compStateConstraint;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// int *compStateConstraint_Comp; //index of the constrained component
-		// int *compStateConstraint_Constraint; //the constrained value
-		vector <int> compStateConstraint_Comp;
-		vector <int> compStateConstraint_Constraint;
+		int *compStateConstraint_Comp; //index of the constrained component
+		int *compStateConstraint_Constraint; //the constrained value
+		// vector <int> compStateConstraint_Comp;
+		// vector <int> compStateConstraint_Constraint;
 
 		// State value exclusions (state != exclusion)
 		int n_compStateExclusion;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// int *compStateExclusion_Comp;
-		// int *compStateExclusion_Exclusion;
-		vector <int> compStateExclusion_Comp;
-		vector <int> compStateExclusion_Exclusion;
+		int *compStateExclusion_Comp;
+		int *compStateExclusion_Exclusion;
+		// vector <int> compStateExclusion_Comp;
+		// vector <int> compStateExclusion_Exclusion;
 
 		// The set of connections that a particular site is connected to
 		int n_bonds;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// int *bondComp;
-		// string *bondCompName;
-		// TemplateMolecule **bondPartner;
-		// string *bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
-		// int *bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
-		// bool *hasVisitedBond;
-		vector <int> bondComp;
-		vector <string> bondCompName;
-		vector <TemplateMolecule *> bondPartner;
-		vector <string> bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
-		vector <int> bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
-		vector <bool> hasVisitedBond;
+		int *bondComp;
+		string *bondCompName;
+		TemplateMolecule **bondPartner;
+		string *bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
+		int *bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
+		bool *hasVisitedBond;
+		// vector <int> bondComp;
+		// vector <string> bondCompName;
+		// vector <TemplateMolecule *> bondPartner;
+		// vector <string> bondPartnerCompName; //used if nonsymmetric bond is connected to partner symmetric site
+		// vector <int> bondPartnerCompIndex; //used if nonsymmetric bond is connected to partner nonsymmetric site else =-1
+		// vector <bool> hasVisitedBond;
 
 
 		//This stores disjoint sets, in other words, this Template is
@@ -246,8 +246,8 @@ namespace NFcore
 		static vector <TemplateMolecule *>::iterator tmVecIter;
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// static list <TemplateMolecule *>::iterator tmIter;
-		static vector <TemplateMolecule *>::iterator tmIter;
+		static list <TemplateMolecule *>::iterator tmIter;
+		// static vector <TemplateMolecule *>::iterator tmIter;
 
 		// For tracking the reactant or product that this TemplateMolecule is
 		// transformed into

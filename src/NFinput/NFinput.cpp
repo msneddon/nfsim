@@ -1160,6 +1160,7 @@ bool NFinput::initReactionRules(
 					}
 				}
 
+				
 				// Read in the reactant-product maps for this rule
 				// Arvind Rasi Subramaniam
 				TiXmlElement *pListOfMaps = pRxnRule->FirstChildElement("Map");
@@ -1167,14 +1168,18 @@ bool NFinput::initReactionRules(
 					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant-product maps!"<<endl;
 					continue;
 				}
-
 				TiXmlElement *pMap;
 				string reactantId, productId;
 				for ( pMap = pListOfMaps->FirstChildElement("MapItem"); pMap != 0; pMap = pMap->NextSiblingElement("MapItem"))
 				{
+					// TODO: these don't have to exist
+					if ( !pMap->Attribute("sourceID") | !pMap->Attribute("targetID") ) {
+						continue;
+					}
 					reactantId = pMap->Attribute("sourceID");
 					productId = pMap->Attribute("targetID");
-					if ((reactantId.size() == 0) | (productId.size() == 0)) {
+					cout<<"lol3"<<endl;
+					if ((reactantId.size() == 0) || (productId.size() == 0)) {
 						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
 						return false;
 					}
@@ -1815,35 +1820,35 @@ bool NFinput::initReactionRules(
 					return false;
 				}
 
-				if( !pRateLaw->Attribute("totalrate") ) {
-					cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
-					cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
-				} else {
-					try {
-						int rf = NFutil::convertToInt(pRateLaw->Attribute("totalrate"));
-						if(rf>0) totalRateFlag=true;
-						if(verbose) cout<<"\t\t\tTotal rate flag = "<<totalRateFlag<<endl;
-					} catch (std::runtime_error &e1) {
-						//cerr<<e1.what()<<endl;
-						cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
-						exit(1);
-					}
-				}
+				// if( !pRateLaw->Attribute("totalrate") ) {
+				// 	cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
+				// 	cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
+				// } else {
+				// 	try {
+				// 		int rf = NFutil::convertToInt(pRateLaw->Attribute("totalrate"));
+				// 		if(rf>0) totalRateFlag=true;
+				// 		if(verbose) cout<<"\t\t\tTotal rate flag = "<<totalRateFlag<<endl;
+				// 	} catch (std::runtime_error &e1) {
+				// 		//cerr<<e1.what()<<endl;
+				// 		cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+				// 		exit(1);
+				// 	}
+				// }
 
-				if( !pRateLaw->Attribute("tag") ) {
-					cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
-					cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
-				} else {
-					try {
-						int rf = NFutil::convertToInt(pRateLaw->Attribute("tag"));
-						if(rf>0) tagFlag=true;
-						if(verbose) cout<<"\t\t\t= "<<tagFlag<<endl;
-					} catch (std::runtime_error &e1) {
-						//cerr<<e1.what()<<endl;
-						cerr<<"Error!! tag flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
-						exit(1);
-					}
-				}
+				// if( !pRateLaw->Attribute("tag") ) {
+				// 	cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
+				// 	cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
+				// } else {
+				// 	try {
+				// 		int rf = NFutil::convertToInt(pRateLaw->Attribute("tag"));
+				// 		if(rf>0) tagFlag=true;
+				// 		if(verbose) cout<<"\t\t\t= "<<tagFlag<<endl;
+				// 	} catch (std::runtime_error &e1) {
+				// 		//cerr<<e1.what()<<endl;
+				// 		cerr<<"Error!! tag flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+				// 		exit(1);
+				// 	}
+				// }
 
 				if(!pRateLaw->Attribute("id") || !pRateLaw->Attribute("type")) {
 					cerr<<"!!Error:: ReactionRule "<<rxnName<<" rate law specification: cannot read 'id' or 'type' attribute!"<<endl;
@@ -3542,6 +3547,7 @@ int NFinput::readTemplatePattern(
 
 		// Now loop through the molecules in the list
 		TiXmlElement *pMol;
+		bool foundTrash = false;
 		for ( pMol = pListOfMol->FirstChildElement("Molecule"); pMol != 0; pMol = pMol->NextSiblingElement("Molecule"))
 		{
 			//First get the type of molecule and retrieve the moleculeType object from the system
@@ -3554,21 +3560,25 @@ int NFinput::readTemplatePattern(
 				molUid = pMol->Attribute("id");
 			}
 
-
 			//Generate an error for any null or trash molecule
 			if(molName=="Null" || molName=="NULL" || molName=="null") {
-				cerr<<"\n\nError!  You cannot include a 'null' molecule in any reactant or observable pattern!"<<endl;
-				cerr<<"Null is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
-				cerr<<"rules and patterns and remove any usage of 'Null' or 'null' or 'NULL'."<<endl;
-				exit(1);
+				// cerr<<"\n\nError!  You cannot include a 'null' molecule in any reactant or observable pattern!"<<endl;
+				// cerr<<"Null is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
+				// cerr<<"rules and patterns and remove any usage of 'Null' or 'null' or 'NULL'."<<endl;
+				// exit(1);
+				if(verbose) cout<<"\t\t\tSkipping a null molecule in species declaration"<<endl;
+				foundTrash=true;
+				continue;
 			}
 			if(molName=="Trash" || molName=="TRASH" || molName=="trash") {
-				cerr<<"\n\nError!  You cannot include a 'trash' molecule in any reactant or observable pattern!"<<endl;
-			    cerr<<"Trash is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
-			    cerr<<"rules and patterns and remove any usage of 'Trash' or 'trash' or 'TRASH'."<<endl;
-				exit(1);
+				// cerr<<"\n\nError!  You cannot include a 'trash' molecule in any reactant or observable pattern!"<<endl;
+			    // cerr<<"Trash is a keyword in NFsim used for degradation, so cannot be used.  Check your"<<endl;
+			    // cerr<<"rules and patterns and remove any usage of 'Trash' or 'trash' or 'TRASH'."<<endl;
+				// exit(1);
+				if(verbose) cout<<"\t\t\t\tskipping a trash molecule in product pattern..."<<endl;
+				foundTrash=true;
+				continue;
 			}
-
 
 			//Get the moleculeType and create the actual template
 			MoleculeType *moltype = s->getMoleculeTypeByName(molName);
@@ -3601,7 +3611,6 @@ int NFinput::readTemplatePattern(
 					//Set up basic component info so we can go back to it if need be...
 					component c(tempmol,compName);
 					comps.insert(pair <string, component> (compId,c));
-
 
 					//////////////////////////////////////////////////////
 					//////////////////////////////////////////////////////
@@ -3663,7 +3672,6 @@ int NFinput::readTemplatePattern(
 						}
 						tempmol->addSymCompConstraint(compName,compId,bondConstraint,stateConstraint);
 
-
 					//////////////////////////////////////////////////////
 					//////////////////////////////////////////////////////
 					//////////////////////////////////////////////////////
@@ -3695,7 +3703,6 @@ int NFinput::readTemplatePattern(
 								}
 							}
 						}
-
 						//Check it as a binding site...
 						if(pComp->Attribute("numberOfBonds")) {
 							string numOfBonds = pComp->Attribute("numberOfBonds");
@@ -3759,7 +3766,6 @@ int NFinput::readTemplatePattern(
 				} //end loop over components
 			} //end if statement for compenents to exist
 
-
 			//Loop through the states and set the constraints we need to set
 			int k=0;
 			for(strVecIter = stateName.begin(); strVecIter != stateName.end(); k++, strVecIter++ )
@@ -3774,7 +3780,6 @@ int NFinput::readTemplatePattern(
 			{
 				tempmol->addBoundComponent(*strVecIter);
 			}
-
 
 
 			//tempmol->printDetails();
@@ -3891,7 +3896,6 @@ int NFinput::readTemplatePattern(
 			return 0;
 		}
 
-
 		//Print out all the templates we made...
 		//for(int k=0; k<tMolecules.size(); k++) {
 		//	tMolecules.at(k)->printDetails(cout);
@@ -3912,7 +3916,6 @@ int NFinput::readTemplatePattern(
 //		for(unsigned int i=0; i<uniqueSetId.size(); i++) {
 //			cout<<uniqueSetId.at(i)<<endl;
 //		}
-
 
 		if(setCount>1) {
 			// Possibly, we might want to enforce complex bookkeeping for such reactions....
@@ -3962,6 +3965,11 @@ int NFinput::readTemplatePattern(
 
 		}
 
+
+		if(foundTrash) {
+			if(verbose) cout<<"\t\t\t\tWarning: You have an add molecule rule, but only a Trash or Null pattern listed..."<<endl;
+			return 1;
+		}
 
 		//Grab the first template molecule from the list, and arbitrarily set this as the root
 		if(tMolecules.empty()){

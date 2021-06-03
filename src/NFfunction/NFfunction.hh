@@ -344,10 +344,10 @@ namespace NFcore {
 
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// static list <Molecule *> molList;
-			// static list <Molecule *>::iterator molIter;
-			static vector <Molecule *> molList;
-			static vector <Molecule *>::iterator molIter;
+			static list <Molecule *> molList;
+			static list <Molecule *>::iterator molIter;
+			// static vector <Molecule *> molList;
+			// static vector <Molecule *>::iterator molIter;
 
 			//Here we store back pointers into both type I and type II molecules
 			//Remember that type I molecules must store the value of this function

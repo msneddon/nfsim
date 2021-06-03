@@ -12,8 +12,8 @@ queue <int> TemplateMolecule::d;
 vector <TemplateMolecule *>::iterator TemplateMolecule::tmVecIter;
 // AS-5/27/2021
 // MERGECHECK - list vs vector
-// list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
-vector <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
+list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
+// vector <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
 int TemplateMolecule::TotalTemplateMoleculeCount=0;
 
@@ -30,18 +30,19 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 	//every time we add some type of constraint
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector?
-	// this->emptyComps=new int[0]
-	// this->occupiedComps=new int[0];
-	// this->compStateConstraint_Comp=new int[0];
-	// this->compStateConstraing_Constraing=new int[0];
-	// this->compStateExclusion_Comp=new int[0];
-	// this->compStateExclusion_Exclusion=new int[0];
-	// this->bondComp=new int[0];
-	// this->bondCompName=new string[0];
-	// this->bondPartner=new TemplateMolecule * [0];
-	// this->bondPartnerCompName=new string[0];
-	// this->bondPartnerCompIndex=new int[0];
-	// this->hasVisitedBond=new bool[0];
+	this->emptyComps=new int[0];
+	this->occupiedComps=new int[0];
+	this->compStateConstraint_Comp=new int[0];
+	this->compStateConstraint_Constraint=new int[0];
+	this->compStateExclusion_Comp=new int[0];
+	this->compStateExclusion_Exclusion=new int[0];
+	this->bondComp=new int[0];
+	this->bondCompName=new string[0];
+	this->bondPartner=new TemplateMolecule * [0];
+	this->bondPartnerCompName=new string[0];
+	this->bondPartnerCompIndex=new int[0];
+	this->hasVisitedBond=new bool[0];
+	//
 	this->n_emptyComps=0;
 	this->n_occupiedComps=0;
 	this->n_compStateConstraint=0;
@@ -100,34 +101,34 @@ TemplateMolecule::~TemplateMolecule() {
 
 	// AS-5/27/2021
 	// MERGECHECK - removed delete commands
-	// delete [] emptyComps;
-	// delete [] occupiedComps;
-	// delete [] compStateConstraint_Comp;
-	// delete [] compStateConstraint_Constraint;
-	// delete [] compStateExclusion_Comp;
-	// delete [] compStateExclusion_Exclusion;
-	emptyComps.clear();
-	occupiedComps.clear();
-	compStateConstraint_Comp.clear();
-	compStateConstraint_Constraint.clear();
-	compStateExclusion_Comp.clear();
-	compStateExclusion_Exclusion.clear();
+	delete [] emptyComps;
+	delete [] occupiedComps;
+	delete [] compStateConstraint_Comp;
+	delete [] compStateConstraint_Constraint;
+	delete [] compStateExclusion_Comp;
+	delete [] compStateExclusion_Exclusion;
+	// emptyComps.clear();
+	// occupiedComps.clear();
+	// compStateConstraint_Comp.clear();
+	// compStateConstraint_Constraint.clear();
+	// compStateExclusion_Comp.clear();
+	// compStateExclusion_Exclusion.clear();
 	delete [] symCompUniqueId;
 
 	// AS-5/27/2021
 	// MERGECHECK - removed deletes
-	// delete [] bondComp;
-	// delete [] bondCompName;
-	// delete [] bondPartner;
-	// delete [] bondPartnerCompName;
-	// delete [] bondPartnerCompIndex;
-	// delete [] hasVisitedBond;
-	bondComp.clear();
-	bondCompName.clear();
-	bondPartner.clear();
-	bondPartnerCompName.clear();
-	bondPartnerCompIndex.clear();
-	hasVisitedBond.clear();
+	delete [] bondComp;
+	delete [] bondCompName;
+	delete [] bondPartner;
+	delete [] bondPartnerCompName;
+	delete [] bondPartnerCompIndex;
+	delete [] hasVisitedBond;
+	// bondComp.clear();
+	// bondCompName.clear();
+	// bondPartner.clear();
+	// bondPartnerCompName.clear();
+	// bondPartnerCompIndex.clear();
+	// hasVisitedBond.clear();
 
 	delete [] connectedTo;
 	delete [] hasTraversedDownConnectedTo;
@@ -185,13 +186,13 @@ void TemplateMolecule::addEmptyComponent(string cName) {
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	// AS-5/27/2021
 	// MERGECHECK - replaced commented block w/ push_back
-	// int *newEmptyCompArray=new int[n_emptyComps+1];
-	// for(int i=0; i<n_emptyComps; i++)
-	// 	newEmptyCompArray[i]=this->emptyComps[i];
-	// newEmptyCompArray[n_emptyComps]=compIndex;
-	// delete [] emptyComps;
-	// emptyComps=newEmptyCompArray;
-	emptyComps.push_back(compIndex);
+	int *newEmptyCompArray=new int[n_emptyComps+1];
+	for(int i=0; i<n_emptyComps; i++)
+		newEmptyCompArray[i]=this->emptyComps[i];
+	newEmptyCompArray[n_emptyComps]=compIndex;
+	delete [] emptyComps;
+	emptyComps=newEmptyCompArray;
+	// emptyComps.push_back(compIndex);
 	n_emptyComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -202,13 +203,13 @@ void TemplateMolecule::addBoundComponent(string cName) {
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	// AS-5/27/2021
 	// MERGECHECK - replaced commented block w/ push_back
-	// int *newOccupiedCompArray=new int[n_occupiedComps+1];
-	// for(int i=0; i<n_occupiedComps; i++)
-	// 	newOccupiedCompArray[i]=this->occupiedComps[i];
-	// newOccupiedCompArray[n_occupiedComps]=compIndex;
-	// delete [] occupiedComps;
-	// occupiedComps=newOccupiedCompArray;
-	occupiedComps.push_back(compIndex);
+	int *newOccupiedCompArray=new int[n_occupiedComps+1];
+	for(int i=0; i<n_occupiedComps; i++)
+		newOccupiedCompArray[i]=this->occupiedComps[i];
+	newOccupiedCompArray[n_occupiedComps]=compIndex;
+	delete [] occupiedComps;
+	occupiedComps=newOccupiedCompArray;
+	// occupiedComps.push_back(compIndex);
 	n_occupiedComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -228,20 +229,20 @@ void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	// AS-5/27/2021
 	// MERGECHECK - replaced commented block w/ push_back
-	// int *newConstraint_Comp=new int[n_compStateConstraint+1];
-	// int *newConstraint_Constraint=new int[n_compStateConstraint+1];
-	// for(int i=0; i<n_compStateConstraint; i++) {
-	// 	newConstraint_Comp[i]=compStateConstraint_Comp[i];
-	// 	newConstraint_Constraint[i]=compStateConstraint_Constraint[i];
-	// }
-	// newConstraint_Comp[n_compStateConstraint]=compIndex;
-	// newConstraint_Constraint[n_compStateConstraint]=stateValue;
-	// delete [] compStateConstraint_Comp;
-	// delete [] compStateConstraint_Constraint;
-	// compStateConstraint_Comp=newConstraint_Comp;
-	// compStateConstraint_Constraint=newConstraint_Constraint;
-	compStateConstraint_Comp.push_back(compIndex);
-	compStateConstraint_Constraint.push_back(stateValue);
+	int *newConstraint_Comp=new int[n_compStateConstraint+1];
+	int *newConstraint_Constraint=new int[n_compStateConstraint+1];
+	for(int i=0; i<n_compStateConstraint; i++) {
+		newConstraint_Comp[i]=compStateConstraint_Comp[i];
+		newConstraint_Constraint[i]=compStateConstraint_Constraint[i];
+	}
+	newConstraint_Comp[n_compStateConstraint]=compIndex;
+	newConstraint_Constraint[n_compStateConstraint]=stateValue;
+	delete [] compStateConstraint_Comp;
+	delete [] compStateConstraint_Constraint;
+	compStateConstraint_Comp=newConstraint_Comp;
+	compStateConstraint_Constraint=newConstraint_Constraint;
+	// compStateConstraint_Comp.push_back(compIndex);
+	// compStateConstraint_Constraint.push_back(stateValue);
 	n_compStateConstraint++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -260,20 +261,20 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	int compIndex=moleculeType->getCompIndexFromName(cName);
 	// AS-5/27/2021
 	// MERGECHECK - replaced commented block w/ push_back
-	// int *newExclusion_Comp=new int[n_compStateExclusion+1];
-	// int *newExclusion_Exclusion=new int[n_compStateExclusion+1];
-	// for(int i=0; i<n_compStateExclusion; i++) {
-	// 	newExclusion_Comp[i]=compStateExclusion_Comp[i];
-	// 	newExclusion_Exclusion[i]=compStateExclusion_Exclusion[i];
-	// }
-	// newExclusion_Comp[n_compStateExclusion]=compIndex;
-	// newExclusion_Exclusion[n_compStateExclusion]=stateValue;
-	// delete [] compStateExclusion_Comp;
-	// delete [] compStateExclusion_Exclusion;
-	// compStateExclusion_Comp=newExclusion_Comp;
-	// compStateExclusion_Exclusion=newExclusion_Exclusion;
-	compStateExclusion_Comp.push_back(compIndex);
-	compStateExclusion_Exclusion.push_back(stateValue);
+	int *newExclusion_Comp=new int[n_compStateExclusion+1];
+	int *newExclusion_Exclusion=new int[n_compStateExclusion+1];
+	for(int i=0; i<n_compStateExclusion; i++) {
+		newExclusion_Comp[i]=compStateExclusion_Comp[i];
+		newExclusion_Exclusion[i]=compStateExclusion_Exclusion[i];
+	}
+	newExclusion_Comp[n_compStateExclusion]=compIndex;
+	newExclusion_Exclusion[n_compStateExclusion]=stateValue;
+	delete [] compStateExclusion_Comp;
+	delete [] compStateExclusion_Exclusion;
+	compStateExclusion_Comp=newExclusion_Comp;
+	compStateExclusion_Exclusion=newExclusion_Exclusion;
+	// compStateExclusion_Comp.push_back(compIndex);
+	// compStateExclusion_Exclusion.push_back(stateValue);
 	n_compStateExclusion++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -550,49 +551,49 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector?
 	// int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
-	// newBondComp[n_bonds] = compIndex;
-	// newBondCompName[n_bonds] = thisBsiteName;
-	// newBondPartner[n_bonds] = t2;
-	// newBondPartnerCompName[n_bonds] = bSiteName2;
-	bondComp.push_back(compIndex);
-	bondCompName.push_back(thisBsiteName);
-	bondPartner.push_back(t2);
-	bondPartnerCompName.push_back(bSiteName2);
+	newBondComp[n_bonds] = compIndex;
+	newBondCompName[n_bonds] = thisBsiteName;
+	newBondPartner[n_bonds] = t2;
+	newBondPartnerCompName[n_bonds] = bSiteName2;
+	// bondComp.push_back(compIndex);
+	// bondCompName.push_back(thisBsiteName);
+	// bondPartner.push_back(t2);
+	// bondPartnerCompName.push_back(bSiteName2);
 	if(t2->moleculeType->isEquivalentComponent(bSiteName2)) {
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// newBondPartnerCompIndex[n_bonds] = -1;
-		bondPartnerCompIndex.push_back(-1);
+		newBondPartnerCompIndex[n_bonds] = -1;
+		// bondPartnerCompIndex.push_back(-1);
 	} else {
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// newBondPartnerCompIndex[n_bonds]=t2->moleculeType->getCompIndexFromName(bSiteName2);
-		bondPartnerCompIndex.push_back(t2->moleculeType->getCompIndexFromName(bSiteName2));
+		newBondPartnerCompIndex[n_bonds]=t2->moleculeType->getCompIndexFromName(bSiteName2);
+		// bondPartnerCompIndex.push_back(t2->moleculeType->getCompIndexFromName(bSiteName2));
 	}
 	// AS-5/27/2021
 	// MERGECHECK - commented section replaced
-	// newHasVisitedBond[n_bonds] = false;
-	hasVisitedBond.push_back(false);
+	newHasVisitedBond[n_bonds] = false;
+	// hasVisitedBond.push_back(false);
 
 	// AS-5/27/2021
 	// MERGECHECK - commented section removed
 	// //Delete the duplicated information
-	// delete [] bondComp;
-	// delete [] bondCompName;
-	// delete [] bondPartner;
-	// delete [] bondPartnerCompName;
-	// delete [] bondPartnerCompIndex;
-	// delete [] hasVisitedBond;
+	delete [] bondComp;
+	delete [] bondCompName;
+	delete [] bondPartner;
+	delete [] bondPartnerCompName;
+	delete [] bondPartnerCompIndex;
+	delete [] hasVisitedBond;
 
 	// AS-5/27/2021
 	// MERGECHECK - removed commented out section
 	// //Reassign the new information
-	// bondComp = newBondComp;
-	// bondCompName = newBondCompName;
-	// bondPartner=newBondPartner;
-	// bondPartnerCompName=newBondPartnerCompName;
-	// bondPartnerCompIndex=newBondPartnerCompIndex;
-	// hasVisitedBond=newHasVisitedBond;
+	bondComp = newBondComp;
+	bondCompName = newBondCompName;
+	bondPartner=newBondPartner;
+	bondPartnerCompName=newBondPartnerCompName;
+	bondPartnerCompIndex=newBondPartnerCompIndex;
+	hasVisitedBond=newHasVisitedBond;
 	n_bonds++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -627,8 +628,8 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 	//queue <TemplateMolecule *> q;
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// list <TemplateMolecule *> t;
-	vector <TemplateMolecule *> t;
+	list <TemplateMolecule *> t;
+	// vector <TemplateMolecule *> t;
 	//queue <int> d;
 
 	int currentDepth = 0;
@@ -1466,10 +1467,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// list <Molecule *> molList;
-		// list <Molecule *>::iterator molIter;
-		vector <Molecule *> molList;
-		vector <Molecule *>::iterator molIter;
+		list <Molecule *> molList;
+		list <Molecule *>::iterator molIter;
+		// vector <Molecule *> molList;
+		// vector <Molecule *>::iterator molIter;
 		bool hasTraversed = false;
 
 		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
@@ -1541,10 +1542,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 					// clear out anything that is dangling
 					// AS-5/27/2021
 					// MERGECHECK - list vs vector
-					// list <Molecule *> molList;
-					// list <Molecule *>::iterator molIter;
-					vector <Molecule *> molList;
-					vector <Molecule *>::iterator molIter;
+					list <Molecule *> molList;
+					list <Molecule *>::iterator molIter;
+					// vector <Molecule *> molList;
+					// vector <Molecule *>::iterator molIter;
 					m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 					for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 						(*molIter)->isMatchedTo=0;
@@ -1578,10 +1579,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			// clear out anything that is dangling
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// list <Molecule *> molList;
-			// list <Molecule *>::iterator molIter;
-			vector <Molecule *> molList;
-			vector <Molecule *>::iterator molIter;
+			list <Molecule *> molList;
+			list <Molecule *>::iterator molIter;
+			// vector <Molecule *> molList;
+			// vector <Molecule *>::iterator molIter;
 			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 			for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 				(*molIter)->isMatchedTo=0;
@@ -1597,6 +1598,10 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	//if(de)cout<<this->uniqueTemplateID<<" matched!!!"<<endl;
 	return true;
 }
+
+// AS-6/1/2021
+// MERGECHECK - going back to lists
+// TODO: Fix this to work with lists and not vectors
 
 /** To match two template molecules
  * I will closely follow the 'compare' function above for
@@ -1616,13 +1621,19 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// then they are compatible
 	vector <int> allComps;
 	vector <int> allComps_tm;
-	// TODO: Is this for syntax ok?
-	for (int i : emptyComps) allComps.push_back(i);
-	for (int i : occupiedComps) allComps.push_back(i);
-	for (int i : bondComp) allComps.push_back(i);
-	for (int i : tm->emptyComps) allComps_tm.push_back(i);
-	for (int i : tm->occupiedComps) allComps_tm.push_back(i);
-	for (int i : tm->bondComp) allComps_tm.push_back(i);
+	for (int i;i<n_emptyComps;i++) allComps.push_back(emptyComps[i]);
+	for (int i;i<n_occupiedComps;i++) allComps.push_back(occupiedComps[i]);
+	for (int i;i<n_bonds;i++) allComps.push_back(bondComp[i]);
+	for (int i;i<tm->n_emptyComps;i++) allComps_tm.push_back(tm->emptyComps[i]);
+	for (int i;i<tm->n_occupiedComps;i++) allComps_tm.push_back(tm->occupiedComps[i]);
+	for (int i;i<tm->n_bonds;i++) allComps_tm.push_back(tm->bondComp[i]);
+	//
+	// for (int i : emptyComps) allComps.push_back(i);
+	// for (int i : occupiedComps) allComps.push_back(i);
+	// for (int i : bondComp) allComps.push_back(i);
+	// for (int i : tm->emptyComps) allComps_tm.push_back(i);
+	// for (int i : tm->occupiedComps) allComps_tm.push_back(i);
+	// for (int i : tm->bondComp) allComps_tm.push_back(i);
 
 	// Check each component of one TM against all components of other TM
 	bool compOverlap = false;
@@ -1641,26 +1652,35 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// Check that sites that are occupied in one TemplateMolecule
 	// are not specified to be empty in the other TemplateMolecule
 	for (int i=0; i < n_occupiedComps; ++i) {
-		it = find(tm->emptyComps.begin(),
-				tm->emptyComps.end(),
-				occupiedComps[i]);
-		if (it != tm->emptyComps.end()) return false;
+		for(int j=0; j<n_emptyComps; j++) {
+			if (tm->emptyComps[j] == occupiedComps[i]) return false;
+		}
+		// it = find(tm->emptyComps.begin(),
+		// 		tm->emptyComps.end(),
+		// 		occupiedComps[i]);
+		// if (it != tm->emptyComps.end()) return false;
 	}
 	// Check that sites that are empty in one TemplateMolecule
 	// are not specified to be occupied in the other TemplateMolecule
 	for (int i=0; i < n_emptyComps; ++i) {
-		it = find(tm->occupiedComps.begin(),
-				tm->occupiedComps.end(),
-				emptyComps[i]);
-		if (it != tm->occupiedComps.end()) return false;
+		for(int j=0; j<n_occupiedComps; j++) {
+			if (tm->occupiedComps[j] == emptyComps[i]) return false;
+		}
+		// it = find(tm->occupiedComps.begin(),
+		// 		tm->occupiedComps.end(),
+		// 		emptyComps[i]);
+		// if (it != tm->occupiedComps.end()) return false;
 	}
 	// Check that sites that are empty in one TemplateMolecule
 	// are not bonded in the other TemplateMolecule
 	for (int i=0; i < n_emptyComps; ++i) {
-		it = find(tm->bondComp.begin(),
-				tm->bondComp.end(),
-				emptyComps[i]);
-		if (it != tm->bondComp.end()) return false;
+		for(int j=0; j<n_bonds; j++) {
+			if (tm->bondComp[j] == emptyComps[i]) return false;
+		}
+		// it = find(tm->bondComp.begin(),
+		// 		tm->bondComp.end(),
+		// 		emptyComps[i]);
+		// if (it != tm->bondComp.end()) return false;
 	}
 
 	// If a state is constrained, make sure that it is either not
@@ -1668,43 +1688,79 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// that the constraint or exclusion are not incompatible between
 	// the two templatemolecules
 	for (int i=0; i < n_compStateConstraint; ++i) {
-		it = find(tm->compStateConstraint_Comp.begin(),
-				tm->compStateConstraint_Comp.end(),
-				compStateConstraint_Comp[i]);
-		if (it != tm->compStateConstraint_Comp.end()) {
-			ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
-			if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc])
-				return false;
+		for(int j=0; j<n_compStateConstraint; j++) {
+			if (tm->compStateConstraint_Comp[j] == compStateConstraint_Comp[i]) {
+					// TODO: Figure out what distance does and implement here
+					ptrdiff_t loc = j;
+					if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc]) {
+						return false;
+					}
+			} 
 		}
-		it = find(tm->compStateExclusion_Comp.begin(),
-				tm->compStateExclusion_Comp.end(),
-				compStateConstraint_Comp[i]);
-		if (it != tm->compStateExclusion_Comp.end()) {
-			ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
-			if (compStateConstraint_Constraint[i] == tm->compStateExclusion_Exclusion[loc])
-				return false;
+		// it = find(tm->compStateConstraint_Comp.begin(),
+		// 		tm->compStateConstraint_Comp.end(),
+		// 		compStateConstraint_Comp[i]);
+		// if (it != tm->compStateConstraint_Comp.end()) {
+		// 	ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
+		// 	if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc])
+		// 		return false;
+		// }
+		for(int j=0; j<n_compStateExclusion; j++) {
+			if (tm->compStateExclusion_Comp[j] == compStateConstraint_Comp[i]) {
+					// TODO: Figure out what distance does and implement here
+					ptrdiff_t loc = j;
+					if (compStateConstraint_Constraint[i] != tm->compStateExclusion_Exclusion[loc]) {
+						return false;
+					}
+			} 
 		}
+		// it = find(tm->compStateExclusion_Comp.begin(),
+		// 		tm->compStateExclusion_Comp.end(),
+		// 		compStateConstraint_Comp[i]);
+		// if (it != tm->compStateExclusion_Comp.end()) {
+		// 	ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
+		// 	if (compStateConstraint_Constraint[i] == tm->compStateExclusion_Exclusion[loc])
+		// 		return false;
+		// }
 	}
 
 	//  Repeat the above but now for all excluded states in the
 	// current TemplateMolecule
 	for (int i=0; i < n_compStateExclusion; ++i) {
-		it = find(tm->compStateConstraint_Comp.begin(),
-				tm->compStateConstraint_Comp.end(),
-				compStateExclusion_Comp[i]);
-		if (it != tm->compStateConstraint_Comp.end()) {
-			ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
-			if (compStateExclusion_Exclusion[i] == tm->compStateConstraint_Constraint[loc])
-				return false;
+		for(int j=0; j<n_compStateConstraint; j++) {
+			if (tm->compStateConstraint_Comp[j] == compStateExclusion_Comp[i]) {
+					// TODO: Figure out what distance does and implement here
+					ptrdiff_t loc =j;
+					if (compStateExclusion_Exclusion[i] != tm->compStateConstraint_Constraint[loc]) {
+						return false;
+					}
+			} 
 		}
-		it = find(tm->compStateExclusion_Comp.begin(),
-				tm->compStateExclusion_Comp.end(),
-				compStateExclusion_Comp[i]);
-		if (it != tm->compStateExclusion_Comp.end()) {
-			ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
-			if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc])
-				return false;
+		// it = find(tm->compStateConstraint_Comp.begin(),
+		// 		tm->compStateConstraint_Comp.end(),
+		// 		compStateExclusion_Comp[i]);
+		// if (it != tm->compStateConstraint_Comp.end()) {
+		// 	ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
+		// 	if (compStateExclusion_Exclusion[i] == tm->compStateConstraint_Constraint[loc])
+		// 		return false;
+		// }
+		for(int j=0; j<n_compStateExclusion; j++) {
+			if (tm->compStateExclusion_Comp[j] == compStateExclusion_Comp[i]) {
+					// TODO: Figure out what distance does and implement here
+					ptrdiff_t loc = j;
+					if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc]) {
+						return false;
+					}
+			} 
 		}
+		// it = find(tm->compStateExclusion_Comp.begin(),
+		// 		tm->compStateExclusion_Comp.end(),
+		// 		compStateExclusion_Comp[i]);
+		// if (it != tm->compStateExclusion_Comp.end()) {
+		// 	ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
+		// 	if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc])
+		// 		return false;
+		// }
 	}
 
 	// Make sure that components are bonded to the same partner at the same componentindex if
@@ -1712,26 +1768,46 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	for(int b=0; b<n_bonds; b++) {
 
 		//The binding site must not be be among the empty components on the other template molecule
-		if(find(tm->emptyComps.begin(), tm->emptyComps.end(), bondComp[b]) != tm->emptyComps.end()) {
-			return false;
+		for(int j=0; j<n_emptyComps; j++) {
+			if (tm->emptyComps[j] == bondComp[b]) {
+				return false;
+			} 
 		}
+		// if(find(tm->emptyComps.begin(), tm->emptyComps.end(), bondComp[b]) != tm->emptyComps.end()) {
+		// 	return false;
+		// }
 
 		//Check if this component is among the bondComps in the target TemplateMolecule
-		it = find(tm->bondComp.begin(), tm->bondComp.end(), bondComp[b]);
-		//If it is not, you don't have to check that the bonds match
-		if(it != tm->bondComp.end()) {
-			// find the bond number in the target molecule that matches bond Component
-			ptrdiff_t tm_b = distance(tm->bondComp.begin(), it);
+		for(int j=0; j<n_bonds; j++) {
+			if (tm->bondComp[j] == bondComp[b]) {
+				// find the bond number in the target molecule that matches bond Component
+				// TODO: Figure out what distance does and implement here
+				ptrdiff_t tm_b = j;
 
-			// If the two bonding partners are not same molecule type, then return false.
-			// Assuming here that the second Template has a bond partner since it is
-			// the comp is in the list of bondComps.
-			if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
+				// If the two bonding partners are not same molecule type, then return false.
+				// Assuming here that the second Template has a bond partner since it is
+				// the comp is in the list of bondComps.
+				if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
 
-			// If the two bonding partners are not bonded on the same site, then return false
-			if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
-
+				// If the two bonding partners are not bonded on the same site, then return false
+				if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
+			} 
 		}
+		// it = find(tm->bondComp.begin(), tm->bondComp.end(), bondComp[b]);
+		// //If it is not, you don't have to check that the bonds match
+		// if(it != tm->bondComp.end()) {
+		// 	// find the bond number in the target molecule that matches bond Component
+		// 	ptrdiff_t tm_b = distance(tm->bondComp.begin(), it);
+
+		// 	// If the two bonding partners are not same molecule type, then return false.
+		// 	// Assuming here that the second Template has a bond partner since it is
+		// 	// the comp is in the list of bondComps.
+		// 	if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
+
+		// 	// If the two bonding partners are not bonded on the same site, then return false
+		// 	if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
+
+		// }
 	}
 
 	// We got this far, so all matches above did not raise any red flag
@@ -2221,15 +2297,27 @@ bool TemplateMolecule::checkSymmetryAroundBond(TemplateMolecule *tm1, TemplateMo
 	return true;
 }
 
-
-
+// AS-6/1/2021
+// MERGECHECK - going back to lists
+// TODO: Fix this to work with lists and not vectors
 bool TemplateMolecule::isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
 	if (this->getMoleculeType() != mt) return false;
-
+	
 	// First make a joint vector of components specified in the TemplateMolecule
-	if (find(emptyComps.begin(), emptyComps.end(), cIndex) != emptyComps.end()) return true;
-	if (find(occupiedComps.begin(), occupiedComps.end(), cIndex) != occupiedComps.end()) return true;
-	if (find(bondComp.begin(), bondComp.end(), cIndex) != bondComp.end()) return true;
+	// TODO: ensure this is what is supposed to be done
+	for(int i=0; i<n_emptyComps; i++) {
+		if (this->emptyComps[i] == cIndex) return true;
+	}
+	for(int i=0; i<n_occupiedComps; i++) {
+		if (this->occupiedComps[i] == cIndex) return true;
+	}
+	for(int i=0; i<n_bonds; i++) {
+		if (this->bondComp[i] == cIndex) return true;
+	}
+
+	// if (find(emptyComps.begin(), emptyComps.end(), cIndex) != emptyComps.end()) return true;
+	// if (find(occupiedComps.begin(), occupiedComps.end(), cIndex) != occupiedComps.end()) return true;
+	// if (find(bondComp.begin(), bondComp.end(), cIndex) != bondComp.end()) return true;
 
 	return false;
 }

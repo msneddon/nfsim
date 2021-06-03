@@ -612,9 +612,11 @@ queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 // AS-5/26/2021
 // MERGECHECK - these are now vectors instead of lists
-vector <Molecule *>::iterator Molecule::molIter;
-
-void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
+// vector <Molecule *>::iterator Molecule::molIter;
+list <Molecule *>::iterator Molecule::molIter;
+// This might need to change to list if I'm reversing vector changes
+// void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
+void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
 		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
@@ -681,8 +683,10 @@ void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int
 
 
 
-//
-void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit)
+// AS-5/26/2021
+// MERGECHECK - these are now vectors instead of lists
+//void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit)
+void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
 	//if(traversalLimit>=0)
@@ -691,10 +695,12 @@ void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int trav
 	//	this->depthFirstSearch(members);
 }
 
-
+// AS-5/26/2021
+// MERGECHECK - these are now vectors instead of lists
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
-void Molecule::depthFirstSearch(vector <Molecule *> &members)
+void Molecule::depthFirstSearch(list <Molecule *> &members)
+// void Molecule::depthFirstSearch(vector <Molecule *> &members)
 {
 	if(this->hasVisitedMolecule==true) {
 		return;
@@ -722,14 +728,16 @@ void Molecule::depthFirstSearch(vector <Molecule *> &members)
 		hasVisitedBond[c] = false;
 }
 
-
-
-void Molecule::printMoleculeList(vector <Molecule *> &members)
+// AS-5/26/2021
+// MERGECHECK - vector instead of list
+// void Molecule::printMoleculeList(vector <Molecule *> &members)
+void Molecule::printMoleculeList(list <Molecule *> &members)
 {
 	cout<<"List of molecules contains: "<<endl;
 	// AS-5/26/2021
 	// MERGECHECK - vector instead of list
-	vector <Molecule *>::iterator molIter;
+	// vector <Molecule *>::iterator molIter;
+	list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		cout<<"   -"<<(*molIter)->getMoleculeTypeName();
 		cout<<"_u"<<(*molIter)->getUniqueID()<<endl;

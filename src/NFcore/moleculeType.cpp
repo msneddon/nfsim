@@ -125,9 +125,9 @@ void MoleculeType::init(
 	//Now we can get on with initializing the MoleculeType information
 	// AS-5/26/2021
 	// MERGECHECK - these were removed 
-	// this->compName=new string [numOfComponents];
-	// this->defaultCompState = new int [numOfComponents];
-	// this->isIntegerCompState = new bool [numOfComponents];
+	this->compName=new string [numOfComponents];
+	this->defaultCompState = new int [numOfComponents];
+	this->isIntegerCompState = new bool [numOfComponents];
 
 	// AS-5/26/2021
 	// MERGECHECK - this is new to merge
@@ -135,10 +135,10 @@ void MoleculeType::init(
 	for(int c=0; c<numOfComponents; c++) {
 		// AS-5/26/2021
 		// MERGECHECK - list vs vector?
-		// this->compName[c]=compName.at(c);
-		// this->isIntegerCompState[c]=isIntegerComponent.at(c);
-		this->compName.push_back(compName.at(c));
-		this->isIntegerCompState.push_back(isIntegerComponent.at(c));
+		this->compName[c]=compName.at(c);
+		this->isIntegerCompState[c]=isIntegerComponent.at(c);
+		// this->compName.push_back(compName.at(c));
+		// this->isIntegerCompState.push_back(isIntegerComponent.at(c));
 
 		bool foundDefaultState=false;
 		vector <string> p;
@@ -147,14 +147,14 @@ void MoleculeType::init(
 			if(possibleCompStates.at(c).at(i) == defaultCompState.at(c)) {
 				// AS-5/26/2021
 				// MERGECHECK -
-				// this->defaultCompState[c]=i; foundDefaultState=true;
-				this->defaultCompState.push_back(i); foundDefaultState=true;
+				this->defaultCompState[c]=i; foundDefaultState=true;
+				// this->defaultCompState.push_back(i); foundDefaultState=true;
 			}
 		}
 		// AS-5/26/2021
 		// MERGECHECK -
-		// if(!foundDefaultState) this->defaultCompState[c]=Molecule::NOSTATE;
-		if(!foundDefaultState) this->defaultCompState.push_back(nostate);
+		if(!foundDefaultState) this->defaultCompState[c]=Molecule::NOSTATE;
+		// if(!foundDefaultState) this->defaultCompState.push_back(nostate);
 		this->possibleCompStates.push_back(p);
 	}
 
@@ -180,9 +180,9 @@ MoleculeType::~MoleculeType()
 	// AS-5/26/2021
 	// MERGECHECK - these are commented out in merge
 //	//Delete freestore component information
-//	delete [] compName;
-//	delete [] defaultCompState;
-//	delete [] isIntegerCompState;
+	delete [] compName;
+	delete [] defaultCompState;
+	delete [] isIntegerCompState;
 
 	//Delete details about equivalent components
 	delete [] eqCompSizes;

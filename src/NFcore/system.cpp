@@ -33,7 +33,7 @@ System::System(string name)
 	this->globalMoleculeLimit = 100000;
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// rxnIndexMap=0;
+	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
 	globalEventCounter=0;
@@ -64,7 +64,7 @@ System::System(string name, bool useComplex)
 
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// rxnIndexMap=0;
+	rxnIndexMap=0;
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
 	outputEventCounter=false;
@@ -93,7 +93,7 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// rxnIndexMap=0;
+	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
 	globalEventCounter=0;
@@ -117,12 +117,12 @@ System::~System()
 	//Delete the rxnIndexMap array
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// if(rxnIndexMap!=NULL) {
-	// 	for(unsigned int r=0; r<allReactions.size(); r++)
-	// 		if(rxnIndexMap[r]!=NULL) { delete [] rxnIndexMap[r]; }
-	// 	delete [] rxnIndexMap;
-	// }
-	rxnIndexMap.clear();
+	if(rxnIndexMap!=NULL) {
+		for(unsigned int r=0; r<allReactions.size(); r++)
+			if(rxnIndexMap[r]!=NULL) { delete [] rxnIndexMap[r]; }
+		delete [] rxnIndexMap;
+	}
+	// rxnIndexMap.clear();
 
 	//Need to delete reactions
 	ReactionClass *r;
@@ -595,14 +595,14 @@ void System::prepareForSimulation()
   	// now we prepare all reactions
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// rxnIndexMap = new int * [allReactions.size()];
-	rxnIndexMap = vector <vector <int> >(allReactions.size());
+	rxnIndexMap = new int * [allReactions.size()];
+	// rxnIndexMap = vector <vector <int> >(allReactions.size());
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
 		// AS-5/27/2021
 		// MERGECHECK - list vs vector
-		// rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
-  		rxnIndexMap[r] = vector <int>(allReactions.at(r)->getNumOfReactants());
+		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
+  		// rxnIndexMap[r] = vector <int>(allReactions.at(r)->getNumOfReactants());
   		allReactions.at(r)->setRxnId(r);
   	}
 
@@ -834,7 +834,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	//////////////////////////////
 	// AS-5/27/2021
 	// MERGECHECK - these were removed
-	//clock_t start,finish;
+	clock_t start,finish;
 	double time;
 	start = clock();
 	//////////////////////////////
@@ -930,8 +930,13 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	}
 
 	// Write list of molecule_types and reactions along with reaction firing counts
-	outputAllMoleculeTypes();
-	outputAllRxnFiringCounts();
+	// TODO: Make this optional!
+	if (this->outputMoleculeTypesFile) {
+		outputAllMoleculeTypes();
+	}
+	if (this->outputRxnFiringCountsFile) {
+		outputAllRxnFiringCounts();
+	}
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -1185,8 +1190,8 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 	if(useBinaryOutput) {
 		// AS-5/27/2021
 		// MERGECHECK - this was changed
-		// double count=0.0; int oTot=0;
-		double count=0.0;
+		double count=0.0; int oTot=0;
+		// double count=0.0;
 
 		outputFileStream.write((char *)&cSampleTime, sizeof(double));
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
@@ -1333,10 +1338,10 @@ bool System::saveSpecies(string filename)
 	// create a couple data structures to store results as we go
 	// AS-5/27/2021
 	// MERGECHECK - list vs vector
-	// list <Molecule *> molecules;
-	// list <molecule *>::iterator iter;
-	vector <Molecule *> molecules;
-	vector <Molecule *>::iterator iter;
+	list <Molecule *> molecules;
+	list <Molecule *>::iterator iter;
+	// vector <Molecule *> molecules;
+	// vector <Molecule *>::iterator iter;
 	map <int,bool> reportedMolecules;
     map <string,int> reportedSpecies;
 

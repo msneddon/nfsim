@@ -91,8 +91,14 @@
  *  			   Default: false
  *  			   @author: Arvind Rasi Subramaniam
  *
-*   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
-*                 @author Arvind Rasi Subramaniam
+ *   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+ *                 @author Arvind Rasi Subramaniam
+ * 
+ *   -printMoleculeTypes - output molecule types (default: false).
+ * 						   @author Ali Sinan Saglam
+ * 
+ *   -printAllRxnFiringCounts - output reaction firing counts (default: false).
+ * 						   @author Ali Sinan Saglam
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
@@ -491,17 +497,29 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
-					s->registerMoleculeTypeFileLocation(
-									outputFileName.replace(
-											outputFileName.end()-5,
-											outputFileName.end(),
-											".molecule_type_list.tsv"));
-					outputFileName = argMap.find("o")->second;
-					s->registerRxnListFileLocation(
-									outputFileName.replace(
-											outputFileName.end()-5,
-											outputFileName.end(),
-											".rxn_list.tsv"));
+					if (argMap.find("printMoleculeTypes")!=argMap.end()) {
+						s->setOutputMoleculeTypes(true);
+
+						s->registerMoleculeTypeFileLocation(
+										outputFileName.replace(
+												outputFileName.end()-5,
+												outputFileName.end(),
+												".molecule_type_list.tsv"));
+					} else {
+						s->setOutputMoleculeTypes(false);
+					};
+					
+					if (argMap.find("printAllRxnFiringCounts")!=argMap.end()) {
+						s->setOutputRxnFiringCounts(true);
+						s->registerRxnListFileLocation(
+										outputFileName.replace(
+												outputFileName.end()-5,
+												outputFileName.end(),
+												".rxn_list.tsv"));
+					} else {
+						s->setOutputRxnFiringCounts(false);
+					};
+
 				} else {
 					if(s->isOutputtingBinary()) {
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
@@ -738,11 +756,28 @@ void printHelp(string version)
 	cout<<"                    This allows you to run the same simulation and get the"<<endl;
 	cout<<"                    exact same results perhaps to compare performance"<<endl;
 	cout<<""<<endl;
+	cout<<" -connect           infer network connectivity before starting simulation. (default: no)."<<endl;
+    cout<<" 		           Does not require any modification to BioNetGen or PySB."<<endl;
+    cout<<""<<endl;
+    cout<<"  -printconnected   print connectivity of each reaction to an output file. (default: no)."<<endl;
+    cout<<""<<endl;
+    cout<<"  -trackconnected   write out the reactions whose rates change after firing"<<endl;
+	cout<<"                    of each reaction. (default: false)"<<endl;
+    cout<<""<<endl;
+    cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep"<<endl;
+	cout<<"                    the rxn log file small. (default: false)"<<endl;
+	cout<<""<<endl;
+	cout<<"  -printMoleculeTypes - output molecule types (default: false)."<<endl;
+    cout<<" 						   @author Ali Sinan Saglam"<<endl;
+	cout<<""<<endl;
+	cout<<"  -printAllRxnFiringCounts - output reaction firing counts (default: false)."<<endl;
+ 	cout<<" 						   @author Ali Sinan Saglam"<<endl;
+    cout<<""<<endl;
+    cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
+	cout<<""<<endl;
 	cout<<"  -logo             prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
 	cout<<""<<endl;
 	cout<<""<<endl;
-	// AS-5/26/2021
-	// TODO: Need to add -connect to help text
 }
 
 

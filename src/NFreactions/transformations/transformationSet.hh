@@ -246,8 +246,8 @@ namespace NFcore
 			*/
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// bool getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
-			bool getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
+			bool getListOfProducts(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			// bool getListOfProducts(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
 
 			/*!
 				This is a companion to getListOfProducts. This is called after applying transformations and
@@ -256,8 +256,8 @@ namespace NFcore
 			*/
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// bool getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
-			bool getListOfAddedMolecules(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
+			bool getListOfAddedMolecules(MappingSet **mappingSets, list <Molecule *> &products, int traversalLimit);
+			// bool getListOfAddedMolecules(MappingSet **mappingSets, vector <Molecule *> &products, int traversalLimit);
 
 			/*!
 				Called by reaction class to determine if the rate of a rule must be adjusted to
@@ -349,21 +349,21 @@ namespace NFcore
 			/*!	List to keep track of the molecules that we are going to delete when a transformation is applied	*/
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// static list <Molecule *> deleteList;
-			static vector <Molecule *> deleteList;
+			static list <Molecule *> deleteList;
+			// static vector <Molecule *> deleteList;
 
 			/*!	List to keep track of the molecules that we have to update as a result of a deletion	*/
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// static list <Molecule *> updateAfterDeleteList;
-			static vector <Molecule *> updateAfterDeleteList;
+			static list <Molecule *> updateAfterDeleteList;
+			// static vector <Molecule *> updateAfterDeleteList;
 
 
 			/*!	iterator for the deleteList and updateAfterDeleteList	*/
 			// AS-5/27/2021
 			// MERGECHECK - list vs vector
-			// static list <Molecule *>::iterator it;
-			static vector <Molecule *>::iterator it;
+			static list <Molecule *>::iterator it;
+			// static vector <Molecule *>::iterator it;
 
 
 			/*!	keeps track if this set has a symmetric unbinding reaction	*/
