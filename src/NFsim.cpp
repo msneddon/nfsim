@@ -94,10 +94,10 @@
  *   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
  *                 @author Arvind Rasi Subramaniam
  * 
- *   -printMoleculeTypes - output molecule types (default: false).
+ *   -printmoltypes - output molecule types (default: false).
  * 						   @author Ali Sinan Saglam
  * 
- *   -printAllRxnFiringCounts - output reaction firing counts (default: false).
+ *   -printrxncounts - output reaction firing counts (default: false).
  * 						   @author Ali Sinan Saglam
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
@@ -497,9 +497,8 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
-					if (argMap.find("printMoleculeTypes")!=argMap.end()) {
+					if (argMap.find("printmoltypes")!=argMap.end()) {
 						s->setOutputMoleculeTypes(true);
-
 						s->registerMoleculeTypeFileLocation(
 										outputFileName.replace(
 												outputFileName.end()-5,
@@ -509,7 +508,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 						s->setOutputMoleculeTypes(false);
 					};
 					
-					if (argMap.find("printAllRxnFiringCounts")!=argMap.end()) {
+					if (argMap.find("printrxncounts")!=argMap.end()) {
 						s->setOutputRxnFiringCounts(true);
 						s->registerRxnListFileLocation(
 										outputFileName.replace(
@@ -767,10 +766,10 @@ void printHelp(string version)
     cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep"<<endl;
 	cout<<"                    the rxn log file small. (default: false)"<<endl;
 	cout<<""<<endl;
-	cout<<"  -printMoleculeTypes - output molecule types (default: false)."<<endl;
+	cout<<"  -printmoltypes - output molecule types (default: false)."<<endl;
     cout<<" 						   @author Ali Sinan Saglam"<<endl;
 	cout<<""<<endl;
-	cout<<"  -printAllRxnFiringCounts - output reaction firing counts (default: false)."<<endl;
+	cout<<"  -printrxncounts - output reaction firing counts (default: false)."<<endl;
  	cout<<" 						   @author Ali Sinan Saglam"<<endl;
     cout<<""<<endl;
     cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
