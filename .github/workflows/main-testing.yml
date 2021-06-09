@@ -48,4 +48,4 @@ jobs:
     #     pip install -r validate/requirements.txt
 
     - name: Validation
-      run: cd ${{github.workspace}}/validation/|python validate.py
+      run: cd ${{github.workspace}}/validate/|python validate.py
