@@ -91,13 +91,13 @@
  *  			   Default: false
  *  			   @author: Arvind Rasi Subramaniam
  *
- *   -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+ *  -maxcputime - maximum run time for simulation in seconds (default: 1000s).
  *                 @author Arvind Rasi Subramaniam
  * 
- *   -printmoltypes - output molecule types (default: false).
+ *  -printmoltypes - output molecule types (default: false).
  * 						   @author Ali Sinan Saglam
  * 
- *   -printrxncounts - output reaction firing counts (default: false).
+ *  -printrxncounts - output reaction firing counts (default: false).
  * 						   @author Ali Sinan Saglam
  *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
@@ -498,23 +498,23 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
 					if (argMap.find("printmoltypes")!=argMap.end()) {
-						s->setOutputMoleculeTypes(true);
 						s->registerMoleculeTypeFileLocation(
 										outputFileName.replace(
 												outputFileName.end()-5,
 												outputFileName.end(),
 												".molecule_type_list.tsv"));
+						s->setOutputMoleculeTypes(true);
 					} else {
 						s->setOutputMoleculeTypes(false);
 					};
 					
 					if (argMap.find("printrxncounts")!=argMap.end()) {
-						s->setOutputRxnFiringCounts(true);
 						s->registerRxnListFileLocation(
 										outputFileName.replace(
 												outputFileName.end()-5,
 												outputFileName.end(),
 												".rxn_list.tsv"));
+						s->setOutputRxnFiringCounts(true);
 					} else {
 						s->setOutputRxnFiringCounts(false);
 					};

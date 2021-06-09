@@ -1132,67 +1132,7 @@ bool NFinput::initReactionRules(
 					}
 				}
 
-				//  Read in the Product Patterns for this rule
-				TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
-				if(!pListOfProductPatterns) {
-					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no product patterns!"<<endl;
-					continue;
-				}
-
-				TiXmlElement *pProduct;
-				for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern"))
-				{
-					const char *productName = pProduct->Attribute("id");
-					if(!productName) {
-						cerr<<"Product tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
-						return false;
-					}
-					if(verbose) cout<<"\t\t\tReading Product Pattern: "<<productName<<endl;
-
-					TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
-					if(pListOfMols) {
-						/* At this point, only the first reactant molecule is sent back as a template - rasi */
-						readTemplatePattern(pListOfMols, s, allowedStates, productName, products, comps, symMap, verbose);
-					}
-					else {
-						cerr<<"Product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
-						return false;
-					}
-				}
-
-				
-				// Read in the reactant-product maps for this rule
-				// Arvind Rasi Subramaniam
-				TiXmlElement *pListOfMaps = pRxnRule->FirstChildElement("Map");
-				if(!pListOfMaps) {
-					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant-product maps!"<<endl;
-					continue;
-				}
-				TiXmlElement *pMap;
-				string reactantId, productId;
-				for ( pMap = pListOfMaps->FirstChildElement("MapItem"); pMap != 0; pMap = pMap->NextSiblingElement("MapItem"))
-				{
-					// TODO: these don't have to exist
-					if ( !pMap->Attribute("sourceID") | !pMap->Attribute("targetID") ) {
-						continue;
-					}
-					reactantId = pMap->Attribute("sourceID");
-					productId = pMap->Attribute("targetID");
-					cout<<"lol3"<<endl;
-					if ((reactantId.size() == 0) || (productId.size() == 0)) {
-						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
-						return false;
-					}
-					// Assign reactant and product template molecules to each
-					// other if they exist. Arvind Rasi Subramaniam
-					auto reactantIt = reactants.find(reactantId);
-					auto productIt = products.find(productId);
-					if ((reactantIt != reactants.end()) &
-							(productIt != products.end())) {
-						reactantIt->second->setMappedPartner(productIt->second);
-						productIt->second->setMappedPartner(reactantIt->second);
-					}
-				}
+		
 
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1369,7 +1309,67 @@ bool NFinput::initReactionRules(
 						return false;
 					}
 				}
+				
+				//  Read in the Product Patterns for this rule
+				TiXmlElement *pListOfProductPatterns = pRxnRule->FirstChildElement("ListOfProductPatterns");
+				if(!pListOfProductPatterns) {
+					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no product patterns!"<<endl;
+					continue;
+				}
 
+				TiXmlElement *pProduct;
+				for ( pProduct = pListOfProductPatterns->FirstChildElement("ProductPattern"); pProduct != 0; pProduct = pProduct->NextSiblingElement("ProductPattern"))
+				{
+					const char *productName = pProduct->Attribute("id");
+					if(!productName) {
+						cerr<<"Product tag in reaction "<<rxnName<<" without a valid 'id' attribute.  Quiting"<<endl;
+						return false;
+					}
+					if(verbose) cout<<"\t\t\tReading Product Pattern: "<<productName<<endl;
+
+					TiXmlElement *pListOfMols = pProduct->FirstChildElement("ListOfMolecules");
+					if(pListOfMols) {
+						/* At this point, only the first reactant molecule is sent back as a template - rasi */
+						readTemplatePattern(pListOfMols, s, allowedStates, productName, products, comps, symMap, verbose);
+					}
+					else {
+						cerr<<"Product pattern "<<productName <<" in reaction "<<rxnName<<" without a valid 'ListOfMolecules'!  Quiting."<<endl;
+						return false;
+					}
+				}
+
+				
+				// Read in the reactant-product maps for this rule
+				// Arvind Rasi Subramaniam
+				TiXmlElement *pListOfMaps = pRxnRule->FirstChildElement("Map");
+				if(!pListOfMaps) {
+					cout<<"!!!!!!!!!!!!!!!!!!!!!!!! Warning:: ReactionRule "<<rxnName<<" contains no reactant-product maps!"<<endl;
+					continue;
+				}
+				TiXmlElement *pMap;
+				string reactantId, productId;
+				for ( pMap = pListOfMaps->FirstChildElement("MapItem"); pMap != 0; pMap = pMap->NextSiblingElement("MapItem"))
+				{
+					// TODO: these don't have to exist
+					if ( !pMap->Attribute("sourceID") | !pMap->Attribute("targetID") ) {
+						continue;
+					}
+					reactantId = pMap->Attribute("sourceID");
+					productId = pMap->Attribute("targetID");
+					if ((reactantId.size() == 0) || (productId.size() == 0)) {
+						cerr<<"Map in reaction "<<rxnName<<" without a valid reactant or product ID.  Quiting"<<endl;
+						return false;
+					}
+					// Assign reactant and product template molecules to each
+					// other if they exist. Arvind Rasi Subramaniam
+					auto reactantIt = reactants.find(reactantId);
+					auto productIt = products.find(productId);
+					if ((reactantIt != reactants.end()) &
+							(productIt != products.end())) {
+						reactantIt->second->setMappedPartner(productIt->second);
+						productIt->second->setMappedPartner(reactantIt->second);
+					}
+				}
 
 
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3965,14 +3965,13 @@ int NFinput::readTemplatePattern(
 
 		}
 
-
-		if(foundTrash) {
-			if(verbose) cout<<"\t\t\t\tWarning: You have an add molecule rule, but only a Trash or Null pattern listed..."<<endl;
-			return 1;
-		}
-
 		//Grab the first template molecule from the list, and arbitrarily set this as the root
-		if(tMolecules.empty()){
+		if(tMolecules.empty()){			
+			if(foundTrash) {
+				// if(verbose) cout<<"\t\t\t\tWarning: You have an add molecule rule, but only a Trash or Null pattern listed..."<<endl;
+				// TODO: Write useful warning here, we have no template mols but we have trash/null
+				return 1;
+			}
 			cerr<<"You have a pattern named "<<patternName<<" that doesn't include any actual patterns!  (Or I just couldn't find any)"<<endl;
 			cerr<<"Therefore, I see no other choice than to quit until you fix the problem."<<endl;
 			return 0;
