@@ -119,6 +119,8 @@ def getTests(directory):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
+    if len(sys.argv) > 1:
+        os.chdir(sys.argv[1])
     testFolder = './basicModels'
     tests = getTests(testFolder)
     for index in tests:
