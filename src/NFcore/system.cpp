@@ -616,7 +616,7 @@ void System::prepareForSimulation()
 		  {
 			// Arvind Rasi Subramaniam
 			allReactions.at(r)->identifyConnectedReactions();
-			if ((r + 1) % 1000 == 0) {
+			if ((r + 1) % 10 == 0) {
 				cout << "Connectivity inferred for " << r + 1 << " reactions."
 						<< endl;
 			}
@@ -632,7 +632,7 @@ void System::prepareForSimulation()
 			for (int r2 = 0; r2 < allReactions.at(r)->getNumConnectedRxns();
 					r2++) {
 				this->getConnectedRxnListFileStream() << r << "\t"
-						<< allReactions.at(r)->getName() << "\t" << r << "\t"
+						<< allReactions.at(r)->getName() << "\t" // << r << "\t"
 						<< allReactions.at(r)->getconnectedRxn(r2)->getRxnId()
 						<< "\t"
 						<< allReactions.at(r)->getconnectedRxn(r2)->getName()

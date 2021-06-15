@@ -1820,20 +1820,20 @@ bool NFinput::initReactionRules(
 					return false;
 				}
 
-				// if( !pRateLaw->Attribute("totalrate") ) {
-				// 	cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
-				// 	cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
-				// } else {
-				// 	try {
-				// 		int rf = NFutil::convertToInt(pRateLaw->Attribute("totalrate"));
-				// 		if(rf>0) totalRateFlag=true;
-				// 		if(verbose) cout<<"\t\t\tTotal rate flag = "<<totalRateFlag<<endl;
-				// 	} catch (std::runtime_error &e1) {
-				// 		//cerr<<e1.what()<<endl;
-				// 		cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
-				// 		exit(1);
-				// 	}
-				// }
+				if( !pRateLaw->Attribute("totalrate") ) {
+					cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
+					cerr<<"You should upgrade your BioNetGen distribution now, or download the latest NFsim package, and regenerate this XML file."<<endl;
+				} else {
+					try {
+						int rf = NFutil::convertToInt(pRateLaw->Attribute("totalrate"));
+						if(rf>0) totalRateFlag=true;
+						if(verbose) cout<<"\t\t\tTotal rate flag = "<<totalRateFlag<<endl;
+					} catch (std::runtime_error &e1) {
+						//cerr<<e1.what()<<endl;
+						cerr<<"Error!! totalrate flag for ReactionRule "<<rxnName<<" was not set properly.  quitting."<<endl;
+						exit(1);
+					}
+				}
 
 				// if( !pRateLaw->Attribute("tag") ) {
 				// 	cerr<<"\n!!Error! This XML file was generated using an older version of BioNetGen that does not support the 'TotalRate' convention!"<<endl;
@@ -2273,10 +2273,13 @@ bool NFinput::initReactionRules(
 					// Add the reactant and product templates to the reaction class
 					r->setAllReactantAndProductTemplates(reactants, products);
 					r->setTotalRateFlag(totalRateFlag);
-					if (tagFlag) {
-						r->tag();
-						s->turnOnTagRxnOutput();
-					}
+					// AS-6/14
+					// MERGECHECK
+					// we are automatically tagging all reactions 
+					// if (tagFlag) {
+					r->tag();
+					s->turnOnTagRxnOutput();
+					// }
 					// Use reaction connectivity flag
 					// Set to true if given on the command line
 					r->setConnectivityFlag(s->getConnectivityFlag());

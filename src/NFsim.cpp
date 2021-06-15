@@ -511,7 +511,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					if (argMap.find("printrxncounts")!=argMap.end()) {
 						s->registerRxnListFileLocation(
 										outputFileName.replace(
-												outputFileName.end()-5,
+												outputFileName.end()-23,
 												outputFileName.end(),
 												".rxn_list.tsv"));
 						s->setOutputRxnFiringCounts(true);
@@ -556,7 +556,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 									rxnLogFileName.replace(
 											rxnLogFileName.end()-4,
 											rxnLogFileName.end(),
-											"_connectedlist.tsv"));
+											"_list.tsv"));
 							s->setPrintConnected(true);
 						} else {
 							s->setPrintConnected(false);

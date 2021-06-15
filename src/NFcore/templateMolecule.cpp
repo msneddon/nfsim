@@ -1652,7 +1652,7 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// Check that sites that are occupied in one TemplateMolecule
 	// are not specified to be empty in the other TemplateMolecule
 	for (int i=0; i < n_occupiedComps; ++i) {
-		for(int j=0; j<n_emptyComps; j++) {
+		for(int j=0; j<tm->n_emptyComps; j++) {
 			if (tm->emptyComps[j] == occupiedComps[i]) return false;
 		}
 		// it = find(tm->emptyComps.begin(),
@@ -1663,7 +1663,7 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// Check that sites that are empty in one TemplateMolecule
 	// are not specified to be occupied in the other TemplateMolecule
 	for (int i=0; i < n_emptyComps; ++i) {
-		for(int j=0; j<n_occupiedComps; j++) {
+		for(int j=0; j<tm->n_occupiedComps; j++) {
 			if (tm->occupiedComps[j] == emptyComps[i]) return false;
 		}
 		// it = find(tm->occupiedComps.begin(),
@@ -1674,7 +1674,7 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// Check that sites that are empty in one TemplateMolecule
 	// are not bonded in the other TemplateMolecule
 	for (int i=0; i < n_emptyComps; ++i) {
-		for(int j=0; j<n_bonds; j++) {
+		for(int j=0; j<tm->n_bonds; j++) {
 			if (tm->bondComp[j] == emptyComps[i]) return false;
 		}
 		// it = find(tm->bondComp.begin(),
@@ -1688,11 +1688,9 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	// that the constraint or exclusion are not incompatible between
 	// the two templatemolecules
 	for (int i=0; i < n_compStateConstraint; ++i) {
-		for(int j=0; j<n_compStateConstraint; j++) {
+		for(int j=0; j<tm->n_compStateConstraint; j++) {
 			if (tm->compStateConstraint_Comp[j] == compStateConstraint_Comp[i]) {
-					// TODO: Figure out what distance does and implement here
-					ptrdiff_t loc = j;
-					if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc]) {
+					if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[j]) {
 						return false;
 					}
 			} 
@@ -1705,11 +1703,9 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		// 	if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc])
 		// 		return false;
 		// }
-		for(int j=0; j<n_compStateExclusion; j++) {
+		for(int j=0; j<tm->n_compStateExclusion; j++) {
 			if (tm->compStateExclusion_Comp[j] == compStateConstraint_Comp[i]) {
-					// TODO: Figure out what distance does and implement here
-					ptrdiff_t loc = j;
-					if (compStateConstraint_Constraint[i] != tm->compStateExclusion_Exclusion[loc]) {
+					if (compStateConstraint_Constraint[i] != tm->compStateExclusion_Exclusion[j]) {
 						return false;
 					}
 			} 
@@ -1727,11 +1723,9 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	//  Repeat the above but now for all excluded states in the
 	// current TemplateMolecule
 	for (int i=0; i < n_compStateExclusion; ++i) {
-		for(int j=0; j<n_compStateConstraint; j++) {
+		for(int j=0; j<tm->n_compStateConstraint; j++) {
 			if (tm->compStateConstraint_Comp[j] == compStateExclusion_Comp[i]) {
-					// TODO: Figure out what distance does and implement here
-					ptrdiff_t loc =j;
-					if (compStateExclusion_Exclusion[i] != tm->compStateConstraint_Constraint[loc]) {
+					if (compStateExclusion_Exclusion[i] != tm->compStateConstraint_Constraint[j]) {
 						return false;
 					}
 			} 
@@ -1744,11 +1738,9 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		// 	if (compStateExclusion_Exclusion[i] == tm->compStateConstraint_Constraint[loc])
 		// 		return false;
 		// }
-		for(int j=0; j<n_compStateExclusion; j++) {
+		for(int j=0; j<tm->n_compStateExclusion; j++) {
 			if (tm->compStateExclusion_Comp[j] == compStateExclusion_Comp[i]) {
-					// TODO: Figure out what distance does and implement here
-					ptrdiff_t loc = j;
-					if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc]) {
+					if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[j]) {
 						return false;
 					}
 			} 
@@ -1768,7 +1760,7 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	for(int b=0; b<n_bonds; b++) {
 
 		//The binding site must not be be among the empty components on the other template molecule
-		for(int j=0; j<n_emptyComps; j++) {
+		for(int j=0; j<tm->n_emptyComps; j++) {
 			if (tm->emptyComps[j] == bondComp[b]) {
 				return false;
 			} 
@@ -1778,19 +1770,17 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		// }
 
 		//Check if this component is among the bondComps in the target TemplateMolecule
-		for(int j=0; j<n_bonds; j++) {
+		for(int j=0; j<tm->n_bonds; j++) {
 			if (tm->bondComp[j] == bondComp[b]) {
 				// find the bond number in the target molecule that matches bond Component
-				// TODO: Figure out what distance does and implement here
-				ptrdiff_t tm_b = j;
 
 				// If the two bonding partners are not same molecule type, then return false.
 				// Assuming here that the second Template has a bond partner since it is
 				// the comp is in the list of bondComps.
-				if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
+				if (bondPartner[b]->getMoleculeType() != tm->bondPartner[j]->getMoleculeType()) return false;
 
 				// If the two bonding partners are not bonded on the same site, then return false
-				if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
+				if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[j]) return false;
 			} 
 		}
 		// it = find(tm->bondComp.begin(), tm->bondComp.end(), bondComp[b]);
