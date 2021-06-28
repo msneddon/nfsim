@@ -536,6 +536,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				if (s->getAnyRxnTagged()) {
 					if (argMap.find("rxnlog") != argMap.end()) {
 						string rxnLogFileName = argMap.find("rxnlog")->second;
+						s->setRxnNumberTrack(true);
 						s->registerReactionFileLocation(rxnLogFileName);
 						// track the reactions whose rates change upon each each reaction
 						// firing. This is useful for debugging to make sure that all the
@@ -562,13 +563,13 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 							s->setPrintConnected(false);
 						}
 					} else {
-						s->registerReactionFileLocation(
+						if (argMap.find("trackrxnnum") != argMap.end()) {
+							s->setRxnNumberTrack(true);
+							s->registerReactionFileLocation(
 								s->getName() + "_rxns.dat");
-					}
-					if (argMap.find("trackrxnnum") != argMap.end()) {
-						s->setRxnNumberTrack(true);
-					} else {
-						s->setRxnNumberTrack(false);
+						} else {
+							s->setRxnNumberTrack(false);
+						}
 					}
 				}
 
@@ -607,16 +608,16 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double eqTime = 0;
 	double sTime = 10;
 	int oSteps = 10;
-	double maxCpuTime = 1000;
+	// double maxCpuTime = 1000;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 
-	if (argMap.find("maxcputime") != argMap.end()) {
-		maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
-	}
-	s->setMaxCpuTime(maxCpuTime);
+	// if (argMap.find("maxcputime") != argMap.end()) {
+	// 	maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	// }
+	// s->setMaxCpuTime(maxCpuTime);
 
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 

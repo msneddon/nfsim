@@ -2277,9 +2277,10 @@ bool NFinput::initReactionRules(
 					// MERGECHECK
 					// we are automatically tagging all reactions 
 					// if (tagFlag) {
-					r->tag();
-					s->turnOnTagRxnOutput();
-					// }
+					if (s->getConnectivityFlag()) {
+						r->tag();
+						s->turnOnTagRxnOutput();
+					}
 					// Use reaction connectivity flag
 					// Set to true if given on the command line
 					r->setConnectivityFlag(s->getConnectivityFlag());

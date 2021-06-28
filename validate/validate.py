@@ -7,10 +7,6 @@ import fnmatch
 import sys
 import bionetgen
 
-# bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
-# bngPath = '/home/boltzmann/apps/BioNetGen-2.3.1/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
-# bngPath = '/home/boltzmann/apps/BioNetGen-2.6.0/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
-# nfsimPath = '/home/boltzmann/apps/BioNetGen-2.6.0/bin/NFsim'  # <<< SET YOUR BIONETGEN PATH HERE <<<
 bngPath = os.path.join(bionetgen.defaults.bng_path, "BNG2.pl")
 nfsimPath = os.path.join('..', 'build', 'NFsim')
 
