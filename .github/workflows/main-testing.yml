@@ -2,9 +2,9 @@ name: main-validation
 
 on:
   push:
-    branches: [ connectivity ]
+    branches: [ master ]
   pull_request:
-    branches: [ connectivity ]
+    branches: [ master ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
