@@ -1,11 +1,10 @@
 # NFsim - the network free stochastic simulator, v1.12.1
 
+[![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 <a href="https://scan.coverity.com/projects/nfsim">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/15734/badge.svg"/>
 </a>
-
-[![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 
 
 - michael w. sneddon
