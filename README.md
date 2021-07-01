@@ -4,6 +4,7 @@
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/15734/badge.svg"/>
 </a>
+
 [![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 
 
