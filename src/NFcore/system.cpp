@@ -31,8 +31,6 @@ System::System(string name)
 
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
@@ -62,8 +60,6 @@ System::System(string name, bool useComplex)
 	this->outputGlobalFunctionValues=false;
 	this->globalMoleculeLimit = 100000;
 
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	rxnIndexMap=0;
 	useBinaryOutput=false;
 	onTheFlyObservables=true;
@@ -91,8 +87,6 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	this->globalMoleculeLimit=globalMoleculeLimit;
 	this->outputGlobalFunctionValues=false;
 
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	rxnIndexMap=0;
 	useBinaryOutput=false;
 	outputEventCounter=false;
@@ -115,14 +109,11 @@ System::~System()
 	if(selector!=0) delete selector;
 
 	//Delete the rxnIndexMap array
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	if(rxnIndexMap!=NULL) {
 		for(unsigned int r=0; r<allReactions.size(); r++)
 			if(rxnIndexMap[r]!=NULL) { delete [] rxnIndexMap[r]; }
 		delete [] rxnIndexMap;
 	}
-	// rxnIndexMap.clear();
 
 	//Need to delete reactions
 	ReactionClass *r;
@@ -593,16 +584,11 @@ void System::prepareForSimulation()
     //this->printAllFunctions();
 
   	// now we prepare all reactions
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	rxnIndexMap = new int * [allReactions.size()];
-	// rxnIndexMap = vector <vector <int> >(allReactions.size());
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
-		// AS-5/27/2021
-		// MERGECHECK - list vs vector
+
 		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
-  		// rxnIndexMap[r] = vector <int>(allReactions.at(r)->getNumOfReactants());
   		allReactions.at(r)->setRxnId(r);
   	}
 
@@ -832,8 +818,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 
 	//////////////////////////////
-	// AS-5/27/2021
-	// MERGECHECK - these were removed
 	clock_t start,finish;
 	double time;
 	start = clock();
@@ -1188,10 +1172,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 
 
 	if(useBinaryOutput) {
-		// AS-5/27/2021
-		// MERGECHECK - this was changed
 		double count=0.0; int oTot=0;
-		// double count=0.0;
 
 		outputFileStream.write((char *)&cSampleTime, sizeof(double));
 		for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
@@ -1336,12 +1317,8 @@ bool System::saveSpecies(string filename)
 	cout<<"\n\nsaving list of final molecular species..."<<endl;
 
 	// create a couple data structures to store results as we go
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	list <Molecule *> molecules;
 	list <Molecule *>::iterator iter;
-	// vector <Molecule *> molecules;
-	// vector <Molecule *>::iterator iter;
 	map <int,bool> reportedMolecules;
     map <string,int> reportedSpecies;
 
@@ -1651,9 +1628,6 @@ void System::evaluateAllLocalFunctions() {
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
 						//cout<<"--------------Evaluating local function on species..."<<endl;
-						// AS-5/27/2021
-						// MERGECHECK - assigned to double before merge?
-						// double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
 						localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
 						//cout<<"     value of function: "<<val<<endl;
 
@@ -1891,8 +1865,6 @@ NFstream& System::getOutputFileStream()
     return outputFileStream;
 }
 
-// AS-5/27/2021
-// MERGECHECK - friend functions removed
 // // friend functions
 // template<class T>
 // NFstream& operator<<(NFstream& nfstream, const T& value)

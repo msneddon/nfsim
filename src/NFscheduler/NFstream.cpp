@@ -144,8 +144,6 @@ NFstream& NFstream::operator<<(NFstream& (*func)(NFstream &))
     return ((*func))(*this);
 }
 
-// AS-5/27/2021
-// MERGECHECK - commented section removed in merge
 // // friend functions
 // template<class T>
 // NFstream& operator<<(NFstream& nfstream, const T& value) 

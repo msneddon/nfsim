@@ -571,11 +571,7 @@ namespace NFcore
 
 			///////////////////////////////////////////////////////////////////////////
 			//random data structures and variables used for optimization....
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
 			int **rxnIndexMap;
-			// vector <vector <int> > rxnIndexMap; /*!< maps reaction index values to a reaction, used for MoleculeTypes to
-			//                         quickly lookup a reaction */
 
 
 			map <string,double> paramMap;
@@ -586,16 +582,10 @@ namespace NFcore
 			ReactionSelector * selector;
 
 			// To look up connected reactions quickly
-			// AS-5/26/2021
-			// MERGECHECK - new vector for connected reactions
 			vector <vector <bool> > connectedReactions;
 
 
 		private:
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// vector <Molecule *> molList;
-			// vector <Molecule *>::iterator molListIter;
 			list <Molecule *> molList;
 			list <Molecule *>::iterator molListIter;
 
@@ -842,18 +832,10 @@ namespace NFcore
 
 			//keeps track of the key information about a MoleculeType - the component
 			int numOfComponents;
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
 			string *compName;
-			// vector < string > compName;
 			vector < vector < string > > possibleCompStates;
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// vector < int > defaultCompState;
-			// vector < bool > isIntegerCompState;
 			int *defaultCompState;
 			bool *isIntegerCompState;
-			//
 			const bool population_type;
 
 
@@ -1010,11 +992,6 @@ namespace NFcore
 
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// void traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit);
-			// static void breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth);
-			// void depthFirstSearch(vector <Molecule *> &members);
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
 			void depthFirstSearch(list <Molecule *> &members);
@@ -1057,9 +1034,6 @@ namespace NFcore
 			void printBondDetails();
 			void printBondDetails(NFstream &o);
 			void printBondDetails(ostream &o);
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// static void printMoleculeList(vector <Molecule *> &members);
 			static void printMoleculeList(list <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };
@@ -1069,13 +1043,6 @@ namespace NFcore
 			int isObs(int oIndex) const { return isObservable[oIndex]; };
 			void setIsObs(int oIndex, int isObs) { isObservable[oIndex]=isObs; };
 
-
-			// AS-5/26/2021
-			// MERGECHECK - these are defined later
-			// /* used for traversing a molecule complex */
-			// bool hasVisitedMolecule;
-			// bool * hasVisitedBond;
-			// TemplateMolecule *isMatchedTo;
 
 			// /* used when reevaluating local functions */
 			// bool hasEvaluatedMolecule;
@@ -1091,9 +1058,6 @@ namespace NFcore
 			/* used for traversing a molecule complex */
 			bool hasVisitedMolecule;
 
-
-
-
 			bool isPrepared;
 			bool isAliveInSim;
 
@@ -1102,7 +1066,6 @@ namespace NFcore
 			int ID_type;
 			int ID_unique;
 			int listId;
-
 
 			static int uniqueIdCount;
 
@@ -1149,9 +1112,6 @@ namespace NFcore
 
 			static queue <Molecule *> q;
 			static queue <int> d;
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// static vector <Molecule *>::iterator molIter;
 			static list <Molecule *>::iterator molIter;
 
 	};
@@ -1325,28 +1285,17 @@ namespace NFcore
 			 */
 			vector <ReactionClass *> connectedReactions;
 
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
 			TemplateMolecule **reactantTemplates;
-			// vector <TemplateMolecule *> reactantTemplates;
 			TransformationSet * transformationSet;
 			MappingSet **mappingSet;
 
 			bool onTheFlyObservables;
 			bool isDimerStyle;
 			
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// vector <Molecule *> products;
-			// vector <Molecule *>::iterator molIter;
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
 
 			// remember the molecule type of each product molecule a with typeII dependencies
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// vector <MoleculeType *> typeII_products;
-			// vector <MoleculeType *>::iterator typeII_iter;
 			list <MoleculeType *> typeII_products;
 			list <MoleculeType *>::iterator typeII_iter;
 
@@ -1445,10 +1394,6 @@ namespace NFcore
 			void unsetCanonical ( ) { is_canonical = false; };
 
 			//This is public so that anybody can access the molecules quickly
-			// AS-5/26/2021
-			// MERGECHECK - list vs vector
-			// vector <Molecule *> complexMembers;
-			// vector <Molecule *>::iterator molIter;
 			list <Molecule *> complexMembers;
 			list <Molecule *>::iterator molIter;
 

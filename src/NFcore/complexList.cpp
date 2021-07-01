@@ -180,9 +180,6 @@ void ComplexList::outputMoleculeTypeCountPerComplex(MoleculeType *m)
 }
 
 
-// AS-5/26/2021
-// MERGECHECK - This is removed in merge
-// TODO: figure out how friend functions work!!
 // friend functions
 // template<class T>
 // NFstream& operator<<(NFstream& nfstream, const T& value)

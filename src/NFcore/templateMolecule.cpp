@@ -10,10 +10,7 @@ using namespace NFcore;
 queue <TemplateMolecule *> TemplateMolecule::q;
 queue <int> TemplateMolecule::d;
 vector <TemplateMolecule *>::iterator TemplateMolecule::tmVecIter;
-// AS-5/27/2021
-// MERGECHECK - list vs vector
 list <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
-// vector <TemplateMolecule *>::iterator TemplateMolecule::tmIter;
 
 int TemplateMolecule::TotalTemplateMoleculeCount=0;
 
@@ -28,8 +25,6 @@ TemplateMolecule::TemplateMolecule(MoleculeType * moleculeType){
 
 	//Start everything off with no constraints, then we will reinitialize
 	//every time we add some type of constraint
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector?
 	this->emptyComps=new int[0];
 	this->occupiedComps=new int[0];
 	this->compStateConstraint_Comp=new int[0];
@@ -99,36 +94,20 @@ TemplateMolecule::~TemplateMolecule() {
 	}
 	delete [] mapGenerators;
 
-	// AS-5/27/2021
-	// MERGECHECK - removed delete commands
 	delete [] emptyComps;
 	delete [] occupiedComps;
 	delete [] compStateConstraint_Comp;
 	delete [] compStateConstraint_Constraint;
 	delete [] compStateExclusion_Comp;
 	delete [] compStateExclusion_Exclusion;
-	// emptyComps.clear();
-	// occupiedComps.clear();
-	// compStateConstraint_Comp.clear();
-	// compStateConstraint_Constraint.clear();
-	// compStateExclusion_Comp.clear();
-	// compStateExclusion_Exclusion.clear();
 	delete [] symCompUniqueId;
 
-	// AS-5/27/2021
-	// MERGECHECK - removed deletes
 	delete [] bondComp;
 	delete [] bondCompName;
 	delete [] bondPartner;
 	delete [] bondPartnerCompName;
 	delete [] bondPartnerCompIndex;
 	delete [] hasVisitedBond;
-	// bondComp.clear();
-	// bondCompName.clear();
-	// bondPartner.clear();
-	// bondPartnerCompName.clear();
-	// bondPartnerCompIndex.clear();
-	// hasVisitedBond.clear();
 
 	delete [] connectedTo;
 	delete [] hasTraversedDownConnectedTo;
@@ -184,15 +163,12 @@ void TemplateMolecule::addEmptyComponent(string cName) {
 		printErrorAndExit("Cannot add empty binding site of a symmetric component with addEmptyComponent() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	// AS-5/27/2021
-	// MERGECHECK - replaced commented block w/ push_back
 	int *newEmptyCompArray=new int[n_emptyComps+1];
 	for(int i=0; i<n_emptyComps; i++)
 		newEmptyCompArray[i]=this->emptyComps[i];
 	newEmptyCompArray[n_emptyComps]=compIndex;
 	delete [] emptyComps;
 	emptyComps=newEmptyCompArray;
-	// emptyComps.push_back(compIndex);
 	n_emptyComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -201,15 +177,12 @@ void TemplateMolecule::addBoundComponent(string cName) {
 		printErrorAndExit("Cannot add bound binding site of a symmetric component with addBoundComponent() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	// AS-5/27/2021
-	// MERGECHECK - replaced commented block w/ push_back
 	int *newOccupiedCompArray=new int[n_occupiedComps+1];
 	for(int i=0; i<n_occupiedComps; i++)
 		newOccupiedCompArray[i]=this->occupiedComps[i];
 	newOccupiedCompArray[n_occupiedComps]=compIndex;
 	delete [] occupiedComps;
 	occupiedComps=newOccupiedCompArray;
-	// occupiedComps.push_back(compIndex);
 	n_occupiedComps++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -227,8 +200,6 @@ void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 		printErrorAndExit("Cannot add component constraint of a symmetric component with addComponentConstraint() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	// AS-5/27/2021
-	// MERGECHECK - replaced commented block w/ push_back
 	int *newConstraint_Comp=new int[n_compStateConstraint+1];
 	int *newConstraint_Constraint=new int[n_compStateConstraint+1];
 	for(int i=0; i<n_compStateConstraint; i++) {
@@ -241,8 +212,6 @@ void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 	delete [] compStateConstraint_Constraint;
 	compStateConstraint_Comp=newConstraint_Comp;
 	compStateConstraint_Constraint=newConstraint_Constraint;
-	// compStateConstraint_Comp.push_back(compIndex);
-	// compStateConstraint_Constraint.push_back(stateValue);
 	n_compStateConstraint++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -259,8 +228,6 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 		printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
-	// AS-5/27/2021
-	// MERGECHECK - replaced commented block w/ push_back
 	int *newExclusion_Comp=new int[n_compStateExclusion+1];
 	int *newExclusion_Exclusion=new int[n_compStateExclusion+1];
 	for(int i=0; i<n_compStateExclusion; i++) {
@@ -523,8 +490,6 @@ void TemplateMolecule::addBond(string thisBsiteName,
 {
 	//If we called this, then we are adding a bond to a nonsymmetric site
 
-	// AS-5/27/2021
-	// MERGECHECK - commented out block removed
 	// //First, initialize the new arrays
 	int *newBondComp = new int[n_bonds+1];
 	string *newBondCompName = new string[n_bonds+1];
@@ -548,35 +513,18 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	}
 
 	//Insert the new information
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector?
 	// int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 	newBondComp[n_bonds] = compIndex;
 	newBondCompName[n_bonds] = thisBsiteName;
 	newBondPartner[n_bonds] = t2;
 	newBondPartnerCompName[n_bonds] = bSiteName2;
-	// bondComp.push_back(compIndex);
-	// bondCompName.push_back(thisBsiteName);
-	// bondPartner.push_back(t2);
-	// bondPartnerCompName.push_back(bSiteName2);
 	if(t2->moleculeType->isEquivalentComponent(bSiteName2)) {
-		// AS-5/27/2021
-		// MERGECHECK - list vs vector
 		newBondPartnerCompIndex[n_bonds] = -1;
-		// bondPartnerCompIndex.push_back(-1);
 	} else {
-		// AS-5/27/2021
-		// MERGECHECK - list vs vector
 		newBondPartnerCompIndex[n_bonds]=t2->moleculeType->getCompIndexFromName(bSiteName2);
-		// bondPartnerCompIndex.push_back(t2->moleculeType->getCompIndexFromName(bSiteName2));
 	}
-	// AS-5/27/2021
-	// MERGECHECK - commented section replaced
 	newHasVisitedBond[n_bonds] = false;
-	// hasVisitedBond.push_back(false);
 
-	// AS-5/27/2021
-	// MERGECHECK - commented section removed
 	// //Delete the duplicated information
 	delete [] bondComp;
 	delete [] bondCompName;
@@ -585,8 +533,6 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	delete [] bondPartnerCompIndex;
 	delete [] hasVisitedBond;
 
-	// AS-5/27/2021
-	// MERGECHECK - removed commented out section
 	// //Reassign the new information
 	bondComp = newBondComp;
 	bondCompName = newBondCompName;
@@ -626,10 +572,7 @@ bool TemplateMolecule::contains(TemplateMolecule *tempMol)
 	//the queues and lists should be static for efficiency
 	//queue Q, depth queue D, and list T
 	//queue <TemplateMolecule *> q;
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
 	list <TemplateMolecule *> t;
-	// vector <TemplateMolecule *> t;
 	//queue <int> d;
 
 	int currentDepth = 0;
@@ -1465,12 +1408,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 		vector <MappingSet *> lastMappingSets;
 		lastMappingSets.push_back(ms);
 
-		// AS-5/27/2021
-		// MERGECHECK - list vs vector
 		list <Molecule *> molList;
 		list <Molecule *>::iterator molIter;
-		// vector <Molecule *> molList;
-		// vector <Molecule *>::iterator molIter;
 		bool hasTraversed = false;
 
 		for(int cTo=0; cTo<this->n_connectedTo; cTo++) {
@@ -1540,12 +1479,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 			if(!canMatch) {
 				if(head) {
 					// clear out anything that is dangling
-					// AS-5/27/2021
-					// MERGECHECK - list vs vector
 					list <Molecule *> molList;
 					list <Molecule *>::iterator molIter;
-					// vector <Molecule *> molList;
-					// vector <Molecule *>::iterator molIter;
 					m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 					for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 						(*molIter)->isMatchedTo=0;
@@ -1577,12 +1512,8 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	if(holdMolClearToEnd) {
 		if(head) {
 			// clear out anything that is dangling
-			// AS-5/27/2021
-			// MERGECHECK - list vs vector
 			list <Molecule *> molList;
 			list <Molecule *>::iterator molIter;
-			// vector <Molecule *> molList;
-			// vector <Molecule *>::iterator molIter;
 			m->traverseBondedNeighborhood(molList,ReactionClass::NO_LIMIT);
 			for(molIter=molList.begin(); molIter!=molList.end();molIter++) {
 				(*molIter)->isMatchedTo=0;
@@ -1599,9 +1530,6 @@ bool TemplateMolecule::compare(Molecule *m, ReactantContainer *rc, MappingSet *m
 	return true;
 }
 
-// AS-6/1/2021
-// MERGECHECK - going back to lists
-// TODO: Fix this to work with lists and not vectors
 
 /** To match two template molecules
  * I will closely follow the 'compare' function above for
@@ -2287,9 +2215,6 @@ bool TemplateMolecule::checkSymmetryAroundBond(TemplateMolecule *tm1, TemplateMo
 	return true;
 }
 
-// AS-6/1/2021
-// MERGECHECK - going back to lists
-// TODO: Fix this to work with lists and not vectors
 bool TemplateMolecule::isMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
 	if (this->getMoleculeType() != mt) return false;
 	
@@ -2304,11 +2229,7 @@ bool TemplateMolecule::isMoleculeTypeAndComponentPresent(MoleculeType * mt, int 
 	for(int i=0; i<n_bonds; i++) {
 		if (this->bondComp[i] == cIndex) return true;
 	}
-
-	// if (find(emptyComps.begin(), emptyComps.end(), cIndex) != emptyComps.end()) return true;
-	// if (find(occupiedComps.begin(), occupiedComps.end(), cIndex) != occupiedComps.end()) return true;
-	// if (find(bondComp.begin(), bondComp.end(), cIndex) != bondComp.end()) return true;
-
+	
 	return false;
 }
 

@@ -34,8 +34,6 @@ Molecule::Molecule(MoleculeType * parentMoleculeType, int listId)
 	this->indexOfBond = new int [numOfComponents];
 	this->hasVisitedBond = new bool [numOfComponents];
 	for(int b=0; b<numOfComponents; b++) {
-		// AS-5/26/2021
-		// MERGECHECK - bond[b]=NULL in merge
 		bond[b]=0; indexOfBond[b]=NOBOND;
 		hasVisitedBond[b] = false;
 	}
@@ -610,9 +608,6 @@ void Molecule::unbind(Molecule *m1, char * compName)
 
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
-// AS-5/26/2021
-// MERGECHECK - these are now vectors instead of lists
-// vector <Molecule *>::iterator Molecule::molIter;
 list <Molecule *>::iterator Molecule::molIter;
 // This might need to change to list if I'm reversing vector changes
 // void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
@@ -683,9 +678,6 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 
 
 
-// AS-5/26/2021
-// MERGECHECK - these are now vectors instead of lists
-//void Molecule::traverseBondedNeighborhood(vector <Molecule *> &members, int traversalLimit)
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
@@ -695,8 +687,6 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 	//	this->depthFirstSearch(members);
 }
 
-// AS-5/26/2021
-// MERGECHECK - these are now vectors instead of lists
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
 void Molecule::depthFirstSearch(list <Molecule *> &members)
@@ -728,15 +718,10 @@ void Molecule::depthFirstSearch(list <Molecule *> &members)
 		hasVisitedBond[c] = false;
 }
 
-// AS-5/26/2021
-// MERGECHECK - vector instead of list
-// void Molecule::printMoleculeList(vector <Molecule *> &members)
+
 void Molecule::printMoleculeList(list <Molecule *> &members)
 {
 	cout<<"List of molecules contains: "<<endl;
-	// AS-5/26/2021
-	// MERGECHECK - vector instead of list
-	// vector <Molecule *>::iterator molIter;
 	list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		cout<<"   -"<<(*molIter)->getMoleculeTypeName();

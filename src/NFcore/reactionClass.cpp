@@ -32,10 +32,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	this->n_mappingsets = transformationSet->getNmappingSets();
 //	cout<<"n_reactants "<< this->n_reactants << endl;
 //	cout<<"n_mappingsets "<< this->n_mappingsets << endl;
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector
     this->reactantTemplates = new TemplateMolecule *[n_reactants];
-	// this->reactantTemplates = vector <TemplateMolecule *>(n_reactants);
 	vector <TemplateMolecule*> tmList;
 	vector <int> hasMapGenerator;
 	for(unsigned int r=0; r<n_reactants; r++)
@@ -276,8 +273,6 @@ bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
 
 ReactionClass::~ReactionClass()
 {
-	// AS-5/27/2021
-	// MERGECHECK - list vs vector?
 	delete [] reactantTemplates;
 	delete transformationSet;
 	for ( unsigned int r = n_reactants; r < n_mappingsets; ++r )
@@ -553,10 +548,7 @@ void ReactionClass::fire(double random_A_number) {
 		else {
 			// this is the hard way: find a representative molecule from each connected set
 			//  and evaluate TypeII functions on that representative.
-			// AS-5/27/2021
-			// MERGECHECK - list vs vector
 			list <Molecule *> allMols;
-			// vector <Molecule *> allMols;
 			Molecule * mol;
 			for ( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 				mol = *molIter;
