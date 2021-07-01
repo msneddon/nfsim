@@ -40,6 +40,8 @@ System::System(string name)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 1000;
 }
 
 
@@ -67,6 +69,8 @@ System::System(string name, bool useComplex)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 1000;
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -92,6 +96,8 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	ds=0;
 	selector = 0;
 	csvFormat = false;
+	anyRxnTagged = false;
+	max_cpu_time = 1000;
 }
 
 
@@ -276,9 +282,122 @@ void System::registerOutputFileLocation(string filename)
 
 }
 
+/*
+ * Print reaction info if -rlog flag is given
+ * Note reactions can be tagged in BioNetGen or PySB or from the command line using the rtag flag
+ * @author: Rasi Subramaniam
+ */
+void System::registerReactionFileLocation(string filename)
+{
+	if (reactionOutputFileStream.is_open()) { reactionOutputFileStream.close(); }
+	reactionOutputFileStream.open(filename.c_str());
+
+	if(!reactionOutputFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	reactionOutputFileStream.setf(ios::fixed);
+	reactionOutputFileStream.precision(6);
+	// print header for file
+	reactionOutputFileStream <<
+			"line" << "\t" <<
+			"cputime" << "\t" <<
+			"time" << "\t" <<
+			"rxn" << "\t";
+	if (!this->getRxnNumberTrack()) {
+		reactionOutputFileStream << "mol" << "\t";
+	}
+	reactionOutputFileStream <<
+			"mol_id" <<
+			endl;
+}
+
+void System::registerMoleculeTypeFileLocation(string filename) {
+	if (moleculeTypeFileStream.is_open()) { moleculeTypeFileStream.close(); }
+	moleculeTypeFileStream.open(filename.c_str());
+
+	if(!moleculeTypeFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	moleculeTypeFileStream.setf(ios::dec);
+	moleculeTypeFileStream.precision(2);
+	// print header for file
+	moleculeTypeFileStream << "mol_type_id" << "\t" << "mol_type" << endl;
+}
+
+void System::registerRxnListFileLocation(string filename) {
+	if (rxnListFileStream.is_open()) { rxnListFileStream.close(); }
+	rxnListFileStream.open(filename.c_str());
+
+	if(!rxnListFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	rxnListFileStream.setf(ios::dec);
+	rxnListFileStream.precision(2);
+	// print header for file
+	rxnListFileStream <<
+			"rxn" << "\t" <<
+			"n_firings" << "\t" <<
+			"name" << endl;
+}
+
+void System::registerConnectedRxnFileLocation(string filename)
+{
+	if (connectedRxnFileStream.is_open()) { connectedRxnFileStream.close(); }
+	connectedRxnFileStream.open(filename.c_str());
+
+	if(!connectedRxnFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	connectedRxnFileStream.setf(ios::scientific);
+	connectedRxnFileStream.precision(8);
+	// print header for file
+	connectedRxnFileStream <<
+			"line" << "\t" <<
+			"rxn" << "\t" <<
+			"mol" << "\t" <<
+			"mol_id" << "\t" <<
+			"con_rxn" << "\t" <<
+			"old_a" << "\t" <<
+			"new_a" <<
+			endl;
+}
+
+void System::registerListOfConnectedRxnFileLocation(string filename)
+{
+	if (connectedRxnListFileStream.is_open()) { connectedRxnListFileStream.close(); }
+	connectedRxnListFileStream.open(filename.c_str());
+
+	if(!connectedRxnListFileStream.is_open()) {
+		cerr<<"Error in System!  cannot open output stream to file "<<filename<<". "<<endl;
+		cerr<<"quitting."<<endl;
+		exit(1);
+	}
+
+	connectedRxnListFileStream.setf(ios::scientific);
+	connectedRxnListFileStream.precision(8);
+	// print header for file
+	connectedRxnListFileStream <<
+			"rxn_id" << "\t" <<
+			"rxn_name" << "\t" <<
+			"connected_rxn_id" << "\t" <<
+			"con_rxn_name" <<
+			endl;
+}
 
 
-void System::tagReaction(int rID) {
+void System::tagReaction(unsigned int rID) {
 
 	if(rID<0 || rID>=this->allReactions.size() ) {
 		cerr<<"!!! Error when trying to tag reaction with reaction ID "<<rID<<endl;
@@ -361,6 +480,21 @@ bool System::addGlobalFunction(GlobalFunction *gf)
 }
 
 
+ReactionClass * System::getReactionByName(string rName)
+{
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		//(*molTypeIter)->printDetails(); //<<endl;
+		if((*rxnIter)->getName()==rName)
+		{
+			return (*rxnIter);
+		}
+	}
+	return 0;
+	cerr<<"!!! warning !!! cannot find reaction type name '"<< rName << "' in System: '"<<this->name<<"'"<<endl;
+	exit(1);
+}
+
 
 
 MoleculeType * System::getMoleculeTypeByName(string mName)
@@ -438,12 +572,12 @@ void System::prepareForSimulation()
 
   	//cout<<"here 1..."<<endl;
 
-  	for( int f=0; f<localFunctions.size(); f++)
+  	for(unsigned int f=0; f<localFunctions.size(); f++)
   		localFunctions.at(f)->prepareForSimulation(this);
 
   	//cout<<"here 2..."<<endl;
 
-  	for( int f=0; f<compositeFunctions.size(); f++)
+  	for(unsigned int f=0; f<compositeFunctions.size(); f++)
   		compositeFunctions.at(f)->prepareForSimulation(this);
 
   	//cout<<"here 3..."<<endl;
@@ -453,9 +587,46 @@ void System::prepareForSimulation()
 	rxnIndexMap = new int * [allReactions.size()];
   	for(unsigned int r=0; r<allReactions.size(); r++)
   	{
-  		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
+
+		rxnIndexMap[r] = new int[allReactions.at(r)->getNumOfReactants()];
   		allReactions.at(r)->setRxnId(r);
   	}
+
+  	// Infer connected reactions if asked to do so from command line
+  	// Arvind Rasi Subramaniam
+  	if (connectivityFlag) {
+		// resize connected reactions map and intialize to false
+		 connectedReactions = vector <vector <bool> > (allReactions.size(),
+				vector <bool> (allReactions.size(), false));
+		  for(unsigned int r=0; r<allReactions.size(); r++)
+		  {
+			// Arvind Rasi Subramaniam
+			allReactions.at(r)->identifyConnectedReactions();
+			if ((r + 1) % 10 == 0) {
+				cout << "Connectivity inferred for " << r + 1 << " reactions."
+						<< endl;
+			}
+			// prepare the connected reaction map for quick lookup
+			for (int r2 = 0; r2 < allReactions.at(r)->getNumConnectedRxns();
+					r2++) {
+				int rxn2_id =
+						allReactions.at(r)->getconnectedRxn(r2)->getRxnId();
+				connectedReactions[r][rxn2_id] = true;
+			}
+			  // print connected reactions if given the switch
+			if (!this->getPrintConnected()) continue;
+			for (int r2 = 0; r2 < allReactions.at(r)->getNumConnectedRxns();
+					r2++) {
+				this->getConnectedRxnListFileStream() << r << "\t"
+						<< allReactions.at(r)->getName() << "\t" // << r << "\t"
+						<< allReactions.at(r)->getconnectedRxn(r2)->getRxnId()
+						<< "\t"
+						<< allReactions.at(r)->getconnectedRxn(r2)->getName()
+						<< endl;
+			}
+		  }
+  	}
+
 
   	//cout<<"here 4..."<<endl;
 
@@ -476,8 +647,9 @@ void System::prepareForSimulation()
 
 
   	//prep each molecule type for the simulation
-  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+  	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
+  	}
 
   	//cout<<"here 7..."<<endl;
 
@@ -663,7 +835,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	double end_time = current_time+duration;
 	tryToDump();
 
-	while(current_time<end_time)
+	while(current_time<end_time & current_cpu_time < max_cpu_time)
 	{
 		//this->printAllObservableCounts(current_time);
 		//2: Recompute a_tot for this time
@@ -692,18 +864,25 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 				curSampleTime+=dSampleTime;
 			}
 			if(verbose) {
-				cout << "Sim time: "           << (curSampleTime-dSampleTime);
-				cout << "\tCPU time (total): " << ((double)(clock() - start)/(double)CLOCKS_PER_SEC) << "s";
-				cout << "\t events (step): "   << stepIteration<<endl;
+			cout << "Sim time: " << (curSampleTime - dSampleTime);
+			current_cpu_time = ((double) (clock() - start) / (double) CLOCKS_PER_SEC);
+			cout << "\tCPU time (total): "
+					<< current_cpu_time
+					<< "s";
+			cout << "\t events (step): " << stepIteration << endl;
 			}
 			stepIteration=0;
 			recompute_A_tot();
+			if (current_cpu_time > max_cpu_time) {
+				break;
+			}
 		}
 
 		//cout<<"delta_t: " <<delta_t<<" atot: "<<a_tot<<endl;
 		//Make sure we can react...
 		if(delta_t==0) break;
 
+		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
 		//4: Select next reaction class based on smallest j,
 		//   such that sum of a_j over all j >= r2*a_tot
 		double randElement = getNextRxn();
@@ -715,37 +894,33 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		//nextReaction->printFullDetails();
 		//cout<<endl<<endl;
 
-		//this->printAllReactions();
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n";
 		//Increment time
 		iteration++;
 		stepIteration++;
 		globalEventCounter++;
 		current_time+=delta_t;
-
-		//5: Fire Reaction! (takes care of updates to lists and observables)
+//		this->printAllReactions();
+//		cout << "Current reaction: " << "\n";
+//		nextReaction->printDetails();
+//		this->getMoleculeType(2)->getMolecule(0)->printDetails();
+//
 		nextReaction->fire(randElement);
-		//this->printAllObservableCounts(this->current_time);
-		//cout<<"\n---"<<endl;
 
 		tryToDump();
-		//	outputAllPropensities(current_time, nextReaction->getRxnId());
 
-		//cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//if(nextReaction->getName()=="Rule7") {
-		//	cout<<getObservableByName("Lig_free")->getCount()<<"/"<<getObservableByName("Lig_tot")->getCount()<<endl;
-		//	printAllReactions();
-		//	exit(1);
-		//}
-
-		// TODO: debug!
-		//this->getAllComplexes().printAllComplexes();
 	}
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
 
+	// Write list of molecule_types and reactions along with reaction firing counts
+	// TODO: Make this optional!
+	if (this->outputMoleculeTypesFile) {
+		outputAllMoleculeTypes();
+	}
+	if (this->outputRxnFiringCountsFile) {
+		outputAllRxnFiringCounts();
+	}
 
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;
@@ -888,6 +1063,7 @@ void System::outputAllObservableNames()
 				for(int k=0; k<spaces; k++) {
 					outputFileStream<<" ";
 				}
+				// outputFileStream<<"\t";
 				outputFileStream<<nm;;
 			}
 
@@ -900,6 +1076,7 @@ void System::outputAllObservableNames()
 					for(int k=0; k<spaces; k++) {
 						outputFileStream<<" ";
 					}
+					// outputFileStream<<"\t";
 					outputFileStream<<nm;;
 				}
 			if(outputEventCounter) {
@@ -909,6 +1086,7 @@ void System::outputAllObservableNames()
 				for(int k=0; k<spaces; k++) {
 					outputFileStream<<" ";
 				}
+				// outputFileStream<<"\t";
 				outputFileStream<<nm;;
 			}
 
@@ -1019,9 +1197,9 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 	}
 	else {
 		if(!csvFormat) {
-			outputFileStream<<" "<<cSampleTime;
+			outputFileStream<<cSampleTime;
 			for(obsIter = obsToOutput.begin(); obsIter != obsToOutput.end(); obsIter++) {
-				outputFileStream<<"  "<<((double)(*obsIter)->getCount());
+				outputFileStream<<"\t"<<((double)(*obsIter)->getCount());
 			}
 
 			if(outputGlobalFunctionValues) {
@@ -1035,7 +1213,7 @@ void System::outputAllObservableCounts(double cSampleTime, int eventCounter)
 				}
 			}
 			if(outputEventCounter) {
-				outputFileStream<<"  "<<eventCounter;
+				outputFileStream<<"\t"<<eventCounter;
 			}
 
 			outputFileStream<<endl;
@@ -1303,6 +1481,27 @@ void System::printAllMoleculeTypes()
 	cout<<endl;
 }
 
+void System::outputAllMoleculeTypes() {
+	for(molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
+	{
+		moleculeTypeFileStream <<
+		(*molTypeIter)->getTypeID() << "\t" << (*molTypeIter)->getName() << endl;
+	}
+	moleculeTypeFileStream << this->getLastRxnTime() << "\tlast_rxn_firing_time" << endl;
+	moleculeTypeFileStream << this->current_time << "\tsimulated_time" << endl;
+	moleculeTypeFileStream << this->current_cpu_time << "\tcpu_time" << endl;
+	moleculeTypeFileStream.close();
+}
+
+void System::outputAllRxnFiringCounts() {
+	for(rxnIter = allReactions.begin(); rxnIter != allReactions.end(); rxnIter++ )
+	{
+		rxnListFileStream <<
+		(*rxnIter)->getRxnId() << "\t" <<
+			(*rxnIter)->getFireCounter() << "\t" << (*rxnIter)->getName() << endl;
+	}
+	rxnListFileStream.close();
+}
 
 // NETGEN  moved to ComplexList
 /*
@@ -1429,7 +1628,7 @@ void System::evaluateAllLocalFunctions() {
 				//Evaluate all local functions on this complex
 				for(unsigned int l=0; l<localFunctions.size(); l++) {
 						//cout<<"--------------Evaluating local function on species..."<<endl;
-						double val =localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
+						localFunctions.at(l)->evaluateOn(mol,LocalFunction::SPECIES);
 						//cout<<"     value of function: "<<val<<endl;
 
 				}
@@ -1647,26 +1846,34 @@ void System::outputAllPropensities(double time, int rxnFired)
 
 }
 
+NFstream& System::getConnectedRxnFileStream()
+{
+    return connectedRxnFileStream;
+}
 
-
-
-
+NFstream& System::getConnectedRxnListFileStream()
+{
+    return connectedRxnListFileStream;
+}
+NFstream& System::getReactionFileStream()
+{
+    return reactionOutputFileStream;
+}
 
 NFstream& System::getOutputFileStream()
 {
     return outputFileStream;
 }
 
+// // friend functions
+// template<class T>
+// NFstream& operator<<(NFstream& nfstream, const T& value)
+// {
+//     if (nfstream.useFile_)
+// 	nfstream.file_ << value;
+//     else
+// 	nfstream.str_ << value;
 
-// friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
-
-    return nfstream;
-}
+//     return nfstream;
+// }
 

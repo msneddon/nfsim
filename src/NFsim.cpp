@@ -76,6 +76,30 @@
  *
  *  -cb = turn on complex bookkeeping, see manual
  *
+ *  -connect - infer network connectivity before starting simulation. (default: no).
+ *             Does not require any modification to BioNetGen or PySB.
+ *             @author Arvind Rasi Subramaniam
+ *
+ *  -printconnected - print connectivity of each reaction to an output file. (default: no).
+ *             @author Arvind Rasi Subramaniam
+ *
+ *  -trackconnected - write out the reactions whose rates change after firing of each reaction.
+ *  				  Default: false
+ *  				  @author: Arvind Rasi Subramaniam
+ *
+ *  -trackrxnnum - track reaction number instead of name. this helps to keep the rxn log file small.
+ *  			   Default: false
+ *  			   @author: Arvind Rasi Subramaniam
+ *
+ *  -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+ *                 @author Arvind Rasi Subramaniam
+ * 
+ *  -printmoltypes - output molecule types (default: false).
+ * 						   @author Ali Sinan Saglam
+ * 
+ *  -printrxncounts - output reaction firing counts (default: false).
+ * 						   @author Ali Sinan Saglam
+ *
  *  -gml [integer] = sets maximal number of molecules, per any MoleculeType, see manual
  *
  *  -nocslf = disable evaluation of Complex-Scoped Local Functions
@@ -378,12 +402,19 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 				globalMoleculeLimit = NFinput::parseAsInt(argMap,"gml",globalMoleculeLimit);
 			}
 
+			bool connectivityFlag = false;
+			if (argMap.find("connect")!=argMap.end()) {
+				connectivityFlag = true;
+			}
+
 			//Actually create the system
 			bool cb = false;
 			if(turnOnComplexBookkeeping || blockSameComplexBinding) cb=true;
 			int suggestedTraveralLimit = ReactionClass::NO_LIMIT;
 			System *s = NFinput::initializeFromXML(filename,cb,globalMoleculeLimit,verbose,
-													suggestedTraveralLimit,evaluateComplexScopedLocalFunctions);
+													suggestedTraveralLimit,
+													evaluateComplexScopedLocalFunctions,
+													connectivityFlag);
 
 
 			if(s!=NULL)
@@ -466,6 +497,28 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					string outputFileName = argMap.find("o")->second;
 					s->registerOutputFileLocation(outputFileName);
 					s->outputAllObservableNames();
+					if (argMap.find("printmoltypes")!=argMap.end()) {
+						s->registerMoleculeTypeFileLocation(
+										outputFileName.replace(
+												outputFileName.end()-5,
+												outputFileName.end(),
+												".molecule_type_list.tsv"));
+						s->setOutputMoleculeTypes(true);
+					} else {
+						s->setOutputMoleculeTypes(false);
+					};
+					
+					if (argMap.find("printrxncounts")!=argMap.end()) {
+						s->registerRxnListFileLocation(
+										outputFileName.replace(
+												outputFileName.end()-23,
+												outputFileName.end(),
+												".rxn_list.tsv"));
+						s->setOutputRxnFiringCounts(true);
+					} else {
+						s->setOutputRxnFiringCounts(false);
+					};
+
 				} else {
 					if(s->isOutputtingBinary()) {
 						s->registerOutputFileLocation(s->getName()+"_nf.dat");
@@ -475,8 +528,51 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 						s->registerOutputFileLocation(s->getName()+"_nf.gdat");
 						s->outputAllObservableNames();
 						if(verbose) cout<<"\tStandard output will be written to: "<< s->getName()+"_nf.gdat" <<endl<<endl;
+						s->registerMoleculeTypeFileLocation(s->getName() + "_molecule_type_list.tsv");
+						s->registerRxnListFileLocation(s->getName() + "_rxn_list.tsv");
 					}
 				}
+
+				if (s->getAnyRxnTagged()) {
+					if (argMap.find("rxnlog") != argMap.end()) {
+						string rxnLogFileName = argMap.find("rxnlog")->second;
+						s->setRxnNumberTrack(true);
+						s->registerReactionFileLocation(rxnLogFileName);
+						// track the reactions whose rates change upon each each reaction
+						// firing. This is useful for debugging to make sure that all the
+						// right reactions are updated after each firing.
+						// Arvind Rasi Subramaniam Nov 21, 2018
+						if (argMap.find("trackconnected") != argMap.end()) {
+							s->registerConnectedRxnFileLocation(
+									rxnLogFileName.replace(
+											rxnLogFileName.end()-4,
+											rxnLogFileName.end(),
+											"_connected.tsv"));
+							s->setTrackConnected(true);
+						} else {
+							s->setTrackConnected(false);
+						}
+						if (argMap.find("printconnected") != argMap.end()) {
+							s->registerListOfConnectedRxnFileLocation(
+									rxnLogFileName.replace(
+											rxnLogFileName.end()-4,
+											rxnLogFileName.end(),
+											"_list.tsv"));
+							s->setPrintConnected(true);
+						} else {
+							s->setPrintConnected(false);
+						}
+					} else {
+						if (argMap.find("trackrxnnum") != argMap.end()) {
+							s->setRxnNumberTrack(true);
+							s->registerReactionFileLocation(
+								s->getName() + "_rxns.dat");
+						} else {
+							s->setRxnNumberTrack(false);
+						}
+					}
+				}
+
 
 				//turn off on the fly calculation of observables
 				if(argMap.find("notf")!=argMap.end()) {
@@ -512,10 +608,17 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double eqTime = 0;
 	double sTime = 10;
 	int oSteps = 10;
+	// double maxCpuTime = 1000;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
+
+	// if (argMap.find("maxcputime") != argMap.end()) {
+	// 	maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	// }
+	// s->setMaxCpuTime(maxCpuTime);
+
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
 	//Prepare the system for simulation!!
@@ -652,6 +755,25 @@ void printHelp(string version)
 	cout<<"  -seed             used to specify the seed for the random number generator."<<endl;
 	cout<<"                    This allows you to run the same simulation and get the"<<endl;
 	cout<<"                    exact same results perhaps to compare performance"<<endl;
+	cout<<""<<endl;
+	cout<<" -connect           infer network connectivity before starting simulation. (default: no)."<<endl;
+    cout<<" 		           Does not require any modification to BioNetGen or PySB."<<endl;
+    cout<<""<<endl;
+    cout<<"  -printconnected   print connectivity of each reaction to an output file. (default: no)."<<endl;
+    cout<<""<<endl;
+    cout<<"  -trackconnected   write out the reactions whose rates change after firing"<<endl;
+	cout<<"                    of each reaction. (default: false)"<<endl;
+    cout<<""<<endl;
+    cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep"<<endl;
+	cout<<"                    the rxn log file small. (default: false)"<<endl;
+	cout<<""<<endl;
+	cout<<"  -printmoltypes - output molecule types (default: false)."<<endl;
+    cout<<" 						   @author Ali Sinan Saglam"<<endl;
+	cout<<""<<endl;
+	cout<<"  -printrxncounts - output reaction firing counts (default: false)."<<endl;
+ 	cout<<" 						   @author Ali Sinan Saglam"<<endl;
+    cout<<""<<endl;
+    cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
 	cout<<""<<endl;
 	cout<<"  -logo             prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
 	cout<<""<<endl;

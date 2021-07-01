@@ -1,0 +1,2 @@
+connectivity testing, simple binding, unbinding, and phosphorylation system
+-sim 100 -oSteps 100 -connect -rxnlog v20_rxns.tsv -trackconnected -printconnected -printmoltypes -printrxncounts

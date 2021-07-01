@@ -110,7 +110,7 @@ void Complex::mergeWithList(Complex * c)
 
 	// move molecules in c to this complex
 	c->refactorToNewComplex(this->ID_complex);
-	this->complexMembers.splice(complexMembers.end(),c->complexMembers);
+    this->complexMembers.splice(complexMembers.end(),c->complexMembers);
 	(system->getAllComplexes()).notifyThatComplexIsAvailable(c->getComplexID());
 }
 
@@ -143,7 +143,7 @@ void Complex::updateComplexMembership(Molecule * m)
 	unsetCanonical();
 
 	//Get list of things this molecule is still connected to
-	list <Molecule *> members;
+    list <Molecule *> members;
 	m->traverseBondedNeighborhood(members, ReactionClass::NO_LIMIT);
 
 	//counter++;
@@ -167,19 +167,17 @@ void Complex::updateComplexMembership(Molecule * m)
 	//cout<<" forming new complex:  next available: " <<newComplex->getComplexID()<<endl;
 
 	//renumber our complex elements
-	list <Molecule *>::iterator molIter;
+    list <Molecule *>::iterator molIter;
 	for( molIter = members.begin(); molIter != members.end(); molIter++ ) {
 		(*molIter)->moveToNewComplex(newComplex->getComplexID());
 	}
 
 	//put our new complex elements into that complex
-	newComplex->complexMembers.splice(newComplex->complexMembers.end(),members);
+    newComplex->complexMembers.splice(newComplex->complexMembers.end(),members);
 	//cout<<"size of list now: " << members.size() <<endl;
 
 	//remove all molecules from this that don't have the correct complex id
-	complexMembers.remove_if(IsInWrongComplex(this->ID_complex));
-
-
+    complexMembers.remove_if(IsInWrongComplex(this->ID_complex));
 
 	//update new complex in reactions?
 

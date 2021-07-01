@@ -158,9 +158,14 @@ LocalFunction * Molecule::getLocalFunction(int localFunctionIndex) {
 
 
 
-void Molecule::updateRxnMembership()
+void Molecule::updateRxnMembership(ReactionClass * r, bool useConnectivity)
 {
-	parentMoleculeType->updateRxnMembership(this);
+	if (useConnectivity) {
+		parentMoleculeType->updateConnectedRxnMembership(this, r);
+	}
+	else {
+		parentMoleculeType->updateRxnMembership(this);
+	}
 }
 
 void Molecule::updateTypeIIFunctions()
@@ -344,6 +349,9 @@ void Molecule::printDetails(ostream &o)
 	o<<"      components: ";
 	for(int c=0; c<numOfComponents; c++)
 	{
+		// Do not print non-bonded states so that mRNA representations are compact
+		// Arvind Rasi Subramaniam
+		if (bond[c] == 0) continue;
 		if(c!=0)o<<"                  ";
 		o<< parentMoleculeType->getComponentName(c) <<"=";
 		o<<parentMoleculeType->getComponentStateName(c,component[c]);
@@ -366,6 +374,76 @@ void Molecule::printDetails(ostream &o)
 			o<<"="<<localFunctionValues[lf]<<"\n";
 		}
 	}
+}
+
+/**
+ * Prints to screen, see printDetails(ostram )
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails() {
+	this->printBondDetails(cout);
+}
+
+/**
+ * Print all bonded states and their details to output stream
+ *
+ * Iterates through all components of a molecule type and prints
+ * only those components with a bond including the binding partner
+ * and the site of attachment.
+ *
+ * Same function written separately for printing to cout and NFStream
+ * @param o - Stream to write to
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(ostream &o) {
+	int degree = 0;
+	o<< parentMoleculeType->getName() << "\t"<<ID_unique;
+//	o<<"\t";
+//	for(int c=0; c<numOfComponents; c++)
+//	{
+//		if(bond[c]==NOBOND) {continue;}
+//		else {
+//			o<<"\t";
+//			o<< parentMoleculeType->getComponentName(c) <<"=";
+//			o<<parentMoleculeType->getComponentStateName(c,component[c]);
+//			o<<",bond=";
+//			o<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+//			o<<"("<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c])<<")";
+//		}
+//	}
+	o.flush();
+}
+
+/**
+ * Same as printBondDetails(ostream )
+ * but writes to NFStream file instead of ostream
+ * @author Arvind Rasi Subramaniam
+ */
+void Molecule::printBondDetails(NFstream &o)
+{
+	if (parentMoleculeType->getSystem()->getRxnNumberTrack()) {
+		o << parentMoleculeType->getTypeID() << "\t" << ID_unique;
+	} else {
+		o << parentMoleculeType->getName() << "\t" << ID_unique;
+	}
+	if (parentMoleculeType->getSystem()->getTrackConnected()) {
+		o<<"\t";
+		for(int c=0; c<numOfComponents; c++)
+		{
+			if(bond[c] == NULL) {continue;}
+			else {
+				o<<"||";
+				o << parentMoleculeType->getComponentName(c);
+				if (parentMoleculeType->getComponentStateName(c,component[c]) != "NO_STATE") {
+					o<< "-" << parentMoleculeType->getComponentStateName(c,component[c]);
+				}
+				o<<":";
+				o<<bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]);
+				o<<"-"<<bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+			}
+		}
+	}
+	o.flush();
 }
 
 //Get the number of molecules this molecule is bonded to
@@ -531,7 +609,6 @@ void Molecule::unbind(Molecule *m1, char * compName)
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
-
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
@@ -599,7 +676,6 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 
 
 
-//
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit)
 {
 	//always call breadth first search, it is a bit faster
@@ -608,7 +684,6 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 	//else
 	//	this->depthFirstSearch(members);
 }
-
 
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
@@ -639,7 +714,6 @@ void Molecule::depthFirstSearch(list <Molecule *> &members)
 	for(int c=0; c<numOfComponents; c++)
 		hasVisitedBond[c] = false;
 }
-
 
 
 void Molecule::printMoleculeList(list <Molecule *> &members)

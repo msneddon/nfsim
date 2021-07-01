@@ -90,7 +90,16 @@ namespace NFcore
 			void pickRandomFromPopulation(MappingSet *&ms);
 
 
+			/**
+			 * Changed to let the returned mappingset be modified.
+			 * Using this in the case when a molecule is attached to a reaction
+			 * to prevent its reordering in the reactant list
+			 * @author Arvind Rasi Subramaniam
+			 * @param mappingSetId
+			 * @return
+			 */
 			virtual MappingSet * getMappingSet(unsigned int mappingSetId) const;
+			virtual MappingSet * getWriteableMappingSet(unsigned int mappingSetId);
 
 
 			/*!

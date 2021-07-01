@@ -5,9 +5,9 @@ import subprocess
 import re
 import fnmatch
 import sys
+import bionetgen
 
-# bngPath = os.path.join('.', 'BioNetGen-2.2.6-stable', 'BNG2.pl')
-bngPath = '/home/boltzmann/bio_tfun/bionetgen/bng2/BNG2.pl'  # <<< SET YOUR BIONETGEN PATH HERE <<<
+bngPath = os.path.join(bionetgen.defaults.bng_path, "BNG2.pl")
 nfsimPath = os.path.join('..', 'build', 'NFsim')
 
 
@@ -115,6 +115,8 @@ def getTests(directory):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
+    if len(sys.argv) > 1:
+        os.chdir(sys.argv[1])
     testFolder = './basicModels'
     tests = getTests(testFolder)
     for index in tests:

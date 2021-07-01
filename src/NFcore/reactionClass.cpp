@@ -13,7 +13,7 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 {
 	//cout<<"\n\ncreating reaction "<<name<<endl;
 	this->system=s;
-	this-> tagged = false;
+	this->tagged = false;
 
 	totalRateFlag=false;
 	isDimerStyle=false;
@@ -30,7 +30,9 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 	//Set up the template molecules from the transformationSet
 	this->n_reactants   = transformationSet->getNreactants();
 	this->n_mappingsets = transformationSet->getNmappingSets();
-	this->reactantTemplates = new TemplateMolecule *[n_reactants];
+//	cout<<"n_reactants "<< this->n_reactants << endl;
+//	cout<<"n_mappingsets "<< this->n_mappingsets << endl;
+    this->reactantTemplates = new TemplateMolecule *[n_reactants];
 	vector <TemplateMolecule*> tmList;
 	vector <int> hasMapGenerator;
 	for(unsigned int r=0; r<n_reactants; r++)
@@ -259,6 +261,15 @@ ReactionClass::ReactionClass(string name, double baseRate, string baseRateParame
 }
 
 
+void ReactionClass::appendConnectedRxn(ReactionClass * rxn) {
+	this->connectedReactions.push_back(rxn);
+}
+
+bool ReactionClass::isReactionConnected(ReactionClass * rxn) {
+	// First check if any of the operations share MoleculeType and components with
+	// one of the reactant templates of rxn.
+	return this->transformationSet->checkConnection(rxn);
+}
 
 ReactionClass::~ReactionClass()
 {
@@ -272,6 +283,21 @@ ReactionClass::~ReactionClass()
 	delete [] mappingSet;
 	delete [] isPopulationType;
 	delete [] identicalPopCountCorrection;
+	connectedReactions.clear();
+}
+
+/** Fill the reactant and product templates for inferring reaction connectivity matrix
+ * @author Arvind Rasi Subramaniam
+ */
+void ReactionClass::setAllReactantAndProductTemplates(map <string,TemplateMolecule *> reactants,
+					map <string,TemplateMolecule *> products) {
+	map <string, TemplateMolecule *>::iterator it;
+	// Fill the reactant template pattern
+	for (it = reactants.begin(); it != reactants.end(); ++it)
+		this->allReactantTemplates.push_back(it->second);
+	// Fill the product template pattern
+	for (it = products.begin(); it != products.end(); ++it)
+		this->allProductTemplates.push_back(it->second);
 }
 
 
@@ -304,19 +330,38 @@ void ReactionClass::resetBaseRateFromSystemParamter() {
 }
 
 
+/** For use in MoleculeTye::updateRxnMembership
+ * @author Arvind Rasi Subramaniam
+ */
+MoleculeType *ReactionClass::getMoleculeTypeOfReactantTemplate(int pos) const {
+	// return reactantTemplates.at(pos)->getMoleculeType();
+	return reactantTemplates[pos]->getMoleculeType();
+}
+
 
 void ReactionClass::printDetails() const {
 	cout<< name <<"  (id="<<this->rxnId<<", baseRate="<<baseRate<<",  a="<<a<<", fired="<<fireCounter<<" times )"<<endl;
+	// added by rasi to look at only nonzero mapping reactions
+	int n_mappings = 0;
 	for(unsigned int r=0; r<n_reactants; r++)
 	{
-		cout<<"      -|"<< this->getReactantCount(r)<<" mappings|\t";
-		cout<<this->reactantTemplates[r]->getPatternString()<<"\n";
+		n_mappings += this->getReactantCount(r);
+	}
+//	if (n_mappings == 0) return;
+
+	cout << name << "  (id=" << this->rxnId << ", baseRate=" << baseRate
+			<< ",  a=" << a << ", fired=" << fireCounter << " times )" << endl;
+	for (unsigned int r = 0; r < n_reactants; r++) {
+		cout << "      -|" << this->getReactantCount(r) << " mappings|\t";
+		cout << this->reactantTemplates[r]->getPatternString() << "\n";
 		//cout<<"head: "<<endl; this->reactantTemplates[r]->printDetails(cout);
 		//reactantTemplates[r]->printDetails();
 	}
-	if(n_reactants==0)
-		cout<<"      >No Reactants: so this rule either creates new species or does nothing."<<endl;
-	cout<<"\n";
+	if (n_reactants == 0)
+		cout
+				<< "      >No Reactants: so this rule either creates new species or does nothing."
+				<< endl;
+	cout << "\n";
 }
 
 
@@ -355,15 +400,6 @@ void ReactionClass::fire(double random_A_number) {
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
 	this->transformationSet->getListOfProducts(mappingSet,products,traversalLimit);
-
-
-	// display product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	//	(*molIter)->printDetails();
-	//	cout<<"<<"<<endl;
-	//}
-
 
 	// Loop through the products (excluding added molecules) and remove from observables
 	if (this->onTheFlyObservables) {
@@ -491,7 +527,7 @@ void ReactionClass::fire(double random_A_number) {
 		//  NOTE: as a side-effect, DORreactions that depend on molecule-scoped local functions
 		//   (typeI relationship) will be updated as long as UTL is set appropriately.
 		if ( mol->isAlive() )
-			mol->updateRxnMembership();
+			mol->updateRxnMembership(this, useConnectivity);
 	}
 
 
@@ -531,27 +567,65 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	} // done updating complex-scoped local functions
 
+	// update the last reaction firing time
+	// this is written to molecule_type_list.tsv at the end of the simulation
+	// @author: Arvind R. Subramaniam
+	// @date: 13 Nov 2019
+	this->system->setLastRxnTime(this->system->getCurrentTime());
 
-	// display final product molecules for debugging..
-	//for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-	//	cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;
-	// 	(*molIter)->printDetails();
-	//  	cout<<"<<"<<endl;
-	//}
+	// output if the reaction was tagged
+	if (tagged) {
+	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		if  ((*molIter)->getMoleculeType()->getName() != "mrna") continue;
 
+		this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
+		// print the time and reaction name
+		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
+				this->system->current_cpu_time << "\t" <<
+				this->system->getCurrentTime() << "\t";
+		if (this->system->getRxnNumberTrack()) {
+			this->system->getReactionFileStream() << rxnId << "\t";
+		} else {
+			this->system->getReactionFileStream() << name << "\t";
+		}
+		// print the molecule type and its bonded states (exclude non-bonded states)
+		(*molIter)->printBondDetails(this->system->getReactionFileStream());
+		this->system->getReactionFileStream() << endl;
+		}
+	}
 
 	//Tidy up
 	products.clear();
 	productComplexes.clear();
 }
 
+void ReactionClass::identifyConnectedReactions() {
+	ReactionClass * rxn;
+	vector <ReactionClass *> allReactions;
+	allReactions = system->getAllReactions();
+	for (unsigned int r=0; r < allReactions.size(); r++) {
+		rxn = allReactions.at(r);
+		if (this->isReactionConnected(rxn)) this->appendConnectedRxn(rxn);
+	}
+}
 
+bool ReactionClass::areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex) {
+	TemplateMolecule * t2;
+	for (unsigned int i=0; i<allReactantTemplates.size(); i++) {
+		t2 = allReactantTemplates[i];
+		if (t2->isMoleculeTypeAndComponentPresent(mt, cIndex)) return true;
+	}
 
+	return false;
+}
 
+bool ReactionClass::isTemplateCompatible(TemplateMolecule * t) {
+	TemplateMolecule * t2;
+	for (unsigned int i=0; i<allReactantTemplates.size(); i++) {
+		t2 = allReactantTemplates[i];
+		if (t->isTemplateCompatible(t2)) return true;
+	}
 
-
-
-
-
-
+	return false;
+}
 

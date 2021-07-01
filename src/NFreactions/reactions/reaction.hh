@@ -34,6 +34,8 @@ namespace NFcore
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const;
+			// AS-6/22
+			bool connectivityFlag;
 
 			ReactantList **reactantLists;
 

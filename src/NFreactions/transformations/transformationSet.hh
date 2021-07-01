@@ -17,6 +17,7 @@ namespace NFcore
 	class Molecule;
 	class SpeciesCreator;
 	class MoleculeCreator;
+	class ReactionClass;
 
 
 	//!  Maintains a set of Transformation objects for a ReactionClass
@@ -296,6 +297,9 @@ namespace NFcore
 			bool usingSymmetryFactor() const { return useSymmetryFactor; };
 			double getSymmetryFactor() const { return symmetryFactor; };
 			void   setSymmetryFactor(double val) { symmetryFactor = val; useSymmetryFactor = true; };
+
+			// To get the connected reactions for each transformation
+			bool checkConnection(ReactionClass * rxn);
 
 		protected:
 

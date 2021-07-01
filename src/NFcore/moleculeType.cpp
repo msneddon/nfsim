@@ -127,6 +127,7 @@ void MoleculeType::init(
 	this->defaultCompState = new int [numOfComponents];
 	this->isIntegerCompState = new bool [numOfComponents];
 
+	int nostate = Molecule::NOSTATE;
 	for(int c=0; c<numOfComponents; c++) {
 		this->compName[c]=compName.at(c);
 		this->isIntegerCompState[c]=isIntegerComponent.at(c);
@@ -543,6 +544,42 @@ void MoleculeType::updateRxnMembership(Molecule * m)
 		rxn->tryToAdd(m, reactionPositions.at(r));
 		this->system->update_A_tot(rxn,oldA,rxn->update_a());
   	}
+
+}
+
+void MoleculeType::updateConnectedRxnMembership(Molecule * m, ReactionClass * firedReaction)
+{
+	// Replace the iteration over all reactions for the MoleculeType in
+	// MoleculeType::updateRxnMembership by only the
+	// connectedReactions for the fired Reaction. This is a much smaller loop
+	// and skips moleculetypes that are not the TemplateMolecule of the reactant
+	// in the connected reaction right away.
+	// Arvind Rasi Subramaniam
+	//
+	for (int r=0; r<firedReaction->getNumConnectedRxns(); r++) {
+		rxn = firedReaction->getconnectedRxn(r);
+		for (int pos=0; pos<rxn->getNumOfReactants(); pos++) {
+			if (rxn->getMoleculeTypeOfReactantTemplate(pos) != this) continue;
+			double oldA = rxn->get_a();
+			double oldAwithTotal = rxn->update_a();
+			rxn->tryToAdd(m, pos);
+			this->system->update_A_tot(rxn,oldA,rxn->update_a());
+			// Used for debugging to see which reaction rates changed
+			// upon updating molecule membership
+			// Arvind Rasi Subramaniam Nov 21, 2018
+			if (!this->system->getTrackConnected()) continue;
+			double newA =  rxn->update_a();
+			if (oldAwithTotal != newA) {
+				this->system->getConnectedRxnFileStream() <<
+				this->system->getGlobalEventCounter() << "\t" <<
+				firedReaction->getName() << "\t" <<
+						m->getMoleculeTypeName() << "\t" <<
+						m->getUniqueID() << "\t" <<
+						rxn->getName() << "\t" <<
+						oldAwithTotal << "\t" << newA << endl;
+			}
+		}
+  	}
 }
 
 
@@ -755,16 +792,16 @@ void MoleculeType::printDetails() const
 
 
 // friend functions
-template<class T>
-NFstream& operator<<(NFstream& nfstream, const T& value)
-{
-    if (nfstream.useFile_)
-	nfstream.file_ << value;
-    else
-	nfstream.str_ << value;
+// template<class T>
+// NFstream& operator<<(NFstream& nfstream, const T& value)
+// {
+//     if (nfstream.useFile_)
+// 	nfstream.file_ << value;
+//     else
+// 	nfstream.str_ << value;
 
-    return nfstream;
-}
+//     return nfstream;
+// }
 
 
 
