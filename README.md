@@ -1,7 +1,5 @@
 # NFsim - the network free stochastic simulator, v1.12.1
 
-[![Build Status](https://travis-ci.org/RuleWorld/nfsim.svg?branch=master)](https://travis-ci.org/RuleWorld/nfsim)
-[![Build status](https://ci.appveyor.com/api/projects/status/423rdsbq0dak9gtt?svg=true)](https://ci.appveyor.com/project/jczech/nfsim)
 <a href="https://scan.coverity.com/projects/nfsim">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/15734/badge.svg"/>
