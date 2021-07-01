@@ -609,7 +609,6 @@ void Molecule::unbind(Molecule *m1, char * compName)
 queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
-// This might need to change to list if I'm reversing vector changes
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {
@@ -689,7 +688,6 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 //Isn't ever called really, but is availabe.  Note that it cannot use traversal limits
 //because it is depth first
 void Molecule::depthFirstSearch(list <Molecule *> &members)
-// void Molecule::depthFirstSearch(vector <Molecule *> &members)
 {
 	if(this->hasVisitedMolecule==true) {
 		return;

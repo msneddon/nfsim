@@ -200,6 +200,7 @@ void TemplateMolecule::addComponentConstraint(string cName, int stateValue) {
 		printErrorAndExit("Cannot add component constraint of a symmetric component with addComponentConstraint() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
+
 	int *newConstraint_Comp=new int[n_compStateConstraint+1];
 	int *newConstraint_Constraint=new int[n_compStateConstraint+1];
 	for(int i=0; i<n_compStateConstraint; i++) {
@@ -228,6 +229,7 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 		printErrorAndExit("Cannot add component exclusion of a symmetric component with addComponentExclusion() function.");
 	}
 	int compIndex=moleculeType->getCompIndexFromName(cName);
+
 	int *newExclusion_Comp=new int[n_compStateExclusion+1];
 	int *newExclusion_Exclusion=new int[n_compStateExclusion+1];
 	for(int i=0; i<n_compStateExclusion; i++) {
@@ -488,7 +490,7 @@ void TemplateMolecule::addBond(string thisBsiteName,
 {
 	//If we called this, then we are adding a bond to a nonsymmetric site
 
-	// //First, initialize the new arrays
+	//First, initialize the new arrays
 	int *newBondComp = new int[n_bonds+1];
 	string *newBondCompName = new string[n_bonds+1];
 	TemplateMolecule **newBondPartner = new TemplateMolecule *[n_bonds+1];
@@ -511,7 +513,7 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	}
 
 	//Insert the new information
-	// int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
+	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 	newBondComp[n_bonds] = compIndex;
 	newBondCompName[n_bonds] = thisBsiteName;
 	newBondPartner[n_bonds] = t2;
@@ -523,7 +525,7 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	}
 	newHasVisitedBond[n_bonds] = false;
 
-	// //Delete the duplicated information
+	//Delete the duplicated information
 	delete [] bondComp;
 	delete [] bondCompName;
 	delete [] bondPartner;
@@ -531,7 +533,7 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	delete [] bondPartnerCompIndex;
 	delete [] hasVisitedBond;
 
-	// //Reassign the new information
+	//Reassign the new information
 	bondComp = newBondComp;
 	bondCompName = newBondCompName;
 	bondPartner=newBondPartner;

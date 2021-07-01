@@ -1291,7 +1291,7 @@ namespace NFcore
 
 			bool onTheFlyObservables;
 			bool isDimerStyle;
-			
+
 			list <Molecule *> products;
 			list <Molecule *>::iterator molIter;
 

@@ -179,7 +179,6 @@ void Complex::updateComplexMembership(Molecule * m)
 	//remove all molecules from this that don't have the correct complex id
     complexMembers.remove_if(IsInWrongComplex(this->ID_complex));
 
-
 	//update new complex in reactions?
 
 	//

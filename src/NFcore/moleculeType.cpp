@@ -163,7 +163,7 @@ MoleculeType::~MoleculeType()
 {
 	if(DEBUG) cout << "Destroying MoleculeType " << name << endl;
 
-//	//Delete freestore component information
+	//Delete freestore component information
 	delete [] compName;
 	delete [] defaultCompState;
 	delete [] isIntegerCompState;
