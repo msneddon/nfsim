@@ -513,7 +513,6 @@ void TemplateMolecule::addBond(string thisBsiteName,
 	}
 
 	//Insert the new information
-	int compIndex=moleculeType->getCompIndexFromName(thisBsiteName);
 	newBondComp[n_bonds] = compIndex;
 	newBondCompName[n_bonds] = thisBsiteName;
 	newBondPartner[n_bonds] = t2;
