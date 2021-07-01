@@ -240,8 +240,6 @@ void TemplateMolecule::addComponentExclusion(string cName, int stateValue) {
 	delete [] compStateExclusion_Exclusion;
 	compStateExclusion_Comp=newExclusion_Comp;
 	compStateExclusion_Exclusion=newExclusion_Exclusion;
-	// compStateExclusion_Comp.push_back(compIndex);
-	// compStateExclusion_Exclusion.push_back(stateValue);
 	n_compStateExclusion++;
 	compIsAlwaysMapped[compIndex]=true;
 }
@@ -1556,12 +1554,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 	for (int i;i<tm->n_occupiedComps;i++) allComps_tm.push_back(tm->occupiedComps[i]);
 	for (int i;i<tm->n_bonds;i++) allComps_tm.push_back(tm->bondComp[i]);
 	//
-	// for (int i : emptyComps) allComps.push_back(i);
-	// for (int i : occupiedComps) allComps.push_back(i);
-	// for (int i : bondComp) allComps.push_back(i);
-	// for (int i : tm->emptyComps) allComps_tm.push_back(i);
-	// for (int i : tm->occupiedComps) allComps_tm.push_back(i);
-	// for (int i : tm->bondComp) allComps_tm.push_back(i);
 
 	// Check each component of one TM against all components of other TM
 	bool compOverlap = false;
@@ -1583,10 +1575,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		for(int j=0; j<tm->n_emptyComps; j++) {
 			if (tm->emptyComps[j] == occupiedComps[i]) return false;
 		}
-		// it = find(tm->emptyComps.begin(),
-		// 		tm->emptyComps.end(),
-		// 		occupiedComps[i]);
-		// if (it != tm->emptyComps.end()) return false;
 	}
 	// Check that sites that are empty in one TemplateMolecule
 	// are not specified to be occupied in the other TemplateMolecule
@@ -1594,10 +1582,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		for(int j=0; j<tm->n_occupiedComps; j++) {
 			if (tm->occupiedComps[j] == emptyComps[i]) return false;
 		}
-		// it = find(tm->occupiedComps.begin(),
-		// 		tm->occupiedComps.end(),
-		// 		emptyComps[i]);
-		// if (it != tm->occupiedComps.end()) return false;
 	}
 	// Check that sites that are empty in one TemplateMolecule
 	// are not bonded in the other TemplateMolecule
@@ -1605,10 +1589,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 		for(int j=0; j<tm->n_bonds; j++) {
 			if (tm->bondComp[j] == emptyComps[i]) return false;
 		}
-		// it = find(tm->bondComp.begin(),
-		// 		tm->bondComp.end(),
-		// 		emptyComps[i]);
-		// if (it != tm->bondComp.end()) return false;
 	}
 
 	// If a state is constrained, make sure that it is either not
@@ -1623,14 +1603,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 					}
 			} 
 		}
-		// it = find(tm->compStateConstraint_Comp.begin(),
-		// 		tm->compStateConstraint_Comp.end(),
-		// 		compStateConstraint_Comp[i]);
-		// if (it != tm->compStateConstraint_Comp.end()) {
-		// 	ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
-		// 	if (compStateConstraint_Constraint[i] != tm->compStateConstraint_Constraint[loc])
-		// 		return false;
-		// }
 		for(int j=0; j<tm->n_compStateExclusion; j++) {
 			if (tm->compStateExclusion_Comp[j] == compStateConstraint_Comp[i]) {
 					if (compStateConstraint_Constraint[i] != tm->compStateExclusion_Exclusion[j]) {
@@ -1638,14 +1610,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 					}
 			} 
 		}
-		// it = find(tm->compStateExclusion_Comp.begin(),
-		// 		tm->compStateExclusion_Comp.end(),
-		// 		compStateConstraint_Comp[i]);
-		// if (it != tm->compStateExclusion_Comp.end()) {
-		// 	ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
-		// 	if (compStateConstraint_Constraint[i] == tm->compStateExclusion_Exclusion[loc])
-		// 		return false;
-		// }
 	}
 
 	//  Repeat the above but now for all excluded states in the
@@ -1658,14 +1622,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 					}
 			} 
 		}
-		// it = find(tm->compStateConstraint_Comp.begin(),
-		// 		tm->compStateConstraint_Comp.end(),
-		// 		compStateExclusion_Comp[i]);
-		// if (it != tm->compStateConstraint_Comp.end()) {
-		// 	ptrdiff_t loc = distance(tm->compStateConstraint_Comp.begin(), it);
-		// 	if (compStateExclusion_Exclusion[i] == tm->compStateConstraint_Constraint[loc])
-		// 		return false;
-		// }
 		for(int j=0; j<tm->n_compStateExclusion; j++) {
 			if (tm->compStateExclusion_Comp[j] == compStateExclusion_Comp[i]) {
 					if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[j]) {
@@ -1673,14 +1629,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 					}
 			} 
 		}
-		// it = find(tm->compStateExclusion_Comp.begin(),
-		// 		tm->compStateExclusion_Comp.end(),
-		// 		compStateExclusion_Comp[i]);
-		// if (it != tm->compStateExclusion_Comp.end()) {
-		// 	ptrdiff_t loc = distance(tm->compStateExclusion_Comp.begin(), it);
-		// 	if (compStateExclusion_Exclusion[i] != tm->compStateExclusion_Exclusion[loc])
-		// 		return false;
-		// }
 	}
 
 	// Make sure that components are bonded to the same partner at the same componentindex if
@@ -1693,9 +1641,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 				return false;
 			} 
 		}
-		// if(find(tm->emptyComps.begin(), tm->emptyComps.end(), bondComp[b]) != tm->emptyComps.end()) {
-		// 	return false;
-		// }
 
 		//Check if this component is among the bondComps in the target TemplateMolecule
 		for(int j=0; j<tm->n_bonds; j++) {
@@ -1711,21 +1656,6 @@ bool TemplateMolecule::isTemplateCompatible(TemplateMolecule * tm) {
 				if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[j]) return false;
 			} 
 		}
-		// it = find(tm->bondComp.begin(), tm->bondComp.end(), bondComp[b]);
-		// //If it is not, you don't have to check that the bonds match
-		// if(it != tm->bondComp.end()) {
-		// 	// find the bond number in the target molecule that matches bond Component
-		// 	ptrdiff_t tm_b = distance(tm->bondComp.begin(), it);
-
-		// 	// If the two bonding partners are not same molecule type, then return false.
-		// 	// Assuming here that the second Template has a bond partner since it is
-		// 	// the comp is in the list of bondComps.
-		// 	if (bondPartner[b]->getMoleculeType() != tm->bondPartner[tm_b]->getMoleculeType()) return false;
-
-		// 	// If the two bonding partners are not bonded on the same site, then return false
-		// 	if (bondPartnerCompIndex[b] != tm->bondPartnerCompIndex[tm_b]) return false;
-
-		// }
 	}
 
 	// We got this far, so all matches above did not raise any red flag

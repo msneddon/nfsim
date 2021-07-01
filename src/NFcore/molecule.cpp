@@ -610,7 +610,6 @@ queue <Molecule *> Molecule::q;
 queue <int> Molecule::d;
 list <Molecule *>::iterator Molecule::molIter;
 // This might need to change to list if I'm reversing vector changes
-// void Molecule::breadthFirstSearch(vector <Molecule *> &members, Molecule *m, int depth)
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth)
 {
 	if(m==0) {

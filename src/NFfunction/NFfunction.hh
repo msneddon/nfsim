@@ -342,6 +342,7 @@ namespace NFcore {
 			int *varRefScope;
 			Observable **varLocalObservables;
 
+
 			static list <Molecule *> molList;
 			static list <Molecule *>::iterator molIter;
 
