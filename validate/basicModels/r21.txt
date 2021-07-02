@@ -1,0 +1,2 @@
+connectivity testing, mRNA monomer model
+-sim 100 -oSteps 100 -connect -rxnlog v20_rxns.tsv -utl 3 -gml 1000000 -trackconnected -printconnected -printmoltypes -printrxncounts
