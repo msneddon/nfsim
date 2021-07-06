@@ -121,7 +121,7 @@ if __name__ == "__main__":
     tests = getTests(testFolder)
     for index in tests:
         suite.addTest(ParametrizedTestCase.parametrize(TestNFSimFile, param={'num': index,
-                      'odir': 'basicModels', 'iterations': 30}))
+                      'odir': 'basicModels', 'iterations': 35}))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     ret = (list(result.failures) == [] and list(result.errors) == [])
