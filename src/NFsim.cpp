@@ -79,7 +79,7 @@
  *  -connect - infer network connectivity before starting simulation. (default: no).
  *             @author Arvind Rasi Subramaniam
  * 
- *  -rxnlog - write out firing time and molecules for all reactions
+ *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to file
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
  *
@@ -742,13 +742,13 @@ void printHelp(string version)
 	cout<<""<<endl;
     cout<<"  -connect          infer network connectivity before starting simulation. (default: no)."<<endl;
 	cout<<""<<endl;
- 	cout<<"  -rxnlog           write out firing time and participating molecules for all reactions."<<endl;
+ 	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions."<<endl;
 	cout<<""<<endl;
  	cout<<"  -trackconnected   write out the reactions whose rates change after firing of each reaction."<<endl;
-	cout<<"                    this works only if -rxnlog switch is included."<<endl;
+	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;
 	cout<<""<<endl;
  	cout<<"  -printconnected   print connectivity of each reaction to an output file."<<endl;
-	cout<<"                    this works only if -rxnlog switch is included."<<endl;
+	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;
 	cout<<""<<endl;
  	cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep the rxn log file small."<<endl;
 	cout<<"                    this works only if -rxnlog switch is included."<<endl;
