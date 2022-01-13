@@ -75,20 +75,24 @@
  *  -notf = disables On the Fly Observables, see manual
  *
  *  -cb = turn on complex bookkeeping, see manual
- *
+ * 
  *  -connect - infer network connectivity before starting simulation. (default: no).
+ *             @author Arvind Rasi Subramaniam
+ * 
+ *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to file
  *             Does not require any modification to BioNetGen or PySB.
  *             @author Arvind Rasi Subramaniam
  *
- *  -printconnected - print connectivity of each reaction to an output file. (default: no).
- *             @author Arvind Rasi Subramaniam
- *
  *  -trackconnected - write out the reactions whose rates change after firing of each reaction.
- *  				  Default: false
+ * 					  this works only if -rxnlog switch is included
  *  				  @author: Arvind Rasi Subramaniam
+ * 
+ *  -printconnected - print connectivity of each reaction to an output file. (default: no).
+ * 					  this works only if -rxnlog switch is included
+ 		*             @author Arvind Rasi Subramaniam
  *
  *  -trackrxnnum - track reaction number instead of name. this helps to keep the rxn log file small.
- *  			   Default: false
+ *	    		   this works only if -rxnlog switch is included
  *  			   @author: Arvind Rasi Subramaniam
  *
  *  -maxcputime - maximum run time for simulation in seconds (default: 1000s).
@@ -533,45 +537,40 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					}
 				}
 
-				if (s->getAnyRxnTagged()) {
-					if (argMap.find("rxnlog") != argMap.end()) {
-						string rxnLogFileName = argMap.find("rxnlog")->second;
-						s->setRxnNumberTrack(true);
-						s->registerReactionFileLocation(rxnLogFileName);
-						// track the reactions whose rates change upon each each reaction
-						// firing. This is useful for debugging to make sure that all the
-						// right reactions are updated after each firing.
-						// Arvind Rasi Subramaniam Nov 21, 2018
-						if (argMap.find("trackconnected") != argMap.end()) {
-							s->registerConnectedRxnFileLocation(
-									rxnLogFileName.replace(
-											rxnLogFileName.end()-4,
-											rxnLogFileName.end(),
-											"_connected.tsv"));
-							s->setTrackConnected(true);
-						} else {
-							s->setTrackConnected(false);
-						}
-						if (argMap.find("printconnected") != argMap.end()) {
-							s->registerListOfConnectedRxnFileLocation(
-									rxnLogFileName.replace(
-											rxnLogFileName.end()-4,
-											rxnLogFileName.end(),
-											"_list.tsv"));
-							s->setPrintConnected(true);
-						} else {
-							s->setPrintConnected(false);
-						}
+				if (argMap.find("rxnlog") != argMap.end()) {
+					string rxnLogFileName = argMap.find("rxnlog")->second;
+					s->registerReactionFileLocation(rxnLogFileName);
+					// track the reactions whose rates change upon each each reaction
+					// firing. This is useful for debugging to make sure that all the
+					// right reactions are updated after each firing.
+					// Arvind Rasi Subramaniam Nov 21, 2018
+					if (argMap.find("trackconnected") != argMap.end()) {
+						s->registerConnectedRxnFileLocation(
+								rxnLogFileName.replace(
+										rxnLogFileName.end()-4,
+										rxnLogFileName.end(),
+										"_connected.tsv"));
+						s->setTrackConnected(true);
 					} else {
-						if (argMap.find("trackrxnnum") != argMap.end()) {
-							s->setRxnNumberTrack(true);
-							s->registerReactionFileLocation(
-								s->getName() + "_rxns.dat");
-						} else {
-							s->setRxnNumberTrack(false);
-						}
+						s->setTrackConnected(false);
+					}
+					if (argMap.find("printconnected") != argMap.end()) {
+						s->registerListOfConnectedRxnFileLocation(
+								rxnLogFileName.replace(
+										rxnLogFileName.end()-4,
+										rxnLogFileName.end(),
+										"_connectedlist.tsv"));
+						s->setPrintConnected(true);
+					} else {
+						s->setPrintConnected(false);
+					}
+					if (argMap.find("trackrxnnum") != argMap.end()) {
+						s->setRxnNumberTrack(true);
+					} else {
+						s->setRxnNumberTrack(false);
 					}
 				}
+				// }
 
 
 				//turn off on the fly calculation of observables
@@ -776,6 +775,21 @@ void printHelp(string version)
     cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
 	cout<<""<<endl;
 	cout<<"  -logo             prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
+	cout<<""<<endl;
+    cout<<"  -connect          infer network connectivity before starting simulation. (default: no)."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -trackconnected   write out the reactions whose rates change after firing of each reaction."<<endl;
+	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -printconnected   print connectivity of each reaction to an output file."<<endl;
+	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep the rxn log file small."<<endl;
+	cout<<"                    this works only if -rxnlog switch is included."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
 	cout<<""<<endl;
 	cout<<""<<endl;
 }
