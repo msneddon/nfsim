@@ -384,7 +384,6 @@ void ReactionClass::fire(double random_A_number) {
 
 	// output something if the reaction was tagged
 	if(tagged) {
-		cout<<"#RT "<<this->rxnId<<" "<<this->system->getCurrentTime();
 		for(unsigned int k=0; k<n_reactants; k++) {
 			cout<<" [";
 			for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
