@@ -2273,15 +2273,10 @@ bool NFinput::initReactionRules(
 					// Add the reactant and product templates to the reaction class
 					r->setAllReactantAndProductTemplates(reactants, products);
 					r->setTotalRateFlag(totalRateFlag);
-					
-					// AS-7/1/2021
-					// TODO: Currently I'm tagging every reaction by default
-					// for connectivity calculations. This probably needs
-					// revisited down the line. 
-					if (s->getConnectivityFlag()) {
-						r->tag();
-						s->turnOnTagRxnOutput();
-					}
+					// if (tagFlag) {
+					r->tag();
+					s->turnOnTagRxnOutput();
+					// }
 					// Use reaction connectivity flag
 					// Set to true if given on the command line
 					r->setConnectivityFlag(s->getConnectivityFlag());
