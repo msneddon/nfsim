@@ -1,4 +1,4 @@
-# NFsim - the network free stochastic simulator, v1.2.1
+# NFsim - the network free stochastic simulator, v1.2.2
 
 [![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 <a href="https://scan.coverity.com/projects/nfsim">
@@ -95,6 +95,12 @@ stable. Use at your own risk.
 
 
 ## Release Notes
+
+### v1.2.2 April, 2022
+
+(a) Bugfix: Disabled maxcputime option
+(b) Bugfix: NFsim now checks for compartments and quits if it finds a compartments block
+(c) Bugifx: Leftover debug statement was removed.
 
 ### v1.2.1 Feb, 2022
 
