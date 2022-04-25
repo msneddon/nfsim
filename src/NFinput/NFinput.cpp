@@ -99,6 +99,16 @@ System * NFinput::initializeFromXML(
 		//(we do not enforce that functions must exist... yet)  if(!pListOfFunctions) { cout<<"\tNo 'ListOfParameters' tag found.  Quitting."; delete s; return NULL; }
 		TiXmlElement *pListOfMoleculeTypes = pListOfParameters->NextSiblingElement("ListOfMoleculeTypes");
 		if(!pListOfMoleculeTypes) { cout<<"\tNo 'ListOfMoleculeTypes' tag found.  Quitting."; delete s; return NULL; }
+		// we need to quit if we have compartments
+		TiXmlElement *pListOfCompartments = pListOfParameters->NextSiblingElement("ListOfCompartments");
+		if(pListOfCompartments) { 
+			// check to see if we have compartments
+			TiXmlElement *pCompElement;
+			pCompElement = pListOfCompartments->FirstChildElement("compartment");
+			if (pCompElement) {
+				cout<<"\tCompartments aren't supported in NFsim.  Quitting."; delete s; return NULL; 
+			}
+		}
 		TiXmlElement *pListOfSpecies = pListOfMoleculeTypes->NextSiblingElement("ListOfSpecies");
 		if(!pListOfSpecies) { cout<<"\tNo 'ListOfSpecies' tag found.  Quitting."; delete s; return NULL; }
 		TiXmlElement *pListOfReactionRules = pListOfSpecies->NextSiblingElement("ListOfReactionRules");
