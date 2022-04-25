@@ -1,4 +1,4 @@
-# NFsim - the network free stochastic simulator, v1.12.1
+# NFsim - the network free stochastic simulator, v1.2.1
 
 [![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 <a href="https://scan.coverity.com/projects/nfsim">
@@ -95,6 +95,15 @@ stable. Use at your own risk.
 
 
 ## Release Notes
+
+### v1.2.1 Feb, 2022
+
+(a) Bugfix release. An accidentally leftover debug statement was removed.
+
+### v1.2.0 Jan, 2022
+
+(a) Added a new built-in function called TFUN that can pull values from a file given a counter observable in a model.
+(b) A new option is added to infer connectivity between reaction rules. This option allows the user to infer "connected" rules before a model is ran and each time a rule fires, only connected rules are checked for updates, instead of every possible rule in the system.
 
 ### v1.12.1 Aug, 2016
 
