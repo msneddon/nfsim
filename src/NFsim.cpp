@@ -613,10 +613,10 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 
-	if (argMap.find("maxcputime") != argMap.end()) {
-		maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
-	}
-	s->setMaxCpuTime(maxCpuTime);
+	// if (argMap.find("maxcputime") != argMap.end()) {
+	// 	maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	// }
+	// s->setMaxCpuTime(maxCpuTime);
 
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
@@ -787,8 +787,8 @@ void printHelp(string version)
  	cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep the rxn log file small."<<endl;
 	cout<<"                    this works only if -rxnlog switch is included."<<endl;
 	cout<<""<<endl;
- 	cout<<"  -maxcputime       maximum run time for simulation in seconds (default: no limit)."<<endl;
-	cout<<""<<endl;
+ 	// cout<<"  -maxcputime       maximum run time for simulation in seconds (default: no limit)."<<endl;
+	// cout<<""<<endl;
 	cout<<""<<endl;
 }
 
