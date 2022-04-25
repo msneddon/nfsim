@@ -874,6 +874,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 			stepIteration=0;
 			recompute_A_tot();
 			if ( max_cpu_time > 0 & current_cpu_time > max_cpu_time) {
+				cout << "Max CPU time (" << max_cpu_time << ") reached, quitting." << endl;
 				break;
 			}
 		}
