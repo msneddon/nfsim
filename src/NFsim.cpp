@@ -607,16 +607,16 @@ bool runFromArgs(System *s, map<string,string> argMap, bool verbose)
 	double eqTime = 0;
 	double sTime = 10;
 	int oSteps = 10;
-	// double maxCpuTime = 1000;
+	double maxCpuTime = -1;
 
 	//Get the simulation time that the user wants
 	eqTime = NFinput::parseAsDouble(argMap,"eq",eqTime);
 	sTime = NFinput::parseAsDouble(argMap,"sim",sTime);
 
-	// if (argMap.find("maxcputime") != argMap.end()) {
-	// 	maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
-	// }
-	// s->setMaxCpuTime(maxCpuTime);
+	if (argMap.find("maxcputime") != argMap.end()) {
+		maxCpuTime = NFinput::parseAsDouble(argMap,"maxcputime",maxCpuTime);
+	}
+	s->setMaxCpuTime(maxCpuTime);
 
 	oSteps = NFinput::parseAsInt(argMap,"oSteps",(int)oSteps);
 
