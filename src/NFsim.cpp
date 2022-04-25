@@ -95,7 +95,7 @@
  *	    		   this works only if -rxnlog switch is included
  *  			   @author: Arvind Rasi Subramaniam
  *
- *  -maxcputime - maximum run time for simulation in seconds (default: 1000s).
+ *  -maxcputime - maximum run time for simulation in seconds (default: no limit).
  *                 @author Arvind Rasi Subramaniam
  * 
  *  -printmoltypes - output molecule types (default: false).
@@ -772,8 +772,6 @@ void printHelp(string version)
 	cout<<"  -printrxncounts - output reaction firing counts (default: false)."<<endl;
  	cout<<" 						   @author Ali Sinan Saglam"<<endl;
     cout<<""<<endl;
-    cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
-	cout<<""<<endl;
 	cout<<"  -logo             prints out the ascii NFsim logo, for your viewing pleasure."<<endl;
 	cout<<""<<endl;
     cout<<"  -connect          infer network connectivity before starting simulation. (default: no)."<<endl;
@@ -789,7 +787,7 @@ void printHelp(string version)
  	cout<<"  -trackrxnnum      track reaction number instead of name. this helps to keep the rxn log file small."<<endl;
 	cout<<"                    this works only if -rxnlog switch is included."<<endl;
 	cout<<""<<endl;
- 	cout<<"  -maxcputime       maximum run time for simulation in seconds (default: 1000s)."<<endl;
+ 	cout<<"  -maxcputime       maximum run time for simulation in seconds (default: no limit)."<<endl;
 	cout<<""<<endl;
 	cout<<""<<endl;
 }
