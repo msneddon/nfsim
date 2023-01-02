@@ -566,8 +566,12 @@ int TransformationSet::find(TemplateMolecule *t)
 	return findIndex;
 }
 
+string TransformationSet::transform(MappingSet **mappingSets)
+{
+	return this->transform(mappingSets, false);
+}
 
-bool TransformationSet::transform(MappingSet **mappingSets)
+string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
@@ -576,14 +580,19 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	 * prior to removing molecules from observables. A general method TransformationSet::checkMolecularity has
 	 * been implemented to check for incorrect molecularity or reaction center conflicts. --Justin
 	 */
-
+	string logstr;
+	if (tracking) {
+		logstr = "        \"operations\": {\n";
+	} else {
+		logstr = "";
+	}
 
 	// addMolecule transforms are applied before other transforms so the molecules exist
 	//  for potential modification by other transforms.
 	int size = addMoleculeTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
-			addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i]  );
+			addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i], logstr );
 		}
 	}
 
@@ -591,7 +600,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	size = addSpeciesTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
-			addSpeciesTransformations.at(i)->apply(NULL,NULL);
+			addSpeciesTransformations.at(i)->apply(NULL, NULL, logstr);
 		}
 	}
 
@@ -615,7 +624,7 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 			}
 			else
 			{	// handle other transforms
-				transformations[r].at(t)->apply(ms->get(t), mappingSets);
+				transformations[r].at(t)->apply(ms->get(t), mappingSets, logstr);
 			}
 		}
 	}
@@ -630,7 +639,11 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	}
 	deleteList.clear();
 
-	return true;
+	if (tracking) {
+		logstr.erase(logstr.end()-2, logstr.end());
+		logstr += "\n        }\n";
+	}
+	return logstr;
 }
 
 

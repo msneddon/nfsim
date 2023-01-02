@@ -1,0 +1,297 @@
+{
+  "simulation": {
+    "info": {
+      "testing": 123
+    },
+    "reactions": [
+      {
+        "name": "rxn1"
+      }
+    ],
+    "firings": [
+      {
+        "id": "initiate",
+        "global_count": 1,
+        "global_time": 1.549971,
+        "cpu_time": 0.125106,
+        "operations": {
+          "BIND": [56,0,0,0],
+          "STCHANGE": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_1",
+        "global_count": 2,
+        "global_time": 2.015735,
+        "cpu_time": 0.125271,
+        "operations": {
+          "STCHANGE": [0,0,0],
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,1]
+        }
+      },
+      {
+        "id": "elongate_2",
+        "global_count": 3,
+        "global_time": 2.288050,
+        "cpu_time": 0.125386,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,2]
+        }
+      },
+      {
+        "id": "elongate_3",
+        "global_count": 4,
+        "global_time": 2.449817,
+        "cpu_time": 0.125518,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,3]
+        }
+      },
+      {
+        "id": "initiate",
+        "global_count": 5,
+        "global_time": 2.521501,
+        "cpu_time": 0.125655,
+        "operations": {
+          "BIND": [69,0,0,0],
+          "STCHANGE": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_1",
+        "global_count": 6,
+        "global_time": 2.831338,
+        "cpu_time": 0.125804,
+        "operations": {
+          "STCHANGE": [0,0,0],
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,1]
+        }
+      },
+      {
+        "id": "elongate_2",
+        "global_count": 7,
+        "global_time": 3.936431,
+        "cpu_time": 0.125977,
+        "operations": {
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,2]
+        }
+      },
+      {
+        "id": "initiate",
+        "global_count": 8,
+        "global_time": 4.310679,
+        "cpu_time": 0.126104,
+        "operations": {
+          "BIND": [40,0,0,0],
+          "STCHANGE": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_4",
+        "global_count": 9,
+        "global_time": 4.435377,
+        "cpu_time": 0.126276,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,4]
+        }
+      },
+      {
+        "id": "elongate_1",
+        "global_count": 10,
+        "global_time": 5.406220,
+        "cpu_time": 0.126484,
+        "operations": {
+          "STCHANGE": [0,0,0],
+         "UNBIND": [40,0],
+          "BIND": [40,0,0,1]
+        }
+      },
+      {
+        "id": "elongate_3",
+        "global_count": 11,
+        "global_time": 5.800641,
+        "cpu_time": 0.126568,
+        "operations": {
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,3]
+        }
+      },
+      {
+        "id": "elongate_5",
+        "global_count": 12,
+        "global_time": 6.011855,
+        "cpu_time": 0.126679,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,5]
+        }
+      },
+      {
+        "id": "elongate_6",
+        "global_count": 13,
+        "global_time": 6.213078,
+        "cpu_time": 0.126837,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,6]
+        }
+      },
+      {
+        "id": "elongate_4",
+        "global_count": 14,
+        "global_time": 6.399680,
+        "cpu_time": 0.126927,
+        "operations": {
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,4]
+        }
+      },
+      {
+        "id": "initiate",
+        "global_count": 15,
+        "global_time": 6.441817,
+        "cpu_time": 0.127025,
+        "operations": {
+          "BIND": [53,0,0,0],
+          "STCHANGE": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_7",
+        "global_count": 16,
+        "global_time": 6.716150,
+        "cpu_time": 0.127097,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,7]
+        }
+      },
+      {
+        "id": "elongate_2",
+        "global_count": 17,
+        "global_time": 6.746691,
+        "cpu_time": 0.127172,
+        "operations": {
+         "UNBIND": [40,0],
+          "BIND": [40,0,0,2]
+        }
+      },
+      {
+        "id": "elongate_5",
+        "global_count": 18,
+        "global_time": 6.830076,
+        "cpu_time": 0.127349,
+        "operations": {
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,5]
+        }
+      },
+      {
+        "id": "elongate_6",
+        "global_count": 19,
+        "global_time": 7.270203,
+        "cpu_time": 0.127460,
+        "operations": {
+         "UNBIND": [69,0],
+          "BIND": [69,0,0,6]
+        }
+      },
+      {
+        "id": "elongate_1",
+        "global_count": 20,
+        "global_time": 7.375407,
+        "cpu_time": 0.127559,
+        "operations": {
+          "STCHANGE": [0,0,0],
+         "UNBIND": [53,0],
+          "BIND": [53,0,0,1]
+        }
+      },
+      {
+        "id": "initiate",
+        "global_count": 21,
+        "global_time": 7.857959,
+        "cpu_time": 0.127699,
+        "operations": {
+          "BIND": [28,0,0,0],
+          "STCHANGE": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_8",
+        "global_count": 22,
+        "global_time": 8.246799,
+        "cpu_time": 0.128202,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,8]
+        }
+      },
+      {
+        "id": "elongate_9",
+        "global_count": 23,
+        "global_time": 8.337618,
+        "cpu_time": 0.128588,
+        "operations": {
+         "UNBIND": [56,0],
+          "BIND": [56,0,0,9]
+        }
+      },
+      {
+        "id": "elongate_3",
+        "global_count": 24,
+        "global_time": 8.491194,
+        "cpu_time": 0.129127,
+        "operations": {
+         "UNBIND": [40,0],
+          "BIND": [40,0,0,3]
+        }
+      },
+      {
+        "id": "elongate_4",
+        "global_count": 25,
+        "global_time": 8.853261,
+        "cpu_time": 0.129381,
+        "operations": {
+         "UNBIND": [40,0],
+          "BIND": [40,0,0,4]
+        }
+      },
+      {
+        "id": "elongate_2",
+        "global_count": 26,
+        "global_time": 9.528539,
+        "cpu_time": 0.129615,
+        "operations": {
+         "UNBIND": [53,0],
+          "BIND": [53,0,0,2]
+        }
+      },
+      {
+        "id": "terminate",
+        "global_count": 27,
+        "global_time": 9.745587,
+        "cpu_time": 0.129767,
+        "operations": {
+         "UNBIND": [56,0]
+        }
+      },
+      {
+        "id": "elongate_3",
+        "global_count": 28,
+        "global_time": 10.598445,
+        "cpu_time": 0.130085,
+        "operations": {
+         "UNBIND": [53,0],
+          "BIND": [53,0,0,3]
+        }
+      }
+    ]
+  }
+}

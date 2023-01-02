@@ -43,6 +43,13 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
 }
+void StateChangeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	m->getMolecule()->setComponentState(cIndex,newValue);
+	if (!logstr.empty()) {
+		logstr = logstr + string("          \"STCHANGE\": [") + to_string(m->getMolecule()->getUniqueID()) + "," + to_string(cIndex) + "," + to_string(newValue) + "],\n";
+	}
+}
 
 
 
@@ -65,6 +72,14 @@ void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue+1);
 }
+void IncrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue+1);
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"INCSTATE\": [],\n";
+	}
+}
 
 
 ///////////////////////////////////////////////////////////////
@@ -85,6 +100,14 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue-1);
+}
+void DecrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue-1);
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"DECSTATE\": [],\n";
+	}
 }
 
 
@@ -130,6 +153,12 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
 {
+	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+}
+
+void BindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
 	//cout<<" cIndex: "<<cIndex;
 	//cout<<" otherReactantIndex: "<<otherReactantIndex;
 	//cout<<" otherMappingIndex: "<<otherMappingIndex;
@@ -145,8 +174,10 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	//	System::NULL_EVENT_COUNTER++;
 	//} else {
 	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"BIND\": [" + to_string(m->getMolecule()->getUniqueID()) + "," +  to_string(m->getIndex()) + "," + to_string(m2->getMolecule()->getUniqueID()) + "," +  to_string(m2->getIndex())  + "],\n";
+	}
 }
-
 
 bool BindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
 {
@@ -197,8 +228,16 @@ UnbindingTransform::UnbindingTransform(int cIndex, TemplateMolecule * tm) :
 	this->tm = tm;
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
+{   
+	Molecule::unbind(m->getMolecule(),m->getIndex());
+}
+void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
 	Molecule::unbind(m->getMolecule(),m->getIndex());
+	if (!logstr.empty()) {
+		logstr = logstr + "         \"UNBIND\": [" + to_string(m->getMolecule()->getUniqueID()) + "," + to_string(m->getIndex()) + "],\n";
+	}
+
 }
 
 ///////////////////////////////////////////////////////////////
@@ -222,10 +261,17 @@ AddSpeciesTransform::~AddSpeciesTransform()
 	delete sc;
 }
 
-
 void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms)
 {
 	this->sc->create();
+}
+
+void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	this->sc->create();
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"ADDSPEC\": [],\n";
+	}
 }
 
 
@@ -268,7 +314,6 @@ AddMoleculeTransform::get_population_pointer() const
 	return mc->get_population_pointer();
 };
 
-
 void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 {
 	// create molecule and get pointer
@@ -279,6 +324,22 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 	for ( unsigned int im = 0;  im < n_mappings;  ++im )
 	{
 		ms->set( im, new_molecule );
+	}
+}
+
+void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
+{
+	// create molecule and get pointer
+	new_molecule = this->mc->create_molecule();
+
+	// point mappings to the new molecule
+	unsigned int n_mappings = ms->getNumOfMappings();
+	for ( unsigned int im = 0;  im < n_mappings;  ++im )
+	{
+		ms->set( im, new_molecule );
+	}
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"ADDMOLEC\": [],\n";
 	}
 }
 
@@ -304,6 +365,12 @@ void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
 }
 
+void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
+	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
+}
+
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -322,6 +389,13 @@ DecrementPopulationTransform::DecrementPopulationTransform(TemplateMolecule * tm
 void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->decrementPopulation();
+}
+void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	m->getMolecule()->decrementPopulation();
+	if (!logstr.empty()) {
+		logstr = logstr + "          \"DECPOP\": [],\n";
+	}
 }
 
 

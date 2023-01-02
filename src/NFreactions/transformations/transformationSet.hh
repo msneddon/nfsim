@@ -168,7 +168,8 @@ namespace NFcore
 				MappingSet per reactant in the correct position in the array, please!).
 				@author Michael Sneddon
 			*/
-			bool transform(MappingSet **mappingSets);
+			string transform(MappingSet **mappingSets);
+			string transform(MappingSet **mappingSets, bool tracking);
 
 			/*!
 				Generates a blank MappingSet (blank in the sense that it is not mapped to

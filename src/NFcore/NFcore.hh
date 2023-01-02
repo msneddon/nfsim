@@ -275,6 +275,9 @@ namespace NFcore
 			bool saveSpecies() { return saveSpecies(string(name+"_nf.species")); };
 			bool saveSpecies(string filename);
 
+			// reaction file output stuff
+			bool getReactionTrackingStatus() { return reactionTrackingEnabled; };
+			void setReactionTrackingStatus(bool status) { reactionTrackingEnabled = status; };
 
 			LocalFunction * getLocalFunctionByName(string fName);
 			//bool addFunctionReference(FunctionReference *fr);
@@ -501,6 +504,7 @@ namespace NFcore
 			bool outputRxnFiringCountsFile; /* Output reaction firing counts (default: false) */
 		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
 		    double lastRxnTime; /* Time when the last reaction was fired */
+			bool reactionTrackingEnabled; /* tells if reaction tracking is on */
 
 		    int globalEventCounter;
 
@@ -1034,6 +1038,7 @@ namespace NFcore
 			void printBondDetails();
 			void printBondDetails(NFstream &o);
 			void printBondDetails(ostream &o);
+			void printBondDetailsJSON(NFstream &o, int level);
 			static void printMoleculeList(list <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };

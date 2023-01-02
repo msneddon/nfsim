@@ -446,6 +446,61 @@ void Molecule::printBondDetails(NFstream &o)
 	o.flush();
 }
 
+/**
+ * Same as printBondDetailsJSON(ostream )
+ * but writes to NFStream file instead of ostream
+ * @author Ali Sinan Saglam
+ */
+void Molecule::printBondDetailsJSON(NFstream &o, int level)
+{
+	// start our reactant array
+    //       [
+    //         1,
+    //         67,
+    //         3
+    //       ],
+    //       [
+    //         23,
+    //         46,
+    //         33
+    //       ]
+    //     ],
+	
+	// // for now we'll keep the name in 
+	if (parentMoleculeType->getSystem()->getRxnNumberTrack()) {
+		o << std::string(level+2,' ') + "\"" + std::to_string(parentMoleculeType->getTypeID()) + "\"" << ",\n";
+	} else {
+		o << std::string(level+2,' ') + "\"" + parentMoleculeType->getName() + "\"" << ",\n";
+	}
+	// add unique ID
+	o << std::string(level+2,' ') + std::to_string(ID_unique) << ",\n";
+	
+	int ctr = 0;
+	if (parentMoleculeType->getSystem()->getTrackConnected()) {
+		for(int c=0; c<numOfComponents; c++)
+		{
+			if(bond[c] == NULL) {continue;}
+			else {
+				if ( ctr != 0 ) { 
+					o << ",\n";
+				}
+				// for now keep the name
+				o << std::string(level+2,' ') + "\"" + parentMoleculeType->getComponentName(c) + "\"" << ",\n";
+				// this is the bond index
+				o << std::string(level+2,' ') + std::to_string(c) << ",\n";
+				// state name
+				o << std::string(level+2,' ') + "\"" + parentMoleculeType->getComponentStateName(c,component[c]) + "\"";
+				// connected component name?
+				// o<< std::string(level+2,' ') + "connected comp name?: " << bond[c]->getMoleculeType()->getComponentName(this->indexOfBond[c]) << ",\n";
+				// unique type ID?
+				// o<< std::string(level+2,' ') + "unique type ID?: " << bond[c]->getMoleculeTypeName()<<"_"<<bond[c]->getUniqueID();
+				ctr += 1;
+			}
+		}
+		o << "\n";
+	}
+	o.flush();
+}
 //Get the number of molecules this molecule is bonded to
 int Molecule::getDegree()
 {

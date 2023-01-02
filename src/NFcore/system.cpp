@@ -42,6 +42,7 @@ System::System(string name)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
+	this->setReactionTrackingStatus(false);
 }
 
 
@@ -71,6 +72,7 @@ System::System(string name, bool useComplex)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
+	this->setReactionTrackingStatus(false);
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -98,6 +100,7 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
+	this->setReactionTrackingStatus(false);
 }
 
 
@@ -298,20 +301,25 @@ void System::registerReactionFileLocation(string filename)
 		exit(1);
 	}
 
+	// TODO: This needs to be converted to a JSON file
+	// where each reaction type is recorded, general simulation
+	// settings are saved and each reaction firing is fully
+	// recorded
 	reactionOutputFileStream.setf(ios::fixed);
 	reactionOutputFileStream.precision(6);
+	setReactionTrackingStatus(true);
 	// print header for file
-	reactionOutputFileStream <<
-			"line" << "\t" <<
-			"cputime" << "\t" <<
-			"time" << "\t" <<
-			"rxn" << "\t";
-	if (!this->getRxnNumberTrack()) {
-		reactionOutputFileStream << "mol" << "\t";
-	}
-	reactionOutputFileStream <<
-			"mol_id" <<
-			endl;
+	// reactionOutputFileStream <<
+	// 		"line" << "\t" <<
+	// 		"cputime" << "\t" <<
+	// 		"time" << "\t" <<
+	// 		"rxn" << "\t";
+	// if (!this->getRxnNumberTrack()) {
+	// 	reactionOutputFileStream << "mol" << "\t";
+	// }
+	// reactionOutputFileStream <<
+	// 		"mol_id" <<
+	// 		endl;
 }
 
 void System::registerMoleculeTypeFileLocation(string filename) {
@@ -723,7 +731,22 @@ void System::prepareForSimulation()
 
   	recompute_A_tot();
 
-
+	// We have prepared for simulation, if we are 
+	// tracking reactions, we should setup the JSON
+	if (this->getReactionTrackingStatus()) {
+		this->getReactionFileStream() <<
+		  "{" << endl <<
+		  "  \"simulation\": {" << endl <<
+		  "    \"info\": {" << endl <<
+		  "      \"testing\": 123" << endl <<
+		  "    }," << endl <<
+		  "    \"reactions\": [" << endl <<
+		  "      {" << endl <<
+		  "        \"name\": \"rxn1\"" << endl <<
+		  "      }" << endl <<
+		  "    ]," << endl <<
+		  "    \"firings\": [" << endl;
+	}
 }
 
 
@@ -932,6 +955,15 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
     cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
     cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
 
+	// if we were tracking reactions, we should close
+	// the JSON file. We close the firing array, then
+	// the simulation level and finally the top level
+	if (this->getReactionTrackingStatus()) {
+		this->getReactionFileStream() <<
+		"\n    ]" << endl <<
+        "  }" << endl <<
+		"}" << endl;
+	}
 	cout.unsetf(ios::scientific);
 	return current_time;
 }

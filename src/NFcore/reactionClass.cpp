@@ -452,8 +452,13 @@ void ReactionClass::fire(double random_A_number) {
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
-	this->transformationSet->transform(this->mappingSet);
-
+	string logstr;
+	if (this->system->getReactionTrackingStatus()) {
+		logstr = this->transformationSet->transform(this->mappingSet, true);
+		
+	} else {
+		logstr = this->transformationSet->transform(this->mappingSet);
+	}
 
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
@@ -573,25 +578,120 @@ void ReactionClass::fire(double random_A_number) {
 	this->system->setLastRxnTime(this->system->getCurrentTime());
 
 	// output if the reaction was tagged
-	if (tagged) {
-	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-		if  ((*molIter)->getMoleculeType()->getName() != "mrna") continue;
-
+	// TODO: This needs to write the reaction to a JSON
+	// e.g. 6 spaces base
+	//   {
+    //     "name": "rxn1",
+    //     "global_count": 101,
+    //     "global_time": 12.32,
+    //     "reactant_ids": [
+    //       [
+    //         1,
+    //         67,
+    //         3
+    //       ],
+    //       [
+    //         23,
+    //         46,
+    //         33
+    //       ]
+    //     ],
+    //     "product_ids": [
+    //       [
+    //         1,
+    //         67,
+    //         3
+    //       ],
+    //       [
+    //         23,
+    //         46,
+    //         33
+    //       ]
+    //     ]
+    //   }
+	if (this->system->getReactionTrackingStatus()) {
+		if (tagged) {
+		int level = 6; // indentation level
 		this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
-		// print the time and reaction name
-		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
-				this->system->current_cpu_time << "\t" <<
-				this->system->getCurrentTime() << "\t";
+		// we need the correct number of commas
+		if (this->system->getGlobalEventCounter() != 1) {
+			this->system->getReactionFileStream() << ",\n";
+		} 
+		// open firing and write info
+		this->system->getReactionFileStream() << 
+			std::string(level,' ') + "{\n" <<
+			std::string(level+2,' ') + "\"id\": ";
 		if (this->system->getRxnNumberTrack()) {
-			this->system->getReactionFileStream() << rxnId << "\t";
+			this->system->getReactionFileStream() << "\"" << rxnId << "\",\n";
 		} else {
-			this->system->getReactionFileStream() << name << "\t";
+			this->system->getReactionFileStream() << "\"" << name << "\",\n";
 		}
-		// print the molecule type and its bonded states (exclude non-bonded states)
-		(*molIter)->printBondDetails(this->system->getReactionFileStream());
-		this->system->getReactionFileStream() << endl;
-		}
+		this->system->getReactionFileStream() <<
+			std::string(level+2,' ') + "\"global_count\": " << this->system->getGlobalEventCounter() << ",\n" <<
+			std::string(level+2,' ') + "\"global_time\": " << this->system->getCurrentTime() << ",\n" <<
+			std::string(level+2,' ') + "\"cpu_time\": " << this->system->current_cpu_time <<  ",\n"; // <<
+		// 	std::string(level+2,' ') + "\"reactant_ids\": [" ;
+		
+		// int ctr = 0;
+		// // for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		// for(unsigned int k=0; k<n_reactants; k++) {
+		// // 	// monitoring commas
+		// 	if (ctr != 0) {
+		// 		this->system->getReactionFileStream() <<  ",\n" + std::string(level+4,' ') + "[\n";
+		// 	} else {
+		// 		this->system->getReactionFileStream() << "\n" + std::string(level+4,' ') + "[\n";
+		// 	}
+
+		// 	for(unsigned int p=0; p<mappingSet[k]->getNumOfMappings();p++) {
+		// 		// cout << "mapping index: " << p << endl;
+		// 		Molecule *mForTag = mappingSet[k]->get(p)->getMolecule();
+		// 		if (mForTag != NULL) {
+		// 			// cout << "it is not null" << endl;
+		// 			mForTag->printBondDetailsJSON(this->system->getReactionFileStream(), level+4);
+		// 		}
+		// 		// cout<<" "<<mForTag->getMoleculeTypeName()<<mForTag->getUniqueID();
+		// 	}
+		// // 	// now we need some sort of reactant IDs
+		// // 	// print the molecule type and its bonded states (exclude non-bonded states)
+		// // 	(*molIter)->printBondDetailsJSON(this->system->getReactionFileStream(), level+4);	
+			
+		// 	// close item
+		// 	this->system->getReactionFileStream() << std::string(level+4,' ') + "]";
+		// 	ctr += 1;
+		// }
+		// // close reactants
+		// this->system->getReactionFileStream() << "\n" + std::string(level+2,' ') + "],\n";
+
+		// write transformation log
+		this->system->getReactionFileStream() << logstr;
+		
+		// // now deal with products
+		// ctr = 0;
+		// this->system->getReactionFileStream() << std::string(level+2,' ') + "\"product_ids\": [" ;
+		// for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
+		// // 	// monitoring commas
+		// 	if (ctr != 0) {
+		// 		this->system->getReactionFileStream() <<  ",\n" + std::string(level+4,' ') + "[\n";
+		// 	} else {
+		// 		this->system->getReactionFileStream() << "\n" + std::string(level+4,' ') + "[\n";
+		// 	}
+
+		// 	// now we need some sort of reactant IDs
+		// 	// print the molecule type and its bonded states (exclude non-bonded states)
+		// 	(*molIter)->printBondDetailsJSON(this->system->getReactionFileStream(), level+4);	
+			
+		// 	// close item
+		// 	this->system->getReactionFileStream() << std::string(level+4,' ') + "]";
+		// 	ctr += 1;
+		// }
+		// // close products
+		// this->system->getReactionFileStream() << "\n" + std::string(level+2,' ') + "]\n";
+		
+		// close firing 
+		this->system->getReactionFileStream() << std::string(level,' ') + "}";
 	}
+	}
+	
 
 	//Tidy up
 	products.clear();
