@@ -580,6 +580,8 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	 * prior to removing molecules from observables. A general method TransformationSet::checkMolecularity has
 	 * been implemented to check for incorrect molecularity or reaction center conflicts. --Justin
 	 */
+
+	// if we are tracking, initialize a log string
 	string logstr;
 	if (tracking) {
 		logstr = "        \"operations\": {\n";
@@ -613,6 +615,11 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 			if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
 			{	// handle deletions
 				Molecule * mol = ms->get(t)->getMolecule();
+				// track deletions if tracking is on
+				// this has to be done here
+				if (tracking) {
+					logstr += "          \"Delete\": [" + to_string(mol->getUniqueID()) + "]\n";
+				}
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
 					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
@@ -639,7 +646,9 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	}
 	deleteList.clear();
 
+	// finalize tracking
 	if (tracking) {
+		// need to delete the last comma
 		logstr.erase(logstr.end()-2, logstr.end());
 		logstr += "\n        }\n";
 	}
