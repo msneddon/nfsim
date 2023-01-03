@@ -308,18 +308,6 @@ void System::registerReactionFileLocation(string filename)
 	reactionOutputFileStream.setf(ios::fixed);
 	reactionOutputFileStream.precision(6);
 	setReactionTrackingStatus(true);
-	// print header for file
-	// reactionOutputFileStream <<
-	// 		"line" << "\t" <<
-	// 		"cputime" << "\t" <<
-	// 		"time" << "\t" <<
-	// 		"rxn" << "\t";
-	// if (!this->getRxnNumberTrack()) {
-	// 	reactionOutputFileStream << "mol" << "\t";
-	// }
-	// reactionOutputFileStream <<
-	// 		"mol_id" <<
-	// 		endl;
 }
 
 void System::registerMoleculeTypeFileLocation(string filename) {

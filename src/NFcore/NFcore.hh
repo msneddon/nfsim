@@ -1038,7 +1038,6 @@ namespace NFcore
 			void printBondDetails();
 			void printBondDetails(NFstream &o);
 			void printBondDetails(ostream &o);
-			void printBondDetailsJSON(NFstream &o, int level);
 			static void printMoleculeList(list <Molecule *> &members);
 
 			static int getUniqueIdCount() { return uniqueIdCount; };

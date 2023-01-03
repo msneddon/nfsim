@@ -581,32 +581,32 @@ void ReactionClass::fire(double random_A_number) {
 	// TODO: This needs to write the reaction to a JSON
 	if (this->system->getReactionTrackingStatus()) {
 		if (tagged) {
-		int level = 6; // indentation level
-		this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
-		// we need the correct number of commas
-		if (this->system->getGlobalEventCounter() != 1) {
-			this->system->getReactionFileStream() << ",\n";
-		} 
-		// open firing and write info
-		this->system->getReactionFileStream() << 
-			std::string(level,' ') + "{\n" <<
-			std::string(level+2,' ') + "\"id\": ";
-		if (this->system->getRxnNumberTrack()) {
-			this->system->getReactionFileStream() << "\"" << rxnId << "\",\n";
-		} else {
-			this->system->getReactionFileStream() << "\"" << name << "\",\n";
-		}
-		this->system->getReactionFileStream() <<
-			std::string(level+2,' ') + "\"global_count\": " << this->system->getGlobalEventCounter() << ",\n" <<
-			std::string(level+2,' ') + "\"global_time\": " << this->system->getCurrentTime() << ",\n" <<
-			std::string(level+2,' ') + "\"cpu_time\": " << this->system->current_cpu_time <<  ",\n";
+			int level = 6; // indentation level
+			this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
+			// we need the correct number of commas
+			if (this->system->getGlobalEventCounter() != 1) {
+				this->system->getReactionFileStream() << ",\n";
+			} 
+			// open firing and write info
+			this->system->getReactionFileStream() << 
+				std::string(level,' ') + "{\n" <<
+				std::string(level+2,' ') + "\"id\": ";
+			if (this->system->getRxnNumberTrack()) {
+				this->system->getReactionFileStream() << "\"" << rxnId << "\",\n";
+			} else {
+				this->system->getReactionFileStream() << "\"" << name << "\",\n";
+			}
+			this->system->getReactionFileStream() <<
+				std::string(level+2,' ') + "\"global_count\": " << this->system->getGlobalEventCounter() << ",\n" <<
+				std::string(level+2,' ') + "\"global_time\": " << this->system->getCurrentTime() << ",\n" <<
+				std::string(level+2,' ') + "\"cpu_time\": " << this->system->current_cpu_time <<  ",\n";
 
-		// write transformation log
-		this->system->getReactionFileStream() << logstr;
-				
-		// close firing 
-		this->system->getReactionFileStream() << std::string(level,' ') + "}";
-	}
+			// write transformation log
+			this->system->getReactionFileStream() << logstr;
+					
+			// close firing 
+			this->system->getReactionFileStream() << std::string(level,' ') + "}";
+		}
 	}
 	
 
