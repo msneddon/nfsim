@@ -82,7 +82,9 @@ void IncrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 	if (!logstr.empty()) {
 		logstr += "          \"IncrementState\": ["
 		       + to_string(m->getMolecule()->getUniqueID()) 
-			   + "," + to_string(cIndex) + "],\n";
+			   + "," + to_string(cIndex) 
+			   + "," + to_string(oldValue+1) 
+			   + "],\n";
 	}
 }
 
@@ -113,7 +115,9 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 	if (!logstr.empty()) {
 		logstr += "          \"DecrementState\": ["
 		       + to_string(m->getMolecule()->getUniqueID())
-			   + "," + to_string(cIndex) + "],\n";
+			   + "," + to_string(cIndex) 
+			   + "," + to_string(oldValue-1)
+			   + "],\n";
 	}
 }
 
@@ -240,15 +244,18 @@ UnbindingTransform::UnbindingTransform(int cIndex, TemplateMolecule * tm) :
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 {   
-	Molecule::unbind(m->getMolecule(),m->getIndex());
+	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
-	Molecule::unbind(m->getMolecule(),m->getIndex());
+	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
 	if (!logstr.empty()) {
 		logstr += "          \"DeleteBond\": ["
 		       + to_string(m->getMolecule()->getUniqueID())
-			   + "," + to_string(m->getIndex()) + "],\n";
+			   + "," + to_string(m->getIndex()) 
+			   + "," + to_string(m2id) 
+			   + "," + to_string(c2id) 
+			   + "],\n";
 	}
 
 }
@@ -352,7 +359,11 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
 		ms->set( im, new_molecule );
 	}
 	if (!logstr.empty()) {
-		logstr += "          \"Add\": [],\n";
+		logstr += "          \"Add\": [" 
+			   + to_string(new_molecule->getUniqueID())
+			   + "," + new_molecule->getMoleculeTypeName()
+			   + "," + to_string(new_molecule->getMoleculeType()->getTypeID())
+		       + "],\n";
 	}
 }
 

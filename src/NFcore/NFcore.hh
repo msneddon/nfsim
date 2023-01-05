@@ -818,6 +818,8 @@ namespace NFcore
 
 			void setUpLocalFunctionListForMolecules();
 
+			vector < vector < string > > getPossibleCompStates() {return possibleCompStates;};
+
 		protected:
 
 			void init(
@@ -990,8 +992,8 @@ namespace NFcore
 			/* static functions which bind and unbind two molecules */
 			static void bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2);
 			static void bind(Molecule *m1, string compName1, Molecule *m2, string compName2);
-			static void unbind(Molecule *m1, int bSiteIndex);
-			static void unbind(Molecule *m1, char * bSiteName);
+			static tuple<int, int> unbind(Molecule *m1, int bSiteIndex);
+			static tuple<int, int> unbind(Molecule *m1, char * bSiteName);
 
 
 			/* functions needed to traverse a complex and get all components
@@ -1255,7 +1257,9 @@ namespace NFcore
 			bool areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
 			bool isTemplateCompatible(TemplateMolecule * t);
 
-
+			// need to get reactant and product templates
+			vector <TemplateMolecule *> getReactantTemplates() {return allReactantTemplates;};
+			vector <TemplateMolecule *> getProductTemplates() {return allProductTemplates;};
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

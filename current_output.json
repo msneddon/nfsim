@@ -3,312 +3,321 @@
     "info": {
       "testing": 123
     },
+    "molecule_types": [
+      {
+        "name": "mrna",
+        "typeID": 0,
+        "components": {
+          "p0": ["free","blocked"],
+          "p1": [],
+          "p2": [],
+          "p3": [],
+          "p4": [],
+          "p5": [],
+          "p6": [],
+          "p7": [],
+          "p8": [],
+          "p9": []
+        }
+      },
+      {
+        "name": "ribosome",
+        "typeID": 1,
+        "components": {
+          "asite": []
+        }
+      }
+    ],
     "reactions": [
       {
-        "name": "rxn1"
+        "name": "initiate",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_1",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_2",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_3",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_4",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_5",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_6",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_7",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_8",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "elongate_9",
+        "reactants": [1,0],
+        "products": [1,0]
+      },
+      {
+        "name": "terminate",
+        "reactants": [1,0],
+        "products": [1,0]
       }
     ],
     "firings": [
       {
         "id": "initiate",
         "global_count": 1,
-        "global_time": 0.040557,
-        "cpu_time": 0.105147,
+        "global_time": 0.756121,
+        "cpu_time": 0.153190,
         "operations": {
-          "AddBond": [38,0,0,0],
+          "AddBond": [32,0,0,0],
           "StateChange": [0,0,1]
         }
       },
       {
         "id": "elongate_1",
         "global_count": 2,
-        "global_time": 1.078380,
-        "cpu_time": 0.105329,
+        "global_time": 2.330847,
+        "cpu_time": 0.153317,
         "operations": {
           "StateChange": [0,0,0],
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,1]
+          "DeleteBond": [32,0,0,0],
+          "AddBond": [32,0,0,1]
         }
       },
       {
-        "id": "elongate_2",
+        "id": "initiate",
         "global_count": 3,
-        "global_time": 1.088849,
-        "cpu_time": 0.105363,
+        "global_time": 2.517194,
+        "cpu_time": 0.153405,
         "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,2]
+          "AddBond": [24,0,0,0],
+          "StateChange": [0,0,1]
         }
       },
       {
-        "id": "initiate",
+        "id": "elongate_2",
         "global_count": 4,
-        "global_time": 1.343806,
-        "cpu_time": 0.105474,
+        "global_time": 3.437262,
+        "cpu_time": 0.153519,
         "operations": {
-          "AddBond": [84,0,0,0],
-          "StateChange": [0,0,1]
+          "DeleteBond": [32,0,0,1],
+          "AddBond": [32,0,0,2]
         }
       },
       {
-        "id": "elongate_3",
+        "id": "elongate_1",
         "global_count": 5,
-        "global_time": 1.367732,
-        "cpu_time": 0.105490,
+        "global_time": 4.093831,
+        "cpu_time": 0.153641,
         "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,3]
+          "StateChange": [0,0,0],
+          "DeleteBond": [24,0,0,0],
+          "AddBond": [24,0,0,1]
         }
       },
       {
-        "id": "elongate_1",
+        "id": "initiate",
         "global_count": 6,
-        "global_time": 1.397815,
-        "cpu_time": 0.105505,
+        "global_time": 4.193739,
+        "cpu_time": 0.153755,
         "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,1]
+          "AddBond": [63,0,0,0],
+          "StateChange": [0,0,1]
         }
       },
       {
-        "id": "initiate",
+        "id": "elongate_3",
         "global_count": 7,
-        "global_time": 1.796610,
-        "cpu_time": 0.105593,
+        "global_time": 4.436274,
+        "cpu_time": 0.153872,
         "operations": {
-          "AddBond": [31,0,0,0],
-          "StateChange": [0,0,1]
+          "DeleteBond": [32,0,0,2],
+          "AddBond": [32,0,0,3]
         }
       },
       {
-        "id": "elongate_4",
+        "id": "elongate_2",
         "global_count": 8,
-        "global_time": 1.868645,
-        "cpu_time": 0.105719,
+        "global_time": 5.634475,
+        "cpu_time": 0.154017,
         "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,4]
+          "DeleteBond": [24,0,0,1],
+          "AddBond": [24,0,0,2]
         }
       },
       {
-        "id": "elongate_5",
+        "id": "elongate_4",
         "global_count": 9,
-        "global_time": 2.167800,
-        "cpu_time": 0.105833,
+        "global_time": 6.465438,
+        "cpu_time": 0.154165,
         "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,5]
-        }
-      },
-      {
-        "id": "elongate_2",
-        "global_count": 10,
-        "global_time": 3.092002,
-        "cpu_time": 0.105974,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,2]
-        }
-      },
-      {
-        "id": "elongate_6",
-        "global_count": 11,
-        "global_time": 3.546475,
-        "cpu_time": 0.106094,
-        "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,6]
-        }
-      },
-      {
-        "id": "elongate_7",
-        "global_count": 12,
-        "global_time": 3.608112,
-        "cpu_time": 0.106185,
-        "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,7]
+          "DeleteBond": [32,0,0,3],
+          "AddBond": [32,0,0,4]
         }
       },
       {
         "id": "elongate_1",
-        "global_count": 13,
-        "global_time": 4.204990,
-        "cpu_time": 0.106318,
+        "global_count": 10,
+        "global_time": 6.540891,
+        "cpu_time": 0.154243,
         "operations": {
           "StateChange": [0,0,0],
-          "DeleteBond": [31,0],
-          "AddBond": [31,0,0,1]
-        }
-      },
-      {
-        "id": "initiate",
-        "global_count": 14,
-        "global_time": 4.232496,
-        "cpu_time": 0.106341,
-        "operations": {
-          "AddBond": [48,0,0,0],
-          "StateChange": [0,0,1]
+          "DeleteBond": [63,0,0,0],
+          "AddBond": [63,0,0,1]
         }
       },
       {
         "id": "elongate_3",
-        "global_count": 15,
-        "global_time": 4.652660,
-        "cpu_time": 0.106445,
+        "global_count": 11,
+        "global_time": 6.932087,
+        "cpu_time": 0.154406,
         "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,3]
-        }
-      },
-      {
-        "id": "elongate_8",
-        "global_count": 16,
-        "global_time": 4.664525,
-        "cpu_time": 0.106469,
-        "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,8]
-        }
-      },
-      {
-        "id": "elongate_4",
-        "global_count": 17,
-        "global_time": 4.687124,
-        "cpu_time": 0.106490,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,4]
-        }
-      },
-      {
-        "id": "elongate_9",
-        "global_count": 18,
-        "global_time": 5.728778,
-        "cpu_time": 0.106669,
-        "operations": {
-          "DeleteBond": [38,0],
-          "AddBond": [38,0,0,9]
-        }
-      },
-      {
-        "id": "elongate_2",
-        "global_count": 19,
-        "global_time": 6.600470,
-        "cpu_time": 0.106805,
-        "operations": {
-          "DeleteBond": [31,0],
-          "AddBond": [31,0,0,2]
+          "DeleteBond": [24,0,0,2],
+          "AddBond": [24,0,0,3]
         }
       },
       {
         "id": "elongate_5",
-        "global_count": 20,
-        "global_time": 6.645969,
-        "cpu_time": 0.106829,
+        "global_count": 12,
+        "global_time": 6.998442,
+        "cpu_time": 0.154438,
         "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,5]
-        }
-      },
-      {
-        "id": "elongate_3",
-        "global_count": 21,
-        "global_time": 6.964861,
-        "cpu_time": 0.106915,
-        "operations": {
-          "DeleteBond": [31,0],
-          "AddBond": [31,0,0,3]
-        }
-      },
-      {
-        "id": "elongate_6",
-        "global_count": 22,
-        "global_time": 7.467273,
-        "cpu_time": 0.107032,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,6]
-        }
-      },
-      {
-        "id": "elongate_7",
-        "global_count": 23,
-        "global_time": 7.835227,
-        "cpu_time": 0.107145,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,7]
-        }
-      },
-      {
-        "id": "elongate_8",
-        "global_count": 24,
-        "global_time": 8.499908,
-        "cpu_time": 0.107251,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,8]
-        }
-      },
-      {
-        "id": "terminate",
-        "global_count": 25,
-        "global_time": 8.555713,
-        "cpu_time": 0.107355,
-        "operations": {
-          "DeleteBond": [38,0]
-        }
-      },
-      {
-        "id": "elongate_9",
-        "global_count": 26,
-        "global_time": 9.364814,
-        "cpu_time": 0.107496,
-        "operations": {
-          "DeleteBond": [84,0],
-          "AddBond": [84,0,0,9]
-        }
-      },
-      {
-        "id": "elongate_1",
-        "global_count": 27,
-        "global_time": 9.373646,
-        "cpu_time": 0.107538,
-        "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [48,0],
-          "AddBond": [48,0,0,1]
-        }
-      },
-      {
-        "id": "terminate",
-        "global_count": 28,
-        "global_time": 9.925577,
-        "cpu_time": 0.107653,
-        "operations": {
-          "DeleteBond": [84,0]
+          "DeleteBond": [32,0,0,4],
+          "AddBond": [32,0,0,5]
         }
       },
       {
         "id": "elongate_4",
-        "global_count": 29,
-        "global_time": 9.997562,
-        "cpu_time": 0.107689,
+        "global_count": 13,
+        "global_time": 7.211638,
+        "cpu_time": 0.154535,
         "operations": {
-          "DeleteBond": [31,0],
-          "AddBond": [31,0,0,4]
+          "DeleteBond": [24,0,0,3],
+          "AddBond": [24,0,0,4]
+        }
+      },
+      {
+        "id": "elongate_6",
+        "global_count": 14,
+        "global_time": 7.569846,
+        "cpu_time": 0.154630,
+        "operations": {
+          "DeleteBond": [32,0,0,5],
+          "AddBond": [32,0,0,6]
+        }
+      },
+      {
+        "id": "elongate_5",
+        "global_count": 15,
+        "global_time": 7.958537,
+        "cpu_time": 0.154718,
+        "operations": {
+          "DeleteBond": [24,0,0,4],
+          "AddBond": [24,0,0,5]
+        }
+      },
+      {
+        "id": "elongate_2",
+        "global_count": 16,
+        "global_time": 8.180921,
+        "cpu_time": 0.154829,
+        "operations": {
+          "DeleteBond": [63,0,0,1],
+          "AddBond": [63,0,0,2]
+        }
+      },
+      {
+        "id": "elongate_3",
+        "global_count": 17,
+        "global_time": 8.191576,
+        "cpu_time": 0.154869,
+        "operations": {
+          "DeleteBond": [63,0,0,2],
+          "AddBond": [63,0,0,3]
         }
       },
       {
         "id": "initiate",
-        "global_count": 30,
-        "global_time": 10.004021,
-        "cpu_time": 0.107785,
+        "global_count": 18,
+        "global_time": 8.442373,
+        "cpu_time": 0.154995,
         "operations": {
-          "AddBond": [29,0,0,0],
+          "AddBond": [64,0,0,0],
           "StateChange": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_1",
+        "global_count": 19,
+        "global_time": 8.714569,
+        "cpu_time": 0.155142,
+        "operations": {
+          "StateChange": [0,0,0],
+          "DeleteBond": [64,0,0,0],
+          "AddBond": [64,0,0,1]
+        }
+      },
+      {
+        "id": "elongate_4",
+        "global_count": 20,
+        "global_time": 8.724772,
+        "cpu_time": 0.155166,
+        "operations": {
+          "DeleteBond": [63,0,0,3],
+          "AddBond": [63,0,0,4]
+        }
+      },
+      {
+        "id": "elongate_7",
+        "global_count": 21,
+        "global_time": 9.321841,
+        "cpu_time": 0.155320,
+        "operations": {
+          "DeleteBond": [32,0,0,6],
+          "AddBond": [32,0,0,7]
+        }
+      },
+      {
+        "id": "initiate",
+        "global_count": 22,
+        "global_time": 9.416429,
+        "cpu_time": 0.155421,
+        "operations": {
+          "AddBond": [17,0,0,0],
+          "StateChange": [0,0,1]
+        }
+      },
+      {
+        "id": "elongate_6",
+        "global_count": 23,
+        "global_time": 10.116020,
+        "cpu_time": 0.155577,
+        "operations": {
+          "DeleteBond": [24,0,0,5],
+          "AddBond": [24,0,0,6]
         }
       }
     ]

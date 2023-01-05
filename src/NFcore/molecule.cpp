@@ -555,7 +555,7 @@ void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compNam
 }
 
 
-void Molecule::unbind(Molecule *m1, int cIndex)
+tuple<int, int> Molecule::unbind(Molecule *m1, int cIndex)
 {
 	//get the other molecule bound to this site
 	//cout<<"I am here. "<<bSiteIndex<<endl;
@@ -591,9 +591,10 @@ void Molecule::unbind(Molecule *m1, int cIndex)
 
 	//cout<<" UnBinding!  mol1 complex: ";
 	//m1->getComplex()->printDetails();
+	return make_tuple(m2->getUniqueID(), cIndex2);
 }
 
-void Molecule::unbind(Molecule *m1, char * compName)
+tuple<int, int> Molecule::unbind(Molecule *m1, char * compName)
 {
 	int cIndex = m1->getMoleculeType()->getCompIndexFromName(compName);
 	Molecule::unbind(m1,cIndex);
