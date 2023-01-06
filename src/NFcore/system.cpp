@@ -623,7 +623,7 @@ void System::prepareForSimulation()
 		  }
   	}
 
-
+	
   	//cout<<"here 4..."<<endl;
 
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
@@ -646,6 +646,7 @@ void System::prepareForSimulation()
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
   	}
+	
 
   	//cout<<"here 7..."<<endl;
 
@@ -687,7 +688,6 @@ void System::prepareForSimulation()
   	}
   	*/
 
-
   	//cout<<"here 8..."<<endl;
 
 
@@ -719,6 +719,7 @@ void System::prepareForSimulation()
 
   	recompute_A_tot();
 
+
 	// We have prepared for simulation, if we are 
 	// tracking reactions, we should setup the JSON
 	if (this->getReactionTrackingStatus()) {
@@ -727,7 +728,12 @@ void System::prepareForSimulation()
 		  "{" << endl <<
 		  "  \"simulation\": {" << endl <<
 		  "    \"info\": {" << endl <<
-		  "      \"testing\": 123" << endl <<
+		  "      \"name\": \"" << this->getName() << "\"," << endl <<
+		  "      \"global_molecule_limit\": " << to_string(this->getGlobalMoleculeLimit()) << "," << endl <<
+		//   "      \"obs_count\": \"" << to_string(this->getMolObsCount()) << "\"," << endl <<
+		  "      \"number_of_molecule_types\": " << to_string(this->getNumOfMoleculeTypes()) << "," << endl <<
+		  "      \"number_of_molecules\": " << to_string(this->getNumOfMolecules()) << "," << endl <<
+		  "      \"tracking_status\": " << to_string(this->getReactionTrackingStatus()) << endl <<
 		  "    }," << endl <<
 		  "    \"molecule_types\": [" << endl;
 		
@@ -737,13 +743,24 @@ void System::prepareForSimulation()
 				"      {" << endl <<
 				"        \"name\": \"" + allMoleculeTypes.at(mt)->getName() + "\"," << endl <<
 				"        \"typeID\": " + to_string(allMoleculeTypes.at(mt)->getTypeID()) + ",\n" <<
-				"        \"components\": {\n";
+				"        \"components\": [";
+			//deal with components
+			for (unsigned int mtci=0; mtci<allMoleculeTypes.at(mt)->getNumOfComponents(); mtci++) {
+				// we enter every component and a list of states
+				this->getReactionFileStream() << "\"" <<
+					  allMoleculeTypes.at(mt)->getComponentName(mtci) << "\"";
+				// deal with commas
+				if (mtci!=allMoleculeTypes.at(mt)->getNumOfComponents()-1) {
+					this->getReactionFileStream() << ",";
+				}
+			}
+			//close components and start component states
+			this->getReactionFileStream() << "],\n        \"componentStates\": [";
 			//deal with components
 			vector < vector < string > > comp_states = allMoleculeTypes.at(mt)->getPossibleCompStates();
 			for (unsigned int mtci=0; mtci<allMoleculeTypes.at(mt)->getNumOfComponents(); mtci++) {
 				// we enter every component and a list of states
-				this->getReactionFileStream() << "          \"" <<
-					  allMoleculeTypes.at(mt)->getComponentName(mtci) << "\": [";
+				this->getReactionFileStream() << "[";
 				for (unsigned int mtcpsi=0; mtcpsi<comp_states[mtci].size(); mtcpsi++) {
 					this->getReactionFileStream() << "\"" << comp_states[mtci][mtcpsi];
 					// deal with commas
@@ -753,16 +770,15 @@ void System::prepareForSimulation()
 						this->getReactionFileStream() << "\"";
 					}
 				}
-				this->getReactionFileStream() << "]";
 				// deal with commas
 				if (mtci!=allMoleculeTypes.at(mt)->getNumOfComponents()-1) {
-					this->getReactionFileStream() << ",\n";
+					this->getReactionFileStream() << "],";
 				} else {
-					this->getReactionFileStream() << "\n";
+					this->getReactionFileStream() << "]";
 				}
 			}
-			//close components and start component states
-			this->getReactionFileStream() << "        }\n      }";
+			//close component states
+			this->getReactionFileStream() << "]\n      }";
 			// deal with commas
 			if (mt!=allMoleculeTypes.size()-1) {
 				this->getReactionFileStream() << ",\n";
@@ -772,40 +788,30 @@ void System::prepareForSimulation()
 		}
 		// close molecule types
 		this->getReactionFileStream() <<
-		  "    ]," << endl <<
-		  "    \"reactions\": [" << endl;
-
-		// now we prepare all reactions
-		for(unsigned int r=0; r<allReactions.size(); r++)
-		{
-			this->getReactionFileStream() <<
-				"      {" << endl <<
-				"        \"name\": \"" + allReactions.at(r)->getName() + "\"," << endl <<
-				"        \"reactants\": [";
-			for (unsigned int rt=0; rt<allReactions.at(r)->getReactantTemplates().size(); rt++) {
-				this->getReactionFileStream() << allReactions.at(r)->getReactantTemplates()[rt]->getMoleculeType()->getTypeID();
-				if (rt!=allReactions.at(r)->getReactantTemplates().size()-1) {
-					this->getReactionFileStream() << ",";
-				}
-			}
-			this->getReactionFileStream() << "],\n" << 
-				"        \"products\": [";
-			for (unsigned int pt=0; pt<allReactions.at(r)->getProductTemplates().size(); pt++) {
-				this->getReactionFileStream() << allReactions.at(r)->getProductTemplates()[pt]->getMoleculeType()->getTypeID();
-				if (pt!=allReactions.at(r)->getProductTemplates().size()-1) {
-					this->getReactionFileStream() << ",";
-				}
-			}
-			this->getReactionFileStream() << "]\n      }";
-			if (r!=allReactions.size()-1) {
-				this->getReactionFileStream() << ",\n";
+		  "    ]," << endl;
+		
+		this->getReactionFileStream() <<
+		  "    \"initialState\": [";
+		
+		for(unsigned int isi=0; isi<this->getNumOfMolecules(); isi++) {
+			Molecule * molec = this->getMoleculeByUid(isi);
+			if (!molec==0) {
+				this->getReactionFileStream() << 
+				to_string(molec->getMoleculeType()->getTypeID());
 			} else {
-				this->getReactionFileStream() << "\n";
+				this->getReactionFileStream() << "-1";
+			}
+			
+			if (isi!=this->getNumOfMolecules()-1) {
+				this->getReactionFileStream() << ",";
 			}
 		}
-		// close reactions and open firings for later
+
+		// close initial state
+		this->getReactionFileStream() << "],\n";
+		
+		// close initial state and open firings for later
 		this->getReactionFileStream() <<
-		  "    ]," << endl <<
 		  "    \"firings\": [" << endl;
 	}
 }

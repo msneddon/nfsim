@@ -47,7 +47,7 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
 	if (!logstr.empty()) {
-		logstr += string("          \"StateChange\": [") 
+		logstr += string("          [\"StateChange\",") 
 			   + to_string(m->getMolecule()->getUniqueID()) 
 			   + "," + to_string(cIndex) + "," 
 			   + to_string(newValue) + "],\n";
@@ -80,7 +80,7 @@ void IncrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue+1);
 	if (!logstr.empty()) {
-		logstr += "          \"IncrementState\": ["
+		logstr += "          [\"IncrementState\","
 		       + to_string(m->getMolecule()->getUniqueID()) 
 			   + "," + to_string(cIndex) 
 			   + "," + to_string(oldValue+1) 
@@ -113,7 +113,7 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue-1);
 	if (!logstr.empty()) {
-		logstr += "          \"DecrementState\": ["
+		logstr += "          [\"DecrementState\","
 		       + to_string(m->getMolecule()->getUniqueID())
 			   + "," + to_string(cIndex) 
 			   + "," + to_string(oldValue-1)
@@ -186,7 +186,7 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 	//} else {
 	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 	if (!logstr.empty()) {
-		logstr += "          \"AddBond\": ["
+		logstr += "          [\"AddBond\","
 		       + to_string(m->getMolecule()->getUniqueID())
 			   + "," +  to_string(m->getIndex())
 			   + "," + to_string(m2->getMolecule()->getUniqueID())
@@ -250,7 +250,7 @@ void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
 	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
 	if (!logstr.empty()) {
-		logstr += "          \"DeleteBond\": ["
+		logstr += "          [\"DeleteBond\","
 		       + to_string(m->getMolecule()->getUniqueID())
 			   + "," + to_string(m->getIndex()) 
 			   + "," + to_string(m2id) 
@@ -290,7 +290,7 @@ void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	this->sc->create();
 	if (!logstr.empty()) {
-		logstr += "          \"Add\": [],\n";
+		logstr += "          [\"Add\",],\n";
 	}
 }
 
@@ -359,7 +359,7 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
 		ms->set( im, new_molecule );
 	}
 	if (!logstr.empty()) {
-		logstr += "          \"Add\": [" 
+		logstr += "          [\"Add\"," 
 			   + to_string(new_molecule->getUniqueID())
 			   + "," + new_molecule->getMoleculeTypeName()
 			   + "," + to_string(new_molecule->getMoleculeType()->getTypeID())
@@ -418,7 +418,7 @@ void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms, string &lo
 {
 	m->getMolecule()->decrementPopulation();
 	if (!logstr.empty()) {
-		logstr += "          \"DecrementPopulation\": ["
+		logstr += "          [\"DecrementPopulation\","
 		       + to_string(m->getMolecule()->getUniqueID()) + "],\n";
 	}
 }

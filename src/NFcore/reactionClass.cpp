@@ -590,16 +590,15 @@ void ReactionClass::fire(double random_A_number) {
 			// open firing and write info
 			this->system->getReactionFileStream() << 
 				std::string(level,' ') + "{\n" <<
-				std::string(level+2,' ') + "\"id\": ";
+				std::string(level+2,' ') + "\"props\": [";
 			if (this->system->getRxnNumberTrack()) {
-				this->system->getReactionFileStream() << "\"" << rxnId << "\",\n";
+				this->system->getReactionFileStream() << "\"" << rxnId << "\",";
 			} else {
-				this->system->getReactionFileStream() << "\"" << name << "\",\n";
+				this->system->getReactionFileStream() << "\"" << name << "\",";
 			}
-			this->system->getReactionFileStream() <<
-				std::string(level+2,' ') + "\"global_count\": " << this->system->getGlobalEventCounter() << ",\n" <<
-				std::string(level+2,' ') + "\"global_time\": " << this->system->getCurrentTime() << ",\n" <<
-				std::string(level+2,' ') + "\"cpu_time\": " << this->system->current_cpu_time <<  ",\n";
+			this->system->getReactionFileStream() << 
+					to_string(this->system->getGlobalEventCounter()) << 
+					"," << this->system->getCurrentTime() << "],\n";
 
 			// write transformation log
 			this->system->getReactionFileStream() << logstr;

@@ -584,7 +584,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	// if we are tracking, initialize a log string
 	string logstr;
 	if (tracking) {
-		logstr = "        \"operations\": {\n";
+		logstr = "        \"ops\": [\n";
 	} else {
 		logstr = "";
 	}
@@ -618,7 +618,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 				// track deletions if tracking is on
 				// this has to be done here
 				if (tracking) {
-					logstr += "          \"Delete\": [" + to_string(mol->getUniqueID()) + "]\n";
+					logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "]\n";
 				}
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
@@ -650,7 +650,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	if (tracking) {
 		// need to delete the last comma
 		logstr.erase(logstr.end()-2, logstr.end());
-		logstr += "\n        }\n";
+		logstr += "\n        ]\n";
 	}
 	return logstr;
 }

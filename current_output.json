@@ -1,324 +1,163 @@
 {
   "simulation": {
     "info": {
-      "testing": 123
+      "name": "v21",
+      "global_molecule_limit": 1000000,
+      "number_of_molecule_types": 2,
+      "number_of_molecules": 101,
+      "tracking_status": 1
     },
     "molecule_types": [
       {
         "name": "mrna",
         "typeID": 0,
-        "components": {
-          "p0": ["free","blocked"],
-          "p1": [],
-          "p2": [],
-          "p3": [],
-          "p4": [],
-          "p5": [],
-          "p6": [],
-          "p7": [],
-          "p8": [],
-          "p9": []
-        }
+        "components": ["p0","p1","p2","p3","p4","p5","p6","p7","p8","p9"],
+        "componentStates": [["free","blocked"],[],[],[],[],[],[],[],[],[]]
       },
       {
         "name": "ribosome",
         "typeID": 1,
-        "components": {
-          "asite": []
-        }
+        "components": ["asite"],
+        "componentStates": [[]]
       }
     ],
-    "reactions": [
-      {
-        "name": "initiate",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_1",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_2",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_3",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_4",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_5",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_6",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_7",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_8",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "elongate_9",
-        "reactants": [1,0],
-        "products": [1,0]
-      },
-      {
-        "name": "terminate",
-        "reactants": [1,0],
-        "products": [1,0]
-      }
-    ],
+    "initialState": [0,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     "firings": [
       {
-        "id": "initiate",
-        "global_count": 1,
-        "global_time": 0.756121,
-        "cpu_time": 0.153190,
-        "operations": {
-          "AddBond": [32,0,0,0],
-          "StateChange": [0,0,1]
-        }
+        "props": ["initiate",1,0.180772],
+        "ops": [
+          ["AddBond",93,0,0,0],
+          ["StateChange",0,0,1]
+        ]
       },
       {
-        "id": "elongate_1",
-        "global_count": 2,
-        "global_time": 2.330847,
-        "cpu_time": 0.153317,
-        "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [32,0,0,0],
-          "AddBond": [32,0,0,1]
-        }
+        "props": ["elongate_1",2,0.244799],
+        "ops": [
+          ["StateChange",0,0,0],
+          ["DeleteBond",93,0,0,0],
+          ["AddBond",93,0,0,1]
+        ]
       },
       {
-        "id": "initiate",
-        "global_count": 3,
-        "global_time": 2.517194,
-        "cpu_time": 0.153405,
-        "operations": {
-          "AddBond": [24,0,0,0],
-          "StateChange": [0,0,1]
-        }
+        "props": ["elongate_2",3,0.950318],
+        "ops": [
+          ["DeleteBond",93,0,0,1],
+          ["AddBond",93,0,0,2]
+        ]
       },
       {
-        "id": "elongate_2",
-        "global_count": 4,
-        "global_time": 3.437262,
-        "cpu_time": 0.153519,
-        "operations": {
-          "DeleteBond": [32,0,0,1],
-          "AddBond": [32,0,0,2]
-        }
+        "props": ["elongate_3",4,1.073711],
+        "ops": [
+          ["DeleteBond",93,0,0,2],
+          ["AddBond",93,0,0,3]
+        ]
       },
       {
-        "id": "elongate_1",
-        "global_count": 5,
-        "global_time": 4.093831,
-        "cpu_time": 0.153641,
-        "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [24,0,0,0],
-          "AddBond": [24,0,0,1]
-        }
+        "props": ["elongate_4",5,1.986766],
+        "ops": [
+          ["DeleteBond",93,0,0,3],
+          ["AddBond",93,0,0,4]
+        ]
       },
       {
-        "id": "initiate",
-        "global_count": 6,
-        "global_time": 4.193739,
-        "cpu_time": 0.153755,
-        "operations": {
-          "AddBond": [63,0,0,0],
-          "StateChange": [0,0,1]
-        }
+        "props": ["initiate",6,2.304009],
+        "ops": [
+          ["AddBond",9,0,0,0],
+          ["StateChange",0,0,1]
+        ]
       },
       {
-        "id": "elongate_3",
-        "global_count": 7,
-        "global_time": 4.436274,
-        "cpu_time": 0.153872,
-        "operations": {
-          "DeleteBond": [32,0,0,2],
-          "AddBond": [32,0,0,3]
-        }
+        "props": ["elongate_1",7,3.151423],
+        "ops": [
+          ["StateChange",0,0,0],
+          ["DeleteBond",9,0,0,0],
+          ["AddBond",9,0,0,1]
+        ]
       },
       {
-        "id": "elongate_2",
-        "global_count": 8,
-        "global_time": 5.634475,
-        "cpu_time": 0.154017,
-        "operations": {
-          "DeleteBond": [24,0,0,1],
-          "AddBond": [24,0,0,2]
-        }
+        "props": ["elongate_5",8,3.439692],
+        "ops": [
+          ["DeleteBond",93,0,0,4],
+          ["AddBond",93,0,0,5]
+        ]
       },
       {
-        "id": "elongate_4",
-        "global_count": 9,
-        "global_time": 6.465438,
-        "cpu_time": 0.154165,
-        "operations": {
-          "DeleteBond": [32,0,0,3],
-          "AddBond": [32,0,0,4]
-        }
+        "props": ["initiate",9,5.010729],
+        "ops": [
+          ["AddBond",32,0,0,0],
+          ["StateChange",0,0,1]
+        ]
       },
       {
-        "id": "elongate_1",
-        "global_count": 10,
-        "global_time": 6.540891,
-        "cpu_time": 0.154243,
-        "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [63,0,0,0],
-          "AddBond": [63,0,0,1]
-        }
+        "props": ["elongate_2",10,5.050616],
+        "ops": [
+          ["DeleteBond",9,0,0,1],
+          ["AddBond",9,0,0,2]
+        ]
       },
       {
-        "id": "elongate_3",
-        "global_count": 11,
-        "global_time": 6.932087,
-        "cpu_time": 0.154406,
-        "operations": {
-          "DeleteBond": [24,0,0,2],
-          "AddBond": [24,0,0,3]
-        }
+        "props": ["elongate_1",11,5.226277],
+        "ops": [
+          ["StateChange",0,0,0],
+          ["DeleteBond",32,0,0,0],
+          ["AddBond",32,0,0,1]
+        ]
       },
       {
-        "id": "elongate_5",
-        "global_count": 12,
-        "global_time": 6.998442,
-        "cpu_time": 0.154438,
-        "operations": {
-          "DeleteBond": [32,0,0,4],
-          "AddBond": [32,0,0,5]
-        }
+        "props": ["initiate",12,5.870240],
+        "ops": [
+          ["AddBond",17,0,0,0],
+          ["StateChange",0,0,1]
+        ]
       },
       {
-        "id": "elongate_4",
-        "global_count": 13,
-        "global_time": 7.211638,
-        "cpu_time": 0.154535,
-        "operations": {
-          "DeleteBond": [24,0,0,3],
-          "AddBond": [24,0,0,4]
-        }
+        "props": ["elongate_6",13,6.956533],
+        "ops": [
+          ["DeleteBond",93,0,0,5],
+          ["AddBond",93,0,0,6]
+        ]
       },
       {
-        "id": "elongate_6",
-        "global_count": 14,
-        "global_time": 7.569846,
-        "cpu_time": 0.154630,
-        "operations": {
-          "DeleteBond": [32,0,0,5],
-          "AddBond": [32,0,0,6]
-        }
+        "props": ["elongate_7",14,7.118238],
+        "ops": [
+          ["DeleteBond",93,0,0,6],
+          ["AddBond",93,0,0,7]
+        ]
       },
       {
-        "id": "elongate_5",
-        "global_count": 15,
-        "global_time": 7.958537,
-        "cpu_time": 0.154718,
-        "operations": {
-          "DeleteBond": [24,0,0,4],
-          "AddBond": [24,0,0,5]
-        }
+        "props": ["elongate_3",15,7.932592],
+        "ops": [
+          ["DeleteBond",9,0,0,2],
+          ["AddBond",9,0,0,3]
+        ]
       },
       {
-        "id": "elongate_2",
-        "global_count": 16,
-        "global_time": 8.180921,
-        "cpu_time": 0.154829,
-        "operations": {
-          "DeleteBond": [63,0,0,1],
-          "AddBond": [63,0,0,2]
-        }
+        "props": ["elongate_8",16,8.474390],
+        "ops": [
+          ["DeleteBond",93,0,0,7],
+          ["AddBond",93,0,0,8]
+        ]
       },
       {
-        "id": "elongate_3",
-        "global_count": 17,
-        "global_time": 8.191576,
-        "cpu_time": 0.154869,
-        "operations": {
-          "DeleteBond": [63,0,0,2],
-          "AddBond": [63,0,0,3]
-        }
+        "props": ["elongate_9",17,9.206144],
+        "ops": [
+          ["DeleteBond",93,0,0,8],
+          ["AddBond",93,0,0,9]
+        ]
       },
       {
-        "id": "initiate",
-        "global_count": 18,
-        "global_time": 8.442373,
-        "cpu_time": 0.154995,
-        "operations": {
-          "AddBond": [64,0,0,0],
-          "StateChange": [0,0,1]
-        }
+        "props": ["elongate_2",18,9.216112],
+        "ops": [
+          ["DeleteBond",32,0,0,1],
+          ["AddBond",32,0,0,2]
+        ]
       },
       {
-        "id": "elongate_1",
-        "global_count": 19,
-        "global_time": 8.714569,
-        "cpu_time": 0.155142,
-        "operations": {
-          "StateChange": [0,0,0],
-          "DeleteBond": [64,0,0,0],
-          "AddBond": [64,0,0,1]
-        }
-      },
-      {
-        "id": "elongate_4",
-        "global_count": 20,
-        "global_time": 8.724772,
-        "cpu_time": 0.155166,
-        "operations": {
-          "DeleteBond": [63,0,0,3],
-          "AddBond": [63,0,0,4]
-        }
-      },
-      {
-        "id": "elongate_7",
-        "global_count": 21,
-        "global_time": 9.321841,
-        "cpu_time": 0.155320,
-        "operations": {
-          "DeleteBond": [32,0,0,6],
-          "AddBond": [32,0,0,7]
-        }
-      },
-      {
-        "id": "initiate",
-        "global_count": 22,
-        "global_time": 9.416429,
-        "cpu_time": 0.155421,
-        "operations": {
-          "AddBond": [17,0,0,0],
-          "StateChange": [0,0,1]
-        }
-      },
-      {
-        "id": "elongate_6",
-        "global_count": 23,
-        "global_time": 10.116020,
-        "cpu_time": 0.155577,
-        "operations": {
-          "DeleteBond": [24,0,0,5],
-          "AddBond": [24,0,0,6]
-        }
+        "props": ["elongate_4",19,10.064442],
+        "ops": [
+          ["DeleteBond",9,0,0,3],
+          ["AddBond",9,0,0,4]
+        ]
       }
     ]
   }
