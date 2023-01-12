@@ -246,3 +246,59 @@ void SpeciesCreator::create()
 		//cout<<endl;
 	}
 }
+
+void SpeciesCreator::create(string &logstr)
+{
+	//Create the molecules in this new species
+	for(unsigned int m=0; m<n_molecules; m++)
+	{
+		newMoleculeCreations[m] = moleculeTypes[m]->genDefaultMolecule();
+		if (!logstr.empty()) {
+			logstr += "          [\"AddSpecies\"," 
+			   + to_string(newMoleculeCreations[m]->getUniqueID())
+			   + "," + to_string(newMoleculeCreations[m]->getMoleculeType()->getTypeID())
+		       + "],\n";
+		}
+	}
+
+	//Set the component state values correctly
+	for(int c=0; c<n_ndStates; c++)
+	{
+		newMoleculeCreations[ndStateMolecule[c]]->setComponentState(ndStateIndex[c],ndStateValue[c]);
+		if (!logstr.empty()) {
+			logstr += string("          [\"StateChange\",") 
+				+ to_string(newMoleculeCreations[ndStateMolecule[c]]->getUniqueID()) 
+				+ "," + to_string(ndStateIndex[c]) + "," 
+				+ to_string(ndStateValue[c]) + "],\n";
+		}
+	}
+
+	//Make the bonds
+	for(unsigned int b=0; b<n_bonds; b++)
+	{
+		Molecule *m1 = newMoleculeCreations[bMolecule1[b]];
+		Molecule *m2 = newMoleculeCreations[bMolecule2[b]];
+		Molecule::bind(m1,bSite1[b],m2,bSite2[b]);
+		if (!logstr.empty()) {
+			logstr += "          [\"AddBond\","
+				+ to_string(m1->getUniqueID())
+				+ "," +  to_string(bSite1[b])
+				+ "," + to_string(m2->getUniqueID())
+				+ "," +  to_string(bSite2[b])  + "],\n";
+		}
+	}
+
+	//Create all the molecules
+	//Molecule *m = mt->genDefaultMolecule();
+
+	//Set all the states etc...
+
+	//Prep the molecules and enter them into the simulation
+	for(unsigned int m=0; m<n_molecules; m++)
+	{
+		moleculeTypes[m]->addMoleculeToRunningSystem(newMoleculeCreations[m]);
+		//cout<<"Created:"<<endl;
+		//newMoleculeCreations[m]->printDetails();
+		//cout<<endl;
+	}
+}

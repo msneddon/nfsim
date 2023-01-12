@@ -33,6 +33,7 @@ namespace NFcore
 
 			// create a molecule and get pointer
 			Molecule * create_molecule( );
+			Molecule * create_molecule( string &logstr );
 
 			// get the template molecule
 			TemplateMolecule * getTemplateMolecule () const { return template_molecule; };

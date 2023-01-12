@@ -22,6 +22,7 @@ namespace NFcore
 			~SpeciesCreator();
 			
 			void create();
+			void create(string &logstr);
 		
 		protected:
 			

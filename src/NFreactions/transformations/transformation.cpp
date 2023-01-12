@@ -288,10 +288,7 @@ void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms)
 
 void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
-	this->sc->create();
-	if (!logstr.empty()) {
-		logstr += "          [\"Add\",],\n";
-	}
+	this->sc->create(logstr);
 }
 
 
@@ -350,20 +347,13 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
 {
 	// create molecule and get pointer
-	new_molecule = this->mc->create_molecule();
+	new_molecule = this->mc->create_molecule(logstr);
 
 	// point mappings to the new molecule
 	unsigned int n_mappings = ms->getNumOfMappings();
 	for ( unsigned int im = 0;  im < n_mappings;  ++im )
 	{
 		ms->set( im, new_molecule );
-	}
-	if (!logstr.empty()) {
-		logstr += "          [\"Add\"," 
-			   + to_string(new_molecule->getUniqueID())
-			   + "," + new_molecule->getMoleculeTypeName()
-			   + "," + to_string(new_molecule->getMoleculeType()->getTypeID())
-		       + "],\n";
 	}
 }
 

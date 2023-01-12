@@ -94,6 +94,47 @@ MoleculeCreator::create_molecule()
 }
 
 Molecule *
+MoleculeCreator::create_molecule(string &logstr)
+{
+
+	if ( isPopulationType() )
+	{
+		// increment population
+		molecule_object->incrementPopulation();
+	}
+	else
+	{
+		//Create the molecule
+		molecule_object = molecule_type->genDefaultMolecule();
+		if (!logstr.empty()) {
+			logstr += "          [\"Add\"," 
+			   + to_string(molecule_object->getUniqueID())
+			   + "," + to_string(molecule_object->getMoleculeType()->getTypeID())
+		       + "],\n";
+		}
+
+		//Set the component state values correctly
+		for( comp_iter = component_states.begin();  comp_iter != component_states.end();  ++comp_iter )
+		{
+			molecule_object->setComponentState( (*comp_iter).first, (*comp_iter).second );
+			if (!logstr.empty()) {
+			logstr += "          [\"StateChange\"," 
+			   + to_string(molecule_object->getUniqueID())
+			   + "," + to_string((*comp_iter).first)
+			   + "," + to_string((*comp_iter).second)
+		       + "],\n";
+			}
+		}
+
+		//Prep the molecule and enterinto the simulation
+		molecule_type->addMoleculeToRunningSystemButDontUpdate( molecule_object );
+	}
+
+	// return a pointer to the new molecule, yeah!
+	return molecule_object;
+}
+
+Molecule *
 MoleculeCreator::get_population_pointer() const
 {
 	if ( population_type )
