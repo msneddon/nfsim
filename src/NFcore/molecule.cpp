@@ -674,6 +674,74 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
 }
 
 
+void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth, string &logstr)
+{
+	if(m==0) {
+		cerr<<"Error in Molecule::breadthFirstSearch, m is null.\n";
+		cerr<<"Likely an internal error where a MappingSet is on a list and\n";
+		cerr<<"is not actually mapped to any molecule!";
+		exit(3);
+	}
+
+	//Create the queues (for effeciency, now queues are a static attribute of Molecule...)
+	//queue <Molecule *> q;
+	//queue <int> d;
+	int currentDepth = 0;
+
+	//cout<<"traversing on:"<<endl;
+	//m->printDetails();
+
+	//First add this molecule
+	q.push(m);
+	members.push_back(m);
+	d.push(currentDepth+1);
+	m->hasVisitedMolecule=true;
+
+	//Look at children until the queue is empty
+	while(!q.empty())
+	{
+		//Get the next parent to look at (currentMolecule)
+		Molecule *cM = q.front();
+		currentDepth = d.front();
+		q.pop();
+		d.pop();
+
+		if (!logstr.empty()) {
+			logstr += "          [\"Delete\"," + to_string(cM->getUniqueID()) + "],\n";
+		}
+			
+		//Make sure the depth does not exceed the limit we want to search
+		if((depth!=ReactionClass::NO_LIMIT) && (currentDepth>=depth)) continue;
+
+		//Loop through the bonds
+		int cMax = cM->numOfComponents;
+		for(int c=0; c<cMax; c++)
+		{
+			//cM->getComp
+			if(cM->isBindingSiteBonded(c))
+			{
+				Molecule *neighbor = cM->getBondedMolecule(c);
+				//cout<<"looking at neighbor: "<<endl;
+				//neighbor->printDetails();
+				if(!neighbor->hasVisitedMolecule)
+				{
+					neighbor->hasVisitedMolecule=true;
+					members.push_back(neighbor);
+					q.push(neighbor);
+					d.push(currentDepth+1);
+					//cout<<"adding... to traversal list."<<endl;
+				}
+			}
+		}
+	}
+
+
+	//clear the has visitedMolecule values
+	for( molIter = members.begin(); molIter != members.end(); molIter++ )
+  		(*molIter)->hasVisitedMolecule=false;
+}
+
+
 
 
 
@@ -682,6 +750,15 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 	//always call breadth first search, it is a bit faster
 	//if(traversalLimit>=0)
 		Molecule::breadthFirstSearch(members, this, traversalLimit);
+	//else
+	//	this->depthFirstSearch(members);
+}
+
+void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit, string &logstr)
+{
+	//always call breadth first search, it is a bit faster
+	//if(traversalLimit>=0)
+		Molecule::breadthFirstSearch(members, this, traversalLimit, logstr);
 	//else
 	//	this->depthFirstSearch(members);
 }

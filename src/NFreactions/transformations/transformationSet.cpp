@@ -615,17 +615,17 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 			if( transformations[r].at(t)->getType()==(int)TransformationFactory::REMOVE )
 			{	// handle deletions
 				Molecule * mol = ms->get(t)->getMolecule();
-				// track deletions if tracking is on
-				// this has to be done here
-				if (tracking) {
-					logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "],\n";
-				}
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
-					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
+					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT, logstr);
 				}
 				else
 				{	// molecule deletion: flag this molecule for deletion
+					// track deletions if tracking is on
+					// this has to be done here
+					if (tracking) {
+						logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "],\n";
+					}
 					deleteList.push_back( mol );
 				}
 			}

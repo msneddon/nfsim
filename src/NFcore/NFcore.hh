@@ -999,7 +999,9 @@ namespace NFcore
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
+			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit, string &logstr);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
+			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth, string &logstr);
 			void depthFirstSearch(list <Molecule *> &members);
 
 			/* when we are ready to begin simulations, moleculeType calls this function
