@@ -28,8 +28,9 @@ MappingSet::MappingSet(unsigned int id, vector <Transformation *> &transformatio
 			// add mapping with component index -1
 			mappings[t] = new Mapping(transformations.at(t)->getType(), -1 );
 		}
-		else
+		else {
 			mappings[t] = new Mapping(transformations.at(t)->getType(), transformations.at(t)->getComponentIndex() );
+		}
 	}
 }
 MappingSet::~MappingSet()

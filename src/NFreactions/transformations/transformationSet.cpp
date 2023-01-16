@@ -618,7 +618,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 				// track deletions if tracking is on
 				// this has to be done here
 				if (tracking) {
-					logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "]\n";
+					logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "],\n";
 				}
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
@@ -897,16 +897,23 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 			t1 = transfn->getTemplateMolecule();
 			if (!t1) continue;
 			mt1 = t1->getMoleculeType();
-			c1 = transfn->getComponentIndex();
-			// If the moleculetype or component is not present in the other reaction,
-			// it is not connected
-			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+			// TODO: figure out if this is the right behavior
+			// we are assuming no connection if the transformation
+			// is of type REMOVE, aka a delete operation
+			if (transfn->getType()!=(int)TransformationFactory::REMOVE) {
+				c1 = transfn->getComponentIndex();
+				// If the moleculetype or component is not present in the other reaction,
+				// it is not connected
+				if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
 
-			// If the TemplateMolecule is 'incompatible' with any of the reactants
-			// or products, then the reaction is not connected
-			if (!rxn->isTemplateCompatible(t1)) continue;
-			// Both checks passed for one op so return true
-			return true;
+				// If the TemplateMolecule is 'incompatible' with any of the reactants
+				// or products, then the reaction is not connected
+				if (!rxn->isTemplateCompatible(t1)) continue;
+				// Both checks passed for one op so return true
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 	// Do the same as above but now for the transformed product templates
