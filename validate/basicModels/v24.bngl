@@ -1,0 +1,47 @@
+begin model
+begin parameters
+  l_ribo     1
+  l_mrna     10
+  k_add      1.2
+  k_del      1
+  k_init     1
+  k_elong    1
+  k_term     1
+  n_mrna_0   1
+  n_ribo_0   100
+end parameters
+
+begin molecule types
+  mrna(p0~free~blocked,p1,p2,p3)
+  ribosome(asite)
+end molecule types
+
+begin species
+  mrna(p0~free,p1,p2,p3)   n_mrna_0
+  ribosome(asite)                            n_ribo_0
+end species
+
+begin observables
+    Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
+end observables
+
+begin reaction rules
+  test_add:    0 -> mrna(p0~free,p1,p2,p3) k_add
+  test_add_spec:    0 -> ribosome(asite!1).mrna(p0~blocked!1,p1,p2,p3) k_add
+  test_del:    ribosome(asite) -> 0 k_del
+  test_del_2:  ribosome(asite!1).mrna(p0~blocked!1,p1,p2,p3) -> 0 k_del
+  initiate:    ribosome(asite) + mrna(p0~free) -> ribosome(asite!1).mrna(p0~blocked!1)    k_init TotalRate 
+  elongate_1:  ribosome(asite!1).mrna(p0~blocked!1,p1) -> ribosome(asite!1).mrna(p0~free,p1!1)    k_elong 
+  elongate_2:  ribosome(asite!1).mrna(p1!1,p2) -> ribosome(asite!1).mrna(p1,p2!1)    k_elong 
+  elongate_3:  ribosome(asite!1).mrna(p2!1,p3) -> ribosome(asite!1).mrna(p2,p3!1)    k_elong 
+  terminate:   ribosome(asite!1).mrna(p3!1) -> ribosome(asite) + mrna(p3)    k_term 
+end reaction rules
+
+end model
+
+generate_network({overwrite=>1})
+simulate_ode({suffix=>"ode",t_end=>100,n_steps=>100})
+resetConcentrations()
+simulate_ssa({suffix=>"ssa",t_end=>100,n_steps=>100})
+resetConcentrations()
+writeXML()

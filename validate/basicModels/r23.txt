@@ -1,0 +1,2 @@
+connectivity testing, mRNA monomer model with delete operations
+-sim 10 -oSteps 100 -connect -rxnlog basicModels/v23_rxns.tsv -utl 3 -gml 1000000 -trackconnected -printconnected -printmoltypes -printrxncounts
