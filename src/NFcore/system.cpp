@@ -511,6 +511,11 @@ MoleculeType * System::getMoleculeTypeByName(string mName)
 
 Molecule * System::getMoleculeByUid(int uid)
 {
+	this->getMoleculeByUid(uid, true);
+}
+
+Molecule * System::getMoleculeByUid(int uid, bool warn)
+{
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
 		//(*molTypeIter)->printDetails(); //<<endl;
@@ -520,7 +525,9 @@ Molecule * System::getMoleculeByUid(int uid)
 					return (*molTypeIter)->getMolecule(m);
 		}
 	}
-	cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
+	if (warn) {
+		cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
+	}	
 	return 0;
 }
 
@@ -794,7 +801,7 @@ void System::prepareForSimulation()
 		  "    \"initialState\": [";
 		
 		for(unsigned int isi=0; isi<this->getNumOfMolecules(); isi++) {
-			Molecule * molec = this->getMoleculeByUid(isi);
+			Molecule * molec = this->getMoleculeByUid(isi, false);
 			if (!molec==0) {
 				this->getReactionFileStream() << 
 				to_string(molec->getMoleculeType()->getTypeID());

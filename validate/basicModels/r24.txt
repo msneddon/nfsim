@@ -1,2 +1,2 @@
 connectivity testing, mRNA monomer model with add and delete operations
--sim 10 -oSteps 100 -connect -rxnlog basicModels/v24_rxns.tsv -utl 3 -gml 1000000 -trackconnected -printconnected -printmoltypes -printrxncounts
+-sim 100 -oSteps 100 -connect -rxnlog basicModels/v24_rxns.json -utl 3 -gml 1000000 -trackconnected -printconnected -printmoltypes -printrxncounts

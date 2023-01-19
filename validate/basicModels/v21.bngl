@@ -20,7 +20,7 @@ begin species
 end species
 
 begin observables
-    Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
+  Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
 end observables
 
 begin reaction rules

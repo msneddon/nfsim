@@ -1,0 +1,6 @@
+mol_type_id	mol_type
+0	mrna
+1	ribosome
+1e+03	last_rxn_firing_time
+1e+03	simulated_time
+-1.4e+08	cpu_time

@@ -2,7 +2,7 @@ begin model
 begin parameters
   l_ribo     1
   l_mrna     10
-  add        1
+  add        0.1
   k_add      1
   k_init     1
   k_elong    1
@@ -18,16 +18,16 @@ end molecule types
 
 begin species
   mrna(p0~free,p1,p2,p3)   n_mrna_0
-  ribosome(asite)                            n_ribo_0
+  ribosome(asite)          n_ribo_0
 end species
 
 begin observables
-    Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
+  Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
 end observables
 
 begin reaction rules
   test_add:    0 -> mrna(p0~free,p1,p2,p3) add
-  test_add_spec:    0 -> ribosome(asite!1).mrna(p0~blocked!1,p1,p2,p3) add
+  test_add_2:  0 -> ribosome(asite!1).mrna(p0~blocked!1,p1,p2,p3) add
   initiate:    ribosome(asite) + mrna(p0~free) -> ribosome(asite!1).mrna(p0~blocked!1)    k_init TotalRate 
   elongate_1:  ribosome(asite!1).mrna(p0~blocked!1,p1) -> ribosome(asite!1).mrna(p0~free,p1!1)    k_elong 
   elongate_2:  ribosome(asite!1).mrna(p1!1,p2) -> ribosome(asite!1).mrna(p1,p2!1)    k_elong 

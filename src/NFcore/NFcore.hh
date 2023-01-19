@@ -252,6 +252,7 @@ namespace NFcore
 			MoleculeType * getMoleculeTypeByName(string name);
 			int getNumOfMoleculeTypes() { return allMoleculeTypes.size(); };
 			Molecule * getMoleculeByUid(int uid);
+			Molecule * getMoleculeByUid(int uid, bool warn);
 		    int getNumOfMolecules();
 
 			//Functions used when setting up the system.  Note that most of these methods

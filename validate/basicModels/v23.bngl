@@ -17,11 +17,11 @@ end molecule types
 
 begin species
   mrna(p0~free,p1,p2,p3)   n_mrna_0
-  ribosome(asite)                            n_ribo_0
+  ribosome(asite)          n_ribo_0
 end species
 
 begin observables
-    Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
+  Molecules rib_elong ribosome(asite!1).mrna(p1,p2!1)
 end observables
 
 begin reaction rules
