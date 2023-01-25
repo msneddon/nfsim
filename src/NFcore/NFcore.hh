@@ -482,6 +482,10 @@ namespace NFcore
 			void setOutputMoleculeTypes(bool setVal) { this->outputMoleculeTypesFile = setVal; };
 			void setOutputRxnFiringCounts(bool setVal) { this->outputRxnFiringCountsFile = setVal; };
 
+			// buffer size setter/getter, in units of firings
+			uint getLogBufferSize() { return this->log_buffer_size; };
+			void setLogBufferSize(uint bsize) { this->log_buffer_size = bsize; };
+			
 		protected:
 
 			///////////////////////////////////////////////////////////////////////////
@@ -589,6 +593,8 @@ namespace NFcore
 			// To look up connected reactions quickly
 			vector <vector <bool> > connectedReactions;
 
+			// 
+			uint log_buffer_size = 1;
 
 		private:
 			list <Molecule *> molList;
@@ -1195,6 +1201,7 @@ namespace NFcore
 			double get_a() const { return a; };
 			virtual void printDetails() const;
 			void fire(double random_A_number);
+			string fire(double random_A_number, bool track);
 
 			//For DOR reactions
 			virtual void notifyRateFactorChange(Molecule * m, int reactantIndex, int rxnListIndex) = 0;

@@ -364,8 +364,11 @@ void ReactionClass::printDetails() const {
 	cout << "\n";
 }
 
-
 void ReactionClass::fire(double random_A_number) {
+	this->fire(random_A_number, false);
+}
+
+string ReactionClass::fire(double random_A_number, bool track) {
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
 
@@ -378,7 +381,7 @@ void ReactionClass::fire(double random_A_number) {
 	if ( ! transformationSet->checkMolecularity(mappingSet) ) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
-		return;
+		return string("");
 	}
 
 
@@ -394,7 +397,6 @@ void ReactionClass::fire(double random_A_number) {
 	// 	}
 	// 	cout<<endl;
 	// }
-
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
@@ -448,7 +450,6 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
@@ -462,7 +463,6 @@ void ReactionClass::fire(double random_A_number) {
 
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
-
 
 	// if complex bookkeeping is on, find all product complexes
 	// (this is useful for updating Species Observables and TypeII functions, so keep the info handy).
@@ -511,7 +511,6 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// Now update reaction membership, functions, and update any DOR Groups
 	//  also, gather a list of typeII dependencies that will require updating
 	typeII_products.clear();
@@ -533,7 +532,6 @@ void ReactionClass::fire(double random_A_number) {
 		if ( mol->isAlive() )
 			mol->updateRxnMembership(this, useConnectivity);
 	}
-
 
 	// update complex-scoped local functions for typeII dependencies
 	// NOTE: as a side-effect, dependent DOR reactions (via typeI molecule dependencies) will be updated
@@ -576,42 +574,43 @@ void ReactionClass::fire(double random_A_number) {
 	// @author: Arvind R. Subramaniam
 	// @date: 13 Nov 2019
 	this->system->setLastRxnTime(this->system->getCurrentTime());
-
 	// output if the reaction was tagged
 	// TODO: This needs to write the reaction to a JSON
 	if (this->system->getReactionTrackingStatus()) {
-		if (tagged) {
+		if (tagged && track) {
+			string track_str = "";
 			int level = 6; // indentation level
 			this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
 			// we need the correct number of commas
 			if (this->system->getGlobalEventCounter() != 1) {
-				this->system->getReactionFileStream() << ",\n";
+				track_str += ",\n";
 			} 
 			// open firing and write info
-			this->system->getReactionFileStream() << 
-				std::string(level,' ') + "{\n" <<
+			track_str += std::string(level,' ') + "{\n" +
 				std::string(level+2,' ') + "\"props\": [";
 			if (this->system->getRxnNumberTrack()) {
-				this->system->getReactionFileStream() << "\"" << rxnId << "\",";
+				track_str += string("\"") + to_string(rxnId) + "\",";
 			} else {
-				this->system->getReactionFileStream() << "\"" << name << "\",";
+				track_str += string("\"") + name + "\",";
 			}
-			this->system->getReactionFileStream() << 
-					to_string(this->system->getGlobalEventCounter()) << 
-					"," << this->system->getCurrentTime() << "],\n";
+			track_str += to_string(this->system->getGlobalEventCounter()) +
+					"," + to_string(this->system->getCurrentTime()) + "],\n";
 
 			// write transformation log
-			this->system->getReactionFileStream() << logstr;
+			track_str += logstr;
 					
 			// close firing 
-			this->system->getReactionFileStream() << std::string(level,' ') + "}";
+			track_str += std::string(level,' ') + "}";
+			//Tidy up
+			products.clear();
+			productComplexes.clear();
+			return track_str;
 		}
 	}
-	
-
 	//Tidy up
 	products.clear();
 	productComplexes.clear();
+	return "";
 }
 
 void ReactionClass::identifyConnectedReactions() {

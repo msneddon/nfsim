@@ -932,6 +932,9 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	double end_time = current_time+duration;
 	tryToDump();
 
+	// depending on the tracking status we'll need a log string to build
+	string logstr;
+
 	while(current_time<end_time)
 	{
 		//this->printAllObservableCounts(current_time);
@@ -1001,9 +1004,15 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 //		cout << "Current reaction: " << "\n";
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
-//
-		nextReaction->fire(randElement);
-
+		if (this->getReactionTrackingStatus()) {
+			logstr += nextReaction->fire(randElement, true);
+			if (globalEventCounter % this->getLogBufferSize() == 0) {
+				this->getReactionFileStream() << logstr;
+				logstr = "";
+			}
+		} else {
+			nextReaction->fire(randElement);
+		}
 		tryToDump();
 
 	}
