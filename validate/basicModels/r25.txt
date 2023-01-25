@@ -1,0 +1,2 @@
+connectivity testing, mRNA monomer model, only `-rxnlog` check
+-sim 100 -oSteps 100 -rxnlog basicModels/v25_rxns.json -utl 3 -gml 1000000
