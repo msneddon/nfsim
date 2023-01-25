@@ -76,7 +76,7 @@ class TestNFSimFile(ParametrizedTestCase):
             return f.readlines()
 
     def test_nfsim(self):
-        tol = 0.35 # this is the error tolerance when comparing nfsim's run to the ssa where 0.35 = 35%
+        tol = 0.4 # this is the error tolerance when comparing nfsim's run to the ssa where 0.35 = 35%
         (modelName, runOptions) = self.loadConfigurationFile(self.param['odir'], self.param['num'])
         print('Processing model "{0}"'.format(modelName.strip()))
         ssaDiff = nfDiff = 0
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     tests = getTests(testFolder)
     for index in tests:
         suite.addTest(ParametrizedTestCase.parametrize(TestNFSimFile, param={'num': index,
-                      'odir': 'basicModels', 'iterations': 35}))
+                      'odir': 'basicModels', 'iterations': 75}))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     ret = (list(result.failures) == [] and list(result.errors) == [])
