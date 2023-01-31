@@ -252,6 +252,8 @@ namespace NFcore
 			MoleculeType * getMoleculeTypeByName(string name);
 			int getNumOfMoleculeTypes() { return allMoleculeTypes.size(); };
 			Molecule * getMoleculeByUid(int uid);
+			// AS2023 - this is added to allow for the suppression of warnings if the
+			// molecule with the UID doesn't exist
 			Molecule * getMoleculeByUid(int uid, bool warn);
 		    int getNumOfMolecules();
 
@@ -276,7 +278,8 @@ namespace NFcore
 			bool saveSpecies() { return saveSpecies(string(name+"_nf.species")); };
 			bool saveSpecies(string filename);
 
-			// reaction file output stuff
+			// AS2023 - this gets set up by rxnlog argument and enables the logging
+			// of each firing in the system 
 			bool getReactionTrackingStatus() { return reactionTrackingEnabled; };
 			void setReactionTrackingStatus(bool status) { reactionTrackingEnabled = status; };
 
@@ -482,9 +485,15 @@ namespace NFcore
 			void setOutputMoleculeTypes(bool setVal) { this->outputMoleculeTypesFile = setVal; };
 			void setOutputRxnFiringCounts(bool setVal) { this->outputRxnFiringCountsFile = setVal; };
 
-			// buffer size setter/getter, in units of firings
+			// AS2023 - buffer size setter/getter, in units of firings. This is 
+			// here to allow the user to juggle the added burden of reaction logging
+			// between memory vs CPU.
 			uint getLogBufferSize() { return this->log_buffer_size; };
 			void setLogBufferSize(uint bsize) { this->log_buffer_size = bsize; };
+
+			// AS2023 - Species log helper functions
+			void setSpeciesLog(string logstr) { this->speciesLog = logstr; };
+			string getSpeciesLog() { return this->speciesLog; };
 			
 		protected:
 
@@ -509,9 +518,11 @@ namespace NFcore
 			bool outputRxnFiringCountsFile; /* Output reaction firing counts (default: false) */
 		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
 		    double lastRxnTime; /* Time when the last reaction was fired */
-			bool reactionTrackingEnabled; /* tells if reaction tracking is on */
+			bool reactionTrackingEnabled; /* tells if reaction tracking is on, for rxnlog argument */
 
 		    int globalEventCounter;
+
+			string speciesLog; /* AS2023 - log string for initial species */
 
 		    ///////////////////////////////////////////////////////////////////////////
 			// The container objects that maintain the core system configuration
@@ -593,8 +604,8 @@ namespace NFcore
 			// To look up connected reactions quickly
 			vector <vector <bool> > connectedReactions;
 
-			// 
-			uint log_buffer_size = 1;
+			// AS2023 - sets the default log buffer size to 10000 firings.
+			uint log_buffer_size = 10000;
 
 		private:
 			list <Molecule *> molList;
@@ -999,6 +1010,8 @@ namespace NFcore
 			/* static functions which bind and unbind two molecules */
 			static void bind(Molecule *m1, int cIndex1, Molecule *m2, int cIndex2);
 			static void bind(Molecule *m1, string compName1, Molecule *m2, string compName2);
+			// AS2023 - unbind now returns the indices of the molecule that's selected
+			// for the unbinding for recording/logging purposesz
 			static tuple<int, int> unbind(Molecule *m1, int bSiteIndex);
 			static tuple<int, int> unbind(Molecule *m1, char * bSiteName);
 
@@ -1006,8 +1019,10 @@ namespace NFcore
 			/* functions needed to traverse a complex and get all components
 			 * which is important when we want to update reactions and complexes */
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit);
+			// AS2023 - additional call sig to use with reaction firing logging
 			void traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit, string &logstr);
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth);
+			// AS2023 - additional call sig to use with reaction firing logging
 			static void breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth, string &logstr);
 			void depthFirstSearch(list <Molecule *> &members);
 
@@ -1201,6 +1216,8 @@ namespace NFcore
 			double get_a() const { return a; };
 			virtual void printDetails() const;
 			void fire(double random_A_number);
+			// AS2023 - additional call sig to use with reaction firing tracking. The call
+			// will now return a log the event
 			string fire(double random_A_number, bool track);
 
 			//For DOR reactions
@@ -1266,10 +1283,6 @@ namespace NFcore
 			// Called from within Transformation Set to check connectivity
 			bool areMoleculeTypeAndComponentPresent(MoleculeType * mt, int cIndex);
 			bool isTemplateCompatible(TemplateMolecule * t);
-
-			// need to get reactant and product templates
-			vector <TemplateMolecule *> getReactantTemplates() {return allReactantTemplates;};
-			vector <TemplateMolecule *> getProductTemplates() {return allProductTemplates;};
 
 		protected:
 			virtual void pickMappingSets(double randNumber) const=0;

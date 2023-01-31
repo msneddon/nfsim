@@ -142,13 +142,16 @@ System * NFinput::initializeFromXML(
 
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Species..."<<endl;
-		if(!initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose))
+		// AS2023
+		string logstr="";
+		logstr = initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose);
+		if(logstr.empty())
 		{
 			cout<<"\n\nI failed at parsing your species.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
 			return NULL;
 		}
-
+		s->setSpeciesLog(logstr);
 
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Observables..."<<endl;
@@ -605,7 +608,7 @@ bool NFinput::initMoleculeTypes(
 
 
 
-bool NFinput::initStartSpecies(
+string NFinput::initStartSpecies(
 		TiXmlElement * pListOfSpecies,
 		System * s,
 		map <string,double> &parameter,
@@ -632,6 +635,9 @@ bool NFinput::initStartSpecies(
 
 		vector<string>::iterator snIter;
 
+		vector <string> operations;
+		vector <int> mgids;
+		vector <int> mids;
 
 		//Loop through all the species
 		TiXmlElement *pSpec;
@@ -641,7 +647,7 @@ bool NFinput::initStartSpecies(
 			string speciesName;
 			if(!pSpec->Attribute("id")) {
 				cerr<<"Species tag without a valid 'id' attribute.  Quiting"<<endl;
-				return false;
+				return "";
 			} else {
 				speciesName = pSpec->Attribute("id");
 			}
@@ -652,7 +658,7 @@ bool NFinput::initStartSpecies(
 			string specCount;
 			if(!pSpec->Attribute("concentration")) {
 				cerr<<"Species "<<speciesName<<" does not have a 'concentration' attribute.  Quitting"<<endl;
-				return false;
+				return "";
 			} else {
 				specCount = pSpec->Attribute("concentration");
 			}
@@ -678,7 +684,7 @@ bool NFinput::initStartSpecies(
 					} catch (std::runtime_error &e1) {
 						if(parameter.find(specCount)==parameter.end()) {
 							cerr<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
-							return false;
+							return "";
 						}
 						specCountInteger = (int)parameter.find(specCount)->second;
 					}
@@ -689,7 +695,7 @@ bool NFinput::initStartSpecies(
 			//Make sure we didn't try to create a negative number of molecules
 			if(specCountInteger<0) {
 				cerr<<"I cannot, in good conscience, make a negative number ("<<specCount<<") of species when creating species "<<speciesName<<". Quitting"<<endl;
-				return false;
+				return "";
 			}
 
 			// Removed this next check!!
@@ -708,7 +714,7 @@ bool NFinput::initStartSpecies(
 			TiXmlElement *pListOfMol = pSpec->FirstChildElement("ListOfMolecules");
 			if(!pListOfMol) {
 				cerr<<"Species "<<speciesName<<" contains no molecules!  I think that was a mistake, on your part, so I'm done."<<endl;
-				return false;
+				return "";
 			}
 
 
@@ -727,14 +733,14 @@ bool NFinput::initStartSpecies(
 				{
 					cerr << "!!!Error.  More than one population molecule when creating species '"
 					     << speciesName << "'. Quitting"<<endl;
-					return false;
+					return "";
 				}
 
 				//First get the type of molecule and retrieve the moleculeType object from the system
 				string molName, molUid;
 				if(!pMol->Attribute("name") || ! pMol->Attribute("id"))  {
 					cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating species '"<<speciesName<<"'. Quitting"<<endl;
-					return false;
+					return "";
 				} else {
 					molName = pMol->Attribute("name");
 					molUid = pMol->Attribute("id");
@@ -766,7 +772,7 @@ bool NFinput::initStartSpecies(
 				{
 					cerr << "!!!Error.  Found mixed population and agent molecule types when creating species '"
 					     << speciesName << "'. Quitting"<<endl;
-					return false;
+					return "";
 				}
 
 				vector <string> usedComponentNames;
@@ -783,7 +789,7 @@ bool NFinput::initStartSpecies(
 						string compId,compName,compBondCount;
 						if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
 							cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of species '"<<speciesName<<"'. Quitting"<<endl;
-							return false;
+							return "";
 						} else {
 							compId=pComp->Attribute("id");
 							compName = pComp->Attribute("name");
@@ -829,13 +835,13 @@ bool NFinput::initStartSpecies(
 							}
 							if(!couldPlaceSymComp) {
 								cout<<"Too many symmetric sites specified, when creating species: "<<speciesName<<endl;
-								return false;
+								return "";
 							}
 						} else {
 							for(unsigned int ucn=0;ucn<usedComponentNames.size(); ucn++) {
 								if(usedComponentNames.at(ucn).compare(compName)==0) {
 									cout<<"Specified the same component multiple times, when creating species: "<<speciesName<<endl;
-									return false;
+									return "";
 								}
 							}
 							usedComponentNames.push_back(compName);
@@ -851,7 +857,7 @@ bool NFinput::initStartSpecies(
 							if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
 								cerr<<"You are trying to create a molecule of type '"<<molName<<"', but you gave an "<<endl;
 								cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
-								return false;
+								return "";
 							} else {
 
 								//State is a valid allowed state, so push it onto our list
@@ -892,6 +898,8 @@ bool NFinput::initStartSpecies(
 					for(int m=0; m<specCountInteger; m++)
 					{
 						Molecule *mol = mt->genDefaultMolecule();
+						mids.push_back(mol->getMoleculeType()->getTypeID());
+						mgids.push_back(mol->getUniqueID());
 
 						//for(int i=0; i<eqClassCount; i++) { currentCount[i]=1; }
 
@@ -908,6 +916,10 @@ bool NFinput::initStartSpecies(
 							//} else {
 								mol->setComponentState((*snIter), (int)stateValue.at(k));
 							//}
+							operations.push_back("[\"StateChange\"," + 
+								to_string(mol->getUniqueID()) + "," + 
+								to_string(mol->getMoleculeType()->getCompIndexFromName((*snIter))) + "," + 
+								to_string((int)stateValue.at(k)) + "]");
 						}
 
 						molecules.at(molecules.size()-1).push_back(mol);
@@ -948,7 +960,7 @@ bool NFinput::initStartSpecies(
 				{
 					cerr << "!! Attempt to create illegal bond in population species: "
 					     << speciesName << ".  Quitting." << endl;
-					return false;
+					return "";
 				}
 
 				//First get the information on the bonds in the complex
@@ -958,7 +970,7 @@ bool NFinput::initStartSpecies(
 					string bondId, bSite1, bSite2;
 					if(!pBond->Attribute("id") || !pBond->Attribute("site1") || !pBond->Attribute("site2")) {
 						cerr<<"!! Invalid Bond tag for species: "<<speciesName<<".  Quitting."<<endl;
-						return false;
+						return "";
 					} else {
 						bondId = pBond->Attribute("id");
 						bSite1 = pBond->Attribute("site1");
@@ -977,11 +989,16 @@ bool NFinput::initStartSpecies(
 						for(int j=0;j<specCountInteger;j++) {
 							Molecule::bind( molecules.at(bSiteMolIndex1).at(j),bSiteName1.c_str(),
 											molecules.at(bSiteMolIndex2).at(j),bSiteName2.c_str());
+							operations.push_back("[\"AddBond\"," + 
+								to_string(molecules.at(bSiteMolIndex1).at(j)->getUniqueID()) + "," + 
+								to_string(molecules.at(bSiteMolIndex1).at(j)->getMoleculeType()->getCompIndexFromName(bSiteName1.c_str())) + "," +
+								to_string(molecules.at(bSiteMolIndex2).at(j)->getUniqueID()) + "," + 
+								to_string(molecules.at(bSiteMolIndex2).at(j)->getMoleculeType()->getCompIndexFromName(bSiteName2.c_str())) + "]");
 						}
 
 					} catch (exception& e) {
 						cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
-						return false;
+						return "";
 					}
 				}
 			}
@@ -996,19 +1013,64 @@ bool NFinput::initStartSpecies(
 			bSiteMolMapping.clear();
 			bSiteSiteMapping.clear();
 		}
+		
+		// AS2023
+		string logstr = "    \"initialState\": {\n";
+		// AS2023
+		logstr += "      \"molTypes\": [\n";
+		// AS2023 - to add compression we make the full molecule type
+		// vector first
+		int molec_size = *max_element(mgids.begin(), mgids.end());
+		vector <int> molec_vec;
+		for(unsigned int isi=0; isi<molec_size; isi++) {
+			molec_vec.push_back(-1);
+		}
+		for(unsigned int img=0; img<mgids.size(); img++) {
+			molec_vec[mgids[img]] = mids[img];
+		}
+		// AS 2023 - now we use it to compress the initial state vector
+		int last_val = molec_vec[0];
+		int val_ctr = 1;
+		bool dumped = false;
+		for(unsigned int ici=1; ici<molec_size; ici++) {
+			if (molec_vec[ici]!=last_val) {
+				logstr += "        [" + to_string(last_val) + "," + to_string(val_ctr) + "],\n";
+				last_val = molec_vec[ici];
+				val_ctr = 1;
+				dumped = true;
+			} else {
+				val_ctr += 1;
+				dumped = false;
+			}
+		}
+		if (!dumped) {
+			logstr += "        [" + to_string(last_val) + "," + to_string(val_ctr) + "],\n";
+		}
+		// AS 2023 
+		logstr.erase(logstr.end()-2, logstr.end());
+		logstr += "\n      ],\n";
+		// AS2023
+		logstr += "      \"operations\": [\n";
+		for(int k=0;k<operations.size();k++) {
+			logstr += "        " + operations[k] + ",\n";
+		}
+		// AS2023
+		logstr.erase(logstr.end()-2, logstr.end());
+		logstr += "\n      ]\n";
+		logstr += "    },\n";
+		
 
-
-		//s->printAllMoleculeTypes();
+		// s->printAllMoleculeTypes();
 
 
 		//If we got here, then we are indeed successful
-		return true;
+		return logstr;
 	} catch (...) {
 		cerr<<"Caught some unknown error when creating Species."<<endl;
-		return false;
+		return "";
 	}
 
-	return false;
+	return "";
 }
 
 

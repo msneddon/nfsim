@@ -554,7 +554,8 @@ void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compNam
 	Molecule::bind(m1, cIndex1, m2, cIndex2);
 }
 
-
+// AS2023 - unbind can return the index of the molecule and component it
+// selected for the unbinding for tracking purposes
 tuple<int, int> Molecule::unbind(Molecule *m1, int cIndex)
 {
 	//get the other molecule bound to this site
@@ -673,7 +674,7 @@ void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int d
   		(*molIter)->hasVisitedMolecule=false;
 }
 
-
+// AS2023 - alternative call sig for logging that includes a log string
 void Molecule::breadthFirstSearch(list <Molecule *> &members, Molecule *m, int depth, string &logstr)
 {
 	if(m==0) {
@@ -754,6 +755,7 @@ void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traver
 	//	this->depthFirstSearch(members);
 }
 
+// AS2023 - alternative call sig for logging that includes a log string
 void Molecule::traverseBondedNeighborhood(list <Molecule *> &members, int traversalLimit, string &logstr)
 {
 	//always call breadth first search, it is a bit faster

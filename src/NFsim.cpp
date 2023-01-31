@@ -545,6 +545,7 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 					string rxnLogFileName = argMap.find("rxnlog")->second;
 					s->registerReactionFileLocation(rxnLogFileName);
 					if (argMap.find("logbuffer") != argMap.end()) {
+						cout << "buffer is getting set to: " << argMap.find("logbuffer")->second << endl;
 						s->setLogBufferSize(stoul(argMap.find("logbuffer")->second));
 					}
 					// track the reactions whose rates change upon each each reaction

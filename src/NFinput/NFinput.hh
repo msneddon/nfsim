@@ -149,7 +149,7 @@ namespace NFinput {
 	/*!
     	@author Michael Sneddon
 	 */
-	bool initStartSpecies(
+	string initStartSpecies(
 			TiXmlElement * pListOfSpecies,
 			System * system,
 			map <string,double> &parameter,

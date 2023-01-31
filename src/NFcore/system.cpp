@@ -740,7 +740,6 @@ void System::prepareForSimulation()
 		//   "      \"obs_count\": \"" << to_string(this->getMolObsCount()) << "\"," << endl <<
 		  "      \"number_of_molecule_types\": " << to_string(this->getNumOfMoleculeTypes()) << "," << endl <<
 		  "      \"number_of_molecules\": " << to_string(this->getNumOfMolecules()) << "," << endl <<
-		  "      \"tracking_status\": " << to_string(this->getReactionTrackingStatus()) << endl <<
 		  "    }," << endl <<
 		  "    \"molecule_types\": [" << endl;
 		
@@ -795,27 +794,9 @@ void System::prepareForSimulation()
 		}
 		// close molecule types
 		this->getReactionFileStream() <<
-		  "    ]," << endl;
+		  	"    ]," << endl;
 		
-		this->getReactionFileStream() <<
-		  "    \"initialState\": [";
-		
-		for(unsigned int isi=0; isi<this->getNumOfMolecules(); isi++) {
-			Molecule * molec = this->getMoleculeByUid(isi, false);
-			if (!molec==0) {
-				this->getReactionFileStream() << 
-				to_string(molec->getMoleculeType()->getTypeID());
-			} else {
-				this->getReactionFileStream() << "-1";
-			}
-			
-			if (isi!=this->getNumOfMolecules()-1) {
-				this->getReactionFileStream() << ",";
-			}
-		}
-
-		// close initial state
-		this->getReactionFileStream() << "],\n";
+		this->getReactionFileStream() << this->getSpeciesLog();
 		
 		// close initial state and open firings for later
 		this->getReactionFileStream() <<
@@ -934,6 +915,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 
 	// depending on the tracking status we'll need a log string to build
 	string logstr;
+	bool logged = false;
 
 	while(current_time<end_time)
 	{
@@ -1000,16 +982,21 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		stepIteration++;
 		globalEventCounter++;
 		current_time+=delta_t;
+		logged = false;
 //		this->printAllReactions();
 //		cout << "Current reaction: " << "\n";
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
 		if (this->getReactionTrackingStatus()) {
 			logstr += nextReaction->fire(randElement, true);
-			if (globalEventCounter % this->getLogBufferSize() == 0) {
-				this->getReactionFileStream() << logstr;
-				logstr = "";
+			if (this->getLogBufferSize()>0) {
+				if ( (globalEventCounter % this->getLogBufferSize()) == 0) {
+					this->getReactionFileStream() << logstr;
+					logstr = "";
+					logged = true;
+				}
 			}
+			
 		} else {
 			nextReaction->fire(randElement);
 		}
@@ -1019,7 +1006,12 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
-
+	// AS2023 - if we missed a firing log, dump what we have
+	if (!logged) {
+		cout << "dumping the end" << endl;
+		this->getReactionFileStream() << logstr;
+		logstr = "";
+	}
 	// Write list of molecule_types and reactions along with reaction firing counts
 	// TODO: Make this optional!
 	if (this->outputMoleculeTypesFile) {
