@@ -1050,7 +1050,7 @@ string NFinput::initStartSpecies(
 		logstr.erase(logstr.end()-2, logstr.end());
 		logstr += "\n      ],\n";
 		// AS2023
-		logstr += "      \"operations\": [\n";
+		logstr += "      \"ops\": [\n";
 		for(int k=0;k<operations.size();k++) {
 			logstr += "        " + operations[k] + ",\n";
 		}
