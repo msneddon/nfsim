@@ -68,16 +68,25 @@
       "required": [ "info", "molecule_types", "initialState", "firings" ],
       "$defs": {
         "molecule_type": {
+            "description": "Description of each molecule type, their names, IDs and components",
             "type": "object",
             "properties": {
-                "name": { "type": "string" },
-                "typeID": { "type": "number" },
+                "name": { 
+                    "description": "Name of the molecule type",
+                    "type": "string" 
+                },
+                "typeID": { 
+                    "description": "Internal ID used for the molecule type, every operation refers to this ID",
+                    "type": "number" 
+                },
                 "components": {
+                    "description": "Names of each component for the molecule type",
                     "type": "array",
                     "items": { "type": "string" },
                     "minItems": 0
                 },
                 "componentStates": {
+                    "description": "Names of each component states, by default the first state is used upon initialization",
                     "type": "array",
                     "minItems": 0,
                     "items": {
@@ -90,6 +99,7 @@
             "required": [ "name", "typeID", "components", "componentStates" ]
         },
         "molType":  {
+            "description": "This is an item in a run-length encoded array, first item is the molecule type index, second item is how many times it repeats",
             "type": "array",
             "prefixItems": [
                 {"type": "number"},
@@ -99,6 +109,7 @@
             "uniqueItems": false
         },
         "operation":  {
+            "description": "Array fully describing an operation and what it operates on. Each operation has different inputs.",
             "type": "array",
             "prefixItems": [
                 {"enum": ["Add", "Delete", "StateChange", "AddBond", "DeleteBond", "IncrementState", "DecrementState", "DecrementPopulation", "AddSpecies"] },
@@ -110,9 +121,11 @@
             "uniqueItems": false
         },
         "firing":  {
+            "description": "Full description of a single event in the simulation.",
             "type": "object",
             "properties": {
                 "props": {
+                    "description": "The name of the reaction that fired, the global event number followed by the internal time it happened",
                     "type": "array",
                     "prefixItems": [
                         {"type": "string"},
@@ -123,6 +136,7 @@
                     "uniqueItems": false
                 },
                 "ops": {
+                    "description": "The set of operations that occured during the event.",
                     "type": "array",
                     "items": { "$ref": "#/$defs/operation" }
                 }
