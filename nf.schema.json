@@ -2,71 +2,76 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/RuleWorld/nfsim/ASinanSaglam/issue35/nf.schema.json",
-    "title": "simulation",
+    "title": "NFsim simulation",
     "description": "Output from a NFsim simulation",
     "type": "object",
     "properties": {
-        "info": {
-          "description": "Information regarding the simulation",
-          "type": "object",
-          "properties": {
-            "name": {
-                "description": "Name of our simulation",
-                "type": "string"
-            },
-            "global_molecule_limit": {
-                "description": "Number of global molecules allowed for the simulation",
-                "type": "number"
-            },
-            "number_of_molecule_types": {
-                "description": "Number of total molecule types defined",
-                "type": "number"
-            },
-            "number_of_molecules": {
-                "description": "Number of total starting molecules",
-                "type": "number"
-            }
-          },
-          "required": [ "name" ]
-        },
-        "molecule_types": {
-            "description": "Molecule types in a simulation",
-            "type": "array",
-            "items": { "$ref": "#/$defs/molefule_type" },
-            "minItems": 1,
-            "uniqueItems": true
-        },
-        "initialState": {
-            "description": "Initial state of the simulation",
+        "simulation": {
             "type": "object",
             "properties": {
-                "molTypes": {
-                    "description": "A run-length encoded array of molecule type indices for the starting state",
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/molType" },
-                    "minItems": 0,
-                    "uniqueItems": false
+                "info": {
+                    "description": "Information regarding the simulation",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                          "description": "Name of our simulation",
+                          "type": "string"
+                      },
+                      "global_molecule_limit": {
+                          "description": "Number of global molecules allowed for the simulation",
+                          "type": "number"
+                      },
+                      "number_of_molecule_types": {
+                          "description": "Number of total molecule types defined",
+                          "type": "number"
+                      },
+                      "number_of_molecules": {
+                          "description": "Number of total starting molecules",
+                          "type": "number"
+                      }
+                    },
+                    "required": [ "name" ]
+                  },
+                  "molecule_types": {
+                      "description": "Molecule types in a simulation",
+                      "type": "array",
+                      "items": { "$ref": "#/$defs/molecule_type" },
+                      "minItems": 1,
+                      "uniqueItems": true
+                  },
+                  "initialState": {
+                      "description": "Initial state of the simulation",
+                      "type": "object",
+                      "properties": {
+                          "molTypes": {
+                              "description": "A run-length encoded array of molecule type indices for the starting state",
+                              "type": "array",
+                              "items": { "$ref": "#/$defs/molType" },
+                              "minItems": 0,
+                              "uniqueItems": false
+                          },
+                          "ops": {
+                              "description": "A set of operations that need to be performed on the initial molecules to get the inital state",
+                              "type": "array",
+                              "items": { "$ref": "#/$defs/operation" },
+                              "minItems": 0,
+                              "uniqueItems": false
+                          }
+                      },
+                      "required": [ "molTypes", "ops" ]
+                  },
+                  "firings": {
+                      "description": "All firings in the simulation",
+                      "type": "array",
+                      "items": { "$ref": "#/$defs/firing" },
+                      "minItems": 0,
+                      "uniqueItems": false
+                  }  
                 },
-                "ops": {
-                    "description": "A set of operations that need to be performed on the initial molecules to get the inital state",
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/operation" },
-                    "minItems": 0,
-                    "uniqueItems": false
-                }
-            },
-            "required": [ "molTypes", "ops" ]
-        },
-        "firings": {
-            "description": "All firings in the simulation",
-            "type": "array",
-            "items": { "$ref": "#/$defs/firing" },
-            "minItems": 0,
-            "uniqueItems": false
-        }  
-      },
-      "required": [ "info", "molecule_types", "initialState", "firings" ],
-      "$defs": {
+                "required": [ "info", "molecule_types", "initialState", "firings" ]
+        }
+    },
+    "$defs": {
         "molecule_type": {
             "description": "Description of each molecule type, their names, IDs and components",
             "type": "object",
@@ -112,7 +117,7 @@
             "description": "Array fully describing an operation and what it operates on. Each operation has different inputs.",
             "type": "array",
             "prefixItems": [
-                {"enum": ["Add", "Delete", "StateChange", "AddBond", "DeleteBond", "IncrementState", "DecrementState", "DecrementPopulation", "AddSpecies"] },
+                {"enum": ["Add", "Delete", "StateChange", "AddBond", "DeleteBond", "IncrementState", "DecrementState", "DecrementPopulation"] },
                 {"type": "number"}
             ],
             "items": { "type": "number" },
@@ -143,5 +148,5 @@
             },
             "required": [ "props", "ops" ]
         }
-      }
+  }
 }
