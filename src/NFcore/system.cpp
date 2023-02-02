@@ -739,7 +739,7 @@ void System::prepareForSimulation()
 		  "      \"global_molecule_limit\": " << to_string(this->getGlobalMoleculeLimit()) << "," << endl <<
 		//   "      \"obs_count\": \"" << to_string(this->getMolObsCount()) << "\"," << endl <<
 		  "      \"number_of_molecule_types\": " << to_string(this->getNumOfMoleculeTypes()) << "," << endl <<
-		  "      \"number_of_molecules\": " << to_string(this->getNumOfMolecules()) << "," << endl <<
+		  "      \"number_of_molecules\": " << to_string(this->getNumOfMolecules()) << endl <<
 		  "    }," << endl <<
 		  "    \"molecule_types\": [" << endl;
 		
