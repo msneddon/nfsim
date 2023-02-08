@@ -44,7 +44,7 @@
                       "type": "object",
                       "properties": {
                           "molTypes": {
-                              "description": "A run-length encoded array of molecule type indices for the starting state",
+                              "description": "A run-length encoded array of molecule type IDs for the starting state",
                               "type": "array",
                               "items": { "$ref": "#/$defs/molType" },
                               "minItems": 0,
@@ -103,7 +103,7 @@
             },
             "required": [ "name", "typeID", "components", "componentStates" ]
         },
-        "molType":  {
+        "molecule_array":  {
             "description": "This is an item in a run-length encoded array, first item is the molecule type index, second item is how many times it repeats",
             "type": "array",
             "prefixItems": [

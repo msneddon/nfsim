@@ -1008,7 +1008,6 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	}
 	// AS2023 - if we missed a firing log, dump what we have
 	if (!logged) {
-		cout << "dumping the end" << endl;
 		this->getReactionFileStream() << logstr;
 		logstr = "";
 	}

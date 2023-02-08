@@ -1014,13 +1014,13 @@ string NFinput::initStartSpecies(
 			bSiteSiteMapping.clear();
 		}
 		
-		// AS2023
+		// AS2023 - start initial state block
 		string logstr = "    \"initialState\": {\n";
-		// AS2023
-		logstr += "      \"molTypes\": [\n";
+		logstr += "      \"molecule_array\": [\n";
 		// AS2023 - to add compression we make the full molecule type
 		// vector first
 		int molec_size = *max_element(mgids.begin(), mgids.end());
+		molec_size+=1;
 		vector <int> molec_vec;
 		for(unsigned int isi=0; isi<molec_size; isi++) {
 			molec_vec.push_back(-1);
@@ -1031,21 +1031,16 @@ string NFinput::initStartSpecies(
 		// AS 2023 - now we use it to compress the initial state vector
 		int last_val = molec_vec[0];
 		int val_ctr = 1;
-		bool dumped = false;
-		for(unsigned int ici=1; ici<molec_size; ici++) {
+		for(unsigned int ici=1; ici<molec_vec.size(); ici++) {
 			if (molec_vec[ici]!=last_val) {
 				logstr += "        [" + to_string(last_val) + "," + to_string(val_ctr) + "],\n";
 				last_val = molec_vec[ici];
 				val_ctr = 1;
-				dumped = true;
 			} else {
 				val_ctr += 1;
-				dumped = false;
 			}
 		}
-		if (!dumped) {
-			logstr += "        [" + to_string(last_val) + "," + to_string(val_ctr) + "],\n";
-		}
+		logstr += "        [" + to_string(last_val) + "," + to_string(val_ctr) + "],\n";
 		// AS 2023 
 		logstr.erase(logstr.end()-2, logstr.end());
 		logstr += "\n      ],\n";
