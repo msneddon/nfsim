@@ -79,8 +79,8 @@
  *  -connect - infer network connectivity before starting simulation. (default: no).
  *             @author Arvind Rasi Subramaniam
  * 
- *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to file
- *             Does not require any modification to BioNetGen or PySB.
+ *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to a JSON file
+ *             by default the expected extension is `.nfevent.json` 
  *             @author Arvind Rasi Subramaniam
  *
  *  -logbuffer [uint] - how many firings to wait before writing to the rxnlog file
@@ -784,7 +784,8 @@ void printHelp(string version)
 	cout<<""<<endl;
     cout<<"  -connect          infer network connectivity before starting simulation. (default: no)."<<endl;
 	cout<<""<<endl;
-	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions."<<endl;
+	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions in a JSON file."<<endl;
+	cout<<"                     by default the expected extension is `.nfevent.json`."<<endl;
 	cout<<""<<endl;
  	cout<<"  -logbuffer [uint] use to set how many firings to wait between each write to the rxnlog."<<endl;
 	cout<<""<<endl;
