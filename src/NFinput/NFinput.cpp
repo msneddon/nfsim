@@ -916,10 +916,18 @@ string NFinput::initStartSpecies(
 							//} else {
 								mol->setComponentState((*snIter), (int)stateValue.at(k));
 							//}
-							operations.push_back("[\"StateChange\"," + 
+							
+							// AS2023 - this is here to reduce the number of operations written
+							// note that the default molecule starts the component state at the 
+							// 0th state so any time we manually set that right after generating
+							// a default one, that's a reduntant operation
+							if ((int)stateValue.at(k)!=0) {
+								operations.push_back("[\"StateChange\"," + 
 								to_string(mol->getUniqueID()) + "," + 
 								to_string(mol->getMoleculeType()->getCompIndexFromName((*snIter))) + "," + 
 								to_string((int)stateValue.at(k)) + "]");
+							}
+							
 						}
 
 						molecules.at(molecules.size()-1).push_back(mol);
