@@ -42,7 +42,6 @@ System::System(string name)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
-	this->setReactionTrackingStatus(false);
 }
 
 
@@ -72,7 +71,6 @@ System::System(string name, bool useComplex)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
-	this->setReactionTrackingStatus(false);
 }
 
 System::System(string name, bool useComplex, int globalMoleculeLimit)
@@ -100,7 +98,6 @@ System::System(string name, bool useComplex, int globalMoleculeLimit)
 	csvFormat = false;
 	anyRxnTagged = false;
 	max_cpu_time = -1;
-	this->setReactionTrackingStatus(false);
 }
 
 
@@ -301,12 +298,9 @@ void System::registerReactionFileLocation(string filename)
 		exit(1);
 	}
 
-	// TODO: This needs to be converted to a JSON file
-	// where each reaction type is recorded, general simulation
-	// settings are saved and each reaction firing is fully
-	// recorded
 	reactionOutputFileStream.setf(ios::fixed);
 	reactionOutputFileStream.precision(6);
+	// AS2023 - enable event tracking
 	setReactionTrackingStatus(true);
 }
 
@@ -511,9 +505,10 @@ MoleculeType * System::getMoleculeTypeByName(string mName)
 
 Molecule * System::getMoleculeByUid(int uid)
 {
+	// AS2023 - we normally want warnings to be on
 	this->getMoleculeByUid(uid, true);
 }
-
+// AS2023 - alternative call sig to turn off warnings if we want to
 Molecule * System::getMoleculeByUid(int uid, bool warn)
 {
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
@@ -727,7 +722,7 @@ void System::prepareForSimulation()
   	recompute_A_tot();
 
 
-	// We have prepared for simulation, if we are 
+	// AS2023 - We have prepared for simulation, if we are 
 	// tracking reactions, we should setup the JSON
 	if (this->getReactionTrackingStatus()) {
 		// start the JSON and write some info about the simulation
@@ -913,7 +908,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	double end_time = current_time+duration;
 	tryToDump();
 
-	// depending on the tracking status we'll need a log string to build
+	// AS2023 - depending on the tracking status we'll need a log string to build
 	string logstr;
 	bool logged = false;
 
@@ -982,16 +977,23 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		stepIteration++;
 		globalEventCounter++;
 		current_time+=delta_t;
+		// AS2023 - if we got to here, we have a new event we haven't logged yet
 		logged = false;
 //		this->printAllReactions();
 //		cout << "Current reaction: " << "\n";
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
+		// AS2023 - if we are tracking events, this needs to be dealt with here
 		if (this->getReactionTrackingStatus()) {
+			// AS2023 - getting the log for the event
 			logstr += nextReaction->fire(randElement, true);
+			// AS2023 - only write if we have a positive value for
+			// buffer size in events
 			if (this->getLogBufferSize()>0) {
+				// AS2023 - write if we have enough events stored in buffer
 				if ( (globalEventCounter % this->getLogBufferSize()) == 0) {
 					this->getReactionFileStream() << logstr;
+					// AS2023 - empty out the buffer
 					logstr = "";
 					logged = true;
 				}
@@ -1006,7 +1008,7 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
-	// AS2023 - if we missed a firing log, dump what we have
+	// AS2023 - if we missed a firing log, write what we have
 	if (!logged) {
 		this->getReactionFileStream() << logstr;
 		logstr = "";
@@ -1029,9 +1031,9 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
     cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
     cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
 
-	// if we were tracking reactions, we should close
-	// the JSON file. We close the firing array, then
-	// the simulation level and finally the top level
+	// AS2023 - if we were tracking reactions, we should close the 
+	// JSON file. We close the firing array, then the simulation 
+	// level and finally the top level
 	if (this->getReactionTrackingStatus()) {
 		this->getReactionFileStream() <<
 		"\n    ]" << endl <<

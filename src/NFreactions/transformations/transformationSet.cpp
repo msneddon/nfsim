@@ -565,12 +565,12 @@ int TransformationSet::find(TemplateMolecule *t)
 	}
 	return findIndex;
 }
-
+// AS2023 - normal calls should have tracking off
 string TransformationSet::transform(MappingSet **mappingSets)
 {
 	return this->transform(mappingSets, false);
 }
-
+// AS2023 - alternative call sig to store a log of the transform
 string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
@@ -581,7 +581,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	 * been implemented to check for incorrect molecularity or reaction center conflicts. --Justin
 	 */
 
-	// if we are tracking, initialize a log string
+	// AS2023 - if we are tracking, initialize a log string
 	string logstr;
 	if (tracking) {
 		logstr = "        \"ops\": [\n";
@@ -594,6 +594,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	int size = addMoleculeTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
+			// AS2023 - since we are in the tracking call, track the application
 			addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i], logstr );
 		}
 	}
@@ -602,6 +603,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 	size = addSpeciesTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
+			// AS2023 - since we are in the tracking call, track the application
 			addSpeciesTransformations.at(i)->apply(NULL, NULL, logstr);
 		}
 	}
@@ -617,6 +619,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 				Molecule * mol = ms->get(t)->getMolecule();
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
+					// AS2023 - since we are in the tracking call, track the deletion events
 					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT, logstr);
 				}
 				else
@@ -624,6 +627,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 					// track deletions if tracking is on
 					// this has to be done here
 					if (tracking) {
+						// AS2023 - since we are in the tracking call, track the deletion operations
 						logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "],\n";
 					}
 					deleteList.push_back( mol );
@@ -631,6 +635,7 @@ string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 			}
 			else
 			{	// handle other transforms
+				// AS2023 - since we are in the tracking call, track the operation
 				transformations[r].at(t)->apply(ms->get(t), mappingSets, logstr);
 			}
 		}
@@ -897,9 +902,8 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 			t1 = transfn->getTemplateMolecule();
 			if (!t1) continue;
 			mt1 = t1->getMoleculeType();
-			// TODO: figure out if this is the right behavior
-			// we are assuming no connection if the transformation
-			// is of type REMOVE, aka a delete operation
+			// AS2023 - if this is not a removal, track connections, removal
+			// doesn't give any reaction connections, so skip that
 			if (transfn->getType()!=(int)TransformationFactory::REMOVE) {
 				c1 = transfn->getComponentIndex();
 				// If the moleculetype or component is not present in the other reaction,

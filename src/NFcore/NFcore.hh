@@ -518,7 +518,7 @@ namespace NFcore
 			bool outputRxnFiringCountsFile; /* Output reaction firing counts (default: false) */
 		    bool trackRxnNumber; /* Whether to track reaction numbers instead of names for minimizing file size */
 		    double lastRxnTime; /* Time when the last reaction was fired */
-			bool reactionTrackingEnabled; /* tells if reaction tracking is on, for rxnlog argument */
+			bool reactionTrackingEnabled = false; /* tells if reaction tracking is on, for rxnlog argument */
 
 		    int globalEventCounter;
 
@@ -835,8 +835,6 @@ namespace NFcore
 			int getDORrxnPosition(int dorRxnIndex) const { return reactionPositions.at(indexOfDORrxns.at(dorRxnIndex)); };
 
 			void setUpLocalFunctionListForMolecules();
-
-			vector < vector < string > > getPossibleCompStates() {return possibleCompStates;};
 
 		protected:
 

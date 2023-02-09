@@ -93,6 +93,8 @@ MoleculeCreator::create_molecule()
 	return molecule_object;
 }
 
+// AS2023 - alternate call sig to store a lof of the molecule
+// creation event for later writing
 Molecule *
 MoleculeCreator::create_molecule(string &logstr)
 {

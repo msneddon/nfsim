@@ -142,15 +142,17 @@ System * NFinput::initializeFromXML(
 
 		if(!verbose) cout<<"-";
 		else cout<<"\n\tReading list of Species..."<<endl;
-		// AS2023
+		// AS2023 - initialize log string, get the starting species
 		string logstr="";
 		logstr = initStartSpecies(pListOfSpecies, s, parameter, allowedStates, verbose);
+		// AS2023 - an empty log is a failed initStartSpecies call now
 		if(logstr.empty())
 		{
 			cout<<"\n\nI failed at parsing your species.  Check standard error for a report."<<endl;
 			if(s!=NULL) delete s;
 			return NULL;
 		}
+		// AS2023 - store the species log for later writing
 		s->setSpeciesLog(logstr);
 
 		if(!verbose) cout<<"-";
@@ -607,7 +609,9 @@ bool NFinput::initMoleculeTypes(
 
 
 
-
+// AS2023 - this call can now return a string which is the 
+// log of the initial species to be written into the event
+// log file eventually
 string NFinput::initStartSpecies(
 		TiXmlElement * pListOfSpecies,
 		System * s,
@@ -635,6 +639,8 @@ string NFinput::initStartSpecies(
 
 		vector<string>::iterator snIter;
 
+		// AS2023 - vectors to keep track of what's going on
+		// during initialization of the system
 		vector <string> operations;
 		vector <int> mgids;
 		vector <int> mids;
@@ -647,6 +653,7 @@ string NFinput::initStartSpecies(
 			string speciesName;
 			if(!pSpec->Attribute("id")) {
 				cerr<<"Species tag without a valid 'id' attribute.  Quiting"<<endl;
+				// AS2023 - fails now return empty strings
 				return "";
 			} else {
 				speciesName = pSpec->Attribute("id");
@@ -658,6 +665,7 @@ string NFinput::initStartSpecies(
 			string specCount;
 			if(!pSpec->Attribute("concentration")) {
 				cerr<<"Species "<<speciesName<<" does not have a 'concentration' attribute.  Quitting"<<endl;
+				// AS2023 - fails now return empty strings
 				return "";
 			} else {
 				specCount = pSpec->Attribute("concentration");
@@ -684,6 +692,7 @@ string NFinput::initStartSpecies(
 					} catch (std::runtime_error &e1) {
 						if(parameter.find(specCount)==parameter.end()) {
 							cerr<<"Could not find parameter: "<<specCount<<" when creating species "<<speciesName<<". Quitting"<<endl;
+							// AS2023 - fails now return empty strings
 							return "";
 						}
 						specCountInteger = (int)parameter.find(specCount)->second;
@@ -695,6 +704,7 @@ string NFinput::initStartSpecies(
 			//Make sure we didn't try to create a negative number of molecules
 			if(specCountInteger<0) {
 				cerr<<"I cannot, in good conscience, make a negative number ("<<specCount<<") of species when creating species "<<speciesName<<". Quitting"<<endl;
+				// AS2023 - fails now return empty strings
 				return "";
 			}
 
@@ -714,6 +724,7 @@ string NFinput::initStartSpecies(
 			TiXmlElement *pListOfMol = pSpec->FirstChildElement("ListOfMolecules");
 			if(!pListOfMol) {
 				cerr<<"Species "<<speciesName<<" contains no molecules!  I think that was a mistake, on your part, so I'm done."<<endl;
+				// AS2023 - fails now return empty strings
 				return "";
 			}
 
@@ -733,6 +744,7 @@ string NFinput::initStartSpecies(
 				{
 					cerr << "!!!Error.  More than one population molecule when creating species '"
 					     << speciesName << "'. Quitting"<<endl;
+					// AS2023 - fails now return empty strings
 					return "";
 				}
 
@@ -740,6 +752,7 @@ string NFinput::initStartSpecies(
 				string molName, molUid;
 				if(!pMol->Attribute("name") || ! pMol->Attribute("id"))  {
 					cerr<<"!!!Error.  Invalid 'Molecule' tag found when creating species '"<<speciesName<<"'. Quitting"<<endl;
+					// AS2023 - fails now return empty strings
 					return "";
 				} else {
 					molName = pMol->Attribute("name");
@@ -772,6 +785,7 @@ string NFinput::initStartSpecies(
 				{
 					cerr << "!!!Error.  Found mixed population and agent molecule types when creating species '"
 					     << speciesName << "'. Quitting"<<endl;
+					// AS2023 - fails now return empty strings
 					return "";
 				}
 
@@ -789,6 +803,7 @@ string NFinput::initStartSpecies(
 						string compId,compName,compBondCount;
 						if(!pComp->Attribute("id") || !pComp->Attribute("name") || !pComp->Attribute("numberOfBonds")) {
 							cerr<<"!!!Error.  Invalid 'Component' tag found when creating '"<<molUid<<"' of species '"<<speciesName<<"'. Quitting"<<endl;
+							// AS2023 - fails now return empty strings
 							return "";
 						} else {
 							compId=pComp->Attribute("id");
@@ -835,12 +850,14 @@ string NFinput::initStartSpecies(
 							}
 							if(!couldPlaceSymComp) {
 								cout<<"Too many symmetric sites specified, when creating species: "<<speciesName<<endl;
+								// AS2023 - fails now return empty strings
 								return "";
 							}
 						} else {
 							for(unsigned int ucn=0;ucn<usedComponentNames.size(); ucn++) {
 								if(usedComponentNames.at(ucn).compare(compName)==0) {
 									cout<<"Specified the same component multiple times, when creating species: "<<speciesName<<endl;
+									// AS2023 - fails now return empty strings
 									return "";
 								}
 							}
@@ -857,6 +874,7 @@ string NFinput::initStartSpecies(
 							if(allowedStates.find(molName+"_"+compName+"_"+compStateValue)==allowedStates.end()) {
 								cerr<<"You are trying to create a molecule of type '"<<molName<<"', but you gave an "<<endl;
 								cerr<<"invalid state! The state you gave was: '"<<compStateValue<<"'.  Quitting now."<<endl;
+								// AS2023 - fails now return empty strings
 								return "";
 							} else {
 
@@ -898,6 +916,8 @@ string NFinput::initStartSpecies(
 					for(int m=0; m<specCountInteger; m++)
 					{
 						Molecule *mol = mt->genDefaultMolecule();
+						// AS2023 - storing what has been generated, we need both the ID of the 
+						// molecule type as well as the global ID that's assigned to the instance
 						mids.push_back(mol->getMoleculeType()->getTypeID());
 						mgids.push_back(mol->getUniqueID());
 
@@ -968,6 +988,7 @@ string NFinput::initStartSpecies(
 				{
 					cerr << "!! Attempt to create illegal bond in population species: "
 					     << speciesName << ".  Quitting." << endl;
+					// AS2023 - fails now return empty strings
 					return "";
 				}
 
@@ -978,6 +999,7 @@ string NFinput::initStartSpecies(
 					string bondId, bSite1, bSite2;
 					if(!pBond->Attribute("id") || !pBond->Attribute("site1") || !pBond->Attribute("site2")) {
 						cerr<<"!! Invalid Bond tag for species: "<<speciesName<<".  Quitting."<<endl;
+						// AS2023 - fails now return empty strings
 						return "";
 					} else {
 						bondId = pBond->Attribute("id");
@@ -997,6 +1019,9 @@ string NFinput::initStartSpecies(
 						for(int j=0;j<specCountInteger;j++) {
 							Molecule::bind( molecules.at(bSiteMolIndex1).at(j),bSiteName1.c_str(),
 											molecules.at(bSiteMolIndex2).at(j),bSiteName2.c_str());
+							// AS2023 - we keep track of what operations is required to generate the 
+							// correct initial state. These are equivalent operations to what happens
+							// during actual reactions/events
 							operations.push_back("[\"AddBond\"," + 
 								to_string(molecules.at(bSiteMolIndex1).at(j)->getUniqueID()) + "," + 
 								to_string(molecules.at(bSiteMolIndex1).at(j)->getMoleculeType()->getCompIndexFromName(bSiteName1.c_str())) + "," +
@@ -1006,6 +1031,7 @@ string NFinput::initStartSpecies(
 
 					} catch (exception& e) {
 						cout<<"!!!!Invalid site value for bond: '"<<bondId<<"' when creating species '"<<speciesName<<"'. Quitting"<<endl;
+						// AS2023 - fails now return empty strings
 						return "";
 					}
 				}
@@ -1036,7 +1062,7 @@ string NFinput::initStartSpecies(
 		for(unsigned int img=0; img<mgids.size(); img++) {
 			molec_vec[mgids[img]] = mids[img];
 		}
-		// AS 2023 - now we use it to compress the initial state vector
+		// AS2023 - now we use it to compress the initial state vector
 		int last_val = molec_vec[0];
 		int val_ctr = 1;
 		for(unsigned int ici=1; ici<molec_vec.size(); ici++) {
@@ -1066,13 +1092,15 @@ string NFinput::initStartSpecies(
 		// s->printAllMoleculeTypes();
 
 
-		//If we got here, then we are indeed successful
+		// AS2023 - If we got here, then we are indeed successful
+		// and we are returning the log
 		return logstr;
 	} catch (...) {
 		cerr<<"Caught some unknown error when creating Species."<<endl;
+		// AS2023 - fails now return empty strings
 		return "";
 	}
-
+	// AS2023 - fails now return empty strings
 	return "";
 }
 

@@ -201,6 +201,7 @@ namespace NFcore
 			virtual ~Transformation() {};
 			int getType() const { return type; };
 			virtual void apply(Mapping *m, MappingSet **ms) = 0;
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr) = 0;
 			virtual int getComponentIndex() const = 0;
 			virtual int getRemovalType() { return -1; };
@@ -218,6 +219,7 @@ namespace NFcore
 			LocalFunctionReference(string PointerName, int scope, TemplateMolecule *tm);
 			virtual ~LocalFunctionReference() {};
 			virtual void apply(Mapping *m, MappingSet **ms) {};
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr) {};
 			virtual int getComponentIndex() const { return -1; };
 
@@ -243,6 +245,7 @@ namespace NFcore
 			EmptyTransform(int cIndex, TemplateMolecule * tm);
 			virtual ~EmptyTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms) {};
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr) {};
 			virtual int getComponentIndex() const { return cIndex; };
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -258,6 +261,7 @@ namespace NFcore
 			StateChangeTransform(int cIndex, int newValue, TemplateMolecule * tm);
 			virtual ~StateChangeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {return cIndex;};
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -273,6 +277,7 @@ namespace NFcore
 			BindingTransform(int cIndex, int otherReactantIndex, int otherMappingIndex, TemplateMolecule * tm);
 			virtual ~BindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {return cIndex;};
 
@@ -309,6 +314,7 @@ namespace NFcore
 			UnbindingTransform(int cIndex, TemplateMolecule * tm);
 			virtual ~UnbindingTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {return cIndex;};
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -324,6 +330,7 @@ namespace NFcore
 			AddSpeciesTransform( SpeciesCreator * sc , TemplateMolecule * tm);
 			virtual ~AddSpeciesTransform();
 			virtual void apply( Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply( Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -341,11 +348,13 @@ namespace NFcore
 			AddMoleculeTransform( MoleculeCreator * _mc , TemplateMolecule * tm);
 			virtual ~AddMoleculeTransform();
 			virtual void apply( Mapping * m, MappingSet ** ms ) { cerr<<"apply method should not be called from an AddMoleculeTranform!!"<<endl;};
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply( Mapping * m, MappingSet ** ms, string & logstr ) { cerr<<"apply method should not be called from an AddMoleculeTranform!!"<<endl;};
 			virtual int getComponentIndex() const { cerr<<"You should not get a component index from an AddMoleculeTransform!!"<<endl; return -1;};
 
 			// adds molecule and points mapping set to that new molecule
 			void apply_and_map( MappingSet * ms );
+			// AS2023 - alternative call sig to store a log of the transform
 			void apply_and_map( MappingSet * ms, string & logstr );
 			// is this a population type?
 			bool isPopulationType() const;
@@ -365,6 +374,7 @@ namespace NFcore
 			RemoveMoleculeTransform(int removalType, TemplateMolecule * tm);
 			virtual ~RemoveMoleculeTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {cout<<"You should not get a component index from a RemoveMoleculeTransform!!"<<endl; exit(1); return -1;};
 			virtual int getRemovalType() { return removalType; };
@@ -384,6 +394,7 @@ namespace NFcore
 			DecrementPopulationTransform(TemplateMolecule * tm);
 			virtual ~DecrementPopulationTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const { return cIndex; };
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -400,6 +411,7 @@ namespace NFcore
 			IncrementStateTransform(unsigned int stateIndex, TemplateMolecule * tm);
 			virtual ~IncrementStateTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {return cIndex;};
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};
@@ -414,6 +426,7 @@ namespace NFcore
 			DecrementStateTransform(unsigned int stateIndex, TemplateMolecule * tm);
 			virtual ~DecrementStateTransform() {};
 			virtual void apply(Mapping *m, MappingSet **ms);
+			// AS2023 - alternative call sig to store a log of the transform
 			virtual void apply(Mapping *m, MappingSet **ms, string & logstr);
 			virtual int getComponentIndex() const {return cIndex;};
 			virtual TemplateMolecule * getTemplateMolecule() const {return this->tm;};

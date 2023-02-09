@@ -368,6 +368,8 @@ void ReactionClass::fire(double random_A_number) {
 	this->fire(random_A_number, false);
 }
 
+// AS2023 - Alternative call signature to tell fire call when we are tracking 
+// each firing for the rxnlog argument
 string ReactionClass::fire(double random_A_number, bool track) {
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
@@ -381,6 +383,8 @@ string ReactionClass::fire(double random_A_number, bool track) {
 	if ( ! transformationSet->checkMolecularity(mappingSet) ) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
+		// AS2023 - we need to return a string now that this can return 
+		// an event log if track is true
 		return string("");
 	}
 
@@ -453,6 +457,7 @@ string ReactionClass::fire(double random_A_number, bool track) {
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
+	// AS2023 - if tracking is turned on, transform needs a string to build up
 	string logstr;
 	if (this->system->getReactionTrackingStatus()) {
 		logstr = this->transformationSet->transform(this->mappingSet, true);
@@ -574,8 +579,7 @@ string ReactionClass::fire(double random_A_number, bool track) {
 	// @author: Arvind R. Subramaniam
 	// @date: 13 Nov 2019
 	this->system->setLastRxnTime(this->system->getCurrentTime());
-	// output if the reaction was tagged
-	// TODO: This needs to write the reaction to a JSON
+	// output to a JSON if the reaction was tagged
 	if (this->system->getReactionTrackingStatus()) {
 		if (tagged && track) {
 			string track_str = "";
@@ -610,6 +614,7 @@ string ReactionClass::fire(double random_A_number, bool track) {
 	//Tidy up
 	products.clear();
 	productComplexes.clear();
+	// AS2023 - returning empty, if we are here logging was off
 	return "";
 }
 

@@ -169,6 +169,7 @@ namespace NFcore
 				@author Michael Sneddon
 			*/
 			string transform(MappingSet **mappingSets);
+			// AS2023 - alternative call sig when tracking is enabled
 			string transform(MappingSet **mappingSets, bool tracking);
 
 			/*!

@@ -22,6 +22,7 @@ namespace NFcore
 			~SpeciesCreator();
 			
 			void create();
+			// AS2023 - alternate call sig to write and store a log of species creation
 			void create(string &logstr);
 		
 		protected:

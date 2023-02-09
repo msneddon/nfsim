@@ -43,6 +43,7 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
 }
+// AS2023 - alternative call sig to store a log of the transform
 void StateChangeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
@@ -75,6 +76,7 @@ void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue+1);
 }
+// AS2023 - alternative call sig to store a log of the transform
 void IncrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
@@ -108,6 +110,7 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue-1);
 }
+// AS2023 - alternative call sig to store a log of the transform
 void DecrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
@@ -167,7 +170,7 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
 	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
 }
-
+// AS2023 - alternative call sig to store a log of the transform
 void BindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	//cout<<" cIndex: "<<cIndex;
@@ -246,6 +249,7 @@ void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 {   
 	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
 }
+// AS2023 - alternative call sig to store a log of the transform
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
 	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
@@ -285,7 +289,7 @@ void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms)
 {
 	this->sc->create();
 }
-
+// AS2023 - alternative call sig to store a log of the transform
 void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	this->sc->create(logstr);
@@ -343,7 +347,7 @@ void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 		ms->set( im, new_molecule );
 	}
 }
-
+// AS2023 - alternative call sig to store a log of the transform
 void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
 {
 	// create molecule and get pointer
@@ -378,7 +382,7 @@ void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
 	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
 }
-
+// AS2023 - alternative call sig to store a log of the transform
 void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
@@ -404,6 +408,7 @@ void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->decrementPopulation();
 }
+// AS2023 - alternative call sig to store a log of the transform
 void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {
 	m->getMolecule()->decrementPopulation();

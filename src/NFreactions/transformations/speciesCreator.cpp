@@ -247,6 +247,7 @@ void SpeciesCreator::create()
 	}
 }
 
+// AS2023 - alternate call sig to write and store a log of species creation
 void SpeciesCreator::create(string &logstr)
 {
 	//Create the molecules in this new species

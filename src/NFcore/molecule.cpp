@@ -592,13 +592,15 @@ tuple<int, int> Molecule::unbind(Molecule *m1, int cIndex)
 
 	//cout<<" UnBinding!  mol1 complex: ";
 	//m1->getComplex()->printDetails();
+	
+	// AS2023 - this now returns what is unbound in a tuple
 	return make_tuple(m2->getUniqueID(), cIndex2);
 }
 
 tuple<int, int> Molecule::unbind(Molecule *m1, char * compName)
 {
 	int cIndex = m1->getMoleculeType()->getCompIndexFromName(compName);
-	Molecule::unbind(m1,cIndex);
+	return Molecule::unbind(m1,cIndex);
 }
 
 
