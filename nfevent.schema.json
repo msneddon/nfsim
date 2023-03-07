@@ -1,0 +1,152 @@
+
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/RuleWorld/nfsim/ASinanSaglam/issue35/nf.schema.json",
+    "title": "NFsim simulation",
+    "description": "Output from a NFsim simulation",
+    "type": "object",
+    "properties": {
+        "simulation": {
+            "type": "object",
+            "properties": {
+                "info": {
+                    "description": "Information regarding the simulation",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                          "description": "Name of our simulation",
+                          "type": "string"
+                      },
+                      "global_molecule_limit": {
+                          "description": "Number of global molecules allowed for the simulation",
+                          "type": "number"
+                      },
+                      "number_of_molecule_types": {
+                          "description": "Number of total molecule types defined",
+                          "type": "number"
+                      },
+                      "number_of_molecules": {
+                          "description": "Number of total starting molecules",
+                          "type": "number"
+                      }
+                    },
+                    "required": [ "name" ]
+                  },
+                  "molecule_types": {
+                      "description": "Molecule types in a simulation",
+                      "type": "array",
+                      "items": { "$ref": "#/$defs/molecule_type" },
+                      "minItems": 1,
+                      "uniqueItems": true
+                  },
+                  "initialState": {
+                      "description": "Initial state of the simulation",
+                      "type": "object",
+                      "properties": {
+                          "molTypes": {
+                              "description": "A run-length encoded array of molecule type IDs for the starting state",
+                              "type": "array",
+                              "items": { "$ref": "#/$defs/molType" },
+                              "minItems": 0,
+                              "uniqueItems": false
+                          },
+                          "ops": {
+                              "description": "A set of operations that need to be performed on the initial molecules to get the inital state",
+                              "type": "array",
+                              "items": { "$ref": "#/$defs/operation" },
+                              "minItems": 0,
+                              "uniqueItems": false
+                          }
+                      },
+                      "required": [ "molTypes", "ops" ]
+                  },
+                  "firings": {
+                      "description": "All firings in the simulation",
+                      "type": "array",
+                      "items": { "$ref": "#/$defs/firing" },
+                      "minItems": 0,
+                      "uniqueItems": false
+                  }  
+                },
+                "required": [ "info", "molecule_types", "initialState", "firings" ]
+        }
+    },
+    "$defs": {
+        "molecule_type": {
+            "description": "Description of each molecule type, their names, IDs and components",
+            "type": "object",
+            "properties": {
+                "name": { 
+                    "description": "Name of the molecule type",
+                    "type": "string" 
+                },
+                "typeID": { 
+                    "description": "Internal ID used for the molecule type, every operation refers to this ID",
+                    "type": "number" 
+                },
+                "components": {
+                    "description": "Names of each component for the molecule type",
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "minItems": 0
+                },
+                "componentStates": {
+                    "description": "Names of each component states, by default the first state is used upon initialization",
+                    "type": "array",
+                    "minItems": 0,
+                    "items": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "minItems": 0
+                    }
+                }
+            },
+            "required": [ "name", "typeID", "components", "componentStates" ]
+        },
+        "molecule_array":  {
+            "description": "This is an item in a run-length encoded array, first item is the molecule type index, second item is how many times it repeats",
+            "type": "array",
+            "prefixItems": [
+                {"type": "number"},
+                {"type": "number"}
+            ],
+            "items": false,
+            "uniqueItems": false
+        },
+        "operation":  {
+            "description": "Array fully describing an operation and what it operates on. Each operation has different inputs.",
+            "type": "array",
+            "prefixItems": [
+                {"enum": ["Add", "Delete", "StateChange", "AddBond", "DeleteBond", "IncrementState", "DecrementState", "DecrementPopulation"] },
+                {"type": "number"}
+            ],
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 5,
+            "uniqueItems": false
+        },
+        "firing":  {
+            "description": "Full description of a single event in the simulation.",
+            "type": "object",
+            "properties": {
+                "props": {
+                    "description": "The name of the reaction that fired, the global event number followed by the internal time it happened",
+                    "type": "array",
+                    "prefixItems": [
+                        {"type": "string"},
+                        {"type": "number"},
+                        {"type": "number"}
+                    ],
+                    "items": false,
+                    "uniqueItems": false
+                },
+                "ops": {
+                    "description": "The set of operations that occured during the event.",
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/operation" }
+                }
+            },
+            "required": [ "props", "ops" ]
+        }
+  }
+}

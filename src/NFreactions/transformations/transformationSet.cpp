@@ -565,9 +565,13 @@ int TransformationSet::find(TemplateMolecule *t)
 	}
 	return findIndex;
 }
-
-
-bool TransformationSet::transform(MappingSet **mappingSets)
+// AS2023 - normal calls should have tracking off
+string TransformationSet::transform(MappingSet **mappingSets)
+{
+	return this->transform(mappingSets, false);
+}
+// AS2023 - alternative call sig to store a log of the transform
+string TransformationSet::transform(MappingSet **mappingSets, bool tracking)
 {
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
@@ -577,13 +581,21 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	 * been implemented to check for incorrect molecularity or reaction center conflicts. --Justin
 	 */
 
+	// AS2023 - if we are tracking, initialize a log string
+	string logstr;
+	if (tracking) {
+		logstr = "        \"ops\": [\n";
+	} else {
+		logstr = "";
+	}
 
 	// addMolecule transforms are applied before other transforms so the molecules exist
 	//  for potential modification by other transforms.
 	int size = addMoleculeTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
-			addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i]  );
+			// AS2023 - since we are in the tracking call, track the application
+			addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i], logstr );
 		}
 	}
 
@@ -591,7 +603,8 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	size = addSpeciesTransformations.size();
 	if(size>0) {
 		for(int i=0; i<size; i++) {
-			addSpeciesTransformations.at(i)->apply(NULL,NULL);
+			// AS2023 - since we are in the tracking call, track the application
+			addSpeciesTransformations.at(i)->apply(NULL, NULL, logstr);
 		}
 	}
 
@@ -606,16 +619,24 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 				Molecule * mol = ms->get(t)->getMolecule();
 				if ( transformations[r].at(t)->getRemovalType()==(int)TransformationFactory::COMPLETE_SPECIES_REMOVAL )
 				{	// complex deletion: flag connected molecules for deletion
-					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT);
+					// AS2023 - since we are in the tracking call, track the deletion events
+					mol->traverseBondedNeighborhood(deleteList,ReactionClass::NO_LIMIT, logstr);
 				}
 				else
 				{	// molecule deletion: flag this molecule for deletion
+					// track deletions if tracking is on
+					// this has to be done here
+					if (tracking) {
+						// AS2023 - since we are in the tracking call, track the deletion operations
+						logstr += "          [\"Delete\"," + to_string(mol->getUniqueID()) + "],\n";
+					}
 					deleteList.push_back( mol );
 				}
 			}
 			else
 			{	// handle other transforms
-				transformations[r].at(t)->apply(ms->get(t), mappingSets);
+				// AS2023 - since we are in the tracking call, track the operation
+				transformations[r].at(t)->apply(ms->get(t), mappingSets, logstr);
 			}
 		}
 	}
@@ -630,7 +651,13 @@ bool TransformationSet::transform(MappingSet **mappingSets)
 	}
 	deleteList.clear();
 
-	return true;
+	// finalize tracking
+	if (tracking) {
+		// need to delete the last comma
+		logstr.erase(logstr.end()-2, logstr.end());
+		logstr += "\n        ]\n";
+	}
+	return logstr;
 }
 
 
@@ -875,16 +902,22 @@ bool TransformationSet::checkConnection(ReactionClass * rxn) {
 			t1 = transfn->getTemplateMolecule();
 			if (!t1) continue;
 			mt1 = t1->getMoleculeType();
-			c1 = transfn->getComponentIndex();
-			// If the moleculetype or component is not present in the other reaction,
-			// it is not connected
-			if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
+			// AS2023 - if this is not a removal, track connections, removal
+			// doesn't give any reaction connections, so skip that
+			if (transfn->getType()!=(int)TransformationFactory::REMOVE) {
+				c1 = transfn->getComponentIndex();
+				// If the moleculetype or component is not present in the other reaction,
+				// it is not connected
+				if (!rxn->areMoleculeTypeAndComponentPresent(mt1, c1)) continue;
 
-			// If the TemplateMolecule is 'incompatible' with any of the reactants
-			// or products, then the reaction is not connected
-			if (!rxn->isTemplateCompatible(t1)) continue;
-			// Both checks passed for one op so return true
-			return true;
+				// If the TemplateMolecule is 'incompatible' with any of the reactants
+				// or products, then the reaction is not connected
+				if (!rxn->isTemplateCompatible(t1)) continue;
+				// Both checks passed for one op so return true
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 	// Do the same as above but now for the transformed product templates

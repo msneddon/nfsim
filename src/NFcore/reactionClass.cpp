@@ -364,8 +364,13 @@ void ReactionClass::printDetails() const {
 	cout << "\n";
 }
 
-
 void ReactionClass::fire(double random_A_number) {
+	this->fire(random_A_number, false);
+}
+
+// AS2023 - Alternative call signature to tell fire call when we are tracking 
+// each firing for the rxnlog argument
+string ReactionClass::fire(double random_A_number, bool track) {
 	//cout<<endl<<">FIRE "<<getName()<<endl;
 	fireCounter++;
 
@@ -378,7 +383,9 @@ void ReactionClass::fire(double random_A_number) {
 	if ( ! transformationSet->checkMolecularity(mappingSet) ) {
 		// wrong molecularity!  this is a NULL event
 		++(System::NULL_EVENT_COUNTER);
-		return;
+		// AS2023 - we need to return a string now that this can return 
+		// an event log if track is true
+		return string("");
 	}
 
 
@@ -394,7 +401,6 @@ void ReactionClass::fire(double random_A_number) {
 	// 	}
 	// 	cout<<endl;
 	// }
-
 
 	// Generate the set of possible products that we need to update
 	// (excluding new molecules, we'll get those later --Justin)
@@ -448,16 +454,20 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// Through the MappingSet, transform all the molecules as neccessary
 	//  This will also create new molecules, as required.  As a side effect,
 	//  deleted molecules will be removed from observables.
-	this->transformationSet->transform(this->mappingSet);
-
+	// AS2023 - if tracking is turned on, transform needs a string to build up
+	string logstr;
+	if (this->system->getReactionTrackingStatus()) {
+		logstr = this->transformationSet->transform(this->mappingSet, true);
+		
+	} else {
+		logstr = this->transformationSet->transform(this->mappingSet);
+	}
 
 	// Add newly created molecules to the list of products
 	this->transformationSet->getListOfAddedMolecules(mappingSet,products,traversalLimit);
-
 
 	// if complex bookkeeping is on, find all product complexes
 	// (this is useful for updating Species Observables and TypeII functions, so keep the info handy).
@@ -506,7 +516,6 @@ void ReactionClass::fire(double random_A_number) {
 		}
 	}
 
-
 	// Now update reaction membership, functions, and update any DOR Groups
 	//  also, gather a list of typeII dependencies that will require updating
 	typeII_products.clear();
@@ -528,7 +537,6 @@ void ReactionClass::fire(double random_A_number) {
 		if ( mol->isAlive() )
 			mol->updateRxnMembership(this, useConnectivity);
 	}
-
 
 	// update complex-scoped local functions for typeII dependencies
 	// NOTE: as a side-effect, dependent DOR reactions (via typeI molecule dependencies) will be updated
@@ -571,31 +579,43 @@ void ReactionClass::fire(double random_A_number) {
 	// @author: Arvind R. Subramaniam
 	// @date: 13 Nov 2019
 	this->system->setLastRxnTime(this->system->getCurrentTime());
+	// output to a JSON if the reaction was tagged
+	if (this->system->getReactionTrackingStatus()) {
+		if (tagged && track) {
+			string track_str = "";
+			int level = 6; // indentation level
+			this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
+			// we need the correct number of commas
+			if (this->system->getGlobalEventCounter() != 1) {
+				track_str += ",\n";
+			} 
+			// open firing and write info
+			track_str += std::string(level,' ') + "{\n" +
+				std::string(level+2,' ') + "\"props\": [";
+			if (this->system->getRxnNumberTrack()) {
+				track_str += string("\"") + to_string(rxnId) + "\",";
+			} else {
+				track_str += string("\"") + name + "\",";
+			}
+			track_str += to_string(this->system->getGlobalEventCounter()) +
+					"," + to_string(this->system->getCurrentTime()) + "],\n";
 
-	// output if the reaction was tagged
-	if (tagged) {
-	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
-		if  ((*molIter)->getMoleculeType()->getName() != "mrna") continue;
-
-		this->system->current_cpu_time = ((double) (clock() - this->system->start) / (double) CLOCKS_PER_SEC);
-		// print the time and reaction name
-		this->system->getReactionFileStream() << this->system->getGlobalEventCounter() << "\t" <<
-				this->system->current_cpu_time << "\t" <<
-				this->system->getCurrentTime() << "\t";
-		if (this->system->getRxnNumberTrack()) {
-			this->system->getReactionFileStream() << rxnId << "\t";
-		} else {
-			this->system->getReactionFileStream() << name << "\t";
-		}
-		// print the molecule type and its bonded states (exclude non-bonded states)
-		(*molIter)->printBondDetails(this->system->getReactionFileStream());
-		this->system->getReactionFileStream() << endl;
+			// write transformation log
+			track_str += logstr;
+					
+			// close firing 
+			track_str += std::string(level,' ') + "}";
+			//Tidy up
+			products.clear();
+			productComplexes.clear();
+			return track_str;
 		}
 	}
-
 	//Tidy up
 	products.clear();
 	productComplexes.clear();
+	// AS2023 - returning empty, if we are here logging was off
+	return "";
 }
 
 void ReactionClass::identifyConnectedReactions() {

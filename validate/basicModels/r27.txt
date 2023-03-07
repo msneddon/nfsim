@@ -1,0 +1,2 @@
+NFSIM ONLY: population testing
+-sim 100 -oSteps 100

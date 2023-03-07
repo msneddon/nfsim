@@ -2,6 +2,7 @@ begin model
 begin parameters
   l_ribo     1
   l_mrna     10
+  k_del      0.1
   k_init     1
   k_elong    1
   k_term     1
@@ -10,13 +11,13 @@ begin parameters
 end parameters
 
 begin molecule types
-  mrna(p0~free~blocked,p1,p2,p3,p4,p5,p6,p7,p8,p9)
+  mrna(p0~free~blocked,p1,p2,p3)
   ribosome(asite)
 end molecule types
 
 begin species
-  mrna(p0~free,p1,p2,p3,p4,p5,p6,p7,p8,p9)   n_mrna_0
-  ribosome(asite)                            n_ribo_0
+  mrna(p0~free,p1,p2,p3)   n_mrna_0
+  ribosome(asite)          n_ribo_0
 end species
 
 begin observables
@@ -24,17 +25,13 @@ begin observables
 end observables
 
 begin reaction rules
+  test_del:    ribosome(asite) -> 0 k_del
+  test_del_2:  ribosome(asite!1).mrna(p0~blocked!1,p1,p2,p3) -> 0 k_del
   initiate:    ribosome(asite) + mrna(p0~free) -> ribosome(asite!1).mrna(p0~blocked!1)    k_init TotalRate 
   elongate_1:  ribosome(asite!1).mrna(p0~blocked!1,p1) -> ribosome(asite!1).mrna(p0~free,p1!1)    k_elong 
   elongate_2:  ribosome(asite!1).mrna(p1!1,p2) -> ribosome(asite!1).mrna(p1,p2!1)    k_elong 
   elongate_3:  ribosome(asite!1).mrna(p2!1,p3) -> ribosome(asite!1).mrna(p2,p3!1)    k_elong 
-  elongate_4:  ribosome(asite!1).mrna(p3!1,p4) -> ribosome(asite!1).mrna(p3,p4!1)    k_elong 
-  elongate_5:  ribosome(asite!1).mrna(p4!1,p5) -> ribosome(asite!1).mrna(p4,p5!1)    k_elong 
-  elongate_6:  ribosome(asite!1).mrna(p5!1,p6) -> ribosome(asite!1).mrna(p5,p6!1)    k_elong 
-  elongate_7:  ribosome(asite!1).mrna(p6!1,p7) -> ribosome(asite!1).mrna(p6,p7!1)    k_elong 
-  elongate_8:  ribosome(asite!1).mrna(p7!1,p8) -> ribosome(asite!1).mrna(p7,p8!1)    k_elong 
-  elongate_9:  ribosome(asite!1).mrna(p8!1,p9) -> ribosome(asite!1).mrna(p8,p9!1)    k_elong 
-  terminate:   ribosome(asite!1).mrna(p9!1) -> ribosome(asite) + mrna(p9)    k_term 
+  terminate:   ribosome(asite!1).mrna(p3!1) -> ribosome(asite) + mrna(p3)    k_term 
 end reaction rules
 
 end model

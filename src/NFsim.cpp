@@ -79,9 +79,13 @@
  *  -connect - infer network connectivity before starting simulation. (default: no).
  *             @author Arvind Rasi Subramaniam
  * 
- *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to file
- *             Does not require any modification to BioNetGen or PySB.
+ *  -rxnlog [filename] - write out firing time and participating molecules for all reactions to a JSON file
+ *             by default the expected extension is `.nfevent.json` 
  *             @author Arvind Rasi Subramaniam
+ *
+ *  -logbuffer [uint] - how many firings to wait before writing to the rxnlog file
+ *             Allows you to balance between CPU/memory impact of writing to a reaction log.
+ *             @author Ali Sinan Saglam
  *
  *  -trackconnected - write out the reactions whose rates change after firing of each reaction.
  * 					  this works only if -rxnlog switch is included
@@ -539,7 +543,12 @@ System *initSystemFromFlags(map<string,string> argMap, bool verbose)
 
 				if (argMap.find("rxnlog") != argMap.end()) {
 					string rxnLogFileName = argMap.find("rxnlog")->second;
+					// AS2023 - register file location 
 					s->registerReactionFileLocation(rxnLogFileName);
+					if (argMap.find("logbuffer") != argMap.end()) {
+						// AS2023 - set buffer size if given, 10k is the default
+						s->setLogBufferSize(stoul(argMap.find("logbuffer")->second));
+					}
 					// track the reactions whose rates change upon each each reaction
 					// firing. This is useful for debugging to make sure that all the
 					// right reactions are updated after each firing.
@@ -776,7 +785,10 @@ void printHelp(string version)
 	cout<<""<<endl;
     cout<<"  -connect          infer network connectivity before starting simulation. (default: no)."<<endl;
 	cout<<""<<endl;
- 	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions."<<endl;
+	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions in a JSON file."<<endl;
+	cout<<"                     by default the expected extension is `.nfevent.json`."<<endl;
+	cout<<""<<endl;
+ 	cout<<"  -logbuffer [uint] use to set how many firings to wait between each write to the rxnlog."<<endl;
 	cout<<""<<endl;
  	cout<<"  -trackconnected   write out the reactions whose rates change after firing of each reaction."<<endl;
 	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;

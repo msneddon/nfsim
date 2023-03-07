@@ -149,7 +149,9 @@ namespace NFinput {
 	/*!
     	@author Michael Sneddon
 	 */
-	bool initStartSpecies(
+	// AS2023 - this now returns a string, empty if it fails, a log of the initial 
+	// state if it succeeds
+	string initStartSpecies(
 			TiXmlElement * pListOfSpecies,
 			System * system,
 			map <string,double> &parameter,

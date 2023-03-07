@@ -300,18 +300,8 @@ void System::registerReactionFileLocation(string filename)
 
 	reactionOutputFileStream.setf(ios::fixed);
 	reactionOutputFileStream.precision(6);
-	// print header for file
-	reactionOutputFileStream <<
-			"line" << "\t" <<
-			"cputime" << "\t" <<
-			"time" << "\t" <<
-			"rxn" << "\t";
-	if (!this->getRxnNumberTrack()) {
-		reactionOutputFileStream << "mol" << "\t";
-	}
-	reactionOutputFileStream <<
-			"mol_id" <<
-			endl;
+	// AS2023 - enable event tracking
+	setReactionTrackingStatus(true);
 }
 
 void System::registerMoleculeTypeFileLocation(string filename) {
@@ -515,6 +505,12 @@ MoleculeType * System::getMoleculeTypeByName(string mName)
 
 Molecule * System::getMoleculeByUid(int uid)
 {
+	// AS2023 - we normally want warnings to be on
+	this->getMoleculeByUid(uid, true);
+}
+// AS2023 - alternative call sig to turn off warnings if we want to
+Molecule * System::getMoleculeByUid(int uid, bool warn)
+{
 	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ )
 	{
 		//(*molTypeIter)->printDetails(); //<<endl;
@@ -524,7 +520,9 @@ Molecule * System::getMoleculeByUid(int uid)
 					return (*molTypeIter)->getMolecule(m);
 		}
 	}
-	cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
+	if (warn) {
+		cerr<<"!!! warning !!! cannot find active molecule with unique ID '"<< uid << "' in System: '"<<this->name<<"'"<<endl;
+	}	
 	return 0;
 }
 
@@ -627,7 +625,7 @@ void System::prepareForSimulation()
 		  }
   	}
 
-
+	
   	//cout<<"here 4..."<<endl;
 
 	//This means we aren't going to add any more molecules to the system, so prep the rxns
@@ -650,6 +648,7 @@ void System::prepareForSimulation()
   	for( molTypeIter = allMoleculeTypes.begin(); molTypeIter != allMoleculeTypes.end(); molTypeIter++ ) {
   		(*molTypeIter)->prepareForSimulation();
   	}
+	
 
   	//cout<<"here 7..."<<endl;
 
@@ -691,7 +690,6 @@ void System::prepareForSimulation()
   	}
   	*/
 
-
   	//cout<<"here 8..."<<endl;
 
 
@@ -724,6 +722,81 @@ void System::prepareForSimulation()
   	recompute_A_tot();
 
 
+	// AS2023 - We have prepared for simulation, if we are 
+	// tracking reactions, we should setup the JSON
+	if (this->getReactionTrackingStatus()) {
+		// start the JSON and write some info about the simulation
+		this->getReactionFileStream() <<
+		  "{" << endl <<
+		  "  \"simulation\": {" << endl <<
+		  "    \"info\": {" << endl <<
+		  "      \"name\": \"" << this->getName() << "\"," << endl <<
+		  "      \"global_molecule_limit\": " << to_string(this->getGlobalMoleculeLimit()) << "," << endl <<
+		//   "      \"obs_count\": \"" << to_string(this->getMolObsCount()) << "\"," << endl <<
+		  "      \"number_of_molecule_types\": " << to_string(this->getNumOfMoleculeTypes()) << "," << endl <<
+		  "      \"number_of_molecules\": " << to_string(this->getNumOfMolecules()) << endl <<
+		  "    }," << endl <<
+		  "    \"molecule_types\": [" << endl;
+		
+		// prepare all molecule types
+		for(unsigned int mt=0; mt<allMoleculeTypes.size(); mt++) {
+		    this->getReactionFileStream() <<
+				"      {" << endl <<
+				"        \"name\": \"" + allMoleculeTypes.at(mt)->getName() + "\"," << endl <<
+				"        \"typeID\": " + to_string(allMoleculeTypes.at(mt)->getTypeID()) + ",\n" <<
+				"        \"components\": [";
+			//deal with components
+			for (unsigned int mtci=0; mtci<allMoleculeTypes.at(mt)->getNumOfComponents(); mtci++) {
+				// we enter every component and a list of states
+				this->getReactionFileStream() << "\"" <<
+					  allMoleculeTypes.at(mt)->getComponentName(mtci) << "\"";
+				// deal with commas
+				if (mtci!=allMoleculeTypes.at(mt)->getNumOfComponents()-1) {
+					this->getReactionFileStream() << ",";
+				}
+			}
+			//close components and start component states
+			this->getReactionFileStream() << "],\n        \"componentStates\": [";
+			//deal with components
+			vector < vector < string > > comp_states = allMoleculeTypes.at(mt)->getPossibleCompStates();
+			for (unsigned int mtci=0; mtci<allMoleculeTypes.at(mt)->getNumOfComponents(); mtci++) {
+				// we enter every component and a list of states
+				this->getReactionFileStream() << "[";
+				for (unsigned int mtcpsi=0; mtcpsi<comp_states[mtci].size(); mtcpsi++) {
+					this->getReactionFileStream() << "\"" << comp_states[mtci][mtcpsi];
+					// deal with commas
+					if (mtcpsi!=comp_states[mtci].size()-1) {
+						this->getReactionFileStream() << "\",";
+					} else {
+						this->getReactionFileStream() << "\"";
+					}
+				}
+				// deal with commas
+				if (mtci!=allMoleculeTypes.at(mt)->getNumOfComponents()-1) {
+					this->getReactionFileStream() << "],";
+				} else {
+					this->getReactionFileStream() << "]";
+				}
+			}
+			//close component states
+			this->getReactionFileStream() << "]\n      }";
+			// deal with commas
+			if (mt!=allMoleculeTypes.size()-1) {
+				this->getReactionFileStream() << ",\n";
+			} else {
+				this->getReactionFileStream() << "\n";
+			}
+		}
+		// close molecule types
+		this->getReactionFileStream() <<
+		  	"    ]," << endl;
+		
+		this->getReactionFileStream() << this->getSpeciesLog();
+		
+		// close initial state and open firings for later
+		this->getReactionFileStream() <<
+		  "    \"firings\": [" << endl;
+	}
 }
 
 
@@ -835,6 +908,10 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 	double end_time = current_time+duration;
 	tryToDump();
 
+	// AS2023 - depending on the tracking status we'll need a log string to build
+	string logstr;
+	bool logged = false;
+
 	while(current_time<end_time)
 	{
 		//this->printAllObservableCounts(current_time);
@@ -900,20 +977,42 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
 		stepIteration++;
 		globalEventCounter++;
 		current_time+=delta_t;
+		// AS2023 - if we got to here, we have a new event we haven't logged yet
+		logged = false;
 //		this->printAllReactions();
 //		cout << "Current reaction: " << "\n";
 //		nextReaction->printDetails();
 //		this->getMoleculeType(2)->getMolecule(0)->printDetails();
-//
-		nextReaction->fire(randElement);
-
+		// AS2023 - if we are tracking events, this needs to be dealt with here
+		if (this->getReactionTrackingStatus()) {
+			// AS2023 - getting the log for the event
+			logstr += nextReaction->fire(randElement, true);
+			// AS2023 - only write if we have a positive value for
+			// buffer size in events
+			if (this->getLogBufferSize()>0) {
+				// AS2023 - write if we have enough events stored in buffer
+				if ( (globalEventCounter % this->getLogBufferSize()) == 0) {
+					this->getReactionFileStream() << logstr;
+					// AS2023 - empty out the buffer
+					logstr = "";
+					logged = true;
+				}
+			}
+			
+		} else {
+			nextReaction->fire(randElement);
+		}
 		tryToDump();
 
 	}
 	if(curSampleTime-dSampleTime<(end_time-0.5*dSampleTime)) {
 		outputAllObservableCounts(curSampleTime,globalEventCounter);
 	}
-
+	// AS2023 - if we missed a firing log, write what we have
+	if (!logged) {
+		this->getReactionFileStream() << logstr;
+		logstr = "";
+	}
 	// Write list of molecule_types and reactions along with reaction firing counts
 	// TODO: Make this optional!
 	if (this->outputMoleculeTypesFile) {
@@ -932,6 +1031,15 @@ double System::sim(double duration, long int sampleTimes, bool verbose)
     cout<<"   Null events: "<< System::NULL_EVENT_COUNTER;
     cout<<"   ("<<(time)/((double)iteration-(double)System::NULL_EVENT_COUNTER)<<" CPU seconds/non-null event )"<< endl;
 
+	// AS2023 - if we were tracking reactions, we should close the 
+	// JSON file. We close the firing array, then the simulation 
+	// level and finally the top level
+	if (this->getReactionTrackingStatus()) {
+		this->getReactionFileStream() <<
+		"\n    ]" << endl <<
+        "  }" << endl <<
+		"}" << endl;
+	}
 	cout.unsetf(ios::scientific);
 	return current_time;
 }

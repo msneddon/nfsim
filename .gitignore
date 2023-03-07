@@ -5,3 +5,5 @@ validate/basicModels/*.*dat
 validate/basicModels/*.net
 validate/basicModels/*.xml
 validate/basicModels/*.tsv
+validate/basicModels/*.json
+validate/tmp/*

@@ -1,0 +1,114 @@
+# Created by BioNetGen 2.8.4
+
+begin model
+begin parameters
+  f       0.01
+  NA      6.0221e23
+  V       1e-12*f
+  L0      (500e-9*NA)*V
+  R0      (100e-9*NA)*V
+  A0      (100e-9*NA)*V
+  B0      (100e-9*NA)*V
+  C0      (100e-9*NA)*V
+  BC0     (100e-9*NA)*V
+  kp1     10e6/(NA*V)
+  km1     1.0
+  k2      1.0
+  k3      1.0
+  kp4     10e6/(NA*V)
+  km4     1.0
+  kp5     10e6/(NA*V)
+  km5     1.0
+  kp6     10e6/(NA*V)
+  km6     1.0
+  k7      1.0
+  k8      1.0
+  kp9     10e6/(NA*V)
+  km9     1.0
+  k_lump  10000
+end parameters
+begin molecule types
+  A(r,b~0~P)      
+  B(r,c)          
+  C(b)            
+  L(r)            
+  P1()              population
+  P2()              population
+  P3()              population
+  P4()              population
+  P5()              population
+  P6()              population
+  P7()              population
+  P8()              population
+  R(l,a~0~P,b~0~P)
+end molecule types
+begin observables
+  Molecules LR L(r!1).R(l!1)
+  Molecules Rp R(a~P!?) R(b~P!?)
+  Molecules Ap A(b~P!?) P3() P4() P5()
+  Molecules RC R(b~P!1).B(r!1,c!2).C(b!2) R(a~P!1).A(r!1,b~P!2).B(r!2,c!3).C(b!3)
+  Molecules Ltot L() P1()
+  Molecules Rtot R()
+  Molecules Atot A() P2() P3() P4() P5()
+  Molecules Btot B() P4() P5() P6() P7()
+  Molecules Ctot C() P5() P7() P8()
+end observables
+begin species
+  P1() L0
+  R(a~0,b~0,l) R0
+  P2() A0
+  P6() B0
+  P8() C0
+  P7() BC0
+  P3() 0
+  P4() 0
+  P5() 0
+end species
+begin reaction rules
+  _R1_v1:  P1() + R(l) -> L(r!1).R(l!1)  kp1
+  _reverse__R1_v1:  L(r!1).R(l!1) -> P1() + R(l)  km1 DeleteMolecules
+  _R2_v1:  L(r!1).R(a~0,l!1) -> L(r!1).R(a~P,l!1)  k2
+  _R3_v1:  L(r!1).R(b~0,l!1) -> L(r!1).R(b~P,l!1)  k2
+  _R4_v1:  R(a~P) -> R(a~0)  k3
+  _R5_v1:  R(b~P) -> R(b~0)  k3
+  _R6_v1:  R(a~P) + A(r) -> A(r!1).R(a~P!1)  kp4
+  _R6_v2:  R(a~P) + P2() -> A(b~0,r!1).R(a~P!1)  kp4
+  _R6_v3:  R(a~P) + P3() -> A(b~P,r!1).R(a~P!1)  kp4
+  _R6_v4:  R(a~P) + P4() -> A(b~P!1,r!2).B(c,r!1).R(a~P!2)  kp4
+  _R6_v5:  R(a~P) + P5() -> A(b~P!1,r!2).B(c!3,r!1).C(b!3).R(a~P!2)  kp4
+  _reverse__R6_v1:  A(r!1).R(a~P!1) -> R(a~P) + A(r)  km4
+  _R7_v1:  R(b~P) + B(r) -> B(r!1).R(b~P!1)  kp5
+  _R7_v2:  R(b~P) + P6() -> B(c,r!1).R(b~P!1)  kp5
+  _R7_v3:  R(b~P) + P7() -> B(c!1,r!2).C(b!1).R(b~P!2)  kp5
+  _reverse__R7_v1:  B(r!1).R(b~P!1) -> R(b~P) + B(r)  km5
+  _R8_v1:  B(c) + P8() -> B(c!1).C(b!1)  kp6
+  _R8_v2:  P4() + P8() -> P5()  kp6
+  _R8_v3:  P6() + P8() -> P7()  kp6
+  _reverse__R8_v1:  B(c!1).C(b!1) -> B(c) + P8()  km6 DeleteMolecules
+  _reverse__R8_v2:  P5() -> P4() + P8()  km6
+  _reverse__R8_v3:  P7() -> P6() + P8()  km6
+  _R9_v1:  A(b~0,r!1).R(a~P!1) -> A(b~P,r!1).R(a~P!1)  k7
+  _R10_v1:  A(b~P) -> A(b~0)  k8
+  _R10_v2:  P3() -> P2()  k8
+  _R11_v1:  A(b~P) + B(r) -> A(b~P!1).B(r!1)  kp9
+  _R11_v2:  A(b~P) + P6() -> A(b~P!1).B(c,r!1)  kp9
+  _R11_v3:  A(b~P) + P7() -> A(b~P!1).B(c!2,r!1).C(b!2)  kp9
+  _R11_v4:  P3() + B(r) -> A(b~P!1,r).B(r!1)  kp9
+  _R11_v5:  P3() + P6() -> P4()  kp9
+  _R11_v6:  P3() + P7() -> P5()  kp9
+  _reverse__R11_v1:  A(b~P!1).B(r!1) -> A(b~P) + B(r)  km9
+  _reverse__R11_v2:  P4() -> P3() + P6()  km9
+  _reverse__R11_v3:  P5() -> P3() + P7()  km9
+  _MapRule0:  L(r) -> P1()  k_lump
+  _MapRule1:  A(b~0,r) -> P2()  k_lump
+  _MapRule2:  A(b~P,r) -> P3()  k_lump
+  _MapRule3:  A(b~P!1,r).B(c,r!1) -> P4()  k_lump
+  _MapRule4:  A(b~P!1,r).B(c!2,r!1).C(b!2) -> P5()  k_lump
+  _MapRule5:  B(c,r) -> P6()  k_lump
+  _MapRule6:  B(c!1,r).C(b!1) -> P7()  k_lump
+  _MapRule7:  C(b) -> P8()  k_lump
+end reaction rules
+end model
+
+## model actions ##
+writeXML()

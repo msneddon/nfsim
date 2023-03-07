@@ -43,6 +43,17 @@ void StateChangeTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->setComponentState(cIndex,newValue);
 }
+// AS2023 - alternative call sig to store a log of the transform
+void StateChangeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	m->getMolecule()->setComponentState(cIndex,newValue);
+	if (!logstr.empty()) {
+		logstr += string("          [\"StateChange\",") 
+			   + to_string(m->getMolecule()->getUniqueID()) 
+			   + "," + to_string(cIndex) + "," 
+			   + to_string(newValue) + "],\n";
+	}
+}
 
 
 
@@ -65,6 +76,19 @@ void IncrementStateTransform::apply(Mapping *m, MappingSet **ms)
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue+1);
 }
+// AS2023 - alternative call sig to store a log of the transform
+void IncrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue+1);
+	if (!logstr.empty()) {
+		logstr += "          [\"IncrementState\","
+		       + to_string(m->getMolecule()->getUniqueID()) 
+			   + "," + to_string(cIndex) 
+			   + "," + to_string(oldValue+1) 
+			   + "],\n";
+	}
+}
 
 
 ///////////////////////////////////////////////////////////////
@@ -85,6 +109,19 @@ void DecrementStateTransform::apply(Mapping *m, MappingSet **ms)
 {
 	int oldValue = m->getMolecule()->getComponentState(cIndex);
 	m->getMolecule()->setComponentState(cIndex,oldValue-1);
+}
+// AS2023 - alternative call sig to store a log of the transform
+void DecrementStateTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	int oldValue = m->getMolecule()->getComponentState(cIndex);
+	m->getMolecule()->setComponentState(cIndex,oldValue-1);
+	if (!logstr.empty()) {
+		logstr += "          [\"DecrementState\","
+		       + to_string(m->getMolecule()->getUniqueID())
+			   + "," + to_string(cIndex) 
+			   + "," + to_string(oldValue-1)
+			   + "],\n";
+	}
 }
 
 
@@ -130,6 +167,12 @@ BindingTransform::BindingTransform(int cIndex, int otherReactantIndex, int other
 
 void BindingTransform::apply(Mapping *m, MappingSet **ms)
 {
+	Mapping *m2 = ms[this->otherReactantIndex]->get(this->otherMappingIndex);
+	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+}
+// AS2023 - alternative call sig to store a log of the transform
+void BindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
 	//cout<<" cIndex: "<<cIndex;
 	//cout<<" otherReactantIndex: "<<otherReactantIndex;
 	//cout<<" otherMappingIndex: "<<otherMappingIndex;
@@ -145,8 +188,14 @@ void BindingTransform::apply(Mapping *m, MappingSet **ms)
 	//	System::NULL_EVENT_COUNTER++;
 	//} else {
 	Molecule::bind(m->getMolecule(),m->getIndex(), m2->getMolecule(), m2->getIndex());
+	if (!logstr.empty()) {
+		logstr += "          [\"AddBond\","
+		       + to_string(m->getMolecule()->getUniqueID())
+			   + "," +  to_string(m->getIndex())
+			   + "," + to_string(m2->getMolecule()->getUniqueID())
+			   + "," +  to_string(m2->getIndex())  + "],\n";
+	}
 }
-
 
 bool BindingTransform::checkForNullCondition(Mapping *m, MappingSet **ms)
 {
@@ -197,8 +246,22 @@ UnbindingTransform::UnbindingTransform(int cIndex, TemplateMolecule * tm) :
 	this->tm = tm;
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
+{   
+	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
+}
+// AS2023 - alternative call sig to store a log of the transform
+void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
-	Molecule::unbind(m->getMolecule(),m->getIndex());
+	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
+	if (!logstr.empty()) {
+		logstr += "          [\"DeleteBond\","
+		       + to_string(m->getMolecule()->getUniqueID())
+			   + "," + to_string(m->getIndex()) 
+			   + "," + to_string(m2id) 
+			   + "," + to_string(c2id) 
+			   + "],\n";
+	}
+
 }
 
 ///////////////////////////////////////////////////////////////
@@ -222,10 +285,14 @@ AddSpeciesTransform::~AddSpeciesTransform()
 	delete sc;
 }
 
-
 void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms)
 {
 	this->sc->create();
+}
+// AS2023 - alternative call sig to store a log of the transform
+void AddSpeciesTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	this->sc->create(logstr);
 }
 
 
@@ -268,11 +335,23 @@ AddMoleculeTransform::get_population_pointer() const
 	return mc->get_population_pointer();
 };
 
-
 void AddMoleculeTransform::apply_and_map(MappingSet *ms)
 {
 	// create molecule and get pointer
 	new_molecule = this->mc->create_molecule();
+
+	// point mappings to the new molecule
+	unsigned int n_mappings = ms->getNumOfMappings();
+	for ( unsigned int im = 0;  im < n_mappings;  ++im )
+	{
+		ms->set( im, new_molecule );
+	}
+}
+// AS2023 - alternative call sig to store a log of the transform
+void AddMoleculeTransform::apply_and_map(MappingSet *ms, string &logstr)
+{
+	// create molecule and get pointer
+	new_molecule = this->mc->create_molecule(logstr);
 
 	// point mappings to the new molecule
 	unsigned int n_mappings = ms->getNumOfMappings();
@@ -303,6 +382,12 @@ void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms)
 	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
 	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
 }
+// AS2023 - alternative call sig to store a log of the transform
+void RemoveMoleculeTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	cout << "!! Warning: calling apply from a RemoveMoleculeTransform!"
+	     << "!! This cannot be handled here! The TransformationSet object should handle this!" << endl;
+}
 
 
 ///////////////////////////////////////////////////////////////
@@ -322,6 +407,15 @@ DecrementPopulationTransform::DecrementPopulationTransform(TemplateMolecule * tm
 void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms)
 {
 	m->getMolecule()->decrementPopulation();
+}
+// AS2023 - alternative call sig to store a log of the transform
+void DecrementPopulationTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
+{
+	m->getMolecule()->decrementPopulation();
+	if (!logstr.empty()) {
+		logstr += "          [\"DecrementPopulation\","
+		       + to_string(m->getMolecule()->getUniqueID()) + "],\n";
+	}
 }
 
 
