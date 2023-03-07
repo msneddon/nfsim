@@ -686,6 +686,8 @@ namespace NFcore
 			string getComponentName(int cIndex) const;
 			void getPossibleComponentStates(int cIndex, list <string> &nameList);
 			int getDefaultComponentState(int cIndex) const { return defaultCompState[cIndex]; };
+			// AS2023 - we need the comp states in a vector
+			vector < vector < string > > getPossibleCompStates() {return possibleCompStates;};
 
 			int getCompIndexFromName(string cName) const;
 			string getComponentStateName(int cIndex, int cValue);

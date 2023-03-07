@@ -2,7 +2,7 @@ begin model
 begin parameters
   l_ribo     1
   l_mrna     10
-  add        0.1
+  add        0.01
   k_add      1
   k_init     1
   k_elong    1
