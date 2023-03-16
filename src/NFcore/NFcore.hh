@@ -1012,8 +1012,8 @@ namespace NFcore
 			static void bind(Molecule *m1, string compName1, Molecule *m2, string compName2);
 			// AS2023 - unbind now returns the indices of the molecule that's selected
 			// for the unbinding for recording/logging purposesz
-			static tuple<int, int> unbind(Molecule *m1, int bSiteIndex);
-			static tuple<int, int> unbind(Molecule *m1, char * bSiteName);
+			static vector<int> unbind(Molecule *m1, int bSiteIndex);
+			static vector<int> unbind(Molecule *m1, char * bSiteName);
 
 
 			/* functions needed to traverse a complex and get all components

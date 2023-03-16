@@ -556,7 +556,7 @@ void Molecule::bind(Molecule *m1, string compName1, Molecule *m2, string compNam
 
 // AS2023 - unbind can return the index of the molecule and component it
 // selected for the unbinding for tracking purposes
-tuple<int, int> Molecule::unbind(Molecule *m1, int cIndex)
+vector<int> Molecule::unbind(Molecule *m1, int cIndex)
 {
 	//get the other molecule bound to this site
 	//cout<<"I am here. "<<bSiteIndex<<endl;
@@ -593,11 +593,14 @@ tuple<int, int> Molecule::unbind(Molecule *m1, int cIndex)
 	//cout<<" UnBinding!  mol1 complex: ";
 	//m1->getComplex()->printDetails();
 	
-	// AS2023 - this now returns what is unbound in a tuple
-	return make_tuple(m2->getUniqueID(), cIndex2);
+	// AS2023 - this now returns what is unbound in a vector
+	vector<int> tpl;
+	tpl.push_back(m2->getUniqueID());
+	tpl.push_back(cIndex2);
+	return tpl;
 }
 
-tuple<int, int> Molecule::unbind(Molecule *m1, char * compName)
+vector<int> Molecule::unbind(Molecule *m1, char * compName)
 {
 	int cIndex = m1->getMoleculeType()->getCompIndexFromName(compName);
 	return Molecule::unbind(m1,cIndex);

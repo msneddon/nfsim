@@ -247,12 +247,16 @@ UnbindingTransform::UnbindingTransform(int cIndex, TemplateMolecule * tm) :
 }
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms)
 {   
-	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
+	vector<int> tpl = Molecule::unbind(m->getMolecule(),m->getIndex());
+	int m2id = tpl[0];
+	int c2id = tpl[1];
 }
 // AS2023 - alternative call sig to store a log of the transform
 void UnbindingTransform::apply(Mapping *m, MappingSet **ms, string &logstr)
 {   //cout<<"unbinding.."<<endl;
-	auto [m2id, c2id] = Molecule::unbind(m->getMolecule(),m->getIndex());
+	vector<int> tpl = Molecule::unbind(m->getMolecule(),m->getIndex());
+	int m2id = tpl[0];
+	int c2id = tpl[1];
 	if (!logstr.empty()) {
 		logstr += "          [\"DeleteBond\","
 		       + to_string(m->getMolecule()->getUniqueID())
