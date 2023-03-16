@@ -83,7 +83,7 @@
  *             by default the expected extension is `.nfevent.json` 
  *             @author Arvind Rasi Subramaniam
  *
- *  -logbuffer [uint] - how many firings to wait before writing to the rxnlog file
+ *  -logbuffer [int] - how many firings to wait before writing to the rxnlog file
  *             Allows you to balance between CPU/memory impact of writing to a reaction log.
  *             @author Ali Sinan Saglam
  *
@@ -788,7 +788,7 @@ void printHelp(string version)
 	cout<<"  -rxnlog [filename] write out firing time and participating molecules for all reactions in a JSON file."<<endl;
 	cout<<"                     by default the expected extension is `.nfevent.json`."<<endl;
 	cout<<""<<endl;
- 	cout<<"  -logbuffer [uint] use to set how many firings to wait between each write to the rxnlog."<<endl;
+ 	cout<<"  -logbuffer [int] use to set how many firings to wait between each write to the rxnlog."<<endl;
 	cout<<""<<endl;
  	cout<<"  -trackconnected   write out the reactions whose rates change after firing of each reaction."<<endl;
 	cout<<"                    this works only if -rxnlog switch is included. Useful for debugging models."<<endl;

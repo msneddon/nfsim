@@ -488,8 +488,8 @@ namespace NFcore
 			// AS2023 - buffer size setter/getter, in units of firings. This is 
 			// here to allow the user to juggle the added burden of reaction logging
 			// between memory vs CPU.
-			uint getLogBufferSize() { return this->log_buffer_size; };
-			void setLogBufferSize(uint bsize) { this->log_buffer_size = bsize; };
+			int getLogBufferSize() { return this->log_buffer_size; };
+			void setLogBufferSize(int bsize) { this->log_buffer_size = bsize; };
 
 			// AS2023 - Species log helper functions
 			void setSpeciesLog(string logstr) { this->speciesLog = logstr; };
@@ -605,7 +605,7 @@ namespace NFcore
 			vector <vector <bool> > connectedReactions;
 
 			// AS2023 - sets the default log buffer size to 10000 firings.
-			uint log_buffer_size = 10000;
+			int log_buffer_size = 10000;
 
 		private:
 			list <Molecule *> molList;
