@@ -1,4 +1,4 @@
-# NFsim - the network free stochastic simulator, v1.13.0
+# NFsim - the network free stochastic simulator, v1.14.0
 
 [![NFsim build status](https://github.com/RuleWorld/nfsim/workflows/main-validation/badge.svg)](https://github.com/RuleWorld/nfsim/actions)
 <a href="https://scan.coverity.com/projects/nfsim">
@@ -96,7 +96,7 @@ stable. Use at your own risk.
 
 ## Release Notes
 
-### v1.13.0 February, 2023
+### v1.14.0 February, 2023
 
 Relabeling the version number to follow previous scheme to avoid further confusion. 
 
