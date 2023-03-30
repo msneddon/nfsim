@@ -21,6 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         config:
           - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl" }
           - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
