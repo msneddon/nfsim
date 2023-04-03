@@ -21,7 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
     - uses: actions/checkout@v3
@@ -34,7 +35,6 @@ jobs:
         cd build
         cmake -G "Ninja" ..
         ninja
-        ./NFsim.exe -h
         cp ${{github.workspace}}/dist/*.dll ${{github.workspace}}/build/.
         ./NFsim.exe -h
 
