@@ -33,7 +33,8 @@ jobs:
         mkdir build
         cd build
         cmake -G Ninja ..
-    - run: cmake --build build
+        cmake --build build
+        cp ../dist/*.dll .
 
     - name: Configure CMake
       if: matrix.os != 'windows-latest'
@@ -64,8 +65,21 @@ jobs:
         pip install -r validate/requirements.txt
     - name: Validation
       run: python validate/validate.py validate/.
+    - name: Prepare unix bundle
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd 
+        mkdir ${{github.workspace}}/bundle_${{ matrix.os }}
+        cp ${{github.workspace}}/build/NFsim ${{github.workspace}}/bundle_${{ matrix.os }}/.
+    - name: Prepare windows bundle
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd 
+        mkdir ${{github.workspace}}/bundle_${{ matrix.os }}
+        cp ${{github.workspace}}/build/NFsim ${{github.workspace}}/bundle_${{ matrix.os }}/.
+        cp ${{github.workspace}}/dist/*.dll ${{github.workspace}}/bundle_${{ matrix.os }}/.
     - name: Archive compiled NFsim
       uses: actions/upload-artifact@v3
       with:
         name: NFsim_bin_${{ matrix.os }}
-        path: ${{github.workspace}}/build/NFsim
+        path: ${{github.workspace}}/bundle_${{ matrix.os }}
