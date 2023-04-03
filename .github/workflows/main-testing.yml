@@ -26,22 +26,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup Ninja for windows
-      if: matrix.os == 'windows-latest'
-      uses: ashutoshvarma/setup-ninja@master
-      with:
-        # ninja version to download. Default: 1.10.0
-        version: 1.10.0
-
     - name: Build on windows
       if: matrix.os == 'windows-latest'
-      uses: ashutoshvarma/action-cmake-build@master
-      with:
-        build-dir: ${{github.workspace}}/build
-        cc: "cl"
-        cxx: "cl"
-        configure-options: -G Ninja
-        build-type: Release
+      uses: seanmiddleditch/gha-setup-ninja@v3
+      run: |
+        mkdir build
+        cd build
+        cmake -G Ninja ..
+    - run: cmake --build build
 
     - name: Configure CMake
       if: matrix.os != 'windows-latest'

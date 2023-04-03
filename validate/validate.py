@@ -8,7 +8,10 @@ import sys
 import bionetgen
 
 bngPath = os.path.join(bionetgen.defaults.bng_path, "BNG2.pl")
-nfsimPath = os.path.join('..', 'build', 'NFsim')
+if os.name == "nt":
+    nfsimPath = os.path.join('..', 'build', 'NFsim.exe')
+else:
+    nfsimPath = os.path.join('..', 'build', 'NFsim')
 
 
 class ParametrizedTestCase(unittest.TestCase):
