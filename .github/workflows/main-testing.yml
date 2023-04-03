@@ -34,7 +34,9 @@ jobs:
         cd build
         cmake -G Ninja ..
         cmake --build .
-        cp ../dist/*.dll .
+        ./NFsim.exe -h
+        cp ${{github.workspace}}/dist/*.dll ${{github.workspace}}/build/.
+        ./NFsim.exe -h
 
     - name: Configure CMake
       if: matrix.os != 'windows-latest'
