@@ -32,8 +32,8 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -G Ninja ..
-        cmake --build .
+        cmake -G "Ninja" ..
+        ninja
         ./NFsim.exe -h
         cp ${{github.workspace}}/dist/*.dll ${{github.workspace}}/build/.
         ./NFsim.exe -h
