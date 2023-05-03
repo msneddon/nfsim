@@ -1079,11 +1079,12 @@ string NFinput::initStartSpecies(
 		logstr.erase(logstr.end()-2, logstr.end());
 		logstr += "\n      ],\n";
 		// AS2023
-		logstr += "      \"ops\": [\n";
+		logstr += "      \"ops\": [\n ";
 		for(int k=0;k<operations.size();k++) {
 			logstr += "        " + operations[k] + ",\n";
 		}
 		// AS2023
+		// deleting the extra new line at the end
 		logstr.erase(logstr.end()-2, logstr.end());
 		logstr += "\n      ]\n";
 		logstr += "    },\n";
